@@ -1,7 +1,7 @@
 FROM node:16 as build-stage
 WORKDIR /app
 # Files required by pnpm install
-COPY package.json yarn-lock.yaml 
+COPY package.json yarn.lock
 RUN yarn install --frozen-lockfile
 COPY ./ .
 RUN yarn build
