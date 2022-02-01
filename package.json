@@ -1,0 +1,30 @@
+{
+  "scripts": {
+    "release": "standard-version --sign",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^16.1.0",
+    "@commitlint/config-conventional": "^16.0.0",
+    "@types/node": "^17.0.10",
+    "husky": "^7.0.4",
+    "prettier": "^2.5.1",
+    "standard-version": "^9.3.2"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "name": "unhcr-geneva-tech-hub-app",
+  "version": "0.1.0",
+  "repository": "https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app",
+  "author": "Guilbert Pierre",
+  "license": "GPL-3",
+  "private": true
+}

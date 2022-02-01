@@ -1,0 +1,31 @@
+services:
+  reverse-proxy:
+    image: traefik:v2.5
+    command:
+      - "--providers.docker"
+      - "--providers.file.directory=/configuration/"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  frontend:
+    build: ./frontend
+    labels:
+      - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
+    restart: unless-stopped
+  couchdb:
+    image: docker.io/bitnami/couchdb:3
+    environment:
+      - COUCHDB_PASSWORD=couchdb
+    ports:
+      - '5984:5984'
+      - '4369:4369'
+      - '9100:9100'
+    volumes:
+      - couchdb_data:/bitnami/couchdb
+volumes:
+  couchdb_data:
+    driver: local
+# https://hub.docker.com/r/bitnami/couchdb/
