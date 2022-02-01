@@ -1,11 +1,11 @@
 install:
-	yarn install
+	npm install
 
 run:
-	yarn serve
+	npm run serve
 
 test:
-	yarn test:unit
+	npm run test:unit
 
 lint:
-	yarn lint
+	npm run lint
