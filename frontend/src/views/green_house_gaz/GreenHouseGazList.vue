@@ -22,7 +22,10 @@
               outlined
               rounded
               text
-              :to="{ name: 'ProjectEdit', params: { id: project.id } }"
+              :to="{
+                name: 'ShelterSustainability',
+                params: { id: project.id },
+              }"
             >
               Edit project
             </v-btn>

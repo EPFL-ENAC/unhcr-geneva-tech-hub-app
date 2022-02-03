@@ -7,49 +7,18 @@
     </v-row>
     <v-row>
       <v-col>
-        <v-stepper non-linear vertical alt-labels :value="$route.meta.step">
-          <v-stepper-header>
-            <router-link :to="{ name: 'ProjectEditStep1' }">
-              <v-stepper-step editable step="1">
-                Project information
-              </v-stepper-step>
-            </router-link>
-
-            <v-divider />
-
-            <router-link :to="{ name: 'ProjectEditStep2' }">
-              <v-stepper-step editable step="2">Geometry</v-stepper-step>
-            </router-link>
-
-            <v-divider />
-
-            <v-stepper-step step="3" editable>Materials</v-stepper-step>
-            <v-divider />
-            <v-stepper-step step="4" editable>Labour</v-stepper-step>
-            <v-divider />
-            <v-stepper-step step="5" editable>
-              Environmental performance
-            </v-stepper-step>
-            <v-divider />
-            <v-stepper-step step="6" editable>
-              Technical performance
-            </v-stepper-step>
-            <v-divider />
-            <v-stepper-step step="6" editable>Habitability</v-stepper-step>
-            <v-divider />
-            <v-stepper-step step="7" editable>Affordability</v-stepper-step>
-            <v-divider />
-            <v-stepper-step step="8" editable>Scorecard</v-stepper-step>
-            <v-divider />
-            <v-stepper-step step="9" editable>BackgroundData</v-stepper-step>
-          </v-stepper-header>
-
-          <v-stepper-items>
-            <v-stepper-content :step="$route.meta.step">
-              <router-view />
-            </v-stepper-content>
-          </v-stepper-items>
-        </v-stepper>
+        <v-tabs hide-slider>
+          <template v-for="item in menuItems">
+            <v-tab :key="item.to" :to="{ name: item.to }">{{
+              item.text
+            }}</v-tab>
+          </template>
+        </v-tabs>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <router-view />
       </v-col>
     </v-row>
   </v-container>
@@ -60,7 +29,26 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component
 /** ProjectItem */
-export default class ProjectItem extends Vue {}
+export default class ProjectItem extends Vue {
+  readonly menuItems: MenuItem[] = [
+    { text: "ProjectInformation", to: "ShelterSustainabilityStep1" },
+    { text: "Geometry", to: "ShelterSustainabilityStep2" },
+    { text: "Materials", to: "ShelterSustainabilityStep3" },
+    { text: "Labour", to: "ShelterSustainabilityStep4" },
+    { text: "EnvironmentalPerformance", to: "ShelterSustainabilityStep5" },
+    { text: "TechnicalPerformance", to: "ShelterSustainabilityStep6" },
+    { text: "Habitability", to: "ShelterSustainabilityStep7" },
+    { text: "Affordability", to: "ShelterSustainabilityStep8" },
+    { text: "Scorecard", to: "ShelterSustainabilityStep9" },
+    { text: "Background", to: "ShelterSustainabilityStep10" },
+  ];
+}
+
+interface MenuItem {
+  text: string;
+  to: string;
+  children?: MenuItem[];
+}
 </script>
 
 <style scoped>

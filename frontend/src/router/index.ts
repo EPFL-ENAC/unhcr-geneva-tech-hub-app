@@ -49,7 +49,7 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: ":id/edit",
-        name: "ShelterSustainabilityEdit",
+        name: "GreenHouseGazEdit",
         component: () =>
           import(
             /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem.vue"
@@ -85,15 +85,15 @@ const routes: Array<RouteConfig> = [
         //   component: ProjectItem,
         // }, {
         path: ":id/edit",
-        name: "ProjectEdit",
+        name: "ShelterSustainabilityEdit",
         component: () =>
           import(
             /* webpackChunkName: "shelter_sustainability" */ "../views/shelter_sustainability/ShelterSustainabilityItem.vue"
           ),
-        redirect: { name: "ProjectEditStep1" },
+        redirect: { name: "ShelterSustainabilityStep1" },
         children: [
           {
-            name: "ProjectEditStep1",
+            name: "ShelterSustainabilityStep1",
             path: "1",
             meta: { step: 1 },
             component: () => {
@@ -103,7 +103,7 @@ const routes: Array<RouteConfig> = [
             },
           },
           {
-            name: "ProjectEditStep2",
+            name: "ShelterSustainabilityStep2",
             path: "2",
             meta: { step: 2 },
             component: () =>
@@ -112,7 +112,7 @@ const routes: Array<RouteConfig> = [
               ),
           },
           {
-            name: "ProjectEditStep3",
+            name: "ShelterSustainabilityStep3",
             path: "3",
             meta: { step: 3 },
             component: () =>
@@ -121,7 +121,7 @@ const routes: Array<RouteConfig> = [
               ),
           },
           {
-            name: "ProjectEditStep4",
+            name: "ShelterSustainabilityStep4",
             path: "4",
             meta: { step: 4 },
             component: () =>
@@ -130,7 +130,7 @@ const routes: Array<RouteConfig> = [
               ),
           },
           {
-            name: "ProjectEditStep5",
+            name: "ShelterSustainabilityStep5",
             path: "5",
             meta: { step: 5 },
             component: () =>
@@ -139,7 +139,7 @@ const routes: Array<RouteConfig> = [
               ),
           },
           {
-            name: "ProjectEditStep6",
+            name: "ShelterSustainabilityStep6",
             path: "6",
             meta: { step: 6 },
             component: () =>
@@ -148,7 +148,7 @@ const routes: Array<RouteConfig> = [
               ),
           },
           {
-            name: "ProjectEditStep7",
+            name: "ShelterSustainabilityStep7",
             path: "7",
             meta: { step: 7 },
             component: () =>
@@ -157,7 +157,7 @@ const routes: Array<RouteConfig> = [
               ),
           },
           {
-            name: "ProjectEditStep8",
+            name: "ShelterSustainabilityStep8",
             path: "8",
             meta: { step: 8 },
             component: () =>
@@ -166,12 +166,21 @@ const routes: Array<RouteConfig> = [
               ),
           },
           {
-            name: "ProjectEditStep9",
+            name: "ShelterSustainabilityStep9",
             path: "9",
             meta: { step: 9 },
             component: () =>
               import(
                 /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/ProjectStep9.vue"
+              ),
+          },
+          {
+            name: "ShelterSustainabilityStep10",
+            path: "10",
+            meta: { step: 9 },
+            component: () =>
+              import(
+                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/ProjectStep10.vue"
               ),
           },
         ],
