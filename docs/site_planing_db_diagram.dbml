@@ -1,0 +1,29 @@
+C02 COST: 
+    Energy
+        - cooking
+        - lighting
+        - facilities
+    Water
+        - Boreholes
+        - Trucking
+        - Waste collection
+
+    Shelter (Very similiar to André)
+        - production
+        - end_of_life
+        - transport
+        - Human waste
+        - CRI (core relief items: clothes and non-food-items NFI)
+
+C02 OFFSET
+    Trees:
+
+
+
+Screen 1: Project description
+Screen 2: C02 Sources Energy
+Screen 3: C02 Sources Water
+Screen 4: C02 Sources Shelter
+Screen 5: C02 offset with Trees
+Screen 6: Summary of sources and sinks
+Screen 7: Diff with Base C02 (same as screen 6)
