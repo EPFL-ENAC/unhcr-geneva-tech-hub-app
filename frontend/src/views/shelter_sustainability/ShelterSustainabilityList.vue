@@ -39,10 +39,9 @@
         <h1>New Project</h1>
         <v-card class="mx-auto" max-width="344" outlined>
           <v-card-text>
-            <form
-              @submit.prevent="submitForm"
-            >
+            <form @submit.prevent="submitForm">
               <v-text-field
+                tabindex="1"
                 v-model="newName"
                 name="name"
                 label="Name"
@@ -57,7 +56,7 @@
               text
               :to="{ name: 'ProjectNew', query: { name: newName } }"
             > Create new project url</v-btn> -->
-            <v-btn outlined rounded text type="submit">
+            <v-btn outlined rounded text type="submit" tabindex="2">
               Create new project
             </v-btn>
           </v-card-actions>
@@ -71,6 +70,10 @@
 import { Component, Vue } from "vue-property-decorator";
 
 import { mapState, mapActions } from "vuex";
+
+import { required } from "vuelidate/lib/validators";
+
+
 @Component({
   computed: {
     ...mapState("ShelterSustainabilityModule", {
@@ -79,21 +82,42 @@ import { mapState, mapActions } from "vuex";
   },
 
   methods: {
-    ...mapActions("ShelterSustainabilityModule", ["addDoc", "removeDoc"]),
+    ...mapActions("ShelterSustainabilityModule", [
+      "addDoc",
+      "removeDoc",
+      "syncDB",
+      "getDB",
+    ]),
   },
 })
 /** ProjectList */
 export default class ProjectList extends Vue {
   newName = "";
   shelters!: [];
-  addDoc!: (name: string ) => null;
-
+  addDoc!: (name: string) => null;
+  syncDB!: () => null;
+  getDB!: () => null;
+  $v!: any;
+  
   public get projects(): Record<string, string | number>[] {
     return this.shelters;
   }
-  public submitForm() : void {
-    console.log("submitForm");
-    this.addDoc(this.newName);
+  public submitForm(): void {
+    if (this.newName !== "") {
+      this.addDoc(this.newName);
+    } else {
+      console.error("please fill the new Name");
+    }
+  }
+
+  validations() {
+    return {
+      newName: { required },
+    };
+  }
+  mounted() {
+    this.syncDB();
+    this.getDB();
   }
 }
 </script>

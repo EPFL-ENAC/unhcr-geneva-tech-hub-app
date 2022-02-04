@@ -7,6 +7,7 @@ import Vuex, {
 } from "vuex";
 
 import ConfigModule from "./ConfigModule";
+import ShelterItemModule from "./ShelterItemModule";
 import ShelterSustainabilityModule from "./ShelterSustainabilityModule";
 import Vue from "vue";
 import VuexPersistence from "vuex-persist";
@@ -138,6 +139,7 @@ const store: StoreOptions<RootState> = {
   modules: {
     ConfigModule,
     ShelterSustainabilityModule,
+    ShelterItemModule,
   },
   plugins: [
     new VuexPersistence({
@@ -165,8 +167,3 @@ const newStore = new Vuex.Store<RootState>(store);
 
 
 export default newStore;
-
-// global init (should be in mounted or somewhere similar )
-// TODO: move to proper place
-newStore.dispatch("ShelterSustainabilityModule/syncDB", null, { root: true });
-newStore.dispatch("ShelterSustainabilityModule/getDB", null, { root: true });

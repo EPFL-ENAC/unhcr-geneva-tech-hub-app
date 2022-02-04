@@ -29,14 +29,12 @@ export interface Shelter {
 }
 
 export interface ShelterState {
-  /** Dark Theme mode */
   shelters: Array<Shelter>;
 }
 
 const localCouch: any = new PouchDB("couchShelters");
 const remoteCouch = "http://pierre:pierre@localhost:5984/shelters";
 
-/** Default Configure state value */
 function generateState(): ShelterState {
   return {
     shelters: [],
@@ -116,10 +114,10 @@ const actions: ActionTree<ShelterState, RootState> = {
       include_docs: true,
       attachments: true,
     })
-    .then(function (result: Array<Shelter>) {
+    .then(function (result: any) {
       // handle result
-      console.log("getdb mutation", result.rows.map(x => x.doc));
-      context.commit("SET_SHELTERS", result.rows.map(x => x.doc));
+      console.log("getdb mutation", result.rows.map((x: any) => x.doc));
+      context.commit("SET_SHELTERS", result.rows.map((x : any) => x.doc));
     })
     .catch(function (err: Error) {
       console.log(err);

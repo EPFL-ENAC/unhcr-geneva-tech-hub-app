@@ -22,7 +22,7 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer />
-      <v-btn color="primary" to="/projects">Login</v-btn>
+      <v-btn color="primary" to="/apps">Login</v-btn>
     </v-card-actions>
   </v-card>
 </template>
