@@ -26,5 +26,9 @@
   "repository": "https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app",
   "author": "Guilbert Pierre",
   "license": "GPL-3",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "@vuelidate/core": "^2.0.0-alpha.34",
+    "@vuelidate/validators": "^2.0.0-alpha.26"
+  }
 }

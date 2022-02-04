@@ -39,14 +39,16 @@
         <h1>New Project</h1>
         <v-card class="mx-auto" max-width="344" outlined>
           <v-card-text>
-            <v-form>
+            <form
+              @submit.prevent="submitForm"
+            >
               <v-text-field
                 v-model="newName"
                 name="name"
                 label="Name"
                 type="text"
               />
-            </v-form>
+            </form>
           </v-card-text>
           <v-card-actions>
             <!-- <v-btn
@@ -55,7 +57,7 @@
               text
               :to="{ name: 'ProjectNew', query: { name: newName } }"
             > Create new project url</v-btn> -->
-            <v-btn outlined rounded text @click="() => addDoc(newName)">
+            <v-btn outlined rounded text type="submit">
               Create new project
             </v-btn>
           </v-card-actions>
@@ -84,10 +86,14 @@ import { mapState, mapActions } from "vuex";
 export default class ProjectList extends Vue {
   newName = "";
   shelters!: [];
-  addDoc!: () => any;
+  addDoc!: (name: string ) => null;
 
   public get projects(): Record<string, string | number>[] {
     return this.shelters;
+  }
+  public submitForm() : void {
+    console.log("submitForm");
+    this.addDoc(this.newName);
   }
 }
 </script>
