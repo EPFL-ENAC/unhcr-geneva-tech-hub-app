@@ -27,7 +27,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapState, mapActions } from "vuex";
-import {Route} from 'vue-router'
+import { Route } from "vue-router";
 
 @Component({
   methods: {
@@ -36,9 +36,9 @@ import {Route} from 'vue-router'
 })
 /** ProjectItem */
 export default class ProjectItem extends Vue {
-  syncDB !: () => any;
-  getDoc !: (id: string) => any;
-  $route !: Route;
+  syncDB!: () => any;
+  getDoc!: (id: string) => any;
+  $route!: Route;
 
   readonly menuItems: MenuItem[] = [
     { text: "ProjectInformation", to: "ShelterSustainabilityStep1" },
@@ -53,8 +53,8 @@ export default class ProjectItem extends Vue {
     { text: "Background", to: "ShelterSustainabilityStep10" },
   ];
   mounted() {
-    console.log("mounted", this.$route.params.id)
-    this.syncDB();
+    console.log("mounted", this.$route.params.id);
+    this.syncDB();      
     this.getDoc(this.$route.params.id);
   }
 }

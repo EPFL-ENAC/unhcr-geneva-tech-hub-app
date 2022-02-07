@@ -134,7 +134,7 @@ export default class Step1 extends Vue {
   updateDoc!: (doc: Shelter) => void;
 
   risks: string[] = ["low", "medium", "high"];
-  get project(): Shelter | null {
+  get project(): Shelter {
     return { ...this.shelter };
   }
   set project(shelter: Shelter) {

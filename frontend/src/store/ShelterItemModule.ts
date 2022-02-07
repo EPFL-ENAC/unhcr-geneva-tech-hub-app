@@ -13,7 +13,7 @@ import { Shelter } from "./ShelterSustainabilityModule";
 
 export interface ShelterState {
   shelter: Shelter | null;
-  localCouch: PouchDB.Database<Shelter> | null;
+  localCouch: any;
 }
 
 const remoteCouch = "http://pierre:pierre@localhost:5984/shelters";
@@ -73,24 +73,25 @@ const mutations: MutationTree<ShelterState> = {
 const actions: ActionTree<ShelterState, RootState> = {
   syncDB: (context: ActionContext<ShelterState, RootState>) => {
     // init
-    context.dispatch("INIT_SYNC");
-    context.state.localCouch;
-    localCouch.replicate.from(remoteCouch).on("complete", function () {
-      localCouch
-        .sync(remoteCouch, { live: true, retry: true })
-        .on("change", function () {
-          context.dispatch("getDoc", context.state.shelter?._id);
-        });
-    });
+    context.commit("INIT_SYNC");
+
+    context.state.localCouch.replicate
+      .from(remoteCouch)
+      .on("complete", function () {
+        context.state.localCouch
+          .sync(remoteCouch, { live: true, retry: true })
+          .on("change", function () {
+            context.dispatch("getDoc", context.state.shelter?._id);
+          });
+      });
   },
   updateDoc: (context: ActionContext<ShelterState, RootState>, value) => {
     context.commit("UPDATE_DOC", value);
   },
   getDoc: (context: ActionContext<ShelterState, RootState>, id) => {
-    localCouch
+    context?.state?.localCouch
       .get(id, {
         include_docs: true,
-        attachments: true,
       })
       .then(function (result: any) {
         // handle result
