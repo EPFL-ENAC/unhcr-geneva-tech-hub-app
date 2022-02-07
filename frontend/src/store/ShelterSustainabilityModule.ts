@@ -30,12 +30,11 @@ export interface Shelter {
 
 export interface ShelterState {
   shelters: Array<Shelter>;
-  localCouch: any;
-  sync: any;
-  replicate: any;
+  localCouch: PouchDB.Database | null;
+  sync: PouchDB.Replication.Sync<Shelter> | null;
+  replicate: PouchDB.Replication.Replication<Shelter> | null;
 }
 
-const localCouch: any = new PouchDB("couchShelters");
 const remoteCouch = "http://pierre:pierre@localhost:5984/shelters";
 
 function generateState(): ShelterState {
@@ -86,8 +85,8 @@ const mutations: MutationTree<ShelterState> = {
   CLOSE_DB(state) {
     state?.localCouch?.close().then(function () {
       // success
-      state.replicate.cancel(); // whenever you want to cancel the replicate!
-      state.sync.cancel(); // whenever you want to cancel the sync!
+      state.replicate?.cancel(); // whenever you want to cancel the replicate!
+      state.sync?.cancel(); // whenever you want to cancel the sync!
       // hopefully removing the replicate!
       state.localCouch = null;
       console.log("succeessfully closing localCouch");
@@ -100,8 +99,8 @@ const mutations: MutationTree<ShelterState> = {
     console.log("running ADD_DOC mutation");
     state.shelters.push(value);
 
-    state.localCouch.put(value).then((response: any) => {
-      console.log(response);
+    state.localCouch?.put(value).then(() => {
+      console.log("successfully put new document");
     });
   },
   REMOVE_DOC(state, value) {
@@ -111,9 +110,9 @@ const mutations: MutationTree<ShelterState> = {
     console.log("indexToRemove", indexToRemove);
     state.shelters.splice(indexToRemove, 1);
 
-    state.localCouch.get(value).then(function (doc: any) {
+    state.localCouch?.get(value).then(function (doc) {
       console.log("removing document", doc);
-      return state.localCouch.remove(doc);
+      return state.localCouch?.remove(doc);
     });
   },
   SET_SYNC(state, value) {
@@ -132,9 +131,9 @@ const actions: ActionTree<ShelterState, RootState> = {
     const opts = { live: true, retry: true };
     const localCouch = context.state.localCouch;
 
-    function sync(db: any) {
+    function sync(db: PouchDB.Database | null) {
       const sync = db
-        .sync(remoteCouch, opts)
+        ?.sync(remoteCouch, opts)
         .on("change", function () {
           context.dispatch("getDB");
         })
@@ -156,13 +155,13 @@ const actions: ActionTree<ShelterState, RootState> = {
       context.commit("SET_SYNC", sync);
     }
     // do one way, one-off sync from the server until completion
-    const replicate = localCouch.replicate
+    const replicate = localCouch?.replicate
       .from(remoteCouch)
       .on("complete", function () {
         // then two-way, continuous, retriable sync
         sync(localCouch);
       })
-      .on("error", function (err: any) {
+      .on("error", function (err) {
         console.log("On sync Error", err);
       });
     context.commit("SET_REPLICATE", replicate);
@@ -173,19 +172,19 @@ const actions: ActionTree<ShelterState, RootState> = {
   getDB: (context: ActionContext<ShelterState, RootState>) => {
     const localCouch = context.state.localCouch;
     return localCouch
-      .allDocs({
+      ?.allDocs({
         include_docs: true,
         attachments: true,
       })
-      .then(function (result: any) {
+      .then(function (result) {
         // handle result
         console.log(
           "getdb mutation",
-          result.rows.map((x: any) => x.doc)
+          result.rows.map((x) => x.doc)
         );
         context.commit(
           "SET_SHELTERS",
-          result.rows.map((x: any) => x.doc)
+          result.rows.map((x) => x.doc)
         );
       })
       .catch(function (err: Error) {

@@ -81,8 +81,6 @@ import { Component, Vue } from "vue-property-decorator";
 
 import { mapState, mapActions } from "vuex";
 
-import { required } from "vuelidate/lib/validators";
-
 @Component({
   computed: {
     ...mapState("ShelterSustainabilityModule", {
@@ -108,12 +106,12 @@ export default class ProjectList extends Vue {
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
   getDB!: () => Promise<null>;
-  $v!: any;
 
   createProjectFormValid = true;
   rules = [
-    (v: string) => !!v || `A name is required`,
-    (v: string) => v?.length > 1 || `Name should have a length >= 1`,
+    (v: string): boolean | string => !!v || `A name is required`,
+    (v: string): boolean | string =>
+      v?.length > 1 || `Name should have a length >= 1`,
   ];
 
   public get projects(): Record<string, string | number>[] {
@@ -127,17 +125,12 @@ export default class ProjectList extends Vue {
     }
   }
 
-  validations() {
-    return {
-      newName: { required },
-    };
-  }
-  mounted() {
+  mounted(): void {
     this.syncDB();
     this.getDB();
   }
 
-  destroyed() {
+  destroyed(): void {
     this.closeDB().then(() => {
       console.log("DESTROYED view shelter list, closing DB");
     });

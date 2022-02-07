@@ -6,16 +6,16 @@ import {
   Module,
   MutationTree,
 } from "vuex";
-import store, { RootState } from ".";
 
 import PouchDB from "pouchdb";
+import { RootState } from ".";
 import { Shelter } from "./ShelterSustainabilityModule";
 
 export interface ShelterState {
   shelter: Shelter | null;
-  localCouch: any;
-  sync: any;
-  replicate: any;
+  localCouch: PouchDB.Database | null;
+  sync: PouchDB.Replication.Sync<Shelter> | null;
+  replicate: PouchDB.Replication.Replication<Shelter> | null;
 }
 
 const remoteCouch = "http://pierre:pierre@localhost:5984/shelters";
@@ -43,8 +43,8 @@ const mutations: MutationTree<ShelterState> = {
   CLOSE_SYNC(state) {
     state?.localCouch?.close().then(function () {
       // success
-      state.replicate.cancel(); // whenever you want to cancel the replicate!
-      state.sync.cancel(); // whenever you want to cancel the sync!
+      state.replicate?.cancel(); // whenever you want to cancel the replicate!
+      state.sync?.cancel(); // whenever you want to cancel the sync!
       // hopefully removing the replicate!
       state.localCouch = null;
       console.log("succeessfully closing localCouch");
@@ -90,11 +90,12 @@ const actions: ActionTree<ShelterState, RootState> = {
     console.log("syncDB action in ShelterItem Module");
     context.commit("INIT_SYNC");
 
-    const replicate = context.state.localCouch.replicate
+    const localCouch = context.state.localCouch;
+    const replicate = localCouch?.replicate
       .from(remoteCouch)
       .on("complete", function () {
-        const sync = context.state.localCouch
-          .sync(remoteCouch, { live: true, retry: true })
+        const sync = localCouch
+          ?.sync(remoteCouch, { live: true, retry: true })
           .on("change", function () {
             context.dispatch("getDoc", context.state.shelter?._id);
           });
@@ -109,11 +110,9 @@ const actions: ActionTree<ShelterState, RootState> = {
     context.commit("UPDATE_DOC", value);
   },
   getDoc: (context: ActionContext<ShelterState, RootState>, id) => {
-    context?.state?.localCouch
-      .get(id, {
-        include_docs: true,
-      })
-      .then(function (result: any) {
+    context.state.localCouch
+      ?.get(id)
+      .then(function (result) {
         // handle result
         console.log("get doc mutation", result);
         context.commit("SET_SHELTER", result);

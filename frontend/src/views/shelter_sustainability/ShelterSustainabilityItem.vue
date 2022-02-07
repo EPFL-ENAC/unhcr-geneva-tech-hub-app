@@ -58,12 +58,12 @@ export default class ProjectItem extends Vue {
     { text: "Scorecard", to: "ShelterSustainabilityStep9" },
     { text: "Background", to: "ShelterSustainabilityStep10" },
   ];
-  mounted() {
+  mounted(): void {
     console.log("mounted", this.$route.params.id);
     this.syncDB();
     this.getDoc(this.$route.params.id);
   }
-  destroyed() {
+  destroyed(): void {
     console.log("DESTROYED view shelter item, closing DB");
     this.closeDB();
   }
