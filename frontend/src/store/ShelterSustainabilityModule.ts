@@ -6,9 +6,9 @@ import {
   Module,
   MutationTree,
 } from "vuex";
-import store, { RootState } from ".";
 
 import PouchDB from "pouchdb";
+import { RootState } from ".";
 
 export interface Shelter {
   _id: string;
@@ -30,6 +30,9 @@ export interface Shelter {
 
 export interface ShelterState {
   shelters: Array<Shelter>;
+  localCouch: any;
+  sync: any;
+  replicate: any;
 }
 
 const localCouch: any = new PouchDB("couchShelters");
@@ -38,6 +41,9 @@ const remoteCouch = "http://pierre:pierre@localhost:5984/shelters";
 function generateState(): ShelterState {
   return {
     shelters: [],
+    localCouch: null,
+    sync: null,
+    replicate: null,
   };
 }
 
@@ -74,13 +80,27 @@ const getters: GetterTree<ShelterState, RootState> = {
 
 /** Mutations */
 const mutations: MutationTree<ShelterState> = {
+  INIT_DB(state) {
+    state.localCouch = new PouchDB("couchShelters", { auto_compaction: true });
+  },
+  CLOSE_DB(state) {
+    state?.localCouch?.close().then(function () {
+      // success
+      state.replicate.cancel(); // whenever you want to cancel the replicate!
+      state.sync.cancel(); // whenever you want to cancel the sync!
+      // hopefully removing the replicate!
+      state.localCouch = null;
+      console.log("succeessfully closing localCouch");
+    });
+  },
   SET_SHELTERS(state, value) {
     state.shelters = value;
   },
   ADD_DOC(state, value) {
     console.log("running ADD_DOC mutation");
     state.shelters.push(value);
-    localCouch.put(value).then((response: any) => {
+
+    state.localCouch.put(value).then((response: any) => {
       console.log(response);
     });
   },
@@ -90,38 +110,87 @@ const mutations: MutationTree<ShelterState> = {
     const indexToRemove = state.shelters.findIndex((el) => el._id === value);
     console.log("indexToRemove", indexToRemove);
     state.shelters.splice(indexToRemove, 1);
-    localCouch.get(value).then(function (doc: any) {
-      console.log("removing document", doc)
-      return localCouch.remove(doc);
+
+    state.localCouch.get(value).then(function (doc: any) {
+      console.log("removing document", doc);
+      return state.localCouch.remove(doc);
     });
+  },
+  SET_SYNC(state, value) {
+    state.sync = value;
+  },
+  SET_REPLICATE(state, value) {
+    state.replicate = value;
   },
 };
 
 /** Action */
 const actions: ActionTree<ShelterState, RootState> = {
   syncDB: (context: ActionContext<ShelterState, RootState>) => {
-    localCouch.replicate.from(remoteCouch).on("complete", function () {
-      localCouch
-        .sync(remoteCouch, { live: true, retry: true })
+    console.log("syncDB action in ShelterItem List Module");
+    context.commit("INIT_DB");
+    const opts = { live: true, retry: true };
+    const localCouch = context.state.localCouch;
+
+    function sync(db: any) {
+      const sync = db
+        .sync(remoteCouch, opts)
         .on("change", function () {
           context.dispatch("getDB");
+        })
+        .on("paused", function () {
+          // replication paused (e.g. replication up to date, user went offline)
+        })
+        .on("active", function () {
+          // replicate resumed (e.g. new changes replicating, user went back online)
+        })
+        .on("denied", function () {
+          // a document failed to replicate (e.g. due to permissions)
+        })
+        .on("complete", function () {
+          // handle complete
+        })
+        .on("error", function () {
+          // handle error
         });
-    });
+      context.commit("SET_SYNC", sync);
+    }
+    // do one way, one-off sync from the server until completion
+    const replicate = localCouch.replicate
+      .from(remoteCouch)
+      .on("complete", function () {
+        // then two-way, continuous, retriable sync
+        sync(localCouch);
+      })
+      .on("error", function (err: any) {
+        console.log("On sync Error", err);
+      });
+    context.commit("SET_REPLICATE", replicate);
+  },
+  closeDB: (context: ActionContext<ShelterState, RootState>) => {
+    context.commit("CLOSE_DB");
   },
   getDB: (context: ActionContext<ShelterState, RootState>) => {
-    localCouch
-    .allDocs({
-      include_docs: true,
-      attachments: true,
-    })
-    .then(function (result: any) {
-      // handle result
-      console.log("getdb mutation", result.rows.map((x: any) => x.doc));
-      context.commit("SET_SHELTERS", result.rows.map((x : any) => x.doc));
-    })
-    .catch(function (err: Error) {
-      console.log(err);
-    });
+    const localCouch = context.state.localCouch;
+    return localCouch
+      .allDocs({
+        include_docs: true,
+        attachments: true,
+      })
+      .then(function (result: any) {
+        // handle result
+        console.log(
+          "getdb mutation",
+          result.rows.map((x: any) => x.doc)
+        );
+        context.commit(
+          "SET_SHELTERS",
+          result.rows.map((x: any) => x.doc)
+        );
+      })
+      .catch(function (err: Error) {
+        console.log(err);
+      });
   },
   addDoc: (context: ActionContext<ShelterState, RootState>, name: string) => {
     const newShelter = generateNewShelter(name);
@@ -129,7 +198,7 @@ const actions: ActionTree<ShelterState, RootState> = {
   },
   removeDoc: (context: ActionContext<ShelterState, RootState>, id) => {
     context.commit("REMOVE_DOC", id);
-  }
+  },
 };
 
 /** VuexStore */

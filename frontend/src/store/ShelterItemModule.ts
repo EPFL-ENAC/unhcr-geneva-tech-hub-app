@@ -14,6 +14,8 @@ import { Shelter } from "./ShelterSustainabilityModule";
 export interface ShelterState {
   shelter: Shelter | null;
   localCouch: any;
+  sync: any;
+  replicate: any;
 }
 
 const remoteCouch = "http://pierre:pierre@localhost:5984/shelters";
@@ -23,6 +25,8 @@ function generateState(): ShelterState {
   return {
     shelter: null,
     localCouch: null,
+    sync: null,
+    replicate: null,
   };
 }
 
@@ -39,6 +43,10 @@ const mutations: MutationTree<ShelterState> = {
   CLOSE_SYNC(state) {
     state?.localCouch?.close().then(function () {
       // success
+      state.replicate.cancel(); // whenever you want to cancel the replicate!
+      state.sync.cancel(); // whenever you want to cancel the sync!
+      // hopefully removing the replicate!
+      state.localCouch = null;
       console.log("succeessfully closing localCouch");
     });
   },
@@ -67,23 +75,35 @@ const mutations: MutationTree<ShelterState> = {
       throw new Error("localCouch is null: should have been initialized");
     }
   },
+  SET_SYNC(state, value) {
+    state.sync = value;
+  },
+  SET_REPLICATE(state, value) {
+    state.replicate = value;
+  },
 };
 
 /** Action */
 const actions: ActionTree<ShelterState, RootState> = {
   syncDB: (context: ActionContext<ShelterState, RootState>) => {
     // init
+    console.log("syncDB action in ShelterItem Module");
     context.commit("INIT_SYNC");
 
-    context.state.localCouch.replicate
+    const replicate = context.state.localCouch.replicate
       .from(remoteCouch)
       .on("complete", function () {
-        context.state.localCouch
+        const sync = context.state.localCouch
           .sync(remoteCouch, { live: true, retry: true })
           .on("change", function () {
             context.dispatch("getDoc", context.state.shelter?._id);
           });
+        context.commit("SET_SYNC", sync);
       });
+    context.commit("SET_REPLICATE", replicate);
+  },
+  closeDB: (context: ActionContext<ShelterState, RootState>) => {
+    context.commit("CLOSE_SYNC");
   },
   updateDoc: (context: ActionContext<ShelterState, RootState>, value) => {
     context.commit("UPDATE_DOC", value);

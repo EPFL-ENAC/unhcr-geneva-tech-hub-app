@@ -142,11 +142,10 @@ export default class Step1 extends Vue {
     this.updateDoc(shelter);
   }
 
-  public submitForm(value : Shelter): void {
+  public submitForm(value: Shelter): void {
     if (value.name !== "") {
-      
-    console.log("setter shelter", value);
-    this.updateDoc(value);
+      console.log("setter shelter", value);
+      this.updateDoc(value);
     } else {
       console.error("please fill the new Name");
     }

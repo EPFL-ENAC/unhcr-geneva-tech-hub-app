@@ -37,30 +37,40 @@
       </v-col>
       <v-col>
         <h1>New Project</h1>
-        <v-card class="mx-auto" max-width="344" outlined>
-          <v-card-text>
-            <form @submit.prevent="submitForm">
+
+        <v-form @submit.prevent="submitForm" v-model="createProjectFormValid">
+          <v-card class="mx-auto" max-width="344" outlined>
+            <v-card-text>
               <v-text-field
                 tabindex="1"
                 v-model="newName"
+                :rules="rules"
+                required
                 name="name"
                 label="Name"
                 type="text"
               />
-            </form>
-          </v-card-text>
-          <v-card-actions>
-            <!-- <v-btn
+            </v-card-text>
+            <v-card-actions>
+              <!-- <v-btn
               outlined
               rounded
               text
               :to="{ name: 'ProjectNew', query: { name: newName } }"
             > Create new project url</v-btn> -->
-            <v-btn outlined rounded text type="submit" tabindex="2">
-              Create new project
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+              <v-btn
+                outlined
+                rounded
+                text
+                type="submit"
+                tabindex="2"
+                :disabled="!createProjectFormValid"
+              >
+                Create new project
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-form>
       </v-col>
     </v-row>
   </v-container>
@@ -72,7 +82,6 @@ import { Component, Vue } from "vue-property-decorator";
 import { mapState, mapActions } from "vuex";
 
 import { required } from "vuelidate/lib/validators";
-
 
 @Component({
   computed: {
@@ -87,6 +96,7 @@ import { required } from "vuelidate/lib/validators";
       "removeDoc",
       "syncDB",
       "getDB",
+      "closeDB",
     ]),
   },
 })
@@ -96,9 +106,16 @@ export default class ProjectList extends Vue {
   shelters!: [];
   addDoc!: (name: string) => null;
   syncDB!: () => null;
-  getDB!: () => null;
+  closeDB!: () => Promise<null>;
+  getDB!: () => Promise<null>;
   $v!: any;
-  
+
+  createProjectFormValid = true;
+  rules = [
+    (v: string) => !!v || `A name is required`,
+    (v: string) => v?.length > 1 || `Name should have a length >= 1`,
+  ];
+
   public get projects(): Record<string, string | number>[] {
     return this.shelters;
   }
@@ -118,6 +135,12 @@ export default class ProjectList extends Vue {
   mounted() {
     this.syncDB();
     this.getDB();
+  }
+
+  destroyed() {
+    this.closeDB().then(() => {
+      console.log("DESTROYED view shelter list, closing DB");
+    });
   }
 }
 </script>
