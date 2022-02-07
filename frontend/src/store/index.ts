@@ -7,6 +7,8 @@ import Vuex, {
 } from "vuex";
 
 import ConfigModule from "./ConfigModule";
+import ShelterItemModule from "./ShelterItemModule";
+import ShelterSustainabilityModule from "./ShelterSustainabilityModule";
 import Vue from "vue";
 import VuexPersistence from "vuex-persist";
 
@@ -136,6 +138,8 @@ const store: StoreOptions<RootState> = {
   actions,
   modules: {
     ConfigModule,
+    ShelterSustainabilityModule,
+    ShelterItemModule,
   },
   plugins: [
     new VuexPersistence({
@@ -159,4 +163,7 @@ const store: StoreOptions<RootState> = {
   ],
 };
 
-export default new Vuex.Store<RootState>(store);
+const newStore = new Vuex.Store<RootState>(store);
+
+
+export default newStore;

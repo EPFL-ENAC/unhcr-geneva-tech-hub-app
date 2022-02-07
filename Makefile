@@ -1,7 +1,6 @@
 install:
-	yarn install
-	yarn husky install
-	npx husky add .husky/commit-msg "npx --no -- commitlint --edit $1"
+	npm install
+	npx husky install
 	$(MAKE) -C frontend install
 
 run-frontend:

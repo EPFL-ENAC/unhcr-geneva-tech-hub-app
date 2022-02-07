@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <v-main>
-      <v-form>
+    <v-main v-if="project">
+      <form @submit.prevent="() => submitForm(project)">
         <v-row>
           <v-col>
             <v-text-field
@@ -105,34 +105,51 @@
             />
           </v-col>
         </v-row>
-      </v-form>
+        <v-row>
+          <v-col>
+            <v-btn type="submit"> Save changes </v-btn>
+          </v-col>
+        </v-row>
+      </form>
     </v-main>
   </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { mapState, mapActions } from "vuex";
+import { Shelter } from "../../../store/ShelterSustainabilityModule";
 
-@Component
+@Component({
+  computed: {
+    ...mapState("ShelterItemModule", ["shelter"]),
+  },
+  methods: {
+    ...mapActions("ShelterItemModule", ["updateDoc"]),
+  },
+})
 /** Project */
 export default class Step1 extends Vue {
+  shelter!: Shelter;
+  updateDoc!: (doc: Shelter) => void;
+
   risks: string[] = ["low", "medium", "high"];
-  project: Record<string, string | number> = {
-    id: "_1",
-    name: "project 1",
-    organisation: "UNHCR",
-    shelter_total: 100, // number of shelters
-    shelter_occupants: 5, // people
-    shelter_lifespan: 6, // years
-    setup_people: 2, // 2 people necessary for setup
-    setup_time: 10, // days,
-    location_name: "Paris",
-    location_country: "France", // iso code ?
-    location_distance_from_capital: 100, // km
-    location_lat: 2, // option
-    location_lon: 10, // option
-    risk_flood: "low", // high, medium, low
-    risk_seismic: "high", // high, medium, low
-  };
+  get project(): Shelter | null {
+    return { ...this.shelter };
+  }
+  set project(shelter: Shelter) {
+    console.log("setter shelter", shelter);
+    this.updateDoc(shelter);
+  }
+
+  public submitForm(value : Shelter): void {
+    if (value.name !== "") {
+      
+    console.log("setter shelter", value);
+    this.updateDoc(value);
+    } else {
+      console.error("please fill the new Name");
+    }
+  }
 }
 </script>

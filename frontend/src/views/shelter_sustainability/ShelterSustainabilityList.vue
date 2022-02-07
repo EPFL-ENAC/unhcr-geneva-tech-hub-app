@@ -5,7 +5,7 @@
         <h1>Existing projects</h1>
         <v-card
           v-for="project in projects"
-          :key="project.id"
+          :key="project._id"
           class="mx-auto"
           max-width="344"
           outlined
@@ -24,10 +24,13 @@
               text
               :to="{
                 name: 'ShelterSustainabilityEdit',
-                params: { id: project.id },
+                params: { id: project._id },
               }"
             >
               Edit project
+            </v-btn>
+            <v-btn outlined rounded @click="() => removeDoc(project._id)">
+              Delete project
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -36,22 +39,24 @@
         <h1>New Project</h1>
         <v-card class="mx-auto" max-width="344" outlined>
           <v-card-text>
-            <v-form>
+            <form @submit.prevent="submitForm">
               <v-text-field
+                tabindex="1"
                 v-model="newName"
                 name="name"
                 label="Name"
                 type="text"
               />
-            </v-form>
+            </form>
           </v-card-text>
           <v-card-actions>
-            <v-btn
+            <!-- <v-btn
               outlined
               rounded
               text
               :to="{ name: 'ProjectNew', query: { name: newName } }"
-            >
+            > Create new project url</v-btn> -->
+            <v-btn outlined rounded text type="submit" tabindex="2">
               Create new project
             </v-btn>
           </v-card-actions>
@@ -64,45 +69,55 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
-@Component
+import { mapState, mapActions } from "vuex";
+
+import { required } from "vuelidate/lib/validators";
+
+
+@Component({
+  computed: {
+    ...mapState("ShelterSustainabilityModule", {
+      shelters: "shelters",
+    }),
+  },
+
+  methods: {
+    ...mapActions("ShelterSustainabilityModule", [
+      "addDoc",
+      "removeDoc",
+      "syncDB",
+      "getDB",
+    ]),
+  },
+})
 /** ProjectList */
 export default class ProjectList extends Vue {
   newName = "";
-  projects: Record<string, string | number>[] = [
-    {
-      id: "_1",
-      name: "project 1",
-      organisation: "UNHCR",
-      shelter_total: 100, // number of shelters
-      shelter_occupants: 5, // people
-      shelter_lifespan: 6, // years
-      setup_people: 2, // 2 people necessary for setup
-      setup_time: 10, // days,
-      location_name: "Paris",
-      location_country: "France", // iso code ?
-      location_distance_from_capital: 100, // km
-      location_lat: 2, // option
-      location_lon: 10, // option
-      risk_flood: "low", // high, medium, low
-      risk_seismic: "high", // high, medium, low
-    },
-    {
-      id: "_2",
-      name: "project 2",
-      organisation: "WHO",
-      shelter_total: 300, // number of shelters
-      shelter_occupants: 2, // people
-      shelter_lifespan: 6, // years
-      setup_people: 2, // 2 people necessary for setup
-      setup_time: 2, // days,
-      location_name: "Berlin",
-      location_country: "USA", // iso code ?
-      location_distance_from_capital: 100, // km
-      location_lat: 2, // option
-      location_lon: 10, // option
-      risk_flood: "low", // high, medium, low
-      risk_seismic: "high", // high, medium, low
-    },
-  ];
+  shelters!: [];
+  addDoc!: (name: string) => null;
+  syncDB!: () => null;
+  getDB!: () => null;
+  $v!: any;
+  
+  public get projects(): Record<string, string | number>[] {
+    return this.shelters;
+  }
+  public submitForm(): void {
+    if (this.newName !== "") {
+      this.addDoc(this.newName);
+    } else {
+      console.error("please fill the new Name");
+    }
+  }
+
+  validations() {
+    return {
+      newName: { required },
+    };
+  }
+  mounted() {
+    this.syncDB();
+    this.getDB();
+  }
 }
 </script>

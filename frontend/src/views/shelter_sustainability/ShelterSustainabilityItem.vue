@@ -26,10 +26,20 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { mapState, mapActions } from "vuex";
+import {Route} from 'vue-router'
 
-@Component
+@Component({
+  methods: {
+    ...mapActions("ShelterItemModule", ["getDoc", "updateDoc", "syncDB"]),
+  },
+})
 /** ProjectItem */
 export default class ProjectItem extends Vue {
+  syncDB !: () => any;
+  getDoc !: (id: string) => any;
+  $route !: Route;
+
   readonly menuItems: MenuItem[] = [
     { text: "ProjectInformation", to: "ShelterSustainabilityStep1" },
     { text: "Geometry", to: "ShelterSustainabilityStep2" },
@@ -42,6 +52,11 @@ export default class ProjectItem extends Vue {
     { text: "Scorecard", to: "ShelterSustainabilityStep9" },
     { text: "Background", to: "ShelterSustainabilityStep10" },
   ];
+  mounted() {
+    console.log("mounted", this.$route.params.id)
+    this.syncDB();
+    this.getDoc(this.$route.params.id);
+  }
 }
 
 interface MenuItem {

@@ -28,4 +28,9 @@ services:
 volumes:
   couchdb_data:
     driver: local
+#    driver_opts:
+#      type: "none"
+#      o: "bind"
+#      device: "/var/couchdb"
+# default was /var/lib/docker/volumes/<project_name>_dbdata
 # https://hub.docker.com/r/bitnami/couchdb/
