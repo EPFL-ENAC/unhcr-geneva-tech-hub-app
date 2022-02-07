@@ -1,5 +1,5 @@
 <template>
-  <v-container class="project">
+  <v-sheet class="project">
     <v-row>
       <v-col>
         <v-tabs hide-slider>
@@ -16,7 +16,7 @@
         <router-view />
       </v-col>
     </v-row>
-  </v-container>
+  </v-sheet>
 </template>
 
 <script lang="ts">
@@ -42,12 +42,12 @@ export default class ProjectItem extends Vue {
   $route!: Route;
 
   readonly menuItems: MenuItem[] = [
-    { text: "Project Information", to: "ShelterSustainabilityStep1" },
+    { text: "About", to: "ShelterSustainabilityStep1" },
     { text: "Geometry", to: "ShelterSustainabilityStep2" },
     { text: "Materials", to: "ShelterSustainabilityStep3" },
     { text: "Labour", to: "ShelterSustainabilityStep4" },
-    { text: "Environmental Performance", to: "ShelterSustainabilityStep5" },
-    { text: "Technical Performance", to: "ShelterSustainabilityStep6" },
+    { text: "Environmental Perf", to: "ShelterSustainabilityStep5" },
+    { text: "Technical Perf", to: "ShelterSustainabilityStep6" },
     { text: "Habitability", to: "ShelterSustainabilityStep7" },
     { text: "Affordability", to: "ShelterSustainabilityStep8" },
     { text: "Scorecard", to: "ShelterSustainabilityStep9" },
@@ -71,7 +71,7 @@ interface MenuItem {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 a,
 a:link,
 a:visited,
@@ -79,5 +79,16 @@ a:hover,
 a:active {
   text-decoration: none;
   color: inherit;
+}
+
+</style>
+
+
+<style lang="scss" >
+// modify all v-slide-group
+.project {
+  .v-slide-group__content {
+    justify-content: center;
+  }
 }
 </style>
