@@ -2,11 +2,6 @@
   <v-container class="project">
     <v-row>
       <v-col>
-        <h1>This is the project item page {{ $route.name }}</h1>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
         <v-tabs hide-slider>
           <template v-for="item in menuItems">
             <v-tab :key="item.to" :to="{ name: item.to }">{{
@@ -47,12 +42,12 @@ export default class ProjectItem extends Vue {
   $route!: Route;
 
   readonly menuItems: MenuItem[] = [
-    { text: "ProjectInformation", to: "ShelterSustainabilityStep1" },
+    { text: "Project Information", to: "ShelterSustainabilityStep1" },
     { text: "Geometry", to: "ShelterSustainabilityStep2" },
     { text: "Materials", to: "ShelterSustainabilityStep3" },
     { text: "Labour", to: "ShelterSustainabilityStep4" },
-    { text: "EnvironmentalPerformance", to: "ShelterSustainabilityStep5" },
-    { text: "TechnicalPerformance", to: "ShelterSustainabilityStep6" },
+    { text: "Environmental Performance", to: "ShelterSustainabilityStep5" },
+    { text: "Technical Performance", to: "ShelterSustainabilityStep6" },
     { text: "Habitability", to: "ShelterSustainabilityStep7" },
     { text: "Affordability", to: "ShelterSustainabilityStep8" },
     { text: "Scorecard", to: "ShelterSustainabilityStep9" },
