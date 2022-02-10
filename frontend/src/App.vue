@@ -4,6 +4,14 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-app-bar-title v-text="title" />
       <v-spacer />
+      <v-btn
+        v-for="([title, linkk], i) in apps"
+        :key="i"
+        link
+        :to="{ name: linkk }"
+        >{{ title }}</v-btn
+      >
+      <v-spacer />
       <v-btn icon @click="$store.dispatch('ConfigModule/toggleTheme')">
         <v-icon v-text="'mdi-invert-colors'" />
       </v-btn>
@@ -95,23 +103,15 @@ export default Vue.extend({
 
   data: () => ({
     /** Window title */
-    title: "UNHCR C02 calculator", // use env variable,
+    title: "UNHCR-TSS", // use env variable,
     /** Drawer menu visibility */
     drawer: null,
     /** Snackbar visibility */
     snackbar: false,
     apps: [
-      [
-        "Green House Gaz Calculator",
-        "GreenHouseGaz",
-        "mdi-account-multiple-outline",
-      ],
-      [
-        "Shelter Sustainability Calculator",
-        "ShelterSustainability",
-        "mdi-cog-outline",
-      ],
-      // ["Holistic Energy Calculator", "holistic_energy","mdi-plus-outline"],
+      ["Green House Gaz", "GreenHouseGaz", "mdi-account-multiple-outline"],
+      ["Shelter Sustainability", "ShelterSustainability", "mdi-cog-outline"],
+      ["Energy", "holistic_energy", "mdi-plus-outline"],
     ],
   }),
 

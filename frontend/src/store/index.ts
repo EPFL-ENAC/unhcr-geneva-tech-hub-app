@@ -131,7 +131,8 @@ const actions: ActionTree<RootState, RootState> = {
 /** VuexStore */
 const store: StoreOptions<RootState> = {
   // https://vuex.vuejs.org/guide/strict.html#development-vs-production
-  strict: true,
+  // PouchDB is modified outside
+  strict: false,
   state,
   getters,
   mutations,
@@ -164,6 +165,5 @@ const store: StoreOptions<RootState> = {
 };
 
 const newStore = new Vuex.Store<RootState>(store);
-
 
 export default newStore;

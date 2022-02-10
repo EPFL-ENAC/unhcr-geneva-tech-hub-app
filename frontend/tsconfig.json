@@ -23,10 +23,11 @@
       ]
     },
     "lib": [
+      "ES2017.object",
       "esnext",
       "dom",
       "dom.iterable",
-      "scripthost"
+      "scripthost",
     ]
   },
   "include": [
