@@ -14,4 +14,7 @@ export default interface Shelter {
   location_lon: number;
   risk_flood: string;
   risk_seismic: string;
+  habitability: Habitability
 }
+
+export type Habitability = Record<string, Record<string, number>>

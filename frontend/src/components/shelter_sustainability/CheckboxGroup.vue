@@ -1,34 +1,35 @@
 <template>
   <v-sheet elevation="2" rounded>
-    <h2>{{ form.title }}</h2>
+    <h4 class="text-h4 pa-4 font-weight-medium">{{ form.title }}</h4>
     <v-divider />
 
     <v-container fluid>
       <v-row>
         <v-col cols="12">
-          <v-checkbox
-            v-for="(input, $index) in form.inputs"
-            :input-value="checkbox[input._id]"
-            @change="(v) => updateValue(input._id, v)"
-            :key="$index"
-            hide-details
-          >
-            <template v-slot:label>
-              <v-row>
-                <v-col cols="10">{{ input.label }}</v-col>
-                <v-col cols="2">
-                  <v-expansion-panels v-if="input.description">
-                    <v-expansion-panel>
-                      <v-expansion-panel-header>?</v-expansion-panel-header>
-                      <v-expansion-panel-content>
-                        {{ input.description }}
-                      </v-expansion-panel-content>
-                    </v-expansion-panel>
-                  </v-expansion-panels>
-                </v-col>
-              </v-row>
-            </template>
-          </v-checkbox>
+          <v-expansion-panels accordion :focusable="false">
+            <v-expansion-panel
+              :readonly="!input.description"
+              v-for="(input, $index) in form.inputs"
+              :key="$index"
+            >
+              <v-expansion-panel-header :hide-actions="!input.description">
+                <v-checkbox
+                  :input-value="checkbox[input._id]"
+                  @mousedown.stop.prevent
+                  @click.stop.prevent
+                  @change="(v) => updateValue(input._id, v)"
+                  hide-details
+                >
+                  <template v-slot:label>
+                    {{ input.label }}
+                  </template>
+                </v-checkbox>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content v-if="!!input.description">
+                {{ input.description }}
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
         </v-col>
       </v-row>
     </v-container>
@@ -55,10 +56,18 @@ export default class CheckboxGroup extends Vue {
   form!: ShelterForm;
 
   get checkbox(): Record<string, boolean> {
-    return Object.entries(this.value).reduce((acc, [key, value]) => {
-      acc[key] = !!value;
-      return acc;
-    }, {} as Record<string, boolean>);
+    // return Object.entries(this.value ?? {}).reduce((acc, [key, value]) => {
+    //   acc[key] = !!value;
+    //   return acc;
+    // }, {} as Record<string, boolean>);
+
+    const newValue = {} as Record<string, boolean>;
+    const oldValue = this.value ?? {};
+    // reset all previous values
+    this.form.inputs.forEach((input) => {
+      newValue[input._id] = !!oldValue[input._id];
+    });
+    return newValue;
   }
 
   updateValue(updatedKey: string, updatedValue: boolean) {
