@@ -66,6 +66,12 @@ function generateNewShelter(name: string) {
         input18: 0,
       },
     },
+    technical_performance: {
+      "1_hazard": {},
+      "2_internal_comfort": {},
+      "3_safety_and_security": {},
+      "4_construction_techniques": {},
+    }
   };
 }
 /** Getters */

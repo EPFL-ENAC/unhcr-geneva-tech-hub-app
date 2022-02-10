@@ -14,7 +14,28 @@ export default interface Shelter {
   location_lon: number;
   risk_flood: string;
   risk_seismic: string;
-  habitability: Habitability
+  habitability: Habitability;
+  technical_performance: TechnicalPerformance;
 }
 
-export type Habitability = Record<string, Record<string, number>>
+/*
+performance: {
+      "key1": { input1: 0, input2: 0, input3: 0, input4: 0 },
+      "key2": { input5: 0, input6: 0, input7: 0 },
+}
+*/
+export type Score = Record<string, number>
+export type ShelterPerformance = Record<string, Score>;
+
+
+/*
+technical performance: {
+  "key1": { input1: 0, input2: 0, input3: 0, input4: 0 },
+  "key2": {
+    "key2_subkey_A": { input_a_1: 0, input_a_2: 0, input_a_3: 0, input_a_4: 0 },
+    "key2_subkey_B": { input_a_5: 0, input_a_6: 0, input_a_7: 0 },
+  },
+}
+*/
+export type Habitability = ShelterPerformance;
+export type TechnicalPerformance = Record<string, Score|ShelterPerformance>;

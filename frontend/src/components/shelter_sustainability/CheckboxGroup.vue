@@ -1,6 +1,6 @@
 <template>
   <v-sheet elevation="2" rounded>
-    <h4 class="text-h4 pa-4 font-weight-medium">{{ form.title }}</h4>
+    <h4 class="text-h5 pa-4 font-weight-medium">{{ form.title }}</h4>
     <v-divider />
 
     <v-container fluid>
@@ -39,6 +39,9 @@
 <script lang="ts">
 import ShelterForm from "./ShelterForm";
 import { Component, Vue } from "vue-property-decorator";
+import { ShelterFormInput } from "@/components/shelter_sustainability/ShelterForm";
+
+import { Score } from "@/store/ShelterInterface";
 
 @Component({
   props: {
@@ -46,22 +49,17 @@ import { Component, Vue } from "vue-property-decorator";
       type: Object as () => ShelterForm,
     },
     value: {
-      type: Object as () => Record<string, number>,
+      type: Object as () => Score,
     },
   },
 })
 /** CheckboxGroup */
 export default class CheckboxGroup extends Vue {
-  value!: Record<string, number>;
+  value!: Score;
   form!: ShelterForm;
 
-  get checkbox(): Record<string, boolean> {
-    // return Object.entries(this.value ?? {}).reduce((acc, [key, value]) => {
-    //   acc[key] = !!value;
-    //   return acc;
-    // }, {} as Record<string, boolean>);
-
-    const newValue = {} as Record<string, boolean>;
+  get checkbox(): CheckboxScore {
+    const newValue = {} as CheckboxScore;
     const oldValue = this.value ?? {};
     // reset all previous values
     this.form.inputs.forEach((input) => {
@@ -71,11 +69,15 @@ export default class CheckboxGroup extends Vue {
   }
 
   updateValue(updatedKey: string, updatedValue: boolean) {
+    // this.form.inputs.forEach((input: ShelterFormInput) => {
+    //   const isChecked = input._id === updatedKey ? updatedValue : this.value[];
+    //   newValue[input._id] = isChecked ? input.score ?? 0;
+    // })
     const newValue = Object.entries(this.checkbox).reduce(
       (acc, [key, value]) => {
         const isChecked = key === updatedKey ? updatedValue : value;
         acc[key] = isChecked
-          ? this.form.inputs.find((el) => el._id === key)?.score ?? 0
+          ? this.form.inputs.find((el: ShelterFormInput) => el._id === key)?.score ?? 0
           : 0;
         return acc;
       },
@@ -84,4 +86,6 @@ export default class CheckboxGroup extends Vue {
     this.$emit("input", newValue);
   }
 }
+
+type CheckboxScore = Record<string, boolean>;
 </script>

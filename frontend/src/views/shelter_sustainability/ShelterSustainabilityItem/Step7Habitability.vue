@@ -50,7 +50,7 @@ import RadioGroup from "@/components/shelter_sustainability/RadioGroup.vue";
 
 import { mapState, mapActions } from "vuex";
 import Shelter from "@/store/ShelterInterface";
-import { Habitability } from "@/store/ShelterInterface";
+import { Habitability, Score } from "@/store/ShelterInterface";
 @Component({
   components: {
     RadioGroup,
@@ -75,7 +75,7 @@ export default class Step7 extends Vue {
       .reduce((acc, z) => acc + z, 0);
   }
 
-  public updateHabitability(formId: string, value: Record<string, number>) {
+  public updateHabitability(formId: string, value: Score) {
     this.habitability[formId] = value;
     // since this.habitability is a reference to this.shelter it works
     this.$store.commit("ShelterItemModule/SET_SHELTER", this.shelter);
