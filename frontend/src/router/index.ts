@@ -31,6 +31,10 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
   {
+    path: "/holistic_energy",
+    name: "holistic_energy",
+  },
+  {
     path: "/green_house_gaz",
     name: "GreenHouseGaz",
     component: () =>
@@ -98,7 +102,7 @@ const routes: Array<RouteConfig> = [
             meta: { step: 1 },
             component: () => {
               return import(
-                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/ProjectStep1.vue"
+                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step1ProjectInformation.vue"
               );
             },
           },
@@ -108,7 +112,7 @@ const routes: Array<RouteConfig> = [
             meta: { step: 2 },
             component: () =>
               import(
-                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/ProjectStep2.vue"
+                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step2Geometry.vue"
               ),
           },
           {
@@ -117,7 +121,7 @@ const routes: Array<RouteConfig> = [
             meta: { step: 3 },
             component: () =>
               import(
-                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/ProjectStep3.vue"
+                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step3Materials.vue"
               ),
           },
           {
@@ -126,7 +130,7 @@ const routes: Array<RouteConfig> = [
             meta: { step: 4 },
             component: () =>
               import(
-                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/ProjectStep4.vue"
+                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step4Labour.vue"
               ),
           },
           {
@@ -135,7 +139,7 @@ const routes: Array<RouteConfig> = [
             meta: { step: 5 },
             component: () =>
               import(
-                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/ProjectStep5.vue"
+                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step5EnvironmentalPerformance.vue"
               ),
           },
           {
@@ -144,7 +148,7 @@ const routes: Array<RouteConfig> = [
             meta: { step: 6 },
             component: () =>
               import(
-                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/ProjectStep6.vue"
+                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step6TechnicalPerformance.vue"
               ),
           },
           {
@@ -153,7 +157,7 @@ const routes: Array<RouteConfig> = [
             meta: { step: 7 },
             component: () =>
               import(
-                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/ProjectStep7.vue"
+                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step7Habitability.vue"
               ),
           },
           {
@@ -162,7 +166,7 @@ const routes: Array<RouteConfig> = [
             meta: { step: 8 },
             component: () =>
               import(
-                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/ProjectStep8.vue"
+                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step8Affordability.vue"
               ),
           },
           {
@@ -171,7 +175,7 @@ const routes: Array<RouteConfig> = [
             meta: { step: 9 },
             component: () =>
               import(
-                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/ProjectStep9.vue"
+                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step9ScoreCard.vue"
               ),
           },
           {
@@ -180,7 +184,7 @@ const routes: Array<RouteConfig> = [
             meta: { step: 9 },
             component: () =>
               import(
-                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/ProjectStep10.vue"
+                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step10BackgroundData.vue"
               ),
           },
         ],

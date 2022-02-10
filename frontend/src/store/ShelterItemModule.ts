@@ -9,9 +9,9 @@ import {
 
 import PouchDB from "pouchdb";
 import { RootState } from ".";
-import { Shelter } from "./ShelterSustainabilityModule";
+import Shelter from "./ShelterInterface";
 
-export interface ShelterState {
+interface ShelterState {
   shelter: Shelter | null;
   localCouch: PouchDB.Database | null;
   sync: PouchDB.Replication.Sync<Shelter> | null;
@@ -59,7 +59,7 @@ const mutations: MutationTree<ShelterState> = {
     if (state.localCouch) {
       state.localCouch
         .put(value)
-        .then((response: any) => {
+        .then((response: unknown) => {
           console.log("update doc is done", response);
         })
         .then(function () {

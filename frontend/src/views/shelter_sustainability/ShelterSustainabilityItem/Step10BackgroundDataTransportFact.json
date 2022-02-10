@@ -1,0 +1,26 @@
+[
+    {
+      "Category": "Sea",
+      "Type": "Container ship - Ocean",
+      "Low\nkgCO2/tonne-km": "0,01",
+      "High\nkgCO2/tonne-km": "0,025",
+      "Mid\nkgCO2/tonne-km": "0,0175",
+      "Source": "Sims R., et al., 2014: Transport. In: Climate Change 2014: Mitigation of Climate Change. Contribution of Working Group III to the Fifth Assessment Report of the Intergovernmental Panel on Climate Change [Edenhofer, O., et al. (eds.)]. Cambridge University Press, pg610"
+    },
+    {
+      "Category": "Road",
+      "Type": "Heavy Duty Vehicle (HDV) - medium",
+      "Low\nkgCO2/tonne-km": "0,17",
+      "High\nkgCO2/tonne-km": "0,25",
+      "Mid\nkgCO2/tonne-km": "0,21",
+      "Source": "Sims R., et al., 2014: Transport. In: Climate Change 2014: Mitigation of Climate Change. Contribution of Working Group III to the Fifth Assessment Report of the Intergovernmental Panel on Climate Change [Edenhofer, O., et al. (eds.)]. Cambridge University Press, pg611"
+    },
+    {
+      "Category": "Air",
+      "Type": "Long haul cargo aircraft",
+      "Low\nkgCO2/tonne-km": "0,375",
+      "High\nkgCO2/tonne-km": "0,95",
+      "Mid\nkgCO2/tonne-km": "0,6625",
+      "Source": "Sims R., et al., 2014: Transport. In: Climate Change 2014: Mitigation of Climate Change. Contribution of Working Group III to the Fifth Assessment Report of the Intergovernmental Panel on Climate Change [Edenhofer, O., et al. (eds.)]. Cambridge University Press, pg612"
+    }
+  ]

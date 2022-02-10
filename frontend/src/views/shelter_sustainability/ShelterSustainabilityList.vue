@@ -2,42 +2,47 @@
   <v-container class="project">
     <v-row>
       <v-col>
-        <h1>Existing projects</h1>
-        <v-card
-          v-for="project in projects"
-          :key="project._id"
-          class="mx-auto"
-          max-width="344"
-          outlined
-        >
-          <v-card-title>
-            {{ project.name }}
-          </v-card-title>
-          <v-card-text>
-            <span>{{ project.location_name }}</span>
-          </v-card-text>
-
-          <v-card-actions>
-            <v-btn
-              outlined
-              rounded
-              text
-              :to="{
-                name: 'ShelterSustainabilityEdit',
-                params: { id: project._id },
-              }"
-            >
-              Edit project
-            </v-btn>
-            <v-btn outlined rounded @click="() => removeDoc(project._id)">
-              Delete project
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+        <h1 style="display: flex; justify-content: center">
+          Projects
+        </h1>
       </v-col>
       <v-col>
-        <h1>New Project</h1>
+        <h1 style="display: flex; justify-content: center">New Project</h1>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-row v-for="project in projects" :key="project._id">
+          <v-col>
+            <v-card class="mx-auto" max-width="344" outlined>
+              <v-card-title>
+                {{ project.name }}
+              </v-card-title>
+              <v-card-text>
+                <span>{{ project.location_name }}</span>
+              </v-card-text>
 
+              <v-card-actions>
+                <v-btn
+                  outlined
+                  rounded
+                  text
+                  :to="{
+                    name: 'ShelterSustainabilityEdit',
+                    params: { id: project._id },
+                  }"
+                >
+                  Edit project
+                </v-btn>
+                <v-btn outlined rounded @click="() => removeDoc(project._id)">
+                  Delete project
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col>
         <v-form @submit.prevent="submitForm" v-model="createProjectFormValid">
           <v-card class="mx-auto" max-width="344" outlined>
             <v-card-text>

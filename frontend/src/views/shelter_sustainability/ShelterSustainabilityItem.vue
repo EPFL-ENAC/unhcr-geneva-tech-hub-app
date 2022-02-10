@@ -2,11 +2,11 @@
   <v-sheet class="project">
     <v-row>
       <v-col>
-        <v-tabs hide-slider>
+        <v-tabs centered height="30px" :show-arrows="true" elevation="2">
           <template v-for="item in menuItems">
-            <v-tab :key="item.to" :to="{ name: item.to }">{{
-              item.text
-            }}</v-tab>
+            <v-tab :key="item.to" :to="{ name: item.to }">
+              {{ item.text }}
+            </v-tab>
           </template>
         </v-tabs>
       </v-col>
@@ -80,15 +80,17 @@ a:active {
   text-decoration: none;
   color: inherit;
 }
-
 </style>
 
-
-<style lang="scss" >
+<style lang="scss">
 // modify all v-slide-group
 .project {
   .v-slide-group__content {
     justify-content: center;
   }
+}
+
+.project-shelter__header {
+  color: var(--c-shelter);
 }
 </style>

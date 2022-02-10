@@ -1,12 +1,13 @@
-C02 COST: 
+C02 COST INPUT: 
     Energy
         - cooking
         - lighting
         - facilities
-    Water
+    WASH (Water and sanitation hygien)
         - Boreholes
         - Trucking
         - Waste collection
+        - Sanitation (dark water processing)
 
     Shelter (Very similiar to André)
         - production
