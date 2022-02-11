@@ -1,28 +1,42 @@
 <template>
-  <v-container>
+  <v-container v-if="this.shelter">
+    <!-- todo: replace v-if by loading -->
     <v-row>
       <v-col>
-        <h1 class="project-shelter__header">Habitability</h1>
+        <h2 class="project-shelter__header text-h2">Habitability</h2>
+      </v-col>
+      <v-col class="d-flex justify-center align-end">
+        <p>score: {{ score }}</p>
       </v-col>
     </v-row>
     <v-row>
-      <v-divider></v-divider>
+      <v-col>
+        <v-divider></v-divider>
+      </v-col>
     </v-row>
     <v-spacer />
-    <v-form>
-      <p>score: {{ score }}</p>
+    <v-form
+      @submit.prevent="() => submitForm(habitability)"
+    >
       <v-row v-for="(form, $index) in forms" :key="$index">
         <v-col>
           <radio-group
             :form="form"
-            v-model="habitability[form._id]"
+            :value="habitability[form._id]"
+            @input="(v) => updateHabitability(form._id, v)"
             v-if="form.type === 'radioGroup'"
           ></radio-group>
           <checkbox-group
             :form="form"
-            v-model="habitability[form._id]"
+            :value="habitability[form._id]"
+            @input="(v) => updateHabitability(form._id, v)"
             v-else-if="form.type === 'checkboxGroup'"
           ></checkbox-group>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-btn type="submit"> Save changes </v-btn>
         </v-col>
       </v-row>
     </v-form>
@@ -36,7 +50,7 @@ import RadioGroup from "@/components/shelter_sustainability/RadioGroup.vue";
 
 import { mapState, mapActions } from "vuex";
 import Shelter from "@/store/ShelterInterface";
-
+import { Habitability, Score } from "@/store/ShelterInterface";
 @Component({
   components: {
     RadioGroup,
@@ -54,23 +68,25 @@ export default class Step7 extends Vue {
   shelter!: Shelter;
   updateDoc!: (doc: Shelter) => void;
 
-  habitability = {
-    "1_floor": { input1: 0, input2: 0, input3: 0, input4: 1 },
-    "2_accessibility": { input5: 1, input6: 0, input7: 0 },
-    "3_privacy": { input8: 0, input9: 0, input10: 0, input11: 0 },
-    "4_artificial_lighting": { input12: 1, input13: 0 },
-    "5_complimentary_facilities": {
-      input14: 0,
-      input15: 0,
-      input16: 0,
-      input17: 1,
-      input18: 0,
-    },
-  };
   get score() {
+    // TODO: externalize score
     return Object.values(this.habitability)
       .map((el) => Object.values(el).reduce((acc, y) => acc + y, 0))
       .reduce((acc, z) => acc + z, 0);
+  }
+
+  public updateHabitability(formId: string, value: Score) {
+    this.habitability[formId] = value;
+    // since this.habitability is a reference to this.shelter it works
+    this.$store.commit("ShelterItemModule/SET_SHELTER", this.shelter);
+  }
+  get habitability() {
+    return this.shelter.habitability;
+  }
+  public submitForm(value: Habitability): void {
+    this.shelter.habitability = value;
+    // validation should be here!
+    this.updateDoc(this.shelter);
   }
 
   forms = [

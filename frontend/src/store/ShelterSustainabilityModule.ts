@@ -53,6 +53,25 @@ function generateNewShelter(name: string) {
     location_lon: shuffle(180), // option
     risk_flood: shuffleArray(["high", "medium", "low"]),
     risk_seismic: shuffleArray(["high", "medium", "low"]),
+    habitability: {
+      "1_floor": { input1: 0, input2: 0, input3: 0, input4: 0 },
+      "2_accessibility": { input5: 0, input6: 0, input7: 0 },
+      "3_privacy": { input8: 0, input9: 0, input10: 0, input11: 0 },
+      "4_artificial_lighting": { input12: 0, input13: 0 },
+      "5_complimentary_facilities": {
+        input14: 0,
+        input15: 0,
+        input16: 0,
+        input17: 0,
+        input18: 0,
+      },
+    },
+    technical_performance: {
+      "1_hazard": {},
+      "2_internal_comfort": {},
+      "3_safety_and_security": {},
+      "4_construction_techniques": {},
+    }
   };
 }
 /** Getters */

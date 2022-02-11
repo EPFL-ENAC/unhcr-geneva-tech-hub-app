@@ -148,10 +148,6 @@ export default class Step1 extends Vue {
   get project(): Shelter {
     return { ...this.shelter };
   }
-  set project(shelter: Shelter) {
-    console.log("setter shelter", shelter);
-    this.updateDoc(shelter);
-  }
 
   public submitForm(value: Shelter): void {
     if (value.name !== "") {

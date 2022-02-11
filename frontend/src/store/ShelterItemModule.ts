@@ -53,28 +53,6 @@ const mutations: MutationTree<ShelterState> = {
   SET_SHELTER(state, value) {
     state.shelter = value;
   },
-  UPDATE_DOC(state, value) {
-    console.log("running UPDATE_DOC mutation");
-    state.shelter = value;
-    if (state.localCouch) {
-      state.localCouch
-        .put(value)
-        .then((response: unknown) => {
-          console.log("update doc is done", response);
-        })
-        .then(function () {
-          // DANGER!
-          // From now on, revision 1 is no longer available.
-        })
-        .catch(function (err: Error) {
-          // handle errors
-          // TODO: handle errors properly with notification and tool
-          console.log(err);
-        });
-    } else {
-      throw new Error("localCouch is null: should have been initialized");
-    }
-  },
   SET_SYNC(state, value) {
     state.sync = value;
   },
@@ -107,7 +85,26 @@ const actions: ActionTree<ShelterState, RootState> = {
     context.commit("CLOSE_SYNC");
   },
   updateDoc: (context: ActionContext<ShelterState, RootState>, value) => {
-    context.commit("UPDATE_DOC", value);
+    context.commit("SET_SHELTER", value);
+    console.log("running UPDATE_DOC mutation");
+    if (context.state.localCouch) {
+      context.state.localCouch
+        .put(value)
+        .then((response: unknown) => {
+          console.log("update doc is done", response);
+        })
+        .then(function () {
+          // DANGER!
+          // From now on, revision 1 is no longer available.
+        })
+        .catch(function (err: Error) {
+          // handle errors
+          // TODO: handle errors properly with notification and tool
+          console.log(err);
+        });
+    } else {
+      throw new Error("localCouch is null: should have been initialized");
+    }
   },
   getDoc: (context: ActionContext<ShelterState, RootState>, id) => {
     context.state.localCouch
