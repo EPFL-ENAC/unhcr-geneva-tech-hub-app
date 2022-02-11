@@ -1,22 +1,25 @@
 <template>
-  <v-sheet class="project">
-    <v-row>
-      <v-col>
-        <v-tabs centered height="30px" :show-arrows="true" elevation="2">
-          <template v-for="item in menuItems">
-            <v-tab :key="item.to" :to="{ name: item.to }">
-              {{ item.text }}
-            </v-tab>
-          </template>
-        </v-tabs>
-      </v-col>
-    </v-row>
+  <v-container fluid class="project">
+    <v-tabs
+      class="fixed-tabs-bar"
+      centered
+      background-color="white"
+      grow
+      :show-arrows="true"
+      elevation="2"
+    >
+      <template v-for="item in menuItems">
+        <v-tab :key="item.to" :to="{ name: item.to }">
+          {{ item.text }}
+        </v-tab>
+      </template>
+    </v-tabs>
     <v-row>
       <v-col>
         <router-view />
       </v-col>
     </v-row>
-  </v-sheet>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -85,6 +88,7 @@ a:active {
 <style lang="scss">
 // modify all v-slide-group
 .project {
+  padding: 0; // cancel padding from container to allow sticky
   .v-slide-group__content {
     justify-content: center;
   }
@@ -93,5 +97,12 @@ a:active {
 .project-shelter__header,
 .project-shelter__h3 {
   color: var(--c-shelter);
+}
+
+.fixed-tabs-bar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 4rem; // 16px*4
+  z-index: 2;
 }
 </style>

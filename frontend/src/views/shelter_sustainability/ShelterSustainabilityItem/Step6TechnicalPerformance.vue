@@ -22,8 +22,6 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import CheckboxGroup from "@/components/shelter_sustainability/CheckboxGroup.vue";
-import RadioGroup from "@/components/shelter_sustainability/RadioGroup.vue";
 import FormGroup from "@/components/shelter_sustainability/FormGroup.vue";
 import { mapState, mapActions } from "vuex";
 import Shelter from "@/store/ShelterInterface";
@@ -35,8 +33,6 @@ import {
 
 @Component({
   components: {
-    RadioGroup,
-    CheckboxGroup,
     FormGroup,
   },
   computed: {
@@ -51,33 +47,14 @@ export default class Step6 extends Vue {
   shelter!: Shelter;
   updateDoc!: (doc: Shelter) => void;
 
-  computeScore(levels: (number | Score | ShelterPerformance)[]): number {
-    return (
-      levels.reduce(
-        (acc: number, level: number | Score | ShelterPerformance) => {
-          if (typeof level === "number") {
-            return acc + level;
-          }
-          return acc + this.computeScore(Object.values(level));
-        },
-        0 as number
-      ) ?? 0
-    );
+  get technical_performance() {
+    return this.shelter.technical_performance;
   }
-
-  get score() {
-    // TODO: externalize score
-    const levels = Object.values(this.technical_performance);
-    return this.computeScore(levels);
-  }
-
   public update(value: TechnicalPerformance) {
     this.shelter.technical_performance = value;
     this.$store.commit("ShelterItemModule/SET_SHELTER", this.shelter);
   }
-  get technical_performance() {
-    return this.shelter.technical_performance;
-  }
+
   public submitForm(value: TechnicalPerformance): void {
     this.update(value);
     this.updateDoc(this.shelter);

@@ -1,42 +1,19 @@
 <template>
   <v-container v-if="this.shelter">
-    <!-- todo: replace v-if by loading -->
-    <v-row>
-      <v-col>
-        <h2 class="project-shelter__header text-h2">Habitability</h2>
-      </v-col>
-      <v-col class="d-flex justify-center align-end">
-        <p>score: {{ score }}</p>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-divider></v-divider>
-      </v-col>
-    </v-row>
-    <v-spacer />
-    <v-form
-      @submit.prevent="() => submitForm(habitability)"
-    >
-      <v-row v-for="(form, $index) in forms" :key="$index">
+    <v-form @submit.prevent="() => submitForm(habitability)">
+      <v-row>
         <v-col>
-          <radio-group
-            :form="form"
-            :value="habitability[form._id]"
-            @input="(v) => updateHabitability(form._id, v)"
-            v-if="form.type === 'radioGroup'"
-          ></radio-group>
-          <checkbox-group
-            :form="form"
-            :value="habitability[form._id]"
-            @input="(v) => updateHabitability(form._id, v)"
-            v-else-if="form.type === 'checkboxGroup'"
-          ></checkbox-group>
+          <component
+            :is="habitabilityForm.type"
+            :form="habitabilityForm"
+            :value="habitability"
+            @input="(v) => update(v)"
+          ></component>
         </v-col>
       </v-row>
       <v-row>
         <v-col>
-          <v-btn type="submit"> Save changes </v-btn>
+          <v-btn type="submit">Save changes</v-btn>
         </v-col>
       </v-row>
     </v-form>
@@ -45,16 +22,16 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import CheckboxGroup from "@/components/shelter_sustainability/CheckboxGroup.vue";
-import RadioGroup from "@/components/shelter_sustainability/RadioGroup.vue";
+import FormGroup from "@/components/shelter_sustainability/FormGroup.vue";
 
 import { mapState, mapActions } from "vuex";
 import Shelter from "@/store/ShelterInterface";
-import { Habitability, Score } from "@/store/ShelterInterface";
+import { Habitability } from "@/store/ShelterInterface";
+
+
 @Component({
   components: {
-    RadioGroup,
-    CheckboxGroup,
+    FormGroup
   },
   computed: {
     ...mapState("ShelterItemModule", ["shelter"]),
@@ -68,28 +45,24 @@ export default class Step7 extends Vue {
   shelter!: Shelter;
   updateDoc!: (doc: Shelter) => void;
 
-  get score() {
-    // TODO: externalize score
-    return Object.values(this.habitability)
-      .map((el) => Object.values(el).reduce((acc, y) => acc + y, 0))
-      .reduce((acc, z) => acc + z, 0);
-  }
 
-  public updateHabitability(formId: string, value: Score) {
-    this.habitability[formId] = value;
-    // since this.habitability is a reference to this.shelter it works
-    this.$store.commit("ShelterItemModule/SET_SHELTER", this.shelter);
-  }
   get habitability() {
     return this.shelter.habitability;
   }
-  public submitForm(value: Habitability): void {
+  public update(value: Habitability) {
     this.shelter.habitability = value;
-    // validation should be here!
-    this.updateDoc(this.shelter);
+    this.$store.commit("ShelterItemModule/SET_SHELTER", this.shelter);
   }
 
-  forms = [
+  public submitForm(value: Habitability): void {
+    this.update(value);
+    this.updateDoc(this.shelter);
+  }
+  habitabilityForm = {
+    _id: "habitability",
+    title: "Habitability",
+    type: "formGroup",
+    children: [
     {
       _id: "1_floor",
       title: "Floor Area",
@@ -228,6 +201,7 @@ export default class Step7 extends Vue {
         },
       ],
     },
-  ];
+  ]
+  }
 }
 </script>

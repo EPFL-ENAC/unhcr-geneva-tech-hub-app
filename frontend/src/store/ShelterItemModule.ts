@@ -35,6 +35,28 @@ const getters: GetterTree<ShelterState, RootState> = {
   shelter: (s): Shelter | null => s.shelter,
 };
 
+
+function computeScore(levels: (number | Score | ShelterPerformance)[]): number {
+  return (
+    levels.reduce(
+      (acc: number, level: number | Score | ShelterPerformance) => {
+        if (typeof level === "number") {
+          return acc + level;
+        }
+        return acc + this.computeScore(Object.values(level));
+      },
+      0 as number
+    ) ?? 0
+  );
+}
+
+function score() {
+  // TODO: externalize score
+  const levels = Object.values(this.technical_performance);
+  return this.computeScore(levels);
+}
+
+
 /** Mutations */
 const mutations: MutationTree<ShelterState> = {
   INIT_SYNC(state) {
