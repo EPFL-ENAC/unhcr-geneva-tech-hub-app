@@ -79,20 +79,20 @@ export default class Step6 extends Vue {
   shelter!: Shelter;
   updateDoc!: (doc: Shelter) => void;
 
-  computeScore(levels: number[] | Score[]) {
-    return levels.reduce((acc: number, level: number | Score) => {
-      if (typeof level === "object") {
-        return acc + this.computeScore(Object.values(level));
-      } else {
+  computeScore(levels: (number|Score|ShelterPerformance)[]): number {
+    return levels.reduce((acc: number, level: number | Score | ShelterPerformance) => {
+      if (typeof level === "number") {
         return acc + level;
       }
-    }, 0 as number);
+      return acc + this.computeScore(Object.values(level));
+    }, 0 as number) ?? 0;
   }
 
   get score() {
     // TODO: externalize score
     // does not work because of sublevel FIXME
-    return this.computeScore(Object.values(this.technical_performance));
+    const levels = Object.values(this.technical_performance);
+    return this.computeScore(levels);
   }
 
   public updateTechnicalPerformance(
