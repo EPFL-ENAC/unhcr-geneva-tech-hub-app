@@ -210,7 +210,7 @@ export default class Step6 extends Vue {
               },
               {
                 _id: "input_2b_2",
-                score: 1,
+                score: 0,
                 label:
                   "Wall comprised of single layer of lightweight material (CGI, etc.)",
               },
@@ -222,18 +222,18 @@ export default class Step6 extends Vue {
               },
               {
                 _id: "input_2b_4",
-                score: 1,
+                score: 2,
                 label: "Wall comprised of multiple layers with air gap between",
               },
               {
                 _id: "input_2b_5",
-                score: 1,
+                score: 3,
                 label:
                   "Wall comprised of multiple layers with insulation material between",
               },
               {
                 _id: "input_2b_6",
-                score: 1,
+                score: 0,
                 label:
                   "Roof comprised of single layer of lightweight material (CGI, etc.)",
               },
@@ -244,7 +244,7 @@ export default class Step6 extends Vue {
               },
               {
                 _id: "input_2b_8",
-                score: 1,
+                score: 2,
                 label:
                   "Roof comprised of multiple layers with insulation material between",
               },

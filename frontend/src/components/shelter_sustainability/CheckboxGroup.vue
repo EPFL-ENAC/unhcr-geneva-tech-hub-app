@@ -1,37 +1,57 @@
 <template>
   <v-sheet elevation="2" rounded>
-    <h4 class="text-h5 pa-4 font-weight-medium">{{ form.title }}</h4>
-    <v-divider />
-
     <v-container fluid>
       <v-row>
-        <v-col cols="12">
-          <v-expansion-panels accordion :focusable="false">
-            <v-expansion-panel
-              :readonly="!input.description"
-              v-for="(input, $index) in form.inputs"
-              :key="$index"
+        <v-col>
+          <component
+            :is="`h${depth + 2}`"
+            :class="`text-h${depth + 3} project-shelter__h${
+              depth + 3
+            }  font-weight-medium`"
+            >{{ form.title }}</component
+          >
+        </v-col>
+        <v-col class="d-flex justify-end align-center">
+          <v-btn icon @click="toggle">
+            <v-icon :class="{ 'chevron-rotate': !show }"
+              >mdi-chevron-down</v-icon
             >
-              <v-expansion-panel-header :hide-actions="!input.description">
-                <v-checkbox
-                  :input-value="checkbox[input._id]"
-                  @mousedown.stop.prevent
-                  @click.stop.prevent
-                  @change="(v) => updateValue(input._id, v)"
-                  hide-details
-                >
-                  <template v-slot:label>
-                    {{ input.label }}
-                  </template>
-                </v-checkbox>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content v-if="!!input.description">
-                {{ input.description }}
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
+          </v-btn>
         </v-col>
       </v-row>
+      <v-row v-show="show">
+        <v-divider />
+      </v-row>
+      <v-expand-transition>
+        <v-row v-show="show">
+          <v-col cols="12">
+            <v-expansion-panels accordion :focusable="false">
+              <v-expansion-panel
+                :readonly="!input.description"
+                v-for="(input, $index) in form.inputs"
+                :key="$index"
+              >
+                <v-expansion-panel-header :hide-actions="!input.description">
+                  <v-checkbox
+                    :input-value="checkbox[input._id]"
+                    @mousedown.stop.prevent
+                    @click.stop.prevent
+                    @change="(v) => updateValue(input._id, v)"
+                    hide-details
+                  >
+                    <template v-slot:label>
+                      {{ input.label }}
+                    </template>
+                  </v-checkbox>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content v-if="!!input.description">
+                  {{ input.description }}
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </v-col>
+        </v-row>
+      </v-expand-transition>
     </v-container>
   </v-sheet>
 </template>
@@ -51,12 +71,22 @@ import { Score } from "@/store/ShelterInterface";
     value: {
       type: Object as () => Score,
     },
+    depth: {
+      type: Number,
+      default: 0,
+    },
   },
 })
 /** CheckboxGroup */
 export default class CheckboxGroup extends Vue {
   value!: Score;
   form!: ShelterForm;
+
+  show = true;
+
+  public toggle() {
+    this.show = !this.show;
+  }
 
   get checkbox(): CheckboxScore {
     const newValue = {} as CheckboxScore;
@@ -77,7 +107,8 @@ export default class CheckboxGroup extends Vue {
       (acc, [key, value]) => {
         const isChecked = key === updatedKey ? updatedValue : value;
         acc[key] = isChecked
-          ? this.form.inputs.find((el: ShelterFormInput) => el._id === key)?.score ?? 0
+          ? this.form.inputs.find((el: ShelterFormInput) => el._id === key)
+              ?.score ?? 0
           : 0;
         return acc;
       },
