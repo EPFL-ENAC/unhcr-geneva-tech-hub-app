@@ -37,11 +37,12 @@
 </template>
 
 <script lang="ts">
-import ShelterForm from "./ShelterForm";
-import { Component, Prop, Vue } from "vue-property-decorator";
-import { Score } from "@/store/ShelterInterface";
-import { ShelterFormInput } from "@/components/shelter_sustainability/ShelterForm";
+import ShelterForm from './ShelterForm'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Score } from '@/store/ShelterInterface'
+import { ShelterFormInput } from '@/components/shelter_sustainability/ShelterForm'
 
+type ScoreBoolean = Record<string, boolean>
 @Component({
   props: {
     form: {
@@ -54,32 +55,36 @@ import { ShelterFormInput } from "@/components/shelter_sustainability/ShelterFor
 })
 /** RadioGroup */
 export default class RadioGroup extends Vue {
-  value!: Score;
-  form!: ShelterForm;
+  value!: Score
+  form!: ShelterForm
 
-  get checkbox(): Record<string, boolean> {
-    const newValue = {} as Record<string, boolean>;
-    const oldValue = this.value ?? {};
+  get checkbox(): ScoreBoolean {
+    // transform a Score structure in boolean
+    const oldValue = this.value ?? ({} as Score)
     // reset all previous values
-    this.form.inputs.forEach((input) => {
-      newValue[input._id] = !!oldValue[input._id];
-    });
-    return newValue;
+    return this.form.inputs
+      .map((input) => input._id)
+      .reduce((acc, _id) => {
+        acc[_id] = !!oldValue[_id];
+        return acc;
+      }, {} as ScoreBoolean)
   }
 
   updateValue(updatedKey: string, updatedValue: boolean) {
     const newValue = Object.entries(this.checkbox).reduce(
-      (acc, [key, value]) => {
+      (acc: Score, [key, value]) => {
         // we reset old values also
-        const isChecked = key === updatedKey ? updatedValue : 0;
-        const lookup = this.form.inputs.find((el: ShelterFormInput): boolean => el._id === key);
-        acc[key] = isChecked ? lookup?.score ?? 0 : 0;
+        const isChecked = key === updatedKey ? updatedValue : 0
+        const lookup = this.form.inputs.find(
+          (el: ShelterFormInput): boolean => el._id === key,
+        )
+        acc[key] = isChecked ? lookup?.score ?? 0 : 0
 
-        return acc;
+        return acc
       },
-      {} as Score
-    );
-    this.$emit("input", newValue);
+      {} as Score,
+    )
+    this.$emit('input', newValue)
   }
 }
 </script>

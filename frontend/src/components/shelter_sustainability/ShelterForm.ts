@@ -6,7 +6,8 @@ export enum ShelterFormType {
 export default interface ShelterForm {
   title: string;
   type: ShelterFormType;
-  inputs: ShelterFormInputs;
+  inputs?: ShelterFormInput[];
+  children?: ShelterForm[];
   _id: string; // unique
 }
 
@@ -17,4 +18,4 @@ export interface ShelterFormInput {
   _id: string; // unique
 }
 
-export type ShelterFormInputs = ShelterFormInput[] | ShelterForm[];
+// export type ShelterFormInputs = ShelterFormInput[] | ShelterForm[];

@@ -90,7 +90,8 @@ a:active {
   }
 }
 
-.project-shelter__header {
+.project-shelter__header,
+.project-shelter__h3 {
   color: var(--c-shelter);
 }
 </style>

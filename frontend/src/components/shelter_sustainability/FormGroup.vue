@@ -1,38 +1,33 @@
 <template>
-  <v-sheet elevation="2" rounded>
-    <v-container fluid>
-      <v-row>
+  <v-container fluid>
+    <v-row>
+      <v-col>
+        <component :is="`h${depth + 2}`" :class="`text-h${depth+3} project-shelter__h${depth+3}  font-weight-medium`">{{ form.title }}</component>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-divider></v-divider>
+      </v-col>
+    </v-row>
+    <v-spacer />
+
+    <v-form @submit.prevent="() => submitForm(value)">
+      <v-row v-for="(child, $index) in form.children" :key="$index">
         <v-col>
-          <!-- <h2 class="project-shelter__header text-h2">{{ form.title }}</h2> -->
-           <h3 class="text-h4 font-weight-medium">{{ form.title }}</h3>
+          <v-sheet elevation="2" rounded>
+            <component
+              :form="child"
+              :value="value[child._id]"
+              @input="(v) => update(child._id, v)"
+              :is="child.type"
+              :depth="depth + 1"
+            ></component>
+          </v-sheet>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col>
-          <v-divider></v-divider>
-        </v-col>
-      </v-row>
-      <v-spacer />
-      <v-form @submit.prevent="() => submitForm(value)">
-        <v-row v-for="(input, $index) in form.inputs" :key="$index">
-          <v-col>
-            <radio-group
-              :form="input"
-              :value="value[input._id]"
-              @input="(v) => update(input._id, v)"
-              v-if="input.type === 'radioGroup'"
-            ></radio-group>
-            <checkbox-group
-              :form="input"
-              :value="value[input._id]"
-              @input="(v) => update(input._id, v)"
-              v-else-if="input.type === 'checkboxGroup'"
-            ></checkbox-group>
-          </v-col>
-        </v-row>
-      </v-form>
-    </v-container>
-  </v-sheet>
+    </v-form>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -53,6 +48,10 @@ import RadioGroup from "@/components/shelter_sustainability/RadioGroup.vue";
     },
     value: {
       type: Object as () => ShelterPerformance,
+    },
+    depth: {
+      type: Number,
+      default: 0,
     },
   },
 })
