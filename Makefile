@@ -18,3 +18,6 @@ setup:
 run:
 	docker-compose build --pull
 	docker-compose up --remove-orphans
+
+run-database:
+	docker-compose up -d couchdb
