@@ -9,7 +9,6 @@ import vuetify from "./plugins/vuetify";
 
 Vue.config.productionTip = false;
 
-
 export default new Vue({
   router,
   store,

@@ -24,12 +24,8 @@
 import { Component, Vue } from "vue-property-decorator";
 import FormGroup from "@/components/shelter_sustainability/FormGroup.vue";
 import { mapState, mapActions } from "vuex";
-import Shelter from "@/store/ShelterInterface";
-import {
-  Score,
-  ShelterPerformance,
-  TechnicalPerformance,
-} from "@/store/ShelterInterface";
+import { Shelter } from "@/store/ShelterInterface";
+import { Score } from "@/store/ShelterInterface";
 
 @Component({
   components: {
@@ -39,23 +35,27 @@ import {
     ...mapState("ShelterItemModule", ["shelter"]),
   },
   methods: {
-    ...mapActions("ShelterItemModule", ["updateDoc"]),
+    ...mapActions("ShelterItemModule", ["updateDoc", "computeScore"]),
   },
 })
 /** Project */
 export default class Step6 extends Vue {
   shelter!: Shelter;
   updateDoc!: (doc: Shelter) => void;
+  computeScore!: (score: Score) => number;
 
-  get technical_performance() {
+  get technical_performance(): Score {
     return this.shelter.technical_performance;
   }
-  public update(value: TechnicalPerformance) {
+  public update(value: Score): void {
     this.shelter.technical_performance = value;
+    this.shelter.technical_performance_score = this.computeScore(
+      this.shelter.technical_performance
+    );
     this.$store.commit("ShelterItemModule/SET_SHELTER", this.shelter);
   }
 
-  public submitForm(value: TechnicalPerformance): void {
+  public submitForm(value: Score): void {
     this.update(value);
     this.updateDoc(this.shelter);
   }

@@ -9,7 +9,7 @@ import {
 
 import PouchDB from "pouchdb";
 import { RootState } from ".";
-import Shelter from "./ShelterInterface";
+import { Shelter } from "@/store/ShelterInterface";
 
 interface ShelterState {
   shelters: Array<Shelter>;
@@ -71,7 +71,7 @@ function generateNewShelter(name: string) {
       "2_internal_comfort": {},
       "3_safety_and_security": {},
       "4_construction_techniques": {},
-    }
+    },
   };
 }
 /** Getters */

@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { ShelterPerformance, Score } from "@/store/ShelterInterface";
+import { Score } from "@/store/ShelterInterface";
 import ShelterForm from "@/components/shelter_sustainability/ShelterForm";
 import CheckboxGroup from "@/components/shelter_sustainability/CheckboxGroup.vue";
 import RadioGroup from "@/components/shelter_sustainability/RadioGroup.vue";
@@ -60,7 +60,7 @@ import RadioGroup from "@/components/shelter_sustainability/RadioGroup.vue";
       type: Object as () => ShelterForm,
     },
     value: {
-      type: Object as () => ShelterPerformance,
+      type: Object as () => Score,
     },
     depth: {
       type: Number,
@@ -70,14 +70,14 @@ import RadioGroup from "@/components/shelter_sustainability/RadioGroup.vue";
 })
 /** FormGroup */
 export default class FormGroup extends Vue {
-  value!: ShelterPerformance;
+  value!: Score;
   form!: ShelterForm;
 
   show = true;
-  public toggle() {
+  public toggle(): void {
     this.show = !this.show;
   }
-  public update(formId: string, value: Score) {
+  public update(formId: string, value: Score): void {
     this.value[formId] = value;
     this.$emit("input", this.value);
   }

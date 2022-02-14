@@ -58,7 +58,7 @@
 
 <script lang="ts">
 import ShelterForm from "./ShelterForm";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import { Score } from "@/store/ShelterInterface";
 import { ShelterFormInput } from "@/components/shelter_sustainability/ShelterForm";
 
@@ -83,7 +83,7 @@ export default class RadioGroup extends Vue {
   form!: ShelterForm;
   show = true;
 
-  public toggle() {
+  public toggle(): void {
     this.show = !this.show;
   }
 
@@ -99,9 +99,9 @@ export default class RadioGroup extends Vue {
       }, {} as ScoreBoolean);
   }
 
-  updateValue(updatedKey: string, updatedValue: boolean) {
+  updateValue(updatedKey: string, updatedValue: boolean): void {
     const newValue = Object.entries(this.checkbox).reduce(
-      (acc: Score, [key, value]) => {
+      (acc: Score, [key]) => {
         // we reset old values also
         const isChecked = key === updatedKey ? updatedValue : 0;
         const lookup = this.form.inputs.find(

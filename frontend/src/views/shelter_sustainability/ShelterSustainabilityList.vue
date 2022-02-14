@@ -2,9 +2,7 @@
   <v-container class="project">
     <v-row>
       <v-col>
-        <h1 style="display: flex; justify-content: center">
-          Projects
-        </h1>
+        <h1 style="display: flex; justify-content: center">Projects</h1>
       </v-col>
       <v-col>
         <h1 style="display: flex; justify-content: center">New Project</h1>

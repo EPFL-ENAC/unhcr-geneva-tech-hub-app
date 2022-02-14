@@ -7,7 +7,7 @@ import Vue from "vue";
 import AppList from "../components/AppList.vue";
 
 export default Vue.extend({
-  name: "Apps",
+  name: "AppListView",
 
   components: {
     AppList,

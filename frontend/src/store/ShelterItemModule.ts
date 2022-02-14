@@ -6,10 +6,10 @@ import {
   Module,
   MutationTree,
 } from "vuex";
+import { Score, Shelter } from "./ShelterInterface";
 
 import PouchDB from "pouchdb";
 import { RootState } from ".";
-import Shelter from "./ShelterInterface";
 
 interface ShelterState {
   shelter: Shelter | null;
@@ -34,28 +34,6 @@ function generateState(): ShelterState {
 const getters: GetterTree<ShelterState, RootState> = {
   shelter: (s): Shelter | null => s.shelter,
 };
-
-
-function computeScore(levels: (number | Score | ShelterPerformance)[]): number {
-  return (
-    levels.reduce(
-      (acc: number, level: number | Score | ShelterPerformance) => {
-        if (typeof level === "number") {
-          return acc + level;
-        }
-        return acc + this.computeScore(Object.values(level));
-      },
-      0 as number
-    ) ?? 0
-  );
-}
-
-function score() {
-  // TODO: externalize score
-  const levels = Object.values(this.technical_performance);
-  return this.computeScore(levels);
-}
-
 
 /** Mutations */
 const mutations: MutationTree<ShelterState> = {
@@ -139,6 +117,24 @@ const actions: ActionTree<ShelterState, RootState> = {
       .catch(function (err: Error) {
         console.log(err);
       });
+  },
+  computeScore: (
+    context: ActionContext<ShelterState, RootState>,
+    performance: Score
+  ): number => {
+    function _recursiveCompute(performance: Score): number {
+      const levels = Object.values(performance);
+      return (
+        levels.reduce((acc: number, level: Score | number) => {
+          if (typeof level === "number") {
+            return acc + level;
+          }
+          return acc + _recursiveCompute(level);
+        }, 0 as number) ?? 0
+      );
+    }
+
+    return _recursiveCompute(performance);
   },
 };
 

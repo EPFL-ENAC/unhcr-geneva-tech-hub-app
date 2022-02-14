@@ -84,7 +84,7 @@ export default class CheckboxGroup extends Vue {
 
   show = true;
 
-  public toggle() {
+  public toggle(): void {
     this.show = !this.show;
   }
 
@@ -98,7 +98,7 @@ export default class CheckboxGroup extends Vue {
     return newValue;
   }
 
-  updateValue(updatedKey: string, updatedValue: boolean) {
+  updateValue(updatedKey: string, updatedValue: boolean): void {
     // this.form.inputs.forEach((input: ShelterFormInput) => {
     //   const isChecked = input._id === updatedKey ? updatedValue : this.value[];
     //   newValue[input._id] = isChecked ? input.score ?? 0;
@@ -112,7 +112,7 @@ export default class CheckboxGroup extends Vue {
           : 0;
         return acc;
       },
-      {} as Record<string, number>
+      {} as Score
     );
     this.$emit("input", newValue);
   }

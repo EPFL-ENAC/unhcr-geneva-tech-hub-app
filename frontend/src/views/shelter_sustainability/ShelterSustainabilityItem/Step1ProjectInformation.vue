@@ -129,7 +129,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapState, mapActions } from "vuex";
-import Shelter from "@/store/ShelterInterface";
+import { Shelter } from "@/store/ShelterInterface";
 
 @Component({
   computed: {
