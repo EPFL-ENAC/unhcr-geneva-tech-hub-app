@@ -1,5 +1,3 @@
 module.exports = {
-    projects: [
-        './frontend'
-    ]
-}
+  projects: ["./frontend"],
+};
