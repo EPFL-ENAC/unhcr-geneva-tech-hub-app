@@ -91,12 +91,15 @@ export default class RadioGroup extends Vue {
     // transform a Score structure in boolean
     const oldValue = this.value ?? ({} as Score);
     // reset all previous values
-    return this.form.inputs
-      .map((input) => input._id)
-      .reduce((acc, _id) => {
-        acc[_id] = !!oldValue[_id];
-        return acc;
-      }, {} as ScoreBoolean);
+    if (this.form.inputs) {
+      return this.form.inputs
+        .map((input) => input._id)
+        .reduce((acc, _id) => {
+          acc[_id] = !!oldValue[_id];
+          return acc;
+        }, {} as ScoreBoolean);
+    }
+    return {} as ScoreBoolean;
   }
 
   updateValue(updatedKey: string, updatedValue: boolean): void {
@@ -104,11 +107,12 @@ export default class RadioGroup extends Vue {
       (acc: Score, [key]) => {
         // we reset old values also
         const isChecked = key === updatedKey ? updatedValue : 0;
-        const lookup = this.form.inputs.find(
-          (el: ShelterFormInput): boolean => el._id === key
-        );
-        acc[key] = isChecked ? lookup?.score ?? 0 : 0;
-
+        if (this.form.inputs) {
+          const lookup = this.form.inputs.find(
+            (el: ShelterFormInput): boolean => el._id === key
+          );
+          acc[key] = isChecked ? lookup?.score ?? 0 : 0;
+        }
         return acc;
       },
       {} as Score

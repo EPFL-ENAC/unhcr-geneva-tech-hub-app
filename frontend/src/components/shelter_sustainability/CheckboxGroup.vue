@@ -92,7 +92,7 @@ export default class CheckboxGroup extends Vue {
     const newValue = {} as CheckboxScore;
     const oldValue = this.value ?? {};
     // reset all previous values
-    this.form.inputs.forEach((input) => {
+    this.form.inputs?.forEach((input) => {
       newValue[input._id] = !!oldValue[input._id];
     });
     return newValue;
@@ -107,7 +107,7 @@ export default class CheckboxGroup extends Vue {
       (acc, [key, value]) => {
         const isChecked = key === updatedKey ? updatedValue : value;
         acc[key] = isChecked
-          ? this.form.inputs.find((el: ShelterFormInput) => el._id === key)
+          ? this.form.inputs?.find((el: ShelterFormInput) => el._id === key)
               ?.score ?? 0
           : 0;
         return acc;

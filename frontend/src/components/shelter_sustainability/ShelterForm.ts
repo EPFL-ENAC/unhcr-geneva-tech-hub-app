@@ -10,7 +10,6 @@ export default interface ShelterForm {
   children?: ShelterForm[];
   _id: string; // unique
 }
-
 export interface ShelterFormInput {
   description?: string;
   label: string;
