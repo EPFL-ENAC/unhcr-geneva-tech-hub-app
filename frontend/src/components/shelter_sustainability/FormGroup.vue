@@ -18,7 +18,7 @@
     </v-row>
 
     <v-expand-transition>
-      <v-form @submit.prevent="() => submitForm(value)" v-show="show">
+      <v-form v-show="show">
         <v-row>
           <v-col>
             <v-divider></v-divider>
