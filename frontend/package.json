@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@mdi/font": "5.9.55",
+    "axios": "^0.26.0",
     "core-js": "^3.6.5",
     "pouchdb": "^7.2.2",
     "register-service-worker": "^1.7.1",
@@ -38,6 +39,7 @@
     "@vue/cli-plugin-unit-mocha": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
+    "@vue/component-compiler-utils": "^3.3.0",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^7.0.0",
     "@vue/test-utils": "^1.0.3",
@@ -47,11 +49,12 @@
     "eslint-plugin-vue": "^6.2.2",
     "lint-staged": "^9.5.0",
     "prettier": "^2.2.1",
+    "prettier-plugin-organize-imports": "^2.3.4",
     "sass": "~1.32.0",
     "sass-loader": "^10.0.0",
     "typescript": "~4.1.5",
     "vue-cli-plugin-vuetify": "~2.4.5",
-    "vue-template-compiler": "^2.6.11",
+    "vue-template-compiler": "^2.6.14",
     "vuetify-loader": "^1.7.0"
   },
   "gitHooks": {

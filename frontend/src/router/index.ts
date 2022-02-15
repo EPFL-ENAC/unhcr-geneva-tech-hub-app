@@ -1,8 +1,7 @@
+import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-
 import Apps from "../views/AppListView.vue";
 import Login from "../views/LoginView.vue";
-import Vue from "vue";
 
 Vue.use(VueRouter);
 
@@ -195,6 +194,20 @@ const routes: Array<RouteConfig> = [
         component: () =>
           import(
             /* webpackChunkName: "shelter_sustainability" */ "../views/shelter_sustainability/ShelterSustainabilityList.vue"
+          ),
+      },
+    ],
+  },
+  {
+    path: "/energy",
+    component: () => import("../views/energy/Energy.vue"),
+    children: [
+      {
+        path: "",
+        name: "Energy",
+        component: () =>
+          import(
+            /* webpackChunkName: "energy-home" */ "../views/energy/EnergyHome.vue"
           ),
       },
     ],

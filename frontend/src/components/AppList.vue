@@ -20,14 +20,7 @@
           </v-list-item>
 
           <v-card-actions>
-            <v-btn
-              outlined
-              rounded
-              text
-              :to="{ name: 'ShelterSustainability' }"
-            >
-              Access
-            </v-btn>
+            <v-btn outlined rounded text :to="{ name: app.to }"> Access </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -55,7 +48,7 @@ export default Vue.extend({
           description:
             "A tool supporting comparative assessments of environmental impacts, technical performance, habitability and affordability of shelter designs used in humanitarian relief operations. ",
         },
-        { title: "Energy", to: "", logo_img: "/app_logo/energy.png" },
+        { title: "Energy", to: "Energy", logo_img: "/app_logo/energy.png" },
       ],
     };
   },

@@ -111,7 +111,7 @@ export default Vue.extend({
     apps: [
       ["Green House Gaz", "GreenHouseGaz", "mdi-account-multiple-outline"],
       ["Shelter Sustainability", "ShelterSustainability", "mdi-cog-outline"],
-      ["Energy", "holistic_energy", "mdi-plus-outline"],
+      ["Energy", "Energy", "mdi-flash"],
     ],
   }),
 

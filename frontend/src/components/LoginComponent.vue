@@ -3,34 +3,63 @@
     <v-toolbar dark color="primary">
       <v-toolbar-title>Login</v-toolbar-title>
     </v-toolbar>
-    <v-card-text>
-      <v-form>
+    <v-form v-model="formValid" @submit="login">
+      <v-card-text>
         <v-text-field
-          prepend-icon="mdi-account"
-          name="login"
+          v-model="username"
           label="Login"
+          prepend-icon="mdi-account"
+          required
           type="text"
         />
         <v-text-field
-          id="password"
-          prepend-icon="mdi-lock"
-          name="password"
+          v-model="password"
           label="Password"
+          prepend-icon="mdi-lock"
+          required
           type="password"
         />
-      </v-form>
-    </v-card-text>
-    <v-card-actions>
-      <v-spacer />
-      <v-btn color="primary" to="/apps">Login</v-btn>
-    </v-card-actions>
+        <span class="error--text">{{ error }}</span>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn color="primary" :disabled="!formValid" type="submit">
+          Login
+        </v-btn>
+      </v-card-actions>
+    </v-form>
   </v-card>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { login } from "@/utils/couchdb";
+import { AxiosError } from "axios";
+import "vue-class-component/hooks";
+import { Component, Vue } from "vue-property-decorator";
 
-export default Vue.extend({
-  name: "LoginComponent",
-});
+@Component
+export default class LoginComponent extends Vue {
+  formValid = false;
+  username = "";
+  password = "";
+  error = "";
+
+  login(event: Event): void {
+    event.preventDefault();
+    this.error = "";
+    login(this.username, this.password)
+      .then(() => {
+        this.$router.push("/apps");
+      })
+      .catch((error: AxiosError) => {
+        switch (error.response?.status) {
+          case 401:
+            this.error = "Invalid credentials";
+            break;
+          default:
+            this.error = error.message;
+        }
+      });
+  }
+}
 </script>
