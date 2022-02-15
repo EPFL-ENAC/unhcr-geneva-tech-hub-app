@@ -18,8 +18,8 @@ services:
   couchdb:
     image: couchdb:3
     environment:
-      - COUCHDB_USER=admin
-      - COUCHDB_PASSWORD=couchdb
+      - COUCHDB_USER=${COUCHDB_USER}
+      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
     ports:
       - '5984:5984'
     restart: unless-stopped
