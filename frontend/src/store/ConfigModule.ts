@@ -6,7 +6,6 @@ import {
   Module,
   MutationTree,
 } from "vuex";
-
 import { RootState } from ".";
 
 /** Config State */

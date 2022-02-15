@@ -21,11 +21,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import FormGroup from "@/components/shelter_sustainability/FormGroup.vue";
-import { mapState, mapActions } from "vuex";
-import { Shelter } from "@/store/ShelterInterface";
-import { Score } from "@/store/ShelterInterface";
+import { Score, Shelter } from "@/store/ShelterInterface";
+import { Component, Vue } from "vue-property-decorator";
+import { mapActions, mapState } from "vuex";
 
 @Component({
   components: {

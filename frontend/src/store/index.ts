@@ -1,3 +1,4 @@
+import Vue from "vue";
 import Vuex, {
   ActionContext,
   ActionTree,
@@ -5,12 +6,10 @@ import Vuex, {
   MutationTree,
   StoreOptions,
 } from "vuex";
-
+import VuexPersistence from "vuex-persist";
 import ConfigModule from "./ConfigModule";
 import ShelterItemModule from "./ShelterItemModule";
 import ShelterSustainabilityModule from "./ShelterSustainabilityModule";
-import Vue from "vue";
-import VuexPersistence from "vuex-persist";
 
 // import createPersistedState from 'vuex-persist-indexeddb';
 

@@ -1,4 +1,6 @@
 /** Config store */
+import { Shelter } from "@/store/ShelterInterface";
+import PouchDB from "pouchdb";
 import {
   ActionContext,
   ActionTree,
@@ -6,10 +8,7 @@ import {
   Module,
   MutationTree,
 } from "vuex";
-
-import PouchDB from "pouchdb";
 import { RootState } from ".";
-import { Shelter } from "@/store/ShelterInterface";
 
 interface ShelterState {
   shelters: Array<Shelter>;

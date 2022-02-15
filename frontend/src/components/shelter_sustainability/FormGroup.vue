@@ -44,11 +44,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import { Score } from "@/store/ShelterInterface";
-import ShelterForm from "@/components/shelter_sustainability/ShelterForm";
 import CheckboxGroup from "@/components/shelter_sustainability/CheckboxGroup.vue";
 import RadioGroup from "@/components/shelter_sustainability/RadioGroup.vue";
+import ShelterForm from "@/components/shelter_sustainability/ShelterForm";
+import { Score } from "@/store/ShelterInterface";
+import { Component, Vue } from "vue-property-decorator";
 
 @Component({
   components: {

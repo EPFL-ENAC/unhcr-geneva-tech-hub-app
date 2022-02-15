@@ -57,11 +57,10 @@
 </template>
 
 <script lang="ts">
-import ShelterForm from "./ShelterForm";
-import { Component, Vue } from "vue-property-decorator";
 import { ShelterFormInput } from "@/components/shelter_sustainability/ShelterForm";
-
 import { Score } from "@/store/ShelterInterface";
+import { Component, Vue } from "vue-property-decorator";
+import ShelterForm from "./ShelterForm";
 
 @Component({
   props: {
