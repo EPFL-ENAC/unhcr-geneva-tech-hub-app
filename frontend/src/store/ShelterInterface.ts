@@ -18,7 +18,30 @@ export interface Shelter {
   habitability_score: number;
   technical_performance: Score;
   technical_performance_score: number;
+
+  shelter_geometry_type: string;
+  shelter_dimensions: ShelterDimensions;
+  doors_dimensions: DoorDimensions[];
+  windows_dimensions: WindowDimensions[];
 }
 export interface Score {
   [property: string]: number | Score;
+}
+export interface ShelterDimensions {
+  L: number;
+  W: number;
+  H1?: number;
+  H2?: number;
+  H?: number;
+}
+
+export interface DoorDimensions {
+  Wd: number;
+  Hd: number;
+}
+
+export interface WindowDimensions {
+  Ww: number;
+  Hw: number;
+  Hs: number;
 }

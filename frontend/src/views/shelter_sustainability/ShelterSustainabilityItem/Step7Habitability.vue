@@ -1,23 +1,19 @@
 <template>
-  <v-container v-if="this.shelter">
-    <v-form @submit.prevent="() => submitForm(habitability)">
+  <v-form v-if="this.shelter" @submit.prevent="() => submitForm(habitability)">
+    <component
+      :is="habitabilityForm.type"
+      :form="habitabilityForm"
+      :value="habitability"
+      @input="(v) => update(v)"
+    ></component>
+    <v-container fluid>
       <v-row>
-        <v-col>
-          <component
-            :is="habitabilityForm.type"
-            :form="habitabilityForm"
-            :value="habitability"
-            @input="(v) => update(v)"
-          ></component>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
+        <v-col class="d-flex justify-end">
           <v-btn type="submit">Save changes</v-btn>
         </v-col>
       </v-row>
-    </v-form>
-  </v-container>
+    </v-container>
+  </v-form>
 </template>
 
 <script lang="ts">
@@ -46,17 +42,16 @@ export default class Step7 extends Vue {
   get habitability(): Score {
     return this.shelter.habitability;
   }
-  public update(value: Score): void {
+  public async update(value: Score): Promise<void> {
     this.shelter.habitability = value;
-    // TODO: fix me
-    this.shelter.habitability_score = this.computeScore(
+    this.shelter.habitability_score = await this.computeScore(
       this.shelter.habitability
     );
     this.$store.commit("ShelterItemModule/SET_SHELTER", this.shelter);
   }
 
-  public submitForm(value: Score): void {
-    this.update(value);
+  public async submitForm(value: Score): Promise<void> {
+    await this.update(value);
     this.updateDoc(this.shelter);
   }
   habitabilityForm = {
@@ -68,7 +63,7 @@ export default class Step7 extends Vue {
         _id: "1_floor",
         title: "Floor Area",
         type: "radioGroup", // could be checkbox group also
-        inputs: [
+        children: [
           {
             _id: "input1",
             label: "Floor area is >=3.5m2 (in hot climate - Sphere Standard)",
@@ -103,7 +98,7 @@ export default class Step7 extends Vue {
         _id: "2_accessibility",
         title: "Accessibility",
         type: "checkboxGroup",
-        inputs: [
+        children: [
           {
             _id: "input5",
             label: "Door(s) >= 90cm wide",
@@ -124,7 +119,7 @@ export default class Step7 extends Vue {
         _id: "3_privacy",
         title: "Privacy",
         type: "checkboxGroup",
-        inputs: [
+        children: [
           {
             _id: "input8",
             label:
@@ -154,7 +149,7 @@ export default class Step7 extends Vue {
         _id: "4_artificial_lighting",
         title: "Artificial lighting",
         type: "checkboxGroup",
-        inputs: [
+        children: [
           {
             _id: "input12",
             label: "Artificial lighting is provided inside shelter",
@@ -171,7 +166,7 @@ export default class Step7 extends Vue {
         _id: "5_complimentary_facilities",
         title: "Complementary facilities",
         type: "checkboxGroup",
-        inputs: [
+        children: [
           {
             _id: "input14",
             label:

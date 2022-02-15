@@ -71,6 +71,10 @@ function generateNewShelter(name: string) {
       "3_safety_and_security": {},
       "4_construction_techniques": {},
     },
+    shelter_dimensions: { L: 0, W: 0 },
+    doors_dimensions: [{ Wd: 0, Hd: 0 }],
+    windows_dimensions: [{ Ww: 0, Hw: 0, Hs: 0 }],
+    shelter_geometry_type: "",
   };
 }
 /** Getters */

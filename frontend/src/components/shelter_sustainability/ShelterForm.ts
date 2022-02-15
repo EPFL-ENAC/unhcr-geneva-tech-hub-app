@@ -3,18 +3,17 @@ export enum ShelterFormType {
   checkboxGroup = 1,
   formGroup = 2,
 }
-export default interface ShelterForm {
+export interface ShelterForm {
   title: string;
   type: ShelterFormType;
-  inputs?: ShelterFormInput[];
-  children?: ShelterForm[];
-  _id: string; // unique
+  children: ShelterFormChild[];
+  _id: string;
 }
 export interface ShelterFormInput {
   description?: string;
   label: string;
   score: number;
-  _id: string; // unique
+  _id: string;
 }
 
-// export type ShelterFormInputs = ShelterFormInput[] | ShelterForm[];
+export type ShelterFormChild = ShelterFormInput | ShelterForm;
