@@ -1,23 +1,26 @@
 <template>
-  <v-container v-if="this.shelter">
-    <v-form @submit.prevent="() => submitForm(technical_performance)">
+  <v-form
+    v-if="this.shelter"
+    @submit.prevent="() => submitForm(technical_performance)"
+  >
+    <!-- <v-row>
+        <v-col> -->
+    <component
+      :is="technicalPerformance.type"
+      :form="technicalPerformance"
+      :value="technical_performance"
+      @input="(v) => update(v)"
+    ></component>
+    <!-- </v-col>
+      </v-row> -->
+    <v-container fluid>
       <v-row>
-        <v-col>
-          <component
-            :is="technicalPerformance.type"
-            :form="technicalPerformance"
-            :value="technical_performance"
-            @input="(v) => update(v)"
-          ></component>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
+        <v-col class="d-flex justify-end">
           <v-btn type="submit">Save changes</v-btn>
         </v-col>
       </v-row>
-    </v-form>
-  </v-container>
+    </v-container>
+  </v-form>
 </template>
 
 <script lang="ts">
@@ -46,16 +49,16 @@ export default class Step6 extends Vue {
   get technical_performance(): Score {
     return this.shelter.technical_performance;
   }
-  public update(value: Score): void {
+  public async update(value: Score): Promise<void> {
     this.shelter.technical_performance = value;
-    this.shelter.technical_performance_score = this.computeScore(
+    this.shelter.technical_performance_score = await this.computeScore(
       this.shelter.technical_performance
     );
     this.$store.commit("ShelterItemModule/SET_SHELTER", this.shelter);
   }
 
-  public submitForm(value: Score): void {
-    this.update(value);
+  public async submitForm(value: Score): Promise<void> {
+    await this.update(value);
     this.updateDoc(this.shelter);
   }
 
@@ -73,7 +76,7 @@ export default class Step6 extends Vue {
             _id: "1a_wind_resistance",
             title: "Wind resistance",
             type: "checkboxGroup",
-            inputs: [
+            children: [
               {
                 _id: "input_1a_1",
                 score: 1,
@@ -104,7 +107,7 @@ export default class Step6 extends Vue {
             _id: "1b_flood_mitigation",
             title: "Flood mitigation",
             type: "checkboxGroup",
-            inputs: [
+            children: [
               {
                 _id: "input_1b_1",
                 score: 1,
@@ -139,7 +142,7 @@ export default class Step6 extends Vue {
             _id: "1c_seismic_resistance",
             title: "Seismic resistance",
             type: "checkboxGroup",
-            inputs: [
+            children: [
               {
                 _id: "input_1c_1",
                 score: 1,
@@ -176,7 +179,7 @@ export default class Step6 extends Vue {
             _id: "2a_natural_ventilation",
             title: "Natural ventilation",
             type: "checkboxGroup",
-            inputs: [
+            children: [
               {
                 _id: "input_2a_1",
                 score: 1,
@@ -200,7 +203,7 @@ export default class Step6 extends Vue {
             _id: "2b_thermal_comfort",
             title: "Thermal comfort",
             type: "checkboxGroup",
-            inputs: [
+            children: [
               {
                 _id: "input_2b_1",
                 score: 1,
@@ -253,7 +256,7 @@ export default class Step6 extends Vue {
             _id: "2c_natural_lighting",
             title: "Natural lighting",
             type: "checkboxGroup",
-            inputs: [
+            children: [
               {
                 _id: "input_2c_1",
                 score: 1,
@@ -282,7 +285,7 @@ export default class Step6 extends Vue {
             _id: "3a_fire_safety",
             title: "Fire safety",
             type: "checkboxGroup",
-            inputs: [
+            children: [
               {
                 _id: "input_3a_1",
                 score: 1,
@@ -326,7 +329,7 @@ export default class Step6 extends Vue {
             _id: "3b_personal_security",
             title: "Personal Security",
             type: "checkboxGroup",
-            inputs: [
+            children: [
               {
                 _id: "input_3b_1",
                 score: 1,
@@ -371,7 +374,7 @@ export default class Step6 extends Vue {
         _id: "4_construction_techniques",
         title: "Construction techniques",
         type: "checkboxGroup",
-        inputs: [
+        children: [
           {
             _id: "input_4a",
             label:

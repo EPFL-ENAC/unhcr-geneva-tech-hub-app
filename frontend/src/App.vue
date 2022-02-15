@@ -2,15 +2,20 @@
   <v-app>
     <v-app-bar app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-app-bar-title v-text="title" />
+      <v-app-bar-title class="d-flex justify-center pr-10">
+        <router-link :to="{ name: 'Apps' }" class="text-decoration-none">{{
+          title
+        }}</router-link>
+      </v-app-bar-title>
       <v-spacer />
-      <v-btn
-        v-for="([title, linkk], i) in apps"
-        :key="i"
-        link
-        :to="{ name: linkk }"
-        >{{ title }}</v-btn
-      >
+      <v-tabs>
+        <v-tab
+          v-for="([title, linkk], i) in apps"
+          :key="i"
+          :to="{ name: linkk }"
+          >{{ title }}</v-tab
+        >
+      </v-tabs>
       <v-spacer />
       <v-btn icon @click="$store.dispatch('ConfigModule/toggleTheme')">
         <v-icon v-text="'mdi-invert-colors'" />

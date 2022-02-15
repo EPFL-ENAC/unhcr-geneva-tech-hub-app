@@ -14,11 +14,7 @@
         </v-tab>
       </template>
     </v-tabs>
-    <v-row>
-      <v-col>
-        <router-view />
-      </v-col>
-    </v-row>
+    <router-view />
   </v-container>
 </template>
 

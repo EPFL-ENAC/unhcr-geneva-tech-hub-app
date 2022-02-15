@@ -1,16 +1,16 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col>
+      <v-col :cols="depth > 0 ? 11 : 12">
         <component
           :is="`h${depth + 2}`"
-          :class="`text-h${depth + 3} project-shelter__h${
+          :class="`text-h${depth + 4} project-shelter__h${
             depth + 3
           }  font-weight-medium`"
           >{{ form.title }}</component
         >
       </v-col>
-      <v-col class="d-flex justify-end align-center" v-if="depth > 0">
+      <v-col cols="1" class="d-flex justify-end align-center" v-if="depth > 0">
         <v-btn icon @click="toggle">
           <v-icon :class="{ 'chevron-rotate': !show }">mdi-chevron-down</v-icon>
         </v-btn>
@@ -46,7 +46,7 @@
 <script lang="ts">
 import CheckboxGroup from "@/components/shelter_sustainability/CheckboxGroup.vue";
 import RadioGroup from "@/components/shelter_sustainability/RadioGroup.vue";
-import ShelterForm from "@/components/shelter_sustainability/ShelterForm";
+import { ShelterForm } from "@/components/shelter_sustainability/ShelterForm";
 import { Score } from "@/store/ShelterInterface";
 import { Component, Vue } from "vue-property-decorator";
 

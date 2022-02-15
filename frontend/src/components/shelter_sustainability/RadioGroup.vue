@@ -5,7 +5,7 @@
         <v-col>
           <component
             :is="`h${depth + 2}`"
-            :class="`text-h${depth + 3} project-shelter__h${
+            :class="`text-h${depth + 4} project-shelter__h${
               depth + 3
             }  font-weight-medium`"
             >{{ form.title }}</component
@@ -27,25 +27,25 @@
           <v-col cols="12">
             <v-expansion-panels accordion :focusable="false">
               <v-expansion-panel
-                :readonly="!input.description"
-                v-for="(input, $index) in form.inputs"
+                :readonly="!child.description"
+                v-for="(child, $index) in form.children"
                 :key="$index"
               >
-                <v-expansion-panel-header :hide-actions="!input.description">
+                <v-expansion-panel-header :hide-actions="!child.description">
                   <v-checkbox
-                    :input-value="checkbox[input._id]"
+                    :input-value="checkbox[child._id]"
                     @mousedown.stop.prevent
                     @click.stop.prevent
-                    @change="(v) => updateValue(input._id, v)"
+                    @change="(v) => updateValue(child._id, v)"
                     hide-details
                   >
                     <template v-slot:label>
-                      {{ input.label }}
+                      {{ child.label }}
                     </template>
                   </v-checkbox>
                 </v-expansion-panel-header>
-                <v-expansion-panel-content v-if="!!input.description">
-                  {{ input.description }}
+                <v-expansion-panel-content v-if="!!child.description">
+                  {{ child.description }}
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
@@ -57,10 +57,13 @@
 </template>
 
 <script lang="ts">
-import { ShelterFormInput } from "@/components/shelter_sustainability/ShelterForm";
+import {
+  ShelterForm,
+  ShelterFormChild,
+  ShelterFormInput,
+} from "@/components/shelter_sustainability/ShelterForm";
 import { Score } from "@/store/ShelterInterface";
 import { Component, Vue } from "vue-property-decorator";
-import ShelterForm from "./ShelterForm";
 
 type ScoreBoolean = Record<string, boolean>;
 @Component({
@@ -91,9 +94,9 @@ export default class RadioGroup extends Vue {
     // transform a Score structure in boolean
     const oldValue = this.value ?? ({} as Score);
     // reset all previous values
-    if (this.form.inputs) {
-      return this.form.inputs
-        .map((input) => input._id)
+    if (this.form.children) {
+      return this.form.children
+        .map((child) => child._id)
         .reduce((acc, _id) => {
           acc[_id] = !!oldValue[_id];
           return acc;
@@ -107,11 +110,11 @@ export default class RadioGroup extends Vue {
       (acc: Score, [key]) => {
         // we reset old values also
         const isChecked = key === updatedKey ? updatedValue : 0;
-        if (this.form.inputs) {
-          const lookup = this.form.inputs.find(
-            (el: ShelterFormInput): boolean => el._id === key
-          );
-          acc[key] = isChecked ? lookup?.score ?? 0 : 0;
+        if (this.form.children) {
+          const lookup = this.form.children.find(
+            (el: ShelterFormChild): boolean => el._id === key
+          ) as ShelterFormInput;
+          acc[key] = isChecked ? lookup.score ?? 0 : 0;
         }
         return acc;
       },

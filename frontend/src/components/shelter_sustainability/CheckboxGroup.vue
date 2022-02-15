@@ -2,16 +2,16 @@
   <v-sheet elevation="2" rounded>
     <v-container fluid>
       <v-row>
-        <v-col>
+        <v-col cols="11">
           <component
             :is="`h${depth + 2}`"
-            :class="`text-h${depth + 3} project-shelter__h${
+            :class="`text-h${depth + 4} project-shelter__h${
               depth + 3
             }  font-weight-medium`"
             >{{ form.title }}</component
           >
         </v-col>
-        <v-col class="d-flex justify-end align-center">
+        <v-col cols="1" class="d-flex justify-end align-center">
           <v-btn icon @click="toggle">
             <v-icon :class="{ 'chevron-rotate': !show }"
               >mdi-chevron-down</v-icon
@@ -27,25 +27,25 @@
           <v-col cols="12">
             <v-expansion-panels accordion :focusable="false">
               <v-expansion-panel
-                :readonly="!input.description"
-                v-for="(input, $index) in form.inputs"
+                :readonly="!child.description"
+                v-for="(child, $index) in form.children"
                 :key="$index"
               >
-                <v-expansion-panel-header :hide-actions="!input.description">
+                <v-expansion-panel-header :hide-actions="!child.description">
                   <v-checkbox
-                    :input-value="checkbox[input._id]"
+                    :input-value="checkbox[child._id]"
                     @mousedown.stop.prevent
                     @click.stop.prevent
-                    @change="(v) => updateValue(input._id, v)"
+                    @change="(v) => updateValue(child._id, v)"
                     hide-details
                   >
                     <template v-slot:label>
-                      {{ input.label }}
+                      {{ child.label }}
                     </template>
                   </v-checkbox>
                 </v-expansion-panel-header>
-                <v-expansion-panel-content v-if="!!input.description">
-                  {{ input.description }}
+                <v-expansion-panel-content v-if="!!child.description">
+                  {{ child.description }}
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
@@ -57,10 +57,13 @@
 </template>
 
 <script lang="ts">
-import { ShelterFormInput } from "@/components/shelter_sustainability/ShelterForm";
+import {
+  ShelterForm,
+  ShelterFormChild,
+  ShelterFormInput,
+} from "@/components/shelter_sustainability/ShelterForm";
 import { Score } from "@/store/ShelterInterface";
 import { Component, Vue } from "vue-property-decorator";
-import ShelterForm from "./ShelterForm";
 
 @Component({
   props: {
@@ -91,7 +94,7 @@ export default class CheckboxGroup extends Vue {
     const newValue = {} as CheckboxScore;
     const oldValue = this.value ?? {};
     // reset all previous values
-    this.form.inputs?.forEach((input) => {
+    this.form.children?.forEach((input) => {
       newValue[input._id] = !!oldValue[input._id];
     });
     return newValue;
@@ -105,10 +108,10 @@ export default class CheckboxGroup extends Vue {
     const newValue = Object.entries(this.checkbox).reduce(
       (acc, [key, value]) => {
         const isChecked = key === updatedKey ? updatedValue : value;
-        acc[key] = isChecked
-          ? this.form.inputs?.find((el: ShelterFormInput) => el._id === key)
-              ?.score ?? 0
-          : 0;
+        const child = this.form.children?.find(
+          (el: ShelterFormChild) => el._id === key
+        ) as ShelterFormInput;
+        acc[key] = isChecked ? child.score ?? 0 : 0;
         return acc;
       },
       {} as Score

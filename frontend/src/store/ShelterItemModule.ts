@@ -46,7 +46,6 @@ const mutations: MutationTree<ShelterState> = {
       state.sync?.cancel(); // whenever you want to cancel the sync!
       // hopefully removing the replicate!
       state.localCouch = null;
-      console.log("succeessfully closing localCouch");
     });
   },
   SET_SHELTER(state, value) {
@@ -64,7 +63,6 @@ const mutations: MutationTree<ShelterState> = {
 const actions: ActionTree<ShelterState, RootState> = {
   syncDB: (context: ActionContext<ShelterState, RootState>) => {
     // init
-    console.log("syncDB action in ShelterItem Module");
     context.commit("INIT_SYNC");
 
     const localCouch = context.state.localCouch;
@@ -85,13 +83,9 @@ const actions: ActionTree<ShelterState, RootState> = {
   },
   updateDoc: (context: ActionContext<ShelterState, RootState>, value) => {
     context.commit("SET_SHELTER", value);
-    console.log("running UPDATE_DOC mutation");
     if (context.state.localCouch) {
       context.state.localCouch
         .put(value)
-        .then((response: unknown) => {
-          console.log("update doc is done", response);
-        })
         .then(function () {
           // DANGER!
           // From now on, revision 1 is no longer available.
@@ -109,8 +103,7 @@ const actions: ActionTree<ShelterState, RootState> = {
     context.state.localCouch
       ?.get(id)
       .then(function (result) {
-        // handle result
-        console.log("get doc mutation", result);
+        console.log(result);
         context.commit("SET_SHELTER", result);
       })
       .catch(function (err: Error) {
