@@ -1,15 +1,24 @@
 install:
 	npm install
 	npx husky install
+	$(MAKE) -C backend install
 	$(MAKE) -C frontend install
+
+run-backend:
+	$(MAKE) -C backend run
 
 run-frontend:
 	$(MAKE) -C frontend run
 
+run-database:
+	docker-compose up -d couchdb
+
 test:
+	$(MAKE) -C backend test
 	$(MAKE) -C frontend test
 
 lint:
+	$(MAKE) -C backend lint
 	$(MAKE) -C frontend lint
 
 setup:
@@ -18,6 +27,3 @@ setup:
 run:
 	docker-compose build --pull
 	docker-compose up --remove-orphans
-
-run-database:
-	docker-compose up -d couchdb

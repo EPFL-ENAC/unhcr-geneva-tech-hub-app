@@ -6,10 +6,24 @@ authors = ["David Tang <david.tang@epfl.ch>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+fastapi = "^0.73.0"
+dynaconf = "^3.1.7"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+pre-commit = "^2.17.0"
+flake8 = "^4.0.1"
+black = "^22.1.0"
+uvicorn = "^0.17.4"
+python-dotenv = "^0.19.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+
+[[tool.mypy.overrides]]
+module = "dynaconf"
+ignore_missing_imports = true
