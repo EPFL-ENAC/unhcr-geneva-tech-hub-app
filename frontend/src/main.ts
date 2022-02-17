@@ -1,3 +1,9 @@
+import "@/directives/hide-if-user";
+import "@/directives/show-if-admin";
+import "@/directives/show-if-author";
+import "@/directives/show-if-specialist";
+import "@/directives/show-if-super-admin";
+import "@/directives/show-if-user";
 import Vue from "vue";
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";

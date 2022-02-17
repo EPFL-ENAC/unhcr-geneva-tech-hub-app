@@ -1,5 +1,6 @@
-import { CouchDBDocument } from "@/models/couchdbModel";
 import axios, { AxiosPromise } from "axios";
+
+import { CouchDBDocument } from "@/models/couchdbModel";
 import PouchDB from "pouchdb";
 import qs from "qs";
 
@@ -25,6 +26,14 @@ export function login(username: string, password: string): AxiosPromise {
       name: username,
       password: password,
     }),
+    withCredentials: true,
+  });
+}
+
+export function logout(): AxiosPromise {
+  return axios({
+    method: "delete",
+    url: sessionUrl,
     withCredentials: true,
   });
 }

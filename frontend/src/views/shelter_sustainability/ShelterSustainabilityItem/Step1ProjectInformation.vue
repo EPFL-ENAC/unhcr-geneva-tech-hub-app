@@ -2,10 +2,15 @@
   <form v-if="project" @submit.prevent="() => submitForm(project)">
     <v-container fluid>
       <v-row>
-        <v-col>
+        <v-col @click="probably = !probably">
           <h2 class="text-h4 project-shelter__h3 font-weight-medium">
             Project information
           </h2>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col v-show-if-admin="probably">
+          BLABLBALBA show-me-if-you-care
         </v-col>
       </v-row>
       <v-row>
@@ -158,6 +163,7 @@ export default class Step1 extends Vue {
   shelter!: Shelter;
   updateDoc!: (doc: Shelter) => void;
 
+  probably = true;
   risks: string[] = ["low", "medium", "high"];
   get project(): Shelter {
     return { ...this.shelter };

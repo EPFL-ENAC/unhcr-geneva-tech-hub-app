@@ -17,7 +17,7 @@ interface ShelterState {
   replicate: PouchDB.Replication.Replication<Shelter> | null;
 }
 
-const remoteCouch = "http://pierre:pierre@localhost:5984/shelters";
+const remoteCouch = "http://localhost:5984/shelters";
 
 /** Default Configure state value */
 function generateState(): ShelterState {
