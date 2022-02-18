@@ -1,6 +1,3 @@
-/** Config store */
-import { Shelter } from "@/store/ShelterInterface";
-import PouchDB from "pouchdb";
 import {
   ActionContext,
   ActionTree,
@@ -8,7 +5,11 @@ import {
   Module,
   MutationTree,
 } from "vuex";
+
+import PouchDB from "pouchdb";
 import { RootState } from ".";
+/** Config store */
+import { Shelter } from "@/store/ShelterInterface";
 
 interface ShelterState {
   shelters: Array<Shelter>;
@@ -176,20 +177,19 @@ const actions: ActionTree<ShelterState, RootState> = {
   },
   getDB: (context: ActionContext<ShelterState, RootState>) => {
     const localCouch = context.state.localCouch;
+    // shelters/_design/shelter/_view/shelters?include_docs=true
+    // shelters/_design/shelter/_update/shelter
     return localCouch
-      ?.allDocs({
-        include_docs: true,
-        attachments: true,
-      })
+      ?.query('shelter/list')
       .then(function (result) {
         // handle result
         console.log(
           "getdb mutation",
-          result.rows.map((x) => x.doc)
+          result.rows.map((x) => x.value)
         );
         context.commit(
           "SET_SHELTERS",
-          result.rows.map((x) => x.doc)
+          result.rows.map((x) => x.value)
         );
       })
       .catch(function (err: Error) {
