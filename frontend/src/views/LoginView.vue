@@ -10,11 +10,14 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { mapGetters } from "vuex";
 import LoginComponent from "../components/LoginComponent.vue";
 
 export default Vue.extend({
   name: "LoginView",
-
+  computed: {
+    ...mapGetters("UserModule", ["user"]),
+  },
   components: {
     LoginComponent,
   },

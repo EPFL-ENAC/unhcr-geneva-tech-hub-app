@@ -3,6 +3,7 @@ install:
 	npx husky install
 	$(MAKE) -C backend install
 	$(MAKE) -C frontend install
+	$(MAKE) -C couchdb install
 
 run-backend:
 	$(MAKE) -C backend run

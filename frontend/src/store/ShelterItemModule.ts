@@ -1,4 +1,3 @@
-/** Config store */
 import PouchDB from "pouchdb";
 import {
   ActionContext,
@@ -17,7 +16,7 @@ interface ShelterState {
   replicate: PouchDB.Replication.Replication<Shelter> | null;
 }
 
-const remoteCouch = "http://pierre:pierre@localhost:5984/shelters";
+const remoteCouch = "http://localhost:5984/shelters";
 
 /** Default Configure state value */
 function generateState(): ShelterState {
@@ -75,6 +74,12 @@ const actions: ActionTree<ShelterState, RootState> = {
             context.dispatch("getDoc", context.state.shelter?._id);
           });
         context.commit("SET_SYNC", sync);
+      })
+      .on("error", function (error: PouchDB.Core.Error) {
+        console.log("could not replicate", error);
+        if (error.status === 401) {
+          // you are not authorized
+        }
       });
     context.commit("SET_REPLICATE", replicate);
   },

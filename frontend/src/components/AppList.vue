@@ -1,6 +1,11 @@
 <template>
   <v-container>
-    <v-row>
+    <v-row v-hide-if-user>
+      <v-col>
+        <v-alert type="warning"> You are not logged in </v-alert>
+      </v-col>
+    </v-row>
+    <v-row v-show-if-user>
       <v-col v-for="app in apps" :key="app.title">
         <v-card class="mx-auto" outlined min-height="250px" max-width="500px">
           <v-list-item three-line>

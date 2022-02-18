@@ -3,7 +3,7 @@
     <v-toolbar dark color="primary">
       <v-toolbar-title>Login</v-toolbar-title>
     </v-toolbar>
-    <v-form v-model="formValid" @submit="login">
+    <v-form v-model="formValid" @submit.prevent="submitLoginForm">
       <v-card-text>
         <v-text-field
           v-model="username"
@@ -32,26 +32,37 @@
 </template>
 
 <script lang="ts">
-import { login } from "@/utils/couchdb";
-import { AxiosError } from "axios";
+import { UserCouchCredentials } from "@/store/UserModule";
+import { AxiosError, AxiosPromise } from "axios";
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
+import { mapActions, mapGetters } from "vuex";
 
-@Component
+@Component({
+  computed: {
+    ...mapGetters("UserModule", ["user"]),
+  },
+
+  methods: {
+    ...mapActions("UserModule", ["login", "logout"]),
+  },
+})
 export default class LoginComponent extends Vue {
   formValid = false;
   username = "";
   password = "";
   error = "";
+  login!: (doc: UserCouchCredentials) => AxiosPromise;
 
-  login(event: Event): void {
-    event.preventDefault();
+  submitLoginForm(): void {
     this.error = "";
-    login(this.username, this.password)
+    const { username, password } = this;
+    this.login({ username, password })
       .then(() => {
         this.$router.push("/apps");
       })
       .catch((error: AxiosError) => {
+        console.log("error login", error);
         switch (error.response?.status) {
           case 401:
             this.error = "Invalid credentials";

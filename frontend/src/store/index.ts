@@ -10,6 +10,7 @@ import VuexPersistence from "vuex-persist";
 import ConfigModule from "./ConfigModule";
 import ShelterItemModule from "./ShelterItemModule";
 import ShelterSustainabilityModule from "./ShelterSustainabilityModule";
+import UserModule from "./UserModule";
 
 // import createPersistedState from 'vuex-persist-indexeddb';
 
@@ -140,6 +141,7 @@ const store: StoreOptions<RootState> = {
     ConfigModule,
     ShelterSustainabilityModule,
     ShelterItemModule,
+    UserModule,
   },
   plugins: [
     new VuexPersistence({

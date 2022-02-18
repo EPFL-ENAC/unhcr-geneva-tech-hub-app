@@ -63,12 +63,20 @@
             <v-list-item-title>About</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item @click="logout">
+        <v-list-item @click="login" v-hide-if-user="user.name">
+          <v-list-item-icon>
+            <v-icon>mdi-login</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Login</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item @click="logout" v-show-if-user="user.name">
           <v-list-item-icon>
             <v-icon>mdi-logout</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title>Logout</v-list-item-title>
+            <v-list-item-title>Logout </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -101,93 +109,116 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { CouchUser } from "@/store/UserModule";
+import { AxiosError, AxiosPromise } from "axios";
+import { Component, Vue } from "vue-property-decorator";
+import { mapActions, mapGetters } from "vuex";
 
-export default Vue.extend({
-  name: "App",
-
-  data: () => ({
-    /** Window title */
-    title: "UNHCR-TSS", // use env variable,
-    /** Drawer menu visibility */
-    drawer: null,
-    /** Snackbar visibility */
-    snackbar: false,
-    apps: [
-      ["Green House Gaz", "GreenHouseGaz", "mdi-account-multiple-outline"],
-      ["Shelter Sustainability", "ShelterSustainability", "mdi-cog-outline"],
-      ["Energy", "Energy", "mdi-flash"],
-    ],
-  }),
-
+@Component({
   computed: {
-    /** Theme dark mode */
-    "$vuetify.theme.dark": {
-      get: function getTheme() {
-        return this.$store.getters["ConfigModule/toggleTheme"];
-      },
-    },
-    /** Snackbar text */
-    snackbarText() {
-      return this.$store.getters.message;
-    },
-    /** Get progress percentage */
-    progress: {
-      get: function progressGetter() {
-        return this.$store.getters.progress;
-      },
-      set: function progressSetter(value) {
-        this.$store.dispatch("setProgress", value);
-      },
-    },
-    loading: {
-      get: function loadingGetter() {
-        return this.$store.getters.loading;
-      },
-      set: function loadingSetter(value) {
-        this.$store.dispatch("setLoading", value);
-      },
-    },
-    error() {
-      return this.$store.getters.error;
-    },
-    themeDark() {
-      return this.$store.getters["ConfigModule/themeDark"];
-    },
-  },
-  watch: {
-    themeDark() {
-      this.$vuetify.theme.dark = this.$store.getters["ConfigModule/themeDark"];
-    },
-
-    "$store.getters.message": function onSnackbarTextChanged() {
-      this.snackbar = true;
-    },
-    $route: function onRouteChanged(): void {
-      /** When route change, hide snackbar */
-      this.snackbar = false;
-    },
-    loading: function onLoading() {
-      /** When loading */
-      // console.log('loading:', this.loading);
-      // change cursor
-      document.body.style.cursor = this.loading ? "wait" : "auto";
-    },
-    error: function onError() {
-      /** When error has occurred */
-      this.$router.push({ name: "Error" });
-    },
+    ...mapGetters("UserModule", ["user"]),
   },
   methods: {
-    logout() {
-      window.alert("are you sure you want to be logged out ?");
-    },
+    ...mapActions("UserModule", {
+      logoutStore: "logout",
+    }),
   },
+})
+/** ProjectList */
+export default class App extends Vue {
+  logoutStore!: () => AxiosPromise;
+  user!: CouchUser;
+
+  title = "UNHCR-TSS"; // use env variable,
+  /** Drawer menu visibility */
+  drawer = null;
+  /** Snackbar visibility */
+  snackbar = false;
+  apps = [
+    ["Green House Gaz", "GreenHouseGaz", "mdi-account-multiple-outline"],
+    ["Shelter Sustainability", "ShelterSustainability", "mdi-cog-outline"],
+    ["Energy", "Energy", "mdi-flash"],
+  ];
+
+  get snackbarText(): string {
+    return this.$store.getters.message;
+  }
+  get progress(): number {
+    return this.$store.getters.progress;
+  }
+  set progress(value: number) {
+    this.$store.dispatch("setProgress", value);
+  }
+  get loading(): boolean {
+    return this.$store.getters.loading;
+  }
+  set loading(value: boolean) {
+    this.$store.dispatch("setLoading", value);
+  }
+  get error(): string {
+    return this.$store.getters.error;
+  }
+  get themeDark(): boolean {
+    return this.$store.getters["ConfigModule/themeDark"];
+  }
+
+  // @Watch
+  // themeDark() {
+  //   this.$vuetify.theme.dark = this.$store.getters["ConfigModule/themeDark"];
+  // },
+
+  // @Watch
+  // "$store.getters.message": function onSnackbarTextChanged() {
+  //   this.snackbar = true;
+  // },
+  // @Watch
+  // $route: function onRouteChanged(): void {
+  //   /** When route change, hide snackbar */
+  //   this.snackbar = false;
+  // },
+  // @Watch
+  // loading: function onLoading() {
+  //   /** When loading */
+  //   // console.log('loading:', this.loading);
+  //   // change cursor
+  //   document.body.style.cursor = this.loading ? "wait" : "auto";
+  // },
+  // @Watch
+  // error: function onError() {
+  //   /** When error has occurred */
+  //   this.$router.push({ name: "Error" });
+  // },
+
+  login(): void {
+    if (this.$router.currentRoute.name !== "Login") {
+      this.$router.push({ name: "Login" });
+    }
+  }
+
+  logout(): void {
+    this.logoutStore()
+      .then(() => {
+        if (this.$router.currentRoute.name !== "Login") {
+          this.$router.push({ name: "Login" });
+        }
+        alert("Logout successful ");
+      })
+      .catch((error: AxiosError) => {
+        console.log("error login", error);
+        switch (error.response?.status) {
+          case 401:
+            this.$store.dispatch("setError", "Invalid credentials");
+            break;
+          default:
+            this.$store.dispatch("setError", error.message);
+        }
+      });
+  }
 
   /** Run once. */
-  mounted() {
+  mounted(): void {
     this.$vuetify.theme.dark = this.$store.getters["ConfigModule/themeDark"];
     document.title = this.title;
-  },
-});
+  }
+}
 </script>
