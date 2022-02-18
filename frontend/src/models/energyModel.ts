@@ -1,6 +1,8 @@
-import { CouchDBDocument } from "./couchdbModel";
-
-export interface EnergyProjectDocument extends CouchDBDocument {
+export interface EnergyProjectDocument {
   name: string;
   users: string[];
+}
+
+export interface EnergyTemplateDocument {
+  name: string;
 }

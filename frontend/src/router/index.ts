@@ -212,7 +212,7 @@ const routes: Array<RouteConfig> = [
           ),
       },
       {
-        path: ":id",
+        path: "projects/:id",
         name: "EnergyProject",
         component: () =>
           import(

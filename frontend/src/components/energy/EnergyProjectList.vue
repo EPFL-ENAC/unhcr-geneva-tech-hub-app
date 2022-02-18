@@ -1,54 +1,81 @@
 <template>
-  <v-list nav>
-    <v-list-item-group>
-      <v-list-item
-        v-for="item in projects"
-        :key="item._id"
-        @click="clickItem(item)"
-      >
-        <v-list-item-content>
-          <v-list-item-title>{{ item.name }}</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list-item-group>
-  </v-list>
+  <sync-document-list
+    ref="list"
+    title="Projects"
+    databaseName="energy_projects"
+    @click:item="clickItem"
+    @create="openDialog"
+  >
+    <template v-slot:item="{ item }">
+      <v-list-item-content>
+        <v-list-item-title>{{ item.name }}</v-list-item-title>
+      </v-list-item-content>
+      <v-list-item-action>
+        <v-btn icon @click="deleteItem(item, $event)">
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+      </v-list-item-action>
+    </template>
+    <template v-slot>
+      <v-dialog v-model="createDialog" max-width="256">
+        <v-card>
+          <v-card-title>New Project</v-card-title>
+          <v-card-text>
+            <v-text-field v-model="name" label="Name"></v-text-field>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="primary" @click="create">Create</v-btn>
+            <v-btn text @click="cancel">Cancel</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </template>
+  </sync-document-list>
 </template>
 
 <script lang="ts">
+import SyncDocumentList from "@/components/commons/SyncDocumentList.vue";
+import { ExistingDocument } from "@/models/couchdbModel";
 import { EnergyProjectDocument } from "@/models/energyModel";
-import { SyncDatabase } from "@/utils/couchdb";
-import PouchDB from "pouchdb";
 import "vue-class-component/hooks";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Ref, Vue } from "vue-property-decorator";
 
-@Component
+@Component({
+  components: { SyncDocumentList },
+})
 export default class EnergyProjectList extends Vue {
-  @Prop({ type: Object as () => SyncDatabase<EnergyProjectDocument> })
-  readonly database!: SyncDatabase<EnergyProjectDocument>;
+  createDialog = false;
+  name = "";
 
-  projects: EnergyProjectDocument[] = [];
-  changes?: PouchDB.Core.Changes<EnergyProjectDocument>;
+  @Ref()
+  readonly list!: SyncDocumentList<EnergyProjectDocument>;
 
-  created(): void {
-    this.updateProjects();
+  clickItem(document: ExistingDocument<EnergyProjectDocument>): void {
+    this.$router.push({ path: `projects/${document._id}`, append: true });
+  }
 
-    this.changes = this.database.onChange(() => {
-      this.updateProjects();
+  deleteItem(
+    document: ExistingDocument<EnergyProjectDocument>,
+    event: Event
+  ): void {
+    event.stopPropagation();
+    this.list.database.db.remove(document);
+  }
+
+  openDialog(): void {
+    this.createDialog = true;
+  }
+
+  create(): void {
+    this.list.database.db.post({
+      name: this.name,
+      users: [],
     });
+    this.createDialog = false;
   }
 
-  destroyed(): void {
-    this.changes?.cancel();
-  }
-
-  updateProjects(): void {
-    this.database.getAllDocuments().then((documents) => {
-      this.projects = documents;
-    });
-  }
-
-  clickItem(project: EnergyProjectDocument): void {
-    this.$router.push({ path: project._id, append: true });
+  cancel(): void {
+    this.createDialog = false;
   }
 }
 </script>

@@ -1,6 +1,5 @@
+import { ExistingDocument } from "@/models/couchdbModel";
 import axios, { AxiosPromise } from "axios";
-
-import { CouchDBDocument } from "@/models/couchdbModel";
 import PouchDB from "pouchdb";
 import qs from "qs";
 
@@ -38,9 +37,7 @@ export function logout(): AxiosPromise {
   });
 }
 
-export function createSyncDatabase<T extends CouchDBDocument>(
-  name: string
-): SyncDatabase<T> {
+export function createSyncDatabase<T>(name: string): SyncDatabase<T> {
   const localDB = new PouchDB<T>(name);
   const remoteDB = new PouchDB<T>(getUrl(name));
   const sync: PouchDB.Replication.Sync<T> = localDB.sync(remoteDB, {
@@ -50,7 +47,7 @@ export function createSyncDatabase<T extends CouchDBDocument>(
   return new SyncDatabase(localDB, sync);
 }
 
-export class SyncDatabase<T extends CouchDBDocument> {
+export class SyncDatabase<T> {
   constructor(
     public db: PouchDB.Database<T>,
     private sync: PouchDB.Replication.Sync<T>
@@ -67,11 +64,11 @@ export class SyncDatabase<T extends CouchDBDocument> {
       .on("change", listener);
   }
 
-  async getAllDocuments(): Promise<T[]> {
+  async getAllDocuments(): Promise<ExistingDocument<T>[]> {
     const result = await this.db.allDocs({
       include_docs: true,
     });
-    return result.rows.map((row) => row.doc as T);
+    return result.rows.map((row) => row.doc as ExistingDocument<T>);
   }
 
   cancel(): void {

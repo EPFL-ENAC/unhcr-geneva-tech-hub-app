@@ -1,6 +1,3 @@
 import PouchDB from "pouchdb";
 
-export interface CouchDBDocument extends PouchDB.Core.AllDocsMeta {
-  _id: string;
-  _rev?: string;
-}
+export type ExistingDocument<T> = PouchDB.Core.ExistingDocument<T>;
