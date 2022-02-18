@@ -105,9 +105,14 @@ const mutations: MutationTree<ShelterState> = {
     console.log("running ADD_DOC mutation");
     state.shelters.push(value);
 
-    state.localCouch?.put(value).then(() => {
-      console.log("successfully put new document");
-    });
+    state.localCouch
+      ?.put(value)
+      .then(() => {
+        console.log("successfully put new document");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
   REMOVE_DOC(state, value) {
     console.log("running REMOVE_DOC mutation");
@@ -180,7 +185,7 @@ const actions: ActionTree<ShelterState, RootState> = {
     // shelters/_design/shelter/_view/shelters?include_docs=true
     // shelters/_design/shelter/_update/shelter
     return localCouch
-      ?.query('shelter/list')
+      ?.query("shelter/list")
       .then(function (result) {
         // handle result
         console.log(

@@ -1,3 +1,4 @@
+import PouchDB from "pouchdb";
 import {
   ActionContext,
   ActionTree,
@@ -5,10 +6,8 @@ import {
   Module,
   MutationTree,
 } from "vuex";
-import { Score, Shelter } from "./ShelterInterface";
-
-import PouchDB from "pouchdb";
 import { RootState } from ".";
+import { Score, Shelter } from "./ShelterInterface";
 
 interface ShelterState {
   shelter: Shelter | null;
@@ -76,12 +75,12 @@ const actions: ActionTree<ShelterState, RootState> = {
           });
         context.commit("SET_SYNC", sync);
       })
-      .on("error", function(error: PouchDB.Core.Error) {
+      .on("error", function (error: PouchDB.Core.Error) {
         console.log("could not replicate", error);
         if (error.status === 401) {
           // you are not authorized
         }
-      })
+      });
     context.commit("SET_REPLICATE", replicate);
   },
   closeDB: (context: ActionContext<ShelterState, RootState>) => {
