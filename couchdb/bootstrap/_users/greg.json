@@ -1,0 +1,8 @@
+{
+    "_id": "org.couchdb.user:greg@epfl.ch",
+    "type": "user",
+    "roles": ["user", "specialist", "admin"],
+    "name": "greg@epfl.ch",
+    "password": "secure"
+  }
+  

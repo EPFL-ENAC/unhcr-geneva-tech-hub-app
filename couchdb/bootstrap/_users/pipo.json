@@ -1,7 +1,0 @@
-{
-  "_id": "org.couchdb.user:pipo@pipo.com",
-  "type": "user",
-  "roles": ["user", "super-admin"],
-  "name": "pipo@pipo.com",
-  "password": "secure"
-}
