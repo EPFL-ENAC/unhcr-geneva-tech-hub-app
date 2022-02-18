@@ -1,33 +1,32 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col>
-        <h1>Energy</h1>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <energy-project-list :database="database"></energy-project-list>
-      </v-col>
-    </v-row>
+    {{ document }}
   </v-container>
 </template>
 
 <script lang="ts">
-import EnergyProjectList from "@/components/energy/EnergyProjectList.vue";
 import { EnergyProjectDocument } from "@/models/energyModel";
 import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
 
-@Component({
-  components: {
-    EnergyProjectList,
-  },
-})
-export default class EnergyHome extends Vue {
+@Component
+export default class EnergyProject extends Vue {
   readonly database: SyncDatabase<EnergyProjectDocument> =
     createSyncDatabase("energy_projects");
+
+  document: EnergyProjectDocument | null = null;
+
+  created(): void {
+    this.database.db
+      .get(this.$route.params.id)
+      .then((document) => {
+        this.document = document;
+      })
+      .catch(() => {
+        this.$router.push("/energy");
+      });
+  }
 
   destroyed(): void {
     this.database.cancel();

@@ -200,7 +200,8 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/energy",
-    component: () => import("../views/energy/Energy.vue"),
+    component: () =>
+      import(/* webpackChunkName: "energy" */ "../views/energy/Energy.vue"),
     children: [
       {
         path: "",
@@ -208,6 +209,14 @@ const routes: Array<RouteConfig> = [
         component: () =>
           import(
             /* webpackChunkName: "energy-home" */ "../views/energy/EnergyHome.vue"
+          ),
+      },
+      {
+        path: ":id",
+        name: "EnergyProject",
+        component: () =>
+          import(
+            /* webpackChunkName: "energy-project" */ "../views/energy/EnergyProject.vue"
           ),
       },
     ],
