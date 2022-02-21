@@ -134,7 +134,15 @@ const routes: Array<RouteConfig> = [
     redirect: { name: "ShelterSustainabilityList" },
     children: [
       {
-        path: ":id/edit",
+        path: "list",
+        name: "ShelterSustainabilityList",
+        component: () =>
+          import(
+            /* webpackChunkName: "shelter_sustainability" */ "../views/shelter_sustainability/ShelterSustainabilityList.vue"
+          ),
+      },
+      {
+        path: ":id/",
         name: "ShelterSustainabilityEdit",
         component: () =>
           import(
@@ -234,14 +242,6 @@ const routes: Array<RouteConfig> = [
               ),
           },
         ],
-      },
-      {
-        path: "list",
-        name: "ShelterSustainabilityList",
-        component: () =>
-          import(
-            /* webpackChunkName: "shelter_sustainability" */ "../views/shelter_sustainability/ShelterSustainabilityList.vue"
-          ),
       },
     ],
   },
