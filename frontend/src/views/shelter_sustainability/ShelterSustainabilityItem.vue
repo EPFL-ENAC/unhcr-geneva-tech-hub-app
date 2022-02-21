@@ -53,9 +53,8 @@ export default class ProjectItem extends Vue {
     { text: "Background", to: "ShelterSustainabilityStep10" },
   ];
   mounted(): void {
-    console.log("mounted", this.$route.params.id);
     this.syncDB();
-    this.getDoc(this.$route.params.id);
+    this.getDoc(decodeURIComponent(this.$route.params.id));
   }
   destroyed(): void {
     console.log("DESTROYED view shelter item, closing DB");

@@ -19,7 +19,6 @@
               <v-card-text>
                 <span>{{ project.location_name }}</span>
               </v-card-text>
-              {{ project.users }} : {{ project.created_by }}
               <v-card-actions>
                 <v-btn
                   outlined
@@ -27,7 +26,7 @@
                   text
                   :to="{
                     name: 'ShelterSustainabilityEdit',
-                    params: { id: project._id },
+                    params: { id: encodeURIComponent(project._id) },
                   }"
                 >
                   <span v-if="$can('edit', project)"> Edit project </span>
@@ -61,12 +60,6 @@
               />
             </v-card-text>
             <v-card-actions>
-              <!-- <v-btn
-              outlined
-              rounded
-              text
-              :to="{ name: 'ProjectNew', query: { name: newName } }"
-            > Create new project url</v-btn> -->
               <v-btn
                 outlined
                 rounded
@@ -86,20 +79,16 @@
 </template>
 
 <script lang="ts">
-import { CouchUser } from "@/store/UserModule";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
 
 @Component({
   computed: {
-    ...mapState("ShelterSustainabilityModule", {
-      shelters: "shelters",
-    }),
-    ...mapState("UserModule", ["user"]),
+    ...mapState("ShelterListModule", ["shelters"]),
   },
 
   methods: {
-    ...mapActions("ShelterSustainabilityModule", [
+    ...mapActions("ShelterListModule", [
       "addDoc",
       "removeDoc",
       "syncDB",
@@ -112,7 +101,6 @@ import { mapActions, mapState } from "vuex";
 export default class ProjectList extends Vue {
   newName = "";
   shelters!: [];
-  user!: CouchUser;
   addDoc!: (name: string) => null;
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
@@ -135,18 +123,6 @@ export default class ProjectList extends Vue {
       console.error("please fill the new Name");
     }
   }
-
-  // public projectsWithEditRights(): Record<string, string | number | boolean>[] {
-  //   // project.users
-  //   // isAdmin/isSpecialist || isDBAmin
-  //   const isAuthor = this.project.users.indexOf(user.name) >= 0;
-
-  //   return this.projects.map(project => {
-
-  //     project.haveEditRights = false;
-  //     return project;
-  //   });
-  // }
 
   mounted(): void {
     this.syncDB();

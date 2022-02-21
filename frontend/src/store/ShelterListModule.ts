@@ -116,7 +116,6 @@ const mutations: MutationTree<ShelterState> = {
 /** Action */
 const actions: ActionTree<ShelterState, RootState> = {
   syncDB: (context: ActionContext<ShelterState, RootState>) => {
-    console.log("syncDB action in ShelterItem List Module");
     context.commit("INIT_DB");
     const opts = { live: true, retry: true };
     const localCouch = context.state.localCouch;
