@@ -17,6 +17,7 @@
         >
       </v-tabs>
       <v-spacer />
+      <v-avatar> {{ user.name }}</v-avatar>
       <v-btn icon @click="$store.dispatch('ConfigModule/toggleTheme')">
         <v-icon v-text="'mdi-invert-colors'" />
       </v-btn>
@@ -63,7 +64,7 @@
             <v-list-item-title>About</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item @click="login" v-hide-if-user="user.name">
+        <v-list-item @click="login" v-if="$user('isLoggedOut')">
           <v-list-item-icon>
             <v-icon>mdi-login</v-icon>
           </v-list-item-icon>
@@ -71,7 +72,7 @@
             <v-list-item-title>Login</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item @click="logout" v-show-if-user="user.name">
+        <v-list-item @click="logout" v-if="$user('isLoggedIn')">
           <v-list-item-icon>
             <v-icon>mdi-logout</v-icon>
           </v-list-item-icon>
@@ -121,12 +122,15 @@ import { mapActions, mapGetters } from "vuex";
   methods: {
     ...mapActions("UserModule", {
       logoutStore: "logout",
+      getSessionStore: "getSession",
     }),
   },
 })
 /** ProjectList */
 export default class App extends Vue {
+  // probably vuex Promise and not AxiosPromise
   logoutStore!: () => AxiosPromise;
+  getSessionStore!: () => AxiosPromise;
   user!: CouchUser;
 
   title = "UNHCR-TSS"; // use env variable,
@@ -219,6 +223,9 @@ export default class App extends Vue {
   mounted(): void {
     this.$vuetify.theme.dark = this.$store.getters["ConfigModule/themeDark"];
     document.title = this.title;
+
+    /// retrieve user
+    this.getSessionStore();
   }
 }
 </script>

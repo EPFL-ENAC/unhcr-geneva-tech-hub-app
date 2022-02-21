@@ -19,7 +19,7 @@
               <v-card-text>
                 <span>{{ project.location_name }}</span>
               </v-card-text>
-
+              {{ project.users }} : {{ project.created_by }}
               <v-card-actions>
                 <v-btn
                   outlined
@@ -30,9 +30,15 @@
                     params: { id: project._id },
                   }"
                 >
-                  Edit project
+                  <span v-if="$can('edit', project)"> Edit project </span>
+                  <span v-else> Show project </span>
                 </v-btn>
-                <v-btn outlined rounded @click="() => removeDoc(project._id)">
+                <v-btn
+                  v-if="$can('delete', project)"
+                  outlined
+                  rounded
+                  @click="() => removeDoc(project._id)"
+                >
                   Delete project
                 </v-btn>
               </v-card-actions>
@@ -80,6 +86,7 @@
 </template>
 
 <script lang="ts">
+import { CouchUser } from "@/store/UserModule";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
 
@@ -88,6 +95,7 @@ import { mapActions, mapState } from "vuex";
     ...mapState("ShelterSustainabilityModule", {
       shelters: "shelters",
     }),
+    ...mapState("UserModule", ["user"]),
   },
 
   methods: {
@@ -104,6 +112,7 @@ import { mapActions, mapState } from "vuex";
 export default class ProjectList extends Vue {
   newName = "";
   shelters!: [];
+  user!: CouchUser;
   addDoc!: (name: string) => null;
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
@@ -126,6 +135,18 @@ export default class ProjectList extends Vue {
       console.error("please fill the new Name");
     }
   }
+
+  // public projectsWithEditRights(): Record<string, string | number | boolean>[] {
+  //   // project.users
+  //   // isAdmin/isSpecialist || isDBAmin
+  //   const isAuthor = this.project.users.indexOf(user.name) >= 0;
+
+  //   return this.projects.map(project => {
+
+  //     project.haveEditRights = false;
+  //     return project;
+  //   });
+  // }
 
   mounted(): void {
     this.syncDB();

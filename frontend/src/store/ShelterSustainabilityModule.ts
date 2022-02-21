@@ -1,3 +1,6 @@
+/** Config store */
+import { Shelter } from "@/store/ShelterInterface";
+import PouchDB from "pouchdb";
 import {
   ActionContext,
   ActionTree,
@@ -5,11 +8,8 @@ import {
   Module,
   MutationTree,
 } from "vuex";
-
-import PouchDB from "pouchdb";
 import { RootState } from ".";
-/** Config store */
-import { Shelter } from "@/store/ShelterInterface";
+import { CouchUser } from "./UserModule";
 
 interface ShelterState {
   shelters: Array<Shelter>;
@@ -30,7 +30,7 @@ function generateState(): ShelterState {
 }
 
 function generateNewShelter(name: string) {
-  const uuid = Math.random().toString(36).substring(2, 15);
+  // const uuid = Math.random().toString(36).substring(2, 15);
   function shuffle(seed: number): number {
     return Math.floor(Math.random() * seed);
   }
@@ -38,8 +38,9 @@ function generateNewShelter(name: string) {
     return array[shuffle(array.length)];
   }
   return {
-    _id: uuid,
-    name: name ?? "project " + shuffle(100000) + uuid,
+    _id: name,
+    // name: name ?? "project " + shuffle(100000) + uuid,
+    name,
     organisation: shuffleArray(["UNHCR", "WHO", "CIA", "TFF"]),
     shelter_total: shuffle(100), // number of shelters
     shelter_occupants: shuffle(10), // people
@@ -76,6 +77,8 @@ function generateNewShelter(name: string) {
     doors_dimensions: [{ Wd: 0, Hd: 0 }],
     windows_dimensions: [{ Ww: 0, Hw: 0, Hs: 0 }],
     shelter_geometry_type: "",
+    users: [""],
+    created_by: "",
   };
 }
 /** Getters */
@@ -103,11 +106,10 @@ const mutations: MutationTree<ShelterState> = {
   },
   ADD_DOC(state, value) {
     console.log("running ADD_DOC mutation");
-    state.shelters.push(value);
-
     state.localCouch
       ?.put(value)
       .then(() => {
+        state.shelters.push(value);
         console.log("successfully put new document");
       })
       .catch((error) => {
@@ -169,11 +171,29 @@ const actions: ActionTree<ShelterState, RootState> = {
     const replicate = localCouch?.replicate
       .from(remoteCouch)
       .on("complete", function () {
+        console.log("complete: proced to sync");
         // then two-way, continuous, retriable sync
         sync(localCouch);
       })
+      .on("change", function (info) {
+        console.log("change", info);
+        // handle change
+      })
+      .on("paused", function (err) {
+        console.log("paused", err);
+        // replication paused (e.g. replication up to date, user went offline)
+      })
+      .on("active", function () {
+        console.log("active");
+        // replicate resumed (e.g. new changes replicating, user went back online)
+      })
+      .on("denied", function (err) {
+        console.log("denied", err);
+        // a document failed to replicate (e.g. due to permissions)
+      })
       .on("error", function (err) {
-        console.log("On sync Error", err);
+        console.log("error", err);
+        // handle error
       });
     context.commit("SET_REPLICATE", replicate);
   },
@@ -202,8 +222,14 @@ const actions: ActionTree<ShelterState, RootState> = {
       });
   },
   addDoc: (context: ActionContext<ShelterState, RootState>, name: string) => {
-    const newShelter = generateNewShelter(name);
-    context.commit("ADD_DOC", newShelter);
+    const user = context.rootGetters["UserModule/user"] as CouchUser;
+    console.log(user);
+    if (user.name) {
+      const newShelter = generateNewShelter(name);
+      newShelter.users = [user.name];
+      newShelter.created_by = user.name;
+      context.commit("ADD_DOC", newShelter);
+    }
   },
   removeDoc: (context: ActionContext<ShelterState, RootState>, id) => {
     context.commit("REMOVE_DOC", id);

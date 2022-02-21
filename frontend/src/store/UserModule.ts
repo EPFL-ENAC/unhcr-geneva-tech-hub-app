@@ -50,7 +50,9 @@ const getters: GetterTree<UserState, RootState> = {
 /** Mutations */
 const mutations: MutationTree<UserState> = {
   SET_USER(state, value) {
-    state.user = value;
+    const name = value.name ?? "";
+    const roles = value.roles ?? [];
+    state.user = { name, roles };
   },
   SET_USER_LOADING(state) {
     state.userLoading = true;
@@ -90,6 +92,20 @@ const actions: ActionTree<UserState, RootState> = {
       })
       .finally(() => {
         context.commit("UNSET_USER_LOADING");
+      });
+  },
+  getSession: (context: ActionContext<UserState, RootState>) => {
+    fetch("http://localhost:5984/_session", {
+      method: "get",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((result) => result.json())
+      .then((response) => {
+        console.log(response.userCtx);
+        context.commit("SET_USER", response.userCtx);
       });
   },
 };

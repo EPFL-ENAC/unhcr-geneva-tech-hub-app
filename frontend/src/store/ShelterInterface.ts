@@ -23,6 +23,9 @@ export interface Shelter {
   shelter_dimensions: ShelterDimensions;
   doors_dimensions: DoorDimensions[];
   windows_dimensions: WindowDimensions[];
+
+  users: string[];
+  created_by: string;
 }
 export interface Score {
   [property: string]: number | Score;

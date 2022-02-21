@@ -9,11 +9,6 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col v-show-if-admin="probably">
-          BLABLBALBA show-me-if-you-care
-        </v-col>
-      </v-row>
-      <v-row>
         <v-col>
           <v-divider></v-divider>
         </v-col>
