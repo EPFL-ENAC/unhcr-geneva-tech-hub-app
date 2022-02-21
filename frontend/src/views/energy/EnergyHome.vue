@@ -7,7 +7,10 @@
     </v-row>
     <v-row>
       <v-col>
-        <energy-project-list :database="database"></energy-project-list>
+        <energy-project-list></energy-project-list>
+      </v-col>
+      <v-col>
+        <energy-template-list></energy-template-list>
       </v-col>
     </v-row>
   </v-container>
@@ -15,22 +18,15 @@
 
 <script lang="ts">
 import EnergyProjectList from "@/components/energy/EnergyProjectList.vue";
-import { EnergyProjectDocument } from "@/models/energyModel";
-import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
+import EnergyTemplateList from "@/components/energy/EnergyTemplateList.vue";
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
   components: {
     EnergyProjectList,
+    EnergyTemplateList,
   },
 })
-export default class EnergyHome extends Vue {
-  readonly database: SyncDatabase<EnergyProjectDocument> =
-    createSyncDatabase("energy_projects");
-
-  destroyed(): void {
-    this.database.cancel();
-  }
-}
+export default class EnergyHome extends Vue {}
 </script>

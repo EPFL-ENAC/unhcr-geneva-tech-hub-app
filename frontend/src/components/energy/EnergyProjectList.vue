@@ -4,7 +4,7 @@
     title="Projects"
     databaseName="energy_projects"
     @click:item="clickItem"
-    @create="openDialog"
+    @create="create"
   >
     <template v-slot:item="{ item }">
       <v-list-item-content>
@@ -16,19 +16,9 @@
         </v-btn>
       </v-list-item-action>
     </template>
-    <template v-slot>
-      <v-dialog v-model="createDialog" max-width="256">
-        <v-card>
-          <v-card-title>New Project</v-card-title>
-          <v-card-text>
-            <v-text-field v-model="name" label="Name"></v-text-field>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn color="primary" @click="create">Create</v-btn>
-            <v-btn text @click="cancel">Cancel</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+    <template v-slot:create>
+      <v-text-field v-model="name" label="Name"></v-text-field>
+      <v-select :items="templates" label="Select template"></v-select>
     </template>
   </sync-document-list>
 </template>
@@ -36,7 +26,12 @@
 <script lang="ts">
 import SyncDocumentList from "@/components/commons/SyncDocumentList.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
-import { EnergyProjectDocument } from "@/models/energyModel";
+import {
+  EnergyProjectDocument,
+  EnergyTemplateDocument,
+} from "@/models/energyModel";
+import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
+import { SelectItemObject } from "@/utils/vuetify";
 import "vue-class-component/hooks";
 import { Component, Ref, Vue } from "vue-property-decorator";
 
@@ -46,9 +41,31 @@ import { Component, Ref, Vue } from "vue-property-decorator";
 export default class EnergyProjectList extends Vue {
   createDialog = false;
   name = "";
+  templateDocuments: EnergyTemplateDocument[] = [];
 
   @Ref()
   readonly list!: SyncDocumentList<EnergyProjectDocument>;
+
+  created(): void {
+    // TODO vuex
+    const templateDatabase: SyncDatabase<EnergyTemplateDocument> =
+      createSyncDatabase("energy_templates");
+    templateDatabase
+      .getAllDocuments()
+      .then((documents) => {
+        this.templateDocuments = documents;
+      })
+      .finally(() => {
+        templateDatabase.cancel();
+      });
+  }
+
+  get templates(): SelectItemObject<string, EnergyTemplateDocument>[] {
+    return this.templateDocuments.map((document) => ({
+      text: document.name,
+      value: document,
+    }));
+  }
 
   clickItem(document: ExistingDocument<EnergyProjectDocument>): void {
     this.$router.push({ path: `projects/${document._id}`, append: true });
@@ -62,20 +79,12 @@ export default class EnergyProjectList extends Vue {
     this.list.database.db.remove(document);
   }
 
-  openDialog(): void {
-    this.createDialog = true;
-  }
-
   create(): void {
     this.list.database.db.post({
       name: this.name,
       users: [],
     });
-    this.createDialog = false;
-  }
-
-  cancel(): void {
-    this.createDialog = false;
+    this.name = "";
   }
 }
 </script>

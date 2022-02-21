@@ -6,17 +6,17 @@
 
 <script lang="ts">
 import { ExistingDocument } from "@/models/couchdbModel";
-import { EnergyProjectDocument } from "@/models/energyModel";
+import { EnergyTemplateDocument } from "@/models/energyModel";
 import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class EnergyProject extends Vue {
-  readonly database: SyncDatabase<EnergyProjectDocument> =
-    createSyncDatabase("energy_projects");
+  readonly database: SyncDatabase<EnergyTemplateDocument> =
+    createSyncDatabase("energy_templates");
 
-  document: ExistingDocument<EnergyProjectDocument> | null = null;
+  document: ExistingDocument<EnergyTemplateDocument> | null = null;
 
   created(): void {
     this.database.db

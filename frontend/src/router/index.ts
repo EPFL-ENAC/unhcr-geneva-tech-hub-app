@@ -219,6 +219,14 @@ const routes: Array<RouteConfig> = [
             /* webpackChunkName: "energy-project" */ "../views/energy/EnergyProject.vue"
           ),
       },
+      {
+        path: "templates/:id",
+        name: "EnergyTemplate",
+        component: () =>
+          import(
+            /* webpackChunkName: "energy-template" */ "../views/energy/EnergyTemplate.vue"
+          ),
+      },
     ],
   },
 ];
