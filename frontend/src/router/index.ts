@@ -13,7 +13,9 @@ const routes: Array<RouteConfig> = [
   {
     path: "/login",
     name: "Login",
-    component: Login,
+    components: {
+      Login,
+    },
   },
   {
     path: "/apps",
@@ -28,10 +30,6 @@ const routes: Array<RouteConfig> = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
-  },
-  {
-    path: "/holistic_energy",
-    name: "holistic_energy",
   },
   {
     path: "/green_house_gaz",
@@ -83,10 +81,6 @@ const routes: Array<RouteConfig> = [
     redirect: { name: "ShelterSustainabilityList" },
     children: [
       {
-        //   path: 'new',
-        //   name: 'ProjectNew',
-        //   component: ProjectItem,
-        // }, {
         path: ":id/edit",
         name: "ShelterSustainabilityEdit",
         component: () =>

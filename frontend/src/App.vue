@@ -83,10 +83,27 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-main>
-      <v-fade-transition mode="out-in">
-        <router-view />
-      </v-fade-transition>
+    <v-main v-if="$user('isLoggedOut')">
+      <v-row v-if="$router.currentRoute.name !== 'Login'">
+        <v-col>
+          <v-alert type="warning"> You are not logged in </v-alert>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <router-view name="Login" />
+        </v-col>
+      </v-row>
+    </v-main>
+
+    <v-main v-else>
+      <v-row>
+        <v-col>
+          <v-fade-transition mode="out-in">
+            <router-view />
+          </v-fade-transition>
+        </v-col>
+      </v-row>
     </v-main>
 
     <v-overlay v-model="loading">
