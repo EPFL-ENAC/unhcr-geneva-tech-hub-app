@@ -4,6 +4,14 @@ function (doc, req) {
     // log(fields);
     // log(req.userCtx);
     // log(req['secObj'])
+    /*
+
+     curl -X POST http://paul%40epfl.ch:secure@localhost:5984/shelters/_design/shelter/_update/shelter \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json" \
+     -d '{ "name": "kikooopaul@epfl.ch"}'
+
+    */
 
     var currentUser = req['userCtx']['name'];
 
@@ -11,7 +19,7 @@ function (doc, req) {
         if ('name' in fields && fields['name']){
             log("NEW DOCUMENT")
             // create new document
-            fields._id = fields['name'];
+            // fields._id = fields['name'];
             fields.created_by = currentUser;
             fields.users = [currentUser]
             return [fields, 'New created document']
