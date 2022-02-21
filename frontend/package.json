@@ -12,6 +12,7 @@
     "@mdi/font": "5.9.55",
     "axios": "^0.26.0",
     "core-js": "^3.6.5",
+    "lodash": "^4.17.21",
     "pouchdb": "^7.2.2",
     "register-service-worker": "^1.7.1",
     "roboto-fontface": "*",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
+    "@types/lodash": "^4.14.178",
     "@types/mocha": "^5.2.4",
     "@types/pouchdb": "^6.4.0",
     "@types/webfontloader": "^1.6.34",

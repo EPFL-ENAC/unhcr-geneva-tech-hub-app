@@ -18,7 +18,11 @@
     </template>
     <template v-slot:create>
       <v-text-field v-model="name" label="Name"></v-text-field>
-      <v-select :items="templates" label="Select template"></v-select>
+      <v-select
+        v-model="template"
+        :items="templates"
+        label="Select template"
+      ></v-select>
     </template>
   </sync-document-list>
 </template>
@@ -26,10 +30,7 @@
 <script lang="ts">
 import SyncDocumentList from "@/components/commons/SyncDocumentList.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
-import {
-  EnergyProjectDocument,
-  EnergyTemplateDocument,
-} from "@/models/energyModel";
+import { ProjectDocument, TemplateDocument } from "@/models/energyModel";
 import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
 import { SelectItemObject } from "@/utils/vuetify";
 import "vue-class-component/hooks";
@@ -39,42 +40,47 @@ import { Component, Ref, Vue } from "vue-property-decorator";
   components: { SyncDocumentList },
 })
 export default class EnergyProjectList extends Vue {
+  // TODO vuex
+  readonly templateDatabase: SyncDatabase<TemplateDocument> =
+    createSyncDatabase("energy_templates");
+
   createDialog = false;
   name = "";
-  templateDocuments: EnergyTemplateDocument[] = [];
+  templateDocuments: ExistingDocument<TemplateDocument>[] = [];
+  template: TemplateDocument | null = null;
 
   @Ref()
-  readonly list!: SyncDocumentList<EnergyProjectDocument>;
+  readonly list!: SyncDocumentList<ProjectDocument>;
 
   created(): void {
-    // TODO vuex
-    const templateDatabase: SyncDatabase<EnergyTemplateDocument> =
-      createSyncDatabase("energy_templates");
-    templateDatabase
-      .getAllDocuments()
-      .then((documents) => {
-        this.templateDocuments = documents;
-      })
-      .finally(() => {
-        templateDatabase.cancel();
-      });
+    this.updateTemplates();
+    this.templateDatabase.onChange(() => {
+      this.updateTemplates();
+    });
   }
 
-  get templates(): SelectItemObject<string, EnergyTemplateDocument>[] {
+  destroyed(): void {
+    this.templateDatabase.cancel();
+  }
+
+  get templates(): SelectItemObject<string, TemplateDocument>[] {
     return this.templateDocuments.map((document) => ({
       text: document.name,
       value: document,
     }));
   }
 
-  clickItem(document: ExistingDocument<EnergyProjectDocument>): void {
+  updateTemplates(): void {
+    this.templateDatabase.getAllDocuments().then((documents) => {
+      this.templateDocuments = documents;
+    });
+  }
+
+  clickItem(document: ExistingDocument<ProjectDocument>): void {
     this.$router.push({ path: `projects/${document._id}`, append: true });
   }
 
-  deleteItem(
-    document: ExistingDocument<EnergyProjectDocument>,
-    event: Event
-  ): void {
+  deleteItem(document: ExistingDocument<ProjectDocument>, event: Event): void {
     event.stopPropagation();
     this.list.database.db.remove(document);
   }
@@ -83,6 +89,9 @@ export default class EnergyProjectList extends Vue {
     this.list.database.db.post({
       name: this.name,
       users: [],
+      modules: {
+        general: this.template?.modules.general,
+      },
     });
     this.name = "";
   }
