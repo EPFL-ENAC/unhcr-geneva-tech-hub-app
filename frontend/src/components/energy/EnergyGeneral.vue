@@ -1,61 +1,26 @@
 <template>
   <v-card>
     <v-card-text>
-      <v-row>
-        <v-col v-bind="colBind">
-          <v-text-field
-            v-model="module.year"
-            label="Year of the data"
-            hide-details="auto"
-            type="number"
-          ></v-text-field>
-        </v-col>
-        <v-col v-bind="colBind">
-          <v-text-field
-            v-model="module.name"
-            label="Name of the camp"
-            hide-details="auto"
-          ></v-text-field>
-        </v-col>
+      <v-row v-for="(rowItem, index) in formItems" :key="index">
+        <template v-for="(item, index) in rowItem">
+          <v-col
+            v-if="!item.hidden"
+            :key="index"
+            cols="12"
+            sm="6"
+            md="4"
+            lg="3"
+            xl="2"
+          >
+            <form-item-component
+              v-model="module[item.key]"
+              :label="item.label"
+              :type="item.type"
+              :options="item.options"
+            ></form-item-component>
+          </v-col>
+        </template>
       </v-row>
-      <v-row>
-        <v-col v-bind="colBind">
-          <v-text-field
-            v-model="module.locationLatitude"
-            label="Latitude of the camp [Decimal Degrees]"
-            hide-details="auto"
-            type="number"
-          ></v-text-field>
-        </v-col>
-        <v-col v-bind="colBind">
-          <v-text-field
-            v-model="module.locationLongitude"
-            label="Longitude of the camp [Decimal Degrees]"
-            hide-details="auto"
-            type="number"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col v-bind="colBind">
-          <v-select
-            v-model="module.temporary"
-            :items="temporaryItems"
-            label="Is the camp temporary?"
-            hide-details="auto"
-          ></v-select>
-        </v-col>
-        <v-col v-bind="colBind">
-          <v-text-field
-            v-if="module.temporary"
-            v-model="module.expirationYear"
-            label="In case of temporary camp, in what year will it be removed?"
-            hide-details="auto"
-            type="number"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-      <v-row> </v-row>
     </v-card-text>
     <v-card-actions>
       <v-btn color="primary" :disabled="saveDisabled" @click="save">
@@ -67,33 +32,73 @@
 </template>
 
 <script lang="ts">
+import FormItemComponent, {
+  FormItem,
+} from "@/components/commons/FormItemComponent.vue";
 import { GeneralModule } from "@/models/energyModel";
-import { SelectItemObject } from "@/utils/vuetify";
-import _ from "lodash";
+import { cloneDeep, isEqual } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
-@Component
+@Component({
+  components: {
+    FormItemComponent,
+  },
+})
 export default class EnergyGeneral extends Vue {
-  readonly colBind = {
-    cols: 12,
-    sm: 6,
-    md: 4,
-    lg: 3,
-    xl: 2,
-  };
-  readonly temporaryItems: SelectItemObject<string, boolean>[] = [
-    { text: "Yes, temporary", value: true },
-    { text: "No, permanent", value: false },
-  ];
-
   @Prop({ type: Object as () => GeneralModule })
   readonly initialModule: GeneralModule | undefined;
 
   module: GeneralModule = EnergyGeneral.getDefaultModule();
 
+  get formItems(): FormItem[][] {
+    return [
+      [
+        {
+          type: "number",
+          key: "year",
+          label: "Year of the data",
+        },
+        {
+          type: "text",
+          key: "name",
+          label: "Name of the camp",
+        },
+      ],
+      [
+        {
+          type: "number",
+          key: "locationLatitude",
+          label: "Latitude of the camp [Decimal Degrees]",
+        },
+        {
+          type: "number",
+          key: "locationLongitude",
+          label: "Longitude of the camp [Decimal Degrees]",
+        },
+      ],
+      [
+        {
+          type: "boolean",
+          key: "temporary",
+          label: "Is the camp temporary?",
+          options: {
+            true: "Yes, temporary",
+            false: "No, permanent",
+          },
+        },
+        {
+          type: "number",
+          key: "expirationYear",
+          label: "In case of temporary camp, in what year will it be removed?",
+          hidden: !this.module.temporary,
+        },
+      ],
+    ];
+  }
+
   get saveDisabled(): boolean {
-    return _.isEqual(this.initialModule, this.module);
+    return isEqual(this.initialModule, this.module);
   }
 
   static getDefaultModule(): GeneralModule {
@@ -115,7 +120,7 @@ export default class EnergyGeneral extends Vue {
   @Watch("initialModule")
   onInitialModuleChanged(): void {
     if (this.initialModule) {
-      this.module = _.cloneDeep(this.initialModule);
+      this.module = cloneDeep(this.initialModule);
     }
   }
 
