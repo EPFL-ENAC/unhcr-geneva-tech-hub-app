@@ -1,30 +1,83 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col>
-        <h1 class="project-shelter__header">Score Card</h1>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-divider></v-divider>
-    </v-row>
-    <v-spacer />
-    <v-row>Habitability: {{ shelter.habitability_score }}</v-row>
-    <v-row
-      >Technical performance: {{ shelter.technical_performance_score }}
-    </v-row>
-  </v-container>
+  <v-form
+    :readonly="!$can('edit', project)"
+    v-if="project"
+    @submit.prevent="() => submitForm(project)"
+  >
+    <v-container fluid>
+      <v-row>
+        <v-col>
+          <h2 class="text-h4 project-shelter__h3 font-weight-medium">
+            Score Card
+          </h2>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-divider></v-divider>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col>
+          <v-sheet elevation="2" rounded v-if="project">
+            <v-container fluid>
+
+              <v-row>
+                <v-col> Habitability: {{ project.habitability_score }} </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  Technical performance:
+                  {{ project.technical_performance_score }}
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-sheet>
+        </v-col>
+      </v-row>
+      <!-- <v-row v-if="$can('edit', project)">
+        <v-col class="d-flex justify-end">
+          <v-btn type="submit"> Save changes </v-btn>
+        </v-col>
+      </v-row> -->
+    </v-container>
+  </v-form>
 </template>
 
 <script lang="ts">
+import { Shelter } from "@/store/ShelterInterface";
+import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 @Component({
   computed: {
     ...mapState("ShelterItemModule", ["shelter"]),
   },
+  methods: {
+    ...mapActions("ShelterItemModule", ["updateDoc"]),
+  },
 })
 /** Project */
-export default class ShelterSustainabilityScoreCardView extends Vue {}
+export default class Step8Affordability extends Vue {
+  shelter!: Shelter;
+  updateDoc!: (doc: Shelter) => void;
+
+  get project(): Shelter {
+    // return {
+    //   ...cloneDeep(this.shelter),
+    //   habitability: this.shelter.habitability, // if you want to make reactive you have to predefine things
+    // };
+    return cloneDeep(this.shelter);
+  }
+
+  public submitForm(value: Shelter): void {
+    if (value.name !== "") {
+      this.updateDoc(value);
+    } else {
+      console.error("please send a valid document");
+    }
+  }
+}
 </script>

@@ -1,6 +1,9 @@
 <template>
-  <form v-if="project" @submit.prevent="() => submitForm(project)">
-    <v-container fluid>
+  <v-container fluid v-if="localShelter.users">
+    <v-form
+      :readonly="!$can('edit', localShelter)"
+      @submit.prevent="() => submitForm(localShelter)"
+    >
       <v-row>
         <v-col>
           <h2 class="text-h4 project-shelter__h3 font-weight-medium">
@@ -48,9 +51,11 @@
                     <v-card-title>Shelter dimensions</v-card-title>
                     <v-form class="pa-md-4">
                       <v-text-field
-                        v-for="(dimension, key) in geometry.shelter_dimensions"
-                        :key="key"
-                        v-model="project.shelter_dimensions[dimension]"
+                        v-for="(
+                          dimension, $shelterDimensionsKey
+                        ) in geometry.shelter_dimensions"
+                        :key="`shelterDimension${$shelterDimensionsKey}`"
+                        v-model="localShelter.shelter_dimensions[dimension]"
                         :name="dimension"
                         :label="dimension"
                         type="number"
@@ -58,16 +63,20 @@
                     </v-form>
                   </v-card>
                   <v-card
-                    v-for="(door, $doorKey) in project.doors_dimensions"
-                    :key="$doorKey"
+                    v-for="(door, $doorKey) in localShelter.doors_dimensions"
+                    :key="`doorsDimension${$doorKey}`"
                   >
                     <!-- v-for on all windows -->
                     <v-card-title>Door dimensions</v-card-title>
                     <v-form class="pa-md-4">
                       <v-text-field
-                        v-for="(dimension, key) in geometry.door_dimensions"
-                        :key="key"
-                        v-model="project.doors_dimensions[$doorKey][dimension]"
+                        v-for="(
+                          dimension, $doorDimensionsKey
+                        ) in geometry.door_dimensions"
+                        :key="`doorDimension${$doorDimensionsKey}`"
+                        v-model="
+                          localShelter.doors_dimensions[$doorKey][dimension]
+                        "
                         :name="dimension"
                         :label="dimension"
                         type="number"
@@ -75,17 +84,21 @@
                     </v-form>
                   </v-card>
                   <v-card
-                    v-for="(window, $windowKey) in project.windows_dimensions"
-                    :key="$windowKey"
+                    v-for="(
+                      window, $windowKey
+                    ) in localShelter.windows_dimensions"
+                    :key="`windowsDimensions${$windowKey}`"
                   >
                     <!-- v-for on all windows -->
                     <v-card-title>Window dimensions</v-card-title>
                     <v-form class="pa-md-4">
                       <v-text-field
-                        v-for="(dimension, key) in geometry.window_dimensions"
-                        :key="key"
+                        v-for="(
+                          dimension, $windowDimensions
+                        ) in geometry.window_dimensions"
+                        :key="`windowDimensions${$windowDimensions}`"
                         v-model="
-                          project.windows_dimensions[$windowKey][dimension]
+                          localShelter.windows_dimensions[$windowKey][dimension]
                         "
                         :name="dimension"
                         :label="dimension"
@@ -113,13 +126,13 @@
         </v-col>
       </v-row>
 
-      <v-row>
+      <v-row v-if="$can('edit', localShelter)">
         <v-col class="d-flex justify-end">
-          <v-btn type="submit">Save changes</v-btn>
+          <v-btn type="submit"> Save changes </v-btn>
         </v-col>
       </v-row>
-    </v-container>
-  </form>
+    </v-form>
+  </v-container>
 </template>
 
 <style lang="scss">
@@ -130,9 +143,16 @@
 
 <script lang="ts">
 import { Shelter } from "@/store/ShelterInterface";
+import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
 
+/* two ways to have a store copy locally
+1. having a watcher on the store that cloneDeep to data() locally
+2. having a subscriber to mutation that's initialized at created
+cf: https://forum.vuejs.org/t/best-way-to-use-forms-with-local-state-using-v-model-and-sync-to-vuex-store-on-save/24739
+for the original discussion
+*/
 @Component({
   computed: {
     ...mapState("ShelterItemModule", ["shelter"]),
@@ -145,19 +165,32 @@ import { mapActions, mapState } from "vuex";
 export default class Step2Geometry extends Vue {
   shelter!: Shelter;
   updateDoc!: (doc: Shelter) => void;
-  shelter_geometry_type = "";
 
-  get project(): Shelter {
-    return { ...this.shelter };
+  localShelter = {} as Shelter;
+
+  public setLocalShelter(): void {
+    if (!this.shelter) {
+      this.localShelter = {} as Shelter;
+    } else {
+      this.localShelter = cloneDeep(this.shelter);
+    }
   }
 
-  // get shelter_geometry_type(): string {
-  //   return this.project.shelter_geometry_type || "";
-  // }
+  public syncLocalShelter(): void {
+    // init function
+    this.setLocalShelter();
 
-  // set shelter_geometry_type(value: string) {
-  //   this.project.shelter_geometry_type = value;
-  // }
+    this.$store.subscribe((mutation) => {
+      const shouldUpdate = ["ShelterItemModule/SET_SHELTER"];
+      if (shouldUpdate.includes(mutation.type)) {
+        this.setLocalShelter();
+      }
+    });
+  }
+
+  public created(): void {
+    this.syncLocalShelter();
+  }
 
   public submitForm(value: Shelter): void {
     if (value.name !== "") {
@@ -169,15 +202,18 @@ export default class Step2Geometry extends Vue {
   }
 
   public toggleImage(_id: string): void {
-    if (this.shelter_geometry_type === "") {
-      this.shelter_geometry_type = _id;
+    if (this.localShelter.shelter_geometry_type === "") {
+      this.localShelter.shelter_geometry_type = _id;
     } else {
-      this.shelter_geometry_type = "";
+      this.localShelter.shelter_geometry_type = "";
     }
+  }
+  get shelter_geometry_type(): string {
+    return this.localShelter.shelter_geometry_type;
   }
 
   public addWindow(): void {
-    this.project.windows_dimensions.push({ Ww: 0, Hw: 0, Hs: 0 });
+    this.localShelter.windows_dimensions.push({ Ww: 0, Hw: 0, Hs: 0 });
   }
 
   geometries = [

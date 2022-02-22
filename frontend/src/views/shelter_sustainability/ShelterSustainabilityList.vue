@@ -1,45 +1,50 @@
 <template>
-  <v-container class="project">
+  <v-container class="project-list">
     <v-row>
       <v-col>
-        <h1 style="display: flex; justify-content: center">Projects</h1>
+        <h1 style="display: flex; justify-content: center">Shelters</h1>
       </v-col>
       <v-col>
-        <h1 style="display: flex; justify-content: center">New Project</h1>
+        <h1 style="display: flex; justify-content: center">New Shelter</h1>
       </v-col>
     </v-row>
     <v-row>
       <v-col>
         <v-row v-for="project in projects" :key="project._id">
           <v-col>
-            <v-card class="mx-auto" max-width="344" outlined>
+            <v-card
+              :to="{
+                name: 'ShelterSustainabilityEdit',
+                params: { id: encodeURIComponent(project._id) },
+              }"
+              class="mx-auto project"
+              max-width="344"
+              hover
+              outlined
+              :class="{
+                'project--editable': $can('edit', project),
+                'project--readonly': !$can('edit', project),
+              }"
+            >
               <v-card-title>
                 {{ project.name }}
               </v-card-title>
               <v-card-text>
                 <span>{{ project.location_name }}</span>
               </v-card-text>
-              <v-card-actions>
-                <v-btn
-                  outlined
-                  rounded
-                  text
-                  :to="{
-                    name: 'ShelterSustainabilityEdit',
-                    params: { id: encodeURIComponent(project._id) },
-                  }"
-                >
-                  <span v-if="$can('edit', project)"> Edit project </span>
-                  <span v-else> Show project </span>
-                </v-btn>
+              <v-card-actions class="d-flex flex-row justify-end">
                 <v-btn
                   v-if="$can('delete', project)"
                   outlined
                   rounded
-                  @click="() => removeDoc(project._id)"
+                  @click.once.prevent.stop="() => removeDoc(project._id)"
                 >
                   Delete project
                 </v-btn>
+                <div v-else class="project__hidden-child">
+                  <span v-if="$can('edit', project)">edit</span>
+                  <span v-else>read</span>
+                </div>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -59,7 +64,7 @@
                 type="text"
               />
             </v-card-text>
-            <v-card-actions>
+            <v-card-actions class="justify-end">
               <v-btn
                 outlined
                 rounded
@@ -68,7 +73,7 @@
                 tabindex="2"
                 :disabled="!createProjectFormValid"
               >
-                Create new project
+                New shelter
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -136,3 +141,40 @@ export default class ProjectList extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+// https://css-tricks.com/using-sass-control-scope-bem-naming/
+.project {
+  $self: &;
+  // background-color: blue;
+
+  &--editable {
+    // background-color: yellow;
+    &:hover {
+      // background-color: red;
+      color: #444;
+    }
+  }
+
+  &--readonly {
+    // background-color: yellow;
+    color: #999;
+    &:hover {
+      // background-color: red;
+      color: inherit;
+    }
+  }
+
+  #{ $self }__hidden-child {
+    visibility: hidden;
+    color: #ccc;
+  }
+
+  &:hover {
+    // background-color: green;
+    #{ $self }__hidden-child {
+      visibility: visible;
+    }
+  }
+}
+</style>
