@@ -5,6 +5,8 @@
       hide-details="auto"
       label="Template Name"
       outlined
+      required
+      :rules="[rules.required]"
       @change="changeName"
     ></v-text-field>
     <v-tabs v-model="tab" center-active show-arrows>
@@ -27,6 +29,7 @@ import EnergyGeneral from "@/components/energy/EnergyGeneral.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
 import { GeneralModule, TemplateDocument } from "@/models/energyModel";
 import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
+import { rules } from "@/utils/rules";
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
 
@@ -36,6 +39,8 @@ import { Component, Vue } from "vue-property-decorator";
   },
 })
 export default class EnergyProject extends Vue {
+  readonly rules = rules;
+
   readonly database: SyncDatabase<TemplateDocument> =
     createSyncDatabase("energy_templates");
 
@@ -80,7 +85,7 @@ export default class EnergyProject extends Vue {
   }
 
   changeName(): void {
-    if (this.document) {
+    if (this.document && this.document.name.length > 0) {
       this.database.db.put(this.document);
       this.getDocument();
     }

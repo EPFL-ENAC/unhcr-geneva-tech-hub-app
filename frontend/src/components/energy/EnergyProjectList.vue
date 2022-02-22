@@ -17,11 +17,18 @@
       </v-list-item-action>
     </template>
     <template v-slot:create>
-      <v-text-field v-model="name" label="Name"></v-text-field>
+      <v-text-field
+        v-model="name"
+        label="Name"
+        required
+        :rules="[rules.required]"
+      ></v-text-field>
       <v-select
         v-model="template"
         :items="templates"
         label="Select template"
+        required
+        :rules="[rules.required]"
       ></v-select>
     </template>
   </sync-document-list>
@@ -32,6 +39,7 @@ import SyncDocumentList from "@/components/commons/SyncDocumentList.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
 import { ProjectDocument, TemplateDocument } from "@/models/energyModel";
 import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
+import { rules } from "@/utils/rules";
 import { SelectItemObject } from "@/utils/vuetify";
 import "vue-class-component/hooks";
 import { Component, Ref, Vue } from "vue-property-decorator";
@@ -40,6 +48,7 @@ import { Component, Ref, Vue } from "vue-property-decorator";
   components: { SyncDocumentList },
 })
 export default class EnergyProjectList extends Vue {
+  readonly rules = rules;
   // TODO vuex
   readonly templateDatabase: SyncDatabase<TemplateDocument> =
     createSyncDatabase("energy_templates");

@@ -1,4 +1,6 @@
-// https://vuetifyjs.com/en/api/v-select/#props-items
+/**
+ * https://vuetifyjs.com/en/api/v-select/#props-items
+ */
 export interface SelectItemObject<
   // eslint-disable-next-line @typescript-eslint/ban-types
   T = string | number | object,
@@ -10,4 +12,11 @@ export interface SelectItemObject<
   disabled?: boolean;
   divider?: boolean;
   header?: string;
+}
+
+/**
+ * https://vuetifyjs.com/en/api/v-form/#functions
+ */
+export interface VForm extends HTMLFormElement {
+  validate(): boolean;
 }

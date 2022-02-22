@@ -1,26 +1,28 @@
 <template>
   <v-card>
     <v-card-text>
-      <v-row v-for="(rowItem, index) in formItems" :key="index">
-        <template v-for="(item, index) in rowItem">
-          <v-col
-            v-if="!item.hidden"
-            :key="index"
-            cols="12"
-            sm="6"
-            md="4"
-            lg="3"
-            xl="2"
-          >
-            <form-item-component
-              v-model="module[item.key]"
-              :label="item.label"
-              :type="item.type"
-              :options="item.options"
-            ></form-item-component>
-          </v-col>
-        </template>
-      </v-row>
+      <v-form ref="form" v-model="formValid" lazy-validation>
+        <v-row v-for="(rowItem, index) in formItems" :key="index">
+          <template v-for="(item, index) in rowItem">
+            <v-col
+              v-if="!item.hidden"
+              :key="index"
+              cols="12"
+              sm="6"
+              md="4"
+              lg="3"
+              xl="2"
+            >
+              <form-item-component
+                v-model="module[item.key]"
+                :label="item.label"
+                :type="item.type"
+                :options="item.options"
+              ></form-item-component>
+            </v-col>
+          </template>
+        </v-row>
+      </v-form>
     </v-card-text>
     <v-card-actions>
       <v-btn color="primary" :disabled="saveDisabled" @click="save">
@@ -36,9 +38,10 @@ import FormItemComponent, {
   FormItem,
 } from "@/components/commons/FormItemComponent.vue";
 import { GeneralModule } from "@/models/energyModel";
+import { VForm } from "@/utils/vuetify";
 import { cloneDeep, isEqual } from "lodash";
 import "vue-class-component/hooks";
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, Prop, Ref, Vue, Watch } from "vue-property-decorator";
 
 @Component({
   components: {
@@ -48,7 +51,10 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 export default class EnergyGeneral extends Vue {
   @Prop({ type: Object as () => GeneralModule })
   readonly initialModule: GeneralModule | undefined;
+  @Ref()
+  readonly form!: VForm;
 
+  formValid = true;
   module: GeneralModule = EnergyGeneral.getDefaultModule();
 
   get formItems(): FormItem[][] {
@@ -98,7 +104,7 @@ export default class EnergyGeneral extends Vue {
   }
 
   get saveDisabled(): boolean {
-    return isEqual(this.initialModule, this.module);
+    return !this.formValid || isEqual(this.initialModule, this.module);
   }
 
   static getDefaultModule(): GeneralModule {
@@ -125,7 +131,9 @@ export default class EnergyGeneral extends Vue {
   }
 
   save(): void {
-    this.$emit("save", this.module);
+    if (this.form.validate()) {
+      this.$emit("save", this.module);
+    }
   }
 }
 </script>

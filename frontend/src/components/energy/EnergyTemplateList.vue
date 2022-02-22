@@ -17,7 +17,12 @@
       </v-list-item-action>
     </template>
     <template v-slot:create>
-      <v-text-field v-model="name" label="Name"></v-text-field>
+      <v-text-field
+        v-model="name"
+        label="Name"
+        required
+        :rules="[rules.required]"
+      ></v-text-field>
     </template>
   </sync-document-list>
 </template>
@@ -26,6 +31,7 @@
 import SyncDocumentList from "@/components/commons/SyncDocumentList.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
 import { TemplateDocument } from "@/models/energyModel";
+import { rules } from "@/utils/rules";
 import "vue-class-component/hooks";
 import { Component, Ref, Vue } from "vue-property-decorator";
 
@@ -33,6 +39,8 @@ import { Component, Ref, Vue } from "vue-property-decorator";
   components: { SyncDocumentList },
 })
 export default class EnergyTemplateList extends Vue {
+  readonly rules = rules;
+
   createDialog = false;
   name = "";
 

@@ -5,6 +5,8 @@
       v-model="model"
       :label="label"
       hide-details="auto"
+      required
+      :rules="[rules.required]"
     ></v-text-field>
     <v-text-field
       v-if="type === 'number'"
@@ -12,6 +14,8 @@
       :label="label"
       hide-details="auto"
       hide-spin-buttons
+      required
+      :rules="[rules.required]"
       type="number"
     ></v-text-field>
     <v-select
@@ -20,17 +24,22 @@
       :label="label"
       hide-details="auto"
       :items="items"
+      required
+      :rules="[rules.required]"
     ></v-select>
   </div>
 </template>
 
 <script lang="ts">
+import { rules } from "@/utils/rules";
 import { SelectItemObject } from "@/utils/vuetify";
 import "vue-class-component/hooks";
 import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 
 @Component
 export default class FormItemComponent extends Vue {
+  readonly rules = rules;
+
   @VModel({ type: [String, Number, Boolean] })
   readonly model!: string | number | boolean;
   @Prop({ type: String as () => "text" | "number" | "boolean" })

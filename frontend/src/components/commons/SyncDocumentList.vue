@@ -26,10 +26,12 @@
       <v-card>
         <v-card-title>New</v-card-title>
         <v-card-text>
-          <slot name="create"></slot>
+          <v-form v-model="formValid">
+            <slot name="create"></slot>
+          </v-form>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary" @click="create">
+          <v-btn color="primary" :disabled="!formValid" @click="create">
             <v-icon left>mdi-check</v-icon>
             Create
           </v-btn>
@@ -63,6 +65,7 @@ export default class SyncDocumentList<T> extends Vue {
   documents: ExistingDocument<T>[] = [];
   changes?: PouchDB.Core.Changes<T>;
   createDialog = false;
+  formValid = true;
 
   created(): void {
     this.updateProjects();
