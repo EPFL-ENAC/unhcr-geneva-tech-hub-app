@@ -15,9 +15,7 @@
             >
               <form-item-component
                 v-model="module[item.key]"
-                :label="item.label"
-                :type="item.type"
-                :options="item.options"
+                v-bind="item"
               ></form-item-component>
             </v-col>
           </template>
@@ -75,12 +73,14 @@ export default class EnergyGeneral extends Vue {
         {
           type: "number",
           key: "locationLatitude",
-          label: "Latitude of the camp [Decimal Degrees]",
+          label: "Latitude of the camp",
+          unit: "Decimal Degrees",
         },
         {
           type: "number",
           key: "locationLongitude",
-          label: "Longitude of the camp [Decimal Degrees]",
+          label: "Longitude of the camp",
+          unit: "Decimal Degrees",
         },
       ],
       [
@@ -96,8 +96,61 @@ export default class EnergyGeneral extends Vue {
         {
           type: "number",
           key: "expirationYear",
-          label: "In case of temporary camp, in what year will it be removed?",
+          label: "In what year will it be removed?",
           hidden: !this.module.temporary,
+        },
+        {
+          type: "select",
+          key: "integration",
+          label: "In what extent is it integrated with the host community?",
+          options: [
+            {
+              text: "Well integrated",
+              value: "well",
+            },
+            {
+              text: "Moderatly integrated",
+              value: "moderately",
+            },
+            {
+              text: "Badly integrated",
+              value: "badly",
+            },
+          ],
+          hidden: this.module.temporary,
+        },
+      ],
+      [
+        {
+          type: "text",
+          key: "electricityCompanyName",
+          label: "Electricity company name",
+        },
+        {
+          type: "boolean",
+          key: "publicGridConnection",
+          label: "Connected to the public grid",
+        },
+        {
+          type: "number",
+          key: "publicGridDomesticRate",
+          label: "Domestic customers rate",
+          unit: `${this.module.currency}/kWh`,
+          hidden: !this.module.publicGridConnection,
+        },
+        {
+          type: "number",
+          key: "publicGridDistance",
+          label: "How far is the camp from the public grid?",
+          unit: "m",
+          hidden: !this.module.publicGridConnection,
+        },
+        {
+          type: "boolean",
+          key: "networkExtension",
+          label:
+            "Does the electricity company envisage to extend its network in the framework of the electricity programme?",
+          hidden: this.module.publicGridConnection,
         },
       ],
     ];
@@ -118,8 +171,8 @@ export default class EnergyGeneral extends Vue {
       expirationYear: currentYear,
       electricityCompanyName: "",
       publicGridConnection: false,
-      publicGridDomesticRate: 0,
-      publicGridDistance: 0,
+
+      currency: "",
     };
   }
 

@@ -25,4 +25,7 @@ export interface GeneralModule {
   publicGridConnection: boolean;
   publicGridDomesticRate?: number;
   publicGridDistance?: number;
+  networkExtension?: boolean;
+
+  currency: string
 }
