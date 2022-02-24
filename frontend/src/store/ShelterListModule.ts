@@ -30,56 +30,33 @@ function generateState(): ShelterState {
 }
 
 function generateNewShelter(name: string) {
-  // const uuid = Math.random().toString(36).substring(2, 15);
-  function shuffle(seed: number): number {
-    return Math.floor(Math.random() * seed);
-  }
-  function shuffleArray(array: Array<string>): string {
-    return array[shuffle(array.length)];
-  }
   return {
     _id: name,
-    // name: name ?? "project " + shuffle(100000) + uuid,
     name,
-    organisation: shuffleArray(["UNHCR", "WHO", "CIA", "TFF"]),
-    shelter_total: shuffle(100), // number of shelters
-    shelter_occupants: shuffle(10), // people
-    shelter_lifespan: shuffle(6), // years
-    setup_people: shuffle(2), // 2 people necessary for setup
-    setup_time: shuffle(10), // days,
-    location_name: shuffleArray(["Paris", "London", "Berlin", "Moscow"]),
-    location_country: shuffleArray(["France", "Germany", "Uk", "Russia"]), // iso code ?
-    location_distance_from_capital: shuffle(1000), // km
-    location_lat: shuffle(180), // option
-    location_lon: shuffle(180), // option
-    risk_flood: shuffleArray(["high", "medium", "low"]),
-    risk_seismic: shuffleArray(["high", "medium", "low"]),
-    habitability: {
-      "1_floor": { input1: 0, input2: 0, input3: 0, input4: 0 },
-      "2_accessibility": { input5: 0, input6: 0, input7: 0 },
-      "3_privacy": { input8: 0, input9: 0, input10: 0, input11: 0 },
-      "4_artificial_lighting": { input12: 0, input13: 0 },
-      "5_complimentary_facilities": {
-        input14: 0,
-        input15: 0,
-        input16: 0,
-        input17: 0,
-        input18: 0,
-      },
-    },
-    technical_performance: {
-      "1_hazard": {},
-      "2_internal_comfort": {},
-      "3_safety_and_security": {},
-      "4_construction_techniques": {},
-    },
-    shelter_dimensions: { L: 0, W: 0 },
-    doors_dimensions: [{ Wd: 0, Hd: 0 }],
-    windows_dimensions: [{ Ww: 0, Hw: 0, Hs: 0 }],
+    organisation: "",
+    shelter_total: undefined, // number of shelters
+    shelter_occupants: undefined, // people
+    shelter_lifespan: undefined, // years
+    setup_people: undefined, // 2 people necessary for setup
+    setup_time: undefined, // days,
+    location_name: "",
+    location_country: "", // iso code ?
+    location_distance_from_capital: undefined, // km
+    location_lat: undefined, // option
+    location_lon: undefined, // option
+    risk_flood: "",
+    risk_seismic: "",
+    habitability: {},
+    habitability_score: undefined,
+    technical_performance_score: undefined,
+    technical_performance: {},
+    shelter_dimensions: { L: undefined, W: undefined },
+    doors_dimensions: [{ Wd: undefined, Hd: undefined }],
+    windows_dimensions: [{ Ww: undefined, Hw: undefined, Hs: undefined }],
     shelter_geometry_type: "",
     users: [""],
     created_by: "",
-  };
+  } as Shelter;
 }
 /** Getters */
 const getters: GetterTree<ShelterState, RootState> = {
@@ -139,7 +116,6 @@ const mutations: MutationTree<ShelterState> = {
 /** Action */
 const actions: ActionTree<ShelterState, RootState> = {
   syncDB: (context: ActionContext<ShelterState, RootState>) => {
-    console.log("syncDB action in ShelterItem List Module");
     context.commit("INIT_DB");
     const opts = { live: true, retry: true };
     const localCouch = context.state.localCouch;

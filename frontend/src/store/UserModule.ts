@@ -21,7 +21,7 @@ export interface CouchUser {
   name: string;
   roles: Roles[];
 }
-interface UserState {
+export interface UserState {
   user: CouchUser;
   userLoading: boolean;
 }

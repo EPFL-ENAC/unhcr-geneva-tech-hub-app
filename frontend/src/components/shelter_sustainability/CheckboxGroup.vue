@@ -13,17 +13,17 @@
         </v-col>
         <v-col cols="1" class="d-flex justify-end align-center">
           <v-btn icon @click="toggle">
-            <v-icon :class="{ 'chevron-rotate': !show }"
+            <v-icon :class="{ 'chevron-rotate': !expandPanel }"
               >mdi-chevron-down</v-icon
             >
           </v-btn>
         </v-col>
       </v-row>
-      <v-row v-show="show">
+      <v-row v-show="expandPanel">
         <v-divider />
       </v-row>
       <v-expand-transition>
-        <v-row v-show="show">
+        <v-row v-show="expandPanel">
           <v-col cols="12">
             <v-expansion-panels accordion :focusable="false">
               <v-expansion-panel
@@ -84,10 +84,10 @@ export default class CheckboxGroup extends Vue {
   value!: Score;
   form!: ShelterForm;
 
-  show = true;
+  expandPanel = true;
 
   public toggle(): void {
-    this.show = !this.show;
+    this.expandPanel = !this.expandPanel;
   }
 
   get checkbox(): CheckboxScore {

@@ -12,13 +12,15 @@
       </v-col>
       <v-col cols="1" class="d-flex justify-end align-center" v-if="depth > 0">
         <v-btn icon @click="toggle">
-          <v-icon :class="{ 'chevron-rotate': !show }">mdi-chevron-down</v-icon>
+          <v-icon :class="{ 'chevron-rotate': !showSubPanel }"
+            >mdi-chevron-down</v-icon
+          >
         </v-btn>
       </v-col>
     </v-row>
 
     <v-expand-transition>
-      <v-form v-show="show">
+      <v-form v-show="showSubPanel">
         <v-row>
           <v-col>
             <v-divider></v-divider>
@@ -30,8 +32,8 @@
             <v-sheet elevation="2" rounded>
               <component
                 :form="child"
-                :value="value[child._id]"
-                @input="(v) => update(child._id, v)"
+                :value="value"
+                @input="(v) => update(v)"
                 :is="child.type"
                 :depth="depth + 1"
               ></component>
@@ -73,13 +75,18 @@ export default class FormGroup extends Vue {
   value!: Score;
   form!: ShelterForm;
 
-  show = true;
+  showSubPanel = true;
   public toggle(): void {
-    this.show = !this.show;
+    this.showSubPanel = !this.showSubPanel;
   }
-  public update(formId: string, value: Score): void {
-    this.value[formId] = value;
-    this.$emit("input", this.value);
+
+  // Avoid mutating a prop directly since the value will be overwritten whenever
+  // the parent component re-renders.
+  // Instead, use a data or computed property based on the prop's value.
+  // Prop being mutated: "value"
+  public update(value: Score): void {
+    const newValue = { ...this.value, ...value };
+    this.$emit("input", newValue);
   }
 }
 </script>

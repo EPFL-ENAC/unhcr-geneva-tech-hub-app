@@ -13,7 +13,9 @@ const routes: Array<RouteConfig> = [
   {
     path: "/login",
     name: "Login",
-    component: Login,
+    components: {
+      Login,
+    },
   },
   {
     path: "/apps",
@@ -28,10 +30,6 @@ const routes: Array<RouteConfig> = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
-  },
-  {
-    path: "/holistic_energy",
-    name: "holistic_energy",
   },
   {
     path: "/green_house_gaz",
@@ -51,23 +49,76 @@ const routes: Array<RouteConfig> = [
           ),
       },
       {
-        path: ":id/edit",
-        name: "GreenHouseGazEdit",
+        path: ":id",
+        name: "GreenHouseGazItem",
         component: () =>
           import(
             /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem.vue"
           ),
-        redirect: { name: "GreenHouseGazStep1" },
+        redirect: { name: "GreenHouseGazEdit" },
         children: [
           {
-            name: "GreenHouseGazStep1",
-            path: "1",
-            meta: { step: 1 },
+            path: "",
+            name: "GreenHouseGazEdit",
+            component: () =>
+              import(
+                /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/GreenHouseGazEdit.vue"
+              ),
+          },
+          {
+            name: "GreenHouseGazCompareSurveys",
+            path: "compare-surveys/:surveyId",
             component: () => {
               return import(
-                /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/GreenHouseGazStep1.vue"
+                /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/GreenHouseGazCompareSurveys.vue"
               );
             },
+          },
+          {
+            name: "GreenHouseGazSurvey",
+            path: "new-survey",
+            component: () => {
+              return import(
+                /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/GreenHouseGazSurvey.vue"
+              );
+            },
+            redirect: { name: "GreenHouseGazStep1" },
+            children: [
+              {
+                path: "",
+                redirect: { name: "GreenHouseGazStep1" }, // default child path
+              },
+              {
+                name: "GreenHouseGazStep1",
+                path: "step-1",
+                meta: { step: 1 },
+                component: () => {
+                  return import(
+                    /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/GreenHouseGazSurvey/GreenHouseGazSurveyStep1Energy.vue"
+                  );
+                },
+              },
+              {
+                name: "GreenHouseGazStep2",
+                path: "step-2",
+                meta: { step: 2 },
+                component: () => {
+                  return import(
+                    /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/GreenHouseGazSurvey/GreenHouseGazSurveyStep2Wash.vue"
+                  );
+                },
+              },
+              {
+                name: "GreenHouseGazStep3",
+                path: "step-3",
+                meta: { step: 3 },
+                component: () => {
+                  return import(
+                    /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/GreenHouseGazSurvey/GreenHouseGazSurveyStep3Offset.vue"
+                  );
+                },
+              },
+            ],
           },
         ],
       },
@@ -83,11 +134,15 @@ const routes: Array<RouteConfig> = [
     redirect: { name: "ShelterSustainabilityList" },
     children: [
       {
-        //   path: 'new',
-        //   name: 'ProjectNew',
-        //   component: ProjectItem,
-        // }, {
-        path: ":id/edit",
+        path: "list",
+        name: "ShelterSustainabilityList",
+        component: () =>
+          import(
+            /* webpackChunkName: "shelter_sustainability" */ "../views/shelter_sustainability/ShelterSustainabilityList.vue"
+          ),
+      },
+      {
+        path: ":id/",
         name: "ShelterSustainabilityEdit",
         component: () =>
           import(
@@ -187,14 +242,6 @@ const routes: Array<RouteConfig> = [
               ),
           },
         ],
-      },
-      {
-        path: "list",
-        name: "ShelterSustainabilityList",
-        component: () =>
-          import(
-            /* webpackChunkName: "shelter_sustainability" */ "../views/shelter_sustainability/ShelterSustainabilityList.vue"
-          ),
       },
     ],
   },

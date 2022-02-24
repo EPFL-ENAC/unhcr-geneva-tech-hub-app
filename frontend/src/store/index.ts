@@ -1,3 +1,9 @@
+import ConfigModule from "@/store/ConfigModule";
+import GhgItemModule from "@/store/GhgItemModule";
+import GhgListModule from "@/store/GhgListModule";
+import ShelterItemModule from "@/store/ShelterItemModule";
+import ShelterListModule from "@/store/ShelterListModule";
+import UserModule from "@/store/UserModule";
 import Vue from "vue";
 import Vuex, {
   ActionContext,
@@ -7,10 +13,6 @@ import Vuex, {
   StoreOptions,
 } from "vuex";
 import VuexPersistence from "vuex-persist";
-import ConfigModule from "./ConfigModule";
-import ShelterItemModule from "./ShelterItemModule";
-import ShelterSustainabilityModule from "./ShelterSustainabilityModule";
-import UserModule from "./UserModule";
 
 // import createPersistedState from 'vuex-persist-indexeddb';
 
@@ -139,8 +141,10 @@ const store: StoreOptions<RootState> = {
   actions,
   modules: {
     ConfigModule,
-    ShelterSustainabilityModule,
+    ShelterListModule,
     ShelterItemModule,
+    GhgListModule,
+    GhgItemModule,
     UserModule,
   },
   plugins: [

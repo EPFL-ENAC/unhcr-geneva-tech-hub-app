@@ -1,3 +1,4 @@
+import { GreenHouseGaz } from "@/store/GhgInterface";
 import PouchDB from "pouchdb";
 import {
   ActionContext,
@@ -7,21 +8,22 @@ import {
   MutationTree,
 } from "vuex";
 import { RootState } from ".";
-import { Shelter } from "./ShelterInterface";
 
-interface ShelterState {
-  shelter: Shelter | null;
+interface GhgState {
+  project: GreenHouseGaz | null;
   localCouch: PouchDB.Database | null;
-  sync: PouchDB.Replication.Sync<Shelter> | null;
-  replicate: PouchDB.Replication.Replication<Shelter> | null;
+  sync: PouchDB.Replication.Sync<GreenHouseGaz> | null;
+  replicate: PouchDB.Replication.Replication<GreenHouseGaz> | null;
 }
 
-const remoteCouch = "http://localhost:5984/shelters";
+const DB_NAME = "ghg";
+const REMOTE_COUCH = `http://localhost:5984/${DB_NAME}`;
+const MSG_DB_NOT_INITIALIZED = "local couchdb should have been initialized";
 
 /** Default Configure state value */
-function generateState(): ShelterState {
+function generateState(): GhgState {
   return {
-    shelter: null,
+    project: null,
     localCouch: null,
     sync: null,
     replicate: null,
@@ -29,14 +31,16 @@ function generateState(): ShelterState {
 }
 
 /** Getters */
-const getters: GetterTree<ShelterState, RootState> = {
-  shelter: (s): Shelter | null => s.shelter,
+const getters: GetterTree<GhgState, RootState> = {
+  project: (s): GreenHouseGaz | null => s.project,
 };
 
 /** Mutations */
-const mutations: MutationTree<ShelterState> = {
+const mutations: MutationTree<GhgState> = {
   INIT_SYNC(state) {
-    state.localCouch = new PouchDB("couchShelters", { auto_compaction: true });
+    state.localCouch = new PouchDB("couchGreenHouseGazs", {
+      auto_compaction: true,
+    });
   },
   CLOSE_SYNC(state) {
     state?.localCouch?.close().then(function () {
@@ -47,8 +51,8 @@ const mutations: MutationTree<ShelterState> = {
       state.localCouch = null;
     });
   },
-  SET_SHELTER(state, value) {
-    state.shelter = value;
+  SET_PROJECT(state, value) {
+    state.project = value;
   },
   SET_SYNC(state, value) {
     state.sync = value;
@@ -59,19 +63,19 @@ const mutations: MutationTree<ShelterState> = {
 };
 
 /** Action */
-const actions: ActionTree<ShelterState, RootState> = {
-  syncDB: (context: ActionContext<ShelterState, RootState>) => {
+const actions: ActionTree<GhgState, RootState> = {
+  syncDB: (context: ActionContext<GhgState, RootState>) => {
     // init
     context.commit("INIT_SYNC");
 
     const localCouch = context.state.localCouch;
     const replicate = localCouch?.replicate
-      .from(remoteCouch)
+      .from(REMOTE_COUCH)
       .on("complete", function () {
         const sync = localCouch
-          ?.sync(remoteCouch, { live: true, retry: true })
+          ?.sync(REMOTE_COUCH, { live: true, retry: true })
           .on("change", function () {
-            context.dispatch("getDoc", context.state.shelter?._id);
+            context.dispatch("getDoc", context.state.project?._id);
           });
         context.commit("SET_SYNC", sync);
       })
@@ -83,11 +87,11 @@ const actions: ActionTree<ShelterState, RootState> = {
       });
     context.commit("SET_REPLICATE", replicate);
   },
-  closeDB: (context: ActionContext<ShelterState, RootState>) => {
+  closeDB: (context: ActionContext<GhgState, RootState>) => {
     context.commit("CLOSE_SYNC");
   },
-  updateDoc: (context: ActionContext<ShelterState, RootState>, value) => {
-    context.commit("SET_SHELTER", value);
+  updateDoc: (context: ActionContext<GhgState, RootState>, value) => {
+    context.commit("SET_PROJECT", value);
     if (context.state.localCouch) {
       context.state.localCouch
         .put(value)
@@ -101,15 +105,15 @@ const actions: ActionTree<ShelterState, RootState> = {
           console.log(err);
         });
     } else {
-      throw new Error("localCouch is null: should have been initialized");
+      throw new Error(MSG_DB_NOT_INITIALIZED);
     }
   },
-  getDoc: (context: ActionContext<ShelterState, RootState>, id) => {
+  getDoc: (context: ActionContext<GhgState, RootState>, id) => {
     context.state.localCouch
       ?.get(id)
       .then(function (result) {
         console.log(result);
-        context.commit("SET_SHELTER", result);
+        context.commit("SET_PROJECT", result);
       })
       .catch(function (err: Error) {
         console.log(err);
@@ -118,7 +122,7 @@ const actions: ActionTree<ShelterState, RootState> = {
 };
 
 /** VuexStore */
-const ShelterItemModule: Module<ShelterState, RootState> = {
+const GhgItemModule: Module<GhgState, RootState> = {
   namespaced: true,
   state: generateState(),
   getters,
@@ -126,4 +130,4 @@ const ShelterItemModule: Module<ShelterState, RootState> = {
   actions,
 };
 
-export default ShelterItemModule;
+export default GhgItemModule;

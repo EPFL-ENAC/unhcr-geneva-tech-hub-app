@@ -27,5 +27,5 @@ export interface GeneralModule {
   publicGridDistance?: number;
   networkExtension?: boolean;
 
-  currency: string
+  currency: string;
 }
