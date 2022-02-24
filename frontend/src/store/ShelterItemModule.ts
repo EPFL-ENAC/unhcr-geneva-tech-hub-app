@@ -115,24 +115,6 @@ const actions: ActionTree<ShelterState, RootState> = {
         console.log(err);
       });
   },
-  computeScore: (
-    context: ActionContext<ShelterState, RootState>,
-    performance: Score
-  ): number => {
-    function _recursiveCompute(performance: Score): number {
-      const levels = Object.values(performance);
-      return (
-        levels.reduce((acc: number, level: Score | number) => {
-          if (typeof level === "number") {
-            return acc + level;
-          }
-          return acc + _recursiveCompute(level);
-        }, 0 as number) ?? 0
-      );
-    }
-
-    return _recursiveCompute(performance);
-  },
 };
 
 /** VuexStore */

@@ -253,11 +253,11 @@ import { Shelter } from "@/store/ShelterInterface";
 import { CouchUser } from "@/store/UserModule";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 
 @Component({
   computed: {
-    ...mapState("ShelterItemModule", ["shelter"]),
+    ...mapGetters("ShelterItemModule", ["shelter"]),
     ...mapState("UserModule", ["user"]),
   },
   methods: {

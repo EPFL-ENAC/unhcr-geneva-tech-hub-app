@@ -1,22 +1,18 @@
 <template>
   <v-form
-    v-if="this.shelter"
-    @submit.prevent="() => submitForm(technical_performance)"
+    v-if="this.localShelter.technical_performance"
+    @submit.prevent="() => submitForm(localShelter)"
   >
-    <!-- <v-row>
-        <v-col> -->
     <component
-      :is="technicalPerformance.type"
-      :form="technicalPerformance"
-      :value="technical_performance"
+      :is="technicalPerformanceForm.type"
+      :form="technicalPerformanceForm"
+      :value="localShelter.technical_performance"
       @input="(v) => update(v)"
     ></component>
-    <!-- </v-col>
-      </v-row> -->
     <v-container fluid>
       <v-row>
         <v-col class="d-flex justify-end">
-          <v-btn type="submit">Save changes</v-btn>
+          <v-btn type="submit" tabindex="2">Save changes</v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -26,6 +22,7 @@
 <script lang="ts">
 import FormGroup from "@/components/shelter_sustainability/FormGroup.vue";
 import { Score, Shelter } from "@/store/ShelterInterface";
+import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
 
@@ -37,32 +34,56 @@ import { mapActions, mapState } from "vuex";
     ...mapState("ShelterItemModule", ["shelter"]),
   },
   methods: {
-    ...mapActions("ShelterItemModule", ["updateDoc", "computeScore"]),
+    ...mapActions("ShelterItemModule", ["updateDoc"]),
   },
 })
 /** Project */
 export default class Step6 extends Vue {
   shelter!: Shelter;
   updateDoc!: (doc: Shelter) => void;
-  computeScore!: (score: Score) => number;
+
+  localShelter = {} as Shelter;
+
+  public setLocalShelter(): void {
+    if (!this.shelter) {
+      this.localShelter = {} as Shelter;
+    } else {
+      this.localShelter = cloneDeep(this.shelter);
+    }
+  }
+
+  public syncLocalShelter(): void {
+    // init function
+    this.setLocalShelter();
+
+    this.$store.subscribe((mutation) => {
+      const shouldUpdate = ["ShelterItemModule/SET_SHELTER"];
+      if (shouldUpdate.includes(mutation.type)) {
+        this.setLocalShelter();
+      }
+    });
+  }
+
+  created(): void {
+    this.syncLocalShelter();
+  }
 
   get technical_performance(): Score {
-    return this.shelter.technical_performance;
+    return this.localShelter.technical_performance;
   }
   public async update(value: Score): Promise<void> {
-    this.shelter.technical_performance = value;
-    this.shelter.technical_performance_score = await this.computeScore(
-      this.shelter.technical_performance
+    this.localShelter.technical_performance = value;
+    const values = Object.values(value) as number[];
+    this.localShelter.technical_performance_score = values.reduce(
+      (acc, el) => acc + el
     );
-    this.$store.commit("ShelterItemModule/SET_SHELTER", this.shelter);
   }
 
-  public async submitForm(value: Score): Promise<void> {
-    await this.update(value);
-    this.updateDoc(this.shelter);
+  public async submitForm(value: Shelter): Promise<void> {
+    await this.updateDoc(value);
   }
 
-  technicalPerformance = {
+  technicalPerformanceForm = {
     _id: "technical_performance",
     title: "Technical Performance",
     type: "formGroup",

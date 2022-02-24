@@ -1,9 +1,12 @@
 <template>
-  <v-form v-if="this.shelter" @submit.prevent="() => submitForm(habitability)">
+  <v-form
+    v-if="localShelter.habitability"
+    @submit.prevent="() => submitForm(localShelter)"
+  >
     <component
       :is="habitabilityForm.type"
       :form="habitabilityForm"
-      :value="habitability"
+      :value="localShelter.habitability"
       @input="(v) => update(v)"
     ></component>
     <v-container fluid>
@@ -19,15 +22,16 @@
 <script lang="ts">
 import FormGroup from "@/components/shelter_sustainability/FormGroup.vue";
 import { Score, Shelter } from "@/store/ShelterInterface";
+import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 @Component({
   components: {
     FormGroup,
   },
   computed: {
-    ...mapState("ShelterItemModule", ["shelter"]),
+    ...mapGetters("ShelterItemModule", ["shelter"]),
   },
   methods: {
     ...mapActions("ShelterItemModule", ["updateDoc", "computeScore"]),
@@ -37,23 +41,46 @@ import { mapActions, mapState } from "vuex";
 export default class Step7 extends Vue {
   shelter!: Shelter;
   updateDoc!: (doc: Shelter) => void;
-  computeScore!: (score: Score) => number;
+
+  localShelter = {} as Shelter;
+
+  public setLocalShelter(): void {
+    if (!this.shelter) {
+      this.localShelter = {} as Shelter;
+    } else {
+      this.localShelter = cloneDeep(this.shelter);
+    }
+  }
+
+  public syncLocalShelter(): void {
+    // init function
+    this.setLocalShelter();
+
+    this.$store.subscribe((mutation) => {
+      const shouldUpdate = ["ShelterItemModule/SET_SHELTER"];
+      if (shouldUpdate.includes(mutation.type)) {
+        this.setLocalShelter();
+      }
+    });
+  }
+
+  created(): void {
+    this.syncLocalShelter();
+  }
 
   get habitability(): Score {
-    return this.shelter.habitability;
+    return this.localShelter.habitability;
   }
   public async update(value: Score): Promise<void> {
-    this.shelter.habitability = value;
-    this.shelter.habitability_score = await this.computeScore(
-      this.shelter.habitability
-    );
-    this.$store.commit("ShelterItemModule/SET_SHELTER", this.shelter);
+    this.localShelter.habitability = value;
+    const values = Object.values(value) as number[];
+    this.localShelter.habitability_score = values.reduce((acc, el) => acc + el);
   }
 
-  public async submitForm(value: Score): Promise<void> {
-    await this.update(value);
-    this.updateDoc(this.shelter);
+  public async submitForm(value: Shelter): Promise<void> {
+    await this.updateDoc(value);
   }
+
   habitabilityForm = {
     _id: "habitability",
     title: "Habitability",
