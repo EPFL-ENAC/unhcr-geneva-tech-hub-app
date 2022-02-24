@@ -3,16 +3,17 @@
     <v-row>
       <v-col> Step 2 WASH </v-col>
     </v-row>
-    <v-row>
+        <v-row>
       <v-col>
-        <router-link :to="{ name: 'GreenHouseGazStep1' }"
-          >got to: Step 1 Energy</router-link
-        >
-      </v-col>
-      <v-col>
-        <router-link :to="{ name: 'GreenHouseGazStep3' }"
-          >got to: Step 3 Offset</router-link
-        >
+        <v-footer>
+          <router-link :to="{ name: 'GreenHouseGazStep1' }"
+            ><v-btn> go to: Step 1 Energy</v-btn></router-link
+          >
+
+          <router-link :to="{ name: 'GreenHouseGazStep3' }"
+            ><v-btn> go to: Step 3 Offset</v-btn></router-link
+          >
+        </v-footer>
       </v-col>
     </v-row>
   </v-container>

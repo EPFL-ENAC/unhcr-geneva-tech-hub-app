@@ -1,6 +1,5 @@
 <template>
   <v-container fluid class="project">
-    GreenHouseGazItemView {{ project }}
     <router-view />
   </v-container>
 </template>

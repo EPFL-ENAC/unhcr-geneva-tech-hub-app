@@ -33,6 +33,9 @@ export default new (class User {
       const isDBAdmin = user.roles.indexOf(DB_ADMIN) >= 0;
       //   const isSpecialist = user.roles.indexOf(SPECIALIST) >= 0;
       //   const isUser = user.roles.indexOf(USER) >= 0;
+      if (!obj || !obj.users) {
+        return false;
+      }
       const isAuthor = obj.users.indexOf(user.name) >= 0 ?? false;
       //   const isLoggedIn = user.name.length > 0;
 

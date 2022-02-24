@@ -51,7 +51,7 @@ const mutations: MutationTree<GhgState> = {
       state.localCouch = null;
     });
   },
-  SET_SHELTER(state, value) {
+  SET_PROJECT(state, value) {
     state.project = value;
   },
   SET_SYNC(state, value) {
@@ -91,7 +91,7 @@ const actions: ActionTree<GhgState, RootState> = {
     context.commit("CLOSE_SYNC");
   },
   updateDoc: (context: ActionContext<GhgState, RootState>, value) => {
-    context.commit("SET_SHELTER", value);
+    context.commit("SET_PROJECT", value);
     if (context.state.localCouch) {
       context.state.localCouch
         .put(value)
@@ -113,7 +113,7 @@ const actions: ActionTree<GhgState, RootState> = {
       ?.get(id)
       .then(function (result) {
         console.log(result);
-        context.commit("SET_SHELTER", result);
+        context.commit("SET_PROJECT", result);
       })
       .catch(function (err: Error) {
         console.log(err);

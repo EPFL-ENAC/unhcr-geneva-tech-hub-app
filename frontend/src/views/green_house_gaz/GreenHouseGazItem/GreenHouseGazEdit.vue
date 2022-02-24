@@ -1,26 +1,264 @@
 <template>
   <v-container fluid>
+    <v-tabs v-model="tab">
+      <v-tab>
+        <v-icon left> mdi-briefcase </v-icon>
+        Country
+      </v-tab>
+      <v-tab>
+        <v-icon left> mdi-account </v-icon>
+        Users
+      </v-tab>
+
+      <v-tab-item>
+        <v-card flat>
+          <v-row>
+            <v-col :cols="6">
+              <v-form
+                :readonly="!$can('edit', localProject)"
+                @submit.prevent="() => submitForm(localProject)"
+              >
+                <v-sheet>
+                  <v-text-field
+                    v-model="localProject.name"
+                    name="name"
+                    label="Camp name"
+                    type="text"
+                    required
+                    :rules="textRules"
+                  />
+                  <v-text-field
+                    id="country"
+                    v-model="localProject.country"
+                    name="country"
+                    label="country"
+                    type="text"
+                    required
+                    :rules="textRules"
+                  />
+                  <v-divider />
+                </v-sheet>
+              </v-form>
+            </v-col>
+            <v-col :cols="6">
+              <v-row>
+                <v-col>
+                  <router-link
+                    :to="{
+                      name: 'GreenHouseGazCompareSurveys',
+                      params: { surveyId: encodeURIComponent('survey-a') },
+                    }"
+                  >
+                    <v-btn>compare survey 'survey-a'</v-btn>
+                  </router-link>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <router-link
+                    :to="{
+                      name: 'GreenHouseGazCompareSurveys',
+                      params: { surveyId: encodeURIComponent('survey-b') },
+                    }"
+                  >
+                    <v-btn>compare survey 'survey-b'</v-btn>
+                  </router-link>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <router-link :to="{ name: 'GreenHouseGazSurvey' }">
+                    <v-btn>add new survey</v-btn>
+                  </router-link>
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-tab-item>
+      <v-tab-item>
+        <v-card flat>
+          <v-row>
+            <v-col>
+              <v-sheet elevation="2" rounded v-if="$can('edit', localProject)">
+                <v-container fluid>
+                  <v-row
+                    v-for="(userEmail, $userKey) in localProject.users"
+                    :key="$userKey"
+                  >
+                    <v-col>{{ userEmail }}</v-col>
+                    <v-col>
+                      <v-btn
+                        @click="() => removeUser(userEmail)"
+                        :disabled="
+                          user.name === userEmail ||
+                          localProject.users.length === 1
+                        "
+                        >remove user</v-btn
+                      ></v-col
+                    >
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-form @submit.prevent="addUser" v-model="addUserValid">
+                        <v-card class="mx-auto" max-width="344" outlined>
+                          <v-card-text>
+                            <v-text-field
+                              tabindex="1"
+                              v-model="newUser"
+                              :rules="rules"
+                              required
+                              name="email"
+                              label="Email"
+                              type="text"
+                            />
+                          </v-card-text>
+                          <v-card-actions class="justify-end">
+                            <v-btn
+                              outlined
+                              rounded
+                              text
+                              type="submit"
+                              tabindex="2"
+                              :disabled="!addUserValid"
+                            >
+                              New User
+                            </v-btn>
+                          </v-card-actions>
+                        </v-card>
+                      </v-form>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-sheet>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-tab-item>
+    </v-tabs>
     <v-row>
-      <v-col> GreenHouseGazEditView: Edit project </v-col>
-      <v-col> </v-col>
+      <v-col>
+        <v-divider />
+      </v-col>
     </v-row>
     <v-row>
       <v-col>
-        <v-row>
-          <router-link
-            :to="{
-              name: 'GreenHouseGazCompareSurveys',
-              params: { surveyId: encodeURIComponent('survey-a') },
-            }"
-            >compare survey 'survey-a'
-          </router-link>
-        </v-row>
-        <v-row>
-          <router-link :to="{ name: 'GreenHouseGazSurvey' }"
-            >add new survey
-          </router-link>
-        </v-row>
+        <v-footer> Footer: Some information about the country </v-footer>
       </v-col>
     </v-row>
   </v-container>
 </template>
+
+<script lang="ts">
+import { GreenHouseGaz } from "@/store/GhgInterface";
+import { CouchUser } from "@/store/UserModule";
+import { cloneDeep } from "lodash";
+import { Component, Vue } from "vue-property-decorator";
+import { mapActions, mapGetters } from "vuex";
+
+@Component({
+  computed: {
+    ...mapGetters("GhgItemModule", ["project"]),
+    ...mapGetters("UserModule", ["user"]),
+  },
+  methods: {
+    ...mapActions("GhgItemModule", [
+      "getDoc",
+      "updateDoc",
+      "syncDB",
+      "closeDB",
+    ]),
+  },
+})
+/** ProjectItem */
+export default class ProjectItem extends Vue {
+  syncDB!: () => null;
+  getDoc!: (id: string) => null;
+  closeDB!: () => null;
+  updateDoc!: (doc: GreenHouseGaz) => void;
+
+  project!: GreenHouseGaz;
+  user!: CouchUser;
+
+  newUser = "";
+
+  addUserValid = true;
+  rules = [
+    (v: string): boolean | string => !!v || `A name is required`,
+    (v: string): boolean | string =>
+      v?.length > 1 || `Name should have a length >= 1`,
+  ];
+
+  tab = 0;
+
+  localProject = {} as GreenHouseGaz;
+
+  textRules = [
+    (v: string): boolean | string => !!v || `is required`,
+    (v: string): boolean | string =>
+      v?.length > 1 || `should have a length >= 1`,
+  ];
+
+  public setLocalShelter(): void {
+    if (!this.project) {
+      this.localProject = {} as GreenHouseGaz;
+    } else {
+      this.localProject = cloneDeep(this.project);
+    }
+  }
+
+  public syncLocalShelter(): void {
+    // init function
+    this.setLocalShelter();
+
+    this.$store.subscribe((mutation) => {
+      const shouldUpdate = ["GhgItemModule/SET_PROJECT"];
+      if (shouldUpdate.includes(mutation.type)) {
+        this.setLocalShelter();
+      }
+    });
+  }
+
+  created(): void {
+    this.syncLocalShelter();
+  }
+
+  mounted(): void {
+    this.syncDB();
+    this.getDoc(decodeURIComponent(this.$route.params.id));
+  }
+  destroyed(): void {
+    console.log("DESTROYED view shelter item, closing DB");
+    this.closeDB();
+  }
+
+  public addUser(value: string): void {
+    console.log("add new user", value, this.tab);
+    this.localProject.users.push(this.newUser);
+    this.newUser = "";
+    this.submitForm(this.localProject);
+  }
+
+  public removeUser(value: string): void {
+    if (value === this.user.name) {
+      throw new Error("cannot remove yourself from the list");
+    }
+    const indexToRemove = this.localProject.users.findIndex(
+      (el: string): boolean => el === value
+    );
+    this.localProject.users.splice(indexToRemove, 1);
+    this.submitForm(this.localProject);
+  }
+
+  public submitForm(value: GreenHouseGaz): void {
+    console.log("setter shelter", value, this.tab);
+    if (value.name !== "") {
+      this.updateDoc(value);
+    } else {
+      console.error("please fill the new Name");
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped></style>
