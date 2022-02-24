@@ -81,4 +81,3 @@ export default class Step3Materials extends Vue {
   }
 }
 </script>
-

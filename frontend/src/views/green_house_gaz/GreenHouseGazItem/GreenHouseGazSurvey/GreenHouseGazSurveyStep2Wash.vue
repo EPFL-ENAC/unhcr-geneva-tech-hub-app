@@ -3,7 +3,7 @@
     <v-row>
       <v-col> Step 2 WASH </v-col>
     </v-row>
-        <v-row>
+    <v-row>
       <v-col>
         <v-footer>
           <router-link :to="{ name: 'GreenHouseGazStep1' }"

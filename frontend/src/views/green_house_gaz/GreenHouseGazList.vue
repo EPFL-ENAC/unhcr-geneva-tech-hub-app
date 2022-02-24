@@ -140,7 +140,6 @@ export default class ProjectList extends Vue {
 }
 </script>
 
-
 <style lang="scss" scoped>
 // https://css-tricks.com/using-sass-control-scope-bem-naming/
 .project {

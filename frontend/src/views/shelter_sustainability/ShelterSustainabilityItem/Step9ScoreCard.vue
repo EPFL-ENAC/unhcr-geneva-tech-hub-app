@@ -22,7 +22,6 @@
         <v-col>
           <v-sheet elevation="2" rounded v-if="project">
             <v-container fluid>
-
               <v-row>
                 <v-col> Habitability: {{ project.habitability_score }} </v-col>
               </v-row>

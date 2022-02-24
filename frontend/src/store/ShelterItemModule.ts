@@ -7,7 +7,7 @@ import {
   MutationTree,
 } from "vuex";
 import { RootState } from ".";
-import { Score, Shelter } from "./ShelterInterface";
+import { Shelter } from "./ShelterInterface";
 
 interface ShelterState {
   shelter: Shelter | null;
