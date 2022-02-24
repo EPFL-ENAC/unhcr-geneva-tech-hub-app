@@ -145,7 +145,7 @@
 import { Shelter } from "@/store/ShelterInterface";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 /* two ways to have a store copy locally
 1. having a watcher on the store that cloneDeep to data() locally
@@ -155,7 +155,7 @@ for the original discussion
 */
 @Component({
   computed: {
-    ...mapState("ShelterItemModule", ["shelter"]),
+    ...mapGetters("ShelterItemModule", ["shelter"]),
   },
   methods: {
     ...mapActions("ShelterItemModule", ["updateDoc"]),
