@@ -9,7 +9,7 @@
         :label="label"
         hide-details="auto"
         required
-        :rules="[rules.required]"
+        :rules="rules"
       ></v-text-field>
       <v-text-field
         v-if="type === 'number'"
@@ -20,10 +20,10 @@
         hide-details="auto"
         hide-spin-buttons
         required
-        :rules="[rules.required]"
+        :rules="rules"
         type="number"
       >
-        <template v-if="unit" v-slot:append>{{ unit }}</template>
+        <template v-if="actualUnit" v-slot:append>{{ actualUnit }}</template>
       </v-text-field>
       <v-select
         v-if="type === 'boolean' || type === 'select'"
@@ -34,33 +34,39 @@
         hide-details="auto"
         :items="items"
         required
-        :rules="[rules.required]"
-      ></v-select>
+        :rules="rules"
+      >
+        <template v-if="actualUnit" v-slot:append>{{ actualUnit }}</template>
+      </v-select>
     </template>
     <span>{{ label }}</span>
   </v-tooltip>
 </template>
 
 <script lang="ts">
-import { rules } from "@/utils/rules";
+import * as rules from "@/utils/rules";
 import { SelectItemObject } from "@/utils/vuetify";
 import "vue-class-component/hooks";
 import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 
 @Component
 export default class FormItemComponent extends Vue {
-  readonly rules = rules;
-
   @VModel({ type: [String, Number, Boolean] })
   readonly model!: string | number | boolean;
   @Prop({ type: String as () => "text" | "number" | "boolean" | "select" })
   readonly type!: "text" | "number" | "boolean" | "select";
+  @Prop({ type: String as () => "percent" })
+  readonly subtype: "percent" | undefined;
   @Prop(String)
   readonly label!: string;
   @Prop([Object, Array])
-  readonly options: BooleanOptions | SelectOption[] | undefined;
+  readonly options: BooleanOptions | SelectOption<any>[] | undefined;
   @Prop(String)
   readonly unit: string | undefined;
+  @Prop(Number)
+  readonly min: number | undefined;
+  @Prop(Number)
+  readonly max: number | undefined;
 
   get items(): SelectItemObject<string, boolean | string>[] {
     switch (this.type) {
@@ -76,7 +82,7 @@ export default class FormItemComponent extends Vue {
           },
         ];
       case "select":
-        return (this.options as SelectOption[]).map((option) => ({
+        return (this.options as SelectOption<any>[]).map((option) => ({
           text: option.text,
           value: option.value,
         }));
@@ -84,37 +90,73 @@ export default class FormItemComponent extends Vue {
         return [];
     }
   }
+
+  get rules(): rules.Rule[] {
+    const defaultRules = [rules.required];
+    if (this.actualMin !== undefined) {
+      defaultRules.push(rules.min(this.actualMin));
+    }
+    if (this.actualMax !== undefined) {
+      defaultRules.push(rules.max(this.actualMax));
+    }
+    return defaultRules;
+  }
+
+  get actualUnit(): string | undefined {
+    if (this.subtype === "percent") {
+      return "%";
+    }
+    return this.unit;
+  }
+
+  get actualMin(): number | undefined {
+    if (this.subtype === "percent") {
+      return 0;
+    }
+    return this.min;
+  }
+
+  get actualMax(): number | undefined {
+    if (this.subtype === "percent") {
+      return 100;
+    }
+    return this.max;
+  }
 }
 
-export type FormItem =
-  | TextFormItem
-  | NumberFormItem
-  | BooleanFormItem
-  | SelectFormItem;
+export type FormItem<K = string, V = string> =
+  | TextFormItem<K>
+  | NumberFormItem<K>
+  | BooleanFormItem<K>
+  | SelectFormItem<K, V>;
 
-interface AbstractFormItem {
-  key: string;
+interface AbstractFormItem<K> {
+  key: K;
   label: string;
   hidden?: boolean;
 }
 
-interface TextFormItem extends AbstractFormItem {
+interface TextFormItem<K> extends AbstractFormItem<K> {
   type: "text";
 }
 
-interface NumberFormItem extends AbstractFormItem {
+interface NumberFormItem<K> extends AbstractFormItem<K> {
   type: "number";
+  subtype?: "percent";
   unit?: string;
+  min?: number;
+  max?: number;
 }
 
-interface BooleanFormItem extends AbstractFormItem {
+interface BooleanFormItem<K> extends AbstractFormItem<K> {
   type: "boolean";
   options?: BooleanOptions;
 }
 
-interface SelectFormItem extends AbstractFormItem {
+interface SelectFormItem<K, V> extends AbstractFormItem<K> {
   type: "select";
-  options: SelectOption[];
+  options: SelectOption<V>[];
+  unit?: string;
 }
 
 interface BooleanOptions {
@@ -122,8 +164,8 @@ interface BooleanOptions {
   false: string;
 }
 
-interface SelectOption {
+interface SelectOption<V> {
   text: string;
-  value: string;
+  value: V;
 }
 </script>

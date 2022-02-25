@@ -39,7 +39,7 @@ import SyncDocumentList from "@/components/commons/SyncDocumentList.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
 import { ProjectDocument, TemplateDocument } from "@/models/energyModel";
 import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
-import { rules } from "@/utils/rules";
+import * as rules from "@/utils/rules";
 import { SelectItemObject } from "@/utils/vuetify";
 import "vue-class-component/hooks";
 import { Component, Ref, Vue } from "vue-property-decorator";

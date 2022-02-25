@@ -29,7 +29,7 @@ import EnergyGeneral from "@/components/energy/EnergyGeneral.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
 import { GeneralModule, ProjectDocument } from "@/models/energyModel";
 import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
-import { rules } from "@/utils/rules";
+import * as rules from "@/utils/rules";
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
 

@@ -31,7 +31,7 @@
 import SyncDocumentList from "@/components/commons/SyncDocumentList.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
 import { TemplateDocument } from "@/models/energyModel";
-import { rules } from "@/utils/rules";
+import * as rules from "@/utils/rules";
 import "vue-class-component/hooks";
 import { Component, Ref, Vue } from "vue-property-decorator";
 
