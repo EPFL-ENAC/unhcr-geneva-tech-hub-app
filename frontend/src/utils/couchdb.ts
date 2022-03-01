@@ -7,9 +7,7 @@ const databaseUrl: string =
   process.env.VUE_APP_COUCHDB_URL ?? "http://localhost:5984";
 
 function getUrl(path: string): string {
-  const url = new URL(databaseUrl);
-  url.pathname = path;
-  return url.toString();
+  return `${databaseUrl}/${path}`;
 }
 
 const sessionUrl: string = getUrl("_session");

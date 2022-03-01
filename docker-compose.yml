@@ -20,6 +20,11 @@ services:
     environment:
       - COUCHDB_USER=${COUCHDB_USER}
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
+    labels:
+      - "traefik.http.routers.backend.rule=PathPrefix(`/db`)"
+      - "traefik.http.routers.backend.middlewares=backend-stripprefix"
+      - "traefik.http.middlewares.backend-stripprefix.stripprefix.prefixes=/db"
+      - "traefik.http.services.backend.loadbalancer.server.port=5984"
     ports:
       - '5984:5984'
     restart: unless-stopped
