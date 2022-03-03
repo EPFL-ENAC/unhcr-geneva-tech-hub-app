@@ -3,6 +3,7 @@ export interface ProjectDocument {
   users: string[];
   modules: {
     general?: GeneralModule;
+    householdCooking?: HouseholdCookingModule;
   };
 }
 
@@ -63,3 +64,5 @@ export type WoodLandscape =
   | "grassland-savannah";
 export type Topography = "flat" | "hilly" | "valley";
 export type vacantSpaceOutside = "no" | "little" | "medium" | "lots";
+
+export interface HouseholdCookingModule {}

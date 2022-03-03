@@ -1,40 +1,18 @@
 <template>
-  <v-card>
-    <v-card-text>
-      <v-form ref="form" v-model="formValid" lazy-validation>
-        <v-row v-for="(rowItem, index) in formItems" :key="index">
-          <template v-for="(item, index) in rowItem">
-            <v-col
-              v-if="!item.hidden"
-              :key="index"
-              cols="12"
-              sm="6"
-              md="4"
-              lg="3"
-              xl="2"
-            >
-              <form-item-component
-                v-model="module[item.key]"
-                v-bind="item"
-              ></form-item-component>
-            </v-col>
-          </template>
-        </v-row>
-      </v-form>
-    </v-card-text>
-    <v-card-actions>
-      <v-btn color="primary" :disabled="saveDisabled" @click="save">
-        <v-icon left>mdi-check</v-icon>
-        Save
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+  <energy-form
+    :module.sync="module"
+    :initial-module="initialModule"
+    :items="items"
+    @save="save"
+  ></energy-form>
 </template>
 
 <script lang="ts">
 import FormItemComponent, {
   FormItem,
 } from "@/components/commons/FormItemComponent.vue";
+import EnergyForm from "@/components/energy/EnergyForm.vue";
+import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
 import {
   AreaPerPerson,
   FarApartHouses,
@@ -45,26 +23,56 @@ import {
   vacantSpaceOutside,
   WoodLandscape,
 } from "@/models/energyModel";
-import { VForm } from "@/utils/vuetify";
-import { cloneDeep, isEqual } from "lodash";
 import "vue-class-component/hooks";
-import { Component, Prop, Ref, Vue, Watch } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 
 @Component({
   components: {
+    EnergyForm,
     FormItemComponent,
   },
 })
-export default class EnergyGeneral extends Vue {
-  @Prop({ type: Object as () => GeneralModule })
-  readonly initialModule: GeneralModule | undefined;
-  @Ref()
-  readonly form!: VForm;
+export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
+  module: GeneralModule = this.emptyModule;
 
-  formValid = true;
-  module: GeneralModule = EnergyGeneral.getDefaultModule();
+  get emptyModule(): GeneralModule {
+    const currentYear = new Date().getFullYear();
+    return {
+      year: currentYear,
+      name: "",
+      locationLatitude: 0,
+      locationLongitude: 0,
+      temporary: false,
+      expirationYear: currentYear,
+      electricityCompanyName: "",
+      publicGridConnection: false,
+      shelterTemporary: 0,
+      shelterTemporaryTent: 0,
+      shelterTemporarySheeting: 0,
+      shelterTemporaryKit: 0,
+      shelterPermanent: 0,
+      shelterPermanentContainer: 0,
+      shelterPermanentPrefabricated: 0,
+      shelterPermanentRhu: 0,
+      electricalSafetyCompliance: 0,
+      annualLocalWindMinimum: 0,
+      annualLocalWindAverage: 0,
+      annualLocalWindMaximum: 0,
+      totalPopulation: 0,
+      familiesCount: 0,
+      currency: "",
+      exchangeRateUsd: 1,
+      businessShare: 0,
+      farApartHouses: "few",
+      areaPerPerson: "-29",
+      vacantSpaceInside: "no",
+      woodLandscape: "rain",
+      topography: "flat",
+      vacantSpaceOutside: "no",
+    };
+  }
 
-  get formItems(): FormItem<keyof GeneralModule>[][] {
+  get items(): FormItem<keyof GeneralModule>[][] {
     return [
       [
         {
@@ -449,60 +457,6 @@ export default class EnergyGeneral extends Vue {
         } as FormItem<keyof GeneralModule, vacantSpaceOutside>,
       ],
     ];
-  }
-
-  get saveDisabled(): boolean {
-    return !this.formValid || isEqual(this.initialModule, this.module);
-  }
-
-  static getDefaultModule(): GeneralModule {
-    const currentYear = new Date().getFullYear();
-    return {
-      year: currentYear,
-      name: "",
-      locationLatitude: 0,
-      locationLongitude: 0,
-      temporary: false,
-      expirationYear: currentYear,
-      electricityCompanyName: "",
-      publicGridConnection: false,
-      shelterTemporary: 0,
-      shelterTemporaryTent: 0,
-      shelterTemporarySheeting: 0,
-      shelterTemporaryKit: 0,
-      shelterPermanent: 0,
-      shelterPermanentContainer: 0,
-      shelterPermanentPrefabricated: 0,
-      shelterPermanentRhu: 0,
-      electricalSafetyCompliance: 0,
-      annualLocalWindMinimum: 0,
-      annualLocalWindAverage: 0,
-      annualLocalWindMaximum: 0,
-      totalPopulation: 0,
-      familiesCount: 0,
-      currency: "",
-      exchangeRateUsd: 1,
-      businessShare: 0,
-      farApartHouses: "few",
-      areaPerPerson: "-29",
-      vacantSpaceInside: "no",
-      woodLandscape: "rain",
-      topography: "flat",
-      vacantSpaceOutside: "no",
-    };
-  }
-
-  @Watch("initialModule")
-  onInitialModuleChanged(): void {
-    if (this.initialModule) {
-      this.module = cloneDeep(this.initialModule);
-    }
-  }
-
-  save(): void {
-    if (this.form.validate()) {
-      this.$emit("save", this.module);
-    }
   }
 }
 </script>
