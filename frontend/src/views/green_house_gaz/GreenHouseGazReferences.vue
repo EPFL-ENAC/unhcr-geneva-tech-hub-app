@@ -1,5 +1,7 @@
 <template>
-  <main class="green-house-gaz__references"></main>
+  <main class="green-house-gaz__references">
+    THE REFERENCES
+  </main>
 </template>
 
 <script lang="ts">

@@ -1,7 +1,8 @@
-import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
+
 import Apps from "../views/AppListView.vue";
 import Login from "../views/LoginView.vue";
+import Vue from "vue";
 
 Vue.use(VueRouter);
 
@@ -46,6 +47,14 @@ const routes: Array<RouteConfig> = [
         component: () =>
           import(
             /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazList.vue"
+          ),
+      },
+      {
+        path: "references",
+        name: "GreenHouseGazReferences",
+        component: () =>
+          import(
+            /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazReferences.vue"
           ),
       },
       {

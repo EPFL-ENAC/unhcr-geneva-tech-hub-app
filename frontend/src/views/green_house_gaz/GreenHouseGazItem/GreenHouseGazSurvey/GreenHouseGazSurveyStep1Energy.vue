@@ -1,31 +1,52 @@
 <template>
   <v-container fluid>
-    <v-row>
-      <v-col> Step 1 Energy Survey </v-col>
-    </v-row>
+    <v-tabs v-model="tab" background-color="primary">
+      <v-tab v-for="item in menuItems" :key="item.tab">
+        {{ item.tab }}
+      </v-tab>
+    </v-tabs>
 
-    <v-row>
-      <v-col> Step 1.a Energy Cooking </v-col>
-    </v-row>
-
-    <v-row>
-      <v-col> Step 1.b Energy Lighting </v-col>
-    </v-row>
-
-    <v-row>
-      <v-col> Step 1.c Energy Pumping </v-col>
-    </v-row>
-    <v-row>
-      <v-col> <v-select></v-select> </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-footer>
-          <router-link :to="{ name: 'GreenHouseGazStep2' }"
-            ><v-btn> go to: Step 2 WASH</v-btn></router-link
-          >
-        </v-footer>
-      </v-col>
-    </v-row>
+    <v-tabs-items v-model="tab">
+      <v-tab-item v-for="item in menuItems" :key="item.tab">
+        <v-card flat>
+          <v-card-text>{{ item.content }}</v-card-text>
+        </v-card>
+      </v-tab-item>
+    </v-tabs-items>
   </v-container>
 </template>
+
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import { mapActions, mapState } from "vuex";
+
+@Component({
+  computed: {
+    ...mapState("GhgListModule", ["countries"]),
+  },
+
+  methods: {
+    ...mapActions("GhgListModule", [
+      "syncDB",
+      "getCountries",
+      "addDoc",
+      "closeDB",
+    ]),
+  },
+})
+/** ProjectList */
+export default class SurveyList extends Vue {
+  readonly menuItems: MenuSurveyItem[] = [
+    { tab: "Cooking", content: "cookingContent" },
+    { tab: "Lighting", content: "LightingContent" },
+    { tab: "Pumping", content: "PumpingContent" },
+    { tab: "Facilities", content: "FacilitiesContent" },
+  ];
+  tab = "Facilities";
+}
+
+interface MenuSurveyItem {
+  tab: string;
+  content: string;
+}
+</script>
