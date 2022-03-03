@@ -48,28 +48,10 @@
 # **Admin**
 ## definition
     - *Example : Greg*
-    - Add/Remove users
+    - Add/Remove users at the application level
 
 ## implementation
-
-    - 
-
-
-# vue helpers
-## create directives
- - admin
-    : v-show-if-admin
-        = admin + specialist + author + user
- - specialist
-    : v-show-if-specialist
-        = specialist + author + user
- - author
-    : v-show-if-author
-        = author + user
- - user
-    : v-show-if-user
- 
-
+    - We will use Azure
 # more information
 Pour un CREATE -> argument oldDoc === null
 Pour un DELETE -> champ '_deleted' présent dans newDoc
