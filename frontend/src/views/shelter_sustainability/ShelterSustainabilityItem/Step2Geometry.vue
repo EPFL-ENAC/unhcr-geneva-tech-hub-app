@@ -118,9 +118,9 @@
           <v-card>
             <v-card-title> Dimensions </v-card-title>
             <v-card-text>
-              <div>Floor area:</div>
-              <div>Volume:</div>
-              <div>Window area</div>
+              <div>Floor area: {{ localShelter.floorArea }}</div>
+              <div>Volume: {{ localShelter.volume }}</div>
+              <div>Window area: {{ localShelter.windowArea }}</div>
             </v-card-text>
           </v-card>
         </v-col>
@@ -195,6 +195,10 @@ export default class Step2Geometry extends Vue {
   public submitForm(value: Shelter): void {
     if (value.name !== "") {
       console.log("setter shelter", value);
+      const { L, W, H, H1, H2 } = value.shelter_dimensions;
+      value.floorArea = (L ?? 0) * (W ?? 0);
+      value.volume = (L ?? 0) * (W ?? 0) * (H ?? H1 ?? H2 ?? 0);
+      value.windowArea = 4;
       this.updateDoc(value);
     } else {
       console.error("please fill the new Name");

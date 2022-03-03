@@ -26,6 +26,9 @@ export interface Shelter {
   shelter_dimensions: ShelterDimensions;
   doors_dimensions: DoorDimensions[];
   windows_dimensions: WindowDimensions[];
+  windowArea: number;
+  floorArea: number;
+  volume: number;
 
   users: string[];
   created_by: string;
@@ -131,7 +134,7 @@ type densitySheet = (
 
 type densityUProfile = (
   L: Meter,
-  W: Meter,
+  W: Milimeter,
   H: Milimeter,
   Thickness: Milimeter,
   density: Density

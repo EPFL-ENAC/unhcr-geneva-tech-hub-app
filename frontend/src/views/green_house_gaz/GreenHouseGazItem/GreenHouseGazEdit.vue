@@ -3,7 +3,7 @@
     <v-tabs v-model="tab">
       <v-tab>
         <v-icon left> mdi-briefcase </v-icon>
-        Country
+        About
       </v-tab>
       <v-tab>
         <v-icon left> mdi-account </v-icon>
@@ -27,15 +27,24 @@
                     required
                     :rules="textRules"
                   />
-                  <v-text-field
-                    id="country"
-                    v-model="localProject.country"
-                    name="country"
-                    label="country"
-                    type="text"
-                    required
-                    :rules="textRules"
-                  />
+                  <v-select
+                    tabindex="2"
+                    v-model="localProject.country_code"
+                    :items="countriesRef"
+                    item-value="code"
+                    item-text="name"
+                    label="Select country"
+                  >
+                    <template v-slot:item="slotProps">
+                      <div
+                        class="d-flex justify-space-between"
+                        style="width: 300px"
+                      >
+                        <span> {{ slotProps.item.emoji }} </span>
+                        {{ slotProps.item.name }}
+                      </div>
+                    </template>
+                  </v-select>
                   <v-divider />
                 </v-sheet>
               </v-form>
@@ -143,7 +152,14 @@
     </v-row>
     <v-row>
       <v-col>
-        <v-footer> Footer: Some information about the country </v-footer>
+        <v-footer>
+          <!-- TODO add form with submit.prevent -->
+          <v-row v-if="$can('edit', localProject)">
+            <v-col class="d-flex justify-end">
+              <v-btn type="submit"> Save changes </v-btn>
+            </v-col>
+          </v-row>
+        </v-footer>
       </v-col>
     </v-row>
   </v-container>
@@ -152,6 +168,7 @@
 <script lang="ts">
 import { GreenHouseGaz } from "@/store/GhgInterface";
 import { CouchUser } from "@/store/UserModule";
+import Countries from "@/views/green_house_gaz/countriesAsList.min.js";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
@@ -179,6 +196,25 @@ export default class ProjectItem extends Vue {
 
   project!: GreenHouseGaz;
   user!: CouchUser;
+
+  public getFlagEmoji(countryCode: string): string {
+    const codePoints = countryCode
+      .toUpperCase()
+      .split("")
+      .map((char) => 127397 + char.charCodeAt(0));
+    return String.fromCodePoint(...codePoints);
+  }
+
+  // todo store in js outstide directly ?
+  countriesRef = Countries.map((country) => ({
+    ...country,
+    emoji: this.getFlagEmoji(country.code),
+  }));
+
+  countriesMap = Countries.reduce((acc, country) => {
+    acc[country.code] = { ...country, emoji: this.getFlagEmoji(country.code) };
+    return acc;
+  }, {} as Record<string, Record<string, string>>);
 
   newUser = "";
 

@@ -1,115 +1,274 @@
 <template>
-  <v-container class="project-list">
-    <v-row>
-      <v-col>
-        <h1 style="display: flex; justify-content: center">Camps</h1>
-      </v-col>
-      <v-col>
-        <h1 style="display: flex; justify-content: center">New Camp</h1>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-row v-for="project in projects" :key="project._id">
-          <v-col>
-            <v-card
-              :to="{
-                name: 'GreenHouseGazEdit',
-                params: { id: encodeURIComponent(project._id) },
-              }"
-              class="mx-auto project"
-              max-width="344"
-              hover
-              outlined
-              :class="{
-                'project--editable': $can('edit', project),
-                'project--readonly': !$can('edit', project),
-              }"
-            >
-              <v-card-title>
-                {{ project.name }}
-              </v-card-title>
-              <v-card-text>
-                <span>{{ project.location_name }}</span>
-              </v-card-text>
-              <v-card-actions class="d-flex flex-row justify-end">
-                <v-btn
-                  v-if="$can('delete', project)"
-                  outlined
-                  rounded
-                  @click.once.prevent.stop="() => removeDoc(project._id)"
-                >
-                  Delete project
+  <main class="green-house-gaz__list" :style="computedGridTemplate">
+    <v-sheet class="country-list overflow-y-auto">
+      <v-container fluid>
+        <v-row
+          ><v-col
+            :cols="10"
+            class="d-flex justify-center align-center country-list__title"
+          >
+            Green House Gaz indicators summarized by location
+          </v-col>
+          <v-col :cols="2" class="d-flex justify-end align-center">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon v-bind="attrs" v-on="on">
+                  <v-icon>mdi-map-marker-question-outline</v-icon>
                 </v-btn>
-                <div v-else class="project__hidden-child">
-                  <span v-if="$can('edit', project)">edit</span>
-                  <span v-else>read</span>
-                </div>
-              </v-card-actions>
-            </v-card>
+              </template>
+              <span>Data last updated on the 1st of March 2022</span>
+            </v-tooltip>
+            <v-btn icon @click="toggleExpandMap">
+              <v-icon v-if="expandMap">mdi-unfold-more-vertical</v-icon>
+              <v-icon v-else>mdi-unfold-less-vertical</v-icon>
+            </v-btn>
           </v-col>
         </v-row>
-      </v-col>
-      <v-col>
-        <v-form @submit.prevent="submitForm" v-model="createProjectFormValid">
-          <v-card class="mx-auto" max-width="344" outlined>
-            <v-card-text>
-              <v-text-field
-                tabindex="1"
-                v-model="newName"
-                :rules="rules"
-                required
-                name="name"
-                label="Name"
-                type="text"
-              />
-            </v-card-text>
-            <v-card-actions class="justify-end">
-              <v-btn
-                outlined
-                rounded
-                text
-                type="submit"
-                tabindex="2"
-                :disabled="!createProjectFormValid"
+        <v-row
+          ><v-col class="country-list__actions">
+            <v-btn text @click="download">
+              <v-icon>mdi-download</v-icon>
+              download
+            </v-btn>
+            <v-btn text @click="compare">
+              <v-icon>mdi-chart-multiple</v-icon>
+              site comparison
+            </v-btn>
+            <v-btn text @click="statistics">
+              <v-icon>mdi-presentation</v-icon>
+              statistics
+            </v-btn>
+            <v-btn text @click="statistics">
+              <v-icon>mdi-script-text-outline</v-icon>
+              references
+            </v-btn>
+            <v-btn text @click="addSite">
+              <v-icon>mdi-plus-thick</v-icon>
+              add new site
+            </v-btn>
+          </v-col></v-row
+        >
+        <v-row
+          ><v-col justify="center">
+            <v-expansion-panels accordion>
+              <v-expansion-panel
+                v-for="(country, keyIndex) in countries"
+                :key="`${country.key}${keyIndex}`"
               >
-                New shelter
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-form>
-      </v-col>
-    </v-row>
-  </v-container>
+                <v-expansion-panel-header>
+                  <div class="panel-header">
+                    <span>
+                      {{ countriesMap[country.key].name }}
+                    </span>
+                    <span>
+                      {{ countriesMap[country.key].emoji }}
+                    </span>
+                  </div>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-simple-table>
+                    <template v-slot:default>
+                      <thead>
+                        <tr>
+                          <th class="text-left">Name</th>
+                          <th class="text-left">hard_coded</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="location in country.value" :key="location">
+                          <td>
+                            <router-link
+                              :to="{
+                                name: 'GreenHouseGazEdit',
+                                params: { id: encodeURIComponent(location) },
+                              }"
+                            >
+                              {{ location }}
+                            </router-link>
+                          </td>
+                          <td>hard_coded_value</td>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </v-col></v-row
+        >
+      </v-container>
+    </v-sheet>
+    <div class="separator"></div>
+    <div class="map-countries"></div>
+    <v-dialog v-model="siteDialog" max-width="500px">
+      <!-- <template v-slot:activator="{ on, attrs }">
+        <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+          New camp site
+        </v-btn>
+      </template> -->
+      <v-form @submit.prevent="save" v-model="createProjectFormValid">
+        <v-card>
+          <v-card-title>
+            <span class="text-h5">New location</span>
+          </v-card-title>
+
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12" sm="6" md="6">
+                  <v-text-field
+                    tabindex="1"
+                    v-model="newCampSite.name"
+                    :rules="rules"
+                    required
+                    name="name"
+                    label="Location"
+                    type="text"
+                  />
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-select
+                    tabindex="2"
+                    v-model="newCampSite.country_code"
+                    :items="countriesRef"
+                    item-value="code"
+                    item-text="name"
+                    label="Select country"
+                  >
+                    <template v-slot:item="slotProps">
+                      <div
+                        class="d-flex justify-space-between"
+                        style="width: 300px"
+                      >
+                        <span> {{ slotProps.item.emoji }} </span>
+                        {{ slotProps.item.name }}
+                      </div>
+                    </template>
+                  </v-select>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="closeSiteDialog">
+              Cancel
+            </v-btn>
+            <v-btn color="blue darken-1" submit text @click="save">
+              Save
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-form>
+    </v-dialog>
+  </main>
 </template>
 
 <script lang="ts">
+import { GreenHouseGaz } from "@/store/GhgInterface.js";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
+import Countries from "./countriesAsList.min.js";
 
 @Component({
   computed: {
-    ...mapState("GhgListModule", ["projects"]),
+    ...mapState("GhgListModule", ["countries"]),
   },
 
   methods: {
     ...mapActions("GhgListModule", [
-      "addDoc",
-      "removeDoc",
       "syncDB",
-      "getDB",
+      "getCountries",
+      "addDoc",
       "closeDB",
     ]),
   },
 })
 /** ProjectList */
 export default class ProjectList extends Vue {
-  newName = "";
-  projects!: [];
-  addDoc!: (name: string) => null;
+  countries!: [];
   syncDB!: () => null;
+  addDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;
+
   closeDB!: () => Promise<null>;
-  getDB!: () => Promise<null>;
+  getCountries!: () => Promise<null>;
+  siteDialog = false;
+  expandMap = false;
+
+  // todo store in js outstide directly ?
+  countriesRef = Countries.map((country) => ({
+    ...country,
+    emoji: this.getFlagEmoji(country.code),
+  }));
+
+  countriesMap = Countries.reduce((acc, country) => {
+    acc[country.code] = { ...country, emoji: this.getFlagEmoji(country.code) };
+    return acc;
+  }, {} as Record<string, Record<string, string>>);
+
+  defaultCampSite = {
+    name: "",
+    country_code: "",
+  } as GreenHouseGaz;
+
+  newCampSite = Object.assign({} as GreenHouseGaz, this.defaultCampSite);
+
+  mounted(): void {
+    this.syncDB();
+    this.getCountries();
+  }
+
+  destroyed(): void {
+    this.closeDB().then(() => {
+      console.log("DESTROYED view shelter list, closing DB");
+    });
+  }
+
+  toggleExpandMap(): void {
+    this.expandMap = !this.expandMap;
+  }
+
+  get computedGridTemplate(): string {
+    if (this.expandMap) {
+      return "{ grid-template-columns: 50% 25px 50%; }";
+    }
+
+    return "grid-template-columns: 100%;";
+  }
+
+  public getFlagEmoji(countryCode: string): string {
+    const codePoints = countryCode
+      .toUpperCase()
+      .split("")
+      .map((char) => 127397 + char.charCodeAt(0));
+    return String.fromCodePoint(...codePoints);
+  }
+
+  public download(): void {
+    console.log("download data");
+  }
+  public compare(): void {
+    console.log("compare surveys");
+  }
+  public statistics(): void {
+    console.log("run statistics");
+  }
+  public addSite(): void {
+    this.newCampSite = Object.assign({} as GreenHouseGaz, this.defaultCampSite);
+    // console.log("add site");
+    this.siteDialog = true;
+  }
+
+  public closeSiteDialog(): void {
+    this.siteDialog = false;
+    this.$nextTick(() => {
+      this.newCampSite = Object.assign(
+        {} as GreenHouseGaz,
+        this.defaultCampSite
+      );
+    });
+  }
 
   createProjectFormValid = true;
   rules = [
@@ -118,61 +277,57 @@ export default class ProjectList extends Vue {
       v?.length > 1 || `Name should have a length >= 1`,
   ];
 
-  public submitForm(): void {
-    if (this.newName !== "") {
-      this.addDoc(this.newName);
-      this.newName = "";
+  public save(): void {
+    console.log("this is the new CampSite", this.newCampSite);
+    if (this.newCampSite.name !== "") {
+      this.addDoc(this.newCampSite).then(this.closeSiteDialog);
     } else {
       console.error("please fill the new Name");
     }
   }
-
-  mounted(): void {
-    this.syncDB();
-    this.getDB();
-  }
-
-  destroyed(): void {
-    this.closeDB().then(() => {
-      console.log("DESTROYED view shelter list, closing DB");
-    });
-  }
 }
 </script>
-
 <style lang="scss" scoped>
-// https://css-tricks.com/using-sass-control-scope-bem-naming/
-.project {
-  $self: &;
-  // background-color: blue;
+.panel-header {
+  justify-content: space-between;
+  display: flex;
+  padding-right: 15px;
+}
+.green-house-gaz__list {
+  $header_height: 64px;
+  display: grid;
+  grid-template-rows: calc(100vh - #{$header_height});
+  grid-template-columns: 50% 25px 50%;
+  grid-template-areas: "a b c";
 
-  &--editable {
-    // background-color: yellow;
-    &:hover {
-      // background-color: red;
-      color: #444;
-    }
-  }
+  flex: 1 1 auto;
+}
 
-  &--readonly {
-    // background-color: yellow;
-    color: #999;
-    &:hover {
-      // background-color: red;
-      color: inherit;
-    }
-  }
+.country-list {
+  grid-area: a;
+}
 
-  #{ $self }__hidden-child {
-    visibility: hidden;
-    color: #ccc;
-  }
+.country-list__actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
 
-  &:hover {
-    // background-color: green;
-    #{ $self }__hidden-child {
-      visibility: visible;
-    }
-  }
+.country-list__title {
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.separator {
+  grid-area: b;
+  background-color: #e9ebec;
+  cursor: col-resize;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.map-countries {
+  grid-area: c;
 }
 </style>
