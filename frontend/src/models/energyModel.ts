@@ -6,13 +6,6 @@ export interface ProjectDocument {
   };
 }
 
-export interface TemplateDocument {
-  name: string;
-  modules: {
-    general?: GeneralModule;
-  };
-}
-
 export interface GeneralModule {
   year: number;
   name: string;

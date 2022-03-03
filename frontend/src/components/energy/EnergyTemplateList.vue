@@ -30,7 +30,7 @@
 <script lang="ts">
 import SyncDocumentList from "@/components/commons/SyncDocumentList.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
-import { TemplateDocument } from "@/models/energyModel";
+import { ProjectDocument } from "@/models/energyModel";
 import * as rules from "@/utils/rules";
 import "vue-class-component/hooks";
 import { Component, Ref, Vue } from "vue-property-decorator";
@@ -45,13 +45,13 @@ export default class EnergyTemplateList extends Vue {
   name = "";
 
   @Ref()
-  readonly list!: SyncDocumentList<TemplateDocument>;
+  readonly list!: SyncDocumentList<ProjectDocument>;
 
-  clickItem(document: ExistingDocument<TemplateDocument>): void {
+  clickItem(document: ExistingDocument<ProjectDocument>): void {
     this.$router.push({ path: `templates/${document._id}`, append: true });
   }
 
-  deleteItem(document: ExistingDocument<TemplateDocument>, event: Event): void {
+  deleteItem(document: ExistingDocument<ProjectDocument>, event: Event): void {
     event.stopPropagation();
     this.list.database.db.remove(document);
   }
@@ -59,7 +59,9 @@ export default class EnergyTemplateList extends Vue {
   create(): void {
     this.list.database.db.post({
       name: this.name,
-      users: [],
+      users: [
+        // current user
+      ],
       modules: {},
     });
     this.name = "";

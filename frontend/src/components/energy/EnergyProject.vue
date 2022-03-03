@@ -3,7 +3,7 @@
     <v-text-field
       v-model="name"
       hide-details="auto"
-      label="Project Name"
+      :label="idName + ' Name'"
       outlined
       required
       :rules="[rules.required]"
@@ -31,7 +31,7 @@ import { GeneralModule, ProjectDocument } from "@/models/energyModel";
 import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
 import * as rules from "@/utils/rules";
 import "vue-class-component/hooks";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({
   components: {
@@ -41,8 +41,14 @@ import { Component, Vue } from "vue-property-decorator";
 export default class EnergyProject extends Vue {
   readonly rules = rules;
 
-  readonly database: SyncDatabase<ProjectDocument> =
-    createSyncDatabase("energy_projects");
+  @Prop(String)
+  readonly idName!: string;
+  @Prop(String)
+  readonly databaseName!: string;
+
+  readonly database: SyncDatabase<ProjectDocument> = createSyncDatabase(
+    this.databaseName
+  );
 
   document: ExistingDocument<ProjectDocument> | null = null;
   tab: string | null = null;

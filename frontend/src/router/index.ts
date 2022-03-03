@@ -259,11 +259,11 @@ const routes: Array<RouteConfig> = [
           ),
       },
       {
-        path: "projects/:id",
-        name: "EnergyProject",
+        path: "camps/:id",
+        name: "EnergyCamps",
         component: () =>
           import(
-            /* webpackChunkName: "energy-project" */ "../views/energy/EnergyProject.vue"
+            /* webpackChunkName: "energy-camp" */ "../views/energy/EnergyCamp.vue"
           ),
       },
       {

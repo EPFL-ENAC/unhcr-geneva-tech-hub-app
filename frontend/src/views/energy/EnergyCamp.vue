@@ -1,8 +1,5 @@
 <template>
-  <energy-project
-    id-name="Templates"
-    database-name="energy_templates"
-  ></energy-project>
+  <energy-project id-name="Camp" database-name="energy_camps"></energy-project>
 </template>
 
 <script lang="ts">
@@ -15,5 +12,5 @@ import { Component, Vue } from "vue-property-decorator";
     EnergyProject,
   },
 })
-export default class EnergyTemplate extends Vue {}
+export default class EnergyCamp extends Vue {}
 </script>

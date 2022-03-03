@@ -1,8 +1,8 @@
 <template>
   <sync-document-list
     ref="list"
-    title="Projects"
-    databaseName="energy_projects"
+    title="Camps"
+    databaseName="energy_camps"
     @click:item="clickItem"
     @create="create"
   >
@@ -24,7 +24,7 @@
         :rules="[rules.required]"
       ></v-text-field>
       <v-select
-        v-model="template"
+        v-model="templateDocument"
         :items="templates"
         label="Select template"
         required
@@ -37,7 +37,7 @@
 <script lang="ts">
 import SyncDocumentList from "@/components/commons/SyncDocumentList.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
-import { ProjectDocument, TemplateDocument } from "@/models/energyModel";
+import { ProjectDocument } from "@/models/energyModel";
 import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
 import * as rules from "@/utils/rules";
 import { SelectItemObject } from "@/utils/vuetify";
@@ -47,16 +47,16 @@ import { Component, Ref, Vue } from "vue-property-decorator";
 @Component({
   components: { SyncDocumentList },
 })
-export default class EnergyProjectList extends Vue {
+class EnergyCampList extends Vue {
   readonly rules = rules;
   // TODO vuex
-  readonly templateDatabase: SyncDatabase<TemplateDocument> =
+  readonly templateDatabase: SyncDatabase<ProjectDocument> =
     createSyncDatabase("energy_templates");
 
   createDialog = false;
   name = "";
-  templateDocuments: ExistingDocument<TemplateDocument>[] = [];
-  template: TemplateDocument | null = null;
+  templateDocuments: ExistingDocument<ProjectDocument>[] = [];
+  templateDocument: ProjectDocument | null = null;
 
   @Ref()
   readonly list!: SyncDocumentList<ProjectDocument>;
@@ -72,7 +72,7 @@ export default class EnergyProjectList extends Vue {
     this.templateDatabase.cancel();
   }
 
-  get templates(): SelectItemObject<string, TemplateDocument>[] {
+  get templates(): SelectItemObject<string, ProjectDocument>[] {
     return this.templateDocuments.map((document) => ({
       text: document.name,
       value: document,
@@ -86,7 +86,7 @@ export default class EnergyProjectList extends Vue {
   }
 
   clickItem(document: ExistingDocument<ProjectDocument>): void {
-    this.$router.push({ path: `projects/${document._id}`, append: true });
+    this.$router.push({ path: `camps/${document._id}`, append: true });
   }
 
   deleteItem(document: ExistingDocument<ProjectDocument>, event: Event): void {
@@ -97,12 +97,16 @@ export default class EnergyProjectList extends Vue {
   create(): void {
     this.list.database.db.post({
       name: this.name,
-      users: [],
+      users: [
+        // current user
+      ],
       modules: {
-        general: this.template?.modules.general,
+        general: this.templateDocument?.modules.general,
       },
     });
     this.name = "";
   }
 }
+
+export { EnergyCampList as default };
 </script>
