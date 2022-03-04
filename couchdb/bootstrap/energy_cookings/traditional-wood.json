@@ -1,0 +1,14 @@
+{
+  "_id": "traditional-wood",
+  "name": "Traditional stove - three stones with pot or alternatives",
+  "fuel": "wood",
+  "technologyType": "conventional",
+  "energyEfficiency": 9,
+  "capacity": 1,
+  "investmentCost": 0,
+  "lifetime": 25,
+  "emmissionFactorCo": 19,
+  "emmissionFactorPm": 1050,
+  "iwaEfficiencyTier": 0,
+  "iwaIndoorEmissionTier": 0
+}

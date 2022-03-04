@@ -8,9 +8,7 @@
 </template>
 
 <script lang="ts">
-import FormItemComponent, {
-  FormItem,
-} from "@/components/commons/FormItemComponent.vue";
+import { FormItem } from "@/components/commons/FormItemComponent.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
 import {
@@ -29,7 +27,6 @@ import { Component } from "vue-property-decorator";
 @Component({
   components: {
     EnergyForm,
-    FormItemComponent,
   },
 })
 export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {

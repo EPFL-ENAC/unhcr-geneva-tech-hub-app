@@ -1,6 +1,7 @@
 <template>
   <v-card>
     <v-card-text>
+      <slot name="append"></slot>
       <v-form ref="form" v-model="formValid" lazy-validation>
         <v-row v-for="(rowItem, index) in items" :key="index">
           <template v-for="(item, index) in rowItem">

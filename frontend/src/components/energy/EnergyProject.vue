@@ -10,20 +10,21 @@
       @change="changeName"
     ></v-text-field>
     <v-tabs v-model="tab" center-active show-arrows>
-      <v-tab key="general">General Information</v-tab>
-      <v-tab key="households">Households</v-tab>
+      <v-tab href="#general">General Information</v-tab>
+      <v-tab href="#household-cooking">Household Cooking</v-tab>
+      <v-tab href="#household-lighting">Household Lighting</v-tab>
       <v-tab>Community lighting</v-tab>
       <v-tab>Community heating & cooling</v-tab>
       <v-tab>Productive use of energy</v-tab>
     </v-tabs>
     <v-tabs-items v-model="tab">
-      <v-tab-item key="general">
+      <v-tab-item value="general">
         <energy-general
           :initial-module="generalModule"
           @save="saveGeneral"
         ></energy-general>
       </v-tab-item>
-      <v-tab-item key="households">
+      <v-tab-item value="household-cooking">
         <energy-household-cooking
           :initial-module="householdCookingModule"
           @save="saveHouseholdCooking"

@@ -1,4 +1,5 @@
 import ConfigModule from "@/store/ConfigModule";
+import EnergyModule from "@/store/EnergyModule";
 import GhgItemModule from "@/store/GhgItemModule";
 import GhgListModule from "@/store/GhgListModule";
 import ShelterItemModule from "@/store/ShelterItemModule";
@@ -146,6 +147,7 @@ const store: StoreOptions<RootState> = {
     GhgListModule,
     GhgItemModule,
     UserModule,
+    energy: EnergyModule,
   },
   plugins: [
     new VuexPersistence({

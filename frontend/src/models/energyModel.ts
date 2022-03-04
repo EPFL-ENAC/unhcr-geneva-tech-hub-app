@@ -65,4 +65,39 @@ export type WoodLandscape =
 export type Topography = "flat" | "hilly" | "valley";
 export type vacantSpaceOutside = "no" | "little" | "medium" | "lots";
 
-export interface HouseholdCookingModule {}
+export interface HouseholdCookingModule {
+  categoryCookings: {
+    cooking: Cooking;
+    categoryCounts: Record<SocioEconomicCategory, number>;
+  }[];
+}
+
+export interface Cooking {
+  name: string;
+  fuel: "wood" | "charcoal" | "pellet" | "ethanol" | "kerosene";
+  technologyType: "conventional" | "improved";
+  energyEfficiency: number;
+  capacity: number;
+  investmentCost: number;
+  lifetime: number;
+  emmissionFactorCo: number;
+  emmissionFactorPm: number;
+  iwaEfficiencyTier: Tier;
+  iwaIndoorEmissionTier: Tier;
+}
+
+type Tier = number | [number, number];
+
+export type SocioEconomicCategory =
+  | "veryLow"
+  | "low"
+  | "middle"
+  | "high"
+  | "veryHigh";
+export const socioEconomicCategories: string[] = [
+  "veryLow",
+  "low",
+  "middle",
+  "high",
+  "veryHigh",
+];
