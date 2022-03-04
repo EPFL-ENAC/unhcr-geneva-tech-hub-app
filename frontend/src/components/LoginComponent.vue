@@ -62,7 +62,6 @@ export default class LoginComponent extends Vue {
         this.$router.push("/apps");
       })
       .catch((error: AxiosError) => {
-        console.log("error login", error);
         switch (error.response?.status) {
           case 401:
             this.error = "Invalid credentials";

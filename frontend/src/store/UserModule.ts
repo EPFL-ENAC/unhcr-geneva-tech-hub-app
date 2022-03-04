@@ -1,4 +1,3 @@
-import { login as loginTool, logout as logoutTool } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -6,6 +5,8 @@ import {
   Module,
   MutationTree,
 } from "vuex";
+import { getSession as getSessionTool, login as loginTool, logout as logoutTool } from "@/utils/couchdb";
+
 import { RootState } from ".";
 
 /** Config store */
@@ -72,12 +73,11 @@ const actions: ActionTree<UserState, RootState> = {
     const { username, password } = credentials;
     return loginTool(username, password)
       .then((axiosResponse) => {
-        console.log("login sucess", axiosResponse.data);
         context.commit("SET_USER", axiosResponse.data);
         return axiosResponse;
       })
       .catch((error) => {
-        console.log("gross eerru", error);
+        throw error;
       })
       .finally(() => {
         context.commit("UNSET_USER_LOADING");
@@ -95,17 +95,11 @@ const actions: ActionTree<UserState, RootState> = {
       });
   },
   getSession: (context: ActionContext<UserState, RootState>) => {
-    fetch("http://localhost:5984/_session", {
-      method: "get",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-      },
-    })
-      .then((result) => result.json())
+    getSessionTool()
       .then((response) => {
-        console.log(response.userCtx);
-        context.commit("SET_USER", response.userCtx);
+        const user = response.data;
+        console.log(user.userCtx);
+        context.commit("SET_USER", user.userCtx);
       });
   },
 };
