@@ -18,9 +18,9 @@ lint:
 	$(MAKE) -C backend lint
 	$(MAKE) -C frontend lint
 
+# setup and run when deploying on server
 setup:
-	echo "nothing to setup for server"
-
+	docker-compose build --parallel --pull
 run:
-	docker-compose build --pull
-	docker-compose up --remove-orphans
+	docker-compose up -d --remove-orphans
+	docker-compose run couchdb-setup make
