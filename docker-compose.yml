@@ -1,3 +1,4 @@
+version: "3.9"
 services:
   reverse-proxy:
     image: traefik:v2.5
@@ -43,6 +44,12 @@ services:
     volumes:
       - ./couchdb/etc/config.ini:/opt/couchdb/etc/local.d/config.ini
       - couchdb_data:/opt/couchdb/data/
+  couchdb-setup:
+    environment:
+      - COUCHDB_USER=${COUCHDB_USER}
+      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
+      - COUCHDB_HOST=couchdb
+    build: ./couchdb
 volumes:
   couchdb_data:
     driver: local
