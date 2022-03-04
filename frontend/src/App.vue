@@ -101,6 +101,7 @@
         <v-col>
           <v-fade-transition mode="out-in">
             <router-view />
+            <router-view name="Login" />
           </v-fade-transition>
         </v-col>
       </v-row>
@@ -222,7 +223,6 @@ export default class App extends Vue {
         if (this.$router.currentRoute.name !== "Login") {
           this.$router.push({ name: "Login" });
         }
-        alert("Logout successful ");
       })
       .catch((error: AxiosError) => {
         console.log("error login", error);

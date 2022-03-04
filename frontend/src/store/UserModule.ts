@@ -1,12 +1,15 @@
 import {
+  getSession as getSessionTool,
+  login as loginTool,
+  logout as logoutTool,
+} from "@/utils/couchdb";
+import {
   ActionContext,
   ActionTree,
   GetterTree,
   Module,
   MutationTree,
 } from "vuex";
-import { getSession as getSessionTool, login as loginTool, logout as logoutTool } from "@/utils/couchdb";
-
 import { RootState } from ".";
 
 /** Config store */
@@ -15,7 +18,7 @@ enum Roles {
   "user",
   "admin",
   "specialist",
-  // "author" // does not exist, it's in the document
+  // "author" // does not exist, it's in the document if user is in the users field
 }
 
 export interface CouchUser {
@@ -95,12 +98,11 @@ const actions: ActionTree<UserState, RootState> = {
       });
   },
   getSession: (context: ActionContext<UserState, RootState>) => {
-    getSessionTool()
-      .then((response) => {
-        const user = response.data;
-        console.log(user.userCtx);
-        context.commit("SET_USER", user.userCtx);
-      });
+    getSessionTool().then((response) => {
+      const user = response.data;
+      console.log(user.userCtx);
+      context.commit("SET_USER", user.userCtx);
+    });
   },
 };
 

@@ -1,4 +1,4 @@
-import PouchDB from "pouchdb";
+import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -11,23 +11,18 @@ import { Shelter } from "./ShelterInterface";
 
 interface ShelterState {
   shelter: Shelter | null;
-  localCouch: PouchDB.Database | null;
-  sync: PouchDB.Replication.Sync<Shelter> | null;
-  replicate: PouchDB.Replication.Replication<Shelter> | null;
+  localCouch: SyncDatabase<Shelter> | null;
 }
-
-const remoteCouch = "http://localhost:5984/shelters";
 
 /** Default Configure state value */
 function generateState(): ShelterState {
   return {
     shelter: null,
     localCouch: null,
-    sync: null,
-    replicate: null,
   };
 }
 
+const DB_NAME = "shelters";
 /** Getters */
 const getters: GetterTree<ShelterState, RootState> = {
   shelter: (s): Shelter | null => s.shelter,
@@ -35,26 +30,14 @@ const getters: GetterTree<ShelterState, RootState> = {
 
 /** Mutations */
 const mutations: MutationTree<ShelterState> = {
-  INIT_SYNC(state) {
-    state.localCouch = new PouchDB("couchShelters", { auto_compaction: true });
+  INIT_DB(state) {
+    state.localCouch = createSyncDatabase(DB_NAME);
   },
-  CLOSE_SYNC(state) {
-    state?.localCouch?.close().then(function () {
-      // success
-      state.replicate?.cancel(); // whenever you want to cancel the replicate!
-      state.sync?.cancel(); // whenever you want to cancel the sync!
-      // hopefully removing the replicate!
-      state.localCouch = null;
-    });
+  CLOSE_DB(state) {
+    state.localCouch?.cancel();
   },
   SET_SHELTER(state, value) {
     state.shelter = value;
-  },
-  SET_SYNC(state, value) {
-    state.sync = value;
-  },
-  SET_REPLICATE(state, value) {
-    state.replicate = value;
   },
 };
 
@@ -62,58 +45,33 @@ const mutations: MutationTree<ShelterState> = {
 const actions: ActionTree<ShelterState, RootState> = {
   syncDB: (context: ActionContext<ShelterState, RootState>) => {
     // init
-    context.commit("INIT_SYNC");
-
+    context.commit("INIT_DB");
     const localCouch = context.state.localCouch;
-    const replicate = localCouch?.replicate
-      .from(remoteCouch)
-      .on("complete", function () {
-        const sync = localCouch
-          ?.sync(remoteCouch, { live: true, retry: true })
-          .on("change", function () {
-            context.dispatch("getDoc", context.state.shelter?._id);
-          });
-        context.commit("SET_SYNC", sync);
-      })
-      .on("error", function (error: PouchDB.Core.Error) {
-        console.log("could not replicate", error);
-        if (error.status === 401) {
-          // you are not authorized
-        }
-      });
-    context.commit("SET_REPLICATE", replicate);
+    localCouch?.onChange(function () {
+      context.dispatch("getDoc", context.state.shelter?._id);
+    });
   },
   closeDB: (context: ActionContext<ShelterState, RootState>) => {
-    context.commit("CLOSE_SYNC");
+    context.commit("CLOSE_DB");
   },
   updateDoc: (context: ActionContext<ShelterState, RootState>, value) => {
     context.commit("SET_SHELTER", value);
-    if (context.state.localCouch) {
-      context.state.localCouch
-        .put(value)
-        .then(function () {
-          // DANGER!
-          // From now on, revision 1 is no longer available.
-        })
-        .catch(function (err: Error) {
-          // handle errors
-          // TODO: handle errors properly with notification and tool
-          console.log(err);
-        });
+    const db = context.state.localCouch?.db;
+    if (db) {
+      db.put(value);
     } else {
       throw new Error("localCouch is null: should have been initialized");
     }
   },
   getDoc: (context: ActionContext<ShelterState, RootState>, id) => {
-    context.state.localCouch
-      ?.get(id)
-      .then(function (result) {
-        console.log(result);
+    const db = context.state.localCouch?.db;
+    if (db) {
+      db.get(id).then(function (result) {
         context.commit("SET_SHELTER", result);
-      })
-      .catch(function (err: Error) {
-        console.log(err);
       });
+    } else {
+      throw new Error("localCouch is null: should have been initialized");
+    }
   },
 };
 

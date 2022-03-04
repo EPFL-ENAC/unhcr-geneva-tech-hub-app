@@ -57,7 +57,6 @@ export default class ProjectItem extends Vue {
     this.getDoc(decodeURIComponent(this.$route.params.id));
   }
   destroyed(): void {
-    console.log("DESTROYED view shelter item, closing DB");
     this.closeDB();
   }
 }

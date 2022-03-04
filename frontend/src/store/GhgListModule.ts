@@ -1,6 +1,6 @@
 /** Config store */
 import { Shelter } from "@/store/ShelterInterface";
-import PouchDB from "pouchdb";
+import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -15,20 +15,15 @@ const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 
 interface ProjectsState {
   projects: Array<Shelter>;
-  localCouch: PouchDB.Database | null;
-  sync: PouchDB.Replication.Sync<Shelter> | null;
-  replicate: PouchDB.Replication.Replication<Shelter> | null;
+  localCouch: SyncDatabase<Shelter> | null;
 }
 
 const DB_NAME = "ghg";
-const REMOTE_COUCH = `http://localhost:5984/${DB_NAME}`;
 
 function generateState(): ProjectsState {
   return {
     projects: [],
     localCouch: null,
-    sync: null,
-    replicate: null,
   };
 }
 
@@ -48,49 +43,25 @@ const getters: GetterTree<ProjectsState, RootState> = {
 /** Mutations */
 const mutations: MutationTree<ProjectsState> = {
   INIT_DB(state) {
-    state.localCouch = new PouchDB(DB_NAME, { auto_compaction: true });
+    state.localCouch = createSyncDatabase(DB_NAME);
   },
   CLOSE_DB(state) {
-    if (!state.localCouch) {
-      throw new Error(MSG_DB_DOES_NOT_EXIST);
-    }
-    state.localCouch.close().then(function () {
-      state.replicate?.cancel();
-      state.sync?.cancel();
-      state.localCouch = null;
-    });
+    state.localCouch?.cancel();
   },
   SET_PROJECTS(state, value) {
     state.projects = value;
   },
   ADD_DOC(state, value) {
-    if (!state.localCouch) {
-      throw new Error(MSG_DB_DOES_NOT_EXIST);
-    }
-    state.localCouch
-      ?.put(value)
-      .then(() => {
-        // add locally
-        state.projects.push(value);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  },
-  REMOVE_DOC(state, value) {
-    // locally
-    const indexToRemove = state.projects.findIndex((el) => el._id === value);
-    state.projects.splice(indexToRemove, 1);
-    // remote
-    state.localCouch?.get(value).then(function (doc) {
-      return state.localCouch?.remove(doc);
+    state.localCouch?.db.put(value).then(() => {
+      state.projects.push(value);
     });
   },
-  SET_SYNC(state, value) {
-    state.sync = value;
-  },
-  SET_REPLICATE(state, value) {
-    state.replicate = value;
+  REMOVE_DOC(state, value) {
+    const indexToRemove = state.projects.findIndex((el) => el._id === value);
+    state.projects.splice(indexToRemove, 1);
+    state.localCouch?.db.get(value).then(function (doc) {
+      return state.localCouch?.db.remove(doc);
+    });
   },
 };
 
@@ -98,42 +69,31 @@ const mutations: MutationTree<ProjectsState> = {
 const actions: ActionTree<ProjectsState, RootState> = {
   syncDB: (context: ActionContext<ProjectsState, RootState>) => {
     context.commit("INIT_DB");
-    const opts = { live: true, retry: true };
     const localCouch = context.state.localCouch;
 
-    function sync(db: PouchDB.Database | null) {
-      const sync = db?.sync(REMOTE_COUCH, opts).on("change", function () {
-        context.dispatch("getDB");
-      });
-      context.commit("SET_SYNC", sync);
-    }
-    // do one way, one-off sync from the server until completion
-    const replicate = localCouch?.replicate
-      .from(REMOTE_COUCH)
-      .on("complete", function () {
-        // then two-way, continuous, retriable sync
-        sync(localCouch);
-      });
-    context.commit("SET_REPLICATE", replicate);
+    localCouch?.onChange(function () {
+      context.dispatch("getDB");
+    });
   },
   closeDB: (context: ActionContext<ProjectsState, RootState>) => {
     context.commit("CLOSE_DB");
   },
   getDB: (context: ActionContext<ProjectsState, RootState>) => {
-    const localCouch = context.state.localCouch;
-    // shelters/_design/shelter/_view/shelters?include_docs=true
-    // shelters/_design/shelter/_update/shelter
-    return localCouch
-      ?.query("project/list")
-      .then(function (result) {
-        context.commit(
-          "SET_PROJECTS",
-          result.rows.map((x) => x.value)
-        );
-      })
-      .catch(function (err: Error) {
-        console.log(err);
-      });
+    const db = context.state.localCouch?.db;
+    if (db) {
+      db?.query("project/list")
+        .then(function (result) {
+          context.commit(
+            "SET_PROJECTS",
+            result.rows.map((x) => x.value)
+          );
+        })
+        .catch(function (err: Error) {
+          console.log(err);
+        });
+    } else {
+      throw new Error(MSG_DB_DOES_NOT_EXIST);
+    }
   },
   addDoc: (context: ActionContext<ProjectsState, RootState>, name: string) => {
     const user = context.rootGetters["UserModule/user"] as CouchUser;

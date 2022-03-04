@@ -1,11 +1,9 @@
-import axios, { AxiosPromise } from "axios";
-
 import { ExistingDocument } from "@/models/couchdbModel";
+import axios, { AxiosPromise } from "axios";
 import PouchDB from "pouchdb";
 import qs from "qs";
 
-const databaseUrl: string =
-  process.env.VUE_APP_COUCHDB_URL ?? "http://localhost:5984";
+const databaseUrl: string = process.env.VUE_APP_COUCHDB_URL ?? "";
 
 function getUrl(path: string): string {
   return `${databaseUrl}/${path}`;
@@ -41,7 +39,7 @@ export function getSession(): AxiosPromise {
     method: "get",
     url: sessionUrl,
     headers: {
-      "Accept": "application/json",
+      Accept: "application/json",
     },
     withCredentials: true,
   });
@@ -54,6 +52,7 @@ export function createSyncDatabase<T>(name: string): SyncDatabase<T> {
     live: true,
     retry: true,
   });
+
   return new SyncDatabase(localDB, sync);
 }
 

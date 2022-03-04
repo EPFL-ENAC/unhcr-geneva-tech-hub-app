@@ -1,18 +1,5 @@
 {
   "httpd": {
-    "enable_cors": true
-  },
-  "cors": {
-    "origins": "*",
-    "credentials": true,
-    "methods": ["GET", "PUT", "POST", "HEAD", "DELETE"],
-    "headers": [
-      "accept",
-      "authorization",
-      "content-type",
-      "origin",
-      "referer",
-      "x-csrf-token"
-    ]
+    "enable_cors": false
   }
 }
