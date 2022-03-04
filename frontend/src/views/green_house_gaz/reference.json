@@ -1,0 +1,445 @@
+{
+    "iges_grid_2021": [
+        {
+            "name": "Bangladesh",
+            "value": 0.641,
+            "country_code": "BD"
+        },
+        {
+            "name": "Bhutan",
+            "value": 0.888,
+            "country_code": "BT"
+        },
+        {
+            "name": "Cambodia",
+            "value": 0.625,
+            "country_code": "KH"
+        },
+        {
+            "name": "China",
+            "value": 0.852,
+            "country_code": "CN"
+        },
+        {
+            "name": "Democratic People's Republic of Korea",
+            "value": 0.912,
+            "country_code": "KP"
+        },
+        {
+            "name": "India",
+            "value": 0.905,
+            "country_code": "IN"
+        },
+        {
+            "name": "Indonesia",
+            "value": 0.771,
+            "country_code": "ID"
+        },
+        {
+            "name": "Lao PDR",
+            "value": 0.563,
+            "country_code": "LA"
+        },
+        {
+            "name": "Malaysia",
+            "value": 0.67,
+            "country_code": "MY"
+        },
+        {
+            "name": "Mongolia",
+            "value": 1.13,
+            "country_code": "MN"
+        },
+        {
+            "name": "Pakistan",
+            "value": 0.547,
+            "country_code": "PK"
+        },
+        {
+            "name": "Philippines",
+            "value": 0.512,
+            "country_code": "PH"
+        },
+        {
+            "name": "Republic of Korea",
+            "value": 0.626,
+            "country_code": "KR"
+        },
+        {
+            "name": "Singapore",
+            "value": 0.486,
+            "country_code": "SG"
+        },
+        {
+            "name": "Sri Lanka",
+            "value": 0.703,
+            "country_code": "LK"
+        },
+        {
+            "name": "Thailand",
+            "value": 0.548,
+            "country_code": "TH"
+        },
+        {
+            "name": "Viet Nam",
+            "value": 0.599,
+            "country_code": "VN"
+        },
+        {
+            "name": "Argentina",
+            "value": 0.51,
+            "country_code": "AR"
+        },
+        {
+            "name": "Bahamas",
+            "value": 0.723,
+            "country_code": "BS"
+        },
+        {
+            "name": "Belize",
+            "value": 0.152,
+            "country_code": "BZ"
+        },
+        {
+            "name": "Bolivia",
+            "value": 0.589,
+            "country_code": "BO"
+        },
+        {
+            "name": "Brazil",
+            "value": 0.295,
+            "country_code": "BR"
+        },
+        {
+            "name": "Chile",
+            "value": 0.608,
+            "country_code": "CL"
+        },
+        {
+            "name": "Colombia",
+            "value": 0.321,
+            "country_code": "CO"
+        },
+        {
+            "name": "Costa Rica",
+            "value": 0.281,
+            "country_code": "CR"
+        },
+        {
+            "name": "Cuba",
+            "value": 0.874,
+            "country_code": "CU"
+        },
+        {
+            "name": "Dominican Republic",
+            "value": 0.638,
+            "country_code": "DO"
+        },
+        {
+            "name": "Ecuador",
+            "value": 0.567,
+            "country_code": "EC"
+        },
+        {
+            "name": "El Salvador",
+            "value": 0.682,
+            "country_code": "SV"
+        },
+        {
+            "name": "Guatemala",
+            "value": 0.594,
+            "country_code": "GT"
+        },
+        {
+            "name": "Guyana",
+            "value": 0.948,
+            "country_code": "GY"
+        },
+        {
+            "name": "Honduras",
+            "value": 0.661,
+            "country_code": "HN"
+        },
+        {
+            "name": "Jamaica",
+            "value": 0.783,
+            "country_code": "JM"
+        },
+        {
+            "name": "Mexico",
+            "value": 0.529,
+            "country_code": "MX"
+        },
+        {
+            "name": "Nicaragua",
+            "value": 0.639,
+            "country_code": "NI"
+        },
+        {
+            "name": "Panama",
+            "value": 0.582,
+            "country_code": "PA"
+        },
+        {
+            "name": "Peru",
+            "value": 0.594,
+            "country_code": "PE"
+        },
+        {
+            "name": "Uruguay",
+            "value": 0.559,
+            "country_code": "UY"
+        },
+        {
+            "name": "Albania",
+            "value": 0.393,
+            "country_code": "AL"
+        },
+        {
+            "name": "Armenia",
+            "value": 0.436,
+            "country_code": "AM"
+        },
+        {
+            "name": "Azerbaijan",
+            "value": 0.59,
+            "country_code": "AZ"
+        },
+        {
+            "name": "Bosnia and Herzegovina",
+            "value": 0.973,
+            "country_code": "BA"
+        },
+        {
+            "name": "Cyprus",
+            "value": 0.798,
+            "country_code": "CY"
+        },
+        {
+            "name": "Fiji",
+            "value": 0.597,
+            "country_code": "FJ"
+        },
+        {
+            "name": "Georgia",
+            "value": 0.402,
+            "country_code": "GE"
+        },
+        {
+            "name": "Montenegro",
+            "value": 0.984,
+            "country_code": "ME"
+        },
+        {
+            "name": "Papua New Guinea",
+            "value": 0.679,
+            "country_code": "PG"
+        },
+        {
+            "name": "Serbia",
+            "value": 1.099,
+            "country_code": "RS"
+        },
+        {
+            "name": "The former Yugoslav Republic of Macedonia",
+            "value": 0.861,
+            "country_code": "MK"
+        },
+        {
+            "name": "Uzbekistan",
+            "value": 0.585,
+            "country_code": "UZ"
+        },
+        {
+            "name": "Angola",
+            "value": 0.841,
+            "country_code": "AO"
+        },
+        {
+            "name": "Burkina Faso",
+            "value": 0.368,
+            "country_code": "BF"
+        },
+        {
+            "name": "Cote d Ivoire",
+            "value": 0.634,
+            "country_code": "CI"
+        },
+        {
+            "name": "Egypt",
+            "value": 0.533,
+            "country_code": "EG"
+        },
+        {
+            "name": "Ethiopia",
+            "value": 0,
+            "country_code": "ET"
+        },
+        {
+            "name": "Ghana",
+            "value": 0.479,
+            "country_code": "GH"
+        },
+        {
+            "name": "Kenya",
+            "value": 0.583,
+            "country_code": "KE"
+        },
+        {
+            "name": "Libya",
+            "value": 0.794,
+            "country_code": "LY"
+        },
+        {
+            "name": "Madagascar",
+            "value": 0.601,
+            "country_code": "MG"
+        },
+        {
+            "name": "Mali",
+            "value": 0.614,
+            "country_code": "ML"
+        },
+        {
+            "name": "Mauritius",
+            "value": 0.969,
+            "country_code": "MR"
+        },
+        {
+            "name": "Morocco",
+            "value": 0.659,
+            "country_code": "MA"
+        },
+        {
+            "name": "Mozambique",
+            "value": 0.964,
+            "country_code": "MZ"
+        },
+        {
+            "name": "Namibia",
+            "value": 0.92,
+            "country_code": "NA"
+        },
+        {
+            "name": "Nigeria",
+            "value": 0.573,
+            "country_code": "NE"
+        },
+        {
+            "name": "Rwanda",
+            "value": 0.654,
+            "country_code": "RW"
+        },
+        {
+            "name": "Senegal",
+            "value": 0.681,
+            "country_code": "SN"
+        },
+        {
+            "name": "Sierra Leone",
+            "value": 0.402,
+            "country_code": "SL"
+        },
+        {
+            "name": "South Africa",
+            "value": 0.953,
+            "country_code": "ZA"
+        },
+        {
+            "name": "Sudan",
+            "value": 0.305,
+            "country_code": "SD"
+        },
+        {
+            "name": "Tunisia",
+            "value": 0.554,
+            "country_code": "TN"
+        },
+        {
+            "name": "Uganda",
+            "value": 0.487,
+            "country_code": "UG"
+        },
+        {
+            "name": "United Republic of Tanzania",
+            "value": 0.529,
+            "country_code": "TZ"
+        },
+        {
+            "name": "Zambia",
+            "value": 0.964,
+            "country_code": "ZM"
+        },
+        {
+            "name": "Iran (Islamic Republic of)",
+            "value": 0.673,
+            "country_code": "IR"
+        },
+        {
+            "name": "Israel",
+            "value": 0.705,
+            "country_code": "IL"
+        },
+        {
+            "name": "Jordan",
+            "value": 0.584,
+            "country_code": "JO"
+        },
+        {
+            "name": "Kuwait",
+            "value": 0.78,
+            "country_code": "KW"
+        },
+        {
+            "name": "Lebanon",
+            "value": 0.65,
+            "country_code": "LB"
+        },
+        {
+            "name": "Saudi Arabia",
+            "value": 0.654,
+            "country_code": "SA"
+        },
+        {
+            "name": "United Arab Emirates",
+            "value": 0.676,
+            "country_code": "AE"
+        }
+    ],
+    "energy": {
+        "REF_GRD": {
+            "value": 0,
+            "source": "iges_grid_2021"
+        },
+        "REF_CONF_DGP": {
+            "name": "Diesel Generator Power in kwh",
+            "value": 20
+        },
+        "REF_CONF_DUSE": {
+            "name": "Diesel Generator Power daily use in kwh",
+            "value": 10
+        },
+        "REF_CONF_KWHD": {
+            "value": 200
+        },
+        "REF_CONF_EFF": {
+            "value": 2.5
+        },
+        "REF_CONF_LDF": {
+            "value": 1
+        },
+        "REF_CONF_HYB_DP": {
+            "value": 50
+        },
+        "REF_CONF_HYB_GP": {
+            "value": 10
+        },
+        "REF_CONF_HYB_RP": {
+            "value": 30
+        },
+        "REF_DIES": {
+            "value": 2.685640875,
+            "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html"
+        }
+    }
+}

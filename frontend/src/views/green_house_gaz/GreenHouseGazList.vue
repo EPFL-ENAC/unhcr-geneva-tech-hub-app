@@ -38,7 +38,12 @@
               <v-icon>mdi-presentation</v-icon>
               statistics
             </v-btn>
-            <v-btn text @click="statistics">
+            <v-btn
+              text
+              :to="{
+                name: 'GreenHouseGazReferences',
+              }"
+            >
               <v-icon>mdi-script-text-outline</v-icon>
               references
             </v-btn>
