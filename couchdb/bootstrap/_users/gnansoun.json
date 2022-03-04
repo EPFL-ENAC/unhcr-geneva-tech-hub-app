@@ -1,0 +1,11 @@
+{
+  "_id": "org.couchdb.user:gnansoun",
+  "type": "user",
+  "roles": [
+    "user",
+    "specialist",
+    "admin"
+  ],
+  "name": "gnansoun",
+  "password": "NJWSKBnYaAqVRAcbrKxs9fh95mRBsEsY"
+}

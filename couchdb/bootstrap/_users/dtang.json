@@ -1,0 +1,11 @@
+{
+  "_id": "org.couchdb.user:dtang",
+  "type": "user",
+  "roles": [
+    "user",
+    "specialist",
+    "admin"
+  ],
+  "name": "dtang",
+  "password": "js2UEWT44ZqL28rULgW6G2MJE4PpQXZJ"
+}

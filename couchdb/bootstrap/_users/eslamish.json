@@ -1,0 +1,11 @@
+{
+  "_id": "org.couchdb.user:eslamish",
+  "type": "user",
+  "roles": [
+    "user",
+    "specialist",
+    "admin"
+  ],
+  "name": "eslamish",
+  "password": "wHRpYMzvxRRsjJaAhkEfcpBYn6WPsm2M"
+}
