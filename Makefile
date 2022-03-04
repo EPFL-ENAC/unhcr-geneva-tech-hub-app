@@ -20,7 +20,8 @@ lint:
 
 # setup and run when deploying on server
 setup:
-	docker-compose build --parallel --pull
+	echo "nothing to see here"
+
 run:
+	docker-compose build --parallel --pull
 	docker-compose up -d --remove-orphans
-	docker-compose run couchdb-setup make
