@@ -42,7 +42,7 @@ export default class SurveyList extends Vue {
     { tab: "Pumping", content: "PumpingContent" },
     { tab: "Facilities", content: "FacilitiesContent" },
   ];
-  tab = "Facilities";
+  tab = 3;
 }
 
 interface MenuSurveyItem {

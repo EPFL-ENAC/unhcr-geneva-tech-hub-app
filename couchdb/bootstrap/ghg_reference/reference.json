@@ -408,35 +408,60 @@
     ],
     "energy": {
         "REF_GRD": {
+            "description": "iges grid for country",
             "value": 0,
-            "source": "iges_grid_2021"
+            "source": "iges_grid_2021",
+            "type": "number"
         },
         "REF_CONF_DGP": {
-            "value": 20
+            "description": "Diesel generator power in Kilowatt",
+            "value": 20,
+            "type": "number"
         },
         "REF_CONF_DUSE": {
-            "value": 10
+            "description": "Daily use time in hours",
+            "value": 10,
+            "type": "number"
         },
         "REF_CONF_KWHD": {
-            "value": 200
+            "description": "kWh/day",
+            "value": 200,
+            "type": "number"
         },
         "REF_CONF_EFF": {
-            "value": 2.5
+            "description": "Efficiency of diesel generator average kWh/liter",
+            "value": 2.5,
+            "type": "number"
         },
         "REF_CONF_LDF": {
-            "value": 1
+            "description": "Estimated L/day / facility",
+            "value": 1,
+            "type": "number"
+        },
+        "REF_CONF_KWHDF": {
+            "description": "Estimated kwh/day/facility",
+            "value": 1,
+            "type": "number"
         },
         "REF_CONF_HYB_DP": {
-            "value": 50
+            "description": "Energy mix diesel generator",
+            "value": 50,
+            "type": "percentage"
         },
         "REF_CONF_HYB_GP": {
-            "value": 10
+            "description": "Energy mix grid",
+            "value": 10,
+            "type": "percentage"
         },
         "REF_CONF_HYB_RP": {
-            "value": 30
+            "description": "Energy mix renewable",
+            "value": 30,
+            "type": "percentage"
         },
         "REF_DIES": {
+            "description": "diesel included estimated",
             "value": 2.685640875,
+            "type": "number",
             "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html"
         }
     }

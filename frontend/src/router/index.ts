@@ -42,20 +42,31 @@ const routes: Array<RouteConfig> = [
     redirect: { name: "GreenHouseGazList" },
     children: [
       {
-        path: "list",
-        name: "GreenHouseGazList",
+        path: "",
+        name: "GreenHouseGazDashboard",
         component: () =>
           import(
-            /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazList.vue"
+            /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazDashboard.vue"
           ),
-      },
-      {
-        path: "references",
-        name: "GreenHouseGazReferences",
-        component: () =>
-          import(
-            /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazReferences.vue"
-          ),
+        redirect: { name: "GreenHouseGazList" },
+        children: [
+          {
+            path: "list",
+            name: "GreenHouseGazList",
+            component: () =>
+              import(
+                /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazDashboard/GreenHouseGazList.vue"
+              ),
+          },
+          {
+            path: "references",
+            name: "GreenHouseGazReferences",
+            component: () =>
+              import(
+                /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazDashboard/GreenHouseGazReferences.vue"
+              ),
+          },
+        ]
       },
       {
         path: ":id",

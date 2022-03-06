@@ -45,42 +45,112 @@
                       </div>
                     </template>
                   </v-select>
-                  <v-divider />
                 </v-sheet>
               </v-form>
             </v-col>
             <v-col :cols="6">
-              <v-row>
-                <v-col>
-                  <router-link
+              <v-data-table
+                :headers="headersSurvey"
+                :items="localProject.surveys"
+                sort-by="created_at"
+                class="elevation-1"
+              >
+                <template v-slot:top>
+                  <v-toolbar flat>
+                    <v-toolbar-title>Surveys</v-toolbar-title>
+                    <v-divider class="mx-4" inset vertical></v-divider>
+                    <v-spacer></v-spacer>
+                    <v-dialog v-model="dialog" max-width="500px">
+                      <template v-slot:activator="{ on, attrs }">
+                        <router-link :to="{ name: 'GreenHouseGazSurvey' }">
+                    <v-btn
+                          color="primary"
+                          dark
+                          class="mb-2"
+                          v-bind="attrs"
+                          v-on="on"
+                        >
+                          New Survey
+                        </v-btn>
+                  </router-link>
+                      </template>
+                      <v-card>
+                        <v-card-title>
+                          <span class="text-h5">{{ formTitle }}</span>
+                        </v-card-title>
+
+                        <v-card-text>
+                          <v-container>
+                            <v-row>
+                              <v-col cols="12" sm="6" md="4">
+                                <v-text-field
+                                  v-model="editedItem.name"
+                                  label="Survey description"
+                                ></v-text-field>
+                              </v-col>
+                            </v-row>
+                          </v-container>
+                        </v-card-text>
+
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn color="blue darken-1" text @click="close">
+                            Cancel
+                          </v-btn>
+                          <v-btn color="blue darken-1" text @click="save">
+                            Save
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                    <v-dialog v-model="dialogDelete" max-width="500px">
+                      <v-card>
+                        <v-card-title class="text-h5"
+                          >Are you sure you want to delete this
+                          survey?</v-card-title
+                        >
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn color="blue darken-1" text @click="closeDelete"
+                            >Cancel</v-btn
+                          >
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="deleteItemConfirm"
+                            >OK</v-btn
+                          >
+                          <v-spacer></v-spacer>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </v-toolbar>
+                </template>
+
+                   <template v-slot:item.actions="{ item }">
+                    
+                    <router-link
                     :to="{
                       name: 'GreenHouseGazCompareSurveys',
-                      params: { surveyId: encodeURIComponent('survey-a') },
+                      params: { surveyId: encodeURIComponent(item.name) },
                     }"
                   >
-                    <v-btn>compare survey 'survey-a'</v-btn>
+                    <v-icon
+                      small
+                      class="mr-2"
+                      @click="editItem(item)"
+                    >
+                      mdi-pencil
+                    </v-icon>
                   </router-link>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <router-link
-                    :to="{
-                      name: 'GreenHouseGazCompareSurveys',
-                      params: { surveyId: encodeURIComponent('survey-b') },
-                    }"
-                  >
-                    <v-btn>compare survey 'survey-b'</v-btn>
-                  </router-link>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <router-link :to="{ name: 'GreenHouseGazSurvey' }">
-                    <v-btn>add new survey</v-btn>
-                  </router-link>
-                </v-col>
-              </v-row>
+                    <v-icon
+                      small
+                      @click="deleteItem(item)"
+                    >
+                      mdi-delete
+                    </v-icon>
+                  </template>
+              </v-data-table>
             </v-col>
           </v-row>
         </v-card>
@@ -154,9 +224,14 @@
       <v-col>
         <v-footer>
           <!-- TODO add form with submit.prevent -->
-          <v-row v-if="$can('edit', localProject)">
-            <v-col class="d-flex justify-end">
-              <v-btn type="submit"> Save changes </v-btn>
+          <v-row>
+            <v-col class="d-flex justify-end align-center">
+              <v-btn type="submit" :disabled="!$can('edit', localProject)">
+                Save changes
+              </v-btn>
+              <span v-if="!$can('edit', localProject)" class="mx-auto">
+                readonly mode
+              </span>
             </v-col>
           </v-row>
         </v-footer>
@@ -166,7 +241,7 @@
 </template>
 
 <script lang="ts">
-import { GreenHouseGaz } from "@/store/GhgInterface";
+import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import { CouchUser } from "@/store/UserModule";
 import Countries from "@/views/green_house_gaz/countriesAsList.min.js";
 import { cloneDeep } from "lodash";
@@ -215,6 +290,70 @@ export default class ProjectItem extends Vue {
     acc[country.code] = { ...country, emoji: this.getFlagEmoji(country.code) };
     return acc;
   }, {} as Record<string, Record<string, string>>);
+
+  headersSurvey = [
+    { text: "description", value: "name" },
+    { text: "created_at", value: "created_at" },
+    { text: 'Actions', value: 'actions', sortable: false }
+  ];
+  dialog = false;
+  dialogDelete = false;
+  editedIndex = -1;
+  private newDefaultItem(): Survey {
+    return {
+      name: "",
+      created_at: new Date().toISOString(),
+    } as Survey;
+  }
+  editedItem = this.newDefaultItem();
+
+  editItem(item: Survey):void {
+    this.editedIndex = this.localProject.surveys.indexOf(item);
+    // create a local copy
+    this.editedItem = Object.assign({}, item) as Survey;
+    this.dialog = true;
+  }
+
+  deleteItem(item: Survey):void {
+    this.editedIndex = this.localProject.surveys.indexOf(item);
+    this.editedItem = Object.assign({}, item) as Survey;
+    this.dialogDelete = true;
+  }
+
+  deleteItemConfirm():void {
+    this.localProject.surveys.splice(this.editedIndex, 1);
+    this.closeDelete();
+  }
+
+  close():void {
+    this.dialog = false;
+    this.$nextTick(() => {
+      this.editedItem = this.newDefaultItem();
+      this.editedIndex = -1;
+    });
+  }
+
+  closeDelete():void {
+    this.dialogDelete = false;
+    this.$nextTick(() => {
+      this.editedItem = this.newDefaultItem();
+      this.editedIndex = -1;
+    });
+  }
+
+  save():void {
+    if (this.editedIndex > -1) {
+      Object.assign(this.localProject.surveys[this.editedIndex], this.editedItem);
+    } else {
+      this.localProject.surveys.push(this.editedItem);
+    }
+    this.submitForm(this.localProject);
+    this.close();
+  }
+
+  public get formTitle () {
+        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+  };
 
   newUser = "";
 

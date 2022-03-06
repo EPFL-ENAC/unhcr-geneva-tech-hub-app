@@ -2,8 +2,7 @@
   <main class="green-house-gaz__list" :style="computedGridTemplate">
     <v-sheet class="country-list overflow-y-auto">
       <v-container fluid>
-        <v-row
-          ><v-col
+        <v-row><v-col
             :cols="10"
             class="d-flex justify-center align-center country-list__title"
           >
@@ -24,15 +23,20 @@
             </v-btn>
           </v-col>
         </v-row>
-        <v-row
-          ><v-col class="country-list__actions">
+        <v-row>
+          <v-col class="country-list__actions">
             <v-btn text @click="download">
               <v-icon>mdi-download</v-icon>
               download
             </v-btn>
-            <v-btn text @click="compare">
+            <v-btn
+              text
+              :to="{
+                name: 'GreenHouseGazList',
+              }"
+            >
               <v-icon>mdi-chart-multiple</v-icon>
-              site comparison
+              sites
             </v-btn>
             <v-btn text @click="statistics">
               <v-icon>mdi-presentation</v-icon>
@@ -51,60 +55,18 @@
               <v-icon>mdi-plus-thick</v-icon>
               add new site
             </v-btn>
-          </v-col></v-row
-        >
-        <v-row
-          ><v-col justify="center">
-            <v-expansion-panels accordion>
-              <v-expansion-panel
-                v-for="(country, keyIndex) in countries"
-                :key="`${country.key}${keyIndex}`"
-              >
-                <v-expansion-panel-header>
-                  <div class="panel-header">
-                    <span>
-                      {{ countriesMap[country.key].name }}
-                    </span>
-                    <span>
-                      {{ countriesMap[country.key].emoji }}
-                    </span>
-                  </div>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <v-simple-table>
-                    <template v-slot:default>
-                      <thead>
-                        <tr>
-                          <th class="text-left">Name</th>
-                          <th class="text-left">hard_coded</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-for="location in country.value" :key="location">
-                          <td>
-                            <router-link
-                              :to="{
-                                name: 'GreenHouseGazEdit',
-                                params: { id: encodeURIComponent(location) },
-                              }"
-                            >
-                              {{ location }}
-                            </router-link>
-                          </td>
-                          <td>hard_coded_value</td>
-                        </tr>
-                      </tbody>
-                    </template>
-                  </v-simple-table>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-            </v-expansion-panels>
-          </v-col></v-row
-        >
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col justify="center">
+            <router-view />
+          </v-col>
+        </v-row>
       </v-container>
     </v-sheet>
     <div class="separator"></div>
     <div class="map-countries"></div>
+
     <v-dialog v-model="siteDialog" max-width="500px">
       <!-- <template v-slot:activator="{ on, attrs }">
         <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
@@ -171,10 +133,11 @@
 </template>
 
 <script lang="ts">
-import { GreenHouseGaz } from "@/store/GhgInterface.js";
+import { GreenHouseGaz, Survey } from "@/store/GhgInterface.js";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
 import Countries from "./countriesAsList.min.js";
+import flagEmoji from './flagEmoji';
 
 @Component({
   computed: {
@@ -182,42 +145,25 @@ import Countries from "./countriesAsList.min.js";
   },
 
   methods: {
-    ...mapActions("GhgListModule", [
-      "syncDB",
-      "getCountries",
-      "addDoc",
-      "closeDB",
-    ]),
+    ...mapActions("GhgListModule", ["syncDB", "addDoc", "closeDB", "getCountries"]),
   },
 })
 /** ProjectList */
 export default class ProjectList extends Vue {
-  countries!: [];
   syncDB!: () => null;
   addDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;
 
-  closeDB!: () => Promise<null>;
-  getCountries!: () => Promise<null>;
   siteDialog = false;
   expandMap = false;
+  closeDB!: () => Promise<null>;
+
+  getCountries!: () => Promise<null>;
 
   // todo store in js outstide directly ?
   countriesRef = Countries.map((country) => ({
     ...country,
-    emoji: this.getFlagEmoji(country.code),
+    emoji: flagEmoji(country.code),
   }));
-
-  countriesMap = Countries.reduce((acc, country) => {
-    acc[country.code] = { ...country, emoji: this.getFlagEmoji(country.code) };
-    return acc;
-  }, {} as Record<string, Record<string, string>>);
-
-  defaultCampSite = {
-    name: "",
-    country_code: "",
-  } as GreenHouseGaz;
-
-  newCampSite = Object.assign({} as GreenHouseGaz, this.defaultCampSite);
 
   mounted(): void {
     this.syncDB();
@@ -242,14 +188,6 @@ export default class ProjectList extends Vue {
     return "grid-template-columns: 100%;";
   }
 
-  public getFlagEmoji(countryCode: string): string {
-    const codePoints = countryCode
-      .toUpperCase()
-      .split("")
-      .map((char) => 127397 + char.charCodeAt(0));
-    return String.fromCodePoint(...codePoints);
-  }
-
   public download(): void {
     console.log("download data");
   }
@@ -259,6 +197,17 @@ export default class ProjectList extends Vue {
   public statistics(): void {
     console.log("run statistics");
   }
+
+  // todo: move to own component
+
+  defaultCampSite = {
+    name: "",
+    country_code: "",
+    surveys: [] as Survey[],
+  } as GreenHouseGaz;
+
+  newCampSite = Object.assign({} as GreenHouseGaz, this.defaultCampSite);
+
   public addSite(): void {
     this.newCampSite = Object.assign({} as GreenHouseGaz, this.defaultCampSite);
     // console.log("add site");
@@ -292,6 +241,7 @@ export default class ProjectList extends Vue {
   }
 }
 </script>
+
 <style lang="scss" scoped>
 .panel-header {
   justify-content: space-between;
