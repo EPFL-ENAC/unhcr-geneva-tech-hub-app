@@ -105,7 +105,12 @@ const actions: ActionTree<ProjectsState, RootState> = {
   getCountries: (context: ActionContext<ProjectsState, RootState>) => {
     const db = context.state.localCouch?.db;
     if (db) {
-      db?.query("project/countries")
+      db?.query("project/countries", {
+        reduce:true,
+        group:true,
+        skip:0,
+        limit:11
+      })
         .then(function (result) {
           context.commit(
             "SET_COUNTRIES",
