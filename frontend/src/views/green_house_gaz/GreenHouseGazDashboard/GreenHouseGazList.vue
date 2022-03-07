@@ -1,5 +1,6 @@
 <template>
-  <v-expansion-panels accordion>
+  <v-expansion-panels accordion
+  v-model="panel">
     <v-expansion-panel
       v-for="(country, keyIndex) in countries"
       :key="`${country.key}${keyIndex}`"
@@ -20,22 +21,29 @@
             <thead>
               <tr>
                 <th class="text-left">Name</th>
-                <th class="text-left">hard_coded</th>
+                <th class="text-left">Created by</th>
+                <th class="text-left">Edit mode</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="location in country.value" :key="location">
+              <tr v-for="location in country.value" :key="location.name">
                 <td>
                   <router-link
                     :to="{
-                      name: 'GreenHouseGazEdit',
-                      params: { id: encodeURIComponent(location) },
+                      name: 'GreenHouseGazItem',
+                      params: {
+                        country: encodeURIComponent(country.key),
+                        site: encodeURIComponent(location.name) },
                     }"
                   >
-                    {{ location }}
+                    {{ location.name }}
                   </router-link>
                 </td>
-                <td>hard_coded_value</td>
+                <td> {{ location.created_by }}</td>
+                <td>
+                  <span v-if="$can('edit', location)">editable</span>
+                  <span v-else>readonly  </span>
+                </td>
               </tr>
             </tbody>
           </template>
@@ -46,8 +54,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import { mapActions, mapState } from "vuex";
+import { Component, Vue, Watch } from "vue-property-decorator";
+import { mapState } from "vuex";
 import Countries from "../countriesAsList.min.js";
 import flagEmoji from "../flagEmoji";
 
@@ -63,6 +71,31 @@ export default class ProjectList extends Vue {
   countriesMap = Countries.reduce((acc, country) => {
     acc[country.code] = { ...country, emoji: flagEmoji(country.code) };
     return acc;
-  }, {} as Record<string, Record<string, string>>);
+  }, {} as CountriesMap);
+
+  public setCountry(country: Country): void {
+    let hash = "";
+    if (this.$route.hash !== `#${country.key}`) {
+      hash = country.key;
+    }
+    this.$router.push({ hash });
+  }
+
+  public get panel(): number {
+    const hash = this.$route.hash;
+    const cleanedHash = hash.substring(1);
+    const index = Object.values(this.countries)
+      .map((x : Country) => x.key)
+      .findIndex(x => x === cleanedHash);
+    return index;
+  };
+
+  public set panel(value: number) {
+    const country = this.countries[value];
+    this.setCountry(country);
+  }
 }
+
+type CountriesMap = Record<string, Country>;
+type Country = Record<string, string>;
 </script>

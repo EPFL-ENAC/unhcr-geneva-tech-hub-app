@@ -1,5 +1,3 @@
-import { GreenHouseGaz } from "@/store/GhgInterface";
-import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -7,6 +5,9 @@ import {
   Module,
   MutationTree,
 } from "vuex";
+import { SyncDatabase, createSyncDatabase } from "@/utils/couchdb";
+
+import { GreenHouseGaz } from "@/store/GhgInterface";
 import { RootState } from ".";
 
 interface GhgState {
@@ -72,11 +73,11 @@ const actions: ActionTree<GhgState, RootState> = {
     }
   },
 
-  updateDoc: (context: ActionContext<GhgState, RootState>, value) => {
+  updateDoc: async (context: ActionContext<GhgState, RootState>, value) => {
     context.commit("SET_PROJECT", value);
     const db = context.state.localCouch?.db;
     if (db) {
-      db.put(value);
+      await db.put(value);
     } else {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }

@@ -1,4 +1,4 @@
-import VueRouter, { RouteConfig } from "vue-router";
+import VueRouter, { Route, RouteConfig } from "vue-router";
 
 import Apps from "../views/AppListView.vue";
 import Login from "../views/LoginView.vue";
@@ -66,80 +66,237 @@ const routes: Array<RouteConfig> = [
                 /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazDashboard/GreenHouseGazReferences.vue"
               ),
           },
-        ]
+        ],
       },
       {
-        path: ":id",
+        path: ":country/:site",
         name: "GreenHouseGazItem",
         component: () =>
           import(
             /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem.vue"
           ),
-        redirect: { name: "GreenHouseGazEdit" },
+
+        meta: {
+          breadCrumb(route: Route) {
+            const country = route.params.country;
+            const site = route.params.site;
+            return [
+              {
+                text: "Dashboard",
+                to: { name: "GreenHouseGazList" },
+              },
+              {
+                text: country,
+                to: {
+                  name: "GreenHouseGazList",
+                  hash: `#${country}`,
+                },
+              },
+              {
+                text: site,
+                to: {
+                  name: "GreenHouseGazItem",
+                  params: {
+                    site,
+                  },
+                },
+              },
+              {
+                text: route?.meta?.title ?? "Undefined route title",
+                to: {
+                  name: route.name,
+                  params: {
+                    site,
+                  },
+                },
+              },
+            ];
+          },
+        },
+        redirect: { name: "GreenHouseGazItemSurveys" },
         children: [
           {
-            path: "",
-            name: "GreenHouseGazEdit",
+            path: "users",
+            meta: {
+              title: "Users",
+            },
+            name: "GreenHouseGazItemUsers",
             component: () =>
               import(
-                /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/GreenHouseGazEdit.vue"
+                /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/Users.vue"
               ),
           },
           {
-            name: "GreenHouseGazCompareSurveys",
-            path: "compare-surveys/:surveyId",
-            component: () => {
-              return import(
-                /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/GreenHouseGazCompareSurveys.vue"
-              );
-            },
-          },
-          {
-            name: "GreenHouseGazSurvey",
-            path: "new-survey",
-            component: () => {
-              return import(
-                /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/GreenHouseGazSurvey.vue"
-              );
-            },
-            redirect: { name: "GreenHouseGazStep1" },
+            path: "surveys",
+            name: "GreenHouseGazItemSurveys",
+            component: () =>
+              import(
+                /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/Surveys.vue"
+              ),
+            redirect: { name: "GreenHouseGazItemSurveysList" },
             children: [
               {
-                path: "",
-                redirect: { name: "GreenHouseGazStep1" }, // default child path
+                path: "list",
+                name: "GreenHouseGazItemSurveysList",
+                meta: {
+                  title: "Surveys",
+                },
+                component: () =>
+                  import(
+                    /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/SurveysList.vue"
+                  ),
               },
               {
-                name: "GreenHouseGazStep1",
-                path: "step-1",
-                meta: { step: 1 },
+                path: ":surveyId",
+                name: "GreenHouseGazItemSurveyId",
+                meta: {
+                  title(route: Route) {
+                    return `${decodeURIComponent(route.params.surveyId)}`
+                  },
+                  hideSiteTabs: true,
+                  breadCrumb(route: Route) {
+                    const country = route.params.country;
+                    const site = route.params.site;
+                    const surveyId = route.params.surveyId;
+                    const matchedTitleRoute = route.matched.find(
+                      (route) => route.meta.title
+                    );
+                    const title = (() => {if (matchedTitleRoute) {
+                        const title = matchedTitleRoute.meta.title;
+                        // const breadCrumb = this.$route.meta?.breadCrumb ?? [];
+                        if (typeof title === "function") {
+                          return title.call(this, this.$route);
+                        }
+                        return title;
+                      }
+                    })();
+                    return [
+                      {
+                        text: "Dashboard",
+                        to: { name: "GreenHouseGazList" },
+                      },
+                      {
+                        text: country,
+                        to: {
+                          name: "GreenHouseGazList",
+                          hash: `#${country}`,
+                        },
+                      },
+                      {
+                        text: site,
+                        to: {
+                          name: "GreenHouseGazItem",
+                          params: {
+                            site,
+                          },
+                        },
+                      },
+                      {
+                        text: 'Surveys',
+                        to: {
+                          name: "GreenHouseGazItemSurveys",
+                          params: {
+                            site,
+                          },
+                        },
+                      },
+                      {
+                        text: title ?? surveyId ?? "Undefined route title",
+                        to: {
+                          name: "GreenHouseGazStep1",
+                          params: {
+                            site,
+                          },
+                        },
+                      },
+                      {
+                        text: route.meta?.title ?? "Undefined route title",
+                        to: {
+                          name: route.name,
+                          params: {
+                            site,
+                          },
+                        },
+                      },
+                    ];
+                  },
+                },
                 component: () => {
                   return import(
-                    /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/GreenHouseGazSurvey/GreenHouseGazSurveyStep1Energy.vue"
+                    /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/SurveysItem.vue"
                   );
                 },
-              },
-              {
-                name: "GreenHouseGazStep2",
-                path: "step-2",
-                meta: { step: 2 },
-                component: () => {
-                  return import(
-                    /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/GreenHouseGazSurvey/GreenHouseGazSurveyStep2Wash.vue"
-                  );
-                },
-              },
-              {
-                name: "GreenHouseGazStep3",
-                path: "step-3",
-                meta: { step: 3 },
-                component: () => {
-                  return import(
-                    /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/GreenHouseGazSurvey/GreenHouseGazSurveyStep3Offset.vue"
-                  );
-                },
+                redirect: { name: "GreenHouseGazStep1" },
+                children: [
+                  {
+                    path: "",
+                    redirect: { name: "GreenHouseGazStep1" }, // default child path
+                  },
+                  {
+                    name: "GreenHouseGazStep1",
+                    path: "step-1",
+                    meta: { step: 1, title: "Energy", hideSiteTabs: true },
+                    component: () => {
+                      return import(
+                        /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/SurveysItem/GreenHouseGazSurveyStep1Energy.vue"
+                      );
+                    },
+                  },
+                  {
+                    name: "GreenHouseGazStep2",
+                    path: "step-2",
+                    meta: { step: 2, title: "WASH", hideSiteTabs: true },
+                    component: () => {
+                      return import(
+                        /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/SurveysItem/GreenHouseGazSurveyStep2Wash.vue"
+                      );
+                    },
+                  },
+                  {
+                    name: "GreenHouseGazStep3",
+                    path: "step-3",
+                    meta: { step: 3, title: "Trees", hideSiteTabs: true },
+                    component: () => {
+                      return import(
+                        /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/SurveysItem/GreenHouseGazSurveyStep3Offset.vue"
+                      );
+                    },
+                  },
+                ],
               },
             ],
           },
+          {
+            path: "configuration",
+            meta: {
+              title: "Configuration",
+            },
+            name: "GreenHouseGazItemConfiguration",
+            component: () =>
+              import(
+                /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/Configuration.vue"
+              ),
+          },
+          {
+            path: "about",
+            meta: {
+              title: "About",
+            },
+            name: "GreenHouseGazItemAbout",
+            component: () =>
+              import(
+                /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/About.vue"
+              ),
+          },
+          // {
+          //   name: "GreenHouseGazCompareSurveys",
+          //   path: "compare-surveys/:surveyId",
+          //   component: () => {
+          //     return import(
+          //       /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/GreenHouseGazCompareSurveys.vue"
+          //     );
+          //   },
+          // },
         ],
       },
     ],

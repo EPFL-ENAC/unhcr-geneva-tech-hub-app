@@ -1,11 +1,11 @@
 import { CouchUser } from "@/store/UserModule";
-import { VueConstructor } from "vue";
 import { Store } from "vuex";
+import { VueConstructor } from "vue";
 
 declare module "vue/types/vue" {
   // 3. Declare augmentation for Vue
   interface Vue {
-    $can: (actionName: string, obj: Store<CouchUser>) => boolean;
+    $can: (actionName: string, obj: ObjWithUsersField) => boolean;
     $user: (isStatus: string) => boolean;
   }
 }
