@@ -1,11 +1,11 @@
 {
-  "_id": "org.couchdb.user:andre",
+  "_id": "org.couchdb.user:cara",
   "type": "user",
   "roles": [
     "user",
     "specialist",
     "admin"
   ],
-  "name": "andre",
+  "name": "cara",
   "password": "password"
 }
