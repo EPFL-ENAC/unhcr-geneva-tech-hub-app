@@ -20,7 +20,7 @@
           <template v-slot:default>
             <thead>
               <tr>
-                <th class="text-left">Name</th>
+                <th class="text-left">Location</th>
                 <th class="text-left">Created by</th>
                 <th class="text-left">Edit mode</th>
               </tr>
