@@ -60,7 +60,7 @@ export default class FormItemComponent extends Vue {
   @Prop(String)
   readonly label!: string;
   @Prop([Object, Array])
-  readonly options: BooleanOptions | SelectOption<any>[] | undefined;
+  readonly options: BooleanOptions | SelectOption<SelectValue>[] | undefined;
   @Prop(String)
   readonly unit: string | undefined;
   @Prop(Number)
@@ -68,7 +68,7 @@ export default class FormItemComponent extends Vue {
   @Prop(Number)
   readonly max: number | undefined;
 
-  get items(): SelectItemObject<string, boolean | string>[] {
+  get items(): SelectItemObject<string, SelectValue>[] {
     switch (this.type) {
       case "boolean":
         return [
@@ -82,7 +82,7 @@ export default class FormItemComponent extends Vue {
           },
         ];
       case "select":
-        return (this.options as SelectOption<any>[]).map((option) => ({
+        return (this.options as SelectOption<SelectValue>[]).map((option) => ({
           text: option.text,
           value: option.value,
         }));
@@ -168,4 +168,6 @@ interface SelectOption<V> {
   text: string;
   value: V;
 }
+
+type SelectValue = boolean | string;
 </script>
