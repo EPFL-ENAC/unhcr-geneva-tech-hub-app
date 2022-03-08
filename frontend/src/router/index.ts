@@ -1,8 +1,7 @@
+import Vue from "vue";
 import VueRouter, { Route, RouteConfig } from "vue-router";
-
 import Apps from "../views/AppListView.vue";
 import Login from "../views/LoginView.vue";
-import Vue from "vue";
 
 Vue.use(VueRouter);
 
@@ -151,7 +150,7 @@ const routes: Array<RouteConfig> = [
                 name: "GreenHouseGazItemSurveyId",
                 meta: {
                   title(route: Route) {
-                    return `${decodeURIComponent(route.params.surveyId)}`
+                    return `${decodeURIComponent(route.params.surveyId)}`;
                   },
                   hideSiteTabs: true,
                   breadCrumb(route: Route) {
@@ -161,7 +160,8 @@ const routes: Array<RouteConfig> = [
                     const matchedTitleRoute = route.matched.find(
                       (route) => route.meta.title
                     );
-                    const title = (() => {if (matchedTitleRoute) {
+                    const title = (() => {
+                      if (matchedTitleRoute) {
                         const title = matchedTitleRoute.meta.title;
                         // const breadCrumb = this.$route.meta?.breadCrumb ?? [];
                         if (typeof title === "function") {
@@ -192,7 +192,7 @@ const routes: Array<RouteConfig> = [
                         },
                       },
                       {
-                        text: 'Surveys',
+                        text: "Surveys",
                         to: {
                           name: "GreenHouseGazItemSurveys",
                           params: {

@@ -35,19 +35,13 @@
               ></v-text-field>
               <v-divider />
               {{ computeFacility }}
-              ---- <br>
+              ---- <br />
               {{ configuration }}
               <v-divider />
               <ul>
-                <li>
-                  diesel tCO2/year: {{ computeFacility.SUR_DIES_CO2}}
-                </li>
-                <li>
-                  grid tCO2/year: {{ computeFacility.SUR_GRD_CO2}}
-                </li>
-                <li>
-                  hybrid tCO2/year: {{ computeFacility.SUR_HYB_CO2}}
-                </li>
+                <li>diesel tCO2/year: {{ computeFacility.SUR_DIES_CO2 }}</li>
+                <li>grid tCO2/year: {{ computeFacility.SUR_GRD_CO2 }}</li>
+                <li>hybrid tCO2/year: {{ computeFacility.SUR_HYB_CO2 }}</li>
               </ul>
             </v-card-text>
           </v-card>
@@ -174,7 +168,12 @@ export default class Step1Energy extends Vue {
     );
     REF_GRD.value = iges_grid_2021?.value || REF_GRD.value; // find REF_GRD per country
     /* for ECONF_DIES_EM */
-    console.log("iges", iges_grid_2021, this.reference.iges_grid_2021[0], REF_GRD);
+    console.log(
+      "iges",
+      iges_grid_2021,
+      this.reference.iges_grid_2021[0],
+      REF_GRD
+    );
     res.ECONF_PKW = REF_CONF_DGP.value; // DG power in kilowatt
     res.ECONF_DUSE = REF_CONF_DUSE.value; // Daily use time in h
     res.ECONF_KWD = REF_CONF_KWHD.value || res.ECONF_PKW * res.ECONF_DUSE; // kWh/day/facility /// TODO: SEEMS WRONG
@@ -230,15 +229,13 @@ export default class Step1Energy extends Vue {
         },
         SUR_GRD: function (facilities: Record<string, number>) {
           // debugger;
-          return (
-            (localConf.ECONF_GRD_EM * facilities.SUR_GRD_NUM * 365) / 1000
-          );
+          return (localConf.ECONF_GRD_EM * facilities.SUR_GRD_NUM * 365) / 1000;
         },
         SUR_HYB: function (facilities: Record<string, number>) {
           // debugger;
           return localConf.ECONF_HYB_EMT * facilities.SUR_HYB_NUM * 365;
         },
-      } as Record<string, any>;
+      } as Record<string, (facilities: Record<string, number>) => number>;
 
       Object.keys(inputFormulas).forEach((key) => {
         facilities[`${key}_NUM`] = (facilities.TOTFAC * facilities[key]) / 100;

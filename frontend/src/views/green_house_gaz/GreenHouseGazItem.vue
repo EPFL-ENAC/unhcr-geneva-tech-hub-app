@@ -34,7 +34,7 @@
 <script lang="ts">
 import { GreenHouseGaz } from "@/store/GhgInterface";
 import { Component, Vue } from "vue-property-decorator";
-import { Route } from "vue-router";
+import { Route, RouteRecord } from "vue-router";
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
@@ -83,7 +83,7 @@ export default class ProjectItem extends Vue {
     this.closeDB();
   }
 
-  public get breadCrumbs() {
+  public get breadCrumbs(): BreadCrumb {
     const matched = [...this.$route.matched];
 
     const matchedRoute = matched
@@ -105,6 +105,11 @@ interface MenuItem {
   text: string;
   to: string;
   children?: MenuItem[];
+}
+
+interface BreadCrumb {
+  text: string;
+  to: RouteRecord;
 }
 </script>
 

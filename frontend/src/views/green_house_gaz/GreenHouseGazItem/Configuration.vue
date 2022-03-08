@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
+import { GreenHouseGaz } from "@/store/GhgInterface";
 import { CouchUser } from "@/store/UserModule";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
@@ -34,9 +34,7 @@ export default class ProjectItem extends Vue {
   }
 
   public setLocalShelter(project: GreenHouseGaz): void {
-    this.localProject = project 
-        ? cloneDeep(project)
-        : {} as GreenHouseGaz;
+    this.localProject = project ? cloneDeep(project) : ({} as GreenHouseGaz);
   }
 
   public syncLocalShelter(): void {
@@ -57,6 +55,4 @@ export default class ProjectItem extends Vue {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

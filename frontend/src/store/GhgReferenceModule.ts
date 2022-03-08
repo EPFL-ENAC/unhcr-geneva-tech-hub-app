@@ -1,3 +1,5 @@
+import { GreenHouseGazReference } from "@/store/GhgInterface";
+import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -5,9 +7,6 @@ import {
   Module,
   MutationTree,
 } from "vuex";
-import { SyncDatabase, createSyncDatabase } from "@/utils/couchdb";
-
-import { GreenHouseGazReference } from "@/store/GhgInterface";
 import { RootState } from ".";
 
 interface GhgReferenceState {
@@ -28,7 +27,7 @@ function generateState(): GhgReferenceState {
 
 /** Getters */
 const getters: GetterTree<GhgReferenceState, RootState> = {
-    reference: (s): GreenHouseGazReference | null => s.reference,
+  reference: (s): GreenHouseGazReference | null => s.reference,
 };
 
 /** Mutations */

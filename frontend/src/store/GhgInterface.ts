@@ -26,20 +26,21 @@ export interface Country {
 
 export interface GreenHouseGazReference {
   _id: string;
-  iges_grid_2021: igesItem[];
-  energy: Record<string, referenceItem>;
+  iges_grid_2021: IgesItemInterface[];
+  energy: EnergyInterface;
   // to be completed
 }
 
+export type EnergyInterface = Record<string, ReferenceItemInterface>;
 export type referenceType = "number" | "percentage";
-export interface referenceItem {
+export interface ReferenceItemInterface {
   description: string;
   value: number;
   type?: referenceType;
   source: string;
 }
 
-export interface igesItem {
+export interface IgesItemInterface {
   name: string;
   value: number;
   country_code: string;

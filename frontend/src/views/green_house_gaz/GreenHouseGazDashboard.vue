@@ -2,7 +2,8 @@
   <main class="green-house-gaz__list" :style="computedGridTemplate">
     <v-sheet class="country-list overflow-y-auto">
       <v-container fluid>
-        <v-row><v-col
+        <v-row
+          ><v-col
             :cols="10"
             class="d-flex justify-center align-center country-list__title"
           >
@@ -137,7 +138,7 @@ import { GreenHouseGaz, Survey } from "@/store/GhgInterface.js";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
 import Countries from "./countriesAsList.min.js";
-import flagEmoji from './flagEmoji';
+import flagEmoji from "./flagEmoji";
 
 @Component({
   computed: {
@@ -145,7 +146,12 @@ import flagEmoji from './flagEmoji';
   },
 
   methods: {
-    ...mapActions("GhgListModule", ["syncDB", "addDoc", "closeDB", "getCountries"]),
+    ...mapActions("GhgListModule", [
+      "syncDB",
+      "addDoc",
+      "closeDB",
+      "getCountries",
+    ]),
   },
 })
 /** ProjectList */

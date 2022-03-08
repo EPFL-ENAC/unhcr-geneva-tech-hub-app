@@ -26,10 +26,9 @@
 <script lang="ts">
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import { Component, Vue } from "vue-property-decorator";
-import { mapGetters, mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 const REFERENCE_DOC_ID = "reference";
-
 
 @Component({
   computed: {
@@ -47,7 +46,7 @@ const REFERENCE_DOC_ID = "reference";
 })
 /** ProjectList */
 export default class SurveyList extends Vue {
-  project !: GreenHouseGaz;
+  project!: GreenHouseGaz;
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
   getDoc!: (id: string) => Promise<null>;
@@ -61,9 +60,10 @@ export default class SurveyList extends Vue {
   public get currentSurvey(): Survey | undefined {
     if (!this.project) {
       return undefined;
-    } 
-    const foundSurvey = this.project.surveys
-      .find((el: Survey) => el.name === this.$route.params.surveyId);
+    }
+    const foundSurvey = this.project.surveys.find(
+      (el: Survey) => el.name === this.$route.params.surveyId
+    );
     if (!foundSurvey) {
       throw new Error("Could not find matching survey");
     }
@@ -80,8 +80,6 @@ export default class SurveyList extends Vue {
       console.log("DESTROYED view reference list, closing DB");
     });
   }
-
-  
 }
 
 interface MenuItem {

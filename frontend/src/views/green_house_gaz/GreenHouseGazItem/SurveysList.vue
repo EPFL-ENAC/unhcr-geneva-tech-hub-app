@@ -175,7 +175,7 @@ export default class ProjectItem extends Vue {
     });
   }
 
-  public get formTitle() {
+  public get formTitle(): string {
     return this.editedIndex === -1 ? "New Survey" : "Edit Survey";
   }
 

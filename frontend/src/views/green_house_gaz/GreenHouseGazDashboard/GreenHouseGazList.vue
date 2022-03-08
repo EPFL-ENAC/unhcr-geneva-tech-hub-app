@@ -1,6 +1,5 @@
 <template>
-  <v-expansion-panels accordion
-  v-model="panel">
+  <v-expansion-panels accordion v-model="panel">
     <v-expansion-panel
       v-for="(country, keyIndex) in countries"
       :key="`${country.key}${keyIndex}`"
@@ -33,16 +32,17 @@
                       name: 'GreenHouseGazItem',
                       params: {
                         country: encodeURIComponent(country.key),
-                        site: encodeURIComponent(location.name) },
+                        site: encodeURIComponent(location.name),
+                      },
                     }"
                   >
                     {{ location.name }}
                   </router-link>
                 </td>
-                <td> {{ location.created_by }}</td>
+                <td>{{ location.created_by }}</td>
                 <td>
                   <span v-if="$can('edit', location)">editable</span>
-                  <span v-else>readonly  </span>
+                  <span v-else>readonly </span>
                 </td>
               </tr>
             </tbody>
@@ -90,10 +90,10 @@ export default class ProjectList extends Vue {
     const hash = this.$route.hash;
     const cleanedHash = hash.substring(1);
     const index = Object.values(this.countries)
-      .map((x : Country) => x.key)
-      .findIndex(x => x === cleanedHash);
+      .map((x: Country) => x.key)
+      .findIndex((x) => x === cleanedHash);
     return index;
-  };
+  }
 
   public set panel(value: number) {
     if (value !== undefined) {
@@ -102,7 +102,6 @@ export default class ProjectList extends Vue {
     } else {
       this.unsetCountry();
     }
-
   }
 }
 

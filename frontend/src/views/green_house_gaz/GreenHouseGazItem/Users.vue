@@ -52,8 +52,8 @@
 </template>
 
 <script lang="ts">
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
-import UserModule, { CouchUser } from "@/store/UserModule";
+import { GreenHouseGaz } from "@/store/GhgInterface";
+import { CouchUser } from "@/store/UserModule";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
@@ -84,7 +84,6 @@ export default class ProjectItem extends Vue {
       v?.length > 1 || `Name should have a length >= 1`,
   ];
 
-
   public addUser(): void {
     this.localProject.users.push(this.newUser);
     this.newUser = "";
@@ -102,7 +101,6 @@ export default class ProjectItem extends Vue {
     this.submitForm(this.localProject);
   }
 
-
   public async submitForm(value: GreenHouseGaz): Promise<void> {
     if (value.name !== "") {
       await this.updateDoc(value);
@@ -112,9 +110,7 @@ export default class ProjectItem extends Vue {
   }
 
   public setLocalShelter(project: GreenHouseGaz): void {
-    this.localProject = project 
-        ? cloneDeep(project)
-        : {} as GreenHouseGaz;
+    this.localProject = project ? cloneDeep(project) : ({} as GreenHouseGaz);
   }
 
   public syncLocalShelter(): void {

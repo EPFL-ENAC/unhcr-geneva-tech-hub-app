@@ -1,3 +1,5 @@
+import { GreenHouseGaz } from "@/store/GhgInterface";
+import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -5,9 +7,6 @@ import {
   Module,
   MutationTree,
 } from "vuex";
-import { SyncDatabase, createSyncDatabase } from "@/utils/couchdb";
-
-import { GreenHouseGaz } from "@/store/GhgInterface";
 import { RootState } from ".";
 
 interface GhgState {

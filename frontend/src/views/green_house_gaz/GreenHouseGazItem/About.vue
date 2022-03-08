@@ -32,13 +32,13 @@
 </template>
 
 <script lang="ts">
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
+import { GreenHouseGaz } from "@/store/GhgInterface";
 import { CouchUser } from "@/store/UserModule";
+import Countries from "@/views/green_house_gaz/countriesAsList.min.js";
+import getFlagEmoji from "@/views/green_house_gaz/flagEmoji";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-import Countries from "@/views/green_house_gaz/countriesAsList.min.js";
-import getFlagEmoji from "@/views/green_house_gaz/flagEmoji";
 @Component({
   computed: {
     ...mapGetters("GhgItemModule", ["project"]),
@@ -60,7 +60,6 @@ export default class ProjectItem extends Vue {
     emoji: getFlagEmoji(country.code),
   }));
 
-
   textRules = [
     (v: string): boolean | string => !!v || `is required`,
     (v: string): boolean | string =>
@@ -76,9 +75,7 @@ export default class ProjectItem extends Vue {
   }
 
   public setLocalShelter(project: GreenHouseGaz): void {
-    this.localProject = project 
-        ? cloneDeep(project)
-        : {} as GreenHouseGaz;
+    this.localProject = project ? cloneDeep(project) : ({} as GreenHouseGaz);
   }
 
   public syncLocalShelter(): void {

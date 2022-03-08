@@ -31,7 +31,7 @@
                 </v-edit-dialog>
               </template>
 
-               <template v-slot:item.value="props">
+              <template v-slot:item.value="props">
                 <v-edit-dialog
                   :return-value.sync="props.item.name"
                   @save="save"
@@ -44,7 +44,8 @@
                     <v-text-field
                       v-if="props.item.type === 'percentage'"
                       v-model.number="props.item.value"
-                      min="1" max="100"
+                      min="1"
+                      max="100"
                       label="Percentage"
                       type="number"
                       suffix="%"
@@ -98,9 +99,10 @@
 
 <script lang="ts">
 import {
+  EnergyInterface,
   GreenHouseGazReference,
-  igesItem,
-  referenceItem,
+  IgesItemInterface,
+  ReferenceItemInterface,
 } from "@/store/GhgInterface";
 import flagEmoji from "@/views/green_house_gaz/flagEmoji";
 import { Component, Vue } from "vue-property-decorator";
@@ -125,7 +127,7 @@ const REFERENCE_DOC_ID = "reference";
 export default class ReferencesList extends Vue {
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
-    getDoc!: (id: string) => Promise<null>;
+  getDoc!: (id: string) => Promise<null>;
 
   updateDoc!: (
     obj: GreenHouseGazReference
@@ -142,7 +144,8 @@ export default class ReferencesList extends Vue {
   snack = false;
   snackColor = "";
   snackText = "";
-  max25chars = (v: string) => v.length <= 25 || "Input too long!";
+  max25chars = (v: string): boolean | string =>
+    v.length <= 25 || "Input too long!";
   pagination = {};
 
   mounted(): void {
@@ -156,7 +159,7 @@ export default class ReferencesList extends Vue {
     });
   }
 
-  public get headers() {
+  public get headers(): HeaderInterface[] {
     if (this.reference) {
       const key = this.menuItems[this.tab].content as string;
       if (key === "energy") {
@@ -187,16 +190,16 @@ export default class ReferencesList extends Vue {
     return [];
   }
 
-  public get items() {
+  public get items(): ReferenceItemInterface[] | IgesItemInterface[] {
     if (this.reference) {
       const key = this.menuItems[this.tab].content as string;
       if (key === "energy") {
-        const obj: Record<string, referenceItem> = this.reference.energy;
+        const obj: EnergyInterface = this.reference.energy;
         return Object.values(obj);
       }
 
       if (key === "iges_grid_2021") {
-        const obj: igesItem[] = this.reference.iges_grid_2021;
+        const obj: IgesItemInterface[] = this.reference.iges_grid_2021;
         return obj.map((x) => ({ ...x, emoji: flagEmoji(x.country_code) }));
       }
     }
@@ -221,6 +224,13 @@ export default class ReferencesList extends Vue {
   close(): void {
     console.log("Dialog closed");
   }
+}
+
+interface HeaderInterface {
+  text: string;
+  align?: string;
+  sortable?: boolean;
+  value: string;
 }
 
 interface MenuSurveyItem {
