@@ -6,7 +6,35 @@
     @save="save"
   >
     <template v-slot:append>
-      <v-data-table :headers="tableHeaders" :items="tableItems"></v-data-table>
+      <v-data-table
+        :headers="tableHeaders"
+        item-key="_id"
+        :items="tableItems"
+        show-expand
+      >
+        <template v-slot:expanded-item="{ headers, item }">
+          <td class="pa-2" :colspan="headers.length">
+            <v-simple-table dense>
+              <template v-slot:default>
+                <tbody>
+                  <tr
+                    v-for="property in tableExpandProperties"
+                    :key="property.key"
+                  >
+                    <td class="font-weight-bold">{{ property.text }}</td>
+                    <td>
+                      {{ item[property.key] }}
+                      <template v-if="property.unit">
+                        [{{ property.unit }}]
+                      </template>
+                    </td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+          </td>
+        </template>
+      </v-data-table>
     </template>
   </energy-form>
 </template>
@@ -44,6 +72,54 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
     text: item,
     value: item,
   }));
+  readonly tableExpandProperties: {
+    text: string;
+    key: keyof TableItem;
+    unit?: string;
+  }[] = [
+    {
+      text: "Technology type",
+      key: "technologyType",
+    },
+    {
+      text: "Energy efficiency",
+      key: "energyEfficiency",
+      unit: "%",
+    },
+    {
+      text: "Capacity",
+      key: "capacity",
+      unit: "kW",
+    },
+    {
+      text: "Investment Cost",
+      key: "investmentCost",
+      unit: "USD",
+    },
+    {
+      text: "Lifetime",
+      key: "lifetime",
+      unit: "years",
+    },
+    {
+      text: "Emission factor for CO2",
+      key: "emmissionFactorCo2",
+      unit: "g/MJ delivered",
+    },
+    {
+      text: "Emission factor for PM2.5",
+      key: "emmissionFactorPm",
+      unit: "g/MJ delivered",
+    },
+    {
+      text: "IWA efficiency TIER",
+      key: "iwaEfficiencyTier",
+    },
+    {
+      text: "IWA indoor emission TIER",
+      key: "iwaIndoorEmissionTier",
+    },
+  ];
 
   module: HouseholdCookingModule = this.emptyModule;
   cookingFuels!: CookingFuel[];
@@ -62,8 +138,7 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   get tableItems(): TableItem[] {
     return (
       this.module?.categoryCookings.map((item) => ({
-        name: item.cooking.name,
-        fuel: item.cooking.fuel,
+        ...item.cooking,
         ...item.categoryCounts,
       })) ?? []
     );
@@ -85,8 +160,5 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   }
 }
 
-interface TableItem extends Record<SocioEconomicCategory, number> {
-  name: string;
-  fuel: string;
-}
+type TableItem = CookingStove & Record<SocioEconomicCategory, number>;
 </script>
