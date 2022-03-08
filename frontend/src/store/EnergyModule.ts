@@ -1,57 +1,100 @@
-import { Cooking } from "@/models/energyModel";
-import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
+import {
+  CookingFuel,
+  CookingStove as CookingStove,
+} from "@/models/energyModel";
+import { DatabaseName, SyncDatabase } from "@/utils/couchdb";
 import { Module } from "vuex";
 import { RootState } from ".";
 
 interface State {
-  cookingDatabase?: SyncDatabase<Cooking>;
-  cookings: Cooking[];
+  cookingFuelsDatabase?: SyncDatabase<CookingFuel>;
+  cookingFuels: CookingFuel[];
+  cookingStovesDatabase?: SyncDatabase<CookingStove>;
+  cookingStoves: CookingStove[];
 }
 
 enum MutationTypes {
-  SetCookingDatabase = "SetCookingDatabase",
-  SetCookings = "SetCookings",
+  SetCookingFuelsDatabase = "SetCookingFuelsDatabase",
+  SetCookingFuels = "SetCookingFuels",
+  SetCookingStovesDatabase = "SetCookingStovesDatabase",
+  SetCookingStoves = "SetCookingStoves",
 }
 
 export enum ActionTypes {
   Created = "SetCookingDatabase",
   Destroyed = "SetCookings",
-  UpdateCookings = "UpdateCookings",
+  UpdateCookingFuels = "UpdateCookingFuels",
+  UpdateCookingStoves = "UpdateCookingStoves",
 }
 
 const energyModule: Module<State, RootState> = {
   namespaced: true,
   state: {
-    cookings: [],
+    cookingFuels: [],
+    cookingStoves: [],
   },
   mutations: {
-    [MutationTypes.SetCookingDatabase](
+    [MutationTypes.SetCookingFuelsDatabase](
       state,
-      cookingDatabase: SyncDatabase<Cooking>
+      value: SyncDatabase<CookingFuel>
     ) {
-      state.cookingDatabase = cookingDatabase;
+      state.cookingFuelsDatabase = value;
     },
-    [MutationTypes.SetCookings](state, cookings: Cooking[]) {
-      state.cookings = cookings;
+    [MutationTypes.SetCookingFuels](state, value: CookingFuel[]) {
+      state.cookingFuels = value;
+    },
+    [MutationTypes.SetCookingStovesDatabase](
+      state,
+      value: SyncDatabase<CookingStove>
+    ) {
+      state.cookingStovesDatabase = value;
+    },
+    [MutationTypes.SetCookingStoves](state, value: CookingStove[]) {
+      state.cookingStoves = value;
     },
   },
   actions: {
     [ActionTypes.Created](context) {
-      const cookingDatabase = createSyncDatabase<Cooking>("energy_cookings");
-      cookingDatabase.onChange(() =>
-        context.dispatch(ActionTypes.UpdateCookings)
+      const cookingStovesDatabase = new SyncDatabase<CookingStove>(
+        DatabaseName.EnergyCookingStoves
       );
-      context.commit(MutationTypes.SetCookingDatabase, cookingDatabase);
-      context.dispatch(ActionTypes.UpdateCookings);
+      cookingStovesDatabase.onChange(() =>
+        context.dispatch(ActionTypes.UpdateCookingStoves)
+      );
+      context.commit(
+        MutationTypes.SetCookingStovesDatabase,
+        cookingStovesDatabase
+      );
+      context.dispatch(ActionTypes.UpdateCookingStoves);
+
+      const cookingFuelsDatabase = new SyncDatabase<CookingFuel>(
+        DatabaseName.EnergyCookingFuels
+      );
+      cookingFuelsDatabase.onChange(() =>
+        context.dispatch(ActionTypes.UpdateCookingFuels)
+      );
+      context.commit(
+        MutationTypes.SetCookingFuelsDatabase,
+        cookingFuelsDatabase
+      );
+      context.dispatch(ActionTypes.UpdateCookingFuels);
     },
     [ActionTypes.Destroyed](context) {
-      context.state.cookingDatabase?.cancel();
+      context.state.cookingFuelsDatabase?.cancel();
+      context.state.cookingStovesDatabase?.cancel();
     },
-    [ActionTypes.UpdateCookings](context) {
-      context.state.cookingDatabase
+    [ActionTypes.UpdateCookingFuels](context) {
+      context.state.cookingFuelsDatabase
         ?.getAllDocuments()
         .then((documents) =>
-          context.commit(MutationTypes.SetCookings, documents)
+          context.commit(MutationTypes.SetCookingFuels, documents)
+        );
+    },
+    [ActionTypes.UpdateCookingStoves](context) {
+      context.state.cookingStovesDatabase
+        ?.getAllDocuments()
+        .then((documents) =>
+          context.commit(MutationTypes.SetCookingStoves, documents)
         );
     },
   },

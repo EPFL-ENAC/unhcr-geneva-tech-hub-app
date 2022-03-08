@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import { ExistingDocument } from "@/models/couchdbModel";
-import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
+import { SyncDatabase } from "@/utils/couchdb";
 import PouchDB from "pouchdb";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -60,7 +60,7 @@ export default class SyncDocumentList<T> extends Vue {
   @Prop(String)
   readonly databaseName!: string;
 
-  readonly database: SyncDatabase<T> = createSyncDatabase(this.databaseName);
+  readonly database: SyncDatabase<T> = new SyncDatabase(this.databaseName);
 
   documents: ExistingDocument<T>[] = [];
   changes?: PouchDB.Core.Changes<T>;

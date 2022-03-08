@@ -5,6 +5,11 @@ import qs from "qs";
 
 const databaseUrl: string = process.env.VUE_APP_COUCHDB_URL ?? "";
 
+export enum DatabaseName {
+  EnergyCookingFuels = "energy_cooking_fuels",
+  EnergyCookingStoves = "energy_cooking_stoves",
+}
+
 function getUrl(path: string): string {
   return `${databaseUrl}/${path}`;
 }
@@ -45,22 +50,26 @@ export function getSession(): AxiosPromise {
   });
 }
 
+/**
+ * @deprecated call directly new SyncDatabase(name)
+ */
 export function createSyncDatabase<T>(name: string): SyncDatabase<T> {
-  const localDB = new PouchDB<T>(name);
-  const remoteDB = new PouchDB<T>(getUrl(name));
-  const sync: PouchDB.Replication.Sync<T> = localDB.sync(remoteDB, {
-    live: true,
-    retry: true,
-  });
-
-  return new SyncDatabase(localDB, sync);
+  return new SyncDatabase(name);
 }
 
 export class SyncDatabase<T> {
-  constructor(
-    public db: PouchDB.Database<T>,
-    private sync: PouchDB.Replication.Sync<T>
-  ) {}
+  public db: PouchDB.Database<T>;
+  private sync: PouchDB.Replication.Sync<T>;
+
+  constructor(name: string) {
+    const localDB = new PouchDB<T>(name);
+    const remoteDB = new PouchDB<T>(getUrl(name));
+    this.sync = localDB.sync(remoteDB, {
+      live: true,
+      retry: true,
+    });
+    this.db = localDB;
+  }
 
   onChange(
     listener: (value: PouchDB.Core.ChangesResponseChange<T>) => unknown

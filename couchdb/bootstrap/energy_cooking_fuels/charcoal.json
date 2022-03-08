@@ -1,0 +1,7 @@
+{
+  "_id": "charcoal",
+  "name": "Charcoal",
+  "energy": 31,
+  "emissionFactorCo2": 2,
+  "price": 0.18
+}

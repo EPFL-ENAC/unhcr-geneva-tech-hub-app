@@ -38,7 +38,7 @@
 import SyncDocumentList from "@/components/commons/SyncDocumentList.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
 import { ProjectDocument } from "@/models/energyModel";
-import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
+import { SyncDatabase } from "@/utils/couchdb";
 import * as rules from "@/utils/rules";
 import { SelectItemObject } from "@/utils/vuetify";
 import "vue-class-component/hooks";
@@ -50,8 +50,9 @@ import { Component, Ref, Vue } from "vue-property-decorator";
 class EnergyCampList extends Vue {
   readonly rules = rules;
   // TODO vuex
-  readonly templateDatabase: SyncDatabase<ProjectDocument> =
-    createSyncDatabase("energy_templates");
+  readonly templateDatabase: SyncDatabase<ProjectDocument> = new SyncDatabase(
+    "energy_templates"
+  );
 
   createDialog = false;
   name = "";

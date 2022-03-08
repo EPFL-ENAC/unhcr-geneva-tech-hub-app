@@ -16,9 +16,11 @@ import { FormItem } from "@/components/commons/FormItemComponent.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
 import {
-  Cooking,
+  CookingFuel,
+  CookingStove,
   HouseholdCookingModule,
   socioEconomicCategories,
+  SocioEconomicCategory,
 } from "@/models/energyModel";
 import "vue-class-component/hooks";
 import { Component } from "vue-property-decorator";
@@ -30,12 +32,22 @@ import { mapState } from "vuex";
     EnergyForm,
   },
   computed: {
-    ...mapState("energy", ["cookings"]),
+    ...mapState("energy", ["cookingFuels", "cookingStoves"]),
   },
 })
 export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCookingModule> {
+  readonly tableHeaders: DataTableHeader[] = [
+    "name",
+    "fuel",
+    ...socioEconomicCategories,
+  ].map((item) => ({
+    text: item,
+    value: item,
+  }));
+
   module: HouseholdCookingModule = this.emptyModule;
-  cookings!: Cooking[];
+  cookingFuels!: CookingFuel[];
+  cookingStoves!: CookingStove[];
 
   get emptyModule(): HouseholdCookingModule {
     return {
@@ -47,17 +59,11 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
     return [];
   }
 
-  get tableHeaders(): DataTableHeader[] {
-    return ["name", ...socioEconomicCategories].map((item) => ({
-      text: item,
-      value: item,
-    }));
-  }
-
-  get tableItems(): tableItem[] {
+  get tableItems(): TableItem[] {
     return (
       this.module?.categoryCookings.map((item) => ({
         name: item.cooking.name,
+        fuel: item.cooking.fuel,
         ...item.categoryCounts,
       })) ?? []
     );
@@ -65,8 +71,8 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
 
   created(): void {
     if (!this.initialModule) {
-      this.module.categoryCookings = this.cookings.map((cooking) => ({
-        cooking: cooking,
+      this.module.categoryCookings = this.cookingStoves.map((item) => ({
+        cooking: item,
         categoryCounts: {
           veryLow: 0,
           low: 0,
@@ -79,8 +85,8 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   }
 }
 
-interface tableItem {
+interface TableItem extends Record<SocioEconomicCategory, number> {
   name: string;
-  veryLow: number;
+  fuel: string;
 }
 </script>

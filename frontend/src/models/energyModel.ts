@@ -67,12 +67,13 @@ export type vacantSpaceOutside = "no" | "little" | "medium" | "lots";
 
 export interface HouseholdCookingModule {
   categoryCookings: {
-    cooking: Cooking;
+    cooking: CookingStove;
     categoryCounts: Record<SocioEconomicCategory, number>;
   }[];
 }
 
-export interface Cooking {
+export interface CookingStove {
+  _id: string;
   name: string;
   fuel: "wood" | "charcoal" | "pellet" | "ethanol" | "kerosene";
   technologyType: "conventional" | "improved";
@@ -80,10 +81,18 @@ export interface Cooking {
   capacity: number;
   investmentCost: number;
   lifetime: number;
-  emmissionFactorCo: number;
+  emmissionFactorCo2: number;
   emmissionFactorPm: number;
   iwaEfficiencyTier: Tier;
   iwaIndoorEmissionTier: Tier;
+}
+
+export interface CookingFuel {
+  _id: string;
+  name: string;
+  energy: number;
+  emissionFactorCo2: number;
+  price: number;
 }
 
 type Tier = number | [number, number];

@@ -43,7 +43,7 @@ import {
   HouseholdCookingModule,
   ProjectDocument,
 } from "@/models/energyModel";
-import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
+import { SyncDatabase } from "@/utils/couchdb";
 import * as rules from "@/utils/rules";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -62,7 +62,7 @@ export default class EnergyProject extends Vue {
   @Prop(String)
   readonly databaseName!: string;
 
-  readonly database: SyncDatabase<ProjectDocument> = createSyncDatabase(
+  readonly database: SyncDatabase<ProjectDocument> = new SyncDatabase(
     this.databaseName
   );
 
