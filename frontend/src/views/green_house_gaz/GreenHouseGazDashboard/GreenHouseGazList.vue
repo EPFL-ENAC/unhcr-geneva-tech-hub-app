@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import { mapState } from "vuex";
 import Countries from "../countriesAsList.min.js";
 import flagEmoji from "../flagEmoji";
@@ -73,11 +73,16 @@ export default class ProjectList extends Vue {
     return acc;
   }, {} as CountriesMap);
 
-  public setCountry(country: Country): void {
+  private setCountry(country: Country): void {
     let hash = "";
     if (this.$route.hash !== `#${country.key}`) {
       hash = country.key;
     }
+    this.$router.push({ hash });
+  }
+
+  private unsetCountry(): void {
+    let hash = "";
     this.$router.push({ hash });
   }
 
@@ -91,8 +96,13 @@ export default class ProjectList extends Vue {
   };
 
   public set panel(value: number) {
-    const country = this.countries[value];
-    this.setCountry(country);
+    if (value !== undefined) {
+      const country = this.countries[value];
+      this.setCountry(country);
+    } else {
+      this.unsetCountry();
+    }
+
   }
 }
 

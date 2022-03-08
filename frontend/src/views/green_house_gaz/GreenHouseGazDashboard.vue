@@ -36,7 +36,7 @@
               }"
             >
               <v-icon>mdi-chart-multiple</v-icon>
-              sites
+              locations
             </v-btn>
             <v-btn text @click="statistics">
               <v-icon>mdi-presentation</v-icon>
@@ -53,7 +53,7 @@
             </v-btn>
             <v-btn text @click="addSite">
               <v-icon>mdi-plus-thick</v-icon>
-              add new site
+              add new location
             </v-btn>
           </v-col>
         </v-row>

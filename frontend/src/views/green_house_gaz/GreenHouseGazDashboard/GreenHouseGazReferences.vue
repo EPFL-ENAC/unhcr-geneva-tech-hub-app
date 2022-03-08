@@ -125,11 +125,11 @@ const REFERENCE_DOC_ID = "reference";
 export default class ReferencesList extends Vue {
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
+    getDoc!: (id: string) => Promise<null>;
 
   updateDoc!: (
     obj: GreenHouseGazReference
   ) => PromiseLike<GreenHouseGazReference>;
-  getDoc!: (id: string) => Promise<null>;
 
   reference!: GreenHouseGazReference;
 
@@ -152,7 +152,7 @@ export default class ReferencesList extends Vue {
 
   destroyed(): void {
     this.closeDB().then(() => {
-      console.log("DESTROYED view shelter list, closing DB");
+      console.log("DESTROYED view reference list, closing DB");
     });
   }
 

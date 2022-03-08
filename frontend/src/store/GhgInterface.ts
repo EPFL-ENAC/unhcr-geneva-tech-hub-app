@@ -15,6 +15,9 @@ export interface Survey {
 
 export interface EnergySurvey {
   facilities: Record<string, number>;
+  cooking: Record<string, number>;
+  lighting: Record<string, number>;
+  pumping: Record<string, number>;
 }
 export interface Country {
   key: string; // name of country
@@ -31,7 +34,7 @@ export interface GreenHouseGazReference {
 export type referenceType = "number" | "percentage";
 export interface referenceItem {
   description: string;
-  value: number|string;
+  value: number;
   type?: referenceType;
   source: string;
 }

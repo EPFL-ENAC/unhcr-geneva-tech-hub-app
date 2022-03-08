@@ -26,16 +26,31 @@
 <script lang="ts">
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import { Component, Vue } from "vue-property-decorator";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
+
+const REFERENCE_DOC_ID = "reference";
+
 
 @Component({
   computed: {
     ...mapGetters("GhgItemModule", ["project"]),
+    ...mapGetters("GhgReferenceModule", ["reference"]),
+  },
+  methods: {
+    ...mapActions("GhgReferenceModule", [
+      "syncDB",
+      "getDoc",
+      "updateDoc",
+      "closeDB",
+    ]),
   },
 })
 /** ProjectList */
 export default class SurveyList extends Vue {
   project !: GreenHouseGaz;
+  syncDB!: () => null;
+  closeDB!: () => Promise<null>;
+  getDoc!: (id: string) => Promise<null>;
 
   readonly menuItems: MenuItem[] = [
     { text: "Energy", to: "GreenHouseGazStep1" },
@@ -45,7 +60,7 @@ export default class SurveyList extends Vue {
 
   public get currentSurvey(): Survey | undefined {
     if (!this.project) {
-      return;
+      return undefined;
     } 
     const foundSurvey = this.project.surveys
       .find((el: Survey) => el.name === this.$route.params.surveyId);
@@ -54,6 +69,19 @@ export default class SurveyList extends Vue {
     }
     return foundSurvey;
   }
+
+  mounted(): void {
+    this.syncDB();
+    this.getDoc(REFERENCE_DOC_ID);
+  }
+
+  destroyed(): void {
+    this.closeDB().then(() => {
+      console.log("DESTROYED view reference list, closing DB");
+    });
+  }
+
+  
 }
 
 interface MenuItem {

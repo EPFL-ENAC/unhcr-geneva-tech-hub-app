@@ -66,15 +66,19 @@
     </template>
 
     <template v-slot:item.actions="{ item }">
-      <router-link
-        :to="{
-        name: 'GreenHouseGazItemSurveyId',
-          params: { surveyId: encodeURIComponent(item.name) },
-        }"
-      >
-        <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-      </router-link>
-      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+      <div class="survey-list__actions">
+        <router-link
+          :to="{
+            name: 'GreenHouseGazItemSurveyId',
+            params: { surveyId: encodeURIComponent(item.name) },
+          }"
+        >
+          <v-icon small class="mr-2" @click="editItem(item)">
+            mdi-pencil
+          </v-icon>
+        </router-link>
+        <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+      </div>
     </template>
   </v-data-table>
 </template>
@@ -99,8 +103,8 @@ import { mapActions, mapGetters } from "vuex";
 export default class ProjectItem extends Vue {
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
   project!: GreenHouseGaz;
-  user!: CouchUser;
   localProject = {} as GreenHouseGaz;
+  user!: CouchUser;
 
   headersSurvey = [
     { text: "description", value: "name" },
@@ -184,9 +188,7 @@ export default class ProjectItem extends Vue {
   }
 
   public setLocalShelter(project: GreenHouseGaz): void {
-    this.localProject = project 
-        ? cloneDeep(project)
-        : {} as GreenHouseGaz;
+    this.localProject = project ? cloneDeep(project) : ({} as GreenHouseGaz);
   }
 
   public syncLocalShelter(): void {
@@ -207,4 +209,10 @@ export default class ProjectItem extends Vue {
 }
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.survey-list__actions {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+</style>
