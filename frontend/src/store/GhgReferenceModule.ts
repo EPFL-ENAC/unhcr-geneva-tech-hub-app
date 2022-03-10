@@ -1,4 +1,4 @@
-import { GreenHouseGaz } from "@/store/GhgInterface";
+import { GreenHouseGazReference } from "@/store/GhgInterface";
 import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
@@ -9,60 +9,60 @@ import {
 } from "vuex";
 import { RootState } from ".";
 
-interface GhgState {
-  project: GreenHouseGaz | null;
-  localCouch: SyncDatabase<GreenHouseGaz> | null;
+interface GhgReferenceState {
+  reference: GreenHouseGazReference | null;
+  localCouch: SyncDatabase<GreenHouseGazReference> | null;
 }
 
-const DB_NAME = "ghg";
+const DB_NAME = "ghg_reference";
 const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 
 /** Default Configure state value */
-function generateState(): GhgState {
+function generateState(): GhgReferenceState {
   return {
-    project: null,
+    reference: null,
     localCouch: null,
   };
 }
 
 /** Getters */
-const getters: GetterTree<GhgState, RootState> = {
-  project: (s): GreenHouseGaz | null => s.project,
+const getters: GetterTree<GhgReferenceState, RootState> = {
+  reference: (s): GreenHouseGazReference | null => s.reference,
 };
 
 /** Mutations */
-const mutations: MutationTree<GhgState> = {
+const mutations: MutationTree<GhgReferenceState> = {
   INIT_DB(state) {
     state.localCouch = createSyncDatabase(DB_NAME);
   },
   CLOSE_DB(state) {
     state.localCouch?.cancel();
   },
-  SET_PROJECT(state, value) {
-    state.project = value;
+  SET_REFERENCE(state, value) {
+    state.reference = value;
   },
 };
 
 /** Action */
-const actions: ActionTree<GhgState, RootState> = {
-  syncDB: (context: ActionContext<GhgState, RootState>) => {
+const actions: ActionTree<GhgReferenceState, RootState> = {
+  syncDB: (context: ActionContext<GhgReferenceState, RootState>) => {
     context.commit("INIT_DB");
     const localCouch = context.state.localCouch;
 
     localCouch?.onChange(function () {
-      context.dispatch("getDoc", context.state.project?._id);
+      context.dispatch("getDoc", context.state.reference?._id);
     });
   },
-  closeDB: (context: ActionContext<GhgState, RootState>) => {
+  closeDB: (context: ActionContext<GhgReferenceState, RootState>) => {
     context.commit("CLOSE_DB");
   },
-  getDoc: (context: ActionContext<GhgState, RootState>, id) => {
+  getDoc: (context: ActionContext<GhgReferenceState, RootState>, id) => {
     const db = context.state.localCouch?.db;
     if (db) {
       db.get(id)
         .then(function (result) {
           console.log(result);
-          context.commit("SET_PROJECT", result);
+          context.commit("SET_REFERENCE", result);
         })
         .catch(function (err: Error) {
           console.log(err);
@@ -72,11 +72,11 @@ const actions: ActionTree<GhgState, RootState> = {
     }
   },
 
-  updateDoc: async (context: ActionContext<GhgState, RootState>, value) => {
-    context.commit("SET_PROJECT", value);
+  updateDoc: (context: ActionContext<GhgReferenceState, RootState>, value) => {
+    context.commit("SET_REFERENCE", value);
     const db = context.state.localCouch?.db;
     if (db) {
-      await db.put(value);
+      db.put(value);
     } else {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
@@ -84,7 +84,7 @@ const actions: ActionTree<GhgState, RootState> = {
 };
 
 /** VuexStore */
-const GhgItemModule: Module<GhgState, RootState> = {
+const GhgReferenceModule: Module<GhgReferenceState, RootState> = {
   namespaced: true,
   state: generateState(),
   getters,
@@ -92,4 +92,4 @@ const GhgItemModule: Module<GhgState, RootState> = {
   actions,
 };
 
-export default GhgItemModule;
+export default GhgReferenceModule;

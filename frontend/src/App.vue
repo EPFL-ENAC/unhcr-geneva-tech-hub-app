@@ -96,15 +96,11 @@
       </v-row>
     </v-main>
 
-    <v-main v-else>
-      <v-row>
-        <v-col>
-          <v-fade-transition mode="out-in">
-            <router-view />
-            <router-view name="Login" />
-          </v-fade-transition>
-        </v-col>
-      </v-row>
+    <v-main v-else class="d-flex">
+      <v-fade-transition mode="out-in">
+        <router-view />
+        <router-view name="Login" />
+      </v-fade-transition>
     </v-main>
 
     <v-overlay v-model="loading">

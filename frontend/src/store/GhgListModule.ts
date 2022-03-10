@@ -1,5 +1,5 @@
 /** Config store */
-import { Shelter } from "@/store/ShelterInterface";
+import { Country, GreenHouseGaz } from "@/store/GhgInterface";
 import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
@@ -14,8 +14,9 @@ import { CouchUser } from "./UserModule";
 const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 
 interface ProjectsState {
-  projects: Array<Shelter>;
-  localCouch: SyncDatabase<Shelter> | null;
+  projects: Array<GreenHouseGaz>;
+  countries: Array<Country>;
+  localCouch: SyncDatabase<GreenHouseGaz> | null;
 }
 
 const DB_NAME = "ghg";
@@ -23,21 +24,23 @@ const DB_NAME = "ghg";
 function generateState(): ProjectsState {
   return {
     projects: [],
+    countries: [],
     localCouch: null,
   };
 }
 
-function generateNewProject(name: string, user: CouchUser) {
+function generateNewProject(newGhg: GreenHouseGaz, user: CouchUser) {
   return {
-    _id: name,
-    name,
+    ...newGhg,
+    _id: newGhg.name,
     users: [user.name],
     created_by: user.name,
   };
 }
 /** Getters */
 const getters: GetterTree<ProjectsState, RootState> = {
-  projects: (s): Array<Shelter> => s.projects,
+  projects: (s): Array<GreenHouseGaz> => s.projects,
+  countries: (s): Array<Country> => s.countries,
 };
 
 /** Mutations */
@@ -50,6 +53,9 @@ const mutations: MutationTree<ProjectsState> = {
   },
   SET_PROJECTS(state, value) {
     state.projects = value;
+  },
+  SET_COUNTRIES(state, countries) {
+    state.countries = countries;
   },
   ADD_DOC(state, value) {
     state.localCouch?.db.put(value).then(() => {
@@ -72,7 +78,7 @@ const actions: ActionTree<ProjectsState, RootState> = {
     const localCouch = context.state.localCouch;
 
     localCouch?.onChange(function () {
-      context.dispatch("getDB");
+      context.dispatch("getCountries");
     });
   },
   closeDB: (context: ActionContext<ProjectsState, RootState>) => {
@@ -95,10 +101,32 @@ const actions: ActionTree<ProjectsState, RootState> = {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
   },
-  addDoc: (context: ActionContext<ProjectsState, RootState>, name: string) => {
+  getCountries: (context: ActionContext<ProjectsState, RootState>) => {
+    const db = context.state.localCouch?.db;
+    if (db) {
+      db?.query("project/countries_with_info", {
+        reduce: true,
+        group: true,
+        skip: 0,
+        limit: 100,
+      })
+        .then(function (result) {
+          context.commit("SET_COUNTRIES", result.rows);
+        })
+        .catch(function (err: Error) {
+          console.log(err);
+        });
+    } else {
+      throw new Error(MSG_DB_DOES_NOT_EXIST);
+    }
+  },
+  addDoc: (
+    context: ActionContext<ProjectsState, RootState>,
+    newGhg: GreenHouseGaz
+  ) => {
     const user = context.rootGetters["UserModule/user"] as CouchUser;
     if (user.name) {
-      context.commit("ADD_DOC", generateNewProject(name, user));
+      context.commit("ADD_DOC", generateNewProject(newGhg, user));
     }
   },
   removeDoc: (context: ActionContext<ProjectsState, RootState>, id) => {
