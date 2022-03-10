@@ -104,7 +104,7 @@ import {
   IgesItemInterface,
   ReferenceItemInterface,
 } from "@/store/GhgInterface";
-import flagEmoji from "@/views/green_house_gaz/flagEmoji";
+import flagEmoji from "@/utils/flagEmoji";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
 

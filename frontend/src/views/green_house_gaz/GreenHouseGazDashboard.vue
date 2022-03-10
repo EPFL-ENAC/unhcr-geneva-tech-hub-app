@@ -135,10 +135,10 @@
 
 <script lang="ts">
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface.js";
+import Countries from "@/utils/countriesAsList";
+import flagEmoji from "@/utils/flagEmoji";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
-import Countries from "./countriesAsList.min.js";
-import flagEmoji from "./flagEmoji";
 
 @Component({
   computed: {

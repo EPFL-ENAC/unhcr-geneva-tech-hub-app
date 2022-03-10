@@ -34,8 +34,8 @@
 <script lang="ts">
 import { GreenHouseGaz } from "@/store/GhgInterface";
 import { CouchUser } from "@/store/UserModule";
-import Countries from "@/views/green_house_gaz/countriesAsList.min.js";
-import getFlagEmoji from "@/views/green_house_gaz/flagEmoji";
+import Countries from "@/utils/countriesAsList";
+import getFlagEmoji from "@/utils/flagEmoji";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";

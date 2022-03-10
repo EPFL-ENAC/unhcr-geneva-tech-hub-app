@@ -54,10 +54,10 @@
 </template>
 
 <script lang="ts">
+import Countries from "@/utils/countriesAsList";
+import flagEmoji from "@/utils/flagEmoji";
 import { Component, Vue } from "vue-property-decorator";
 import { mapState } from "vuex";
-import Countries from "../countriesAsList.min.js";
-import flagEmoji from "../flagEmoji";
 
 @Component({
   computed: {
