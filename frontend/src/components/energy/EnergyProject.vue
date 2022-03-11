@@ -50,6 +50,9 @@
           @save="saveHouseholdCooking"
         ></energy-household-cooking>
       </v-tab-item>
+      <v-tab-item value="result">
+        <energy-result :modules="modules"></energy-result>
+      </v-tab-item>
     </v-tabs-items>
   </v-container>
 </template>
@@ -57,10 +60,12 @@
 <script lang="ts">
 import EnergyGeneral from "@/components/energy/EnergyGeneral.vue";
 import EnergyHouseholdCooking from "@/components/energy/EnergyHouseholdCooking.vue";
+import EnergyResult from "@/components/energy/EnergyResult.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
 import {
   GeneralModule,
   HouseholdCookingModule,
+  Modules,
   ProjectDocument,
 } from "@/models/energyModel";
 import { SyncDatabase } from "@/utils/couchdb";
@@ -72,6 +77,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
   components: {
     EnergyGeneral,
     EnergyHouseholdCooking,
+    EnergyResult,
   },
 })
 export default class EnergyProject extends Vue {
@@ -175,6 +181,10 @@ export default class EnergyProject extends Vue {
 
   get householdCookingModule(): HouseholdCookingModule | undefined {
     return this.document?.modules?.householdCooking;
+  }
+
+  get modules(): Modules | undefined {
+    return this.document?.modules;
   }
 
   created(): void {

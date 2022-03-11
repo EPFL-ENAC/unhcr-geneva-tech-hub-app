@@ -66,6 +66,11 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
       woodLandscape: "rain",
       topography: "flat",
       vacantSpaceOutside: "no",
+      categoryVeryLow: 0,
+      categoryLow: 0,
+      categoryMiddle: 0,
+      categoryHigh: 0,
+      categoryVeryHigh: 0,
     };
   }
 
@@ -452,6 +457,38 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
             },
           ],
         } as FormItem<keyof GeneralModule, vacantSpaceOutside>,
+      ],
+      [
+        {
+          type: "number",
+          key: "categoryVeryLow",
+          label: "Very Low Category",
+          subtype: "percent",
+        },
+        {
+          type: "number",
+          key: "categoryLow",
+          label: "Low Category",
+          subtype: "percent",
+        },
+        {
+          type: "number",
+          key: "categoryMiddle",
+          label: "Middle Category",
+          subtype: "percent",
+        },
+        {
+          type: "number",
+          key: "categoryHigh",
+          label: "High Category",
+          subtype: "percent",
+        },
+        {
+          type: "number",
+          key: "categoryVeryHigh",
+          label: "Very High Category",
+          subtype: "percent",
+        },
       ],
     ];
   }

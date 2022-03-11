@@ -39,9 +39,25 @@
           v-slot:[`item.${name}`]="{ item }"
         >
           <form-item-component
-            :key="name"
-            v-model="item[name]"
+            :key="name + '-percentage'"
+            v-model="item[name].perHouseholdPercentage"
             type="number"
+            label="Count per 100 household"
+            subtype="percent"
+          ></form-item-component>
+          <form-item-component
+            :key="name + '-use'"
+            v-model="item[name].useFactor"
+            type="number"
+            label="Use Factor"
+            subtype="percent"
+          ></form-item-component>
+          <form-item-component
+            :key="name + '-time'"
+            v-model="item[name].cookingTime"
+            type="number"
+            label="Daily Cooking Time"
+            unit="h"
           ></form-item-component>
         </template>
       </v-data-table>
@@ -56,11 +72,12 @@ import FormItemComponent, {
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
 import {
+  Category,
+  CategoryProperty,
   CookingFuel,
   CookingStove,
   HouseholdCookingModule,
   socioEconomicCategories,
-  SocioEconomicCategory,
 } from "@/models/energyModel";
 import { assign, cloneDeep, keys, pick, zip } from "lodash";
 import "vue-class-component/hooks";
@@ -118,12 +135,12 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
     },
     {
       text: "Emission factor for CO2",
-      key: "emmissionFactorCo2",
+      key: "emissionFactorCo",
       unit: "g/MJ delivered",
     },
     {
       text: "Emission factor for PM2.5",
-      key: "emmissionFactorPm",
+      key: "emissionFactorPm",
       unit: "g/MJ delivered",
     },
     {
@@ -155,10 +172,7 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   onTableItemsChanged(tableItems: TableItem[]): void {
     zip(this.module.categoryCookings, tableItems).forEach(([cooking, item]) => {
       assign(cooking?.stove, pick(item, keys(cooking?.stove)));
-      assign(
-        cooking?.categoryCounts,
-        pick(item, keys(cooking?.categoryCounts))
-      );
+      assign(cooking?.categories, pick(item, keys(cooking?.categories)));
     });
   }
 
@@ -168,21 +182,24 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
     } else {
       this.module.categoryCookings = this.cookingStoves.map((item) => ({
         stove: item,
-        categoryCounts: {
-          veryLow: 0,
-          low: 0,
-          middle: 0,
-          high: 0,
-          veryHigh: 0,
-        },
+        categories: Object.fromEntries<CategoryProperty>(
+          socioEconomicCategories.map((item) => [
+            item,
+            {
+              perHouseholdPercentage: 0,
+              useFactor: 0,
+              cookingTime: 0,
+            },
+          ])
+        ) as Category,
       }));
     }
     this.tableItems = this.module.categoryCookings.map((item) => ({
       ...item.stove,
-      ...item.categoryCounts,
+      ...item.categories,
     }));
   }
 }
 
-type TableItem = CookingStove & Record<SocioEconomicCategory, number>;
+type TableItem = CookingStove & Category;
 </script>
