@@ -67,7 +67,7 @@ export type vacantSpaceOutside = "no" | "little" | "medium" | "lots";
 
 export interface HouseholdCookingModule {
   categoryCookings: {
-    cooking: CookingStove;
+    stove: CookingStove;
     categoryCounts: Record<SocioEconomicCategory, number>;
   }[];
 }

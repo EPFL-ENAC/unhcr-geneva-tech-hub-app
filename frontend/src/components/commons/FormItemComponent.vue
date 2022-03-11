@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip top :disabled="label.length < 32">
+  <v-tooltip top :disabled="tooltipDisabled">
     <template v-slot:activator="{ on, attrs }">
       <v-text-field
         v-if="type === 'text'"
@@ -58,7 +58,7 @@ export default class FormItemComponent extends Vue {
   @Prop({ type: String as () => "percent" })
   readonly subtype: "percent" | undefined;
   @Prop(String)
-  readonly label!: string;
+  readonly label: string | undefined;
   @Prop([Object, Array])
   readonly options: BooleanOptions | SelectOption<SelectValue>[] | undefined;
   @Prop(String)
@@ -67,6 +67,10 @@ export default class FormItemComponent extends Vue {
   readonly min: number | undefined;
   @Prop(Number)
   readonly max: number | undefined;
+
+  get tooltipDisabled(): boolean {
+    return this.label === undefined ? true : this.label.length < 32;
+  }
 
   get items(): SelectItemObject<string, SelectValue>[] {
     switch (this.type) {
@@ -132,7 +136,7 @@ export type FormItem<K = string, V = string> =
 
 interface AbstractFormItem<K> {
   key: K;
-  label: string;
+  label?: string;
   hidden?: boolean;
 }
 

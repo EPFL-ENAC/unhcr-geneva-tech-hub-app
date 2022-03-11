@@ -34,13 +34,25 @@
             </v-simple-table>
           </td>
         </template>
+        <template
+          v-for="name in inputNumberColumnNames"
+          v-slot:[`item.${name}`]="{ item }"
+        >
+          <form-item-component
+            :key="name"
+            v-model="item[name]"
+            type="number"
+          ></form-item-component>
+        </template>
       </v-data-table>
     </template>
   </energy-form>
 </template>
 
 <script lang="ts">
-import { FormItem } from "@/components/commons/FormItemComponent.vue";
+import FormItemComponent, {
+  FormItem,
+} from "@/components/commons/FormItemComponent.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
 import {
@@ -50,14 +62,16 @@ import {
   socioEconomicCategories,
   SocioEconomicCategory,
 } from "@/models/energyModel";
+import { assign, cloneDeep, keys, pick, zip } from "lodash";
 import "vue-class-component/hooks";
-import { Component } from "vue-property-decorator";
+import { Component, Watch } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";
 import { mapState } from "vuex";
 
 @Component({
   components: {
     EnergyForm,
+    FormItemComponent,
   },
   computed: {
     ...mapState("energy", ["cookingFuels", "cookingStoves"]),
@@ -72,6 +86,7 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
     text: item,
     value: item,
   }));
+  readonly inputNumberColumnNames: string[] = socioEconomicCategories;
   readonly tableExpandProperties: {
     text: string;
     key: keyof TableItem;
@@ -124,6 +139,7 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   module: HouseholdCookingModule = this.emptyModule;
   cookingFuels!: CookingFuel[];
   cookingStoves!: CookingStove[];
+  tableItems: TableItem[] = [];
 
   get emptyModule(): HouseholdCookingModule {
     return {
@@ -135,19 +151,23 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
     return [];
   }
 
-  get tableItems(): TableItem[] {
-    return (
-      this.module?.categoryCookings.map((item) => ({
-        ...item.cooking,
-        ...item.categoryCounts,
-      })) ?? []
-    );
+  @Watch("tableItems", { deep: true })
+  onTableItemsChanged(tableItems: TableItem[]): void {
+    zip(this.module.categoryCookings, tableItems).forEach(([cooking, item]) => {
+      assign(cooking?.stove, pick(item, keys(cooking?.stove)));
+      assign(
+        cooking?.categoryCounts,
+        pick(item, keys(cooking?.categoryCounts))
+      );
+    });
   }
 
   created(): void {
-    if (!this.initialModule) {
+    if (this.initialModule) {
+      this.module = cloneDeep(this.initialModule);
+    } else {
       this.module.categoryCookings = this.cookingStoves.map((item) => ({
-        cooking: item,
+        stove: item,
         categoryCounts: {
           veryLow: 0,
           low: 0,
@@ -157,6 +177,10 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
         },
       }));
     }
+    this.tableItems = this.module.categoryCookings.map((item) => ({
+      ...item.stove,
+      ...item.categoryCounts,
+    }));
   }
 }
 
