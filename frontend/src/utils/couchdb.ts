@@ -3,8 +3,19 @@ import axios, { AxiosPromise } from "axios";
 import PouchDB from "pouchdb";
 import qs from "qs";
 
-const databaseUrl: string = process.env.VUE_APP_COUCHDB_URL ?? "";
+const databaseUrl: string = url(process.env.VUE_APP_COUCHDB_URL);
 
+function url(value = ""): string {
+  try {
+    return new URL(value).toString();
+  } catch {
+    const url = new URL(window.location.origin);
+
+    url.pathname = value;
+
+    return url.toString();
+  }
+}
 export enum DatabaseName {
   EnergyCookingFuels = "energy_cooking_fuels",
   EnergyCookingStoves = "energy_cooking_stoves",

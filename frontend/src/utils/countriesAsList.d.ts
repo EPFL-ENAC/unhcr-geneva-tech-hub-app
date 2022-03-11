@@ -1,6 +1,6 @@
 export interface Country {
-    name: string;
-    code: string;
+  name: string;
+  code: string;
 }
 
 declare const country: Country[];
