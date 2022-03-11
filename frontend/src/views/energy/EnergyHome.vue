@@ -7,7 +7,7 @@
     </v-row>
     <v-row>
       <v-col>
-        <energy-camp-list></energy-camp-list>
+        <energy-site-list></energy-site-list>
       </v-col>
       <v-col>
         <energy-template-list></energy-template-list>
@@ -17,14 +17,14 @@
 </template>
 
 <script lang="ts">
-import EnergyCampList from "@/components/energy/EnergyCampList.vue";
+import EnergySiteList from "@/components/energy/EnergySiteList.vue";
 import EnergyTemplateList from "@/components/energy/EnergyTemplateList.vue";
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
   components: {
-    EnergyCampList,
+    EnergySiteList,
     EnergyTemplateList,
   },
 })

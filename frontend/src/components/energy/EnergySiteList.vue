@@ -1,8 +1,8 @@
 <template>
   <sync-document-list
     ref="list"
-    title="Camps"
-    databaseName="energy_camps"
+    title="Sites"
+    databaseName="energy_sites"
     @click:item="clickItem"
     @create="create"
   >
@@ -41,13 +41,14 @@ import { ProjectDocument } from "@/models/energyModel";
 import { SyncDatabase } from "@/utils/couchdb";
 import * as rules from "@/utils/rules";
 import { SelectItemObject } from "@/utils/vuetify";
+import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Ref, Vue } from "vue-property-decorator";
 
 @Component({
   components: { SyncDocumentList },
 })
-class EnergyCampList extends Vue {
+class EnergySiteList extends Vue {
   readonly rules = rules;
   // TODO vuex
   readonly templateDatabase: SyncDatabase<ProjectDocument> = new SyncDatabase(
@@ -87,7 +88,7 @@ class EnergyCampList extends Vue {
   }
 
   clickItem(document: ExistingDocument<ProjectDocument>): void {
-    this.$router.push({ path: `camps/${document._id}`, append: true });
+    this.$router.push({ path: `sites/${document._id}`, append: true });
   }
 
   deleteItem(document: ExistingDocument<ProjectDocument>, event: Event): void {
@@ -96,18 +97,18 @@ class EnergyCampList extends Vue {
   }
 
   create(): void {
-    this.list.database.db.post({
-      name: this.name,
-      users: [
-        // current user
-      ],
-      modules: {
-        general: this.templateDocument?.modules.general,
-      },
-    });
-    this.name = "";
+    if (this.templateDocument) {
+      this.list.database.db.post({
+        name: this.name,
+        users: [
+          // TODO current user
+        ],
+        modules: cloneDeep(this.templateDocument.modules),
+      });
+      this.name = "";
+    }
   }
 }
 
-export { EnergyCampList as default };
+export { EnergySiteList as default };
 </script>

@@ -436,11 +436,11 @@ const routes: Array<RouteConfig> = [
           ),
       },
       {
-        path: "camps/:id",
-        name: "EnergyCamps",
+        path: "sites/:id",
+        name: "EnergySites",
         component: () =>
           import(
-            /* webpackChunkName: "energy-camp" */ "../views/energy/EnergyCamp.vue"
+            /* webpackChunkName: "energy-site" */ "../views/energy/EnergySite.vue"
           ),
       },
       {

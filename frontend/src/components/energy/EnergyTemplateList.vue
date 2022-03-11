@@ -60,7 +60,7 @@ export default class EnergyTemplateList extends Vue {
     this.list.database.db.post({
       name: this.name,
       users: [
-        // current user
+        // TODO current user
       ],
       modules: {},
     });

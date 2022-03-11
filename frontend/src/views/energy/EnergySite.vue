@@ -1,5 +1,5 @@
 <template>
-  <energy-project id-name="Camp" database-name="energy_camps"></energy-project>
+  <energy-project id-name="Site" database-name="energy_sites"></energy-project>
 </template>
 
 <script lang="ts">
@@ -12,5 +12,5 @@ import { Component, Vue } from "vue-property-decorator";
     EnergyProject,
   },
 })
-export default class EnergyCamp extends Vue {}
+export default class EnergySite extends Vue {}
 </script>
