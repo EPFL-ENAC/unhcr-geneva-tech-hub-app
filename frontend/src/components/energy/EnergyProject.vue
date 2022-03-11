@@ -10,12 +10,32 @@
       @change="changeName"
     ></v-text-field>
     <v-tabs v-model="tab" center-active show-arrows>
-      <v-tab href="#general">General Information</v-tab>
-      <v-tab href="#household-cooking">Household Cooking</v-tab>
-      <v-tab href="#household-lighting">Household Lighting</v-tab>
-      <v-tab>Community lighting</v-tab>
-      <v-tab>Community heating & cooling</v-tab>
-      <v-tab>Productive use of energy</v-tab>
+      <template v-for="item in tabItems">
+        <v-menu v-if="item.children" :key="item.id" offset-y open-on-hover>
+          <template v-slot:activator="{ on, attrs }">
+            <v-tab
+              v-bind="attrs"
+              v-on="on"
+              :href="`#${item.id}-${item.children[0].id}`"
+            >
+              <v-icon left>{{ item.icon }}</v-icon>
+              {{ item.text }}
+            </v-tab>
+          </template>
+          <v-list>
+            <v-list-item v-for="subItem in item.children" :key="subItem.id">
+              <v-tab :href="`#${item.id}-${subItem.id}`">
+                <v-icon left>{{ subItem.icon }}</v-icon>
+                {{ subItem.text }}
+              </v-tab>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <v-tab v-else :key="item.id" :href="`#${item.id}`">
+          <v-icon left>{{ item.icon }}</v-icon>
+          {{ item.text }}
+        </v-tab>
+      </template>
     </v-tabs>
     <v-tabs-items v-model="tab">
       <v-tab-item value="general">
@@ -65,6 +85,72 @@ export default class EnergyProject extends Vue {
   readonly database: SyncDatabase<ProjectDocument> = new SyncDatabase(
     this.databaseName
   );
+  readonly tabItems: TabItem[] = [
+    {
+      text: "General",
+      id: "general",
+      icon: "mdi-information",
+    },
+    {
+      text: "Household",
+      id: "household",
+      icon: "mdi-home",
+      children: [
+        {
+          text: "Cooking",
+          id: "cooking",
+          icon: "mdi-stove",
+        },
+        {
+          text: "Lighting",
+          id: "lighting",
+          icon: "mdi-lightbulb",
+        },
+        {
+          text: "Heating & Cooling",
+          id: "heating",
+          icon: "mdi-sun-snowflake",
+        },
+      ],
+    },
+    {
+      text: "Community",
+      id: "community",
+      icon: "mdi-home-city",
+      children: [
+        {
+          text: "Lighting",
+          id: "lighting",
+          icon: "mdi-lightbulb",
+        },
+        {
+          text: "Heating & Cooling",
+          id: "heating",
+          icon: "mdi-sun-snowflake",
+        },
+        {
+          text: "Good & Service",
+          id: "service",
+          icon: "mdi-room-service",
+        },
+      ],
+    },
+    {
+      text: "Scenario",
+      id: "scenario",
+      icon: "mdi-skip-next",
+    },
+    {
+      text: "Intervention",
+      id: "intervention",
+      icon: "mdi-gesture-tap",
+    },
+    {
+      text: "Result",
+      id: "result",
+      icon: "mdi-chart-box",
+    },
+  ];
 
   document: ExistingDocument<ProjectDocument> | null = null;
   tab: string | null = null;
@@ -134,5 +220,12 @@ export default class EnergyProject extends Vue {
       (document) => (document.modules.householdCooking = module)
     );
   }
+}
+
+interface TabItem {
+  text: string;
+  id: string;
+  icon: string;
+  children?: TabItem[];
 }
 </script>
