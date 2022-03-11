@@ -3,4 +3,16 @@ module.exports = {
     devtool: "source-map",
   },
   transpileDependencies: ["vuetify"],
+  devServer: {
+    proxy: {
+      "^/db": {
+        target: "http://localhost:5984/",
+        pathRewrite: {
+          "^/db": "", // remove base path
+        },
+        ws: true,
+        changeOrigin: true,
+      },
+    },
+  },
 };
