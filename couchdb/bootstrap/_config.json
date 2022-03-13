@@ -1,2 +1,11 @@
 {
+    "httpd": {
+        "enable_cors": false
+    },
+    "cors": {},
+    "chttpd_auth": {
+        "require_valid_user": true,
+        "allow_persistent_cookies": true,
+        "timeout": 86400
+    }
 }
