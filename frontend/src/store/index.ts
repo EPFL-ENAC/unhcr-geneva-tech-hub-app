@@ -1,12 +1,3 @@
-import ConfigModule from "@/store/ConfigModule";
-import EnergyModule from "@/store/EnergyModule";
-import GhgItemModule from "@/store/GhgItemModule";
-import GhgListModule from "@/store/GhgListModule";
-import GhgReferenceModule from "@/store/GhgReferenceModule";
-import ShelterItemModule from "@/store/ShelterItemModule";
-import ShelterListModule from "@/store/ShelterListModule";
-import UserModule from "@/store/UserModule";
-import Vue from "vue";
 import Vuex, {
   ActionContext,
   ActionTree,
@@ -14,6 +5,17 @@ import Vuex, {
   MutationTree,
   StoreOptions,
 } from "vuex";
+
+import ConfigModule from "@/store/ConfigModule";
+import EnergyModule from "@/store/EnergyModule";
+import GhgItemModule from "@/store/GhgItemModule";
+import GhgListModule from "@/store/GhgListModule";
+import GhgReferenceModule from "@/store/GhgReferenceModule";
+import ShelterItemModule from "@/store/ShelterItemModule";
+import ShelterListModule from "@/store/ShelterListModule";
+import ShelterMaterialsModule from "@/store/ShelterMaterialsModule";
+import UserModule from "@/store/UserModule";
+import Vue from "vue";
 import VuexPersistence from "vuex-persist";
 
 // import createPersistedState from 'vuex-persist-indexeddb';
@@ -145,6 +147,7 @@ const store: StoreOptions<RootState> = {
     ConfigModule,
     ShelterListModule,
     ShelterItemModule,
+    ShelterMaterialsModule,
     GhgListModule,
     GhgItemModule,
     GhgReferenceModule,

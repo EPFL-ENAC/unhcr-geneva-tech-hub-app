@@ -1,7 +1,8 @@
-import Vue from "vue";
 import VueRouter, { Route, RouteConfig } from "vue-router";
+
 import Apps from "../views/AppListView.vue";
 import Login from "../views/LoginView.vue";
+import Vue from "vue";
 
 Vue.use(VueRouter);
 
@@ -352,16 +353,7 @@ const routes: Array<RouteConfig> = [
             meta: { step: 3 },
             component: () =>
               import(
-                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step3Materials.vue"
-              ),
-          },
-          {
-            name: "ShelterSustainabilityStep4",
-            path: "4",
-            meta: { step: 4 },
-            component: () =>
-              import(
-                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step4Labour.vue"
+                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step3BillOfQuantities.vue"
               ),
           },
           {

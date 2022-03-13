@@ -43,8 +43,7 @@ export default class ProjectItem extends Vue {
   readonly menuItems: MenuItem[] = [
     { text: "About", to: "ShelterSustainabilityStep1" },
     { text: "Geometry", to: "ShelterSustainabilityStep2" },
-    { text: "Materials", to: "ShelterSustainabilityStep3" },
-    { text: "Labour", to: "ShelterSustainabilityStep4" },
+    { text: "Bill of Quantities", to: "ShelterSustainabilityStep3" },
     { text: "Environmental Perf", to: "ShelterSustainabilityStep5" },
     { text: "Technical Perf", to: "ShelterSustainabilityStep6" },
     { text: "Habitability", to: "ShelterSustainabilityStep7" },

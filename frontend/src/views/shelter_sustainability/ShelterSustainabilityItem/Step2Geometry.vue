@@ -220,6 +220,42 @@ export default class Step2Geometry extends Vue {
     this.localShelter.windows_dimensions.push({ Ww: 0, Hw: 0, Hs: 0 });
   }
 
+  // get shelter_geometry_type(): string {
+  //   return this.shelter.shelter_geometry_type;
+  // }
+
+  // set shelter_geometry_type(value: string) {
+  //   this.shelter.shelter_geometry_type = value;
+  // }
+
+  // externalize somehwere
+  // get windowDimensions(): number {
+  //   return this.shelter.windows_dimensions
+  //     .map(({ Ww, Hw }) => Ww * Hw)
+  //     .reduce((windowsArea, windowArea) => windowsArea + windowArea);
+  // }
+
+  // get floorArea(): number {
+  //   const { L, W } = this.shelter.shelter_dimensions;
+  //   if (this.shelter_geometry_type === "dome") {
+  //     const surfaceAreaEllipse = Math.PI * (L / 2) * (W / 2);
+  //     // better to use toPrecision(3)
+  //     return Math.floor(surfaceAreaEllipse * 100) / 100;
+  //   }
+  //   return L * W;
+  // }
+
+  // get shelterVolume(): number {
+  //   const { L, W, H1, H2, H } = this.shelter.shelter_dimensions;
+  //   if (H) {
+  //     return L * W * H;
+  //   }
+  //   if (H1 && H2) {
+  //     return L * W * H1;
+  //   }
+  //   throw new Error("should not exist");
+  // }
+
   geometries = [
     {
       _id: "gableHW",
