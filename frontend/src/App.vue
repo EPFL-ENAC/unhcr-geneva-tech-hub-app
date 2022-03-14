@@ -2,22 +2,12 @@
   <v-app>
     <v-app-bar app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-app-bar-title class="d-flex justify-center pr-10">
-        <router-link :to="{ name: 'Apps' }" class="text-decoration-none">{{
-          title
-        }}</router-link>
-      </v-app-bar-title>
-      <v-spacer />
       <v-tabs>
-        <v-tab
-          v-for="([title, linkk], i) in apps"
-          :key="i"
-          :to="{ name: linkk }"
-          >{{ title }}</v-tab
-        >
+        <v-tab v-if="rootRoute" :to="{ name: rootRoute.name }">{{
+          rootRouteTitle
+        }}</v-tab>
       </v-tabs>
       <v-spacer />
-      <v-avatar> {{ user.name }}</v-avatar>
       <v-btn icon @click="$store.dispatch('ConfigModule/toggleTheme')">
         <v-icon v-text="'mdi-invert-colors'" />
       </v-btn>
@@ -31,30 +21,43 @@
       />
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" app>
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      :mini-variant.sync="mini"
+      expand-on-hover
+    >
       <v-list>
-        <v-list-group
-          :value="true"
-          prepend-icon="mdi-briefcase"
-          :to="{ name: 'Apps' }"
-        >
-          <template v-slot:activator>
+        <v-list-item class="px-2" :to="{ name: 'Apps' }" v-if="user.name">
+          <v-list-item-avatar>
+            <v-img v-if="gravatarImageUrl" :src="gravatarImageUrl"></v-img>
+          </v-list-item-avatar>
+
+          <v-list-item-title>{{ user.name }}</v-list-item-title>
+
+          <v-btn icon @click.stop="toggleMini">
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+        </v-list-item>
+        <v-list-item link :to="{ name: 'Apps' }">
+          <v-list-item-icon>
+            <v-icon>mdi-briefcase</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
             <v-list-item-title>Apps</v-list-item-title>
-          </template>
-
-          <v-list-item
-            v-for="([title, name, icon], i) in apps"
-            :key="i"
-            link
-            :to="{ name }"
-          >
-            <v-list-item-title v-text="title"></v-list-item-title>
-
-            <v-list-item-icon>
-              <v-icon v-text="icon"></v-icon>
-            </v-list-item-icon>
-          </v-list-item>
-        </v-list-group>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item
+          v-for="([title, name, icon], i) in apps"
+          :key="i"
+          link
+          :to="{ name }"
+        >
+          <v-list-item-icon @click.stop="mini = true">
+            <v-icon v-text="icon"></v-icon>
+          </v-list-item-icon>
+          <v-list-item-title v-text="title"></v-list-item-title>
+        </v-list-item>
 
         <v-list-item link :to="{ name: 'About' }">
           <v-list-item-icon>
@@ -85,15 +88,23 @@
 
     <v-main v-if="$user('isLoggedOut')">
       <v-row v-if="$router.currentRoute.name !== 'Login'">
-        <v-col>
+        <v-col :cols="12">
           <v-alert type="warning"> You are not logged in </v-alert>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col>
-          <router-view name="Login" />
-        </v-col>
-      </v-row>
+      <v-container
+        class="login"
+        fluid
+        fill-height
+        v-if="$router.currentRoute.name !== 'Login'"
+      >
+        <v-layout align-content-start justify-center>
+          <v-flex xs12 sm8 md4>
+            <login-component />
+          </v-flex>
+        </v-layout>
+      </v-container>
+      <router-view name="Login" />
     </v-main>
 
     <v-main v-else class="d-flex">
@@ -124,9 +135,12 @@
 </template>
 
 <script lang="ts">
+import LoginComponent from "@/components/LoginComponent.vue";
 import { CouchUser } from "@/store/UserModule";
+import md5 from "@/utils/md5";
 import { AxiosError, AxiosPromise } from "axios";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
+import { Route, RouteRecordPublic } from "vue-router";
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
@@ -139,6 +153,9 @@ import { mapActions, mapGetters } from "vuex";
       getSessionStore: "getSession",
     }),
   },
+  components: {
+    LoginComponent,
+  },
 })
 /** ProjectList */
 export default class App extends Vue {
@@ -146,17 +163,23 @@ export default class App extends Vue {
   logoutStore!: () => AxiosPromise;
   getSessionStore!: () => AxiosPromise;
   user!: CouchUser;
-
+  md5Function: (v: string) => string = md5;
   title = "UNHCR-TSS"; // use env variable,
   /** Drawer menu visibility */
-  drawer = null;
+  drawer = false;
+  mini = null;
   /** Snackbar visibility */
   snackbar = false;
+  // TODO: use meta.title for apps name
   apps = [
     ["Green House Gaz", "GreenHouseGaz", "mdi-account-multiple-outline"],
     ["Shelter Sustainability", "ShelterSustainability", "mdi-cog-outline"],
     ["Energy", "Energy", "mdi-flash"],
   ];
+
+  rootRoute = {} as RouteRecordPublic;
+  currentRouteName = "";
+  rootRouteTitle = "";
 
   get snackbarText(): string {
     return this.$store.getters.message;
@@ -180,35 +203,46 @@ export default class App extends Vue {
     return this.$store.getters["ConfigModule/themeDark"];
   }
 
-  // @Watch
-  // themeDark() {
-  //   this.$vuetify.theme.dark = this.$store.getters["ConfigModule/themeDark"];
-  // },
+  get gravatarImageUrl(): string {
+    if (this.user?.name) {
+      const email_md5 = this.md5Function(this.user.name);
+      return `https://www.gravatar.com/avatar/${email_md5}?d=mp`;
+    }
+    return "";
+  }
 
-  // @Watch
-  // "$store.getters.message": function onSnackbarTextChanged() {
-  //   this.snackbar = true;
-  // },
-  // @Watch
-  // $route: function onRouteChanged(): void {
-  //   /** When route change, hide snackbar */
-  //   this.snackbar = false;
-  // },
-  // @Watch
-  // loading: function onLoading() {
-  //   /** When loading */
-  //   // console.log('loading:', this.loading);
-  //   // change cursor
-  //   document.body.style.cursor = this.loading ? "wait" : "auto";
-  // },
-  // @Watch
-  // error: function onError() {
-  //   /** When error has occurred */
-  //   this.$router.push({ name: "Error" });
-  // },
+  @Watch("themeDark")
+  onthemeDarkChange(): void {
+    this.$vuetify.theme.dark = this.$store.getters["ConfigModule/themeDark"];
+  }
+
+  @Watch("$store.getters.message")
+  onSnackbarTextChanged(): void {
+    this.snackbar = true;
+  }
+  @Watch("$route", { immediate: true, deep: true })
+  onRouteChanged(newRoute: Route): void {
+    this.rootRoute = newRoute.matched[0];
+    this.rootRouteTitle = this.rootRoute?.meta?.title ?? "Unknown title";
+    this.currentRouteName = newRoute.name ?? "Unknown Route name";
+    /** When route change, hide snackbar */
+    this.snackbar = false;
+  }
+  @Watch("loading")
+  onLoadingChange(): void {
+    /** When loading */
+    // console.log('loading:', this.loading);
+    // change cursor
+    document.body.style.cursor = this.loading ? "wait" : "auto";
+  }
+  @Watch("error")
+  onError(): void {
+    /** When error has occurred */
+    this.$router.push({ name: "Error" });
+  }
 
   login(): void {
-    if (this.$router.currentRoute.name !== "Login") {
+    if (this.currentRouteName !== "Login") {
       this.$router.push({ name: "Login" });
     }
   }
@@ -216,7 +250,7 @@ export default class App extends Vue {
   logout(): void {
     this.logoutStore()
       .then(() => {
-        if (this.$router.currentRoute.name !== "Login") {
+        if (this.currentRouteName !== "Login") {
           this.$router.push({ name: "Login" });
         }
       })
@@ -232,11 +266,14 @@ export default class App extends Vue {
       });
   }
 
+  toggleMini(): void {
+    this.mini = !this.mini;
+  }
+
   /** Run once. */
   mounted(): void {
     this.$vuetify.theme.dark = this.$store.getters["ConfigModule/themeDark"];
     document.title = this.title;
-
     /// retrieve user
     this.getSessionStore();
   }

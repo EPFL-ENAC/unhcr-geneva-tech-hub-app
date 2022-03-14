@@ -21,6 +21,9 @@ const routes: Array<RouteConfig> = [
     path: "/apps",
     name: "Apps",
     component: Apps,
+    meta: {
+      title: "UNHCR-TSS",
+    },
   },
   {
     path: "/about",
@@ -38,6 +41,9 @@ const routes: Array<RouteConfig> = [
       import(
         /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGaz.vue"
       ),
+    meta: {
+      title: "Green House Gaz Calculator",
+    },
     redirect: { name: "GreenHouseGazList" },
     children: [
       {
@@ -308,6 +314,9 @@ const routes: Array<RouteConfig> = [
       import(
         /* webpackChunkName: "shelter_sustainability" */ "../views/shelter_sustainability/ShelterSustainability.vue"
       ),
+    meta: {
+      title: "Shelter Sustainability",
+    },
     redirect: { name: "ShelterSustainabilityList" },
     children: [
       {
@@ -417,6 +426,9 @@ const routes: Array<RouteConfig> = [
     path: "/energy",
     component: () =>
       import(/* webpackChunkName: "energy" */ "../views/energy/Energy.vue"),
+    meta: {
+      title: "Energy",
+    },
     children: [
       {
         path: "",
