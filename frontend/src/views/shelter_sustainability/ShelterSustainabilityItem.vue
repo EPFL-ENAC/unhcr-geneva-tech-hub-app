@@ -3,7 +3,6 @@
     <v-tabs
       class="fixed-tabs-bar"
       centered
-      background-color="white"
       grow
       :show-arrows="true"
       elevation="2"

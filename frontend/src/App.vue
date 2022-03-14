@@ -126,7 +126,7 @@
 <script lang="ts">
 import { CouchUser } from "@/store/UserModule";
 import { AxiosError, AxiosPromise } from "axios";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
@@ -180,32 +180,32 @@ export default class App extends Vue {
     return this.$store.getters["ConfigModule/themeDark"];
   }
 
-  // @Watch
-  // themeDark() {
-  //   this.$vuetify.theme.dark = this.$store.getters["ConfigModule/themeDark"];
-  // },
+  @Watch("themeDark")
+  onthemeDarkChange(): void {
+    this.$vuetify.theme.dark = this.$store.getters["ConfigModule/themeDark"];
+  }
 
-  // @Watch
-  // "$store.getters.message": function onSnackbarTextChanged() {
-  //   this.snackbar = true;
-  // },
-  // @Watch
-  // $route: function onRouteChanged(): void {
-  //   /** When route change, hide snackbar */
-  //   this.snackbar = false;
-  // },
-  // @Watch
-  // loading: function onLoading() {
-  //   /** When loading */
-  //   // console.log('loading:', this.loading);
-  //   // change cursor
-  //   document.body.style.cursor = this.loading ? "wait" : "auto";
-  // },
-  // @Watch
-  // error: function onError() {
-  //   /** When error has occurred */
-  //   this.$router.push({ name: "Error" });
-  // },
+  @Watch("$store.getters.message")
+  onSnackbarTextChanged(): void {
+    this.snackbar = true;
+  }
+  @Watch("$route")
+  onRouteChanged(): void {
+    /** When route change, hide snackbar */
+    this.snackbar = false;
+  }
+  @Watch("loading")
+  onLoadingChange(): void {
+    /** When loading */
+    // console.log('loading:', this.loading);
+    // change cursor
+    document.body.style.cursor = this.loading ? "wait" : "auto";
+  }
+  @Watch("error")
+  onError(): void {
+    /** When error has occurred */
+    this.$router.push({ name: "Error" });
+  }
 
   login(): void {
     if (this.$router.currentRoute.name !== "Login") {
