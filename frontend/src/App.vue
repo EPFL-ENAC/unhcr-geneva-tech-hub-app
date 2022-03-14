@@ -167,7 +167,7 @@ export default class App extends Vue {
   title = "UNHCR-TSS"; // use env variable,
   /** Drawer menu visibility */
   drawer = false;
-  mini = null;
+  mini: boolean | null = null;
   /** Snackbar visibility */
   snackbar = false;
   // TODO: use meta.title for apps name
