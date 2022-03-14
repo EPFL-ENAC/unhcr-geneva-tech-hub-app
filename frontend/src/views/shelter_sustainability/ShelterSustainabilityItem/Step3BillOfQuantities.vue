@@ -7,9 +7,7 @@
     <v-container fluid>
       <v-row>
         <v-col>
-          <h2 class="text-h4 project-shelter__h3 font-weight-medium">
-            Items
-          </h2>
+          <h2 class="text-h4 project-shelter__h3 font-weight-medium">Items</h2>
         </v-col>
       </v-row>
       <v-row>
@@ -26,7 +24,7 @@
                 <v-col> -->
             <v-data-table
               :headers="headers"
-              :items="materials"
+              :items="items"
               sort-by="name"
               class="elevation-1"
             >
@@ -55,6 +53,44 @@
                       <v-card-text>
                         <v-container>
                           <v-row>
+                            <v-col>
+                              <v-select
+                                :items="['Labour', 'Material']"
+                                label="Item type"
+                                v-model="editedItem.itemType"
+                                name="type"
+                                type="string"
+                                required
+                              />
+                            </v-col>
+                          </v-row>
+                          <v-row v-if="editedItem.itemType === 'Labour'">
+                            <v-col cols="12" sm="6" md="6">
+                              <v-select
+                                :items="['Skilled', 'Unskilled']"
+                                label="Worker type"
+                                v-model="editedItem.workerType"
+                                name="type"
+                                type="string"
+                                required
+                              />
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                              <v-text-field
+                                v-model="editedItem.pricePerPerson"
+                                type="number"
+                                label="Price per person"
+                              ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                              <v-text-field
+                                v-model.number="editedItem.workDays"
+                                type="number"
+                                label="Work days"
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                          <v-row v-if="editedItem.itemType === 'Material'">
                             <v-col cols="12" sm="6" md="6">
                               <v-text-field
                                 v-model="editedItem.name"
@@ -71,7 +107,7 @@
                               <v-select
                                 :items="materialTypes"
                                 label="Item type"
-                                v-model="editedItem.type"
+                                v-model="editedItem.materialId"
                                 item-text="text"
                                 item-value="value"
                                 name="type"
@@ -81,12 +117,15 @@
                             </v-col>
                             <v-col cols="12" sm="6" md="6">
                               <v-select
-                                :disabled="!editedItem.type"
-                                :items="materialFormPossible[editedItem.type]"
+                                :disabled="!editedItem.materialId"
+                                :items="currentForm"
                                 label="Item Form"
                                 v-model="editedItem.form"
-                                item-text="text"
-                                item-value="value"
+                                item-text="name"
+                                @update="(v) => callMaterialId('update', v)"
+                                @input="(v) => callMaterialId('input', v)"
+                                @change="(v) => callMaterialId('change', v)"
+                                item-value="code"
                                 name="type"
                                 type="string"
                                 required
@@ -100,7 +139,7 @@
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
                               <v-text-field
-                                v-model.number="editedItem.dimensions.PCE"
+                                v-model.number="editedItem.pieces"
                                 label="Pieces"
                                 type="number"
                               ></v-text-field>
@@ -178,9 +217,11 @@
 
 <script lang="ts">
 import {
+  FormMaterial,
+  Item,
   Material,
   MaterialDimensions,
-  materialsForm,
+  MaterialSubCategory,
   OMaterial,
   Shelter,
   Units,
@@ -207,7 +248,31 @@ export default class Step3Materials extends Vue {
     text: OMaterial[key],
   }));
 
-  materialFormPossible = materialsForm;
+  public callMaterialId(type: string, e: Event): void {
+    console.log(type, e);
+  }
+
+  private isMaterial(object: unknown): object is Material {
+    return (
+      Object.prototype.hasOwnProperty.call(object, "materialId") &&
+      Object.prototype.hasOwnProperty.call(object, "form")
+    );
+  }
+
+  public get currentForm(): FormMaterial[] {
+    if (this.isMaterial(this.editedItem) && this.editedItem.materialId) {
+      return MaterialSubCategory[this.editedItem.materialId];
+    }
+    return [] as FormMaterial[];
+  }
+
+  public get currentFormUnit(): FormMaterial[] {
+    if (this.isMaterial(this.editedItem) && this.editedItem.materialId) {
+      return MaterialSubCategory[this.editedItem.materialId];
+    }
+    return [] as FormMaterial[];
+  }
+
   dialog = false;
   dialogDelete = false;
   headers = [
@@ -223,25 +288,23 @@ export default class Step3Materials extends Vue {
     { text: "Unit", value: "unit" },
     { text: "Dimensions", value: "dimensions", sortable: false },
   ];
-  materials = [];
+  items = [] as Item[];
   editedIndex = -1;
-  editedItem = {
-    name: "",
-    source: "",
-    type: "",
-    form: "",
-    unit: Units.PCE,
-    dimensions: { PCE: 3 } as MaterialDimensions,
-  } as Material;
 
-  defaultItem = {
-    name: "",
-    source: 0,
-    type: 0,
-    form: 0,
-    unit: 0,
-    dimensions: {},
-  };
+  defaultItem = this.getDefaultItem();
+  editedItem = this.getDefaultItem();
+  private getDefaultItem(): Item {
+    return {
+      name: "",
+      source: "FR",
+      materialId: "ALU",
+      form: "SHEET",
+      density_code: "ALU-ALL_DEN", // TODO: use types
+      unit: Units.KG,
+      pieces: 1,
+      dimensions: { kilogram: 3 } as MaterialDimensions,
+    };
+  }
 
   localShelter = {} as Shelter;
 
@@ -279,20 +342,20 @@ export default class Step3Materials extends Vue {
 
   public editItem(item: Material): void {
     console.log("Edit item", item);
-    // this.editedIndex = this.materials.indexOf(item);
-    // this.editedItem = Object.assign({} as Material, item);
+    this.editedIndex = this.items.indexOf(item);
+    this.editedItem = Object.assign({} as Item, item);
     this.dialog = true;
   }
 
   public deleteItem(item: Material): void {
     console.log(item);
-    // this.editedIndex = this.materials.indexOf(item);
-    // this.editedItem = Object.assign({}, item);
-    // this.dialogDelete = true;
+    this.editedIndex = this.items.indexOf(item);
+    this.editedItem = Object.assign({}, item);
+    this.dialogDelete = true;
   }
 
   public deleteItemConfirm(): void {
-    this.materials.splice(this.editedIndex, 1);
+    this.items.splice(this.editedIndex, 1);
     this.closeDelete();
   }
 
@@ -313,11 +376,11 @@ export default class Step3Materials extends Vue {
   }
 
   public save(): void {
-    // if (this.editedIndex > -1) {
-    //   Object.assign(this.materials[this.editedIndex], this.editedItem);
-    // } else {
-    //   this.materials.push(this.editedItem);
-    // }
+    if (this.editedIndex > -1) {
+      Object.assign(this.items[this.editedIndex], this.editedItem);
+    } else {
+      this.items.push(this.editedItem);
+    }
     console.log("SAVE");
     this.close();
   }

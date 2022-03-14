@@ -4,17 +4,16 @@
       <v-col>
         <h1 class="project-shelter__header">Background Data</h1>
         <v-data-table :headers="headers" :items="materials">
-              <template v-slot:item.density="props">
-                {{ props.item.density }} {{ props.item.density_unit }}
-              </template>
-              <template v-slot:item.production_water_consumption="props">
-                {{ props.item.density }} L/kg
-              </template>
-              <template v-slot:item.production_embodied_carbon="props">
-                {{ props.item.density }} kgCO2e/kg
-              </template>
-
-            </v-data-table>
+          <template v-slot:item.density="props">
+            {{ props.item.density }} {{ props.item.density_unit }}
+          </template>
+          <template v-slot:item.production_water_consumption="props">
+            {{ props.item.density }} L/kg
+          </template>
+          <template v-slot:item.production_embodied_carbon="props">
+            {{ props.item.density }} kgCO2e/kg
+          </template>
+        </v-data-table>
       </v-col>
     </v-row>
   </v-container>
@@ -24,8 +23,6 @@
 import { ShelterMaterial } from "@/store/ShelterInterface";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
-
-const REFERENCE_DOC_ID = "reference";
 
 @Component({
   computed: {
@@ -83,7 +80,7 @@ export default class BackgroundData extends Vue {
         value: "variable",
       },
       { text: "density", value: "density" },
-      { text: "embodied_carbon", value: "production_embodied_carbon"},
+      { text: "embodied_carbon", value: "production_embodied_carbon" },
       { text: "water_consumption", value: "production_water_consumption" },
     ];
   }
@@ -114,5 +111,4 @@ interface HeaderInterface {
   sortable?: boolean;
   value: string;
 }
-
 </script>

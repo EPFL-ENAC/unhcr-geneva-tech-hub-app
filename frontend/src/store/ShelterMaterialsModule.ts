@@ -1,3 +1,5 @@
+import { ShelterMaterial } from "@/store/ShelterInterface";
+import { SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -5,10 +7,7 @@ import {
   Module,
   MutationTree,
 } from "vuex";
-
 import { RootState } from ".";
-import { ShelterMaterial } from "@/store/ShelterInterface";
-import { SyncDatabase } from "@/utils/couchdb";
 
 interface SheltersMaterialsState {
   materials: ShelterMaterial[];
@@ -85,7 +84,10 @@ const actions: ActionTree<SheltersMaterialsState, RootState> = {
         include_docs: true,
       })
         .then(function (result) {
-          context.commit("SET_MATERIALS", result.rows.map(x => x.doc));
+          context.commit(
+            "SET_MATERIALS",
+            result.rows.map((x) => x.doc)
+          );
         })
         .catch(function (err: Error) {
           console.log(err);

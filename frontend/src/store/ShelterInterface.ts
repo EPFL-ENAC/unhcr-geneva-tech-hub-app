@@ -15,7 +15,7 @@ export interface Shelter {
   risk_flood: string;
   risk_seismic: string;
 
-  materials: Material[];
+  items: Item[];
 
   habitability: Score;
   habitability_score: number | undefined;
@@ -38,12 +38,16 @@ export interface Score {
 }
 
 export enum Units {
-  PCE = "pce",
   KG = "kg",
   M = "m",
   M2 = "m2",
   M3 = "m3",
   L = "l",
+}
+
+export enum ItemTypes {
+  Material = "material",
+  Labour = "labour",
 }
 
 export const OMaterial = {
@@ -74,40 +78,7 @@ export const OMaterial = {
 
 export type MaterialId = typeof OMaterial[keyof typeof OMaterial];
 
-/*
- CUB: Cube = m*m*m
- SHE: Plate/Sheet/Panel=m*m*mm
- LIT: Liter
- KIL: Kilogram
- CYL: Cylinder Plain tube: Rope/Cylinder (plain) 
- TUB: Tube: Hollow tube
- .. etc but not a lot many more
-*/
-// export const materialsForm = {
-//   ALU: ["Pipe", "Sheet"],
-//   BMB: ["Sheet"],
-//   BIT: ["Sheet"],
-//   PLC: ["Sheet"],
-//   CDB: ["Sheet"],
-//   CEM: ["Sheet"],
-//   CLA: ["Sheet"],
-//   CON: ["Sheet"],
-//   EAR: ["Sheet"],
-//   GLA: ["Sheet"],
-//   GRA: ["Sheet"],
-//   GYP: ["Sheet"],
-//   HMP: ["Sheet"],
-//   LME: ["Sheet"],
-//   MFX: ["Sheet"],
-//   PLA: ["Sheet"],
-//   RBR: ["Sheet"],
-//   SND: ["Sheet"],
-//   STE: ["Sheet"],
-//   STO: ["Sheet"],
-//   TIM: ["Sheet"],
-// } as Record<string, FormsMaterial[]>;
-
-export type FormsMaterial =
+export type FormTypeMaterial =
   | "Cube"
   | "UProfile"
   | "Sandwitch"
@@ -117,6 +88,13 @@ export type FormsMaterial =
   | "Cylinder"
   | "Kilogram"
   | "Liter";
+
+export interface FormMaterial {
+  type: FormTypeMaterial;
+  name: string;
+  code: string;
+}
+export type MaterialsForms = Record<MaterialId, FormMaterial[]>;
 
 export const MaterialSubCategory = {
   ALU: [
@@ -187,9 +165,13 @@ export const MaterialSubCategory = {
   ],
   LME: [{ code: "LIME-ALL_DEN", type: "Kilogram", name: "Lime" }],
   MFX: [
-    { type: "Kilogram", name: "Hinge" },
-    { type: "Kilogram", name: "Lock" },
-    { type: "Kilogram", name: "Nails, screws, bolts, other fixings" },
+    { code: "STE-ALL_DEN", type: "Kilogram", name: "Hinge" },
+    { code: "STE-ALL_DEN", type: "Kilogram", name: "Lock" },
+    {
+      code: "STE-ALL_DEN",
+      type: "Kilogram",
+      name: "Nails, screws, bolts, other fixings",
+    },
   ],
   PLA: [
     {
@@ -299,14 +281,15 @@ export const MaterialSubCategory = {
       name: "Softwood - circular section",
     },
   ],
-};
+} as MaterialsForms;
 
 type Weight = number;
 type Meter = number;
 type Milimeter = number;
 type Liter = number;
+type Kilogram = number;
 type Density = number;
-type MaterialsFunction = Record<FormsMaterial, densityFunction>;
+type MaterialsFunction = Record<FormTypeMaterial, densityFunction>;
 
 type densityCube = (L: Meter, W: Meter, H: Meter, density: Density) => Weight;
 
@@ -391,7 +374,7 @@ export const materialFunction = {
     const half_diameter = (diameter / 2) * ONE_THOUSANDTH;
     return L * Math.pow(half_diameter, 2) * Math.PI * density;
   },
-  Kilogram: (n: number) => n,
+  Kilogram: (n: Kilogram) => n,
   Liter: (n: Liter, density: Density) => {
     // n is in liter hence (0.001 * n) m3 because 1000L = 1m3
     // density is kg per m3 or per 1000L
@@ -427,18 +410,38 @@ export const materialFunction = {
 export interface Material {
   name: string | undefined;
   source: string | undefined;
-  type: MaterialId | undefined;
+  materialId: MaterialId | undefined;
   form: string | undefined;
   unit: Units | undefined;
+  density_code: string | undefined;
   dimensions: MaterialDimensions | undefined;
+  pieces: number;
 }
 
+export enum WorkerType {
+  Skilled = "skilled",
+  Unskilled = "unskilled",
+}
+export interface Labour {
+  // 2 skilled worker for 2 day : 3USD per person
+  // 1 unskilled worker for 1 day: 1 USD per person
+  workerType: WorkerType;
+  pricePerPerson: number; // in USD
+  workDays: number; // number of day necessary
+}
+
+export type Item = Material | Labour;
+
+// TODO change. MaterialDimension should be argument of MaterialsFunction
 export interface MaterialDimensions {
-  PCE?: number | undefined; // =piece
-  LEN?: number | undefined; // =length
-  WID?: number | undefined; // =width
-  THK?: number | undefined; // =thickness
-  DIA?: number | undefined; // =diameter
+  /// TODO: add Kg ? Liter, etc..
+  kilogram?: Kilogram;
+  liter?: Liter;
+  length?: Meter;
+  LEN?: number; // =length
+  WID?: number; // =width
+  THK?: number; // =thickness
+  DIA?: number; // =diameter
 }
 
 export interface ShelterDimensions {

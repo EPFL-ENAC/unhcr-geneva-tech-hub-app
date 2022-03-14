@@ -1,11 +1,3 @@
-import Vuex, {
-  ActionContext,
-  ActionTree,
-  GetterTree,
-  MutationTree,
-  StoreOptions,
-} from "vuex";
-
 import ConfigModule from "@/store/ConfigModule";
 import EnergyModule from "@/store/EnergyModule";
 import GhgItemModule from "@/store/GhgItemModule";
@@ -16,6 +8,13 @@ import ShelterListModule from "@/store/ShelterListModule";
 import ShelterMaterialsModule from "@/store/ShelterMaterialsModule";
 import UserModule from "@/store/UserModule";
 import Vue from "vue";
+import Vuex, {
+  ActionContext,
+  ActionTree,
+  GetterTree,
+  MutationTree,
+  StoreOptions,
+} from "vuex";
 import VuexPersistence from "vuex-persist";
 
 // import createPersistedState from 'vuex-persist-indexeddb';

@@ -1,8 +1,7 @@
+import Vue from "vue";
 import VueRouter, { Route, RouteConfig } from "vue-router";
-
 import Apps from "../views/AppListView.vue";
 import Login from "../views/LoginView.vue";
-import Vue from "vue";
 
 Vue.use(VueRouter);
 
