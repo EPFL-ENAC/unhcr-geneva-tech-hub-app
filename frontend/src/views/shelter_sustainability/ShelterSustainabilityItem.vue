@@ -9,6 +9,7 @@
     >
       <template v-for="item in menuItems">
         <v-tab :key="item.to" :to="{ name: item.to }">
+          <v-icon left>{{ item.icon }}</v-icon>
           {{ item.text }}
         </v-tab>
       </template>
@@ -40,15 +41,15 @@ export default class ProjectItem extends Vue {
   $route!: Route;
 
   readonly menuItems: MenuItem[] = [
-    { text: "About", to: "ShelterSustainabilityStep1" },
-    { text: "Geometry", to: "ShelterSustainabilityStep2" },
-    { text: "Bill of Quantities", to: "ShelterSustainabilityStep3" },
-    { text: "Environmental Perf", to: "ShelterSustainabilityStep5" },
-    { text: "Technical Perf", to: "ShelterSustainabilityStep6" },
-    { text: "Habitability", to: "ShelterSustainabilityStep7" },
-    { text: "Affordability", to: "ShelterSustainabilityStep8" },
-    { text: "Scorecard", to: "ShelterSustainabilityStep9" },
-    { text: "Background", to: "ShelterSustainabilityStep10" },
+    { icon: "mdi-information", text: "About", to: "ShelterSustainabilityStep1" },
+    { icon: "mdi-shape", text: "Geometry", to: "ShelterSustainabilityStep2" },
+    { icon: "mdi-clipboard-text-multiple", text: "Bill of Quantities", to: "ShelterSustainabilityStep3" },
+    { icon: "mdi-leaf", text: "Environmental Perf", to: "ShelterSustainabilityStep5" },
+    { icon: "mdi-poll", text: "Technical Perf", to: "ShelterSustainabilityStep6" },
+    { icon: "mdi-home", text: "Habitability", to: "ShelterSustainabilityStep7" },
+    { icon: "mdi-account-cash", text: "Affordability", to: "ShelterSustainabilityStep8" },
+    { icon: "mdi-scoreboard", text: "Scorecard", to: "ShelterSustainabilityStep9" },
+    { icon: "mdi-database-arrow-right", text: "Background", to: "ShelterSustainabilityStep10" },
   ];
   mounted(): void {
     this.syncDB();
@@ -61,6 +62,7 @@ export default class ProjectItem extends Vue {
 
 interface MenuItem {
   text: string;
+  icon: string;
   to: string;
   children?: MenuItem[];
 }

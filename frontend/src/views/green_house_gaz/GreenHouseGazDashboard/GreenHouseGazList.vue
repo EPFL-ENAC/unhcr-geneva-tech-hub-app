@@ -17,17 +17,20 @@
       <v-expansion-panel-content>
         <v-simple-table>
           <template v-slot:default>
-            <thead>
+            <!-- <thead>
               <tr>
                 <th class="text-left">Location</th>
                 <th class="text-left">Created by</th>
                 <th class="text-left">Edit mode</th>
               </tr>
-            </thead>
+            </thead> -->
             <tbody>
               <tr v-for="location in country.value" :key="location.name">
+                <td width="100px">
+                  {{ location.name }}
+                </td>
                 <td>
-                  <router-link
+                  <!-- <router-link
                     :to="{
                       name: 'GreenHouseGazItem',
                       params: {
@@ -37,13 +40,43 @@
                     }"
                   >
                     {{ location.name }}
-                  </router-link>
+                  </router-link> -->
+                  <v-slider
+                    @input="(i) => selectSurvey(i, country.key, location.name)"
+                    :tick-labels="['Survey 1', 'Survey 2', 'Survey 3']"
+                    :max="3"
+                    step="1"
+                    ticks="always"
+                    tick-size="4"
+                  ></v-slider>
                 </td>
-                <td>{{ location.created_by }}</td>
+                <td width="104px">
+                  <!-- actions -->
+                  <v-btn icon
+                  :to="{
+                      name: 'GreenHouseGazCompareSurveys',
+                      params: {
+                        country: encodeURIComponent(country.key),
+                        site: encodeURIComponent(location.name),
+                      },
+                    }">
+                    <v-icon>mdi-chart-areaspline</v-icon>
+                  </v-btn>
+                  <v-btn icon :to="{
+                      name: 'GreenHouseGazItem',
+                      params: {
+                        country: encodeURIComponent(country.key),
+                        site: encodeURIComponent(location.name),
+                      },
+                    }">
+                    <v-icon>mdi-cog-outline</v-icon>
+                  </v-btn>
+                </td>
+                <!-- <td>{{ location.created_by }}</td>
                 <td>
                   <span v-if="$can('edit', location)">editable</span>
                   <span v-else>readonly </span>
-                </td>
+                </td> -->
               </tr>
             </tbody>
           </template>
@@ -102,6 +135,10 @@ export default class ProjectList extends Vue {
     } else {
       this.unsetCountry();
     }
+  }
+
+  public selectSurvey(index: number, country_code: string, site: string): void {
+    // retrieve id of survey
   }
 }
 
