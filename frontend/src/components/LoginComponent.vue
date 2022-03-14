@@ -1,22 +1,29 @@
 <template>
   <v-card class="elevation-12">
     <v-toolbar dark color="primary">
-      <v-toolbar-title>Login</v-toolbar-title>
+      <v-toolbar-title>Welcome!</v-toolbar-title>
     </v-toolbar>
     <v-form v-model="formValid" @submit.prevent="submitLoginForm">
       <v-card-text>
         <v-text-field
+          outlined
           v-model="username"
           label="Login"
           prepend-icon="mdi-account"
+          placeholder=" "
+          persistent-placeholder
           required
           type="text"
         />
         <v-text-field
+          outlined
           v-model="password"
           label="Password"
+          placeholder=" "
+          persistent-placeholder
           prepend-icon="mdi-lock"
           required
+          hide-details="true"
           type="password"
         />
         <span class="error--text">{{ error }}</span>
@@ -54,12 +61,16 @@ export default class LoginComponent extends Vue {
   error = "";
   login!: (doc: UserCouchCredentials) => AxiosPromise;
 
+  public get destinationRouteName(): string {
+    const currentRouteName = this.$router.currentRoute.name as string;
+    return currentRouteName === "Login" ? "Apps" : currentRouteName;
+  }
   submitLoginForm(): void {
     this.error = "";
     const { username, password } = this;
     this.login({ username, password })
       .then(() => {
-        this.$router.push("/apps");
+        this.$router.push({ name: this.destinationRouteName });
       })
       .catch((error: AxiosError) => {
         switch (error.response?.status) {

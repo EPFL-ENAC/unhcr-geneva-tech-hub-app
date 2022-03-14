@@ -1,5 +1,62 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <v-card class="about ma-4" elevation="2">
+    <v-card-text>
+      <h2 class="ma-8">Context</h2>
+      <p class="mx-10">
+        In the context of ongoing work with UNHCR Geneva Technical Hub,
+        EssentialTech, FAR and BPE aim to develop web application building on
+        various data sources (mostly Excel sheets and web source) and user
+        inputs, to improve sustainability practices, through GHG emmissions
+        estimates, shleter sustainability scores and improved energy planning in
+        refugee camps. The overaching project is composed of 3 different tools,
+        each with distinct specifications and functionalities - but developed
+        jointly to foster synergies and integration wherever possible.
+      </p>
+    </v-card-text>
+    <v-card-text>
+      <v-simple-table class="ma-8">
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th>Tool Name</th>
+              <th>Key interlocutor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Global GHG Calculator</td>
+              <td>
+                <b>EssentialTech</b> Dr. Cara Tobin & Dr. Grégoire Castella
+              </td>
+            </tr>
+            <tr>
+              <td>Shelter Sustainability Calculator</td>
+              <td><b>FAR</b> Dr. André Ullal</td>
+            </tr>
+            <tr>
+              <td>Refugee Camp Energy Planning Tool</td>
+              <td><b>BPE</b> Prof. Edgard Gnansounou. Dr Farnaz Eslamishoar</td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
+    </v-card-text>
+    <v-card-text>
+      <hr />
+
+      <h2 class="ma-8">Key specifications</h2>
+      <ul class="mx-10">
+        <li>
+          All tools will be deployed as web apps, but must be available offline
+        </li>
+        <li>
+          All tools will follow similar design conventions and style decisions
+        </li>
+        <li>
+          All tools should abide by the data privacy restrictions of UNHCR
+        </li>
+        <li>Maintenance is included for the first year by EPFL</li>
+      </ul>
+    </v-card-text>
+  </v-card>
 </template>

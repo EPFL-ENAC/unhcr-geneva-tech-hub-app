@@ -8,16 +8,16 @@
         }}</router-link>
       </v-app-bar-title>
       <v-spacer />
-      <v-tabs>
+      <!-- <v-tabs>
         <v-tab
           v-for="([title, linkk], i) in apps"
           :key="i"
           :to="{ name: linkk }"
           >{{ title }}</v-tab
         >
-      </v-tabs>
+      </v-tabs> -->
       <v-spacer />
-      <v-avatar> {{ user.name }}</v-avatar>
+      <!-- <v-avatar> {{ user.name }}</v-avatar> -->
       <v-btn icon @click="$store.dispatch('ConfigModule/toggleTheme')">
         <v-icon v-text="'mdi-invert-colors'" />
       </v-btn>
@@ -31,15 +31,35 @@
       />
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" app>
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      :mini-variant.sync="mini"
+      permanent
+    >
       <v-list>
+        <v-list-item class="px-2" :to="{ name: 'Apps' }" v-if="user.name">
+          <v-list-item-avatar>
+            <v-img v-if="gravatarImageUrl" :src="gravatarImageUrl"></v-img>
+          </v-list-item-avatar>
+
+          <v-list-item-title>{{ user.name }}</v-list-item-title>
+
+          <v-btn icon @click.stop="mini = !mini">
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+        </v-list-item>
         <v-list-group
           :value="true"
           prepend-icon="mdi-briefcase"
-          :to="{ name: 'Apps' }"
+          @click.stop="mini = true"
         >
           <template v-slot:activator>
-            <v-list-item-title>Apps</v-list-item-title>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ title }}
+              </v-list-item-title>
+            </v-list-item-content>
           </template>
 
           <v-list-item
@@ -48,11 +68,10 @@
             link
             :to="{ name }"
           >
-            <v-list-item-title v-text="title"></v-list-item-title>
-
-            <v-list-item-icon>
+            <v-list-item-icon @click.stop="mini = true">
               <v-icon v-text="icon"></v-icon>
             </v-list-item-icon>
+            <v-list-item-title v-text="title"></v-list-item-title>
           </v-list-item>
         </v-list-group>
 
@@ -85,15 +104,23 @@
 
     <v-main v-if="$user('isLoggedOut')">
       <v-row v-if="$router.currentRoute.name !== 'Login'">
-        <v-col>
+        <v-col :cols="12">
           <v-alert type="warning"> You are not logged in </v-alert>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col>
-          <router-view name="Login" />
-        </v-col>
-      </v-row>
+      <v-container
+        class="login"
+        fluid
+        fill-height
+        v-if="$router.currentRoute.name !== 'Login'"
+      >
+        <v-layout align-content-start justify-center>
+          <v-flex xs12 sm8 md4>
+            <login-component />
+          </v-flex>
+        </v-layout>
+      </v-container>
+      <router-view name="Login" />
     </v-main>
 
     <v-main v-else class="d-flex">
@@ -124,7 +151,9 @@
 </template>
 
 <script lang="ts">
+import LoginComponent from "@/components/LoginComponent.vue";
 import { CouchUser } from "@/store/UserModule";
+import md5 from "@/utils/md5";
 import { AxiosError, AxiosPromise } from "axios";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
@@ -139,6 +168,9 @@ import { mapActions, mapGetters } from "vuex";
       getSessionStore: "getSession",
     }),
   },
+  components: {
+    LoginComponent,
+  },
 })
 /** ProjectList */
 export default class App extends Vue {
@@ -146,10 +178,11 @@ export default class App extends Vue {
   logoutStore!: () => AxiosPromise;
   getSessionStore!: () => AxiosPromise;
   user!: CouchUser;
-
+  md5Function: (v: string) => string = md5;
   title = "UNHCR-TSS"; // use env variable,
   /** Drawer menu visibility */
-  drawer = null;
+  drawer = true;
+  mini = true;
   /** Snackbar visibility */
   snackbar = false;
   apps = [
@@ -178,6 +211,14 @@ export default class App extends Vue {
   }
   get themeDark(): boolean {
     return this.$store.getters["ConfigModule/themeDark"];
+  }
+
+  get gravatarImageUrl(): string {
+    if (this.user?.name) {
+      const email_md5 = this.md5Function(this.user.name);
+      return `https://www.gravatar.com/avatar/${email_md5}?d=mp`;
+    }
+    return "";
   }
 
   @Watch("themeDark")
