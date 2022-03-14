@@ -15,7 +15,7 @@
               xl="2"
             >
               <form-item-component
-                v-model="module[item.key]"
+                v-model="syncedModule[item.key]"
                 v-bind="item"
               ></form-item-component>
             </v-col>
@@ -75,6 +75,11 @@ export default class EnergyForm<M> extends Vue {
     if (this.initialModule) {
       this.syncedModule = cloneDeep(this.initialModule);
     }
+  }
+
+  @Watch("syncedModule", { deep: true })
+  onSyncedModuleChanged(): void {
+    this.form.validate();
   }
 
   save(): void {

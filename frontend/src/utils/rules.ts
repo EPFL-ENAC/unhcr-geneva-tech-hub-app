@@ -1,8 +1,10 @@
+import { sumBy } from "lodash";
+
 export type Rule = (
   value: string | boolean | number | null | undefined
 ) => boolean | string;
 
-export const required: Rule = function (value) {
+export const checkRequired: Rule = function (value) {
   return (
     (value != undefined &&
       (typeof value === "boolean" ||
@@ -13,12 +15,22 @@ export const required: Rule = function (value) {
   );
 };
 
-export function min(min: number): Rule {
+export function checkMin(min: number): Rule {
   return (value) =>
     (typeof value === "number" && value >= min) || `Mininum ${min}.`;
 }
 
-export function max(max: number): Rule {
+export function checkMax(max: number): Rule {
   return (value) =>
     (typeof value === "number" && value <= max) || `Maximum ${max}.`;
+}
+
+export function checkSum<T>(
+  t: T,
+  expected: number,
+  ...keys: (keyof T)[]
+): Rule {
+  return () =>
+    sumBy(keys, (key) => t[key] as unknown as number) === expected ||
+    `Sum to ${expected}`;
 }

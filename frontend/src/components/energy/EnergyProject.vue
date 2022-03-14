@@ -6,7 +6,7 @@
       :label="idName + ' Name'"
       outlined
       required
-      :rules="[rules.required]"
+      :rules="rules"
       @change="changeName"
     ></v-text-field>
     <v-tabs v-model="tab" center-active show-arrows>
@@ -69,7 +69,7 @@ import {
   ProjectDocument,
 } from "@/models/energyModel";
 import { SyncDatabase } from "@/utils/couchdb";
-import * as rules from "@/utils/rules";
+import { checkRequired } from "@/utils/rules";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
@@ -81,7 +81,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
   },
 })
 export default class EnergyProject extends Vue {
-  readonly rules = rules;
+  readonly rules = [checkRequired];
 
   @Prop(String)
   readonly idName!: string;

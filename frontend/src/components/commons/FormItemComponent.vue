@@ -9,7 +9,7 @@
         :label="label"
         hide-details="auto"
         required
-        :rules="rules"
+        :rules="actualRules"
       ></v-text-field>
       <v-text-field
         v-if="type === 'number'"
@@ -20,7 +20,7 @@
         hide-details="auto"
         hide-spin-buttons
         required
-        :rules="rules"
+        :rules="actualRules"
         type="number"
       >
         <template v-if="actualUnit" v-slot:append>{{ actualUnit }}</template>
@@ -34,7 +34,7 @@
         hide-details="auto"
         :items="items"
         required
-        :rules="rules"
+        :rules="actualRules"
       >
         <template v-if="actualUnit" v-slot:append>{{ actualUnit }}</template>
       </v-select>
@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import * as rules from "@/utils/rules";
+import { checkMax, checkMin, checkRequired, Rule } from "@/utils/rules";
 import { SelectItemObject } from "@/utils/vuetify";
 import "vue-class-component/hooks";
 import { Component, Prop, VModel, Vue } from "vue-property-decorator";
@@ -67,6 +67,8 @@ export default class FormItemComponent extends Vue {
   readonly min: number | undefined;
   @Prop(Number)
   readonly max: number | undefined;
+  @Prop({ type: Array as () => Rule[] })
+  readonly rules: Rule[] | undefined;
 
   get tooltipDisabled(): boolean {
     return this.label === undefined ? true : this.label.length < 32;
@@ -95,15 +97,18 @@ export default class FormItemComponent extends Vue {
     }
   }
 
-  get rules(): rules.Rule[] {
-    const defaultRules = [rules.required];
+  get actualRules(): Rule[] {
+    const rules: Rule[] = [checkRequired];
     if (this.actualMin !== undefined) {
-      defaultRules.push(rules.min(this.actualMin));
+      rules.push(checkMin(this.actualMin));
     }
     if (this.actualMax !== undefined) {
-      defaultRules.push(rules.max(this.actualMax));
+      rules.push(checkMax(this.actualMax));
     }
-    return defaultRules;
+    if (this.rules) {
+      rules.push(...this.rules);
+    }
+    return rules;
   }
 
   get actualUnit(): string | undefined {
@@ -138,6 +143,7 @@ interface AbstractFormItem<K> {
   key: K;
   label?: string;
   hidden?: boolean;
+  rules?: Rule[];
 }
 
 interface TextFormItem<K> extends AbstractFormItem<K> {

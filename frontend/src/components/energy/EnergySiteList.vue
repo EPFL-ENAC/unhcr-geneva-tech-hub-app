@@ -21,14 +21,14 @@
         v-model="name"
         label="Name"
         required
-        :rules="[rules.required]"
+        :rules="rules"
       ></v-text-field>
       <v-select
         v-model="templateDocument"
         :items="templates"
         label="Select template"
         required
-        :rules="[rules.required]"
+        :rules="rules"
       ></v-select>
     </template>
   </sync-document-list>
@@ -39,7 +39,7 @@ import SyncDocumentList from "@/components/commons/SyncDocumentList.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
 import { ProjectDocument } from "@/models/energyModel";
 import { SyncDatabase } from "@/utils/couchdb";
-import * as rules from "@/utils/rules";
+import { checkRequired } from "@/utils/rules";
 import { SelectItemObject } from "@/utils/vuetify";
 import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
@@ -49,7 +49,7 @@ import { Component, Ref, Vue } from "vue-property-decorator";
   components: { SyncDocumentList },
 })
 class EnergySiteList extends Vue {
-  readonly rules = rules;
+  readonly rules = [checkRequired];
   // TODO vuex
   readonly templateDatabase: SyncDatabase<ProjectDocument> = new SyncDatabase(
     "energy_templates"

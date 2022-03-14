@@ -21,7 +21,7 @@
         v-model="name"
         label="Name"
         required
-        :rules="[rules.required]"
+        :rules="rules"
       ></v-text-field>
     </template>
   </sync-document-list>
@@ -31,7 +31,7 @@
 import SyncDocumentList from "@/components/commons/SyncDocumentList.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
 import { ProjectDocument } from "@/models/energyModel";
-import * as rules from "@/utils/rules";
+import { checkRequired } from "@/utils/rules";
 import "vue-class-component/hooks";
 import { Component, Ref, Vue } from "vue-property-decorator";
 
@@ -39,7 +39,7 @@ import { Component, Ref, Vue } from "vue-property-decorator";
   components: { SyncDocumentList },
 })
 export default class EnergyTemplateList extends Vue {
-  readonly rules = rules;
+  readonly rules = [checkRequired];
 
   createDialog = false;
   name = "";

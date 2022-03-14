@@ -21,6 +21,7 @@ import {
   vacantSpaceOutside,
   WoodLandscape,
 } from "@/models/energyModel";
+import { checkSum } from "@/utils/rules";
 import "vue-class-component/hooks";
 import { Component } from "vue-property-decorator";
 
@@ -75,6 +76,15 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
   }
 
   get items(): FormItem<keyof GeneralModule>[][] {
+    const checkCategorySum = checkSum(
+      this.module,
+      100,
+      "categoryVeryLow",
+      "categoryLow",
+      "categoryMiddle",
+      "categoryHigh",
+      "categoryVeryHigh"
+    );
     return [
       [
         {
@@ -464,30 +474,35 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
           key: "categoryVeryLow",
           label: "Very Low Category",
           subtype: "percent",
+          rules: [checkCategorySum],
         },
         {
           type: "number",
           key: "categoryLow",
           label: "Low Category",
           subtype: "percent",
+          rules: [checkCategorySum],
         },
         {
           type: "number",
           key: "categoryMiddle",
           label: "Middle Category",
           subtype: "percent",
+          rules: [checkCategorySum],
         },
         {
           type: "number",
           key: "categoryHigh",
           label: "High Category",
           subtype: "percent",
+          rules: [checkCategorySum],
         },
         {
           type: "number",
           key: "categoryVeryHigh",
           label: "Very High Category",
           subtype: "percent",
+          rules: [checkCategorySum],
         },
       ],
     ];
