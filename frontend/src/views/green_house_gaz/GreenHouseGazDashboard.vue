@@ -4,57 +4,33 @@
       <v-container fluid>
         <v-row
           ><v-col
-            :cols="10"
-            class="d-flex justify-center align-center country-list__title"
+            :cols="12"
+            class="country-list-header d-flex align-center justify-center"
           >
-            Green House Gaz indicators summarized by location
-          </v-col>
-          <v-col :cols="2" class="d-flex justify-end align-center">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn icon v-bind="attrs" v-on="on">
-                  <v-icon>mdi-map-marker-question-outline</v-icon>
-                </v-btn>
-              </template>
-              <span>Data last updated on the 1st of March 2022</span>
-            </v-tooltip>
-            <v-btn icon @click="toggleExpandMap">
-              <v-icon v-if="expandMap">mdi-unfold-more-vertical</v-icon>
-              <v-icon v-else>mdi-unfold-less-vertical</v-icon>
-            </v-btn>
+            <span class="country-list-header__title">
+              Green House Gaz indicators summarized by location
+            </span>
+            <span class="country-list-header__tools">
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn icon v-bind="attrs" v-on="on">
+                    <v-icon>mdi-map-marker-question-outline</v-icon>
+                  </v-btn>
+                </template>
+                <span>Data last updated on the 1st of March 2022</span>
+              </v-tooltip>
+              <v-btn icon @click="toggleExpandMap">
+                <v-icon v-if="expandMap">mdi-unfold-more-vertical</v-icon>
+                <v-icon v-else>mdi-unfold-less-vertical</v-icon>
+              </v-btn>
+            </span>
           </v-col>
         </v-row>
         <v-row>
           <v-col class="country-list__actions d-flex justify-end align-center">
-            <!-- <v-btn text @click="download">
-              <v-icon>mdi-download</v-icon>
-              download
-            </v-btn>
-            <v-btn
-              text
-              :to="{
-                name: 'GreenHouseGazList',
-              }"
-            >
-              <v-icon>mdi-chart-multiple</v-icon>
-              locations
-            </v-btn>
-            <v-btn text @click="statistics">
-              <v-icon>mdi-presentation</v-icon>
-              statistics
-            </v-btn>
-            <v-btn
-              text
-              :to="{
-                name: 'GreenHouseGazReferences',
-              }"
-            >
-              <v-icon>mdi-script-text-outline</v-icon>
-              references
-            </v-btn> -->
             <v-btn text @click="addSite">
               <v-icon>mdi-plus-thick</v-icon>
-              add new location
+              New survey
             </v-btn>
           </v-col>
         </v-row>
@@ -66,7 +42,9 @@
       </v-container>
     </v-sheet>
     <div class="separator"></div>
-    <div class="map-countries"></div>
+    <div class="map-countries">
+      <v-img src="/ghg/map.png"></v-img>
+    </div>
 
     <v-dialog v-model="siteDialog" max-width="500px">
       <!-- <template v-slot:activator="{ on, attrs }">
@@ -274,10 +252,23 @@ export default class ProjectList extends Vue {
   justify-content: space-around;
 }
 
-.country-list__title {
+// .country-list-header {
+//   display: grid;
+//   grid-template: "left" "center" "right";
+// }
+
+.country-list-header__title {
   font-size: 20px;
   font-weight: 700;
   text-transform: uppercase;
+  // grid-area: center;
+}
+
+.country-list-header__tools {
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  // grid-area: right;
 }
 
 .separator {
