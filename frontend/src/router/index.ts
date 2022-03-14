@@ -352,16 +352,7 @@ const routes: Array<RouteConfig> = [
             meta: { step: 3 },
             component: () =>
               import(
-                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step3Materials.vue"
-              ),
-          },
-          {
-            name: "ShelterSustainabilityStep4",
-            path: "4",
-            meta: { step: 4 },
-            component: () =>
-              import(
-                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step4Labour.vue"
+                /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step3BillOfQuantities.vue"
               ),
           },
           {
