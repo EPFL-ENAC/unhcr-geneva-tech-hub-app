@@ -82,7 +82,7 @@ export interface HouseholdCookingModule {
 export type Category = Record<SocioEconomicCategory, CategoryProperty>;
 
 export interface CategoryProperty {
-  perHouseholdPercentage: number;
+  countPerHousehold: number;
   /**
    * CU
    */

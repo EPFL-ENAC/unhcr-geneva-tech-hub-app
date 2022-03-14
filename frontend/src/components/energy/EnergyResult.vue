@@ -1,14 +1,57 @@
 <template>
-  <v-card v-if="cookingResult">
+  <v-card v-if="householdCookingResult">
     <v-card-title>Household Cooking</v-card-title>
-    <v-card-text>Energy: {{ cookingResult.energy }} [MJ]</v-card-text>
-    <v-card-text>
-      CO2 Emission: {{ cookingResult.emissionCo2 }} [kg]
-    </v-card-text>
-    <v-card-text>CO Emission: {{ cookingResult.emissionCo }} [g]</v-card-text>
-    <v-card-text>
-      Particles Emission: {{ cookingResult.emissionPm }} [g]
-    </v-card-text>
+    <v-simple-table dense>
+      <template v-slot:default>
+        <thead>
+          <tr>
+            <th></th>
+            <th class="text-right">Very Low</th>
+            <th class="text-right">Low</th>
+            <th class="text-right">Middle</th>
+            <th class="text-right">High</th>
+            <th class="text-right">Very High</th>
+            <th class="text-right">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in lines" :key="item.key">
+            <td class="font-weight-black">{{ item.text }}</td>
+            <td class="text-right">
+              {{
+                householdCookingResult.categories.veryLow[item.key]
+                  | formatNumber
+              }}
+            </td>
+            <td class="text-right">
+              {{
+                householdCookingResult.categories.low[item.key] | formatNumber
+              }}
+            </td>
+            <td class="text-right">
+              {{
+                householdCookingResult.categories.middle[item.key]
+                  | formatNumber
+              }}
+            </td>
+            <td class="text-right">
+              {{
+                householdCookingResult.categories.high[item.key] | formatNumber
+              }}
+            </td>
+            <td class="text-right">
+              {{
+                householdCookingResult.categories.veryHigh[item.key]
+                  | formatNumber
+              }}
+            </td>
+            <td class="font-weight-bold text-right">
+              {{ householdCookingResult.total[item.key] | formatNumber }}
+            </td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
   </v-card>
 </template>
 
@@ -31,14 +74,40 @@ import { mapState } from "vuex";
   computed: {
     ...mapState("energy", ["cookingFuels"]),
   },
+  filters: {
+    formatNumber(value: number): string {
+      return value.toLocaleString(undefined, {
+        maximumFractionDigits: 0,
+      });
+    },
+  },
 })
 export default class EnergyResult extends Vue {
+  readonly lines: { text: string; key: keyof CookingResult }[] = [
+    {
+      text: "Energy [MJ]",
+      key: "energy",
+    },
+    {
+      text: "CO2 Emission [kg]",
+      key: "emissionCo2",
+    },
+    {
+      text: "CO Emission [g]",
+      key: "emissionCo",
+    },
+    {
+      text: "Particles Emission [g]",
+      key: "emissionPm",
+    },
+  ];
+
   @Prop({ type: Object as () => Modules })
   modules!: Modules;
 
   cookingFuels!: CookingFuel[];
 
-  get cookingResult(): CookingResult | undefined {
+  get householdCookingResult(): HouseholdCookingResult | undefined {
     const householdCooking = this.modules.householdCooking;
     if (this.modules.general && householdCooking) {
       const site: CookingSite = {
@@ -51,8 +120,7 @@ export default class EnergyResult extends Vue {
             const technologies: CookingTechnology[] =
               householdCooking.categoryCookings
                 .filter(
-                  (cooking) =>
-                    cooking.categories[item].perHouseholdPercentage > 0
+                  (cooking) => cooking.categories[item].countPerHousehold > 0
                 )
                 .map((cooking) => {
                   const fuel = this.cookingFuels.find(
@@ -83,7 +151,7 @@ export default class EnergyResult extends Vue {
     }
   }
 
-  getCategoryPercentage(category: SocioEconomicCategory): number {
+  private getCategoryPercentage(category: SocioEconomicCategory): number {
     if (!this.modules.general) {
       return 0;
     }
@@ -129,7 +197,7 @@ export default class EnergyResult extends Vue {
           emissionCo,
           emissionPm,
         },
-        (v) => (v * item.property.perHouseholdPercentage) / 100
+        (v) => v * item.property.countPerHousehold
       );
     });
     const result = applyReduce(results, (a, b) => a + b, {
@@ -141,12 +209,25 @@ export default class EnergyResult extends Vue {
     return applyMap(result, (v) => v * count);
   }
 
-  computeBySite(site: CookingSite): CookingResult {
-    const results = Object.values(site.categories).map((item) => {
-      const count = site.householdsCount * (item.percentage / 100);
-      return this.computeByCategory(count, item.technologies);
-    });
-    return applyReduce(results, (a, b) => a + b);
+  computeBySite(site: CookingSite): HouseholdCookingResult {
+    const results: [keyof SocioEconomicCategory, CookingResult][] =
+      Object.entries(site.categories).map(([key, value]) => {
+        const count = site.householdsCount * (value.percentage / 100);
+        return [
+          key as keyof SocioEconomicCategory,
+          this.computeByCategory(count, value.technologies),
+        ];
+      });
+    return {
+      categories: Object.fromEntries(results) as Record<
+        SocioEconomicCategory,
+        CookingResult
+      >,
+      total: applyReduce(
+        results.map((item) => item[1]),
+        (a, b) => a + b
+      ),
+    };
   }
 }
 
@@ -169,10 +250,6 @@ interface CookingTechnology {
   property: CategoryProperty;
 }
 
-// interface CookingResult {
-//   years: Record<SocioEconomicCategory, SingleResult>[];
-// }
-
 interface CookingResult {
   /**
    * CEf
@@ -181,5 +258,10 @@ interface CookingResult {
   emissionCo2: number;
   emissionCo: number;
   emissionPm: number;
+}
+
+interface HouseholdCookingResult {
+  categories: Record<SocioEconomicCategory, CookingResult>;
+  total: CookingResult;
 }
 </script>

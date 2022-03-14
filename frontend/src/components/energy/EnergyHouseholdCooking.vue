@@ -39,11 +39,10 @@
           v-slot:[`item.${name}`]="{ item }"
         >
           <form-item-component
-            :key="name + '-percentage'"
-            v-model="item[name].perHouseholdPercentage"
+            :key="name + '-count'"
+            v-model="item[name].countPerHousehold"
             type="number"
-            label="Count per 100 household"
-            subtype="percent"
+            label="Count per household"
           ></form-item-component>
           <form-item-component
             :key="name + '-use'"
@@ -186,7 +185,7 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
           socioEconomicCategories.map((item) => [
             item,
             {
-              perHouseholdPercentage: 0,
+              countPerHousehold: 0,
               useFactor: 0,
               cookingTime: 0,
             },
