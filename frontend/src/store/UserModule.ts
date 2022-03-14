@@ -36,7 +36,8 @@ export interface UserCouchCredentials {
 }
 
 function generateEmptyUser(): CouchUser {
-  return { name: "", roles: [] };
+  // return { name: "", roles: [] };
+  return {} as CouchUser;
 }
 /** Default Configure state value */
 function generateState(): UserState {

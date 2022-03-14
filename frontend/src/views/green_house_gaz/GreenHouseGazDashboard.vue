@@ -25,8 +25,8 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col class="country-list__actions">
-            <v-btn text @click="download">
+          <v-col class="country-list__actions d-flex justify-end align-center">
+            <!-- <v-btn text @click="download">
               <v-icon>mdi-download</v-icon>
               download
             </v-btn>
@@ -51,7 +51,7 @@
             >
               <v-icon>mdi-script-text-outline</v-icon>
               references
-            </v-btn>
+            </v-btn> -->
             <v-btn text @click="addSite">
               <v-icon>mdi-plus-thick</v-icon>
               add new location

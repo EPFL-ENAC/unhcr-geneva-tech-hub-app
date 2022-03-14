@@ -2,22 +2,12 @@
   <v-app>
     <v-app-bar app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-app-bar-title class="d-flex justify-center pr-10">
-        <router-link :to="{ name: 'Apps' }" class="text-decoration-none">{{
-          title
-        }}</router-link>
-      </v-app-bar-title>
+      <v-tabs>
+        <v-tab v-if="rootRoute" :to="{ name: rootRoute.name }">{{
+          rootRouteTitle
+        }}</v-tab>
+      </v-tabs>
       <v-spacer />
-      <!-- <v-tabs>
-        <v-tab
-          v-for="([title, linkk], i) in apps"
-          :key="i"
-          :to="{ name: linkk }"
-          >{{ title }}</v-tab
-        >
-      </v-tabs> -->
-      <v-spacer />
-      <!-- <v-avatar> {{ user.name }}</v-avatar> -->
       <v-btn icon @click="$store.dispatch('ConfigModule/toggleTheme')">
         <v-icon v-text="'mdi-invert-colors'" />
       </v-btn>
@@ -35,7 +25,7 @@
       v-model="drawer"
       app
       :mini-variant.sync="mini"
-      permanent
+      expand-on-hover
     >
       <v-list>
         <v-list-item class="px-2" :to="{ name: 'Apps' }" v-if="user.name">
@@ -45,35 +35,29 @@
 
           <v-list-item-title>{{ user.name }}</v-list-item-title>
 
-          <v-btn icon @click.stop="mini = !mini">
+          <v-btn icon @click.stop="toggleMini">
             <v-icon>mdi-chevron-left</v-icon>
           </v-btn>
         </v-list-item>
-        <v-list-group
-          :value="true"
-          prepend-icon="mdi-briefcase"
-          @click.stop="mini = true"
+        <v-list-item link :to="{ name: 'Apps' }">
+          <v-list-item-icon>
+            <v-icon>mdi-briefcase</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Apps</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item
+          v-for="([title, name, icon], i) in apps"
+          :key="i"
+          link
+          :to="{ name }"
         >
-          <template v-slot:activator>
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ title }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </template>
-
-          <v-list-item
-            v-for="([title, name, icon], i) in apps"
-            :key="i"
-            link
-            :to="{ name }"
-          >
-            <v-list-item-icon @click.stop="mini = true">
-              <v-icon v-text="icon"></v-icon>
-            </v-list-item-icon>
-            <v-list-item-title v-text="title"></v-list-item-title>
-          </v-list-item>
-        </v-list-group>
+          <v-list-item-icon @click.stop="mini = true">
+            <v-icon v-text="icon"></v-icon>
+          </v-list-item-icon>
+          <v-list-item-title v-text="title"></v-list-item-title>
+        </v-list-item>
 
         <v-list-item link :to="{ name: 'About' }">
           <v-list-item-icon>
@@ -156,6 +140,7 @@ import { CouchUser } from "@/store/UserModule";
 import md5 from "@/utils/md5";
 import { AxiosError, AxiosPromise } from "axios";
 import { Component, Vue, Watch } from "vue-property-decorator";
+import { Route, RouteRecordPublic } from "vue-router";
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
@@ -181,15 +166,20 @@ export default class App extends Vue {
   md5Function: (v: string) => string = md5;
   title = "UNHCR-TSS"; // use env variable,
   /** Drawer menu visibility */
-  drawer = true;
-  mini = true;
+  drawer = false;
+  mini = null;
   /** Snackbar visibility */
   snackbar = false;
+  // TODO: use meta.title for apps name
   apps = [
     ["Green House Gaz", "GreenHouseGaz", "mdi-account-multiple-outline"],
     ["Shelter Sustainability", "ShelterSustainability", "mdi-cog-outline"],
     ["Energy", "Energy", "mdi-flash"],
   ];
+
+  rootRoute = {} as RouteRecordPublic;
+  currentRouteName = "";
+  rootRouteTitle = "";
 
   get snackbarText(): string {
     return this.$store.getters.message;
@@ -230,8 +220,11 @@ export default class App extends Vue {
   onSnackbarTextChanged(): void {
     this.snackbar = true;
   }
-  @Watch("$route")
-  onRouteChanged(): void {
+  @Watch("$route", { immediate: true, deep: true })
+  onRouteChanged(newRoute: Route): void {
+    this.rootRoute = newRoute.matched[0];
+    this.rootRouteTitle = this.rootRoute?.meta?.title ?? "Unknown title";
+    this.currentRouteName = newRoute.name ?? "Unknown Route name";
     /** When route change, hide snackbar */
     this.snackbar = false;
   }
@@ -249,7 +242,7 @@ export default class App extends Vue {
   }
 
   login(): void {
-    if (this.$router.currentRoute.name !== "Login") {
+    if (this.currentRouteName !== "Login") {
       this.$router.push({ name: "Login" });
     }
   }
@@ -257,7 +250,7 @@ export default class App extends Vue {
   logout(): void {
     this.logoutStore()
       .then(() => {
-        if (this.$router.currentRoute.name !== "Login") {
+        if (this.currentRouteName !== "Login") {
           this.$router.push({ name: "Login" });
         }
       })
@@ -273,11 +266,14 @@ export default class App extends Vue {
       });
   }
 
+  toggleMini(): void {
+    this.mini = !this.mini;
+  }
+
   /** Run once. */
   mounted(): void {
     this.$vuetify.theme.dark = this.$store.getters["ConfigModule/themeDark"];
     document.title = this.title;
-
     /// retrieve user
     this.getSessionStore();
   }
