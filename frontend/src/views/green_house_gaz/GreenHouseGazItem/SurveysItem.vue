@@ -6,7 +6,7 @@
         <v-col :cols="10">
           <h2>
             {{ currentProjectEmoji }} {{ project.name }},
-            {{ currentSurvey.created_at | date}}
+            {{ currentSurvey.created_at | date }}
           </h2>
         </v-col>
         <v-col :cols="2">
@@ -72,13 +72,13 @@ const REFERENCE_DOC_ID = "reference";
     ]),
   },
   filters: {
-  date: function (value: string) {
-    if (!value) return ''
-    value = value.toString()
-    const locale = navigator?.languages?.[0] ?? navigator.language;
-    return new Intl.DateTimeFormat(locale).format(new Date(value));
-  }
-}
+    date: function (value: string) {
+      if (!value) return "";
+      value = value.toString();
+      const locale = navigator?.languages?.[0] ?? navigator.language;
+      return new Intl.DateTimeFormat(locale).format(new Date(value));
+    },
+  },
 })
 /** ProjectList */
 export default class SurveyList extends Vue {

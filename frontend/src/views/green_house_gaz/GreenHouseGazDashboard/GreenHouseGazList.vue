@@ -52,23 +52,28 @@
                 </td>
                 <td width="104px">
                   <!-- actions -->
-                  <v-btn icon
-                  :to="{
+                  <v-btn
+                    icon
+                    :to="{
                       name: 'GreenHouseGazCompareSurveys',
                       params: {
                         country: encodeURIComponent(country.key),
                         site: encodeURIComponent(location.name),
                       },
-                    }">
+                    }"
+                  >
                     <v-icon>mdi-chart-areaspline</v-icon>
                   </v-btn>
-                  <v-btn icon :to="{
+                  <v-btn
+                    icon
+                    :to="{
                       name: 'GreenHouseGazItem',
                       params: {
                         country: encodeURIComponent(country.key),
                         site: encodeURIComponent(location.name),
                       },
-                    }">
+                    }"
+                  >
                     <v-icon>mdi-cog-outline</v-icon>
                   </v-btn>
                 </td>

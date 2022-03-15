@@ -1,16 +1,15 @@
 import {
+  getSession as getSessionTool,
+  login as loginTool,
+  logout as logoutTool,
+} from "@/utils/couchdb";
+import {
   ActionContext,
   ActionTree,
   GetterTree,
   Module,
   MutationTree,
 } from "vuex";
-import {
-  getSession as getSessionTool,
-  login as loginTool,
-  logout as logoutTool,
-} from "@/utils/couchdb";
-
 import { RootState } from ".";
 
 /** Config store */
@@ -39,7 +38,7 @@ export interface UserCouchCredentials {
 
 function generateEmptyUser(): CouchUser {
   // return { name: "", roles: [] };
-  return {loaded: false} as CouchUser;
+  return { loaded: false } as CouchUser;
 }
 /** Default Configure state value */
 function generateState(): UserState {
@@ -103,13 +102,15 @@ const actions: ActionTree<UserState, RootState> = {
   },
   getSession: (context: ActionContext<UserState, RootState>) => {
     context.commit("SET_USER_LOADING");
-    getSessionTool().then((response) => {
-      const user = response.data;
-      console.log(user.userCtx);
-      context.commit("SET_USER", user.userCtx);
-    }).finally(() => {
-      context.commit("UNSET_USER_LOADING");
-    });
+    getSessionTool()
+      .then((response) => {
+        const user = response.data;
+        console.log(user.userCtx);
+        context.commit("SET_USER", user.userCtx);
+      })
+      .finally(() => {
+        context.commit("UNSET_USER_LOADING");
+      });
   },
 };
 

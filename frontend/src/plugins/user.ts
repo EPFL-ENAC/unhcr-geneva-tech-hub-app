@@ -1,6 +1,6 @@
 import { CouchUser } from "@/store/UserModule";
-import { Store } from "vuex";
 import { VueConstructor } from "vue";
+import { Store } from "vuex";
 
 declare module "vue/types/vue" {
   // 3. Declare augmentation for Vue
@@ -55,9 +55,9 @@ export default new (class User {
       const user = store.getters["UserModule/user"];
       const rights = {
         isUserAdmin: user.loaded && user.roles.indexOf(USER_ADMIN) >= 0,
-        isDBAdmin: user.loaded &&  user.roles.indexOf(DB_ADMIN) >= 0,
-        isSpecialist: user.loaded &&  user.roles.indexOf(SPECIALIST) >= 0,
-        isUser: user.loaded &&  user.roles.indexOf(USER) >= 0,
+        isDBAdmin: user.loaded && user.roles.indexOf(DB_ADMIN) >= 0,
+        isSpecialist: user.loaded && user.roles.indexOf(SPECIALIST) >= 0,
+        isUser: user.loaded && user.roles.indexOf(USER) >= 0,
         isLoggedIn: user.loaded && user.name.length > 0,
         isLoggedOut: user.loaded && user.name.length == 0,
       } as Record<string, boolean>;

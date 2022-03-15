@@ -1,8 +1,7 @@
+import Vue from "vue";
 import VueRouter, { Route, RouteConfig } from "vue-router";
-
 import Apps from "../views/AppListView.vue";
 import Login from "../views/LoginView.vue";
-import Vue from "vue";
 
 Vue.use(VueRouter);
 
@@ -258,7 +257,11 @@ const routes: Array<RouteConfig> = [
                   {
                     name: "GreenHouseGazStep2",
                     path: "step-2",
-                    meta: { step: 2, title: "WASH transport", hideSiteTabs: true },
+                    meta: {
+                      step: 2,
+                      title: "WASH transport",
+                      hideSiteTabs: true,
+                    },
                     component: () => {
                       return import(
                         /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/SurveysItem/GreenHouseGazSurveyStep2Wash.vue"
@@ -268,7 +271,11 @@ const routes: Array<RouteConfig> = [
                   {
                     name: "GreenHouseGazStep3",
                     path: "step-3",
-                    meta: { step: 3, title: "Shelter, Site and Materials", hideSiteTabs: true },
+                    meta: {
+                      step: 3,
+                      title: "Shelter, Site and Materials",
+                      hideSiteTabs: true,
+                    },
                     component: () => {
                       return import(
                         /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/SurveysItem/GreenHouseGazSurveyStep3ShelterAndsite.vue"
@@ -278,7 +285,11 @@ const routes: Array<RouteConfig> = [
                   {
                     name: "GreenHouseGazStep4",
                     path: "step-4",
-                    meta: { step: 3, title: "Sequestration", hideSiteTabs: true },
+                    meta: {
+                      step: 3,
+                      title: "Sequestration",
+                      hideSiteTabs: true,
+                    },
                     component: () => {
                       return import(
                         /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/SurveysItem/GreenHouseGazSurveyStep4Sequestration.vue"

@@ -41,15 +41,47 @@ export default class ProjectItem extends Vue {
   $route!: Route;
 
   readonly menuItems: MenuItem[] = [
-    { icon: "mdi-information", text: "About", to: "ShelterSustainabilityStep1" },
+    {
+      icon: "mdi-information",
+      text: "About",
+      to: "ShelterSustainabilityStep1",
+    },
     { icon: "mdi-shape", text: "Geometry", to: "ShelterSustainabilityStep2" },
-    { icon: "mdi-clipboard-text-multiple", text: "Bill of Quantities", to: "ShelterSustainabilityStep3" },
-    { icon: "mdi-leaf", text: "Environmental Perf", to: "ShelterSustainabilityStep5" },
-    { icon: "mdi-poll", text: "Technical Perf", to: "ShelterSustainabilityStep6" },
-    { icon: "mdi-home", text: "Habitability", to: "ShelterSustainabilityStep7" },
-    { icon: "mdi-account-cash", text: "Affordability", to: "ShelterSustainabilityStep8" },
-    { icon: "mdi-scoreboard", text: "Scorecard", to: "ShelterSustainabilityStep9" },
-    { icon: "mdi-database-arrow-right", text: "Background", to: "ShelterSustainabilityStep10" },
+    {
+      icon: "mdi-clipboard-text-multiple",
+      text: "Bill of Quantities",
+      to: "ShelterSustainabilityStep3",
+    },
+    {
+      icon: "mdi-leaf",
+      text: "Environmental Perf",
+      to: "ShelterSustainabilityStep5",
+    },
+    {
+      icon: "mdi-poll",
+      text: "Technical Perf",
+      to: "ShelterSustainabilityStep6",
+    },
+    {
+      icon: "mdi-home",
+      text: "Habitability",
+      to: "ShelterSustainabilityStep7",
+    },
+    {
+      icon: "mdi-account-cash",
+      text: "Affordability",
+      to: "ShelterSustainabilityStep8",
+    },
+    {
+      icon: "mdi-scoreboard",
+      text: "Scorecard",
+      to: "ShelterSustainabilityStep9",
+    },
+    {
+      icon: "mdi-database-arrow-right",
+      text: "Background",
+      to: "ShelterSustainabilityStep10",
+    },
   ];
   mounted(): void {
     this.syncDB();

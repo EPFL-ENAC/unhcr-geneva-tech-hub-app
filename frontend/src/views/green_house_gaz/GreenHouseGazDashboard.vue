@@ -94,7 +94,12 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" tabindex="4" text @click="closeSiteDialog">
+            <v-btn
+              color="blue darken-1"
+              tabindex="4"
+              text
+              @click="closeSiteDialog"
+            >
               Cancel
             </v-btn>
             <v-btn color="blue darken-1" tabindex="3" submit text @click="save">

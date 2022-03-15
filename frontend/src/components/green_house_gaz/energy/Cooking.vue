@@ -1,7 +1,5 @@
 <template>
-<div>
-    Cooking
-</div>
+  <div>Cooking</div>
 </template>
 
 <script lang="ts">
@@ -9,8 +7,7 @@ import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
-export default class Cooking extends Vue {
-}
+export default class Cooking extends Vue {}
 </script>
 
 <style></style>
