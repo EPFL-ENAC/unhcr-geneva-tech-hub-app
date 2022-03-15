@@ -124,7 +124,7 @@ const routes: Array<RouteConfig> = [
             ];
           },
         },
-        redirect: { name: "GreenHouseGazItemSurveys" },
+        redirect: { name: "GreenHouseGazItemAbout" },
         children: [
           {
             path: "users",

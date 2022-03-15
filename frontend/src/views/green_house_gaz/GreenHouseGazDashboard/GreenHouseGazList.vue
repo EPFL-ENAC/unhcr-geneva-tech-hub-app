@@ -55,7 +55,7 @@
                   <v-btn
                     icon
                     :to="{
-                      name: 'GreenHouseGazCompareSurveys',
+                      name: 'GreenHouseGazCompareAbout',
                       params: {
                         country: encodeURIComponent(country.key),
                         site: encodeURIComponent(location.name),
@@ -67,11 +67,7 @@
                   <v-btn
                     icon
                     :to="{
-                      name: 'GreenHouseGazItem',
-                      params: {
-                        country: encodeURIComponent(country.key),
-                        site: encodeURIComponent(location.name),
-                      },
+                      name: 'GreenHouseGazReferences',
                     }"
                   >
                     <v-icon>mdi-cog-outline</v-icon>
@@ -105,6 +101,7 @@ import { mapState } from "vuex";
 /** ProjectList */
 export default class ProjectList extends Vue {
   countries!: [];
+  setup = 0;
 
   countriesMap = Countries.reduce((acc, country) => {
     acc[country.code] = { ...country, emoji: flagEmoji(country.code) };
@@ -144,6 +141,18 @@ export default class ProjectList extends Vue {
 
   public selectSurvey(index: number, country_code: string, site: string): void {
     // retrieve id of survey
+    console.log(index, country_code, site);
+    if (this.setup > 0) {
+      this.$router.push({
+        name: "GreenHouseGazItemSurveyId",
+        params: {
+          country: "FR",
+          site: "Lyon",
+          surveyId: encodeURIComponent("dafadf"),
+        },
+      });
+    }
+    this.setup = this.setup + 1;
   }
 }
 

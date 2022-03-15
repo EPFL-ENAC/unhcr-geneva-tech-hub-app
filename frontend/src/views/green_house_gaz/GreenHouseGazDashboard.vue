@@ -28,7 +28,18 @@
         </v-row> -->
         <v-row>
           <v-col class="country-list__actions d-flex justify-end align-center">
-            <v-btn text @click="addSite">
+            <!-- @click="addSite" -->
+            <v-btn
+              text
+              :to="{
+                name: 'GreenHouseGazItemSurveyId',
+                params: {
+                  country: 'FR',
+                  site: 'Lyon',
+                  surveyId: encodeURIComponent('dafadf'),
+                },
+              }"
+            >
               <v-icon>mdi-plus-thick</v-icon>
               New survey
             </v-btn>

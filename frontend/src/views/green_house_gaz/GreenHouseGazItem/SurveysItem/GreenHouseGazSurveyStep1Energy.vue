@@ -7,15 +7,13 @@
             :readonly="!$can('edit', localProject)"
             @submit.prevent="() => submitForm(localProject)"
           >
-            <v-card-title>
+            <v-card-title class="d-flex justify-space-between">
               <v-icon left>{{ item.icon }}</v-icon>
               {{ item.tab }}
+              <v-icon right>mdi-cog</v-icon>
             </v-card-title>
             <v-card-text>
-              <h2>Inputs</h2>
-              <v-divider />
-              <h2>Results</h2>
-              <v-divider />
+              <component :is="item.tab" />
             </v-card-text>
             <v-card-actions>
               <v-footer>
@@ -123,6 +121,10 @@
 </template>
 
 <script lang="ts">
+import Cooking from "@/components/green_house_gaz/energy/Cooking.vue";
+import Facilities from "@/components/green_house_gaz/energy/Facilities.vue";
+import Lighting from "@/components/green_house_gaz/energy/Lighting.vue";
+import Pumping from "@/components/green_house_gaz/energy/Pumping.vue";
 import {
   EnergySurvey,
   GreenHouseGaz,
@@ -141,6 +143,12 @@ import { mapActions, mapGetters } from "vuex";
 
   methods: {
     ...mapActions("GhgItemModule", ["updateDoc"]),
+  },
+  components: {
+    Facilities,
+    Pumping,
+    Lighting,
+    Cooking,
   },
 })
 /** ProjectList */

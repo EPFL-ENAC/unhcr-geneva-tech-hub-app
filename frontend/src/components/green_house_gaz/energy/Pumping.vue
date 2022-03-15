@@ -1,5 +1,10 @@
 <template>
-  <div>Pumping</div>
+  <div>
+    <h2>Inputs</h2>
+    <v-divider />
+    <h2>Results</h2>
+    <v-divider />
+  </div>
 </template>
 
 <script lang="ts">
