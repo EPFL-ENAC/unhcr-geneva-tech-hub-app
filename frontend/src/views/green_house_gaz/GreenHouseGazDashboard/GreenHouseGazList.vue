@@ -55,7 +55,7 @@
                   <v-btn
                     icon
                     :to="{
-                      name: 'GreenHouseGazCompareAbout',
+                      name: 'GreenHouseGazCompareSurveys',
                       params: {
                         country: encodeURIComponent(country.key),
                         site: encodeURIComponent(location.name),
