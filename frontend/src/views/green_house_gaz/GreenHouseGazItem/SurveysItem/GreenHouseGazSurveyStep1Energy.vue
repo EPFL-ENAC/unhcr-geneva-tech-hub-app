@@ -1,5 +1,45 @@
 <template>
   <v-container fluid>
+    <v-row>
+      <v-col v-for="item in menuItems" :key="item.tab">
+        <v-card elevation="2" class="mx-auto" max-width="344">
+          <v-form
+            :readonly="!$can('edit', localProject)"
+            @submit.prevent="() => submitForm(localProject)"
+          >
+            <v-card-title>
+              <v-icon left>{{ item.icon }}</v-icon>
+              {{ item.tab }}
+            </v-card-title>
+            <v-card-text>
+              <h2>Inputs</h2>
+              <v-divider />
+              <h2>Results</h2>
+              <v-divider />
+            </v-card-text>
+            <v-card-actions>
+              <v-footer>
+                <v-row>
+                  <v-col class="d-flex justify-end align-center">
+                    <v-btn
+                      type="submit"
+                      :disabled="!$can('edit', localProject)"
+                    >
+                      Save changes
+                    </v-btn>
+                    <span v-if="!$can('edit', localProject)" class="mx-auto">
+                      readonly mode
+                    </span>
+                  </v-col>
+                </v-row>
+              </v-footer>
+            </v-card-actions>
+          </v-form>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <!--     
     <v-form
       :readonly="!$can('edit', localProject)"
       @submit.prevent="() => submitForm(localProject)"
@@ -65,7 +105,6 @@
       <v-row>
         <v-col>
           <v-footer>
-            <!-- TODO add form with submit.prevent -->
             <v-row>
               <v-col class="d-flex justify-end align-center">
                 <v-btn type="submit" :disabled="!$can('edit', localProject)">
@@ -79,7 +118,7 @@
           </v-footer>
         </v-col>
       </v-row>
-    </v-form>
+    </v-form> -->
   </v-container>
 </template>
 
@@ -107,10 +146,10 @@ import { mapActions, mapGetters } from "vuex";
 /** ProjectList */
 export default class Step1Energy extends Vue {
   readonly menuItems: MenuSurveyItem[] = [
-    { tab: "Facilities", content: "FacilitiesContent" },
-    { tab: "Cooking", content: "cookingContent" },
-    { tab: "Lighting", content: "LightingContent" },
-    { tab: "Pumping", content: "PumpingContent" },
+    { icon: "mdi-shower", tab: "Facilities", content: "FacilitiesContent" },
+    { icon: "mdi-stove", tab: "Cooking", content: "cookingContent" },
+    { icon: "mdi-lightbulb", tab: "Lighting", content: "LightingContent" },
+    { icon: "mdi-water-pump", tab: "Pumping", content: "PumpingContent" },
   ];
   tab = 0;
   reference!: GreenHouseGazReference;
@@ -299,5 +338,6 @@ export default class Step1Energy extends Vue {
 interface MenuSurveyItem {
   tab: string;
   content: string;
+  icon: string;
 }
 </script>

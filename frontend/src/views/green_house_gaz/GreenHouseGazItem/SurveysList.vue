@@ -166,6 +166,7 @@ export default class ProjectItem extends Vue {
       this.localProject.surveys.push(this.editedItem);
     }
     const createdName = this.editedItem.name;
+    // createdName will be country_site_year_month_day
     await this.submitForm(this.localProject);
     await this.close();
     // TODO: should check unicity of name

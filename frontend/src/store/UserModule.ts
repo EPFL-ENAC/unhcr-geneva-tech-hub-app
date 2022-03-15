@@ -24,6 +24,7 @@ enum Roles {
 export interface CouchUser {
   name: string;
   roles: Roles[];
+  loaded: boolean;
 }
 export interface UserState {
   user: CouchUser;
@@ -37,7 +38,7 @@ export interface UserCouchCredentials {
 
 function generateEmptyUser(): CouchUser {
   // return { name: "", roles: [] };
-  return {} as CouchUser;
+  return { loaded: false } as CouchUser;
 }
 /** Default Configure state value */
 function generateState(): UserState {
@@ -57,13 +58,14 @@ const mutations: MutationTree<UserState> = {
   SET_USER(state, value) {
     const name = value.name ?? "";
     const roles = value.roles ?? [];
-    state.user = { name, roles };
+    state.user = { name, roles, loaded: false };
   },
   SET_USER_LOADING(state) {
     state.userLoading = true;
   },
   UNSET_USER_LOADING(state) {
     state.userLoading = false;
+    state.user.loaded = true;
   },
 };
 
@@ -99,11 +101,16 @@ const actions: ActionTree<UserState, RootState> = {
       });
   },
   getSession: (context: ActionContext<UserState, RootState>) => {
-    getSessionTool().then((response) => {
-      const user = response.data;
-      console.log(user.userCtx);
-      context.commit("SET_USER", user.userCtx);
-    });
+    context.commit("SET_USER_LOADING");
+    getSessionTool()
+      .then((response) => {
+        const user = response.data;
+        console.log(user.userCtx);
+        context.commit("SET_USER", user.userCtx);
+      })
+      .finally(() => {
+        context.commit("UNSET_USER_LOADING");
+      });
   },
 };
 

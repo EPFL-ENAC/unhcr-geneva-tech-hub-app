@@ -112,7 +112,7 @@
                           id="location_name"
                           v-model="localShelter.location_name"
                           name="location_name"
-                          label="Location name"
+                          label="Site name"
                           type="text"
                         />
                         <v-text-field

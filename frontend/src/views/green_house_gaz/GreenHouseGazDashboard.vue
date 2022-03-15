@@ -2,7 +2,7 @@
   <main class="green-house-gaz__list" :style="computedGridTemplate">
     <v-sheet class="country-list overflow-y-auto">
       <v-container fluid>
-        <v-row
+        <!-- <v-row
           ><v-col
             :cols="12"
             class="country-list-header d-flex align-center justify-center"
@@ -25,7 +25,7 @@
               </v-btn>
             </span>
           </v-col>
-        </v-row>
+        </v-row> -->
         <v-row>
           <v-col class="country-list__actions d-flex justify-end align-center">
             <v-btn text @click="addSite">
@@ -47,11 +47,6 @@
     </div>
 
     <v-dialog v-model="siteDialog" max-width="500px">
-      <!-- <template v-slot:activator="{ on, attrs }">
-        <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-          New camp site
-        </v-btn>
-      </template> -->
       <v-form @submit.prevent="save" v-model="createProjectFormValid">
         <v-card>
           <v-card-title>
@@ -62,19 +57,8 @@
             <v-container>
               <v-row>
                 <v-col cols="12" sm="6" md="6">
-                  <v-text-field
-                    tabindex="1"
-                    v-model="newCampSite.name"
-                    :rules="rules"
-                    required
-                    name="name"
-                    label="Location"
-                    type="text"
-                  />
-                </v-col>
-                <v-col cols="12" sm="6" md="6">
                   <v-select
-                    tabindex="2"
+                    tabindex="0"
                     v-model="newCampSite.country_code"
                     :items="countriesRef"
                     item-value="code"
@@ -92,16 +76,33 @@
                     </template>
                   </v-select>
                 </v-col>
+
+                <v-col cols="12" sm="6" md="6">
+                  <v-text-field
+                    tabindex="1"
+                    v-model="newCampSite.name"
+                    :rules="rules"
+                    required
+                    name="name"
+                    label="Location"
+                    type="text"
+                  />
+                </v-col>
               </v-row>
             </v-container>
           </v-card-text>
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="closeSiteDialog">
+            <v-btn
+              color="blue darken-1"
+              tabindex="4"
+              text
+              @click="closeSiteDialog"
+            >
               Cancel
             </v-btn>
-            <v-btn color="blue darken-1" submit text @click="save">
+            <v-btn color="blue darken-1" tabindex="3" submit text @click="save">
               Save
             </v-btn>
           </v-card-actions>
@@ -138,7 +139,7 @@ export default class ProjectList extends Vue {
   addDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;
 
   siteDialog = false;
-  expandMap = false;
+  expandMap = true;
   closeDB!: () => Promise<null>;
 
   getCountries!: () => Promise<null>;
@@ -216,6 +217,10 @@ export default class ProjectList extends Vue {
   ];
 
   public save(): void {
+    // directly create a new survey inside a new Camp site
+    // not logical
+    // todo: fix me
+    // (new Date()).toISOString().split("T")[0]
     console.log("this is the new CampSite", this.newCampSite);
     if (this.newCampSite.name !== "") {
       this.addDoc(this.newCampSite).then(this.closeSiteDialog);

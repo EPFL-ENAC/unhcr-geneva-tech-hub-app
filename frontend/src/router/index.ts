@@ -13,6 +13,9 @@ const routes: Array<RouteConfig> = [
   {
     path: "/login",
     name: "Login",
+    meta: {
+      title: "Login",
+    },
     components: {
       Login,
     },
@@ -28,6 +31,9 @@ const routes: Array<RouteConfig> = [
   {
     path: "/about",
     name: "About",
+    meta: {
+      title: "About",
+    },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -251,7 +257,11 @@ const routes: Array<RouteConfig> = [
                   {
                     name: "GreenHouseGazStep2",
                     path: "step-2",
-                    meta: { step: 2, title: "WASH", hideSiteTabs: true },
+                    meta: {
+                      step: 2,
+                      title: "WASH transport",
+                      hideSiteTabs: true,
+                    },
                     component: () => {
                       return import(
                         /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/SurveysItem/GreenHouseGazSurveyStep2Wash.vue"
@@ -261,10 +271,28 @@ const routes: Array<RouteConfig> = [
                   {
                     name: "GreenHouseGazStep3",
                     path: "step-3",
-                    meta: { step: 3, title: "Trees", hideSiteTabs: true },
+                    meta: {
+                      step: 3,
+                      title: "Shelter, Site and Materials",
+                      hideSiteTabs: true,
+                    },
                     component: () => {
                       return import(
-                        /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/SurveysItem/GreenHouseGazSurveyStep3Offset.vue"
+                        /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/SurveysItem/GreenHouseGazSurveyStep3ShelterAndsite.vue"
+                      );
+                    },
+                  },
+                  {
+                    name: "GreenHouseGazStep4",
+                    path: "step-4",
+                    meta: {
+                      step: 3,
+                      title: "Sequestration",
+                      hideSiteTabs: true,
+                    },
+                    component: () => {
+                      return import(
+                        /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/SurveysItem/GreenHouseGazSurveyStep4Sequestration.vue"
                       );
                     },
                   },
@@ -294,15 +322,15 @@ const routes: Array<RouteConfig> = [
                 /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/About.vue"
               ),
           },
-          // {
-          //   name: "GreenHouseGazCompareSurveys",
-          //   path: "compare-surveys/:surveyId",
-          //   component: () => {
-          //     return import(
-          //       /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/GreenHouseGazCompareSurveys.vue"
-          //     );
-          //   },
-          // },
+          {
+            name: "GreenHouseGazCompareSurveys",
+            path: "compare-surveys",
+            component: () => {
+              return import(
+                /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/Compare.vue"
+              );
+            },
+          },
         ],
       },
     ],

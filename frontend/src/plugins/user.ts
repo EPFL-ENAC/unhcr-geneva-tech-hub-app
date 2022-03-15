@@ -54,12 +54,12 @@ export default new (class User {
       // v-if="$user('isLoggedIn')"
       const user = store.getters["UserModule/user"];
       const rights = {
-        isUserAdmin: user.roles.indexOf(USER_ADMIN) >= 0,
-        isDBAdmin: user.roles.indexOf(DB_ADMIN) >= 0,
-        isSpecialist: user.roles.indexOf(SPECIALIST) >= 0,
-        isUser: user.roles.indexOf(USER) >= 0,
-        isLoggedIn: user.name.length > 0,
-        isLoggedOut: user.name.length == 0,
+        isUserAdmin: user.loaded && user.roles.indexOf(USER_ADMIN) >= 0,
+        isDBAdmin: user.loaded && user.roles.indexOf(DB_ADMIN) >= 0,
+        isSpecialist: user.loaded && user.roles.indexOf(SPECIALIST) >= 0,
+        isUser: user.loaded && user.roles.indexOf(USER) >= 0,
+        isLoggedIn: user.loaded && user.name.length > 0,
+        isLoggedOut: user.loaded && user.name.length == 0,
       } as Record<string, boolean>;
       return rights[isStatus];
     };

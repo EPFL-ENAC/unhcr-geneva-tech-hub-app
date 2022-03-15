@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="project">
-    <v-breadcrumbs :items="breadCrumbs">
+    <!-- <v-breadcrumbs :items="breadCrumbs">
       <template v-slot:item="{ item }">
         <v-breadcrumbs-item
           :to="item.to"
@@ -11,7 +11,7 @@
           {{ item.text }}
         </v-breadcrumbs-item>
       </template>
-    </v-breadcrumbs>
+    </v-breadcrumbs> -->
     <v-tabs
       v-if="!$route.meta.hideSiteTabs"
       class="fixed-tabs-bar"
