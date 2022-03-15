@@ -95,6 +95,7 @@ export default class Step7 extends Vue {
             _id: "input1",
             label: "Floor area is >=3.5m2 (in hot climate - Sphere Standard)",
             score: 1,
+            image: "/shelter/habitability/floor_area.png",
             description:
               "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eget imperdiet ipsum, eget porta ex. Nam mi nibh, aliquet ultrices justo nec, pharetra blandit odio. Morbi vehicula pretium tortor sit amet pellentesque. Morbi lobortis vulputate interdum. Duis ante elit, imperdiet mattis congue sed, auctor ac dolor. Phasellus vitae faucibus tellus. Ut blandit, ligula quis eleifend tristique, velit ipsum auctor justo, at porttitor nunc tortor sit amet justo. Sed fermentum metus eget laoreet vestibulum. Vestibulum sed tellus vitae turpis egestas elementum. ",
           },

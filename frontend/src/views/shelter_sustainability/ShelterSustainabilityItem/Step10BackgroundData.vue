@@ -73,15 +73,16 @@ export default class BackgroundData extends Vue {
         sortable: false,
         value: "name",
       },
-      {
-        text: "variable name",
-        align: "start",
-        sortable: false,
-        value: "variable",
-      },
+
       { text: "density", value: "density" },
       { text: "embodied_carbon", value: "production_embodied_carbon" },
       { text: "water_consumption", value: "production_water_consumption" },
+      {
+        text: "source name",
+        align: "start",
+        sortable: false,
+        value: "source",
+      },
     ];
   }
 

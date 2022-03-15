@@ -1,38 +1,45 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col v-for="item in menuItems" :key="item.tab">
-        <v-card elevation="2" class="mx-auto" max-width="344">
-          <v-form
-            :readonly="!$can('edit', localProject)"
-            @submit.prevent="() => submitForm(localProject)"
-          >
-            <v-card-title class="d-flex justify-space-between">
-              <v-icon left>{{ item.icon }}</v-icon>
-              {{ item.tab }}
-              <v-icon right>mdi-cog</v-icon>
-            </v-card-title>
-            <v-card-text>
-              <component :is="item.tab" />
-            </v-card-text>
-            <v-card-actions>
-              <v-footer>
-                <v-row>
-                  <v-col class="d-flex justify-end align-center">
-                    <v-btn
-                      type="submit"
-                      :disabled="!$can('edit', localProject)"
-                    >
-                      Save changes
-                    </v-btn>
-                    <span v-if="!$can('edit', localProject)" class="mx-auto">
-                      readonly mode
-                    </span>
-                  </v-col>
-                </v-row>
-              </v-footer>
-            </v-card-actions>
-          </v-form>
+      <v-col :cols="12">
+        <v-card elevation="3" style="width: 100%" class="d-flex">
+          <v-col v-for="item in menuItems" :key="item.tab">
+            <v-card elevation="2" class="mx-auto" max-width="344">
+              <v-form
+                :readonly="!$can('edit', localProject)"
+                @submit.prevent="() => submitForm(localProject)"
+              >
+                <v-card-title class="d-flex justify-space-between">
+                  <v-icon left>{{ item.icon }}</v-icon>
+                  {{ item.tab }}
+                  <v-icon right>mdi-cog</v-icon>
+                </v-card-title>
+                <v-card-text>
+                  <component :is="item.tab" />
+                </v-card-text>
+                <v-card-actions>
+                  <v-footer>
+                    <v-row>
+                      <v-col class="d-flex justify-end align-center">
+                        <v-btn
+                          type="submit"
+                          :disabled="!$can('edit', localProject)"
+                        >
+                          Save changes
+                        </v-btn>
+                        <span
+                          v-if="!$can('edit', localProject)"
+                          class="mx-auto"
+                        >
+                          readonly mode
+                        </span>
+                      </v-col>
+                    </v-row>
+                  </v-footer>
+                </v-card-actions>
+              </v-form>
+            </v-card>
+          </v-col>
         </v-card>
       </v-col>
     </v-row>

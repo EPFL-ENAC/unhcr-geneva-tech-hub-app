@@ -68,7 +68,7 @@
                             <v-col cols="12" sm="6" md="6">
                               <v-select
                                 :items="['Skilled', 'Unskilled']"
-                                label="Worker type"
+                                label="Work type"
                                 v-model="editedItem.workerType"
                                 name="type"
                                 type="string"
@@ -76,17 +76,28 @@
                               />
                             </v-col>
                             <v-col cols="12" sm="6" md="6">
+                              <v-select
+                                :items="['Hour', 'Day', 'Lump sum']"
+                                label="Unit"
+                                v-model="editedItem.unit"
+                                name="type"
+                                type="string"
+                                required
+                              />
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                              <!-- If Lump Sum qunatity is disabled for the suer and defualt is 1 -->
                               <v-text-field
-                                v-model="editedItem.pricePerPerson"
+                                v-model.number="editedItem.quantity"
                                 type="number"
-                                label="Price per person"
+                                label="Quantity"
                               ></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6" md="6">
                               <v-text-field
-                                v-model.number="editedItem.workDays"
+                                v-model="editedItem.unitCost"
                                 type="number"
-                                label="Work days"
+                                label="Unit cost"
                               ></v-text-field>
                             </v-col>
                           </v-row>
@@ -131,6 +142,11 @@
                                 required
                               />
                             </v-col>
+                            <!-- three fields:
+                              Units (kg/piece)
+                              Quantity (number)
+                              Unit Cost (number in dollar)
+                              -->
                             <v-col cols="12" sm="6" md="4">
                               <v-text-field
                                 v-model="editedItem.unit"
@@ -151,6 +167,7 @@
                                 type="number"
                               ></v-text-field>
                             </v-col>
+                            <!-- Spec will be below with rebar length width diameter etc  -->
                           </v-row>
                         </v-container>
                       </v-card-text>

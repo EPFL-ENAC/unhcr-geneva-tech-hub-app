@@ -29,10 +29,7 @@
         <v-row>
           <v-col class="country-list__actions d-flex justify-end align-center">
             <!--  -->
-            <v-btn
-              text
-              @click="addSite"
-            >
+            <v-btn text @click="addSite">
               <v-icon>mdi-plus-thick</v-icon>
               New Site
             </v-btn>

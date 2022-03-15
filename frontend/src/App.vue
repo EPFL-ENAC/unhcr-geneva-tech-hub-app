@@ -87,11 +87,11 @@
     </v-navigation-drawer>
 
     <v-main v-if="$user('isLoggedOut')">
-      <v-row v-if="$router.currentRoute.name !== 'Login'">
+      <!-- <v-row v-if="$router.currentRoute.name !== 'Login'">
         <v-col :cols="12">
           <v-alert type="warning"> You are not logged in </v-alert>
         </v-col>
-      </v-row>
+      </v-row> -->
       <v-container
         class="login"
         fluid
