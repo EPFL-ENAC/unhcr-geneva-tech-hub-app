@@ -81,6 +81,9 @@ const actions: ActionTree<GhgState, RootState> = {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
   },
+  hasDB: async (context: ActionContext<GhgState, RootState>) => {
+    return context.state.localCouch?.db;
+  },
 };
 
 /** VuexStore */

@@ -7,6 +7,8 @@ declare module "vue/types/vue" {
   interface Vue {
     $can: (actionName: string, obj: ObjWithUsersField) => boolean;
     $user: (isStatus: string) => boolean;
+    $userName: () => string;
+    $userRoles: () => string[];
   }
 }
 
@@ -28,30 +30,29 @@ export default new (class User {
       // v-if="$can('edit', project)"
       // this function may return false or true
       const user = store.getters["UserModule/user"];
+      if (user.loaded) {
+        //   const isUserAdmin = user.roles.indexOf(USER_ADMIN) >= 0;
+        const isDBAdmin = user.roles.indexOf(DB_ADMIN) >= 0;
+        //   const isSpecialist = user.roles.indexOf(SPECIALIST) >= 0;
+        //   const isUser = user.roles.indexOf(USER) >= 0;
+        if (!obj || !obj.users) {
+          return false;
+        }
+        const isAuthor = obj.users.indexOf(user.name) >= 0 ?? false;
+        //   const isLoggedIn = user.name.length > 0;
 
-      //   const isUserAdmin = user.roles.indexOf(USER_ADMIN) >= 0;
-      const isDBAdmin = user.roles.indexOf(DB_ADMIN) >= 0;
-      //   const isSpecialist = user.roles.indexOf(SPECIALIST) >= 0;
-      //   const isUser = user.roles.indexOf(USER) >= 0;
-      if (!obj || !obj.users) {
-        return false;
-      }
-      const isAuthor = obj.users.indexOf(user.name) >= 0 ?? false;
-      //   const isLoggedIn = user.name.length > 0;
-
-      if (actionName === "edit") {
-        return isAuthor;
-      }
-      if (actionName === "delete") {
-        return isDBAdmin;
+        if (actionName === "edit") {
+          return isAuthor;
+        }
+        if (actionName === "delete") {
+          return isDBAdmin;
+        }
       }
 
       return false;
     };
 
     Vue.prototype.$user = (isStatus: string): boolean => {
-      // use like so:
-      // v-if="$user('isLoggedIn')"
       const user = store.getters["UserModule/user"];
       const rights = {
         isUserAdmin: user.loaded && user.roles.indexOf(USER_ADMIN) >= 0,
@@ -62,6 +63,20 @@ export default new (class User {
         isLoggedOut: user.loaded && user.name.length == 0,
       } as Record<string, boolean>;
       return rights[isStatus];
+    };
+
+    Vue.prototype.$userName = (): string => {
+      // use like so:
+      // v-if="$user('isLoggedIn')"
+      const user = store.getters["UserModule/user"];
+      return user.name;
+    };
+
+    Vue.prototype.$userRoles = (): string[] => {
+      // use like so:
+      // v-if="$user('isLoggedIn')"
+      const user = store.getters["UserModule/user"];
+      return user.roles;
     };
   }
 })();

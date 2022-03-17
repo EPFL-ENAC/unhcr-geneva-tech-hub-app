@@ -42,12 +42,7 @@ import { mapActions, mapGetters } from "vuex";
     ...mapGetters("GhgItemModule", ["project"]),
   },
   methods: {
-    ...mapActions("GhgItemModule", [
-      "getDoc",
-      "updateDoc",
-      "syncDB",
-      "closeDB",
-    ]),
+    ...mapActions("GhgItemModule", ["getDoc", "syncDB", "closeDB"]),
   },
 })
 /** ProjectItem */
@@ -65,13 +60,13 @@ export default class ProjectItem extends Vue {
       return [
         { text: "About", to: "GreenHouseGazItemAbout" },
         { text: "Users", to: "GreenHouseGazItemUsers" },
-        { text: "Surveys", to: "GreenHouseGazItemSurveys" },
+        // { text: "Surveys", to: "GreenHouseGazItemSurveys" },
         { text: "Configuration", to: "GreenHouseGazItemConfiguration" },
       ];
     }
     return [
       { text: "About", to: "GreenHouseGazItemAbout" },
-      { text: "Surveys", to: "GreenHouseGazItemSurveys" },
+      // { text: "Surveys", to: "GreenHouseGazItemSurveys" },
     ];
   }
 

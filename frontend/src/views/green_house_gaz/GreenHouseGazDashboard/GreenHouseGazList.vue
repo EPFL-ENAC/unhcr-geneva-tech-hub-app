@@ -15,22 +15,41 @@
         </div>
       </v-expansion-panel-header>
       <v-expansion-panel-content>
-        <v-simple-table>
-          <template v-slot:default>
-            <!-- <thead>
-              <tr>
-                <th class="text-left">Location</th>
-                <th class="text-left">Created by</th>
-                <th class="text-left">Edit mode</th>
-              </tr>
-            </thead> -->
+        <v-data-table
+          v-if="country.value"
+          :headers="tableHeaders"
+          :items="country.value"
+          :single-expand="singleExpand"
+          :expanded.sync="expanded[`${country.key}${keyIndex}`]"
+          item-key="name"
+          show-expand
+          hide-default-footer
+          hide-default-header
+        >
+          <template v-slot:expanded-item="{ headers, item }">
+            <td :colspan="headers.length">
+              <survey-list :site="item.name" :country-code="country.key" />
+            </td>
+          </template>
+          <template v-slot:item.data-table-compare="props">
+            <v-btn
+              icon
+              :to="{
+                name: 'GreenHouseGazCompareSurveys',
+                params: {
+                  country: encodeURIComponent(country.key),
+                  site: encodeURIComponent(props.item.name),
+                },
+              }"
+            >
+              <v-icon>mdi-chart-areaspline</v-icon>
+            </v-btn>
+          </template>
+          <!-- <template v-slot:default>
             <tbody>
               <tr v-for="location in country.value" :key="location.name">
                 <td width="100px">
-                  {{ location.name }}
-                </td>
-                <td>
-                  <!-- <router-link
+                  <router-link
                     :to="{
                       name: 'GreenHouseGazItem',
                       params: {
@@ -38,75 +57,58 @@
                         site: encodeURIComponent(location.name),
                       },
                     }"
-                  >
-                    {{ location.name }}
-                  </router-link> -->
-                  <v-slider
-                    @input="(i) => selectSurvey(i, country.key, location.name)"
-                    :tick-labels="['Survey 1', 'Survey 2', 'Survey 3']"
-                    :max="3"
-                    step="1"
-                    ticks="always"
-                    tick-size="4"
-                  ></v-slider>
+                  >{{ location.name }}
+                  </router-link>
                 </td>
-                <td width="104px">
-                  <!-- actions -->
-                  <v-btn
-                    icon
-                    :to="{
-                      name: 'GreenHouseGazCompareSurveys',
-                      params: {
-                        country: encodeURIComponent(country.key),
-                        site: encodeURIComponent(location.name),
-                      },
-                    }"
-                  >
-                    <v-icon>mdi-chart-areaspline</v-icon>
-                  </v-btn>
-                  <v-btn
-                    icon
-                    :to="{
-                      name: 'GreenHouseGazReferences',
-                    }"
-                  >
-                    <v-icon>mdi-cog-outline</v-icon>
-                  </v-btn>
-                </td>
-                <!-- <td>{{ location.created_by }}</td>
+                <td>{{ location.created_by }}</td>
                 <td>
                   <span v-if="$can('edit', location)">editable</span>
                   <span v-else>readonly </span>
-                </td> -->
+                </td>
               </tr>
+ Do something smart with direct access to survey... maybe request dynamically!! 
             </tbody>
-          </template>
-        </v-simple-table>
+          </template> -->
+        </v-data-table>
       </v-expansion-panel-content>
     </v-expansion-panel>
   </v-expansion-panels>
 </template>
 
 <script lang="ts">
+import SurveyList from "@/components/green_house_gaz/SurveysList.vue";
+import { CountriesInfoMap, Country } from "@/store/GhgInterface";
 import Countries from "@/utils/countriesAsList";
 import flagEmoji from "@/utils/flagEmoji";
 import { Component, Vue } from "vue-property-decorator";
-import { mapState } from "vuex";
+import { DataTableHeader } from "vuetify";
+import { mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapState("GhgListModule", ["countries"]),
+    ...mapGetters("GhgListModule", ["countries"]),
+  },
+  components: {
+    SurveyList,
   },
 })
 /** ProjectList */
 export default class ProjectList extends Vue {
   countries!: [];
   setup = 0;
+  singleExpand = true;
+  expanded = {};
+
+  readonly tableHeaders: DataTableHeader[] = [
+    { text: "Site", value: "name" },
+    { text: "Compare surveys", value: "data-table-compare" },
+    { text: "", value: "data-table-expand", align: "end", sortable: false },
+  ];
 
   countriesMap = Countries.reduce((acc, country) => {
     acc[country.code] = { ...country, emoji: flagEmoji(country.code) };
     return acc;
-  }, {} as CountriesMap);
+  }, {} as CountriesInfoMap);
 
   private setCountry(country: Country): void {
     let hash = "";
@@ -138,24 +140,15 @@ export default class ProjectList extends Vue {
       this.unsetCountry();
     }
   }
-
-  public selectSurvey(index: number, country_code: string, site: string): void {
-    // retrieve id of survey
-    console.log(index, country_code, site);
-    if (this.setup > 0) {
-      this.$router.push({
-        name: "GreenHouseGazItemSurveyId",
-        params: {
-          country: "FR",
-          site: "Lyon",
-          surveyId: encodeURIComponent("dafadf"),
-        },
-      });
-    }
-    this.setup = this.setup + 1;
-  }
 }
-
-type CountriesMap = Record<string, Country>;
-type Country = Record<string, string>;
 </script>
+
+<style scoped lang="scss">
+.v-data-table
+  ::v-deep
+  .v-data-table__wrapper
+  tbody
+  tr.v-data-table__expanded__content {
+  box-shadow: none;
+}
+</style>

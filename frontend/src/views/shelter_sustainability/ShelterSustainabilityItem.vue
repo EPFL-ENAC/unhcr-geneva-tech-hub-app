@@ -77,11 +77,11 @@ export default class ProjectItem extends Vue {
       text: "Scorecard",
       to: "ShelterSustainabilityStep9",
     },
-    {
-      icon: "mdi-database-arrow-right",
-      text: "Background",
-      to: "ShelterSustainabilityStep10",
-    },
+    // {
+    //   icon: "mdi-database-arrow-right",
+    //   text: "Background",
+    //   to: "ShelterSustainabilityStep10",
+    // },
   ];
   mounted(): void {
     this.syncDB();

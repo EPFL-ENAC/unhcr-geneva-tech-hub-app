@@ -5,8 +5,9 @@
       <v-row>
         <v-col :cols="10">
           <h2>
-            {{ currentProjectEmoji }} {{ project.name }},
-            {{ currentSurvey.created_at | date }}
+            {{ currentProjectEmoji }} {{ currentProjectCountryName }},
+            {{ project.name }},
+            {{ currentSurvey.name }}
           </h2>
         </v-col>
         <v-col :cols="2">
@@ -53,6 +54,7 @@
 <script lang="ts">
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import getFlagEmoji from "@/utils/flagEmoji";
+import getCountryName from "@/utils/getCountryName";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
@@ -64,10 +66,10 @@ const REFERENCE_DOC_ID = "reference";
     ...mapGetters("GhgReferenceModule", ["reference"]),
   },
   methods: {
-    ...mapActions("GhgReferenceModule", [
-      "syncDB",
+    ...mapActions("GhgItemModule", [
       "getDoc",
       "updateDoc",
+      "syncDB",
       "closeDB",
     ]),
   },
@@ -75,8 +77,9 @@ const REFERENCE_DOC_ID = "reference";
     date: function (value: string) {
       if (!value) return "";
       value = value.toString();
-      const locale = navigator?.languages?.[0] ?? navigator.language;
-      return new Intl.DateTimeFormat(locale).format(new Date(value));
+      return value.substring(0, 4);
+      // const locale = navigator?.languages?.[0] ?? navigator.language;
+      // return new Intl.DateTimeFormat(locale).format(new Date(value));
     },
   },
 })
@@ -100,6 +103,10 @@ export default class SurveyList extends Vue {
 
   public get currentProjectEmoji(): string {
     return getFlagEmoji(this.project.country_code);
+  }
+
+  public get currentProjectCountryName(): string {
+    return getCountryName(this.project.country_code);
   }
 
   public get currentSurvey(): Survey | undefined {

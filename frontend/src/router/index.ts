@@ -154,7 +154,7 @@ const routes: Array<RouteConfig> = [
                 },
                 component: () =>
                   import(
-                    /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/SurveysList.vue"
+                    /* webpackChunkName: "green_house_gaz" */ "../components/green_house_gaz/SurveysList.vue"
                   ),
               },
               {
