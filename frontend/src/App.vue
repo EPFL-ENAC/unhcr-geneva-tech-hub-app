@@ -8,9 +8,12 @@
         }}</v-tab>
       </v-tabs>
       <v-spacer />
-      <v-btn icon @click="$store.dispatch('ConfigModule/toggleTheme')">
-        <v-icon v-text="'mdi-invert-colors'" />
+      <v-btn icon @click.stop="toggleReferenceData">
+        <v-icon v-text="'mdi-database-arrow-right'"></v-icon>
       </v-btn>
+      <!-- <v-btn icon @click="$store.dispatch('ConfigModule/toggleTheme')">
+        <v-icon v-text="'mdi-invert-colors'" />
+      </v-btn> -->
       <v-progress-linear
         :active="loading"
         :indeterminate="progress === null"
@@ -108,6 +111,7 @@
     </v-main>
 
     <v-main v-else class="d-flex">
+      <reference-data />
       <v-fade-transition mode="out-in">
         <router-view />
         <router-view name="Login" />
@@ -136,6 +140,7 @@
 
 <script lang="ts">
 import LoginComponent from "@/components/LoginComponent.vue";
+import ReferenceData from "@/components/ReferenceData.vue";
 import { CouchUser } from "@/store/UserModule";
 import md5 from "@/utils/md5";
 import { AxiosError, AxiosPromise } from "axios";
@@ -146,19 +151,24 @@ import { mapActions, mapGetters } from "vuex";
 @Component({
   computed: {
     ...mapGetters("UserModule", ["user"]),
+    ...mapGetters(["referenceDataDrawer"]),
   },
   methods: {
     ...mapActions("UserModule", {
       logoutStore: "logout",
       getSessionStore: "getSession",
     }),
+    ...mapActions(["toggleReferenceData"]),
   },
   components: {
     LoginComponent,
+    ReferenceData,
   },
 })
 /** ProjectList */
 export default class App extends Vue {
+  referenceDataDrawer!: boolean;
+  toggleReferenceData!: () => AxiosPromise;
   // probably vuex Promise and not AxiosPromise
   logoutStore!: () => AxiosPromise;
   getSessionStore!: () => AxiosPromise;
@@ -279,3 +289,10 @@ export default class App extends Vue {
   }
 }
 </script>
+
+<style lang="scss">
+:root {
+  --c-shelter: #3fa1ed;
+  --c-unhcr: #3fa1ed;
+}
+</style>

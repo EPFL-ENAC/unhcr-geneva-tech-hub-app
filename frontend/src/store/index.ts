@@ -31,6 +31,8 @@ export interface RootState {
   message?: string;
   /** Error Message */
   error?: string;
+  /** Hold value that say if referenceDataDrawer is open or not */
+  referenceDataDrawer: boolean;
 }
 
 /** State Default value */
@@ -39,6 +41,7 @@ const state: RootState = {
   progress: 0,
   message: undefined,
   error: undefined,
+  referenceDataDrawer: false,
 };
 
 /** Getters */
@@ -47,6 +50,7 @@ const getters: GetterTree<RootState, RootState> = {
   progress: (s): number => s.progress,
   message: (s): string | undefined => s.message,
   error: (s): string | undefined => s.error,
+  referenceDataDrawer: (s): boolean => s.referenceDataDrawer,
 };
 
 /** Mutations */
@@ -87,6 +91,15 @@ const mutations: MutationTree<RootState> = {
    */
   storeError(s, error: string) {
     s.error = error;
+  },
+  /**
+   * Store referenceDataDrawer on/off
+   *
+   * @param s - Vuex state
+   * @param error - Payload
+   */
+  storeReferenceDataDrawer(s, value: boolean) {
+    s.referenceDataDrawer = value;
   },
 };
 
@@ -130,6 +143,22 @@ const actions: ActionTree<RootState, RootState> = {
    */
   setError(context: ActionContext<RootState, RootState>, error = null) {
     context.commit("storeError", error);
+  },
+
+  setReferenceDataDrawer(
+    context: ActionContext<RootState, RootState>,
+    referenceDataDrawer = false
+  ) {
+    context.commit("storeReferenceDataDrawer", referenceDataDrawer);
+  },
+  /**
+   * toggleReferenceData
+   */
+  toggleReferenceData(context: ActionContext<RootState, RootState>) {
+    context.commit(
+      "storeReferenceDataDrawer",
+      !context.state.referenceDataDrawer
+    );
   },
 };
 
