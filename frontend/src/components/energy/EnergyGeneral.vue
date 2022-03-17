@@ -42,7 +42,6 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
       locationLongitude: 0,
       temporary: false,
       expirationYear: currentYear,
-      electricityCompanyName: "",
       publicGridConnection: false,
       shelterTemporary: 0,
       shelterTemporaryTent: 0,
@@ -158,6 +157,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
           type: "text",
           key: "electricityCompanyName",
           label: "Electricity company name",
+          optional: true,
         },
         {
           type: "boolean",
@@ -181,9 +181,9 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
         {
           type: "boolean",
           key: "networkExtension",
-          label:
-            "Does the electricity company envisage to extend its network in the framework of the electricity programme?",
+          label: "Does electricity company envisages to extend its network?",
           hidden: this.module.publicGridConnection,
+          optional: true,
         },
       ],
       [
@@ -306,8 +306,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
         {
           type: "select",
           key: "farApartHouses",
-          label:
-            "How far apart- typically- are the houses/living spaces in the camp blocks (not counting roads)?",
+          label: "How far apart are living spaces?",
           options: [
             {
               text: "A few",
@@ -335,8 +334,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
         {
           type: "select",
           key: "areaPerPerson",
-          label:
-            "What is the average camp area per person (square meters as per UNHCR design )?",
+          label: "Average camp area per person",
           options: [
             {
               text: "29 or less",
@@ -359,8 +357,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
         {
           type: "select",
           key: "vacantSpaceInside",
-          label:
-            "What is the average camp area per person (square meters as per UNHCR design )?",
+          label: "Available vacant inside camp spaces",
           options: [
             {
               text: "No Space",
@@ -395,8 +392,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
         {
           type: "select",
           key: "woodLandscape",
-          label:
-            "What does the landscape outside of the camp where wood is harvested primarily look like?",
+          label: "Overall landscape of the area",
           options: [
             {
               text: "Evergreen forest / rain forest",
@@ -446,8 +442,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
         {
           type: "select",
           key: "vacantSpaceOutside",
-          label:
-            "Is there vacant space available - outside - the camp place energy infrastructure (if permission is granted) ?",
+          label: "Available vacant outside camp spaces",
           options: [
             {
               text: "No Space",

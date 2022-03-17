@@ -17,7 +17,18 @@
       <v-col>
         <v-tabs v-model="tab" center-active show-arrows>
           <template v-for="item in tabItems">
-            <v-menu v-if="item.children" :key="item.id" offset-y open-on-hover>
+            <v-divider
+              v-if="!item.text"
+              :key="item.id"
+              class="mx-2"
+              vertical
+            ></v-divider>
+            <v-menu
+              v-else-if="item.children"
+              :key="item.id"
+              offset-y
+              open-on-hover
+            >
               <template v-slot:activator="{ on, attrs }">
                 <v-tab
                   v-bind="attrs"
@@ -164,6 +175,10 @@ export default class EnergyProject extends Vue {
       ],
     },
     {
+      text: "",
+      id: "divider",
+    },
+    {
       text: "Scenario",
       id: "scenario",
       icon: "mdi-skip-next",
@@ -257,7 +272,7 @@ export default class EnergyProject extends Vue {
 interface TabItem {
   text: string;
   id: string;
-  icon: string;
+  icon?: string;
   children?: TabItem[];
 }
 </script>

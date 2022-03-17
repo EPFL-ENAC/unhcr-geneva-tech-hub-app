@@ -17,7 +17,7 @@ export interface GeneralModule {
   temporary: boolean;
   expirationYear?: number;
   integration?: Integration;
-  electricityCompanyName: string;
+  electricityCompanyName?: string;
   publicGridConnection: boolean;
   publicGridDomesticRate?: number;
   publicGridDistance?: number;

@@ -1,46 +1,59 @@
 <template>
-  <v-tooltip top :disabled="tooltipDisabled">
-    <template v-slot:activator="{ on, attrs }">
-      <v-text-field
-        v-if="type === 'text'"
-        v-model="model"
-        v-bind="attrs"
-        v-on="on"
-        :label="label"
-        hide-details="auto"
-        required
-        :rules="actualRules"
-      ></v-text-field>
-      <v-text-field
-        v-if="type === 'number'"
-        v-model.number="model"
-        v-bind="attrs"
-        v-on="on"
-        :label="label"
-        hide-details="auto"
-        hide-spin-buttons
-        required
-        :rules="actualRules"
-        type="number"
-      >
-        <template v-if="actualUnit" v-slot:append>{{ actualUnit }}</template>
-      </v-text-field>
-      <v-select
-        v-if="type === 'boolean' || type === 'select'"
-        v-model="model"
-        v-bind="attrs"
-        v-on="on"
-        :label="label"
-        hide-details="auto"
-        :items="items"
-        required
-        :rules="actualRules"
-      >
-        <template v-if="actualUnit" v-slot:append>{{ actualUnit }}</template>
-      </v-select>
-    </template>
-    <span>{{ label }}</span>
-  </v-tooltip>
+  <div>
+    <v-text-field
+      v-if="type === 'text'"
+      v-model="model"
+      hide-details="auto"
+      required
+      :rules="actualRules"
+    >
+      <template v-slot:label>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <span v-bind="attrs" v-on="on">{{ label }}</span>
+          </template>
+          <span>{{ label }}</span>
+        </v-tooltip>
+      </template>
+    </v-text-field>
+    <v-text-field
+      v-if="type === 'number'"
+      v-model.number="model"
+      hide-details="auto"
+      hide-spin-buttons
+      required
+      :rules="actualRules"
+      type="number"
+    >
+      <template v-slot:label>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <span v-bind="attrs" v-on="on">{{ label }}</span>
+          </template>
+          <span>{{ label }}</span>
+        </v-tooltip>
+      </template>
+      <template v-if="actualUnit" v-slot:append>{{ actualUnit }}</template>
+    </v-text-field>
+    <v-select
+      v-if="type === 'boolean' || type === 'select'"
+      v-model="model"
+      hide-details="auto"
+      :items="items"
+      required
+      :rules="actualRules"
+    >
+      <template v-slot:label>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <span v-bind="attrs" v-on="on">{{ label }}</span>
+          </template>
+          <span>{{ label }}</span>
+        </v-tooltip>
+      </template>
+      <template v-if="actualUnit" v-slot:append>{{ actualUnit }}</template>
+    </v-select>
+  </div>
 </template>
 
 <script lang="ts">
@@ -69,10 +82,8 @@ export default class FormItemComponent extends Vue {
   readonly max: number | undefined;
   @Prop({ type: Array as () => Rule[] })
   readonly rules: Rule[] | undefined;
-
-  get tooltipDisabled(): boolean {
-    return this.label === undefined ? true : this.label.length < 32;
-  }
+  @Prop({ type: Boolean, default: false })
+  readonly optional!: boolean;
 
   get items(): SelectItemObject<string, SelectValue>[] {
     switch (this.type) {
@@ -98,7 +109,10 @@ export default class FormItemComponent extends Vue {
   }
 
   get actualRules(): Rule[] {
-    const rules: Rule[] = [checkRequired];
+    const rules: Rule[] = [];
+    if (!this.optional) {
+      rules.push(checkRequired);
+    }
     if (this.actualMin !== undefined) {
       rules.push(checkMin(this.actualMin));
     }
@@ -144,6 +158,7 @@ interface AbstractFormItem<K> {
   label?: string;
   hidden?: boolean;
   rules?: Rule[];
+  optional?: boolean;
 }
 
 interface TextFormItem<K> extends AbstractFormItem<K> {
