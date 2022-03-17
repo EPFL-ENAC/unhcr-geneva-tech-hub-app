@@ -1,58 +1,64 @@
 <template>
-  <v-card v-if="householdCookingResult">
-    <v-card-title>Household Cooking</v-card-title>
-    <v-simple-table dense>
-      <template v-slot:default>
-        <thead>
-          <tr>
-            <th></th>
-            <th class="text-right">Very Low</th>
-            <th class="text-right">Low</th>
-            <th class="text-right">Middle</th>
-            <th class="text-right">High</th>
-            <th class="text-right">Very High</th>
-            <th class="text-right">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in lines" :key="item.key">
-            <td class="font-weight-black">{{ item.text }}</td>
-            <td class="text-right">
-              {{
-                householdCookingResult.categories.veryLow[item.key]
-                  | formatNumber
-              }}
-            </td>
-            <td class="text-right">
-              {{
-                householdCookingResult.categories.low[item.key] | formatNumber
-              }}
-            </td>
-            <td class="text-right">
-              {{
-                householdCookingResult.categories.middle[item.key]
-                  | formatNumber
-              }}
-            </td>
-            <td class="text-right">
-              {{
-                householdCookingResult.categories.high[item.key] | formatNumber
-              }}
-            </td>
-            <td class="text-right">
-              {{
-                householdCookingResult.categories.veryHigh[item.key]
-                  | formatNumber
-              }}
-            </td>
-            <td class="font-weight-bold text-right">
-              {{ householdCookingResult.total[item.key] | formatNumber }}
-            </td>
-          </tr>
-        </tbody>
-      </template>
-    </v-simple-table>
-  </v-card>
+  <v-row>
+    <v-col>
+      <v-card v-if="householdCookingResult" flat>
+        <v-card-title>Household Cooking</v-card-title>
+        <v-simple-table dense>
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th></th>
+                <th class="text-right">Very Low</th>
+                <th class="text-right">Low</th>
+                <th class="text-right">Middle</th>
+                <th class="text-right">High</th>
+                <th class="text-right">Very High</th>
+                <th class="text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in lines" :key="item.key">
+                <td class="font-weight-black">{{ item.text }}</td>
+                <td class="text-right">
+                  {{
+                    householdCookingResult.categories.veryLow[item.key]
+                      | formatNumber
+                  }}
+                </td>
+                <td class="text-right">
+                  {{
+                    householdCookingResult.categories.low[item.key]
+                      | formatNumber
+                  }}
+                </td>
+                <td class="text-right">
+                  {{
+                    householdCookingResult.categories.middle[item.key]
+                      | formatNumber
+                  }}
+                </td>
+                <td class="text-right">
+                  {{
+                    householdCookingResult.categories.high[item.key]
+                      | formatNumber
+                  }}
+                </td>
+                <td class="text-right">
+                  {{
+                    householdCookingResult.categories.veryHigh[item.key]
+                      | formatNumber
+                  }}
+                </td>
+                <td class="font-weight-bold text-right">
+                  {{ householdCookingResult.total[item.key] | formatNumber }}
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">

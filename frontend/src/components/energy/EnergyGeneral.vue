@@ -67,11 +67,11 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
       woodLandscape: "rain",
       topography: "flat",
       vacantSpaceOutside: "no",
-      categoryVeryLow: 0,
-      categoryLow: 0,
-      categoryMiddle: 0,
-      categoryHigh: 0,
-      categoryVeryHigh: 0,
+      categoryVeryLow: 20,
+      categoryLow: 20,
+      categoryMiddle: 20,
+      categoryHigh: 20,
+      categoryVeryHigh: 20,
     };
   }
 

@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card flat>
     <v-card-text>
       <slot name="append"></slot>
       <v-form ref="form" v-model="formValid" lazy-validation>

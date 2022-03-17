@@ -1,66 +1,86 @@
 <template>
   <v-container fluid>
-    <v-text-field
-      v-model="name"
-      hide-details="auto"
-      :label="idName + ' Name'"
-      outlined
-      required
-      :rules="rules"
-      @change="changeName"
-    ></v-text-field>
-    <v-tabs v-model="tab" center-active show-arrows>
-      <template v-for="item in tabItems">
-        <v-menu v-if="item.children" :key="item.id" offset-y open-on-hover>
-          <template v-slot:activator="{ on, attrs }">
-            <v-tab
-              v-bind="attrs"
-              v-on="on"
-              :href="`#${item.id}-${item.children[0].id}`"
-            >
+    <v-row>
+      <v-col>
+        <v-text-field
+          v-model="name"
+          hide-details="auto"
+          :label="idName + ' Name'"
+          outlined
+          required
+          :rules="rules"
+          @change="changeName"
+        ></v-text-field>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-tabs v-model="tab" center-active show-arrows>
+          <template v-for="item in tabItems">
+            <v-menu v-if="item.children" :key="item.id" offset-y open-on-hover>
+              <template v-slot:activator="{ on, attrs }">
+                <v-tab
+                  v-bind="attrs"
+                  v-on="on"
+                  :href="`#${item.id}-${item.children[0].id}`"
+                >
+                  <v-icon left>{{ item.icon }}</v-icon>
+                  {{ item.text }}
+                </v-tab>
+              </template>
+              <v-list>
+                <v-list-item v-for="subItem in item.children" :key="subItem.id">
+                  <v-tab :href="`#${item.id}-${subItem.id}`">
+                    <v-icon left>{{ subItem.icon }}</v-icon>
+                    {{ subItem.text }}
+                  </v-tab>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+            <v-tab v-else :key="item.id" :href="`#${item.id}`">
               <v-icon left>{{ item.icon }}</v-icon>
               {{ item.text }}
             </v-tab>
           </template>
-          <v-list>
-            <v-list-item v-for="subItem in item.children" :key="subItem.id">
-              <v-tab :href="`#${item.id}-${subItem.id}`">
-                <v-icon left>{{ subItem.icon }}</v-icon>
-                {{ subItem.text }}
-              </v-tab>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-        <v-tab v-else :key="item.id" :href="`#${item.id}`">
-          <v-icon left>{{ item.icon }}</v-icon>
-          {{ item.text }}
-        </v-tab>
-      </template>
-    </v-tabs>
-    <v-tabs-items v-model="tab">
-      <v-tab-item value="general">
-        <energy-general
-          :initial-module="generalModule"
-          @save="saveGeneral"
-        ></energy-general>
-      </v-tab-item>
-      <v-tab-item value="household-cooking">
-        <energy-household-cooking
-          :initial-module="householdCookingModule"
-          @save="saveHouseholdCooking"
-        ></energy-household-cooking>
-      </v-tab-item>
-      <v-tab-item value="result">
-        <energy-result :modules="modules"></energy-result>
-      </v-tab-item>
-    </v-tabs-items>
+        </v-tabs>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-tabs-items v-model="tab">
+          <v-tab-item value="general">
+            <energy-general
+              :initial-module="generalModule"
+              @save="saveGeneral"
+            ></energy-general>
+          </v-tab-item>
+          <v-tab-item value="household-cooking">
+            <energy-household-cooking
+              :initial-module="householdCookingModule"
+              @save="saveHouseholdCooking"
+            ></energy-household-cooking>
+          </v-tab-item>
+          <v-tab-item value="scenario">
+            <energy-scenario></energy-scenario>
+          </v-tab-item>
+          <v-tab-item value="intervention">
+            <energy-intervention></energy-intervention>
+          </v-tab-item>
+          <v-tab-item value="result">
+            <energy-result :modules="modules"></energy-result>
+          </v-tab-item>
+        </v-tabs-items>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
 import EnergyGeneral from "@/components/energy/EnergyGeneral.vue";
 import EnergyHouseholdCooking from "@/components/energy/EnergyHouseholdCooking.vue";
+import EnergyIntervention from "@/components/energy/EnergyIntervention.vue";
 import EnergyResult from "@/components/energy/EnergyResult.vue";
+import EnergyScenario from "@/components/energy/EnergyScenario.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
 import {
   GeneralModule,
@@ -77,6 +97,8 @@ import { Component, Prop, Vue } from "vue-property-decorator";
   components: {
     EnergyGeneral,
     EnergyHouseholdCooking,
+    EnergyScenario,
+    EnergyIntervention,
     EnergyResult,
   },
 })
