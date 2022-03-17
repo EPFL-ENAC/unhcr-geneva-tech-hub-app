@@ -452,6 +452,8 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/energy",
+    name: "Energy",
+    redirect: { name: "EnergyHome" },
     component: () =>
       import(/* webpackChunkName: "energy" */ "../views/energy/Energy.vue"),
     meta: {
@@ -460,7 +462,7 @@ const routes: Array<RouteConfig> = [
     children: [
       {
         path: "",
-        name: "Energy",
+        name: "EnergyHome",
         component: () =>
           import(
             /* webpackChunkName: "energy-home" */ "../views/energy/EnergyHome.vue"

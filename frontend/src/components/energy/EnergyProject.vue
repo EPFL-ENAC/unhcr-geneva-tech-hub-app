@@ -152,7 +152,7 @@ export default class EnergyProject extends Vue {
       icon: "mdi-gesture-tap",
     },
     {
-      text: "Result",
+      text: "Results",
       id: "result",
       icon: "mdi-chart-box",
     },

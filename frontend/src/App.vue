@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app>
+    <v-app-bar app dense>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-tabs>
         <v-tab v-if="rootRoute" :to="{ name: rootRoute.name }">{{
