@@ -36,8 +36,9 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
   get emptyModule(): GeneralModule {
     const currentYear = new Date().getFullYear();
     return {
-      year: currentYear,
       name: "",
+      yearStart: currentYear,
+      yearEnd: currentYear + 10,
       locationLatitude: 0,
       locationLongitude: 0,
       temporary: false,
@@ -87,14 +88,19 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
     return [
       [
         {
-          type: "number",
-          key: "year",
-          label: "Year of the data",
-        },
-        {
           type: "text",
           key: "name",
           label: "Name of the camp",
+        },
+        {
+          type: "number",
+          key: "yearStart",
+          label: "Starting Year",
+        },
+        {
+          type: "number",
+          key: "yearEnd",
+          label: "Ending Year ",
         },
       ],
       [

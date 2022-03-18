@@ -68,7 +68,6 @@ export default class AppList extends Vue {
       title: "Shelter Sustainability",
       to: "ShelterSustainability",
       logoImg: "/app_logo/shelter.png",
-
       description:
         "A tool supporting comparative assessments of environmental \
         impacts, technical performance, habitability and affordability of \
@@ -77,9 +76,9 @@ export default class AppList extends Vue {
     {
       title: "Energy planning tool",
       to: "Energy",
-      description:
-        "This tool allows medium & long-term energy planning for improving access to sustainable energy for refugees.",
       logoIcon: "mdi-flash",
+      description:
+        "The best technology options for reliable and sustainable energy needs for different shelters based on available local options.",
     },
   ];
 }

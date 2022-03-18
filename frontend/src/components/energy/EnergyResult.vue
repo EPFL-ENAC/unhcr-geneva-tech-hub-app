@@ -3,59 +3,72 @@
     <v-col>
       <v-card v-if="householdCookingResult" flat>
         <v-card-title>Household Cooking</v-card-title>
-        <v-simple-table dense>
-          <template v-slot:default>
-            <thead>
-              <tr>
-                <th></th>
-                <th class="text-right">Very Low</th>
-                <th class="text-right">Low</th>
-                <th class="text-right">Middle</th>
-                <th class="text-right">High</th>
-                <th class="text-right">Very High</th>
-                <th class="text-right">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in lines" :key="item.key">
-                <td class="font-weight-black">{{ item.text }}</td>
-                <td class="text-right">
-                  {{
-                    householdCookingResult.categories.veryLow[item.key]
-                      | formatNumber
-                  }}
-                </td>
-                <td class="text-right">
-                  {{
-                    householdCookingResult.categories.low[item.key]
-                      | formatNumber
-                  }}
-                </td>
-                <td class="text-right">
-                  {{
-                    householdCookingResult.categories.middle[item.key]
-                      | formatNumber
-                  }}
-                </td>
-                <td class="text-right">
-                  {{
-                    householdCookingResult.categories.high[item.key]
-                      | formatNumber
-                  }}
-                </td>
-                <td class="text-right">
-                  {{
-                    householdCookingResult.categories.veryHigh[item.key]
-                      | formatNumber
-                  }}
-                </td>
-                <td class="font-weight-bold text-right">
-                  {{ householdCookingResult.total[item.key] | formatNumber }}
-                </td>
-              </tr>
-            </tbody>
-          </template>
-        </v-simple-table>
+        <v-card-text>
+          <v-tabs v-model="tab" center-active show-arrows>
+            <v-tab v-for="item in years" :key="item" :href="`#${item}`">
+              {{ item }}
+            </v-tab>
+          </v-tabs>
+          <v-tabs-items v-model="tab">
+            <v-tab-item v-for="item in years" :key="item" :value="`${item}`">
+              <v-simple-table dense>
+                <template v-slot:default>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th class="text-right">Very Low</th>
+                      <th class="text-right">Low</th>
+                      <th class="text-right">Middle</th>
+                      <th class="text-right">High</th>
+                      <th class="text-right">Very High</th>
+                      <th class="text-right">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="item in lines" :key="item.key">
+                      <td class="font-weight-black">{{ item.text }}</td>
+                      <td class="text-right">
+                        {{
+                          householdCookingResult.categories.veryLow[item.key]
+                            | formatNumber
+                        }}
+                      </td>
+                      <td class="text-right">
+                        {{
+                          householdCookingResult.categories.low[item.key]
+                            | formatNumber
+                        }}
+                      </td>
+                      <td class="text-right">
+                        {{
+                          householdCookingResult.categories.middle[item.key]
+                            | formatNumber
+                        }}
+                      </td>
+                      <td class="text-right">
+                        {{
+                          householdCookingResult.categories.high[item.key]
+                            | formatNumber
+                        }}
+                      </td>
+                      <td class="text-right">
+                        {{
+                          householdCookingResult.categories.veryHigh[item.key]
+                            | formatNumber
+                        }}
+                      </td>
+                      <td class="font-weight-bold text-right">
+                        {{
+                          householdCookingResult.total[item.key] | formatNumber
+                        }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+            </v-tab-item>
+          </v-tabs-items>
+        </v-card-text>
       </v-card>
     </v-col>
   </v-row>
@@ -72,6 +85,7 @@ import {
   SocioEconomicCategory,
 } from "@/models/energyModel";
 import { applyMap, applyReduce } from "@/utils/energy";
+import { range } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapState } from "vuex";
@@ -111,7 +125,19 @@ export default class EnergyResult extends Vue {
   @Prop({ type: Object as () => Modules })
   modules!: Modules;
 
+  tab: string | null = null;
   cookingFuels!: CookingFuel[];
+
+  get years(): number[] {
+    if (this.modules.general) {
+      return range(
+        this.modules.general.yearStart,
+        this.modules.general.yearEnd + 1
+      );
+    } else {
+      return [new Date().getFullYear()];
+    }
+  }
 
   get householdCookingResult(): HouseholdCookingResult | undefined {
     const householdCooking = this.modules.householdCooking;

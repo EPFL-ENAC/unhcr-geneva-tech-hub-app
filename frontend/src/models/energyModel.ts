@@ -10,8 +10,9 @@ export interface Modules {
 }
 
 export interface GeneralModule {
-  year: number;
   name: string;
+  yearStart: number;
+  yearEnd: number;
   locationLatitude: number;
   locationLongitude: number;
   temporary: boolean;

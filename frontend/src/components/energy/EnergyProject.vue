@@ -71,6 +71,11 @@
               @save="saveHouseholdCooking"
             ></energy-household-cooking>
           </v-tab-item>
+          <v-tab-item value="household-lighting">TODO</v-tab-item>
+          <v-tab-item value="household-heating">TODO</v-tab-item>
+          <v-tab-item value="community-lighting">TODO</v-tab-item>
+          <v-tab-item value="community-heating">TODO</v-tab-item>
+          <v-tab-item value="community-service">TODO</v-tab-item>
           <v-tab-item value="scenario">
             <energy-scenario></energy-scenario>
           </v-tab-item>
