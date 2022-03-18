@@ -14,6 +14,24 @@
           developed jointly to foster synergies and integration wherever
           possible.
         </p>
+        <p class="mx-10">
+          The proposed tools will enable UNHCR to address its goal of 'greening'
+          its operations and will support UNHCR to respond to Objective 3 of its
+          Strategic Framework for Climate Action: *Objective 3: Improve UNHCR's
+          environmental sustainability by reducing greenhouse gas emissions and
+          minimizing negative impacts on the environment.*
+        </p>
+
+        <p class="mx-10">
+          Through UNHCR's Global Strategy for Sustainable Energy 2019-2024,
+          UNHCR is undertaking ambitious action to avoid or reduce negative
+          environmental impacts. Over 90 percent of refugees living in
+          settlements have no access to electricity or clean sources of energy.
+          Sustainable energy solutions benefit both displaced and host
+          countries' national and local energy plans in line with SDG 7 on
+          ensuring access to affordable, reliable, sustainable and modern energy
+          for all.
+        </p>
       </v-card-text>
       <v-card-text>
         <v-simple-table class="ma-8">

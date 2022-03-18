@@ -57,7 +57,12 @@
           :to="{ name: app.name }"
         >
           <v-list-item-icon @click.stop="mini = true">
-            <v-img max-width="24px" v-if="app.logoImg" :src="app.logoImg" style="color: rgba(0, 0, 0, 0.54);"></v-img>
+            <v-img
+              max-width="24px"
+              v-if="app.logoImg"
+              :src="app.logoImg"
+              style="color: rgba(0, 0, 0, 0.54)"
+            ></v-img>
             <v-icon v-if="app.logoIcon">
               {{ app.logoIcon }}
             </v-icon>
@@ -185,9 +190,17 @@ export default class App extends Vue {
   snackbar = false;
   // TODO: use meta.title for apps name
   apps = [
-    { title: "Green House Gaz", name: "GreenHouseGaz",logoImg: "/app_logo/ghg.png"},
-    { title: "Shelter Sustainability", name: "ShelterSustainability",logoImg: "/app_logo/shelter.png"},
-    { title: "Energy",name:  "Energy", logoIcon: "mdi-flash"},
+    {
+      title: "Green House Gaz",
+      name: "GreenHouseGaz",
+      logoImg: "/app_logo/ghg.png",
+    },
+    {
+      title: "Shelter Sustainability",
+      name: "ShelterSustainability",
+      logoImg: "/app_logo/shelter.png",
+    },
+    { title: "Energy", name: "Energy", logoIcon: "mdi-flash" },
   ];
 
   rootRoute = {} as RouteRecordPublic;

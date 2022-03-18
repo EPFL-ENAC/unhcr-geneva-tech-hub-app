@@ -6,9 +6,9 @@
       v-for="(logo, $key) in logos"
       :key="$key"
     >
-       <a  :href="logo.urlDescription" target="_blank"> 
-          <v-img height="100" contain :src="logo.imgPath"></v-img>
-       </a>
+      <a :href="logo.urlDescription" target="_blank">
+        <v-img height="100" contain :src="logo.imgPath"></v-img>
+      </a>
     </v-sheet>
   </v-footer>
 </template>
@@ -26,7 +26,8 @@ export default class AppLogo extends Vue {
     },
     {
       imgPath: "/app_logo_new/logo 1.png",
-      urlDescription: "https://www.unhcr.org/publications/brochures/6229f4184/geneva-technical-hub-brochure.html",
+      urlDescription:
+        "https://www.unhcr.org/publications/brochures/6229f4184/geneva-technical-hub-brochure.html",
     },
     {
       imgPath: "/app_logo_new/SLL-LOGO-SQUARE-RVB.png",
