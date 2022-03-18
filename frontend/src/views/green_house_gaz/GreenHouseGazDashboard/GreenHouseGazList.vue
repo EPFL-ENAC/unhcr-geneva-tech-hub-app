@@ -5,7 +5,7 @@
       :key="`${country.key}${keyIndex}`"
     >
       <v-expansion-panel-header>
-        <div class="panel-header">
+        <div class="panel-header" v-if="countriesMap[country.key]">
           <span>
             {{ countriesMap[country.key].name }}
           </span>

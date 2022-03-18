@@ -4,7 +4,7 @@
     },
     "cors": {},
     "chttpd_auth": {
-        "require_valid_user": true,
+        "require_valid_user": false,
         "allow_persistent_cookies": true,
         "timeout": 86400
     }
