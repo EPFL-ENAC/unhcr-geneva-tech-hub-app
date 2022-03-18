@@ -1,4 +1,6 @@
 import User from "@/plugins/user";
+import "@fontsource/lato";
+import "font-proxima-nova-css/fonts.min.css";
 import "leaflet/dist/leaflet.css";
 import Vue from "vue";
 import App from "./App.vue";

@@ -2,9 +2,6 @@ import "@mdi/font/css/materialdesignicons.css";
 import Vue from "vue";
 import Vuetify from "vuetify/lib/framework";
 import { VuetifyParsedTheme } from "vuetify/types/services/theme";
-import { loadFonts } from "./webfontloader";
-
-loadFonts();
 
 Vue.use(Vuetify);
 
@@ -26,10 +23,11 @@ export default new Vuetify({
       },
     },
     themes: {
+      // https://www.ungm.org/UNUser/Documents/DownloadPublicDocument?docId=782892
       light: {
-        primary: "#007BFF",
-        secondary: "#424242",
-        accent: "#82B1FF",
+        primary: "#0072BC",
+        secondary: "#000000",
+        accent: "#FAEB00",
         error: "#FF5252",
         info: "#2196F3",
         success: "#4CAF50",
