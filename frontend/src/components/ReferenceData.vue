@@ -102,6 +102,24 @@
                     </template>
                   </v-edit-dialog>
                 </template>
+
+                <template v-slot:item.density="props">
+                  <v-tooltip right>
+                    <template v-slot:activator="{ on, attrs }">
+                      {{ props.item.density }} {{ props.item.density_unit }}
+                      <v-btn icon v-bind="attrs" v-on="on">
+                        <v-icon v-text="'mdi-exclamation'"></v-icon>
+                      </v-btn>
+                    </template>
+                    <span>{{ props.item.density_ref }}</span>
+                  </v-tooltip>
+                </template>
+                <template v-slot:item.embodied_water="props">
+                  {{ props.item.density }} L/kg
+                </template>
+                <template v-slot:item.embodied_carbon="props">
+                  {{ props.item.density }} kgCO2e/kg
+                </template>
               </v-data-table>
               <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
                 {{ snackText }}
@@ -127,6 +145,7 @@ import {
   IgesItemInterface,
   ReferenceItemInterface,
 } from "@/store/GhgInterface";
+import { ShelterMaterial } from "@/store/ShelterInterface";
 import flagEmoji from "@/utils/flagEmoji";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
@@ -174,6 +193,7 @@ export default class App extends Vue {
   readonly menuItems: MenuSurveyItem[] = [
     { tab: "iges_grid_2021", content: "iges_grid_2021" },
     { tab: "Energy", content: "energy" },
+    { tab: "Materials", content: "materials" },
   ];
   tab = 1;
 
@@ -222,11 +242,23 @@ export default class App extends Vue {
           { text: "value", value: "value" },
         ];
       }
+      if (key === "materials") {
+        return [
+          { text: "Material", value: "material" },
+          { text: "Form", value: "form" },
+          { text: "density", value: "density" },
+          { text: "embodied_carbon", value: "embodied_carbon" },
+          { text: "embodied_water", value: "embodied_water" },
+        ];
+      }
     }
     return [];
   }
 
-  public get items(): ReferenceItemInterface[] | IgesItemInterface[] {
+  public get items():
+    | ReferenceItemInterface[]
+    | IgesItemInterface[]
+    | ShelterMaterial[] {
     if (this.reference) {
       const key = this.menuItems[this.tab].content as string;
       if (key === "energy") {
@@ -237,6 +269,10 @@ export default class App extends Vue {
       if (key === "iges_grid_2021") {
         const obj: IgesItemInterface[] = this.reference.iges_grid_2021;
         return obj.map((x) => ({ ...x, emoji: flagEmoji(x.country_code) }));
+      }
+
+      if (key === "materials") {
+        return this.reference.materials as ShelterMaterial[];
       }
     }
     return [];

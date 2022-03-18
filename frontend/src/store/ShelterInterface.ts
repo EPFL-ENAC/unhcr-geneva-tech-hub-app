@@ -468,9 +468,12 @@ export interface ShelterMaterial {
   source: string; // : "EcoInvent 3.8\nbamboo pole production\nGLO (Global)",
   name: string; // : "Bamboo, pole",
   density: number; // : 700,
+  density_ref: string;
   variable: string; // : "BMB-POL_DEN",
-  production_embodied_carbon: number; // : 0.72,
+  embodied_carbon: number; // : 0.72,
+  embodied_carbon_ref: string;
   unit: string; // : "L/kg",
-  production_water_consumption: number; // : 0.00234,
+  embodied_water: number; // : 0.00234,
+  embodied_water_ref: string; // source reference for embodied water
   _id: string; // : "BMB-POL_DEN"
 }

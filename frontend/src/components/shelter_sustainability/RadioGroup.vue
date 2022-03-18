@@ -1,7 +1,7 @@
 <template>
   <v-sheet elevation="2" rounded>
     <v-container fluid>
-      <v-row>
+      <v-row v-if="form.title">
         <v-col>
           <component
             :is="`h${depth + 2}`"

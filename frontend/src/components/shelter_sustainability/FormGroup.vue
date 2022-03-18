@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-row>
+    <v-row v-if="form.title">
       <v-col :cols="depth > 0 ? 11 : 12">
         <component
           :is="`h${depth + 2}`"

@@ -464,5 +464,1002 @@
             "type": "number",
             "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html"
         }
-    }
+    },
+    "materials": [
+        {
+            "form": "Composite panel",
+            "embodied_water_ref": "EcoInvent 3.8, aluminium alloy production, Metallic Matrix Composite, GLO (Global)",
+            "material": "Aluminium",
+            "embodied_carbon": 6.67,
+            "density_unit": "kg/m3",
+            "density": 2700.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019)",
+            "embodied_water": 1.75,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M2",
+                "PCE"
+            ],
+            "_id": "ALU-CPA_"
+        },
+        {
+            "form": "Sheet",
+            "embodied_water_ref": "EcoInvent 3.8, aluminium alloy production, Metallic Matrix Composite, GLO (Global)",
+            "material": "Aluminium",
+            "embodied_carbon": 6.67,
+            "density_unit": "kg/m3",
+            "density": 2700.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019)",
+            "embodied_water": 1.75,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M2",
+                "PCE"
+            ],
+            "_id": "ALU-SHE_"
+        },
+        {
+            "form": "Other (e.g., window profile)",
+            "embodied_water_ref": "EcoInvent 3.8, aluminium alloy production, Metallic Matrix Composite, GLO (Global)",
+            "material": "Aluminium",
+            "embodied_carbon": 6.67,
+            "density_unit": "kg/m3",
+            "density": 2700.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019)",
+            "embodied_water": 1.75,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG"
+            ],
+            "_id": "ALU-OTH_"
+        },
+        {
+            "form": "Pole",
+            "embodied_water_ref": "EcoInvent 3.8, bamboo pole production, GLO (Global)",
+            "material": "Bamboo",
+            "embodied_carbon": 26.91,
+            "density_unit": "kg/m3",
+            "density": 700.0,
+            "embodied_carbon_ref": "Kuchai, N., Matard, A., Coley, D., Allen, S., 2019. Embodied energy and embodied carbon of 81 shelters globally. Bath: University of Bath Research Data Archive. Available from: https://doi.org/10.15125/BATH-00550.",
+            "embodied_water": 0.002,
+            "density_ref": "Kuchai, N., Matard, A., Coley, D., Allen, S., 2019. Embodied energy and embodied carbon of 81 shelters globally. Bath: University of Bath Research Data Archive. Available from: https://doi.org/10.15125/BATH-00550.",
+            "units": [
+                "KG",
+                "PCE"
+            ],
+            "_id": "BMB-POL_"
+        },
+        {
+            "form": "Woven mat",
+            "embodied_water_ref": "EcoInvent 3.8, bamboo pole production, GLO (Global)",
+            "material": "Bamboo",
+            "embodied_carbon": 26.91,
+            "density_unit": "kg/m3",
+            "density": 0.0,
+            "embodied_carbon_ref": "Kuchai, N., Matard, A., Coley, D., Allen, S., 2019. Embodied energy and embodied carbon of 81 shelters globally. Bath: University of Bath Research Data Archive. Available from: https://doi.org/10.15125/BATH-00550.",
+            "embodied_water": 0.002,
+            "density_ref": "..",
+            "units": [
+                "KG"
+            ],
+            "_id": "BMB-MAT_"
+        },
+        {
+            "form": "Paint, membrane",
+            "embodied_water_ref": "EcoInvent 3.8, bitumen seal production, GLO (Global)",
+            "material": "Bitumen",
+            "embodied_carbon": 0.898,
+            "density_unit": "kg/m3",
+            "density": 1000.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Average Embodied Carbon, Bitumen, membrane",
+            "embodied_water": 24.0,
+            "density_ref": "ICE DB V2.0 (2011), Bitumen, insulation, all types",
+            "units": [
+                "KG",
+                "L",
+                "M2"
+            ],
+            "_id": "BIT-ALL_"
+        },
+        {
+            "form": "Heavy - sheet, tarpaulin, tent (e.g. SFT outer)",
+            "embodied_water_ref": "EcoInvent 3.8, textile production, cotton, weaving, GLO (Global)",
+            "material": "Canvas, Polycotton",
+            "embodied_carbon": 4.265,
+            "density_unit": "kg/m2",
+            "density": 0.35,
+            "embodied_carbon_ref": "Kalliala, E.M., Nousiainen, P. (1999( Environmental Profile of Cotton and Polyester Cotton Fabrics. AUTEX Research Journal, 1/1",
+            "embodied_water": 1.19,
+            "density_ref": "Standard Family tent specifications - outer tent, roof,UNHCR Core Relief Items Catalogue, 2012",
+            "units": [
+                "KG",
+                "M2",
+                "PCE"
+            ],
+            "_id": "PLC-HVY_"
+        },
+        {
+            "form": "Light - sheet, tarpaulin, tent (e.g. SFT outer)",
+            "embodied_water_ref": "EcoInvent 3.8, textile production, cotton, weaving, GLO (Global)",
+            "material": "Canvas, Polycotton",
+            "embodied_carbon": 4.265,
+            "density_unit": "kg/m2",
+            "density": 0.13,
+            "embodied_carbon_ref": "Kalliala, E.M., Nousiainen, P. (1999( Environmental Profile of Cotton and Polyester Cotton Fabrics. AUTEX Research Journal, 1/1",
+            "embodied_water": 1.19,
+            "density_ref": "Standard Family tent specifications - inner tent, UNHCR Core Relief Items Catalogue, 2012",
+            "units": [
+                "KG",
+                "M2",
+                "PCE"
+            ],
+            "_id": "PLC-LHT_"
+        },
+        {
+            "form": "Sheet",
+            "embodied_water_ref": "EcoInvent 3.8, paper production, woodcontaining, supercalendered, GLO (Global)",
+            "material": "Cardboard, paper",
+            "embodied_carbon": 1.29,
+            "density_unit": "kg/m3",
+            "density": 0.0,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011)",
+            "embodied_water": 432.0,
+            "density_ref": "..",
+            "units": [
+                "KG"
+            ],
+            "_id": "CAR-ALL_"
+        },
+        {
+            "form": "Mortar",
+            "embodied_water_ref": "EcoInvent 3.8, cement mortar production, hand-mixed, on-site, GLO (Global)",
+            "material": "Cement",
+            "embodied_carbon": 0.2,
+            "density_unit": "kg/m3",
+            "density": 1650.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Mortar and screed - CEM I, (1:3 cement:sand mix)",
+            "embodied_water": 0.0,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M3"
+            ],
+            "_id": "CEM-MTR_"
+        },
+        {
+            "form": "Pure cement powder",
+            "embodied_water_ref": "UNHCR (2021) Shelter and Sustainability, p10",
+            "material": "Cement",
+            "embodied_carbon": 0.912,
+            "density_unit": "kg/m3",
+            "density": 1860.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), CEM I, Ordinary Portland Cement",
+            "embodied_water": 0.2,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG"
+            ],
+            "_id": "CEM-PUR_"
+        },
+        {
+            "form": "Brick, fired",
+            "embodied_water_ref": "EcoInvent 3.8, clay brick production, GLO (Global)",
+            "material": "Clay",
+            "embodied_carbon": 0.213,
+            "density_unit": "kg/m3",
+            "density": 1920.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Clay, Brick",
+            "embodied_water": 0.027,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M3",
+                "PCE"
+            ],
+            "_id": "CLA-BRF_"
+        },
+        {
+            "form": "Brick, unfired",
+            "embodied_water_ref": "EcoInvent 3.8, clay brick production, GLO (Global)",
+            "material": "Clay",
+            "embodied_carbon": 0.05,
+            "density_unit": "kg/m3",
+            "density": 2200.0,
+            "embodied_carbon_ref": "Calculated from, Dabeaieh, M., Heinonen, J., El-Mahdy, D., Hassan, DM. (2020). A comparative study of life cycle carbon emissions and embodied energy between sun-dried bricks and fired clay bricks.",
+            "embodied_water": 0.027,
+            "density_ref": "Engineering Toolbox, Density of solids, Brick, pressed",
+            "units": [
+                "KG",
+                "M3",
+                "PCE"
+            ],
+            "_id": "CLA-BRU_"
+        },
+        {
+            "form": "Floor tile, fired",
+            "embodied_water_ref": "EcoInvent 3.8\n  clay brick production\n GLO (Global)",
+            "material": "Clay",
+            "embodied_carbon": 0.48,
+            "density_unit": "kg/m3",
+            "density": 2000.0,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011)",
+            "embodied_water": 0.027,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M3"
+            ],
+            "_id": "CLA-TLF_"
+        },
+        {
+            "form": "Roof tile, fired",
+            "embodied_water_ref": "EcoInvent 3.8\n  clay brick production\n GLO (Global)",
+            "material": "Clay",
+            "embodied_carbon": 0.48,
+            "density_unit": "kg/m3",
+            "density": 2000.0,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011)",
+            "embodied_water": 0.027,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M4"
+            ],
+            "_id": "CLA-TLR_"
+        },
+        {
+            "form": "Aerated/lightweight block",
+            "embodied_water_ref": "EcoInvent 3.8\n autoclaved aerated concrete block production\n GLO (Global)",
+            "material": "Concrete",
+            "embodied_carbon": 0.482,
+            "density_unit": "kg/m3",
+            "density": 750.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Concrete, aerated",
+            "embodied_water": 0.184,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M3",
+                "PCE"
+            ],
+            "_id": "CON-AEB_"
+        },
+        {
+            "form": "General",
+            "embodied_water_ref": "EcoInvent 3.8\n concrete production, 40MPa, ready-mix, with Portland cement\n GLO (Global)",
+            "material": "Concrete",
+            "embodied_carbon": 0.103,
+            "density_unit": "kg/m3",
+            "density": 2000.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Concrete, General",
+            "embodied_water": 0.139,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M3"
+            ],
+            "_id": "CON-GEN_"
+        },
+        {
+            "form": "Precast, block",
+            "embodied_water_ref": "EcoInvent 3.8\n concrete production, 40MPa, ready-mix, with Portland cement\n GLO (Global)",
+            "material": "Concrete",
+            "embodied_carbon": 0.093,
+            "density_unit": "kg/m3",
+            "density": 1350.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Concrete Block, medium density solid, average strength, per kg",
+            "embodied_water": 0.139,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M3",
+                "PCE"
+            ],
+            "_id": "CON-PCB_"
+        },
+        {
+            "form": "Precast, other unit",
+            "embodied_water_ref": "EcoInvent 3.8\n concrete production, 40MPa, ready-mix, with Portland cement\n GLO (Global)",
+            "material": "Concrete",
+            "embodied_carbon": 0.148,
+            "density_unit": "kg/m3",
+            "density": 2200.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019, Concrete, Pre-Cast\n Concrete - Ordinary Portland Cement concrete\u2026",
+            "embodied_water": 0.139,
+            "density_ref": "ICE DB V2.0 (2011), Concrete, cast, dense,",
+            "units": [
+                "KG",
+                "M3",
+                "PCE"
+            ],
+            "_id": "CON-PCU_"
+        },
+        {
+            "form": "Reinforced",
+            "embodied_water_ref": "EcoInvent 3.8\n concrete production, 40MPa, ready-mix, with Portland cement\n GLO (Global)",
+            "material": "Concrete",
+            "embodied_carbon": 0.103,
+            "density_unit": "kg/m3",
+            "density": 2300.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Concrete, General",
+            "embodied_water": 0.139,
+            "density_ref": "ICE DB V2.0 (2011), Concrete, cast, dense, reinforced",
+            "units": [
+                "KG",
+                "M3"
+            ],
+            "_id": "CON-REI_"
+        },
+        {
+            "form": "Earth roof",
+            "embodied_water_ref": "",
+            "material": "Earth, soil, mud",
+            "embodied_carbon": 0.024,
+            "density_unit": "kg/m3",
+            "density": 1460.0,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011)\n General (Rammed) soil",
+            "embodied_water": 0.0,
+            "density_ref": "ICE DB V2.0 (2011)\n earth, common",
+            "units": [
+                "KG",
+                "M3"
+            ],
+            "_id": "EAR-ROF_"
+        },
+        {
+            "form": "Mud plaster",
+            "embodied_water_ref": "",
+            "material": "Earth, soil, mud",
+            "embodied_carbon": 0.024,
+            "density_unit": "kg/m3",
+            "density": 1460.0,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011)\n General (Rammed) soil",
+            "embodied_water": 0.0,
+            "density_ref": "ICE DB V2.0 (2011)\n earth, common",
+            "units": [
+                "KG",
+                "M3"
+            ],
+            "_id": "EAR-PLA_"
+        },
+        {
+            "form": "Rammed earth",
+            "embodied_water_ref": "",
+            "material": "Earth, soil, mud",
+            "embodied_carbon": 0.024,
+            "density_unit": "kg/m3",
+            "density": 1460.0,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011)\n General (Rammed) soil",
+            "embodied_water": 0.0,
+            "density_ref": "ICE DB V2.0 (2011)\n earth, common",
+            "units": [
+                "KG",
+                "M3"
+            ],
+            "_id": "EAR-RME_"
+        },
+        {
+            "form": "Window pane",
+            "embodied_water_ref": "UNHCR (2021) Shelter and Sustainability, p10",
+            "material": "Glass",
+            "embodied_carbon": 1.437,
+            "density_unit": "kg/m3",
+            "density": 2500.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Glass, General",
+            "embodied_water": 5.8,
+            "density_ref": "ICE DB V2.0 (2011), Glass, solid (soda-lime)",
+            "units": [
+                "KG",
+                "PCE"
+            ],
+            "_id": "GLA-WIN_"
+        },
+        {
+            "form": "Wool insulation",
+            "embodied_water_ref": "EcoInvent 3.8\n glass wool mat production\n GLO (Global)",
+            "material": "Glass",
+            "embodied_carbon": 1.35,
+            "density_unit": "kg/m3",
+            "density": 10.0,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011)",
+            "embodied_water": 5.74,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M3"
+            ],
+            "_id": "GLA-WOO_"
+        },
+        {
+            "form": "..",
+            "embodied_water_ref": "EcoInvent 3.8\n grass production, organic, intensive\n GLO (Global)",
+            "material": "Grass, straw",
+            "embodied_carbon": 0.1,
+            "density_unit": "kg/m3",
+            "density": 15.0,
+            "embodied_carbon_ref": "Kuchai, N., Matard, A., Coley, D., Allen, S., 2019. Embodied energy and embodied carbon of 81 shelters globally.",
+            "embodied_water": 0.134,
+            "density_ref": "Kuchai, N., Matard, A., Coley, D., Allen, S., 2019. Embodied energy and embodied carbon of 81 shelters globally. Bath: University of Bath Research Data Archive. Available from: https://doi.org/10.15125/BATH-00550.",
+            "units": [
+                "KG"
+            ],
+            "_id": "GRA-ALL_"
+        },
+        {
+            "form": "Plaster",
+            "embodied_water_ref": "EcoInvent 3.8\n gypsum fibreboard production\n GLO (Global)",
+            "material": "Gypsum",
+            "embodied_carbon": 0.39,
+            "density_unit": "kg/m3",
+            "density": 950.0,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011)",
+            "embodied_water": 0.318,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M2"
+            ],
+            "_id": "GYP-PLA_"
+        },
+        {
+            "form": "Rope, hemp (or other natural fibre) (10mm)",
+            "embodied_water_ref": "EcoInvent 3.8\n textile production, cotton, weaving\n GLO (Global)",
+            "material": "Hemp",
+            "embodied_carbon": 4.265,
+            "density_unit": "kg/m",
+            "density": 0.056,
+            "embodied_carbon_ref": "Kalliala, E.M., Nousiainen, P. (1999( Environmental Profile of Cotton and Polyester Cotton Fabrics.",
+            "embodied_water": 1.19,
+            "density_ref": "Engineering Toolbox <https://www.engineeringtoolbox.com/manila-rope-strength-d_1512.html>\n (equivalent strength to IOM-specified synthetic rope)",
+            "units": [
+                "KG",
+                "M"
+            ],
+            "_id": "HMP-ROP_"
+        },
+        {
+            "form": "Plaster",
+            "embodied_water_ref": "EcoInvent 3.8\n lime production, hydrated, loose weight\n GLO (Global)",
+            "material": "Lime",
+            "embodied_carbon": 0.78,
+            "density_unit": "kg/m3",
+            "density": 1350.0,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011) General lime",
+            "embodied_water": 0.845,
+            "density_ref": "Engineering Toolbox, Density of solids, Lime, slaked",
+            "units": [
+                "KG"
+            ],
+            "_id": "LME-PLA_"
+        },
+        {
+            "form": "Polycarbonate, PC sheet - solid",
+            "embodied_water_ref": "EcoInvent 3.8\n polycarbonate production\n GLO (Global)",
+            "material": "Plastic, polymer",
+            "embodied_carbon": 7.62,
+            "density_unit": "kg/m3",
+            "density": 1200.0,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011)",
+            "embodied_water": 142.0,
+            "density_ref": "Engineering Toolbox, Density of solids, PC-polycarbonate",
+            "units": [
+                "KG",
+                "PCE"
+            ],
+            "_id": "PLA-PCS_"
+        },
+        {
+            "form": "Polycarbonate, PC sheet - corrugated",
+            "embodied_water_ref": "EcoInvent 3.8\n polycarbonate production\n GLO (Global)",
+            "material": "Plastic, polymer",
+            "embodied_carbon": 7.62,
+            "density_unit": "kg/m3",
+            "density": 1200.0,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011)",
+            "embodied_water": 142.0,
+            "density_ref": "Engineering Toolbox, Density of solids, PC-polycarbonate",
+            "units": [
+                "KG",
+                "PCE"
+            ],
+            "_id": "PLA-PCC_"
+        },
+        {
+            "form": "Polycarbonate, PC sheet - twinwall",
+            "embodied_water_ref": "EcoInvent 3.8\n polycarbonate production\n GLO (Global)",
+            "material": "Plastic, polymer",
+            "embodied_carbon": 7.62,
+            "density_unit": "kg/m3",
+            "density": 1200.0,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011)",
+            "embodied_water": 142.0,
+            "density_ref": "Engineering Toolbox, Density of solids, PC-polycarbonate",
+            "units": [
+                "KG",
+                "PCE"
+            ],
+            "_id": "PLA-PCT_"
+        },
+        {
+            "form": "Polystyrene - sheet (e.g. for insulation)",
+            "embodied_water_ref": "EcoInvent 3.8\n polystyrene production, expandable\n GLO (Global)",
+            "material": "Plastic, polymer",
+            "embodied_carbon": 3.29,
+            "density_unit": "kg/m3",
+            "density": 27.0,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011), Expanded polystyrene",
+            "embodied_water": 165.0,
+            "density_ref": "Engineering Toolbox, Density of solids, Expanded polystyrene",
+            "units": [
+                "KG",
+                "M2",
+                "PCE"
+            ],
+            "_id": "PLA-PSY_"
+        },
+        {
+            "form": "Polyvinyl chloride, PVC pipe",
+            "embodied_water_ref": "EcoInvent 3.8\n polyvinylchloride production, emulsion polymerisation\n GLO (Global)",
+            "material": "Plastic, polymer",
+            "embodied_carbon": 3.23,
+            "density_unit": "kg/m3",
+            "density": 1380.0,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011), Polyvinyl chloride pipe",
+            "embodied_water": 26.1,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M",
+                "PCE"
+            ],
+            "_id": "PLA-PVC_"
+        },
+        {
+            "form": "Rope, polypropylene, nylon (or other synthetic material) (8mm)",
+            "embodied_water_ref": "EcoInvent 3.8\n nylon 6 production\n GLO (Global)",
+            "material": "Plastic, polymer",
+            "embodied_carbon": 9.14,
+            "density_unit": "kg/m",
+            "density": 0.03,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011), Nylon (polyamide) 6",
+            "embodied_water": 184.0,
+            "density_ref": "IOM Emergency Manuual <https://emergencymanual.iom.int/entry/51550/rope-polypropylene-black-8mm-twisted>",
+            "units": [
+                "KG",
+                "M"
+            ],
+            "_id": "PLA-ROP_"
+        },
+        {
+            "form": "Tarpaulin, polyester",
+            "embodied_water_ref": "EcoInvent 3.8\n polyester fibre production, finished\n GLO (Global)",
+            "material": "Plastic, polymer",
+            "embodied_carbon": 15.5,
+            "density_unit": "kg/m2",
+            "density": 0.19,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011)",
+            "embodied_water": 22808.0,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M2",
+                "PCE"
+            ],
+            "_id": "PLA-TAR_"
+        },
+        {
+            "form": "..",
+            "embodied_water_ref": "EcoInvent 3.8\n synthetic rubber production\n GLO (Global)",
+            "material": "Rubber",
+            "embodied_carbon": 2.66,
+            "density_unit": "kg/m3",
+            "density": 1500.0,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011)",
+            "embodied_water": 45.0,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG"
+            ],
+            "_id": "RBR-ALL_"
+        },
+        {
+            "form": "..",
+            "embodied_water_ref": "",
+            "material": "Sand",
+            "embodied_carbon": 0.005,
+            "density_unit": "kg/m3",
+            "density": 2240.0,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011)",
+            "embodied_water": 0.0,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M3"
+            ],
+            "_id": "SND-ALL_"
+        },
+        {
+            "form": "Rebar",
+            "embodied_water_ref": "UNHCR (2021) Shelter and Sustainability, p10",
+            "material": "Steel",
+            "embodied_carbon": 1.99,
+            "density_unit": "kg/m3",
+            "density": 7800.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Steel, Rebar",
+            "embodied_water": 705.0,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M",
+                "PCE"
+            ],
+            "_id": "STE-REB_"
+        },
+        {
+            "form": "Wire",
+            "embodied_water_ref": "UNHCR (2021) Shelter and Sustainability, p10",
+            "material": "Steel",
+            "embodied_carbon": 2.27,
+            "density_unit": "kg/m3",
+            "density": 7800.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Steel, Wire Rod",
+            "embodied_water": 705.0,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG"
+            ],
+            "_id": "STE-WIR_"
+        },
+        {
+            "form": "Galvanised Sheet, corrugated",
+            "embodied_water_ref": "UNHCR (2021) Shelter and Sustainability, p10",
+            "material": "Steel",
+            "embodied_carbon": 2.76,
+            "density_unit": "kg/m3",
+            "density": 7800.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Steel, hot dip galvanised steel",
+            "embodied_water": 705.0,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "PCE"
+            ],
+            "_id": "STE-GSH_"
+        },
+        {
+            "form": "Plate, sheet, flat",
+            "embodied_water_ref": "UNHCR (2021) Shelter and Sustainability, p10",
+            "material": "Steel",
+            "embodied_carbon": 2.42,
+            "density_unit": "kg/m3",
+            "density": 7800.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Steel, pickled hot rolled coil",
+            "embodied_water": 705.0,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "PCE"
+            ],
+            "_id": "STE-PLA_"
+        },
+        {
+            "form": "Strap",
+            "embodied_water_ref": "",
+            "material": "Steel",
+            "embodied_carbon": 2.42,
+            "density_unit": "kg/m3",
+            "density": 7800.0,
+            "embodied_carbon_ref": "",
+            "embodied_water": 705.0,
+            "density_ref": "",
+            "units": [
+                "KG",
+                "M",
+                "PCE"
+            ],
+            "_id": "STE-STR_"
+        },
+        {
+            "form": "Structural section, circular hollow section (tube)",
+            "embodied_water_ref": "UNHCR (2021) Shelter and Sustainability, p10",
+            "material": "Steel",
+            "embodied_carbon": 1.55,
+            "density_unit": "kg/m3",
+            "density": 7800.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Steel, Section",
+            "embodied_water": 705.0,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M",
+                "PCE"
+            ],
+            "_id": "STE-CHS_"
+        },
+        {
+            "form": "Structural section, square hollow section",
+            "embodied_water_ref": "UNHCR (2021) Shelter and Sustainability, p10",
+            "material": "Steel",
+            "embodied_carbon": 1.55,
+            "density_unit": "kg/m3",
+            "density": 7800.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Steel, Section",
+            "embodied_water": 705.0,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M",
+                "PCE"
+            ],
+            "_id": "STE-SHS_"
+        },
+        {
+            "form": "Structural section, rectangular hollow section",
+            "embodied_water_ref": "UNHCR (2021) Shelter and Sustainability, p10",
+            "material": "Steel",
+            "embodied_carbon": 1.55,
+            "density_unit": "kg/m3",
+            "density": 7800.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Steel, Section",
+            "embodied_water": 705.0,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M",
+                "PCE"
+            ],
+            "_id": "STE-RHS_"
+        },
+        {
+            "form": "Structural section, I section",
+            "embodied_water_ref": "UNHCR (2021) Shelter and Sustainability, p10",
+            "material": "Steel",
+            "embodied_carbon": 1.55,
+            "density_unit": "kg/m3",
+            "density": 7800.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Steel, Section",
+            "embodied_water": 705.0,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M",
+                "PCE"
+            ],
+            "_id": "STE-ISE_"
+        },
+        {
+            "form": "Structural section, C section",
+            "embodied_water_ref": "UNHCR (2021) Shelter and Sustainability, p10",
+            "material": "Steel",
+            "embodied_carbon": 1.55,
+            "density_unit": "kg/m3",
+            "density": 7800.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Steel, Section",
+            "embodied_water": 705.0,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M",
+                "PCE"
+            ],
+            "_id": "STE-CSE_"
+        },
+        {
+            "form": "Structural section, Equal angle section",
+            "embodied_water_ref": "UNHCR (2021) Shelter and Sustainability, p10",
+            "material": "Steel",
+            "embodied_carbon": 1.55,
+            "density_unit": "kg/m3",
+            "density": 7800.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Steel, Section",
+            "embodied_water": 705.0,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M",
+                "PCE"
+            ],
+            "_id": "STE-EAS_"
+        },
+        {
+            "form": "Structural section, other",
+            "embodied_water_ref": "UNHCR (2021) Shelter and Sustainability, p10",
+            "material": "Steel",
+            "embodied_carbon": 1.55,
+            "density_unit": "kg/m3",
+            "density": 7800.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Steel, Section",
+            "embodied_water": 705.0,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M",
+                "PCE"
+            ],
+            "_id": "STE-SEO_"
+        },
+        {
+            "form": "Hinge",
+            "embodied_water_ref": "",
+            "material": "Steel/brass fixture, fixing ",
+            "embodied_carbon": 1.55,
+            "density_unit": "kg/m3",
+            "density": 7800.0,
+            "embodied_carbon_ref": "",
+            "embodied_water": 705.0,
+            "density_ref": "",
+            "units": [
+                "KG",
+                "PCE"
+            ],
+            "_id": "STE-FXH_"
+        },
+        {
+            "form": "Lock",
+            "embodied_water_ref": "",
+            "material": "Steel/brass fixture, fixing ",
+            "embodied_carbon": 1.55,
+            "density_unit": "kg/m3",
+            "density": 7800.0,
+            "embodied_carbon_ref": "",
+            "embodied_water": 705.0,
+            "density_ref": "",
+            "units": [
+                "KG",
+                "PCE"
+            ],
+            "_id": "STE-FXL_"
+        },
+        {
+            "form": "Nails, screws, bolts, other fixings",
+            "embodied_water_ref": "",
+            "material": "Steel/brass fixture, fixing ",
+            "embodied_carbon": 1.55,
+            "density_unit": "kg/m3",
+            "density": 7800.0,
+            "embodied_carbon_ref": "",
+            "embodied_water": 705.0,
+            "density_ref": "",
+            "units": [
+                "KG"
+            ],
+            "_id": "STE-FXN_"
+        },
+        {
+            "form": "Block",
+            "embodied_water_ref": "",
+            "material": "Stone",
+            "embodied_carbon": 0.7,
+            "density_unit": "kg/m3",
+            "density": 2880.0,
+            "embodied_carbon_ref": "ICE DB V2.0 (2011)\n Granite",
+            "embodied_water": 0.0,
+            "density_ref": "ICE DB V2.0 (2011), Granite",
+            "units": [
+                "KG",
+                "M3",
+                "PCE"
+            ],
+            "_id": "STO-BLK_"
+        },
+        {
+            "form": "Gravel, aggregate",
+            "embodied_water_ref": "",
+            "material": "Stone",
+            "embodied_carbon": 0.007,
+            "density_unit": "kg/m3",
+            "density": 2240.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Aggregates and sand, General UK",
+            "embodied_water": 0.0,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M3"
+            ],
+            "_id": "STO-AGG_"
+        },
+        {
+            "form": "Hardwood, rectangular section",
+            "embodied_water_ref": "Joep F. Schyns, Martijn J. Booij, Arjen Y. Hoekstra, (2017)The water footprint of wood for lumber, pulp, paper, fuel and firewood. Advances in Water Resources,107, pp.490-501,",
+            "material": "Timber",
+            "embodied_carbon": 0.306,
+            "density_unit": "kg/m3",
+            "density": 720.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Timber, Hardwood, no carbon storage",
+            "embodied_water": 601.0,
+            "density_ref": "ICE DB V2.0 (2011), Maple, oak and similar hardwoods",
+            "units": [
+                "KG",
+                "M",
+                "PCE"
+            ],
+            "_id": "TIM-HDR_"
+        },
+        {
+            "form": "Hardwood, circular section",
+            "embodied_water_ref": "Joep F. Schyns, Martijn J. Booij, Arjen Y. Hoekstra, (2017)The water footprint of wood for lumber, pulp, paper, fuel and firewood. Advances in Water Resources,107, pp.490-501,",
+            "material": "Timber",
+            "embodied_carbon": 0.306,
+            "density_unit": "kg/m3",
+            "density": 720.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Timber, Hardwood, no carbon storage",
+            "embodied_water": 601.0,
+            "density_ref": "ICE DB V2.0 (2011), Maple, oak and similar hardwoods",
+            "units": [
+                "KG",
+                "M",
+                "PCE"
+            ],
+            "_id": "TIM-HDC_"
+        },
+        {
+            "form": "Plywood, chipboard, fibreboard",
+            "embodied_water_ref": "Joep F. Schyns, Martijn J. Booij, Arjen Y. Hoekstra, (2017)The water footprint of wood for lumber, pulp, paper, fuel and firewood. Advances in Water Resources,107, pp.490-501,",
+            "material": "Timber",
+            "embodied_carbon": 0.681,
+            "density_unit": "kg/m3",
+            "density": 540.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Timber, Plywood, no carbon storage",
+            "embodied_water": 1420.0,
+            "density_ref": "ICE DB V2.0 (2011)",
+            "units": [
+                "KG",
+                "M2",
+                "PCE"
+            ],
+            "_id": "TIM-PLY_"
+        },
+        {
+            "form": "Softwood, rectangular section",
+            "embodied_water_ref": "Joep F. Schyns, Martijn J. Booij, Arjen Y. Hoekstra, (2017)The water footprint of wood for lumber, pulp, paper, fuel and firewood. Advances in Water Resources,107, pp.490-501,",
+            "material": "Timber",
+            "embodied_carbon": 0.263,
+            "density_unit": "kg/m3",
+            "density": 510.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Timber, Softwood, no carbon storage",
+            "embodied_water": 1420.0,
+            "density_ref": "ICE DB V2.0 (2011), Fir pine",
+            "units": [
+                "KG",
+                "M",
+                "PCE"
+            ],
+            "_id": "TIM-SFR_"
+        },
+        {
+            "form": "Softwood, circular section",
+            "embodied_water_ref": "Joep F. Schyns, Martijn J. Booij, Arjen Y. Hoekstra, (2017)The water footprint of wood for lumber, pulp, paper, fuel and firewood. Advances in Water Resources,107, pp.490-501,",
+            "material": "Timber",
+            "embodied_carbon": 0.263,
+            "density_unit": "kg/m3",
+            "density": 510.0,
+            "embodied_carbon_ref": "ICE DB V3.0 (10.11.2019), Timber, Softwood, no carbon storage",
+            "embodied_water": 1420.0,
+            "density_ref": "ICE DB V2.0 (2011), Fir pine",
+            "units": [
+                "KG",
+                "M",
+                "PCE"
+            ],
+            "_id": "TIM-SFC_"
+        },
+        {
+            "form": "Paint",
+            "embodied_water_ref": "",
+            "material": "Timber preservative ",
+            "embodied_carbon": 0.0,
+            "density_unit": "kg/m3",
+            "density": 0.0,
+            "embodied_carbon_ref": "",
+            "embodied_water": 0.0,
+            "density_ref": "",
+            "units": [
+                "KG",
+                "L"
+            ],
+            "_id": "TPR-ALL_"
+        }
+    ]
 }

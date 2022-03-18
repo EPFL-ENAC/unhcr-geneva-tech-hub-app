@@ -23,23 +23,23 @@
           <v-sheet elevation="2" rounded v-if="project">
             <v-container fluid>
               <v-row>
-                <v-col> Habitability: {{ project.habitability_score }} </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  Technical performance:
-                  {{ project.technical_performance_score }}
+                <v-col class="about-first-column d-flex justify-center" lg="12">
+                  <v-img
+                    max-width="70%"
+                    class="d-flex justify-center"
+                    src="/shelter/scorecard.png"
+                  ></v-img>
                 </v-col>
               </v-row>
             </v-container>
           </v-sheet>
         </v-col>
       </v-row>
-      <!-- <v-row v-if="$can('edit', project)">
+      <v-row v-if="$can('edit', project)">
         <v-col class="d-flex justify-end">
           <v-btn type="submit"> Save changes </v-btn>
         </v-col>
-      </v-row> -->
+      </v-row>
     </v-container>
   </v-form>
 </template>

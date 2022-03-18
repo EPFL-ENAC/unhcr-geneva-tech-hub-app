@@ -107,6 +107,9 @@ export default class Step6 extends Vue {
               {
                 _id: "input_1a_2",
                 score: 1,
+                imagePath: "/shelter/step6/input_1a_2.png",
+                description:
+                  "The icon with a circle and triangle indicates a drop-down panel that can be expanded and explains the criteria in more detail. The explaination will have text and may include an image, graphics and web links. E.g. for more information refer to https//:www.shelter_cluster_library_doc.pdf Only a single drop-down panel can be expanded at a time - i.e., opening a second panel collapses the currently-open panel.",
                 label:
                   "Wall structure designed to suit local lateral wind loads, including incorporation of adequate bracing",
               },
@@ -223,53 +226,73 @@ export default class Step6 extends Vue {
           {
             _id: "2b_thermal_comfort",
             title: "Thermal comfort",
-            type: "checkboxGroup",
+            type: "formGroup",
             children: [
               {
-                _id: "input_2b_1",
-                score: 1,
-                label:
-                  "Floor is elevated, with an air cavity to natural ground",
+                _id: "2b1_thermal_comfort",
+                type: "radioGroup",
+                children: [
+                  {
+                    _id: "input_2b_1",
+                    score: 1,
+                    label:
+                      "Floor is elevated, with an air cavity to natural ground",
+                  },
+                ],
               },
               {
-                _id: "input_2b_2",
-                score: 0,
-                label:
-                  "Wall comprised of single layer of lightweight material (CGI, etc.)",
+                _id: "2b2_thermal_comfort",
+                type: "radioGroup",
+                children: [
+                  {
+                    _id: "input_2b_2",
+                    score: 0,
+                    label:
+                      "Wall comprised of single layer of lightweight material (CGI, etc.)",
+                  },
+                  {
+                    _id: "input_2b_3",
+                    score: 1,
+                    label:
+                      "Wall comprised of a single layer of masonry (brick, adobe, etc.)",
+                  },
+                  {
+                    _id: "input_2b_4",
+                    score: 2,
+                    label:
+                      "Wall comprised of multiple layers with air gap between",
+                  },
+                  {
+                    _id: "input_2b_5",
+                    score: 3,
+                    label:
+                      "Wall comprised of multiple layers with insulation material between",
+                  },
+                ],
               },
               {
-                _id: "input_2b_3",
-                score: 1,
-                label:
-                  "Wall comprised of a single layer of masonry (brick, adobe, etc.)",
-              },
-              {
-                _id: "input_2b_4",
-                score: 2,
-                label: "Wall comprised of multiple layers with air gap between",
-              },
-              {
-                _id: "input_2b_5",
-                score: 3,
-                label:
-                  "Wall comprised of multiple layers with insulation material between",
-              },
-              {
-                _id: "input_2b_6",
-                score: 0,
-                label:
-                  "Roof comprised of single layer of lightweight material (CGI, etc.)",
-              },
-              {
-                _id: "input_2b_7",
-                score: 1,
-                label: "Roof comprised of multiple layers with air gap between",
-              },
-              {
-                _id: "input_2b_8",
-                score: 2,
-                label:
-                  "Roof comprised of multiple layers with insulation material between",
+                _id: "2b3_thermal_comfort",
+                type: "radioGroup",
+                children: [
+                  {
+                    _id: "input_2b_6",
+                    score: 0,
+                    label:
+                      "Roof comprised of single layer of lightweight material (CGI, etc.)",
+                  },
+                  {
+                    _id: "input_2b_7",
+                    score: 1,
+                    label:
+                      "Roof comprised of multiple layers with air gap between",
+                  },
+                  {
+                    _id: "input_2b_8",
+                    score: 2,
+                    label:
+                      "Roof comprised of multiple layers with insulation material between",
+                  },
+                ],
               },
             ],
           },

@@ -1,0 +1,111 @@
+material,form,code,density,density_unit,embodied_carbon,embodied_water,units,density_ref,embodied_carbon_ref,embodied_water_ref
+Aluminium,Composite panel,ALU-CPA_,2700,kg/m3,6.670,1.750,"KG, M2, PCE",ICE DB V2.0 (2011),ICE DB V3.0 (10.11.2019),"EcoInvent 3.8, aluminium alloy production, Metallic Matrix Composite, GLO (Global)"
+Aluminium,Sheet,ALU-SHE_,2700,kg/m3,6.670,1.750,"KG, M2, PCE",ICE DB V2.0 (2011),ICE DB V3.0 (10.11.2019),"EcoInvent 3.8, aluminium alloy production, Metallic Matrix Composite, GLO (Global)"
+Aluminium,"Other (e.g., window profile)",ALU-OTH_,2700,kg/m3,6.670,1.750,KG,ICE DB V2.0 (2011),ICE DB V3.0 (10.11.2019),"EcoInvent 3.8, aluminium alloy production, Metallic Matrix Composite, GLO (Global)"
+Bamboo,Pole,BMB-POL_,700,kg/m3,26.910,0.002,"KG, PCE","Kuchai, N., Matard, A., Coley, D., Allen, S., 2019. Embodied energy and embodied carbon of 81 shelters globally. Bath: University of Bath Research Data Archive. Available from: https://doi.org/10.15125/BATH-00550.","Kuchai, N., Matard, A., Coley, D., Allen, S., 2019. Embodied energy and embodied carbon of 81 shelters globally. Bath: University of Bath Research Data Archive. Available from: https://doi.org/10.15125/BATH-00550.","EcoInvent 3.8, bamboo pole production, GLO (Global)"
+Bamboo,Woven mat,BMB-MAT_,0,kg/m3,26.910,0.002,KG,..,"Kuchai, N., Matard, A., Coley, D., Allen, S., 2019. Embodied energy and embodied carbon of 81 shelters globally. Bath: University of Bath Research Data Archive. Available from: https://doi.org/10.15125/BATH-00550.","EcoInvent 3.8, bamboo pole production, GLO (Global)"
+Bitumen,"Paint, membrane",BIT-ALL_,1000,kg/m3,0.898,24.000,"KG, L, M2","ICE DB V2.0 (2011), Bitumen, insulation, all types","ICE DB V3.0 (10.11.2019), Average Embodied Carbon, Bitumen, membrane","EcoInvent 3.8, bitumen seal production, GLO (Global)"
+"Canvas, Polycotton","Heavy - sheet, tarpaulin, tent (e.g. SFT outer)",PLC-HVY_,0.35,kg/m2,4.265,1.190,"KG, M2, PCE","Standard Family tent specifications - outer tent, roof,UNHCR Core Relief Items Catalogue, 2012","Kalliala, E.M., Nousiainen, P. (1999( Environmental Profile of Cotton and Polyester Cotton Fabrics. AUTEX Research Journal, 1/1","EcoInvent 3.8, textile production, cotton, weaving, GLO (Global)"
+"Canvas, Polycotton","Light - sheet, tarpaulin, tent (e.g. SFT outer)",PLC-LHT_,0.13,kg/m2,4.265,1.190,"KG, M2, PCE","Standard Family tent specifications - inner tent, UNHCR Core Relief Items Catalogue, 2012","Kalliala, E.M., Nousiainen, P. (1999( Environmental Profile of Cotton and Polyester Cotton Fabrics. AUTEX Research Journal, 1/1","EcoInvent 3.8, textile production, cotton, weaving, GLO (Global)"
+"Cardboard, paper",Sheet,CAR-ALL_,0,kg/m3,1.290,432.000,KG,..,ICE DB V2.0 (2011),"EcoInvent 3.8, paper production, woodcontaining, supercalendered, GLO (Global)"
+Cement,Mortar,CEM-MTR_,1650,kg/m3,0.200,0.000,"KG, M3",ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Mortar and screed - CEM I, (1:3 cement:sand mix)","EcoInvent 3.8, cement mortar production, hand-mixed, on-site, GLO (Global)"
+Cement,Pure cement powder,CEM-PUR_,1860,kg/m3,0.912,0.200,KG,ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), CEM I, Ordinary Portland Cement","UNHCR (2021) Shelter and Sustainability, p10"
+Clay,"Brick, fired",CLA-BRF_,1920,kg/m3,0.213,0.027,"KG, M3, PCE",ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Clay, Brick","EcoInvent 3.8, clay brick production, GLO (Global)"
+Clay,"Brick, unfired",CLA-BRU_,2200,kg/m3,0.050,0.027,"KG, M3, PCE","Engineering Toolbox, Density of solids, Brick, pressed","Calculated from, Dabeaieh, M., Heinonen, J., El-Mahdy, D., Hassan, DM. (2020). A comparative study of life cycle carbon emissions and embodied energy between sun-dried bricks and fired clay bricks.","EcoInvent 3.8, clay brick production, GLO (Global)"
+Clay,"Floor tile, fired",CLA-TLF_,2000,kg/m3,0.480,0.027,"KG, M3",ICE DB V2.0 (2011),ICE DB V2.0 (2011),"EcoInvent 3.8
+  clay brick production
+ GLO (Global)"
+Clay,"Roof tile, fired",CLA-TLR_,2000,kg/m3,0.480,0.027,"KG, M4",ICE DB V2.0 (2011),ICE DB V2.0 (2011),"EcoInvent 3.8
+  clay brick production
+ GLO (Global)"
+Concrete,Aerated/lightweight block,CON-AEB_,750,kg/m3,0.482,0.184,"KG, M3, PCE",ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Concrete, aerated","EcoInvent 3.8
+ autoclaved aerated concrete block production
+ GLO (Global)"
+Concrete,General,CON-GEN_,2000,kg/m3,0.103,0.139,"KG, M3",ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Concrete, General","EcoInvent 3.8
+ concrete production, 40MPa, ready-mix, with Portland cement
+ GLO (Global)"
+Concrete,"Precast, block",CON-PCB_,1350,kg/m3,0.093,0.139,"KG, M3, PCE",ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Concrete Block, medium density solid, average strength, per kg","EcoInvent 3.8
+ concrete production, 40MPa, ready-mix, with Portland cement
+ GLO (Global)"
+Concrete,"Precast, other unit",CON-PCU_,2200,kg/m3,0.148,0.139,"KG, M3, PCE","ICE DB V2.0 (2011), Concrete, cast, dense,","ICE DB V3.0 (10.11.2019, Concrete, Pre-Cast
+ Concrete - Ordinary Portland Cement concrete…","EcoInvent 3.8
+ concrete production, 40MPa, ready-mix, with Portland cement
+ GLO (Global)"
+Concrete,Reinforced,CON-REI_,2300,kg/m3,0.103,0.139,"KG, M3","ICE DB V2.0 (2011), Concrete, cast, dense, reinforced","ICE DB V3.0 (10.11.2019), Concrete, General","EcoInvent 3.8
+ concrete production, 40MPa, ready-mix, with Portland cement
+ GLO (Global)"
+"Earth, soil, mud",Earth roof,EAR-ROF_,1460,kg/m3,0.024,0.000,"KG, M3","ICE DB V2.0 (2011)
+ earth, common","ICE DB V2.0 (2011)
+ General (Rammed) soil",
+"Earth, soil, mud",Mud plaster,EAR-PLA_,1460,kg/m3,0.024,0.000,"KG, M3","ICE DB V2.0 (2011)
+ earth, common","ICE DB V2.0 (2011)
+ General (Rammed) soil",
+"Earth, soil, mud",Rammed earth,EAR-RME_,1460,kg/m3,0.024,0.000,"KG, M3","ICE DB V2.0 (2011)
+ earth, common","ICE DB V2.0 (2011)
+ General (Rammed) soil",
+Glass,Window pane,GLA-WIN_,2500,kg/m3,1.437,5.800,"KG, PCE","ICE DB V2.0 (2011), Glass, solid (soda-lime)","ICE DB V3.0 (10.11.2019), Glass, General","UNHCR (2021) Shelter and Sustainability, p10"
+Glass,Wool insulation,GLA-WOO_,10,kg/m3,1.350,5.740,"KG, M3",ICE DB V2.0 (2011),ICE DB V2.0 (2011),"EcoInvent 3.8
+ glass wool mat production
+ GLO (Global)"
+"Grass, straw",..,GRA-ALL_,15,kg/m3,0.100,0.134,KG,"Kuchai, N., Matard, A., Coley, D., Allen, S., 2019. Embodied energy and embodied carbon of 81 shelters globally. Bath: University of Bath Research Data Archive. Available from: https://doi.org/10.15125/BATH-00550.","Kuchai, N., Matard, A., Coley, D., Allen, S., 2019. Embodied energy and embodied carbon of 81 shelters globally.","EcoInvent 3.8
+ grass production, organic, intensive
+ GLO (Global)"
+Gypsum,Plaster,GYP-PLA_,950,kg/m3,0.390,0.318,"KG, M2",ICE DB V2.0 (2011),ICE DB V2.0 (2011),"EcoInvent 3.8
+ gypsum fibreboard production
+ GLO (Global)"
+Hemp,"Rope, hemp (or other natural fibre) (10mm)",HMP-ROP_,0.056,kg/m,4.265,1.190,"KG, M","Engineering Toolbox <https://www.engineeringtoolbox.com/manila-rope-strength-d_1512.html>
+ (equivalent strength to IOM-specified synthetic rope)","Kalliala, E.M., Nousiainen, P. (1999( Environmental Profile of Cotton and Polyester Cotton Fabrics.","EcoInvent 3.8
+ textile production, cotton, weaving
+ GLO (Global)"
+Lime,Plaster,LME-PLA_,1350,kg/m3,0.780,0.845,KG,"Engineering Toolbox, Density of solids, Lime, slaked",ICE DB V2.0 (2011) General lime,"EcoInvent 3.8
+ lime production, hydrated, loose weight
+ GLO (Global)"
+"Plastic, polymer","Polycarbonate, PC sheet - solid",PLA-PCS_,1200,kg/m3,7.620,142.000,"KG, PCE","Engineering Toolbox, Density of solids, PC-polycarbonate",ICE DB V2.0 (2011),"EcoInvent 3.8
+ polycarbonate production
+ GLO (Global)"
+"Plastic, polymer","Polycarbonate, PC sheet - corrugated",PLA-PCC_,1200,kg/m3,7.620,142.000,"KG, PCE","Engineering Toolbox, Density of solids, PC-polycarbonate",ICE DB V2.0 (2011),"EcoInvent 3.8
+ polycarbonate production
+ GLO (Global)"
+"Plastic, polymer","Polycarbonate, PC sheet - twinwall",PLA-PCT_,1200,kg/m3,7.620,142.000,"KG, PCE","Engineering Toolbox, Density of solids, PC-polycarbonate",ICE DB V2.0 (2011),"EcoInvent 3.8
+ polycarbonate production
+ GLO (Global)"
+"Plastic, polymer",Polystyrene - sheet (e.g. for insulation),PLA-PSY_,27,kg/m3,3.290,165.000,"KG, M2, PCE","Engineering Toolbox, Density of solids, Expanded polystyrene","ICE DB V2.0 (2011), Expanded polystyrene","EcoInvent 3.8
+ polystyrene production, expandable
+ GLO (Global)"
+"Plastic, polymer","Polyvinyl chloride, PVC pipe",PLA-PVC_,1380,kg/m3,3.230,26.100,"KG, M, PCE",ICE DB V2.0 (2011),"ICE DB V2.0 (2011), Polyvinyl chloride pipe","EcoInvent 3.8
+ polyvinylchloride production, emulsion polymerisation
+ GLO (Global)"
+"Plastic, polymer","Rope, polypropylene, nylon (or other synthetic material) (8mm)",PLA-ROP_,0.03,kg/m,9.140,184.000,"KG, M",IOM Emergency Manuual <https://emergencymanual.iom.int/entry/51550/rope-polypropylene-black-8mm-twisted>,"ICE DB V2.0 (2011), Nylon (polyamide) 6","EcoInvent 3.8
+ nylon 6 production
+ GLO (Global)"
+"Plastic, polymer","Tarpaulin, polyester",PLA-TAR_,0.19,kg/m2,15.500,22808,"KG, M2, PCE",ICE DB V2.0 (2011),ICE DB V2.0 (2011),"EcoInvent 3.8
+ polyester fibre production, finished
+ GLO (Global)"
+Rubber,..,RBR-ALL_,1500,kg/m3,2.660,45.000,KG,ICE DB V2.0 (2011),ICE DB V2.0 (2011),"EcoInvent 3.8
+ synthetic rubber production
+ GLO (Global)"
+Sand,..,SND-ALL_,2240,kg/m3,0.005,0.000,"KG, M3",ICE DB V2.0 (2011),ICE DB V2.0 (2011),
+Steel,Rebar,STE-REB_,7800,kg/m3,1.990,705.000,"KG, M, PCE",ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Steel, Rebar","UNHCR (2021) Shelter and Sustainability, p10"
+Steel,Wire,STE-WIR_,7800,kg/m3,2.270,705.000,KG,ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Steel, Wire Rod","UNHCR (2021) Shelter and Sustainability, p10"
+Steel,"Galvanised Sheet, corrugated",STE-GSH_,7800,kg/m3,2.760,705.000,"KG, PCE",ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Steel, hot dip galvanised steel","UNHCR (2021) Shelter and Sustainability, p10"
+Steel,"Plate, sheet, flat",STE-PLA_,7800,kg/m3,2.420,705.000,"KG, PCE",ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Steel, pickled hot rolled coil","UNHCR (2021) Shelter and Sustainability, p10"
+Steel,Strap,STE-STR_,7800,kg/m3,2.420,705.000,"KG, M, PCE",,,
+Steel,"Structural section, circular hollow section (tube)",STE-CHS_,7800,kg/m3,1.550,705.000,"KG, M, PCE",ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Steel, Section","UNHCR (2021) Shelter and Sustainability, p10"
+Steel,"Structural section, square hollow section",STE-SHS_,7800,kg/m3,1.550,705.000,"KG, M, PCE",ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Steel, Section","UNHCR (2021) Shelter and Sustainability, p10"
+Steel,"Structural section, rectangular hollow section",STE-RHS_,7800,kg/m3,1.550,705.000,"KG, M, PCE",ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Steel, Section","UNHCR (2021) Shelter and Sustainability, p10"
+Steel,"Structural section, I section",STE-ISE_,7800,kg/m3,1.550,705.000,"KG, M, PCE",ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Steel, Section","UNHCR (2021) Shelter and Sustainability, p10"
+Steel,"Structural section, C section",STE-CSE_,7800,kg/m3,1.550,705.000,"KG, M, PCE",ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Steel, Section","UNHCR (2021) Shelter and Sustainability, p10"
+Steel,"Structural section, Equal angle section",STE-EAS_,7800,kg/m3,1.550,705.000,"KG, M, PCE",ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Steel, Section","UNHCR (2021) Shelter and Sustainability, p10"
+Steel,"Structural section, other",STE-SEO_,7800,kg/m3,1.550,705.000,"KG, M, PCE",ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Steel, Section","UNHCR (2021) Shelter and Sustainability, p10"
+"Steel/brass fixture, fixing ",Hinge,STE-FXH_,7800,kg/m3,1.550,705.000,"KG, PCE",,,
+"Steel/brass fixture, fixing ",Lock,STE-FXL_,7800,kg/m3,1.550,705.000,"KG, PCE",,,
+"Steel/brass fixture, fixing ","Nails, screws, bolts, other fixings",STE-FXN_,7800,kg/m3,1.550,705.000,KG,,,
+Stone,Block,STO-BLK_,2880,kg/m3,0.700,0.000,"KG, M3, PCE","ICE DB V2.0 (2011), Granite","ICE DB V2.0 (2011)
+ Granite",
+Stone,"Gravel, aggregate",STO-AGG_,2240,kg/m3,0.007,0.000,"KG, M3",ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Aggregates and sand, General UK",
+Timber,"Hardwood, rectangular section",TIM-HDR_,720,kg/m3,0.306,601.000,"KG, M, PCE","ICE DB V2.0 (2011), Maple, oak and similar hardwoods","ICE DB V3.0 (10.11.2019), Timber, Hardwood, no carbon storage","Joep F. Schyns, Martijn J. Booij, Arjen Y. Hoekstra, (2017)The water footprint of wood for lumber, pulp, paper, fuel and firewood. Advances in Water Resources,107, pp.490-501,"
+Timber,"Hardwood, circular section",TIM-HDC_,720,kg/m3,0.306,601.000,"KG, M, PCE","ICE DB V2.0 (2011), Maple, oak and similar hardwoods","ICE DB V3.0 (10.11.2019), Timber, Hardwood, no carbon storage","Joep F. Schyns, Martijn J. Booij, Arjen Y. Hoekstra, (2017)The water footprint of wood for lumber, pulp, paper, fuel and firewood. Advances in Water Resources,107, pp.490-501,"
+Timber,"Plywood, chipboard, fibreboard",TIM-PLY_,540,kg/m3,0.681,1420,"KG, M2, PCE",ICE DB V2.0 (2011),"ICE DB V3.0 (10.11.2019), Timber, Plywood, no carbon storage","Joep F. Schyns, Martijn J. Booij, Arjen Y. Hoekstra, (2017)The water footprint of wood for lumber, pulp, paper, fuel and firewood. Advances in Water Resources,107, pp.490-501,"
+Timber,"Softwood, rectangular section",TIM-SFR_,510,kg/m3,0.263,1420,"KG, M, PCE","ICE DB V2.0 (2011), Fir pine","ICE DB V3.0 (10.11.2019), Timber, Softwood, no carbon storage","Joep F. Schyns, Martijn J. Booij, Arjen Y. Hoekstra, (2017)The water footprint of wood for lumber, pulp, paper, fuel and firewood. Advances in Water Resources,107, pp.490-501,"
+Timber,"Softwood, circular section",TIM-SFC_,510,kg/m3,0.263,1420,"KG, M, PCE","ICE DB V2.0 (2011), Fir pine","ICE DB V3.0 (10.11.2019), Timber, Softwood, no carbon storage","Joep F. Schyns, Martijn J. Booij, Arjen Y. Hoekstra, (2017)The water footprint of wood for lumber, pulp, paper, fuel and firewood. Advances in Water Resources,107, pp.490-501,"
+Timber preservative ,Paint,TPR-ALL_,0,kg/m3,0.000,0.000,"KG, L",,,

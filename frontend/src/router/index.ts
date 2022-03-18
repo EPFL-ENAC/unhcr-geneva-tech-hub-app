@@ -465,7 +465,7 @@ const routes: Array<RouteConfig> = [
         name: "EnergyHome",
         component: () =>
           import(
-            /* webpackChunkName: "energy-home" */ "../views/energy/EnergyHome.vue"
+            /* webpackChunkName: "energy" */ "../views/energy/EnergyHome.vue"
           ),
       },
       {
@@ -473,7 +473,7 @@ const routes: Array<RouteConfig> = [
         name: "EnergySites",
         component: () =>
           import(
-            /* webpackChunkName: "energy-site" */ "../views/energy/EnergySite.vue"
+            /* webpackChunkName: "energy" */ "../views/energy/EnergySite.vue"
           ),
       },
       {
@@ -481,7 +481,7 @@ const routes: Array<RouteConfig> = [
         name: "EnergyTemplate",
         component: () =>
           import(
-            /* webpackChunkName: "energy-template" */ "../views/energy/EnergyTemplate.vue"
+            /* webpackChunkName: "energy" */ "../views/energy/EnergyTemplate.vue"
           ),
       },
     ],
