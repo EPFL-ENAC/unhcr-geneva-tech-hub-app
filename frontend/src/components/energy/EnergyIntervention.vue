@@ -12,7 +12,13 @@
               ></v-checkbox>
             </template>
           </v-expansion-panel-header>
-          <v-expansion-panel-content>TODO</v-expansion-panel-content>
+          <v-expansion-panel-content>
+            <form-item-component
+              v-for="item in formItems"
+              :key="item.key"
+              v-bind="item"
+            ></form-item-component>
+          </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
     </v-card-text>
@@ -22,8 +28,13 @@
 <script lang="ts">
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
+import FormItemComponent, { FormItem } from "../commons/FormItemComponent.vue";
 
-@Component
+@Component({
+  components: {
+    FormItemComponent,
+  },
+})
 export default class EnergyIntervention extends Vue {
   readonly interventions: { text: string }[] = [
     {
@@ -40,6 +51,38 @@ export default class EnergyIntervention extends Vue {
     },
     {
       text: "Diffusion of solar cookers",
+    },
+  ];
+  readonly formItems: FormItem[] = [
+    {
+      type: "number",
+      key: "yearStart",
+      label: "Starting year of the diffusion",
+    },
+    {
+      type: "number",
+      key: "yearEnd",
+      label: "Ending year of the diffusion",
+    },
+    {
+      type: "number",
+      key: "cookstovesCount",
+      label: "Number of cookstoves per year",
+    },
+    {
+      type: "number",
+      key: "replaceTarget",
+      label: "Targeted households and coostoves to replace",
+    },
+    {
+      type: "number",
+      key: "cost",
+      label: "Total cost per year",
+    },
+    {
+      type: "number",
+      key: "subsidies",
+      label: "Share of subsidies by the donnor",
     },
   ];
 }
