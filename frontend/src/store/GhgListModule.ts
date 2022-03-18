@@ -1,3 +1,6 @@
+/** Config store */
+import { Country, GreenHouseGaz } from "@/store/GhgInterface";
+import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -5,17 +8,14 @@ import {
   Module,
   MutationTree,
 } from "vuex";
-/** Config store */
-import { Country, GreenHouseGaz } from "@/store/GhgInterface";
-import { SyncDatabase, createSyncDatabase } from "@/utils/couchdb";
-
-import { CouchUser } from "./UserModule";
 import { RootState } from ".";
+import { CouchUser } from "./UserModule";
 
 const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 
 interface ProjectsState {
   projects: Array<GreenHouseGaz>;
+  project: GreenHouseGaz;
   countries: Array<Country>;
   localCouch: SyncDatabase<GreenHouseGaz> | null;
 }
@@ -25,6 +25,7 @@ const DB_NAME = "ghg";
 function generateState(): ProjectsState {
   return {
     projects: [],
+    project: {} as GreenHouseGaz,
     countries: [],
     localCouch: null,
   };
@@ -41,6 +42,8 @@ function generateNewProject(newGhg: GreenHouseGaz, user: CouchUser) {
 /** Getters */
 const getters: GetterTree<ProjectsState, RootState> = {
   projects: (s): Array<GreenHouseGaz> => s.projects,
+  project: (s): GreenHouseGaz | null => s.project,
+
   countries: (s): Array<Country> => s.countries,
 };
 
@@ -54,6 +57,9 @@ const mutations: MutationTree<ProjectsState> = {
   },
   SET_PROJECTS(state, value) {
     state.projects = value;
+  },
+  SET_PROJECT(state, value) {
+    state.project = value;
   },
   SET_COUNTRIES(state, countries) {
     state.countries = countries;
@@ -136,6 +142,36 @@ const actions: ActionTree<ProjectsState, RootState> = {
   },
   removeDoc: (context: ActionContext<ProjectsState, RootState>, id) => {
     context.commit("REMOVE_DOC", id);
+  },
+  getDoc: (context: ActionContext<ProjectsState, RootState>, id) => {
+    const db = context.state.localCouch?.db;
+    if (db) {
+      db.get(id)
+        .then(function (result) {
+          console.log(result);
+          context.commit("SET_PROJECT", result);
+        })
+        .catch(function (err: Error) {
+          console.log(err);
+        });
+    } else {
+      throw new Error(MSG_DB_DOES_NOT_EXIST);
+    }
+  },
+  updateDoc: async (
+    context: ActionContext<ProjectsState, RootState>,
+    value
+  ) => {
+    context.commit("SET_PROJECT", value);
+    const db = context.state.localCouch?.db;
+    if (db) {
+      await db.put(value);
+    } else {
+      throw new Error(MSG_DB_DOES_NOT_EXIST);
+    }
+  },
+  hasDB: async (context: ActionContext<ProjectsState, RootState>) => {
+    return context.state.localCouch?.db;
   },
 };
 

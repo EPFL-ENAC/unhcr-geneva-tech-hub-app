@@ -37,6 +37,7 @@
                   :disabled="existingSites.length === 0 || newName !== ''"
                   tabindex="0"
                   v-model="newCampSite.name"
+                  @input="onSelectExistingSite"
                   :items="existingSites"
                   item-value="name"
                   item-text="name"
@@ -60,9 +61,9 @@
                 <v-text-field
                   tabindex="1"
                   v-model="newName"
-                  :rules="rules"
                   required
                   name="name"
+                  :rules="rulesCreateNewSite"
                   label="Create a new site"
                   type="text"
                 />
@@ -71,8 +72,10 @@
                 <v-select
                   tabindex="3"
                   v-model="editedItem.name"
+                  :rules="[ruleAYearIsRequired, ruleSurveyYearAlreadyExist]"
+                  required
                   :items="['2019', '2020', '2021', '2022']"
-                  label="Select an existing year"
+                  label="Select survey year"
                 >
                 </v-select>
               </v-col>
@@ -122,16 +125,17 @@
 import { Country, GreenHouseGaz, Sites, Survey } from "@/store/GhgInterface.js";
 import Countries from "@/utils/countriesAsList";
 import flagEmoji from "@/utils/flagEmoji";
+import { cloneDeep } from "lodash";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-
 @Component({
   computed: {
-    ...mapGetters("GhgListModule", ["countries"]),
+    ...mapGetters("GhgListModule", ["countries", "project"]),
   },
 
   methods: {
-    ...mapActions("GhgListModule", ["addDoc", "updateDoc"]),
+    // todo unified GHG database connection so we have only one store
+    ...mapActions("GhgListModule", ["addDoc", "updateDoc", "getDoc"]),
   },
 })
 /** ProjectList */
@@ -141,8 +145,10 @@ export default class ProjectList extends Vue {
 
   addDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;
   updateDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;
+  getDoc!: (id: string) => null;
 
   countries!: Country[];
+  project!: GreenHouseGaz;
   newName = "";
 
   get dialogOpen(): boolean {
@@ -156,6 +162,10 @@ export default class ProjectList extends Vue {
     ...country,
     emoji: flagEmoji(country.code),
   }));
+
+  public onSelectExistingSite(site: string) {
+    this.getDoc(site);
+  }
 
   private newDefaultCampSite(): GreenHouseGaz {
     return {
@@ -172,7 +182,7 @@ export default class ProjectList extends Vue {
   editedIndex = -1;
   private newDefaultItem(): Survey {
     return {
-      name: "2022", // current year
+      name: "", // current year
       created_at: new Date().toISOString(),
       created_by: this.$userName(),
     } as Survey;
@@ -189,10 +199,6 @@ export default class ProjectList extends Vue {
     return currentCountry.value;
   }
 
-  mounted(): void {
-    this.newCampSite = this.newDefaultCampSite();
-  }
-
   public closeSiteDialog(): void {
     this.dialogOpen = false;
     this.$nextTick(() => {
@@ -200,16 +206,45 @@ export default class ProjectList extends Vue {
     });
   }
 
-  createProjectFormValid = true;
+  createProjectFormValid = false;
   // a name is required if current Site selected is null
-  rules = [
-    (v: string): boolean | string =>
-      !!v || !this.newCampSite.name || `A name is required`,
-    (v: string): boolean | string =>
+  rulesCreateNewSite = [
+    this.ruleANameShouldHaveLength,
+    this.ruleSiteAlreadyExist,
+  ];
+  public ruleANameIsRequired(v: string): boolean | string {
+    return !!v || !this.newCampSite.name || `A name is required`;
+  }
+  public ruleANameShouldHaveLength(v: string): boolean | string {
+    return (
       v?.length > 1 ||
       !this.newCampSite.name ||
-      `Name should have a length >= 1`,
-  ];
+      `Name should have a length >= 1`
+    );
+  }
+
+  public ruleAYearIsRequired(value: string): boolean | string {
+    return !!value || `A year is required`;
+  }
+
+  public ruleSurveyYearAlreadyExist(value: string): boolean | string {
+    if (this.newName) {
+      return true;
+    } else {
+      const surveys =
+        this.newCampSite.surveys?.map((survey) => survey.name) ?? [];
+      return (
+        surveys.indexOf(value) === -1 || `A survey for this year already exist`
+      );
+    }
+  }
+
+  public ruleSiteAlreadyExist(value: string): boolean | string {
+    const sites = this.existingSites?.map((survey) => survey.name) ?? [];
+    return (
+      sites.indexOf(value) === -1 || `A survey for this year already exist`
+    );
+  }
 
   async submit(): Promise<void> {
     // if does not exist
@@ -250,6 +285,30 @@ export default class ProjectList extends Vue {
         surveyId: encodeURIComponent(surveyId),
       },
     });
+  }
+
+  public setLocalCampSite(project: GreenHouseGaz): void {
+    this.newCampSite = project ? cloneDeep(project) : ({} as GreenHouseGaz);
+  }
+
+  public syncLocalCampSite(): void {
+    // init function
+    this.setLocalCampSite(this.project);
+
+    this.$store.subscribe((mutation) => {
+      const shouldUpdate = ["GhgListModule/SET_PROJECT"];
+      if (shouldUpdate.includes(mutation.type)) {
+        this.setLocalCampSite(mutation.payload);
+      }
+    });
+  }
+
+  created(): void {
+    this.syncLocalCampSite();
+  }
+
+  mounted(): void {
+    this.newCampSite = this.newDefaultCampSite();
   }
 }
 </script>
