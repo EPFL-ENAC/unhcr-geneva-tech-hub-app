@@ -23,24 +23,23 @@
                 <v-list-item-title class="text-h5 mb-1">
                   {{ app.title }}
                 </v-list-item-title>
-                <v-list-item-subtitle>
-                  {{ app.description }}
-                </v-list-item-subtitle>
+                {{ app.description }}
               </v-list-item-content>
 
-              <v-list-item-avatar tile size="80">
-                <v-img v-if="app.logoImg" :src="app.logoImg"></v-img>
-                <v-icon v-if="app.logoIcon" color="black" x-large>
-                  {{ app.logoIcon }}
-                </v-icon>
-              </v-list-item-avatar>
+              <div class="icon-and-click">
+                <v-list-item-avatar tile size="80">
+                  <v-img v-if="app.logoImg" :src="app.logoImg"></v-img>
+                  <v-icon v-if="app.logoIcon" color="black" x-large>
+                    {{ app.logoIcon }}
+                  </v-icon>
+                </v-list-item-avatar>
+                <v-card-actions class="app-action">
+                  <v-btn outlined rounded text :to="{ name: app.to }">
+                    Access
+                  </v-btn>
+                </v-card-actions>
+              </div>
             </v-list-item>
-
-            <v-card-actions class="d-flex justify-end">
-              <v-btn outlined rounded text :to="{ name: app.to }">
-                Access
-              </v-btn>
-            </v-card-actions>
           </v-card>
         </v-hover>
       </v-col>
@@ -71,11 +70,15 @@ export default class AppList extends Vue {
       logoImg: "/app_logo/shelter.png",
 
       description:
-        "A tool supporting comparative assessments of environmental impacts, technical performance, habitability and affordability of shelter designs used in humanitarian relief operations. ",
+        "A tool supporting comparative assessments of environmental \
+        impacts, technical performance, habitability and affordability of \
+        shelter designs used in humanitarian relief operations.",
     },
     {
-      title: "Energy",
+      title: "Energy planning tool",
       to: "Energy",
+      description:
+        "This tool allows medium & long-term energy planning for improving access to sustainable energy for refugees.",
       logoIcon: "mdi-flash",
     },
   ];
@@ -87,8 +90,19 @@ export default class AppList extends Vue {
   transition: opacity 0.2s ease-in-out;
   cursor: pointer;
 }
-
-// .v-card:not(.on-hover) {
-//   opacity: 0.8;
-//  }
+.icon-and-click {
+  flex-direction: column;
+  align-self: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  flex: 0 1 auto;
+  overflow: hidden;
+  padding: 12px 0;
+  justify-content: space-between;
+}
+::v-deep .v-card__actions.app-action {
+  width: 80px; // like the logo app
+  display: flex;
+  justify-content: center;
+}
 </style>

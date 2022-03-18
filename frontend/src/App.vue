@@ -51,15 +51,18 @@
           </v-list-item-content>
         </v-list-item>
         <v-list-item
-          v-for="([title, name, icon], i) in apps"
+          v-for="(app, i) in apps"
           :key="i"
           link
-          :to="{ name }"
+          :to="{ name: app.name }"
         >
           <v-list-item-icon @click.stop="mini = true">
-            <v-icon v-text="icon"></v-icon>
+            <v-img max-width="24px" v-if="app.logoImg" :src="app.logoImg" style="color: rgba(0, 0, 0, 0.54);"></v-img>
+            <v-icon v-if="app.logoIcon">
+              {{ app.logoIcon }}
+            </v-icon>
           </v-list-item-icon>
-          <v-list-item-title v-text="title"></v-list-item-title>
+          <v-list-item-title v-text="app.title"></v-list-item-title>
         </v-list-item>
 
         <v-list-item link :to="{ name: 'About' }">
@@ -182,9 +185,9 @@ export default class App extends Vue {
   snackbar = false;
   // TODO: use meta.title for apps name
   apps = [
-    ["Green House Gaz", "GreenHouseGaz", "mdi-account-multiple-outline"],
-    ["Shelter Sustainability", "ShelterSustainability", "mdi-cog-outline"],
-    ["Energy", "Energy", "mdi-flash"],
+    { title: "Green House Gaz", name: "GreenHouseGaz",logoImg: "/app_logo/ghg.png"},
+    { title: "Shelter Sustainability", name: "ShelterSustainability",logoImg: "/app_logo/shelter.png"},
+    { title: "Energy",name:  "Energy", logoIcon: "mdi-flash"},
   ];
 
   rootRoute = {} as RouteRecordPublic;
