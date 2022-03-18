@@ -99,6 +99,11 @@ export default class SurveyList extends Vue {
       to: "GreenHouseGazStep3",
     },
     { icon: "mdi-leaf", text: "Sequestration", to: "GreenHouseGazStep4" },
+    {
+      icon: "mdi-newspaper-variant-outline",
+      text: "Results",
+      to: "GreenHouseGazStep4",
+    },
   ];
 
   public get currentProjectEmoji(): string {

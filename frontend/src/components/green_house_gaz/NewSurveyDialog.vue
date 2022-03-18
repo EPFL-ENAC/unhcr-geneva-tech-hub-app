@@ -11,7 +11,7 @@
             <!-- {{ newCampSite }}
             {{ editedItem }} -->
             <v-row>
-              <v-col cols="12" sm="6" md="6">
+              <v-col cols="12">
                 <v-select
                   tabindex="0"
                   v-model="newCampSite.country_code"
@@ -31,8 +31,10 @@
                   </template>
                 </v-select>
               </v-col>
-
-              <v-col cols="12" sm="6" md="6">
+              <v-col>
+                <v-divider />
+              </v-col>
+              <v-col cols="12">
                 <v-select
                   :disabled="existingSites.length === 0 || newName !== ''"
                   tabindex="0"
@@ -54,10 +56,9 @@
                   </template>
                 </v-select>
               </v-col>
+              <v-col> Or </v-col>
 
-              <v-divider />
-
-              <v-col cols="12" sm="6" md="6">
+              <v-col cols="12">
                 <v-text-field
                   tabindex="1"
                   v-model="newName"
@@ -68,7 +69,11 @@
                   type="text"
                 />
               </v-col>
-              <v-col cols="12" sm="6" md="6">
+
+              <v-col>
+                <v-divider />
+              </v-col>
+              <v-col cols="12">
                 <v-select
                   tabindex="3"
                   v-model="editedItem.name"
@@ -163,7 +168,7 @@ export default class ProjectList extends Vue {
     emoji: flagEmoji(country.code),
   }));
 
-  public onSelectExistingSite(site: string) {
+  public onSelectExistingSite(site: string): void {
     this.getDoc(site);
   }
 

@@ -79,26 +79,28 @@ export default class Facilities extends Vue {
       SUR_RNW: function (): number {
         return 0;
       },
-      SUR_DIES: function (facilities: Record<string, number>): number {
+
+      // SUR_DIES: function (facilities: Record<string, number>): number {
+      SUR_DIES: function (): number {
         // debugger;
         return 0;
         // return (localConf.ECONF_DIES_EM * facilities.SUR_DIES_NUM) / 1000;
       },
-      SUR_GRD: function (facilities: Record<string, number>): number {
+      SUR_GRD: function (): number {
         // debugger;
         return 0;
         // return (localConf.ECONF_GRD_EM * facilities.SUR_GRD_NUM * 365) / 1000;
       },
-      SUR_HYB: function (facilities: Record<string, number>): number {
+      SUR_HYB: function (): number {
         // debugger;
         return 0;
         // return localConf.ECONF_HYB_EMT * facilities.SUR_HYB_NUM * 365;
       },
-    } as Record<string, (facilities: Record<string, number>) => number>;
+    } as Record<string, () => number>;
 
     Object.keys(inputFormulas).forEach((key) => {
-      facilities[`${key}_NUM`] = (facilities.TOTFAC * facilities[key]) / 100;
-      facilities[`${key}_CO2`] = inputFormulas[key](facilities);
+      facilities[`${key}_NUM`] = 0; // (facilities.TOTFAC * facilities[key]) / 100;
+      facilities[`${key}_CO2`] = 0; //inputFormulas[key](facilities);
     });
     // }
 
