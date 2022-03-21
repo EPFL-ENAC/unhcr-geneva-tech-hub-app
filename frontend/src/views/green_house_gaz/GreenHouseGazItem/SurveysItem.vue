@@ -1,6 +1,5 @@
 <template>
   <v-container fluid v-if="project">
-    <!-- {{ currentSurvey }} -->
     <header>
       <v-row>
         <v-col :cols="10">
@@ -35,9 +34,43 @@
       grow
       :show-arrows="true"
       elevation="2"
+      v-model="tabSelected"
     >
-      <template v-for="item in menuItems">
-        <v-tab :key="item.to" :to="{ name: item.to }">
+      <template v-for="(item, $itemIndex) in menuItems">
+        <v-divider
+          v-if="!item.text"
+          :key="item.toilet"
+          class="mx-2"
+          vertical
+        ></v-divider>
+        <v-menu
+          v-else-if="item.children"
+          :key="`${$itemIndex}`"
+          offset-y
+          open-on-hover
+        >
+          <template v-slot:activator="{ attrs, on }">
+            <v-tab :key="`${$itemIndex}`" v-bind="attrs" v-on="on">
+              <v-icon left>{{ item.icon }}</v-icon>
+              {{ item.text }}
+            </v-tab>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(subItem, $subItemIndex) in item.children"
+              :key="subItem.to"
+            >
+              <v-tab
+                :key="`${$itemIndex}${$subItemIndex}`"
+                :href="`#${item.to}-${subItem.to}`"
+              >
+                <v-icon left>{{ subItem.icon }}</v-icon>
+                {{ subItem.text }}
+              </v-tab>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <v-tab v-else :key="item.to" :href="`#${item.to}`">
           <v-icon left>{{ item.icon }}</v-icon>
           {{ item.text }}
         </v-tab>
@@ -45,13 +78,25 @@
     </v-tabs>
     <v-row>
       <v-col>
-        <router-view />
+        <component :is="$router.currentRoute.query.subcategory" />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
+import Cooking from "@/components/green_house_gaz/energy/Cooking.vue";
+import Facilities from "@/components/green_house_gaz/energy/Facilities.vue";
+import Lighting from "@/components/green_house_gaz/energy/Lighting.vue";
+import Pumping from "@/components/green_house_gaz/energy/Pumping.vue";
+import CRI from "@/components/green_house_gaz/materials/CRI.vue";
+import HHWaste from "@/components/green_house_gaz/materials/HHWaste.vue";
+import Shelter from "@/components/green_house_gaz/materials/Shelter.vue";
+import TreePlanting from "@/components/green_house_gaz/offset/TreePlanting.vue";
+import Results from "@/components/green_house_gaz/Results.vue";
+import Transport from "@/components/green_house_gaz/wash/Transport.vue";
+import Wastewater from "@/components/green_house_gaz/wash/Wastewater.vue";
+import Water from "@/components/green_house_gaz/wash/Water.vue";
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import getFlagEmoji from "@/utils/flagEmoji";
 import getCountryName from "@/utils/getCountryName";
@@ -73,6 +118,20 @@ const REFERENCE_DOC_ID = "reference";
       "closeDB",
     ]),
   },
+  components: {
+    Cooking,
+    Facilities,
+    Lighting,
+    Pumping,
+    CRI,
+    HHWaste,
+    Shelter,
+    Transport,
+    Water,
+    Wastewater,
+    TreePlanting,
+    Results,
+  },
   filters: {
     date: function (value: string) {
       if (!value) return "";
@@ -91,20 +150,79 @@ export default class SurveyList extends Vue {
   getDoc!: (id: string) => Promise<null>;
 
   readonly menuItems: MenuItem[] = [
-    { icon: "mdi-lightning-bolt", text: "Energy", to: "GreenHouseGazStep1" },
-    { icon: "mdi-water", text: "Wash transport", to: "GreenHouseGazStep2" },
+    {
+      children: [
+        {
+          icon: "mdi-shower",
+          text: "Facilities",
+          to: "Facilities",
+        },
+        { icon: "mdi-stove", text: "Cooking", to: "cooking" },
+        {
+          icon: "mdi-lightbulb",
+          text: "Lighting",
+          to: "lighting",
+        },
+        {
+          icon: "mdi-water-pump",
+          text: "Pumping",
+          to: "pumping",
+        },
+      ],
+      icon: "mdi-lightning-bolt",
+      text: "Energy",
+      to: "Energy",
+    },
+    {
+      icon: "mdi-water",
+      text: "Wash transport",
+      to: "WASH",
+      children: [
+        { text: "Water", to: "Water", icon: "mdi-cup-water" },
+        { text: "Wastewater", to: "Wastewater", icon: "mdi-hand-water" },
+        { text: "Transport", to: "Transport", icon: "mdi-tanker-truck" },
+      ],
+    },
     {
       icon: "mdi-home",
-      text: "Shelter, Site and material",
-      to: "GreenHouseGazStep3",
+      // text: "Shelter, Site and material",
+      text: "Material",
+      to: "Material",
+      children: [
+        { text: "Shelter", to: "Shelter", icon: "mdi-home-group" },
+        { text: "CRI", to: "CRI", icon: "mdi-wizard-hat" },
+        { text: "HH waste", to: "HHWaste", icon: "mdi-toilet" },
+      ],
     },
-    { icon: "mdi-leaf", text: "Sequestration", to: "GreenHouseGazStep4" },
+    {
+      icon: "mdi-leaf",
+      text: "Offset",
+      to: "Offset-TreePlanting",
+    },
     {
       icon: "mdi-newspaper-variant-outline",
       text: "Results",
-      to: "GreenHouseGazStep4",
+      to: "Results-Results",
     },
   ];
+
+  _tabSelected = "";
+  public get tabSelected(): string {
+    // return this._tabSelected;
+    // return this.$route.query.toString();
+    const category = this.$router.currentRoute.query.category as string;
+    const subcategory = this.$router.currentRoute.query.subcategory as string;
+    const tab = `${category}-${subcategory}`;
+    return tab;
+  }
+  public set tabSelected(value: string) {
+    if (value && value.split) {
+      const [category, subcategory] = value.split("-");
+      if (category && subcategory) {
+        this.$router.push({ query: { category, subcategory } });
+      }
+    }
+  }
 
   public get currentProjectEmoji(): string {
     return getFlagEmoji(this.project.country_code);

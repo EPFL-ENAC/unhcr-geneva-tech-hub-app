@@ -7,7 +7,7 @@
       <v-row>
         <v-col>
           <h2 class="text-h4 project-shelter__h3 font-weight-medium">
-            Energy - Cooking
+            WASH - Wastewater
           </h2>
         </v-col>
       </v-row>
@@ -60,7 +60,7 @@ import { mapActions, mapGetters } from "vuex";
     ...mapActions("GhgItemModule", ["getDoc", "updateDoc"]),
   },
 })
-export default class Cooking extends Vue {
+export default class WasteWater extends Vue {
   project!: GreenHouseGaz;
   localProject = {} as GreenHouseGaz;
   reference!: GreenHouseGazReference;

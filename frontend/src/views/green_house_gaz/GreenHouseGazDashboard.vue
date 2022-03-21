@@ -6,7 +6,7 @@
           <v-col class="country-list__actions d-flex justify-end align-center">
             <v-btn text @click="addSurvey">
               <v-icon>mdi-plus-thick</v-icon>
-              New Survey
+              New assessment
             </v-btn>
           </v-col>
         </v-row>

@@ -76,6 +76,10 @@
                 site: encodeURIComponent(localProject.name),
                 surveyId: encodeURIComponent(item.name),
               },
+              query: {
+                category: 'Energy',
+                subcategory: 'Facilities',
+              },
             }"
           >
             <v-icon small class="mr-2"> mdi-pencil </v-icon>
@@ -199,7 +203,7 @@ export default class ProjectItem extends Vue {
   }
 
   public get formTitle(): string {
-    return this.editedIndex === -1 ? "New Survey" : "Edit Survey";
+    return this.editedIndex === -1 ? "New assessment" : "Edit assessment";
   }
 
   public async submitForm(value: GreenHouseGaz): Promise<void> {

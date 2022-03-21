@@ -128,10 +128,6 @@
 </template>
 
 <script lang="ts">
-import Cooking from "@/components/green_house_gaz/energy/Cooking.vue";
-import Facilities from "@/components/green_house_gaz/energy/Facilities.vue";
-import Lighting from "@/components/green_house_gaz/energy/Lighting.vue";
-import Pumping from "@/components/green_house_gaz/energy/Pumping.vue";
 import {
   EnergySurvey,
   GreenHouseGaz,
@@ -151,12 +147,6 @@ import { mapActions, mapGetters } from "vuex";
   methods: {
     ...mapActions("GhgItemModule", ["updateDoc"]),
   },
-  components: {
-    Facilities,
-    Pumping,
-    Lighting,
-    Cooking,
-  },
 })
 /** ProjectList */
 export default class Step1Energy extends Vue {
@@ -170,12 +160,12 @@ export default class Step1Energy extends Vue {
   reference!: GreenHouseGazReference;
 
   configuration = {};
+  localSurvey = {} as Survey;
+  localSurveyIndex = -1;
 
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
   project!: GreenHouseGaz;
   localProject = {} as GreenHouseGaz;
-  localSurvey = {} as Survey;
-  localSurveyIndex = -1;
 
   readonly facilitiesInput = [
     {

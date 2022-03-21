@@ -1,17 +1,5 @@
 <template>
   <v-container fluid class="project">
-    <!-- <v-breadcrumbs :items="breadCrumbs">
-      <template v-slot:item="{ item }">
-        <v-breadcrumbs-item
-          :to="item.to"
-          class="text-subtitle-2 crumb-item"
-          :disabled="item.disabled"
-          exact
-        >
-          {{ item.text }}
-        </v-breadcrumbs-item>
-      </template>
-    </v-breadcrumbs> -->
     <v-tabs
       v-if="!$route.meta.hideSiteTabs"
       class="fixed-tabs-bar"

@@ -5,8 +5,8 @@
         <v-select
           tabindex="0"
           v-model="base"
-          :items="['march', 'july', 'august']"
-          label="Select date"
+          :items="['2022', '2021', '2020']"
+          label="baseline"
         >
         </v-select>
       </v-col>
@@ -14,8 +14,8 @@
         <v-select
           tabindex="1"
           v-model="next"
-          :items="['march', 'july', 'august']"
-          label="Select date"
+          :items="['2022', '2021', '2020']"
+          label="projected"
         >
         </v-select>
       </v-col>
@@ -37,8 +37,8 @@ import { Component, Vue } from "vue-property-decorator";
 @Component({})
 /** ProjectItem */
 export default class CompareItem extends Vue {
-  base = "ae";
-  next = "ae";
+  base = "2020";
+  next = "2022";
 }
 </script>
 
