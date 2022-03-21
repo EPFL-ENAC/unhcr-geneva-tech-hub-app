@@ -60,7 +60,7 @@ export default class AppList extends Vue {
     description?: string;
   }[] = [
     {
-      title: "Green House Gaz",
+      title: "UNHCR GHG carbon assessment calculator",
       to: "GreenHouseGaz",
       logoImg: "/app_logo/ghg.png",
     },

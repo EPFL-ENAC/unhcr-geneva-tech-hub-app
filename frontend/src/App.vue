@@ -191,7 +191,7 @@ export default class App extends Vue {
   // TODO: use meta.title for apps name
   apps = [
     {
-      title: "Green House Gaz",
+      title: "UNHCR GHG carbon assessment calculator",
       name: "GreenHouseGaz",
       logoImg: "/app_logo/ghg.png",
     },
