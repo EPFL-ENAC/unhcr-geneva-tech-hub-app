@@ -199,7 +199,7 @@ export default class ProjectItem extends Vue {
   }
 
   public get formTitle(): string {
-    return this.editedIndex === -1 ? "New Survey" : "Edit Survey";
+    return this.editedIndex === -1 ? "New assessment" : "Edit assessment";
   }
 
   public async submitForm(value: GreenHouseGaz): Promise<void> {
