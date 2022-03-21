@@ -2,6 +2,18 @@
   <main class="about-view">
     <v-card class="about ma-4" elevation="2">
       <v-card-text>
+        <h2 class="mx-8">Disclaimer</h2>
+        <p class="mx-10">
+          This Web Application is under active development. The current version
+          is only available as a proff of concept. Please report any bugs
+          <a
+            href="https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues"
+            >here</a
+          >
+        </p>
+      </v-card-text>
+      <v-divider />
+      <v-card-text>
         <p class="mx-10">
           In the context of ongoing work with UNHCR Geneva Technical Hub,
           EssentialTech, FAR and BPE aim to develop web application building on
@@ -51,14 +63,6 @@
             </tbody>
           </template>
         </v-simple-table>
-      </v-card-text>
-      <v-card-text>
-        <hr />
-
-        <h2 class="ma-8">Key specifications</h2>
-        <ul class="mx-10">
-          <li>...</li>
-        </ul>
       </v-card-text>
     </v-card>
     <app-logo />

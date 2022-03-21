@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <h1>Energy</h1>
+        <h1>{{ title }}</h1>
       </v-col>
     </v-row>
     <v-row>
@@ -19,6 +19,7 @@
 <script lang="ts">
 import EnergySiteList from "@/components/energy/EnergySiteList.vue";
 import EnergyTemplateList from "@/components/energy/EnergyTemplateList.vue";
+import { energy } from "@/utils/apps";
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
 
@@ -28,5 +29,7 @@ import { Component, Vue } from "vue-property-decorator";
     EnergyTemplateList,
   },
 })
-export default class EnergyHome extends Vue {}
+export default class EnergyHome extends Vue {
+  title = energy.title;
+}
 </script>

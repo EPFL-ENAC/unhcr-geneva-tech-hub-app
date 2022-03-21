@@ -86,6 +86,9 @@ export default class ProjectList extends Vue {
     return acc;
   }, {} as CountriesInfoMap);
 
+  countriesList = Countries;
+
+  public getFlagEmoji = flagEmoji;
   private setCountry(country: Country): void {
     let hash = "";
     if (this.$route.hash !== `#${country.key}`) {

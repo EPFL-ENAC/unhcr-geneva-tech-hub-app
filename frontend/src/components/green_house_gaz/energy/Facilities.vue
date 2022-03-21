@@ -16,7 +16,7 @@
           <v-divider></v-divider>
         </v-col>
       </v-row>
-      <v-row v-if="localSurvey.energy.facilities.configuration">
+      <v-row v-if="localSurvey">
         <v-col :cols="4" :lg="4" :md="6" :sm="12">
           <v-card flat>
             <v-card-title><h2>Configuration</h2></v-card-title>
@@ -79,6 +79,7 @@
               <v-simple-table>
                 <thead>
                   <tr>
+                    <th></th>
                     <th>No. of facilities</th>
                     <th>CO2 Emissions</th>
                   </tr>
@@ -86,23 +87,41 @@
                 <tbody>
                   <tr>
                     <td>No. of facilities using diesel generators</td>
-                    <td>##</td>
-                    <td>## tCO2/year</td>
+                    <td>
+                      {{ localSurvey.energy.facilities.results.SUR_DIES_NUM }}
+                    </td>
+                    <td>
+                      {{
+                        localSurvey.energy.facilities.results.SUR_DIES_CO2
+                          | formatNumber
+                      }}
+                      tCO2/year
+                    </td>
                   </tr>
                   <tr>
                     <td>No. of facilities using national grid</td>
-                    <td>##</td>
-                    <td>## tCO2/year</td>
+                    <td>
+                      {{ localSurvey.energy.facilities.results.SUR_GRD_NUM }}
+                    </td>
+                    <td>
+                      {{ localSurvey.energy.facilities.results.SUR_GRD_CO2 }}
+                      tCO2/year
+                    </td>
                   </tr>
                   <tr>
                     <td>No. of facilities using renewable energy</td>
                     <td>##</td>
-                    <td>## tCO2/year</td>
+                    <td>0 tCO2/year</td>
                   </tr>
                   <tr>
                     <td>No. of facilities using hybrid mix</td>
-                    <td>##</td>
-                    <td>## tCO2/year</td>
+                    <td>
+                      {{ localSurvey.energy.facilities.results.SUR_HYB_NUM }}
+                    </td>
+                    <td>
+                      {{ localSurvey.energy.facilities.results.SUR_HYB_CO2 }}
+                      tCO2/year
+                    </td>
                   </tr>
                   <tr>
                     <td>No. of facilities not powered</td>
@@ -111,12 +130,6 @@
                   </tr>
                 </tbody>
               </v-simple-table>
-              <!-- 
-              <ul>
-                <li>diesel tCO2/year: {{ computeFacility.SUR_DIES_CO2 }}</li>
-                <li>grid tCO2/year: {{ computeFacility.SUR_GRD_CO2 }}</li>
-                <li>hybrid tCO2/year: {{ computeFacility.SUR_HYB_CO2 }}</li>
-              </ul> -->
             </v-card-text>
           </v-card>
         </v-col>
@@ -150,6 +163,11 @@ import { mapActions, mapGetters } from "vuex";
   },
   methods: {
     ...mapActions("GhgItemModule", ["getDoc", "updateDoc"]),
+  },
+  filters: {
+    formatNumber(n: number): string {
+      return Intl.NumberFormat("en").format(n);
+    },
   },
 })
 export default class Facilities extends Vue {
@@ -191,7 +209,6 @@ export default class Facilities extends Vue {
       this.localProject.surveys?.[this.localSurveyIndex] ?? ({} as Survey);
     if (!this.localSurvey.energy) {
       // this.localSurvey.energy = this.newEnergySurvey();
-      console.log("setting new field");
       this.$set(this.localSurvey, "energy", this.newEnergySurvey());
     }
   }
@@ -451,71 +468,86 @@ export default class Facilities extends Vue {
   private getConfigurationComputed(
     configuration: Record<string, number>
   ): Record<string, number> {
-    const { REF_DIES, REF_GRD } = this.reference.energy;
-
     const res: Record<string, number> = {};
-    res.ECONF_KWD = configuration.ECONF_PKW * configuration.ECONF_DUSE; // kWh/day/facility /// TODO: SEEMS WRONG
-    res.ECONF_PYR = res.ECONF_KWD * 365; // Energy needed per year in kWh
-    res.ECONF_LITR = res.ECONF_PYR / configuration.ECONF_EFF;
+    try {
+      const { REF_DIES, REF_GRD } = this.reference.energy;
 
-    // variables used in final computation
-    res.ECONF_DIES_EM = res.ECONF_LITR * REF_DIES.value; // Emissions per facility
-    res.ECONF_GRD_EM = configuration.ECONF_NKWD * REF_GRD.value; // Emissions per day per facility
-    res.ECONF_HYB_EMT = res.ECONF_HYB_EMG + res.ECONF_HYB_EMD; // Total emissions per day per facility
+      res.ECONF_KWD = configuration.ECONF_PKW * configuration.ECONF_DUSE; // kWh/day/facility /// TODO: SEEMS WRONG
+      res.ECONF_PYR = res.ECONF_KWD * 365; // Energy needed per year in kWh
+      res.ECONF_LITR = res.ECONF_PYR / configuration.ECONF_EFF;
+
+      // variables used in final computation
+      res.ECONF_DIES_EM = res.ECONF_LITR * REF_DIES.value; // Emissions per facility
+      res.ECONF_GRD_EM = configuration.ECONF_NKWD * REF_GRD.value; // Emissions per day per facility
+      res.ECONF_HYB_EMT = res.ECONF_HYB_EMG + res.ECONF_HYB_EMD; // Total emissions per day per facility
+    } catch (e) {
+      console.error(e);
+    }
     return res;
   }
 
   @Watch("localSurvey.energy.facilities.configuration", { deep: true })
   public onConfigurationChange(newValue: Record<string, number>): void {
-    const configurationComputed = this.getConfigurationComputed(newValue);
-    this.$set(
-      this.localSurvey.energy.facilities,
-      "configurationComputed",
-      configurationComputed
-    );
+    if (newValue) {
+      const configurationComputed = this.getConfigurationComputed(newValue);
+      this.$set(
+        this.localSurvey.energy.facilities,
+        "configurationComputed",
+        configurationComputed
+      );
+    }
   }
 
-  public get computeFacility(): Record<string, number> {
+  @Watch("localSurvey.energy.facilities.configurationComputed", { deep: true })
+  @Watch("localSurvey.energy.facilities.inputs", { deep: true })
+  public onConfigurationComputedChange(newValue: Record<string, number>): void {
+    if (newValue) {
+      this.$set(
+        this.localSurvey.energy.facilities,
+        "results",
+        this.getComputeFacility()
+      );
+    }
+  }
+
+  public getComputeFacility(): Record<string, number> {
     // const reference = this.reference;
-
-    // let facilities = { ...this.localSurvey.energy.facilities };
+    const { configurationComputed, inputs } =
+      this.localSurvey.energy.facilities;
     let results = {} as Record<string, number>;
-    // if (reference?.energy) {
-    //   this.configuration = this.computeConfiguration();
-    //   console.log(this.configuration);
-    //   const localConf = this.configuration as Record<string, number>;
-    const inputFormulas = {
-      SUR_NP: function (): number {
-        return 0;
-      },
-      SUR_RNW: function (): number {
-        return 0;
-      },
+    try {
+      const inputFormulas = {
+        SUR_NP: function (): number {
+          return 0;
+        },
+        SUR_RNW: function (): number {
+          return 0;
+        },
+        SUR_DIES: function (): number {
+          return (
+            (configurationComputed.ECONF_DIES_EM * results.SUR_DIES_NUM) / 1000
+          );
+        },
+        SUR_GRD: function (): number {
+          return (
+            (configurationComputed.ECONF_GRD_EM * results.SUR_GRD_NUM * 365) /
+            1000
+          );
+        },
+        SUR_HYB: function (): number {
+          return (
+            configurationComputed.ECONF_HYB_EMT * results.SUR_HYB_NUM * 365
+          );
+        },
+      } as Record<string, () => number>;
 
-      // SUR_DIES: function (facilities: Record<string, number>): number {
-      SUR_DIES: function (): number {
-        // debugger;
-        return 0;
-        // return (localConf.ECONF_DIES_EM * facilities.SUR_DIES_NUM) / 1000;
-      },
-      SUR_GRD: function (): number {
-        // debugger;
-        return 0;
-        // return (localConf.ECONF_GRD_EM * facilities.SUR_GRD_NUM * 365) / 1000;
-      },
-      SUR_HYB: function (): number {
-        // debugger;
-        return 0;
-        // return localConf.ECONF_HYB_EMT * facilities.SUR_HYB_NUM * 365;
-      },
-    } as Record<string, () => number>;
-
-    Object.keys(inputFormulas).forEach((key) => {
-      results[`${key}_NUM`] = 0; // (facilities.TOTFAC * facilities[key]) / 100;
-      results[`${key}_CO2`] = 0; //inputFormulas[key](facilities);
-    });
-    // }
-
+      Object.keys(inputFormulas).forEach((key) => {
+        results[`${key}_NUM`] = (inputs.TOTFAC * inputs[key]) / 100;
+        results[`${key}_CO2`] = inputFormulas[key]();
+      });
+    } catch (e) {
+      console.error(e);
+    }
     return results;
   }
 }
