@@ -9,7 +9,7 @@ export default {
       /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGaz.vue"
     ),
   meta: {
-    title: "UNHCR GHG carbon assessment calculator",
+    title: "Greenhouse gas assessment",
   },
   redirect: { name: "GreenHouseGazList" },
   children: [

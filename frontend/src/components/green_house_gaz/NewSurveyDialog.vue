@@ -289,6 +289,10 @@ export default class ProjectList extends Vue {
         site: encodeURIComponent(site),
         surveyId: encodeURIComponent(surveyId),
       },
+      query: {
+        category: "Energy",
+        subcategory: "Facilities",
+      },
     });
   }
 

@@ -7,7 +7,7 @@ export default {
       /* webpackChunkName: "shelter_sustainability" */ "../views/shelter_sustainability/ShelterSustainability.vue"
     ),
   meta: {
-    title: "Shelter Sustainability",
+    title: "Shelter sustainability",
   },
   redirect: { name: "ShelterSustainabilityList" },
   children: [

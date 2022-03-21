@@ -160,12 +160,12 @@ export default class Step1Energy extends Vue {
   reference!: GreenHouseGazReference;
 
   configuration = {};
+  localSurvey = {} as Survey;
+  localSurveyIndex = -1;
 
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
   project!: GreenHouseGaz;
   localProject = {} as GreenHouseGaz;
-  localSurvey = {} as Survey;
-  localSurveyIndex = -1;
 
   readonly facilitiesInput = [
     {

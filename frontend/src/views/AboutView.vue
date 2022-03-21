@@ -44,13 +44,13 @@
             </thead>
             <tbody>
               <tr>
-                <td>Global GHG Calculator</td>
+                <td>Greenhouse gas assessment</td>
                 <td>
                   <b>EssentialTech</b> Dr. Cara Tobin & Dr. Grégoire Castella
                 </td>
               </tr>
               <tr>
-                <td>Shelter Sustainability Calculator</td>
+                <td>Shelter sustainability Calculator</td>
                 <td><b>FAR</b> Dr. André Ullal</td>
               </tr>
               <tr>

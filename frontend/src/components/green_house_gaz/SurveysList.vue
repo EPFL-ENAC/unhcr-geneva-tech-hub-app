@@ -76,6 +76,10 @@
                 site: encodeURIComponent(localProject.name),
                 surveyId: encodeURIComponent(item.name),
               },
+              query: {
+                category: 'Energy',
+                subcategory: 'Facilities',
+              },
             }"
           >
             <v-icon small class="mr-2"> mdi-pencil </v-icon>
