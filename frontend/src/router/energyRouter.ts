@@ -1,3 +1,4 @@
+import { energy } from "@/utils/apps";
 import { RouteConfig } from "vue-router";
 
 export default {
@@ -7,7 +8,7 @@ export default {
   component: () =>
     import(/* webpackChunkName: "energy" */ "../views/energy/Energy.vue"),
   meta: {
-    title: "Energy",
+    title: energy.title,
   },
   children: [
     {

@@ -2,7 +2,6 @@
   <main class="about-view">
     <v-card class="about ma-4" elevation="2">
       <v-card-text>
-        <h2 class="ma-8">Context</h2>
         <p class="mx-10">
           In the context of ongoing work with UNHCR Geneva Technical Hub,
           EssentialTech, FAR and BPE aim to develop web application building on
@@ -39,24 +38,14 @@
             <thead>
               <tr>
                 <th>Tool Name</th>
-                <th>Key interlocutor</th>
+                <th>Description</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Greenhouse gas assessment</td>
+              <tr v-for="(app, $key) in Apps" :key="$key">
+                <td>{{ app.title }}</td>
                 <td>
-                  <b>EssentialTech</b> Dr. Cara Tobin & Dr. Grégoire Castella
-                </td>
-              </tr>
-              <tr>
-                <td>Shelter sustainability Calculator</td>
-                <td><b>FAR</b> Dr. André Ullal</td>
-              </tr>
-              <tr>
-                <td>Refugee Camp Energy Planning Tool</td>
-                <td>
-                  <b>BPE</b> Prof. Edgard Gnansounou. Dr Farnaz Eslamishoar
+                  {{ app.description }}
                 </td>
               </tr>
             </tbody>
@@ -68,17 +57,7 @@
 
         <h2 class="ma-8">Key specifications</h2>
         <ul class="mx-10">
-          <li>
-            All tools will be deployed as web apps, but must be available
-            offline
-          </li>
-          <li>
-            All tools will follow similar design conventions and style decisions
-          </li>
-          <li>
-            All tools should abide by the data privacy restrictions of UNHCR
-          </li>
-          <li>Maintenance is included for the first year by EPFL</li>
+          <li>...</li>
         </ul>
       </v-card-text>
     </v-card>
@@ -88,11 +67,16 @@
 
 <script lang="ts">
 import AppLogo from "@/components/commons/AppLogo.vue";
+import Apps from "@/utils/apps";
 import Vue from "vue";
 
 export default Vue.extend({
   name: "AboutView",
-
+  data() {
+    return {
+      Apps,
+    };
+  },
   components: {
     AppLogo,
   },

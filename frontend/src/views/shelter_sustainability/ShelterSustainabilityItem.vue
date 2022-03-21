@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="project">
+  <v-container fluid class="project my-8">
     <v-tabs
       class="fixed-tabs-bar"
       centered

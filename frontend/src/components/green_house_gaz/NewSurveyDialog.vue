@@ -3,7 +3,7 @@
     <v-form @submit.prevent="submit" v-model="createProjectFormValid">
       <v-card>
         <v-card-title>
-          <span class="text-h5">New survey</span>
+          <span class="text-h5">New assessment</span>
         </v-card-title>
 
         <v-card-text>

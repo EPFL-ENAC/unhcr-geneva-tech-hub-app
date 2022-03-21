@@ -38,11 +38,20 @@ export interface Survey {
 }
 
 export interface EnergySurvey {
-  facilities: Record<string, number>;
+  facilities: FacilitySurvey;
   cooking: Record<string, number>;
   lighting: Record<string, number>;
   pumping: Record<string, number>;
 }
+
+export interface FacilitySurvey {
+  configuration: Record<string, number>;
+  configurationComputed: Record<string, number>;
+  inputs: Record<string, number>;
+  inputsComputed: Record<string, number>;
+  results: Record<string, number>;
+}
+
 export interface GreenHouseGazReference {
   _id: string;
   iges_grid_2021: IgesItemInterface[];

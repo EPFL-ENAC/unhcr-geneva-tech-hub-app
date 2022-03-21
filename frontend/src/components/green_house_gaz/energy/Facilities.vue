@@ -16,14 +16,42 @@
           <v-divider></v-divider>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col :cols="4">
+      <v-row v-if="localSurvey.energy.facilities.configuration">
+        <v-col :cols="4" :lg="4" :md="6" :sm="12">
+          <v-card flat>
+            <v-card-title><h2>Configuration</h2></v-card-title>
+            <v-card-text
+              v-for="(config, $key) in facilitiesConfiguration"
+              :key="$key"
+            >
+              <h4>{{ config.title }}</h4>
+              <v-divider />
+              <v-text-field
+                v-for="(configInput, $configInputKey) in config.inputs"
+                :key="`${$configInputKey}${$key}`"
+                v-model.number="
+                  localSurvey.energy.facilities[configInput.destination][
+                    configInput.code
+                  ]
+                "
+                min="1"
+                max="100"
+                :label="configInput.description"
+                type="number"
+                :disabled="configInput.disabled"
+                :suffix="configInput.suffix || ''"
+              ></v-text-field>
+              <v-divider />
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col :cols="4" :lg="4" :md="6" :sm="12">
           <v-card flat>
             <v-card-title><h2>Inputs</h2></v-card-title>
             <v-card-text>
               <v-text-field
                 label="Total facilities"
-                v-model.number="localSurvey.energy.facilities.TOTFAC"
+                v-model.number="localSurvey.energy.facilities.inputs.TOTFAC"
               >
               </v-text-field>
               <v-divider />
@@ -31,7 +59,7 @@
                 v-for="facilityInput in facilitiesInput"
                 :key="facilityInput.code"
                 v-model.number="
-                  localSurvey.energy.facilities[facilityInput.code]
+                  localSurvey.energy.facilities.inputs[facilityInput.code]
                 "
                 min="1"
                 max="100"
@@ -44,15 +72,51 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col :cols="4">
+        <v-col :cols="4" :lg="4" :md="6" :sm="12">
           <v-card flat>
             <v-card-title><h2>Results</h2></v-card-title>
             <v-card-text>
+              <v-simple-table>
+                <thead>
+                  <tr>
+                    <th>No. of facilities</th>
+                    <th>CO2 Emissions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>No. of facilities using diesel generators</td>
+                    <td>##</td>
+                    <td>## tCO2/year</td>
+                  </tr>
+                  <tr>
+                    <td>No. of facilities using national grid</td>
+                    <td>##</td>
+                    <td>## tCO2/year</td>
+                  </tr>
+                  <tr>
+                    <td>No. of facilities using renewable energy</td>
+                    <td>##</td>
+                    <td>## tCO2/year</td>
+                  </tr>
+                  <tr>
+                    <td>No. of facilities using hybrid mix</td>
+                    <td>##</td>
+                    <td>## tCO2/year</td>
+                  </tr>
+                  <tr>
+                    <td>No. of facilities not powered</td>
+                    <td>##</td>
+                    <td>## tCO2/year</td>
+                  </tr>
+                </tbody>
+              </v-simple-table>
+              <!-- 
               <ul>
                 <li>diesel tCO2/year: {{ computeFacility.SUR_DIES_CO2 }}</li>
                 <li>grid tCO2/year: {{ computeFacility.SUR_GRD_CO2 }}</li>
                 <li>hybrid tCO2/year: {{ computeFacility.SUR_HYB_CO2 }}</li>
-              </ul>
+              </ul> -->
             </v-card-text>
           </v-card>
         </v-col>
@@ -76,7 +140,7 @@ import {
 } from "@/store/GhgInterface";
 import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
@@ -126,7 +190,9 @@ export default class Facilities extends Vue {
     this.localSurvey =
       this.localProject.surveys?.[this.localSurveyIndex] ?? ({} as Survey);
     if (!this.localSurvey.energy) {
-      this.localSurvey.energy = this.newEnergySurvey();
+      // this.localSurvey.energy = this.newEnergySurvey();
+      console.log("setting new field");
+      this.$set(this.localSurvey, "energy", this.newEnergySurvey());
     }
   }
 
@@ -157,8 +223,17 @@ export default class Facilities extends Vue {
   }
 
   private newEnergySurvey(): EnergySurvey {
+    // warning reference may not have been downloaded yet!
+    // TODO: add safeguard
+    const configuration = this.getDefaultConfiguration();
     return {
-      facilities: {},
+      facilities: {
+        configuration,
+        configurationComputed: {},
+        inputs: {},
+        inputsComputed: {},
+        results: {},
+      },
       cooking: {},
       lighting: {},
       pumping: {},
@@ -167,35 +242,244 @@ export default class Facilities extends Vue {
 
   readonly facilitiesInput = [
     {
-      description: "Using diesel generators only",
+      description: "Diesel generators only",
       code: "SUR_DIES",
       type: "percentage",
     },
     {
-      description: "Using national grid only",
+      description: "Facilities using national grid only",
       code: "SUR_GRD",
       type: "percentage",
     },
-    { description: "hybrid", code: "SUR_HYB", type: "percentage" },
     {
-      description: "Using renewable energy only",
+      description: "Facilities using hybrid mix",
+      code: "SUR_HYB",
+      type: "percentage",
+    },
+    {
+      description: "Facilities using renewable energy only",
       code: "SUR_RNW",
       type: "percentage",
       disabled: true,
     },
     {
-      description: "not powered",
+      description: "Facilities not powered",
       code: "SUR_NP",
       type: "percentage",
       disabled: true,
     },
   ];
 
+  readonly facilitiesConfiguration = [
+    {
+      title: "Facilities using diesel generators only",
+      inputs: [
+        {
+          description: "DG power in kilowatt",
+          code: "ECONF_PKW",
+          destination: "configuration",
+          type: "number",
+        },
+        {
+          description: "Daily use time in h",
+          code: "ECONF_DUSE",
+          destination: "configuration",
+          type: "number",
+        },
+        {
+          description: "kWh/day/facility",
+          disabled: true,
+          code: "ECONF_KWD",
+          destination: "configurationComputed",
+          type: "number",
+        },
+        {
+          disabled: true,
+          destination: "configurationComputed",
+          description: "Energy needed per year in kWh ",
+          code: "ECONF_PYR",
+          type: "number",
+        },
+        {
+          description: "Efficiency of DG average kWh/liter",
+          destination: "configuration",
+          code: "ECONF_EFF",
+          type: "number",
+        },
+        {
+          destination: "configuration",
+          description: "Estimated L/day/facility",
+          code: "ECONF_LDF",
+          type: "number",
+        },
+        {
+          disabled: true,
+          destination: "configurationComputed",
+          description: "Liters of diesel used per year ",
+          code: "ECONF_LITR",
+          type: "number",
+        },
+        {
+          disabled: true,
+          destination: "configurationComputed",
+          description: "Emissions per facility",
+          code: "ECONF_DIES_EM",
+          type: "number",
+        },
+      ],
+    },
+    {
+      title: "Facilities using national grid only",
+      inputs: [
+        {
+          description: "Estimated average Kwh/day/facility",
+          type: "number",
+          destination: "configuration",
+          code: "",
+        },
+        {
+          disabled: true,
+          description: "Emissions per facility",
+          destination: "configuration",
+          type: "number",
+          code: "",
+        },
+      ],
+    },
+    {
+      title: "Facilities using hybrid mix",
+      inputs: [
+        {
+          destination: "configuration",
+          description: "Diesel generator",
+          code: "",
+          type: "percentage",
+        },
+        {
+          destination: "configuration",
+          description: "National grid",
+          code: "",
+          type: "percentage",
+        },
+        {
+          destination: "configuration",
+          description: "Renewable",
+          code: "",
+          type: "percentage",
+        },
+        {
+          disabled: true,
+          destination: "configurationComputed",
+          description: "Emissions per day per facilitiy from diesel",
+          code: "",
+          type: "number",
+        },
+        {
+          disabled: true,
+          destination: "configurationComputed",
+          description: "Emissions per day per facilitiy from grid",
+          code: "",
+          type: "number",
+        },
+        {
+          disabled: true,
+          destination: "configurationComputed",
+          description: "Total Emissions per day per facility      ",
+          code: "",
+          type: "number",
+        },
+      ],
+    },
+  ];
+
+  private getDefaultConfiguration(): Record<string, number> {
+    let res = {} as Record<string, number>;
+
+    const {
+      REF_CONF_HYB_DP,
+      REF_CONF_HYB_GP,
+      REF_CONF_DGP,
+      REF_CONF_DUSE,
+      REF_CONF_KWHD,
+      REF_CONF_EFF,
+      REF_CONF_LDF,
+      REF_DIES,
+      REF_GRD,
+    } = this.reference.energy;
+
+    const iges_grid_2021 = this.reference.iges_grid_2021.find(
+      (el) => el.country_code === this.localProject.country_code
+    );
+    REF_GRD.value = iges_grid_2021?.value || REF_GRD.value; // find REF_GRD per country
+    /* for ECONF_DIES_EM */
+    console.log(
+      "iges",
+      iges_grid_2021,
+      this.reference.iges_grid_2021[0],
+      REF_GRD
+    );
+    res.ECONF_PKW = REF_CONF_DGP.value; // DG power in kilowatt
+    res.ECONF_DUSE = REF_CONF_DUSE.value; // Daily use time in h
+
+    res.ECONF_EFF = REF_CONF_EFF.value; // Efficiency of DG average kWh/liter
+    res.ECONF_LDF = REF_CONF_LDF.value; // Estimated L/day/facility;
+    // res.ECONF_LITR = res.ECONF_LDF
+    //   ? res.ECONF_LDF * 365
+    //   : res.ECONF_PYR / res.ECONF_EFF; // Liters of diesel used per year
+    // res.ECONF_LITR = res.ECONF_PYR / res.ECONF_EFF;
+    /* endfor*/
+
+    /** for ECONF_GRD_EM */
+    res.ECONF_NKWD = REF_CONF_KWHD.value; // Estimated average Kwh/day/facility
+    /* endfor */
+
+    /** for ECONF_HYB_EMT */
+    res.ECONF_HYB_D = REF_CONF_HYB_DP.value;
+    res.ECONF_HYB_G = REF_CONF_HYB_GP.value;
+    res.ECONF_HYB_KWD = REF_CONF_KWHD.value;
+    res.ECONF_HYB_LDF = REF_CONF_LDF.value;
+    // we're not using renewable cost...
+
+    res.ECONF_HYB_EMG = res.ECONF_HYB_G * res.ECONF_HYB_KWD * REF_GRD.value; // Emissions per day per facilitiy from grid
+    res.ECONF_HYB_EMD =
+      res.ECONF_HYB_D * res.ECREF_CONF_HYB_GPONF_HYB_LDF * REF_DIES.value; // Emissions per day per facilitiy from diesel
+    /* endfor */
+
+    return res;
+  }
+
+  private getConfigurationComputed(
+    configuration: Record<string, number>
+  ): Record<string, number> {
+    const { REF_DIES, REF_GRD } = this.reference.energy;
+
+    const res: Record<string, number> = {};
+    res.ECONF_KWD = configuration.ECONF_PKW * configuration.ECONF_DUSE; // kWh/day/facility /// TODO: SEEMS WRONG
+    res.ECONF_PYR = res.ECONF_KWD * 365; // Energy needed per year in kWh
+    res.ECONF_LITR = res.ECONF_PYR / configuration.ECONF_EFF;
+
+    // variables used in final computation
+    res.ECONF_DIES_EM = res.ECONF_LITR * REF_DIES.value; // Emissions per facility
+    res.ECONF_GRD_EM = configuration.ECONF_NKWD * REF_GRD.value; // Emissions per day per facility
+    res.ECONF_HYB_EMT = res.ECONF_HYB_EMG + res.ECONF_HYB_EMD; // Total emissions per day per facility
+    return res;
+  }
+
+  @Watch("localSurvey.energy.facilities.configuration", { deep: true })
+  public onConfigurationChange(newValue: Record<string, number>): void {
+    const configurationComputed = this.getConfigurationComputed(newValue);
+    this.$set(
+      this.localSurvey.energy.facilities,
+      "configurationComputed",
+      configurationComputed
+    );
+  }
+
   public get computeFacility(): Record<string, number> {
     // const reference = this.reference;
 
     // let facilities = { ...this.localSurvey.energy.facilities };
-    let facilities = {} as Record<string, number>;
+    let results = {} as Record<string, number>;
     // if (reference?.energy) {
     //   this.configuration = this.computeConfiguration();
     //   console.log(this.configuration);
@@ -227,12 +511,12 @@ export default class Facilities extends Vue {
     } as Record<string, () => number>;
 
     Object.keys(inputFormulas).forEach((key) => {
-      facilities[`${key}_NUM`] = 0; // (facilities.TOTFAC * facilities[key]) / 100;
-      facilities[`${key}_CO2`] = 0; //inputFormulas[key](facilities);
+      results[`${key}_NUM`] = 0; // (facilities.TOTFAC * facilities[key]) / 100;
+      results[`${key}_CO2`] = 0; //inputFormulas[key](facilities);
     });
     // }
 
-    return facilities;
+    return results;
   }
 }
 </script>

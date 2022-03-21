@@ -54,7 +54,7 @@
           v-for="(app, i) in apps"
           :key="i"
           link
-          :to="{ name: app.name }"
+          :to="{ name: app.to }"
         >
           <v-list-item-icon @click.stop="mini = true">
             <v-img
@@ -150,6 +150,7 @@
 import LoginComponent from "@/components/LoginComponent.vue";
 import ReferenceData from "@/components/ReferenceData.vue";
 import { CouchUser } from "@/store/UserModule";
+import Apps from "@/utils/apps";
 import md5 from "@/utils/md5";
 import { AxiosError, AxiosPromise } from "axios";
 import { Component, Vue, Watch } from "vue-property-decorator";
@@ -189,19 +190,7 @@ export default class App extends Vue {
   /** Snackbar visibility */
   snackbar = false;
   // TODO: use meta.title for apps name
-  apps = [
-    {
-      title: "Shelter sustainability",
-      name: "ShelterSustainability",
-      logoImg: "/app_logo/shelter.png",
-    },
-    {
-      title: "Greenhouse gas assessment",
-      name: "GreenHouseGaz",
-      logoImg: "/app_logo/ghg.png",
-    },
-    { title: "Energy", name: "Energy", logoIcon: "mdi-flash" },
-  ];
+  apps = Apps;
 
   rootRoute = {} as RouteRecordPublic;
   currentRouteName = "";

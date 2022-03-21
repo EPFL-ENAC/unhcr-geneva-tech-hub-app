@@ -1,4 +1,5 @@
 import ghgSurveysRouter from "@/router/ghgSurveysRouter";
+import { ghg } from "@/utils/apps";
 import { RouteConfig } from "vue-router";
 
 export default {
@@ -9,7 +10,7 @@ export default {
       /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGaz.vue"
     ),
   meta: {
-    title: "Greenhouse gas assessment",
+    title: ghg.title,
   },
   redirect: { name: "GreenHouseGazList" },
   children: [

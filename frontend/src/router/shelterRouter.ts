@@ -1,4 +1,6 @@
+import { shelter } from "@/utils/apps";
 import { RouteConfig } from "vue-router";
+
 export default {
   path: "/shelter_sustainability",
   name: "ShelterSustainability",
@@ -7,7 +9,7 @@ export default {
       /* webpackChunkName: "shelter_sustainability" */ "../views/shelter_sustainability/ShelterSustainability.vue"
     ),
   meta: {
-    title: "Shelter sustainability",
+    title: shelter.title,
   },
   redirect: { name: "ShelterSustainabilityList" },
   children: [

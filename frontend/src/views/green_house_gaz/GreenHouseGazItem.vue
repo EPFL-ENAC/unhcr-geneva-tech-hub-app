@@ -48,14 +48,10 @@ export default class ProjectItem extends Vue {
       return [
         { text: "About", to: "GreenHouseGazItemAbout" },
         { text: "Users", to: "GreenHouseGazItemUsers" },
-        // { text: "Surveys", to: "GreenHouseGazItemSurveys" },
         { text: "Configuration", to: "GreenHouseGazItemConfiguration" },
       ];
     }
-    return [
-      { text: "About", to: "GreenHouseGazItemAbout" },
-      // { text: "Surveys", to: "GreenHouseGazItemSurveys" },
-    ];
+    return [{ text: "About", to: "GreenHouseGazItemAbout" }];
   }
 
   mounted(): void {

@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-row>
+    <!-- <v-row>
       <v-col :cols="12">
         <v-card elevation="3" style="width: 100%" class="d-flex">
           <v-col v-for="item in menuItems" :key="item.tab">
@@ -42,7 +42,7 @@
           </v-col>
         </v-card>
       </v-col>
-    </v-row>
+    </v-row> -->
 
     <!--     
     <v-form
@@ -128,13 +128,13 @@
 </template>
 
 <script lang="ts">
-import {
-  EnergySurvey,
-  GreenHouseGaz,
-  GreenHouseGazReference,
-  Survey,
-} from "@/store/GhgInterface";
-import { cloneDeep } from "lodash";
+// import {
+//   EnergySurvey,
+//   GreenHouseGaz,
+//   GreenHouseGazReference,
+//   Survey,
+// } from "@/store/GhgInterface";
+// import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
@@ -150,194 +150,194 @@ import { mapActions, mapGetters } from "vuex";
 })
 /** ProjectList */
 export default class Step1Energy extends Vue {
-  readonly menuItems: MenuSurveyItem[] = [
-    { icon: "mdi-shower", tab: "Facilities", content: "FacilitiesContent" },
-    { icon: "mdi-stove", tab: "Cooking", content: "cookingContent" },
-    { icon: "mdi-lightbulb", tab: "Lighting", content: "LightingContent" },
-    { icon: "mdi-water-pump", tab: "Pumping", content: "PumpingContent" },
-  ];
-  tab = 0;
-  reference!: GreenHouseGazReference;
+  // readonly menuItems: MenuSurveyItem[] = [
+  //   { icon: "mdi-shower", tab: "Facilities", content: "FacilitiesContent" },
+  //   { icon: "mdi-stove", tab: "Cooking", content: "cookingContent" },
+  //   { icon: "mdi-lightbulb", tab: "Lighting", content: "LightingContent" },
+  //   { icon: "mdi-water-pump", tab: "Pumping", content: "PumpingContent" },
+  // ];
+  // tab = 0;
+  // reference!: GreenHouseGazReference;
 
-  configuration = {};
-  localSurvey = {} as Survey;
-  localSurveyIndex = -1;
+  // configuration = {};
+  // localSurvey = {} as Survey;
+  // localSurveyIndex = -1;
 
-  updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
-  project!: GreenHouseGaz;
-  localProject = {} as GreenHouseGaz;
+  // updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
+  // project!: GreenHouseGaz;
+  // localProject = {} as GreenHouseGaz;
 
-  readonly facilitiesInput = [
-    {
-      description: "Using diesel generators only",
-      code: "SUR_DIES",
-      type: "percentage",
-    },
-    {
-      description: "Using national grid only",
-      code: "SUR_GRD",
-      type: "percentage",
-    },
-    { description: "hybrid", code: "SUR_HYB", type: "percentage" },
-    {
-      description: "Using renewable energy only",
-      code: "SUR_RNW",
-      type: "percentage",
-      disabled: true,
-    },
-    {
-      description: "not powered",
-      code: "SUR_NP",
-      type: "percentage",
-      disabled: true,
-    },
-  ];
+  // readonly facilitiesInput = [
+  //   {
+  //     description: "Using diesel generators only",
+  //     code: "SUR_DIES",
+  //     type: "percentage",
+  //   },
+  //   {
+  //     description: "Using national grid only",
+  //     code: "SUR_GRD",
+  //     type: "percentage",
+  //   },
+  //   { description: "hybrid", code: "SUR_HYB", type: "percentage" },
+  //   {
+  //     description: "Using renewable energy only",
+  //     code: "SUR_RNW",
+  //     type: "percentage",
+  //     disabled: true,
+  //   },
+  //   {
+  //     description: "not powered",
+  //     code: "SUR_NP",
+  //     type: "percentage",
+  //     disabled: true,
+  //   },
+  // ];
 
-  private computeConfiguration(): Record<string, number> {
-    let res = {} as Record<string, number>;
+  // private computeConfiguration(): Record<string, number> {
+  //   let res = {} as Record<string, number>;
 
-    const {
-      REF_CONF_HYB_DP,
-      REF_CONF_HYB_GP,
-      REF_CONF_DGP,
-      REF_CONF_DUSE,
-      REF_CONF_KWHD,
-      REF_CONF_EFF,
-      REF_CONF_LDF,
-      REF_DIES,
-      REF_GRD,
-    } = this.reference.energy;
-    const iges_grid_2021 = this.reference.iges_grid_2021.find(
-      (el) => el.country_code === this.localProject.country_code
-    );
-    REF_GRD.value = iges_grid_2021?.value || REF_GRD.value; // find REF_GRD per country
-    /* for ECONF_DIES_EM */
-    console.log(
-      "iges",
-      iges_grid_2021,
-      this.reference.iges_grid_2021[0],
-      REF_GRD
-    );
-    res.ECONF_PKW = REF_CONF_DGP.value; // DG power in kilowatt
-    res.ECONF_DUSE = REF_CONF_DUSE.value; // Daily use time in h
-    res.ECONF_KWD = REF_CONF_KWHD.value || res.ECONF_PKW * res.ECONF_DUSE; // kWh/day/facility /// TODO: SEEMS WRONG
-    res.ECONF_PYR = res.ECONF_KWD * 365; // Energy needed per year in kWh
-    res.ECONF_EFF = REF_CONF_EFF.value; // Efficiency of DG average kWh/liter
-    res.ECONF_LDF = REF_CONF_LDF.value; // Estimated L/day/facility;
-    // res.ECONF_LITR = res.ECONF_LDF
-    //   ? res.ECONF_LDF * 365
-    //   : res.ECONF_PYR / res.ECONF_EFF; // Liters of diesel used per year
-    res.ECONF_LITR = res.ECONF_PYR / res.ECONF_EFF;
-    /* endfor*/
+  //   const {
+  //     REF_CONF_HYB_DP,
+  //     REF_CONF_HYB_GP,
+  //     REF_CONF_DGP,
+  //     REF_CONF_DUSE,
+  //     REF_CONF_KWHD,
+  //     REF_CONF_EFF,
+  //     REF_CONF_LDF,
+  //     REF_DIES,
+  //     REF_GRD,
+  //   } = this.reference.energy;
+  //   const iges_grid_2021 = this.reference.iges_grid_2021.find(
+  //     (el) => el.country_code === this.localProject.country_code
+  //   );
+  //   REF_GRD.value = iges_grid_2021?.value || REF_GRD.value; // find REF_GRD per country
+  //   /* for ECONF_DIES_EM */
+  //   console.log(
+  //     "iges",
+  //     iges_grid_2021,
+  //     this.reference.iges_grid_2021[0],
+  //     REF_GRD
+  //   );
+  //   res.ECONF_PKW = REF_CONF_DGP.value; // DG power in kilowatt
+  //   res.ECONF_DUSE = REF_CONF_DUSE.value; // Daily use time in h
+  //   res.ECONF_KWD = REF_CONF_KWHD.value || res.ECONF_PKW * res.ECONF_DUSE; // kWh/day/facility /// TODO: SEEMS WRONG
+  //   res.ECONF_PYR = res.ECONF_KWD * 365; // Energy needed per year in kWh
+  //   res.ECONF_EFF = REF_CONF_EFF.value; // Efficiency of DG average kWh/liter
+  //   res.ECONF_LDF = REF_CONF_LDF.value; // Estimated L/day/facility;
+  //   // res.ECONF_LITR = res.ECONF_LDF
+  //   //   ? res.ECONF_LDF * 365
+  //   //   : res.ECONF_PYR / res.ECONF_EFF; // Liters of diesel used per year
+  //   res.ECONF_LITR = res.ECONF_PYR / res.ECONF_EFF;
+  //   /* endfor*/
 
-    /** for ECONF_GRD_EM */
-    res.ECONF_NKWD = REF_CONF_KWHD.value; // Estimated average Kwh/day/facility
-    /* endfor */
+  //   /** for ECONF_GRD_EM */
+  //   res.ECONF_NKWD = REF_CONF_KWHD.value; // Estimated average Kwh/day/facility
+  //   /* endfor */
 
-    /** for ECONF_HYB_EMT */
-    res.ECONF_HYB_D = REF_CONF_HYB_DP.value;
-    res.ECONF_HYB_G = REF_CONF_HYB_GP.value;
-    res.ECONF_HYB_KWD = REF_CONF_KWHD.value;
-    res.ECONF_HYB_LDF = REF_CONF_LDF.value;
-    // we're not using renewable cost...
+  //   /** for ECONF_HYB_EMT */
+  //   res.ECONF_HYB_D = REF_CONF_HYB_DP.value;
+  //   res.ECONF_HYB_G = REF_CONF_HYB_GP.value;
+  //   res.ECONF_HYB_KWD = REF_CONF_KWHD.value;
+  //   res.ECONF_HYB_LDF = REF_CONF_LDF.value;
+  //   // we're not using renewable cost...
 
-    res.ECONF_HYB_EMG = res.ECONF_HYB_G * res.ECONF_HYB_KWD * REF_GRD.value; // Emissions per day per facilitiy from grid
-    res.ECONF_HYB_EMD =
-      res.ECONF_HYB_D * res.ECREF_CONF_HYB_GPONF_HYB_LDF * REF_DIES.value; // Emissions per day per facilitiy from diesel
-    /* endfor */
+  //   res.ECONF_HYB_EMG = res.ECONF_HYB_G * res.ECONF_HYB_KWD * REF_GRD.value; // Emissions per day per facilitiy from grid
+  //   res.ECONF_HYB_EMD =
+  //     res.ECONF_HYB_D * res.ECREF_CONF_HYB_GPONF_HYB_LDF * REF_DIES.value; // Emissions per day per facilitiy from diesel
+  //   /* endfor */
 
-    // variables used in final computation
-    res.ECONF_DIES_EM = res.ECONF_LITR * REF_DIES.value; // Emissions per facility
-    res.ECONF_GRD_EM = res.ECONF_NKWD * REF_GRD.value; // Emissions per day per facility
-    res.ECONF_HYB_EMT = res.ECONF_HYB_EMG + res.ECONF_HYB_EMD; // Total emissions per day per facility
-    return res;
-  }
-  public get computeFacility(): Record<string, number> {
-    const reference = this.reference;
+  //   // variables used in final computation
+  //   res.ECONF_DIES_EM = res.ECONF_LITR * REF_DIES.value; // Emissions per facility
+  //   res.ECONF_GRD_EM = res.ECONF_NKWD * REF_GRD.value; // Emissions per day per facility
+  //   res.ECONF_HYB_EMT = res.ECONF_HYB_EMG + res.ECONF_HYB_EMD; // Total emissions per day per facility
+  //   return res;
+  // }
+  // public get computeFacility(): Record<string, number> {
+  //   const reference = this.reference;
 
-    let facilities = { ...this.localSurvey.energy.facilities };
-    if (reference?.energy) {
-      this.configuration = this.computeConfiguration();
-      console.log(this.configuration);
-      const localConf = this.configuration as Record<string, number>;
-      const inputFormulas = {
-        SUR_NP: function () {
-          return 0;
-        },
-        SUR_RNW: function () {
-          return 0;
-        },
-        SUR_DIES: function (facilities: Record<string, number>) {
-          // debugger;
-          return (localConf.ECONF_DIES_EM * facilities.SUR_DIES_NUM) / 1000;
-        },
-        SUR_GRD: function (facilities: Record<string, number>) {
-          // debugger;
-          return (localConf.ECONF_GRD_EM * facilities.SUR_GRD_NUM * 365) / 1000;
-        },
-        SUR_HYB: function (facilities: Record<string, number>) {
-          // debugger;
-          return localConf.ECONF_HYB_EMT * facilities.SUR_HYB_NUM * 365;
-        },
-      } as Record<string, (facilities: Record<string, number>) => number>;
+  //   let facilities = { ...this.localSurvey.energy.facilities };
+  //   if (reference?.energy) {
+  //     this.configuration = this.computeConfiguration();
+  //     console.log(this.configuration);
+  //     const localConf = this.configuration as Record<string, number>;
+  //     const inputFormulas = {
+  //       SUR_NP: function () {
+  //         return 0;
+  //       },
+  //       SUR_RNW: function () {
+  //         return 0;
+  //       },
+  //       SUR_DIES: function (facilities: Record<string, number>) {
+  //         // debugger;
+  //         return (localConf.ECONF_DIES_EM * facilities.SUR_DIES_NUM) / 1000;
+  //       },
+  //       SUR_GRD: function (facilities: Record<string, number>) {
+  //         // debugger;
+  //         return (localConf.ECONF_GRD_EM * facilities.SUR_GRD_NUM * 365) / 1000;
+  //       },
+  //       SUR_HYB: function (facilities: Record<string, number>) {
+  //         // debugger;
+  //         return localConf.ECONF_HYB_EMT * facilities.SUR_HYB_NUM * 365;
+  //       },
+  //     } as Record<string, (facilities: Record<string, number>) => number>;
 
-      Object.keys(inputFormulas).forEach((key) => {
-        facilities[`${key}_NUM`] = (facilities.TOTFAC * facilities[key]) / 100;
-        facilities[`${key}_CO2`] = inputFormulas[key](facilities);
-      });
-    }
+  //     Object.keys(inputFormulas).forEach((key) => {
+  //       facilities[`${key}_NUM`] = (facilities.TOTFAC * facilities[key]) / 100;
+  //       facilities[`${key}_CO2`] = inputFormulas[key](facilities);
+  //     });
+  //   }
 
-    return facilities;
-  }
+  //   return facilities;
+  // }
 
-  public async submitForm(value: GreenHouseGaz): Promise<void> {
-    if (value.name !== "") {
-      value.surveys.splice(this.localSurveyIndex, 1, this.localSurvey);
-      console.log(value);
-      await this.updateDoc(value);
-    } else {
-      throw new Error("please fill the new Name");
-    }
-  }
+  // public async submitForm(value: GreenHouseGaz): Promise<void> {
+  //   if (value.name !== "") {
+  //     value.surveys.splice(this.localSurveyIndex, 1, this.localSurvey);
+  //     console.log(value);
+  //     await this.updateDoc(value);
+  //   } else {
+  //     throw new Error("please fill the new Name");
+  //   }
+  // }
 
-  private newEnergySurvey(): EnergySurvey {
-    return {
-      facilities: {},
-      cooking: {},
-      lighting: {},
-      pumping: {},
-    };
-  }
-  public setLocalShelter(project: GreenHouseGaz): void {
-    this.localProject = project ? cloneDeep(project) : ({} as GreenHouseGaz);
+  // private newEnergySurvey(): EnergySurvey {
+  //   return {
+  //     facilities: {},
+  //     cooking: {},
+  //     lighting: {},
+  //     pumping: {},
+  //   };
+  // }
+  // public setLocalShelter(project: GreenHouseGaz): void {
+  //   this.localProject = project ? cloneDeep(project) : ({} as GreenHouseGaz);
 
-    const surveyId = decodeURIComponent(this.$route.params.surveyId);
-    this.localSurveyIndex =
-      this.localProject.surveys?.findIndex(
-        (el: Survey) => el.name === surveyId
-      ) ?? -1;
-    this.localSurvey =
-      this.localProject.surveys?.[this.localSurveyIndex] ?? ({} as Survey);
-    if (!this.localSurvey.energy) {
-      this.localSurvey.energy = this.newEnergySurvey();
-    }
-  }
+  //   const surveyId = decodeURIComponent(this.$route.params.surveyId);
+  //   this.localSurveyIndex =
+  //     this.localProject.surveys?.findIndex(
+  //       (el: Survey) => el.name === surveyId
+  //     ) ?? -1;
+  //   this.localSurvey =
+  //     this.localProject.surveys?.[this.localSurveyIndex] ?? ({} as Survey);
+  //   if (!this.localSurvey.energy) {
+  //     this.localSurvey.energy = this.newEnergySurvey();
+  //   }
+  // }
 
-  public syncLocalShelter(): void {
-    // init function
-    this.setLocalShelter(this.project);
+  // public syncLocalShelter(): void {
+  //   // init function
+  //   this.setLocalShelter(this.project);
 
-    this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["GhgItemModule/SET_PROJECT"];
-      if (shouldUpdate.includes(mutation.type)) {
-        this.setLocalShelter(mutation.payload);
-      }
-    });
-  }
+  //   this.$store.subscribe((mutation) => {
+  //     const shouldUpdate = ["GhgItemModule/SET_PROJECT"];
+  //     if (shouldUpdate.includes(mutation.type)) {
+  //       this.setLocalShelter(mutation.payload);
+  //     }
+  //   });
+  // }
 
-  created(): void {
-    this.syncLocalShelter();
-  }
+  // created(): void {
+  //   this.syncLocalShelter();
+  // }
 }
 
 interface MenuSurveyItem {
