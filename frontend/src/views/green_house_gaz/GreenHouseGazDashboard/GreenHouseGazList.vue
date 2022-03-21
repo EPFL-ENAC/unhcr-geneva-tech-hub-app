@@ -45,30 +45,6 @@
               <v-icon>mdi-chart-areaspline</v-icon>
             </v-btn>
           </template>
-          <!-- <template v-slot:default>
-            <tbody>
-              <tr v-for="location in country.value" :key="location.name">
-                <td width="100px">
-                  <router-link
-                    :to="{
-                      name: 'GreenHouseGazItem',
-                      params: {
-                        country: encodeURIComponent(country.key),
-                        site: encodeURIComponent(location.name),
-                      },
-                    }"
-                  >{{ location.name }}
-                  </router-link>
-                </td>
-                <td>{{ location.created_by }}</td>
-                <td>
-                  <span v-if="$can('edit', location)">editable</span>
-                  <span v-else>readonly </span>
-                </td>
-              </tr>
- Do something smart with direct access to survey... maybe request dynamically!! 
-            </tbody>
-          </template> -->
         </v-data-table>
       </v-expansion-panel-content>
     </v-expansion-panel>
