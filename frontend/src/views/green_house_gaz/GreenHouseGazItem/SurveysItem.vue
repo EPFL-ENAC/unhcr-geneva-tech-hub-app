@@ -1,6 +1,5 @@
 <template>
   <v-container fluid v-if="project">
-    <!-- {{ currentSurvey }} -->
     <header>
       <v-row>
         <v-col :cols="10">
@@ -37,7 +36,33 @@
       elevation="2"
     >
       <template v-for="item in menuItems">
-        <v-tab :key="item.to" :to="{ name: item.to }">
+        <v-divider
+          v-if="!item.text"
+          :key="item.id"
+          class="mx-2"
+          vertical
+        ></v-divider>
+        <v-menu v-else-if="item.children" :key="item.id" offset-y open-on-hover>
+          <template v-slot:activator="{ on, attrs }">
+            <v-tab
+              v-bind="attrs"
+              v-on="on"
+              :href="`#${item.id}-${item.children[0].id}`"
+            >
+              <v-icon left>{{ item.icon }}</v-icon>
+              {{ item.text }}
+            </v-tab>
+          </template>
+          <v-list>
+            <v-list-item v-for="subItem in item.children" :key="subItem.id">
+              <v-tab :href="`#${item.id}-${subItem.id}`">
+                <v-icon left>{{ subItem.icon }}</v-icon>
+                {{ subItem.text }}
+              </v-tab>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <v-tab v-else :key="item.to" :to="{ name: item.to }">
           <v-icon left>{{ item.icon }}</v-icon>
           {{ item.text }}
         </v-tab>
@@ -91,7 +116,29 @@ export default class SurveyList extends Vue {
   getDoc!: (id: string) => Promise<null>;
 
   readonly menuItems: MenuItem[] = [
-    { icon: "mdi-lightning-bolt", text: "Energy", to: "GreenHouseGazStep1" },
+    {
+      children: [
+        {
+          icon: "mdi-shower",
+          text: "Facilities",
+          to: "GreenHouseGazStep1Facilities",
+        },
+        { icon: "mdi-stove", text: "Cooking", to: "GreenHouseGazStep1Cooking" },
+        {
+          icon: "mdi-lightbulb",
+          text: "Lighting",
+          to: "GreenHouseGazStep1Lighting",
+        },
+        {
+          icon: "mdi-water-pump",
+          text: "Pumping",
+          to: "GreenHouseGazStep1Pumping",
+        },
+      ],
+      icon: "mdi-lightning-bolt",
+      text: "Energy",
+      to: "GreenHouseGazStep1",
+    },
     { icon: "mdi-water", text: "Wash transport", to: "GreenHouseGazStep2" },
     {
       icon: "mdi-home",
