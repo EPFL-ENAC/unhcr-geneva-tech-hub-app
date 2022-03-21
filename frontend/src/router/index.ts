@@ -1,11 +1,10 @@
-import VueRouter, { Route, RouteConfig } from "vue-router";
-
-import Apps from "../views/AppListView.vue";
-import Login from "../views/LoginView.vue";
-import Vue from "vue";
 import energyRouter from "@/router/energyRouter";
 import ghgRouter from "@/router/ghgRouter";
 import shelterRouter from "@/router/shelterRouter";
+import Vue from "vue";
+import VueRouter, { RouteConfig } from "vue-router";
+import Apps from "../views/AppListView.vue";
+import Login from "../views/LoginView.vue";
 
 Vue.use(VueRouter);
 
@@ -43,7 +42,7 @@ const routes: Array<RouteConfig> = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
-  }
+  },
 ];
 routes.push(ghgRouter);
 routes.push(shelterRouter);

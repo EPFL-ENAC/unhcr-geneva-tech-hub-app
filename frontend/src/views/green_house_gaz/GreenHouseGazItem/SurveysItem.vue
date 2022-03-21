@@ -47,7 +47,9 @@
             <v-tab
               v-bind="attrs"
               v-on="on"
-              :href="`#${item.id}-${item.children[0].id}`"
+              :to="{
+                query: { category: item.to, subcategory: item.children[0].to },
+              }"
             >
               <v-icon left>{{ item.icon }}</v-icon>
               {{ item.text }}
@@ -55,7 +57,9 @@
           </template>
           <v-list>
             <v-list-item v-for="subItem in item.children" :key="subItem.id">
-              <v-tab :href="`#${item.id}-${subItem.id}`">
+              <v-tab
+                :to="{ query: { category: item.to, subcategory: subItem.to } }"
+              >
                 <v-icon left>{{ subItem.icon }}</v-icon>
                 {{ subItem.text }}
               </v-tab>
@@ -70,13 +74,17 @@
     </v-tabs>
     <v-row>
       <v-col>
-        <router-view />
+        <component :is="$router.currentRoute.query.subcategory" />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
+import Cooking from "@/components/green_house_gaz/energy/Cooking.vue";
+import Facilities from "@/components/green_house_gaz/energy/Facilities.vue";
+import Lighting from "@/components/green_house_gaz/energy/Lighting.vue";
+import Pumping from "@/components/green_house_gaz/energy/Pumping.vue";
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import getFlagEmoji from "@/utils/flagEmoji";
 import getCountryName from "@/utils/getCountryName";
@@ -97,6 +105,12 @@ const REFERENCE_DOC_ID = "reference";
       "syncDB",
       "closeDB",
     ]),
+  },
+  components: {
+    Cooking,
+    Facilities,
+    Lighting,
+    Pumping,
   },
   filters: {
     date: function (value: string) {
@@ -121,35 +135,35 @@ export default class SurveyList extends Vue {
         {
           icon: "mdi-shower",
           text: "Facilities",
-          to: "GreenHouseGazStep1Facilities",
+          to: "Facilities",
         },
-        { icon: "mdi-stove", text: "Cooking", to: "GreenHouseGazStep1Cooking" },
+        { icon: "mdi-stove", text: "Cooking", to: "cooking" },
         {
           icon: "mdi-lightbulb",
           text: "Lighting",
-          to: "GreenHouseGazStep1Lighting",
+          to: "lighting",
         },
         {
           icon: "mdi-water-pump",
           text: "Pumping",
-          to: "GreenHouseGazStep1Pumping",
+          to: "pumping",
         },
       ],
       icon: "mdi-lightning-bolt",
       text: "Energy",
-      to: "GreenHouseGazStep1",
+      to: "Energy",
     },
-    { icon: "mdi-water", text: "Wash transport", to: "GreenHouseGazStep2" },
+    { icon: "mdi-water", text: "Wash transport", to: "WASH" },
     {
       icon: "mdi-home",
       text: "Shelter, Site and material",
       to: "GreenHouseGazStep3",
     },
-    { icon: "mdi-leaf", text: "Sequestration", to: "GreenHouseGazStep4" },
+    { icon: "mdi-leaf", text: "Sequestration", to: "sequestration" },
     {
       icon: "mdi-newspaper-variant-outline",
       text: "Results",
-      to: "GreenHouseGazStep4",
+      to: "results",
     },
   ];
 

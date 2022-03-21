@@ -60,11 +60,6 @@ export default class AppList extends Vue {
     description?: string;
   }[] = [
     {
-      title: "UNHCR GHG carbon assessment calculator",
-      to: "GreenHouseGaz",
-      logoImg: "/app_logo/ghg.png",
-    },
-    {
       title: "Shelter Sustainability",
       to: "ShelterSustainability",
       logoImg: "/app_logo/shelter.png",
@@ -72,6 +67,11 @@ export default class AppList extends Vue {
         "A tool supporting comparative assessments of environmental \
         impacts, technical performance, habitability and affordability of \
         shelter designs used in humanitarian relief operations.",
+    },
+    {
+      title: "UNHCR GHG carbon assessment calculator",
+      to: "GreenHouseGaz",
+      logoImg: "/app_logo/ghg.png",
     },
     {
       title: "Energy planning tool",
