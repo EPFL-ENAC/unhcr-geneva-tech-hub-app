@@ -28,9 +28,10 @@ export function checkMax(max: number): Rule {
 export function checkSum<T>(
   t: T,
   expected: number,
-  ...keys: (keyof T)[]
+  keys: (keyof T)[],
+  text?: string
 ): Rule {
   return () =>
     sumBy(keys, (key) => t[key] as unknown as number) === expected ||
-    `Sum to ${expected}`;
+    `Sum to ${text ?? expected}`;
 }

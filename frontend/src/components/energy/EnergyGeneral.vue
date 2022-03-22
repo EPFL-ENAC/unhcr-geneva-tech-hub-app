@@ -78,12 +78,15 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
   get items(): FormItem<keyof GeneralModule>[][] {
     const checkCategorySum = checkSum(
       this.module,
-      100,
-      "categoryVeryLow",
-      "categoryLow",
-      "categoryMiddle",
-      "categoryHigh",
-      "categoryVeryHigh"
+      1,
+      [
+        "categoryVeryLow",
+        "categoryLow",
+        "categoryMiddle",
+        "categoryHigh",
+        "categoryVeryHigh",
+      ],
+      "100%"
     );
     return [
       [

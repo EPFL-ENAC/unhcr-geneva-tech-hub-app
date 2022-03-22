@@ -207,13 +207,14 @@ export default class EnergyResult extends Vue {
     technologies: CookingTechnology[]
   ): CookingResult {
     const results: CookingResult[] = technologies.map((item) => {
+      console.log(item.property.useFactor);
       // CEu
       const usefulEnergy =
         item.stove.capacity *
-        (item.property.useFactor / 100) *
+        item.property.useFactor *
         item.property.cookingTime *
-        24 *
-        365;
+        365 *
+        3.6;
       // CEf
       const finalEnergy = usefulEnergy / item.stove.energyEfficiency;
       // CWF
@@ -244,7 +245,7 @@ export default class EnergyResult extends Vue {
   computeBySite(site: CookingSite): HouseholdCookingResult {
     const results: [keyof SocioEconomicCategory, CookingResult][] =
       Object.entries(site.categories).map(([key, value]) => {
-        const count = site.householdsCount * (value.percentage / 100);
+        const count = site.householdsCount * value.percentage;
         return [
           key as keyof SocioEconomicCategory,
           this.computeByCategory(count, value.technologies),

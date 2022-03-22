@@ -18,7 +18,7 @@
     </v-text-field>
     <v-text-field
       v-if="type === 'number'"
-      v-model.number="model"
+      v-model.number="numberModel"
       hide-details="auto"
       hide-spin-buttons
       required
@@ -65,7 +65,7 @@ import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 @Component
 export default class FormItemComponent extends Vue {
   @VModel({ type: [String, Number, Boolean] })
-  readonly model!: string | number | boolean;
+  model!: string | number | boolean;
   @Prop({ type: String as () => "text" | "number" | "boolean" | "select" })
   readonly type!: "text" | "number" | "boolean" | "select";
   @Prop({ type: String as () => "percent" })
@@ -84,6 +84,8 @@ export default class FormItemComponent extends Vue {
   readonly rules: Rule[] | undefined;
   @Prop({ type: Boolean, default: false })
   readonly optional!: boolean;
+  @Prop(Number)
+  readonly ratio: number | undefined;
 
   get items(): SelectItemObject<string, SelectValue>[] {
     switch (this.type) {
@@ -145,6 +147,21 @@ export default class FormItemComponent extends Vue {
     }
     return this.max;
   }
+
+  get actualRatio(): number {
+    if (this.subtype === "percent") {
+      return 100;
+    }
+    return this.ratio ?? 1;
+  }
+
+  get numberModel(): number {
+    return (this.model as number) * this.actualRatio;
+  }
+
+  set numberModel(value: number) {
+    this.model = (value as number) / this.actualRatio;
+  }
 }
 
 export type FormItem<K = string, V = string> =
@@ -171,6 +188,7 @@ interface NumberFormItem<K> extends AbstractFormItem<K> {
   unit?: string;
   min?: number;
   max?: number;
+  ratio?: number;
 }
 
 interface BooleanFormItem<K> extends AbstractFormItem<K> {
