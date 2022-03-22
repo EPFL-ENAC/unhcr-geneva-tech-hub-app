@@ -16,7 +16,11 @@
           <v-divider></v-divider>
         </v-col>
       </v-row>
-      <v-row v-if="localSurvey">
+      <v-row
+        v-if="
+          localSurvey && localSurvey.energy && localSurvey.energy.facilities
+        "
+      >
         <v-col :cols="4" :lg="4" :md="6" :sm="12">
           <v-card flat>
             <v-card-title><h2>Configuration</h2></v-card-title>
