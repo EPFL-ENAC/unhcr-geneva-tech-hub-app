@@ -99,7 +99,7 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
     "fuel",
     ...socioEconomicCategories,
   ].map((item) => ({
-    text: item,
+    text: this.$t(`energy.${item}`).toString(),
     value: item,
   }));
   readonly inputNumberColumnNames: string[] = socioEconomicCategories;

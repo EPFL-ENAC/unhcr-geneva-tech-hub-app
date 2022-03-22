@@ -1,0 +1,11 @@
+{
+  "energy": {
+    "name": "Name",
+    "fuel": "Fuel",
+    "veryLow": "Very Low",
+    "low": "Low",
+    "middle": "Middle",
+    "high": "High",
+    "veryHigh": "Very High"
+  }
+}

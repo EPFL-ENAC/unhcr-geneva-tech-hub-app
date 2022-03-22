@@ -11,11 +11,9 @@
         <template v-slot:default>
           <thead>
             <tr>
-              <th>Very Low</th>
-              <th>Low</th>
-              <th>Middle</th>
-              <th>High</th>
-              <th>Very High</th>
+              <th v-for="item in socioEconomicCategories" :key="item">
+                {{ $t(`energy.${item}`) }}
+              </th>
             </tr>
           </thead>
           <tbody>

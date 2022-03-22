@@ -2,7 +2,9 @@ module.exports = {
   configureWebpack: {
     devtool: "source-map",
   },
+
   transpileDependencies: ["vuetify"],
+
   devServer: {
     proxy: {
       "^/db": {
@@ -13,6 +15,16 @@ module.exports = {
         ws: true,
         changeOrigin: true,
       },
+    },
+  },
+
+  pluginOptions: {
+    i18n: {
+      locale: "en",
+      fallbackLocale: "en",
+      localeDir: "locales",
+      enableInSFC: true,
+      enableBridge: false,
     },
   },
 };
