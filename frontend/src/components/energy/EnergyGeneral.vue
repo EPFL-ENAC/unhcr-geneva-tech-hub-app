@@ -4,18 +4,50 @@
     :initial-module="initialModule"
     :items="items"
     @save="save"
-  ></energy-form>
+  >
+    <template v-slot:append>
+      <h2>Socio-Economic Categories</h2>
+      <v-simple-table>
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th>Very Low</th>
+              <th>Low</th>
+              <th>Middle</th>
+              <th>High</th>
+              <th>Very High</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in categoryFormItems" :key="item.key">
+              <td v-for="category in socioEconomicCategories" :key="category">
+                <form-item-component
+                  v-model="module.categories[category][item.key]"
+                  v-bind="item"
+                ></form-item-component>
+              </td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
+    </template>
+  </energy-form>
 </template>
 
 <script lang="ts">
-import { FormItem } from "@/components/commons/FormItemComponent.vue";
+import FormItemComponent, {
+  FormItem,
+} from "@/components/commons/FormItemComponent.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
 import {
   AreaPerPerson,
   FarApartHouses,
+  GeneralCategory,
   GeneralModule,
   Integration,
+  socioEconomicCategories,
+  SocioEconomicCategory,
   Topography,
   VacantSpaceInside,
   vacantSpaceOutside,
@@ -28,13 +60,49 @@ import { Component } from "vue-property-decorator";
 @Component({
   components: {
     EnergyForm,
+    FormItemComponent,
   },
 })
 export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
+  readonly socioEconomicCategories = socioEconomicCategories;
+
   module: GeneralModule = this.emptyModule;
+
+  get categoryProportions(): number[] {
+    return Object.values(this.module.categories).map((item) => item.proportion);
+  }
+
+  get categoryFormItems(): FormItem<keyof GeneralCategory>[] {
+    return [
+      {
+        type: "number",
+        key: "proportion",
+        label: "Proportion",
+        subtype: "percent",
+        rules: [checkSum(this.categoryProportions, 1, "100%")],
+      },
+      {
+        type: "number",
+        key: "cookingHours",
+        label: "Cooking TIme",
+        unit: "h",
+      },
+      {
+        type: "number",
+        key: "annualIncome",
+        label: "Annual Income by Household",
+        unit: this.module.currency,
+      },
+    ];
+  }
 
   get emptyModule(): GeneralModule {
     const currentYear = new Date().getFullYear();
+    const defaultCategory: GeneralCategory = {
+      proportion: 0.2,
+      cookingHours: 0,
+      annualIncome: 0,
+    };
     return {
       name: "",
       yearStart: currentYear,
@@ -67,27 +135,32 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
       woodLandscape: "rain",
       topography: "flat",
       vacantSpaceOutside: "no",
-      categoryVeryLow: 20,
-      categoryLow: 20,
-      categoryMiddle: 20,
-      categoryHigh: 20,
-      categoryVeryHigh: 20,
+      categories: Object.fromEntries<GeneralCategory>(
+        socioEconomicCategories.map((item) => [
+          item,
+          {
+            proportion: 0.2,
+            cookingHours: 0,
+            annualIncome: 0,
+          },
+        ])
+      ) as Record<SocioEconomicCategory, GeneralCategory>,
     };
   }
 
   get items(): FormItem<keyof GeneralModule>[][] {
-    const checkCategorySum = checkSum(
-      this.module,
-      1,
-      [
-        "categoryVeryLow",
-        "categoryLow",
-        "categoryMiddle",
-        "categoryHigh",
-        "categoryVeryHigh",
-      ],
-      "100%"
-    );
+    // const checkCategorySum = checkSum(
+    //   this.module,
+    //   1,
+    //   [
+    //     "categoryVeryLow",
+    //     "categoryLow",
+    //     "categoryMiddle",
+    //     "categoryHigh",
+    //     "categoryVeryHigh",
+    //   ],
+    //   "100%"
+    // );
     return [
       [
         {
@@ -472,43 +545,43 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
           ],
         } as FormItem<keyof GeneralModule, vacantSpaceOutside>,
       ],
-      [
-        {
-          type: "number",
-          key: "categoryVeryLow",
-          label: "Very Low Category",
-          subtype: "percent",
-          rules: [checkCategorySum],
-        },
-        {
-          type: "number",
-          key: "categoryLow",
-          label: "Low Category",
-          subtype: "percent",
-          rules: [checkCategorySum],
-        },
-        {
-          type: "number",
-          key: "categoryMiddle",
-          label: "Middle Category",
-          subtype: "percent",
-          rules: [checkCategorySum],
-        },
-        {
-          type: "number",
-          key: "categoryHigh",
-          label: "High Category",
-          subtype: "percent",
-          rules: [checkCategorySum],
-        },
-        {
-          type: "number",
-          key: "categoryVeryHigh",
-          label: "Very High Category",
-          subtype: "percent",
-          rules: [checkCategorySum],
-        },
-      ],
+      // [
+      //   {
+      //     type: "number",
+      //     key: "categoryVeryLow",
+      //     label: "Very Low Category",
+      //     subtype: "percent",
+      //     rules: [checkCategorySum],
+      //   },
+      //   {
+      //     type: "number",
+      //     key: "categoryLow",
+      //     label: "Low Category",
+      //     subtype: "percent",
+      //     rules: [checkCategorySum],
+      //   },
+      //   {
+      //     type: "number",
+      //     key: "categoryMiddle",
+      //     label: "Middle Category",
+      //     subtype: "percent",
+      //     rules: [checkCategorySum],
+      //   },
+      //   {
+      //     type: "number",
+      //     key: "categoryHigh",
+      //     label: "High Category",
+      //     subtype: "percent",
+      //     rules: [checkCategorySum],
+      //   },
+      //   {
+      //     type: "number",
+      //     key: "categoryVeryHigh",
+      //     label: "Very High Category",
+      //     subtype: "percent",
+      //     rules: [checkCategorySum],
+      //   },
+      // ],
     ];
   }
 }

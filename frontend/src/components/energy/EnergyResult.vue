@@ -79,7 +79,6 @@ import {
   CategoryProperty,
   CookingFuel,
   CookingStove,
-  GeneralModule,
   Modules,
   socioEconomicCategories,
   SocioEconomicCategory,
@@ -140,15 +139,14 @@ export default class EnergyResult extends Vue {
   }
 
   get householdCookingResult(): HouseholdCookingResult | undefined {
+    const general = this.modules.general;
     const householdCooking = this.modules.householdCooking;
-    if (this.modules.general && householdCooking) {
+    if (general && householdCooking) {
       const site: CookingSite = {
-        householdsCount:
-          this.modules.general.totalPopulation /
-          this.modules.general.familiesCount,
+        householdsCount: general.totalPopulation / general.familiesCount,
         categories: Object.fromEntries(
           socioEconomicCategories.map((item) => {
-            const percentage = this.getCategoryPercentage(item);
+            const percentage: number = general.categories[item].proportion;
             const technologies: CookingTechnology[] =
               householdCooking.categoryCookings
                 .filter(
@@ -187,19 +185,7 @@ export default class EnergyResult extends Vue {
     if (!this.modules.general) {
       return 0;
     }
-    const general: GeneralModule = this.modules.general;
-    switch (category) {
-      case "veryLow":
-        return general.categoryVeryLow;
-      case "low":
-        return general.categoryLow;
-      case "middle":
-        return general.categoryMiddle;
-      case "high":
-        return general.categoryHigh;
-      case "veryHigh":
-        return general.categoryVeryHigh;
-    }
+    return this.modules.general.categories[category].proportion;
   }
 
   computeByCategory(
@@ -207,7 +193,6 @@ export default class EnergyResult extends Vue {
     technologies: CookingTechnology[]
   ): CookingResult {
     const results: CookingResult[] = technologies.map((item) => {
-      console.log(item.property.useFactor);
       // CEu
       const usefulEnergy =
         item.stove.capacity *

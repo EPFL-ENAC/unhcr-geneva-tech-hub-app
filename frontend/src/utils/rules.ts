@@ -1,4 +1,4 @@
-import { sumBy } from "lodash";
+import { sum, sumBy } from "lodash";
 
 export type Rule = (
   value: string | boolean | number | null | undefined
@@ -25,7 +25,19 @@ export function checkMax(max: number): Rule {
     (typeof value === "number" && value <= max) || `Maximum ${max}.`;
 }
 
+export function check(predicate: () => boolean, error: string): Rule {
+  return () => predicate() || error;
+}
+
 export function checkSum<T>(
+  values: number[],
+  expected: number,
+  text?: string
+): Rule {
+  return () => sum(values) === expected || `Sum to ${text ?? expected}`;
+}
+
+export function checkSumByKeys<T>(
   t: T,
   expected: number,
   keys: (keyof T)[],

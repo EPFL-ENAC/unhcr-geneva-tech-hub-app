@@ -46,11 +46,7 @@ export interface GeneralModule {
   woodLandscape: WoodLandscape;
   topography: Topography;
   vacantSpaceOutside: vacantSpaceOutside;
-  categoryVeryLow: number;
-  categoryLow: number;
-  categoryMiddle: number;
-  categoryHigh: number;
-  categoryVeryHigh: number;
+  categories: Record<SocioEconomicCategory, GeneralCategory>;
 }
 export type Integration = "well" | "moderately" | "badly";
 export type FarApartHouses = "few" | "3-6" | "6-12" | "12-20" | "20+";
@@ -72,6 +68,11 @@ export type WoodLandscape =
   | "grassland-savannah";
 export type Topography = "flat" | "hilly" | "valley";
 export type vacantSpaceOutside = "no" | "little" | "medium" | "lots";
+export interface GeneralCategory {
+  proportion: number;
+  cookingHours: number;
+  annualIncome: number;
+}
 
 export interface HouseholdCookingModule {
   categoryCookings: {
