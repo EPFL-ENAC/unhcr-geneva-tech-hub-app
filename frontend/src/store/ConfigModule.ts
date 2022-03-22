@@ -18,7 +18,7 @@ export interface ConfigState {
 
 /** Default Configure state value */
 const state: ConfigState = {
-  themeDark: window.matchMedia("(prefers-color-scheme: dark)").matches,
+  themeDark: false, //window.matchMedia("(prefers-color-scheme: dark)").matches,
   locale:
     (window.navigator.languages && window.navigator.languages[0]) ||
     window.navigator.language,

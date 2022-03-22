@@ -23,13 +23,12 @@
           <v-sheet elevation="2" rounded v-if="project">
             <v-container fluid>
               <v-row>
-                <v-col class="about-first-column" lg="6" md="6" sm="12" xs="12">
-                  <v-text-field
-                    v-model="project.habitability.kikoo"
-                    name="somelabel"
-                    label="somelabel"
-                    type="text"
-                  />
+                <v-col class="about-first-column d-flex justify-center" lg="12">
+                  <v-img
+                    max-width="70%"
+                    class="d-flex justify-center"
+                    src="/shelter/env_perf.png"
+                  ></v-img>
                 </v-col>
               </v-row>
             </v-container>

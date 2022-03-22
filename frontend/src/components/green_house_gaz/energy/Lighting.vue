@@ -53,11 +53,11 @@ import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("GhgItemModule", ["project"]),
+    ...mapGetters("GhgModule", ["project"]),
     ...mapGetters("GhgReferenceModule", ["reference"]),
   },
   methods: {
-    ...mapActions("GhgItemModule", ["getDoc", "updateDoc"]),
+    ...mapActions("GhgModule", ["getDoc", "updateDoc"]),
   },
 })
 export default class Lighting extends Vue {
@@ -83,7 +83,7 @@ export default class Lighting extends Vue {
     this.setLocalProject();
 
     this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["GhgItemModule/SET_PROJECT"];
+      const shouldUpdate = ["GhgModule/SET_PROJECT"];
       if (shouldUpdate.includes(mutation.type)) {
         this.setLocalProject();
       }

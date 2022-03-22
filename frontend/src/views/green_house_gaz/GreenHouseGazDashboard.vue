@@ -33,12 +33,7 @@ import { mapActions } from "vuex";
 
 @Component({
   methods: {
-    ...mapActions("GhgListModule", [
-      "syncDB",
-      "addDoc",
-      "closeDB",
-      "getCountries",
-    ]),
+    ...mapActions("GhgModule", ["syncDB", "addDoc", "closeDB", "getCountries"]),
   },
   components: {
     TerritoryMap,

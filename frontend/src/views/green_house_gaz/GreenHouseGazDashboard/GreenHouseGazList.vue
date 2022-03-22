@@ -62,7 +62,7 @@ import { mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("GhgListModule", ["countries"]),
+    ...mapGetters("GhgModule", ["countries"]),
   },
   components: {
     SurveyList,

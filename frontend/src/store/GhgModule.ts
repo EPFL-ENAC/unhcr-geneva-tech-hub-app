@@ -1,6 +1,6 @@
 /** Config store */
 import { Country, GreenHouseGaz } from "@/store/GhgInterface";
-import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
+import { SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -50,7 +50,7 @@ const getters: GetterTree<ProjectsState, RootState> = {
 /** Mutations */
 const mutations: MutationTree<ProjectsState> = {
   INIT_DB(state) {
-    state.localCouch = createSyncDatabase(DB_NAME);
+    state.localCouch = new SyncDatabase(DB_NAME);
   },
   CLOSE_DB(state) {
     state.localCouch?.cancel();

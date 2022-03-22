@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid v-if="project">
+  <v-container fluid v-if="project && currentSurvey">
     <header>
       <v-row>
         <v-col :cols="10">
@@ -101,22 +101,11 @@ import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import getFlagEmoji from "@/utils/flagEmoji";
 import getCountryName from "@/utils/getCountryName";
 import { Component, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
-
-const REFERENCE_DOC_ID = "reference";
+import { mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("GhgItemModule", ["project"]),
-    ...mapGetters("GhgReferenceModule", ["reference"]),
-  },
-  methods: {
-    ...mapActions("GhgItemModule", [
-      "getDoc",
-      "updateDoc",
-      "syncDB",
-      "closeDB",
-    ]),
+    ...mapGetters("GhgModule", ["project"]),
   },
   components: {
     Cooking,
@@ -145,9 +134,6 @@ const REFERENCE_DOC_ID = "reference";
 /** ProjectList */
 export default class SurveyList extends Vue {
   project!: GreenHouseGaz;
-  syncDB!: () => null;
-  closeDB!: () => Promise<null>;
-  getDoc!: (id: string) => Promise<null>;
 
   readonly menuItems: MenuItem[] = [
     {
@@ -225,35 +211,26 @@ export default class SurveyList extends Vue {
   }
 
   public get currentProjectEmoji(): string {
-    return getFlagEmoji(this.project.country_code);
+    if (this.project?.country_code) {
+      return getFlagEmoji(this.project.country_code);
+    }
+    return "";
   }
 
   public get currentProjectCountryName(): string {
-    return getCountryName(this.project.country_code);
+    if (this.project?.country_code) {
+      return getCountryName(this.project.country_code);
+    }
+    return "";
   }
 
   public get currentSurvey(): Survey | undefined {
-    if (!this.project) {
-      return undefined;
+    if (this.project?.surveys) {
+      return this.project.surveys.find(
+        (el: Survey) => el.name === this.$route.params.surveyId
+      );
     }
-    const foundSurvey = this.project.surveys.find(
-      (el: Survey) => el.name === this.$route.params.surveyId
-    );
-    if (!foundSurvey) {
-      throw new Error("Could not find matching survey");
-    }
-    return foundSurvey;
-  }
-
-  mounted(): void {
-    this.syncDB();
-    this.getDoc(REFERENCE_DOC_ID);
-  }
-
-  destroyed(): void {
-    this.closeDB().then(() => {
-      console.log("DESTROYED view reference list, closing DB");
-    });
+    return undefined;
   }
 }
 

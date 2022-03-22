@@ -135,12 +135,12 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 @Component({
   computed: {
-    ...mapGetters("GhgListModule", ["countries", "project"]),
+    ...mapGetters("GhgModule", ["countries", "project"]),
   },
 
   methods: {
     // todo unified GHG database connection so we have only one store
-    ...mapActions("GhgListModule", ["addDoc", "updateDoc", "getDoc"]),
+    ...mapActions("GhgModule", ["addDoc", "updateDoc", "getDoc"]),
   },
 })
 /** ProjectList */
@@ -305,7 +305,7 @@ export default class ProjectList extends Vue {
     this.setLocalCampSite(this.project);
 
     this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["GhgListModule/SET_PROJECT"];
+      const shouldUpdate = ["GhgModule/SET_PROJECT"];
       if (shouldUpdate.includes(mutation.type)) {
         this.setLocalCampSite(mutation.payload);
       }

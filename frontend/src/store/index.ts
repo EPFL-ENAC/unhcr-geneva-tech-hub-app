@@ -1,7 +1,6 @@
 import ConfigModule from "@/store/ConfigModule";
 import EnergyModule from "@/store/EnergyModule";
-import GhgItemModule from "@/store/GhgItemModule";
-import GhgListModule from "@/store/GhgListModule";
+import GhgModule from "@/store/GhgModule";
 import GhgReferenceModule from "@/store/GhgReferenceModule";
 import ShelterItemModule from "@/store/ShelterItemModule";
 import ShelterListModule from "@/store/ShelterListModule";
@@ -176,8 +175,7 @@ const store: StoreOptions<RootState> = {
     ShelterListModule,
     ShelterItemModule,
     ShelterMaterialsModule,
-    GhgListModule,
-    GhgItemModule,
+    GhgModule,
     GhgReferenceModule,
     UserModule,
     energy: EnergyModule,

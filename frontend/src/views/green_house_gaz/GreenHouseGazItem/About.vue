@@ -41,11 +41,11 @@ import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 @Component({
   computed: {
-    ...mapGetters("GhgItemModule", ["project"]),
+    ...mapGetters("GhgModule", ["project"]),
     ...mapGetters("UserModule", ["user"]),
   },
   methods: {
-    ...mapActions("GhgItemModule", ["updateDoc"]),
+    ...mapActions("GhgModule", ["updateDoc"]),
   },
 })
 /** ProjectItem */
@@ -83,7 +83,7 @@ export default class ProjectItem extends Vue {
     this.setLocalShelter(this.project);
 
     this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["GhgItemModule/SET_PROJECT"];
+      const shouldUpdate = ["GhgModule/SET_PROJECT"];
       if (shouldUpdate.includes(mutation.type)) {
         this.setLocalShelter(mutation.payload);
       }

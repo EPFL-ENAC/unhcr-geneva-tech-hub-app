@@ -27,10 +27,10 @@ import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("GhgItemModule", ["project"]),
+    ...mapGetters("GhgModule", ["project"]),
   },
   methods: {
-    ...mapActions("GhgItemModule", ["getDoc", "syncDB", "closeDB"]),
+    ...mapActions("GhgModule", ["getDoc", "syncDB", "closeDB"]),
   },
 })
 /** ProjectItem */

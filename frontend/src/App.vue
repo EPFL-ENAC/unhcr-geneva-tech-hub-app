@@ -215,7 +215,8 @@ export default class App extends Vue {
     return this.$store.getters.error;
   }
   get themeDark(): boolean {
-    return this.$store.getters["ConfigModule/themeDark"];
+    return false;
+    // return this.$store.getters["ConfigModule/themeDark"];
   }
 
   get gravatarImageUrl(): string {
@@ -228,7 +229,7 @@ export default class App extends Vue {
 
   @Watch("themeDark")
   onthemeDarkChange(): void {
-    this.$vuetify.theme.dark = this.$store.getters["ConfigModule/themeDark"];
+    this.$vuetify.theme.dark = false; // this.$store.getters["ConfigModule/themeDark"];
   }
 
   @Watch("$store.getters.message")
@@ -287,7 +288,7 @@ export default class App extends Vue {
 
   /** Run once. */
   mounted(): void {
-    this.$vuetify.theme.dark = this.$store.getters["ConfigModule/themeDark"];
+    this.$vuetify.theme.dark = false; //this.$store.getters["ConfigModule/themeDark"];
     document.title = this.title;
     /// retrieve user
     this.getSessionStore();
