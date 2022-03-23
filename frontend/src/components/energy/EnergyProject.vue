@@ -77,7 +77,7 @@
           <v-tab-item value="community-heating">TODO</v-tab-item>
           <v-tab-item value="community-service">TODO</v-tab-item>
           <v-tab-item value="scenario">
-            <energy-scenario></energy-scenario>
+            <energy-scenario :module="scenarioModule"></energy-scenario>
           </v-tab-item>
           <v-tab-item value="intervention">
             <energy-intervention></energy-intervention>
@@ -103,6 +103,7 @@ import {
   HouseholdCookingModule,
   Modules,
   ProjectDocument,
+  ScenarioModule,
 } from "@/models/energyModel";
 import { SyncDatabase } from "@/utils/couchdb";
 import { checkRequired } from "@/utils/rules";
@@ -223,6 +224,10 @@ export default class EnergyProject extends Vue {
 
   get householdCookingModule(): HouseholdCookingModule | undefined {
     return this.document?.modules?.householdCooking;
+  }
+
+  get scenarioModule(): ScenarioModule | undefined {
+    return this.document?.modules.scenario;
   }
 
   get modules(): Modules | undefined {

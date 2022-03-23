@@ -7,6 +7,7 @@ export interface ProjectDocument {
 export interface Modules {
   general?: GeneralModule;
   householdCooking?: HouseholdCookingModule;
+  scenario?: ScenarioModule;
 }
 
 export interface GeneralModule {
@@ -95,6 +96,50 @@ export interface CategoryProperty {
   cookingTime: number;
 }
 
+type Tier = number | [number, number];
+
+export type SocioEconomicCategory =
+  | "veryLow"
+  | "low"
+  | "middle"
+  | "high"
+  | "veryHigh";
+export const socioEconomicCategories: SocioEconomicCategory[] = [
+  "veryLow",
+  "low",
+  "middle",
+  "high",
+  "veryHigh",
+];
+
+export type ScenarioTrend = "stable" | "increase" | "decrease";
+export interface ScenarioModule {
+  selectedId: string;
+  scenarios: Scenario[];
+}
+export interface Scenario {
+  id: string;
+  name: string;
+  energyPriceTrend: ScenarioTrend;
+  investmentCostTrend: ScenarioTrend;
+  /**
+   * d1
+   */
+  discountRate: number;
+  /**
+   * r1
+   */
+  incomeRate: number;
+  /**
+   * a1
+   */
+  demographicGrowth: number;
+}
+
+/**
+ * CouchDB Models
+ */
+
 export interface CookingStove {
   _id: string;
   name: string;
@@ -144,19 +189,3 @@ export interface CookingFuel {
    */
   price: number;
 }
-
-type Tier = number | [number, number];
-
-export type SocioEconomicCategory =
-  | "veryLow"
-  | "low"
-  | "middle"
-  | "high"
-  | "veryHigh";
-export const socioEconomicCategories: SocioEconomicCategory[] = [
-  "veryLow",
-  "low",
-  "middle",
-  "high",
-  "veryHigh",
-];

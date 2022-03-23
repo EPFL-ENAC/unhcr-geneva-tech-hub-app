@@ -29,7 +29,7 @@ export function check(predicate: () => boolean, error: string): Rule {
   return () => predicate() || error;
 }
 
-export function checkSum<T>(
+export function checkSum(
   values: number[],
   expected: number,
   text?: string

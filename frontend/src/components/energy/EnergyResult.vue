@@ -146,7 +146,7 @@ export default class EnergyResult extends Vue {
         householdsCount: general.totalPopulation / general.familiesCount,
         categories: Object.fromEntries(
           socioEconomicCategories.map((item) => {
-            const percentage: number = general.categories[item].proportion;
+            const proportion: number = general.categories[item].proportion;
             const technologies: CookingTechnology[] =
               householdCooking.categoryCookings
                 .filter(
@@ -168,7 +168,7 @@ export default class EnergyResult extends Vue {
             return [
               item,
               {
-                percentage,
+                proportion,
                 technologies,
               },
             ];
@@ -179,13 +179,6 @@ export default class EnergyResult extends Vue {
     } else {
       return undefined;
     }
-  }
-
-  private getCategoryPercentage(category: SocioEconomicCategory): number {
-    if (!this.modules.general) {
-      return 0;
-    }
-    return this.modules.general.categories[category].proportion;
   }
 
   computeByCategory(
@@ -230,7 +223,7 @@ export default class EnergyResult extends Vue {
   computeBySite(site: CookingSite): HouseholdCookingResult {
     const results: [keyof SocioEconomicCategory, CookingResult][] =
       Object.entries(site.categories).map(([key, value]) => {
-        const count = site.householdsCount * value.percentage;
+        const count = site.householdsCount * value.proportion;
         return [
           key as keyof SocioEconomicCategory,
           this.computeByCategory(count, value.technologies),
@@ -257,7 +250,7 @@ interface CookingSite {
 type CookingCategories = Record<
   SocioEconomicCategory,
   {
-    percentage: number;
+    proportion: number;
     technologies: CookingTechnology[];
   }
 >;

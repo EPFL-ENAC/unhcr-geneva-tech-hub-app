@@ -96,11 +96,6 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
 
   get emptyModule(): GeneralModule {
     const currentYear = new Date().getFullYear();
-    const defaultCategory: GeneralCategory = {
-      proportion: 0.2,
-      cookingHours: 0,
-      annualIncome: 0,
-    };
     return {
       name: "",
       yearStart: currentYear,
@@ -147,18 +142,6 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
   }
 
   get items(): FormItem<keyof GeneralModule>[][] {
-    // const checkCategorySum = checkSum(
-    //   this.module,
-    //   1,
-    //   [
-    //     "categoryVeryLow",
-    //     "categoryLow",
-    //     "categoryMiddle",
-    //     "categoryHigh",
-    //     "categoryVeryHigh",
-    //   ],
-    //   "100%"
-    // );
     return [
       [
         {
@@ -543,43 +526,6 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
           ],
         } as FormItem<keyof GeneralModule, vacantSpaceOutside>,
       ],
-      // [
-      //   {
-      //     type: "number",
-      //     key: "categoryVeryLow",
-      //     label: "Very Low Category",
-      //     subtype: "percent",
-      //     rules: [checkCategorySum],
-      //   },
-      //   {
-      //     type: "number",
-      //     key: "categoryLow",
-      //     label: "Low Category",
-      //     subtype: "percent",
-      //     rules: [checkCategorySum],
-      //   },
-      //   {
-      //     type: "number",
-      //     key: "categoryMiddle",
-      //     label: "Middle Category",
-      //     subtype: "percent",
-      //     rules: [checkCategorySum],
-      //   },
-      //   {
-      //     type: "number",
-      //     key: "categoryHigh",
-      //     label: "High Category",
-      //     subtype: "percent",
-      //     rules: [checkCategorySum],
-      //   },
-      //   {
-      //     type: "number",
-      //     key: "categoryVeryHigh",
-      //     label: "Very High Category",
-      //     subtype: "percent",
-      //     rules: [checkCategorySum],
-      //   },
-      // ],
     ];
   }
 }

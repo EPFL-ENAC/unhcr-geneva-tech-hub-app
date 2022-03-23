@@ -1,14 +1,18 @@
 <template>
   <v-card flat>
     <v-card-text>
-      <v-expansion-panels>
-        <v-expansion-panel v-for="(item, index) in scenarios" :key="index">
+      <v-expansion-panels v-model="selectedIndex">
+        <v-expansion-panel
+          v-for="(scenarioItem, index) in scenarios"
+          :key="index"
+        >
           <v-expansion-panel-header>
             <template v-slot:default="{ open }">
               <v-checkbox
                 :value="open"
                 hide-details="auto"
-                :label="item.text"
+                :label="scenarioItem.name"
+                readonly
               ></v-checkbox>
             </template>
           </v-expansion-panel-header>
@@ -16,6 +20,7 @@
             <form-item-component
               v-for="item in formItems"
               :key="item.key"
+              v-model="scenarioItem[item.key]"
               v-bind="item"
             ></form-item-component>
           </v-expansion-panel-content>
@@ -28,9 +33,11 @@
 <script lang="ts">
 import FormItemComponent, {
   FormItem,
+  SelectOption,
 } from "@/components/commons/FormItemComponent.vue";
+import { Scenario, ScenarioModule, ScenarioTrend } from "@/models/energyModel";
 import "vue-class-component/hooks";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({
   components: {
@@ -38,47 +45,61 @@ import { Component, Vue } from "vue-property-decorator";
   },
 })
 export default class EnergyScenario extends Vue {
-  readonly scenarios: { text: string }[] = [
+  readonly defaultScenarios: Scenario[] = [
     {
-      text: "Business as Usual",
+      id: "usual",
+      name: "Business as Usual",
+      energyPriceTrend: "stable",
+      investmentCostTrend: "stable",
+      discountRate: 1,
+      incomeRate: 1,
+      demographicGrowth: 1,
     },
     {
-      text: "Optimistic scenario",
+      id: "optimistic",
+      name: "Optimistic Scenario",
+      energyPriceTrend: "stable",
+      investmentCostTrend: "decrease",
+      discountRate: 1,
+      incomeRate: 1,
+      demographicGrowth: 1,
     },
     {
-      text: "Pessimistic scenario",
+      id: "pessimistic",
+      name: "Pessimistic Scenario",
+      energyPriceTrend: "increase",
+      investmentCostTrend: "increase",
+      discountRate: 1,
+      incomeRate: 1,
+      demographicGrowth: 1,
     },
   ];
-  readonly formItems: FormItem[] = [
+  readonly trendOptions: SelectOption<ScenarioTrend>[] = [
+    {
+      text: "Stable",
+      value: "stable",
+    },
+    {
+      text: "Increase",
+      value: "increase",
+    },
+    {
+      text: "Decrease",
+      value: "decrease",
+    },
+  ];
+  readonly formItems: FormItem<keyof Scenario>[] = [
     {
       type: "select",
-      key: "energyPrice",
+      key: "energyPriceTrend",
       label: "Energy Price",
-      options: [
-        {
-          text: "Stable",
-          value: "stable",
-        },
-        {
-          text: "Increase",
-          value: "increase",
-        },
-      ],
+      options: this.trendOptions,
     },
     {
       type: "select",
-      key: "investmentCost",
+      key: "investmentCostTrend",
       label: "Investment Cost",
-      options: [
-        {
-          text: "Stable",
-          value: "stable",
-        },
-        {
-          text: "Increase",
-          value: "increase",
-        },
-      ],
+      options: this.trendOptions,
     },
     {
       type: "number",
@@ -95,11 +116,12 @@ export default class EnergyScenario extends Vue {
       key: "demographicGrowth",
       label: "Demographic Growth",
     },
-    {
-      type: "number",
-      key: "householdSize",
-      label: "Average Household Size",
-    },
   ];
+
+  @Prop({ type: Object as () => ScenarioModule })
+  readonly module: ScenarioModule | undefined;
+
+  selectedIndex: number | null = null;
+  scenarios: Scenario[] = this.defaultScenarios;
 }
 </script>

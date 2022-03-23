@@ -207,7 +207,7 @@ interface BooleanOptions {
   false: string;
 }
 
-interface SelectOption<V> {
+export interface SelectOption<V> {
   text: string;
   value: V;
 }
