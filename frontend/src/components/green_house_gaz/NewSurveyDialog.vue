@@ -8,28 +8,9 @@
 
         <v-card-text>
           <v-container>
-            <!-- {{ newCampSite }}
-            {{ editedItem }} -->
             <v-row>
               <v-col cols="12">
-                <v-select
-                  tabindex="0"
-                  v-model="newCampSite.country_code"
-                  :items="countriesRef"
-                  item-value="code"
-                  item-text="name"
-                  label="Select country"
-                >
-                  <template v-slot:item="slotProps">
-                    <div
-                      class="d-flex justify-space-between"
-                      style="width: 300px"
-                    >
-                      <span> {{ slotProps.item.emoji }} </span>
-                      {{ slotProps.item.name }}
-                    </div>
-                  </template>
-                </v-select>
+                <country-select v-model="newCampSite.country_code" />
               </v-col>
               <v-col>
                 <v-divider />
@@ -127,12 +108,14 @@
   - retrieve (already retrieved project) and add new survey
   -> redirect to proper surveyId page edit
 */
+import CountrySelect from "@/components/commons/CountrySelect.vue";
 import { Country, GreenHouseGaz, Sites, Survey } from "@/store/GhgInterface.js";
 import Countries from "@/utils/countriesAsList";
 import flagEmoji from "@/utils/flagEmoji";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
+
 @Component({
   computed: {
     ...mapGetters("GhgModule", ["countries", "project"]),
@@ -141,6 +124,9 @@ import { mapActions, mapGetters } from "vuex";
   methods: {
     // todo unified GHG database connection so we have only one store
     ...mapActions("GhgModule", ["addDoc", "updateDoc", "getDoc"]),
+  },
+  components: {
+    CountrySelect,
   },
 })
 /** ProjectList */
