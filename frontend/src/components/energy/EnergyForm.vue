@@ -7,7 +7,7 @@
             <slot name="prepend"></slot>
           </v-col>
         </v-row>
-        <v-row>
+        <v-row v-if="items">
           <v-col>
             <v-row v-for="(rowItem, index) in items" :key="index">
               <template v-for="(item, index) in rowItem">
@@ -69,7 +69,7 @@ import {
 export default class EnergyForm<M> extends Vue {
   @Prop({ type: Object as () => M })
   readonly initialModule!: M;
-  @Prop({ type: Array as () => FormItem<keyof M>[][] })
+  @Prop({ type: Array as () => FormItem<keyof M>[][], default: () => [] })
   readonly items!: FormItem<keyof M>[][];
   @PropSync("module", { type: Object as () => M })
   syncedModule!: M;
@@ -81,6 +81,10 @@ export default class EnergyForm<M> extends Vue {
 
   get saveDisabled(): boolean {
     return !this.formValid || isEqual(this.initialModule, this.syncedModule);
+  }
+
+  created(): void {
+    this.onInitialModuleChanged();
   }
 
   @Watch("initialModule")

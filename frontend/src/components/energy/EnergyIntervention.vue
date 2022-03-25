@@ -6,9 +6,10 @@
           <v-expansion-panel-header>
             <template v-slot:default="{ open }">
               <v-checkbox
-                :value="open"
                 hide-details="auto"
+                :input-value="open"
                 :label="item.text"
+                readonly
               ></v-checkbox>
             </template>
           </v-expansion-panel-header>

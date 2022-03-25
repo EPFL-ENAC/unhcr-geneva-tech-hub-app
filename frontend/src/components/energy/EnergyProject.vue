@@ -77,7 +77,10 @@
           <v-tab-item value="community-heating">TODO</v-tab-item>
           <v-tab-item value="community-service">TODO</v-tab-item>
           <v-tab-item value="scenario">
-            <energy-scenario :module="scenarioModule"></energy-scenario>
+            <energy-scenario
+              :initial-module="scenarioModule"
+              @save="saveScenario"
+            ></energy-scenario>
           </v-tab-item>
           <v-tab-item value="intervention">
             <energy-intervention></energy-intervention>
@@ -276,6 +279,10 @@ export default class EnergyProject extends Vue {
     this.updateDocument(
       (document) => (document.modules.householdCooking = module)
     );
+  }
+
+  saveScenario(module: ScenarioModule): void {
+    this.updateDocument((document) => (document.modules.scenario = module));
   }
 }
 

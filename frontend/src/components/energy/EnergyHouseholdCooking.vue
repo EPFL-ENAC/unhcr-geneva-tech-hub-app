@@ -2,7 +2,6 @@
   <energy-form
     :module.sync="module"
     :initial-module="initialModule"
-    :items="items"
     @save="save"
   >
     <template v-slot:append>
@@ -65,9 +64,7 @@
 </template>
 
 <script lang="ts">
-import FormItemComponent, {
-  FormItem,
-} from "@/components/commons/FormItemComponent.vue";
+import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
 import {
@@ -152,20 +149,13 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
     },
   ];
 
-  module: HouseholdCookingModule = this.emptyModule;
   cookingFuels!: CookingFuel[];
   cookingStoves!: CookingStove[];
+
+  module: HouseholdCookingModule = {
+    categoryCookings: [],
+  };
   tableItems: TableItem[] = [];
-
-  get emptyModule(): HouseholdCookingModule {
-    return {
-      categoryCookings: [],
-    };
-  }
-
-  get items(): FormItem<keyof HouseholdCookingModule>[][] {
-    return [];
-  }
 
   @Watch("tableItems", { deep: true })
   onTableItemsChanged(tableItems: TableItem[]): void {
