@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col>
-      <v-card v-if="householdCookingResult" flat>
+      <v-card v-if="siteResults" flat>
         <v-card-title>Household Cooking</v-card-title>
         <v-card-text>
           <v-tabs v-model="tab" center-active show-arrows>
@@ -10,7 +10,11 @@
             </v-tab>
           </v-tabs>
           <v-tabs-items v-model="tab">
-            <v-tab-item v-for="item in years" :key="item" :value="`${item}`">
+            <v-tab-item
+              v-for="(siteResult, index) in siteResults"
+              :key="index"
+              :value="`${years[index]}`"
+            >
               <v-simple-table dense>
                 <template v-slot:default>
                   <thead>
@@ -29,38 +33,30 @@
                       <td class="font-weight-black">{{ item.text }}</td>
                       <td class="text-right">
                         {{
-                          householdCookingResult.categories.veryLow[item.key]
-                            | formatNumber
+                          siteResult.categories.veryLow[item.key] | formatNumber
+                        }}
+                      </td>
+                      <td class="text-right">
+                        {{ siteResult.categories.low[item.key] | formatNumber }}
+                      </td>
+                      <td class="text-right">
+                        {{
+                          siteResult.categories.middle[item.key] | formatNumber
                         }}
                       </td>
                       <td class="text-right">
                         {{
-                          householdCookingResult.categories.low[item.key]
-                            | formatNumber
+                          siteResult.categories.high[item.key] | formatNumber
                         }}
                       </td>
                       <td class="text-right">
                         {{
-                          householdCookingResult.categories.middle[item.key]
-                            | formatNumber
-                        }}
-                      </td>
-                      <td class="text-right">
-                        {{
-                          householdCookingResult.categories.high[item.key]
-                            | formatNumber
-                        }}
-                      </td>
-                      <td class="text-right">
-                        {{
-                          householdCookingResult.categories.veryHigh[item.key]
+                          siteResult.categories.veryHigh[item.key]
                             | formatNumber
                         }}
                       </td>
                       <td class="font-weight-bold text-right">
-                        {{
-                          householdCookingResult.total[item.key] | formatNumber
-                        }}
+                        {{ siteResult.total[item.key] | formatNumber }}
                       </td>
                     </tr>
                   </tbody>
@@ -76,7 +72,7 @@
 
 <script lang="ts">
 import {
-  CategoryProperty,
+  CookingCategoryValue,
   CookingFuel,
   CookingStove,
   Modules,
@@ -84,7 +80,7 @@ import {
   SocioEconomicCategory,
 } from "@/models/energyModel";
 import { applyMap, applyReduce } from "@/utils/energy";
-import { range } from "lodash";
+import { cloneDeep, range } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapState } from "vuex";
@@ -138,17 +134,23 @@ export default class EnergyResult extends Vue {
     }
   }
 
-  get householdCookingResult(): HouseholdCookingResult | undefined {
+  get sites(): Site[] {
     const general = this.modules.general;
     const householdCooking = this.modules.householdCooking;
     if (general && householdCooking) {
-      const site: CookingSite = {
+      const firstSite: Site = {
         householdsCount: general.totalPopulation / general.familiesCount,
-        categories: Object.fromEntries(
-          socioEconomicCategories.map((item) => {
-            const proportion: number = general.categories[item].proportion;
-            const technologies: CookingTechnology[] =
-              householdCooking.categoryCookings
+        proportions: Object.fromEntries<number>(
+          socioEconomicCategories.map((cat) => [
+            cat,
+            general.categories[cat].proportion,
+          ])
+        ) as Record<SocioEconomicCategory, number>,
+        categories: Object.fromEntries<CategoryValue>(
+          socioEconomicCategories.map((item) => [
+            item,
+            {
+              cookingTechnologies: householdCooking.categoryCookings
                 .filter(
                   (cooking) => cooking.categories[item].countPerHousehold > 0
                 )
@@ -162,26 +164,58 @@ export default class EnergyResult extends Vue {
                   return {
                     stove: cooking.stove,
                     fuel: fuel,
-                    property: cooking.categories[item],
+                    value: cooking.categories[item],
                   };
-                });
-            return [
-              item,
-              {
-                proportion,
-                technologies,
-              },
-            ];
-          })
-        ) as CookingCategories,
+                }),
+            },
+          ])
+        ) as Record<SocioEconomicCategory, CategoryValue>,
       };
-      return this.computeBySite(site);
+      const sites: Site[] = [firstSite];
+      for (let index = 1; index < this.years.length; index++) {
+        const previousSite = sites[index - 1];
+        const site = cloneDeep(previousSite);
+        site.proportions = this.updateProportions(site.proportions);
+        sites[index] = site;
+      }
+      return sites;
     } else {
-      return undefined;
+      return [];
     }
   }
 
-  computeByCategory(
+  get siteResults(): SiteResult[] {
+    return this.sites.map((site) => this.computeSite(site));
+  }
+
+  updateProportions(
+    proportions: Record<SocioEconomicCategory, number>
+  ): Record<SocioEconomicCategory, number> {
+    return proportions;
+  }
+
+  computeSite(site: Site): SiteResult {
+    const results: [SocioEconomicCategory, CookingResult][] =
+      socioEconomicCategories.map((cat) => {
+        const count = site.householdsCount * site.proportions[cat];
+        return [
+          cat,
+          this.computeCategory(count, site.categories[cat].cookingTechnologies),
+        ];
+      });
+    return {
+      categories: Object.fromEntries<CookingResult>(results) as Record<
+        SocioEconomicCategory,
+        CookingResult
+      >,
+      total: applyReduce(
+        results.map((item) => item[1]),
+        (a, b) => a + b
+      ),
+    };
+  }
+
+  computeCategory(
     count: number,
     technologies: CookingTechnology[]
   ): CookingResult {
@@ -189,8 +223,8 @@ export default class EnergyResult extends Vue {
       // CEu
       const usefulEnergy =
         item.stove.capacity *
-        item.property.useFactor *
-        item.property.cookingTime *
+        item.value.useFactor *
+        item.value.cookingTime *
         365 *
         3.6;
       // CEf
@@ -208,7 +242,7 @@ export default class EnergyResult extends Vue {
           emissionCo,
           emissionPm,
         },
-        (v) => v * item.property.countPerHousehold
+        (v) => v * item.value.countPerHousehold
       );
     });
     const result = applyReduce(results, (a, b) => a + b, {
@@ -219,46 +253,22 @@ export default class EnergyResult extends Vue {
     });
     return applyMap(result, (v) => v * count);
   }
-
-  computeBySite(site: CookingSite): HouseholdCookingResult {
-    const results: [keyof SocioEconomicCategory, CookingResult][] =
-      Object.entries(site.categories).map(([key, value]) => {
-        const count = site.householdsCount * value.proportion;
-        return [
-          key as keyof SocioEconomicCategory,
-          this.computeByCategory(count, value.technologies),
-        ];
-      });
-    return {
-      categories: Object.fromEntries(results) as Record<
-        SocioEconomicCategory,
-        CookingResult
-      >,
-      total: applyReduce(
-        results.map((item) => item[1]),
-        (a, b) => a + b
-      ),
-    };
-  }
 }
 
-interface CookingSite {
+interface Site {
   householdsCount: number;
-  categories: CookingCategories;
+  proportions: Record<SocioEconomicCategory, number>;
+  categories: Record<SocioEconomicCategory, CategoryValue>;
 }
 
-type CookingCategories = Record<
-  SocioEconomicCategory,
-  {
-    proportion: number;
-    technologies: CookingTechnology[];
-  }
->;
+interface CategoryValue {
+  cookingTechnologies: CookingTechnology[];
+}
 
 interface CookingTechnology {
   stove: CookingStove;
   fuel: CookingFuel;
-  property: CategoryProperty;
+  value: CookingCategoryValue;
 }
 
 interface CookingResult {
@@ -271,7 +281,7 @@ interface CookingResult {
   emissionPm: number;
 }
 
-interface HouseholdCookingResult {
+interface SiteResult {
   categories: Record<SocioEconomicCategory, CookingResult>;
   total: CookingResult;
 }

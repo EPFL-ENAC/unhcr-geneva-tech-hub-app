@@ -68,12 +68,12 @@ import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
 import {
-  Category,
-  CategoryProperty,
+  CookingCategoryValue,
   CookingFuel,
   CookingStove,
   HouseholdCookingModule,
   socioEconomicCategories,
+  SocioEconomicCategory,
 } from "@/models/energyModel";
 import { assign, cloneDeep, keys, pick, zip } from "lodash";
 import "vue-class-component/hooks";
@@ -171,7 +171,7 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
     } else {
       this.module.categoryCookings = this.cookingStoves.map((item) => ({
         stove: item,
-        categories: Object.fromEntries<CategoryProperty>(
+        categories: Object.fromEntries<CookingCategoryValue>(
           socioEconomicCategories.map((item) => [
             item,
             {
@@ -180,7 +180,7 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
               cookingTime: 0,
             },
           ])
-        ) as Category,
+        ) as Record<SocioEconomicCategory, CookingCategoryValue>,
       }));
     }
     this.tableItems = this.module.categoryCookings.map((item) => ({
@@ -190,5 +190,6 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   }
 }
 
-type TableItem = CookingStove & Category;
+type TableItem = CookingStove &
+  Record<SocioEconomicCategory, CookingCategoryValue>;
 </script>

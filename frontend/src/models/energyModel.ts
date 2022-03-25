@@ -78,13 +78,11 @@ export interface GeneralCategory {
 export interface HouseholdCookingModule {
   categoryCookings: {
     stove: CookingStove;
-    categories: Category;
+    categories: Record<SocioEconomicCategory, CookingCategoryValue>;
   }[];
 }
 
-export type Category = Record<SocioEconomicCategory, CategoryProperty>;
-
-export interface CategoryProperty {
+export interface CookingCategoryValue {
   countPerHousehold: number;
   /**
    * CU
