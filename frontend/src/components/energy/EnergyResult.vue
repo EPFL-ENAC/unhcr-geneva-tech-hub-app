@@ -30,7 +30,10 @@
                   </thead>
                   <tbody>
                     <tr v-for="item in lines" :key="item.key">
-                      <td class="font-weight-black">{{ item.text }}</td>
+                      <td class="font-weight-black">
+                        {{ item.text }}
+                        <template v-if="item.unit">[{{ item.unit }}]</template>
+                      </td>
                       <td class="text-right">
                         {{
                           siteResult.categories.veryLow[item.key] | formatNumber
@@ -80,7 +83,7 @@ import {
   SocioEconomicCategory,
 } from "@/models/energyModel";
 import { applyMap, applyReduce } from "@/utils/energy";
-import { cloneDeep, range } from "lodash";
+import { cloneDeep, min, range, round, sum } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapState } from "vuex";
@@ -98,24 +101,42 @@ import { mapState } from "vuex";
   },
 })
 export default class EnergyResult extends Vue {
-  readonly lines: { text: string; key: keyof CookingResult }[] = [
-    {
-      text: "Energy [MJ]",
-      key: "energy",
-    },
-    {
-      text: "CO2 Emission [kg]",
-      key: "emissionCo2",
-    },
-    {
-      text: "CO Emission [g]",
-      key: "emissionCo",
-    },
-    {
-      text: "Particles Emission [g]",
-      key: "emissionPm",
-    },
-  ];
+  readonly lines: { text: string; key: keyof CookingResult; unit?: string }[] =
+    [
+      {
+        text: "Proportion",
+        key: "proportion",
+        unit: "%",
+      },
+      {
+        text: "Households",
+        key: "householdCount",
+      },
+      {
+        text: "Population",
+        key: "populationCount",
+      },
+      {
+        text: "Energy",
+        key: "energy",
+        unit: "MJ",
+      },
+      {
+        text: "CO2 Emission",
+        key: "emissionCo2",
+        unit: "kg",
+      },
+      {
+        text: "CO Emission",
+        key: "emissionCo",
+        unit: "g",
+      },
+      {
+        text: "Particles Emission",
+        key: "emissionPm",
+        unit: "g",
+      },
+    ];
 
   @Prop({ type: Object as () => Modules })
   modules!: Modules;
@@ -137,9 +158,14 @@ export default class EnergyResult extends Vue {
   get sites(): Site[] {
     const general = this.modules.general;
     const householdCooking = this.modules.householdCooking;
-    if (general && householdCooking) {
+    const scenario = this.modules.scenario?.scenarios.find(
+      (scn) => scn.id === this.modules.scenario?.selectedId
+    );
+    if (general && householdCooking && scenario) {
       const firstSite: Site = {
         householdsCount: general.totalPopulation / general.familiesCount,
+        populationCount: general.totalPopulation,
+        incomeRate: scenario.incomeRate,
         proportions: Object.fromEntries<number>(
           socioEconomicCategories.map((cat) => [
             cat,
@@ -147,12 +173,13 @@ export default class EnergyResult extends Vue {
           ])
         ) as Record<SocioEconomicCategory, number>,
         categories: Object.fromEntries<CategoryValue>(
-          socioEconomicCategories.map((item) => [
-            item,
+          socioEconomicCategories.map((cat) => [
+            cat,
             {
+              income: general.categories[cat].annualIncome,
               cookingTechnologies: householdCooking.categoryCookings
                 .filter(
-                  (cooking) => cooking.categories[item].countPerHousehold > 0
+                  (cooking) => cooking.categories[cat].countPerHousehold > 0
                 )
                 .map((cooking) => {
                   const fuel = this.cookingFuels.find(
@@ -164,10 +191,10 @@ export default class EnergyResult extends Vue {
                   return {
                     stove: cooking.stove,
                     fuel: fuel,
-                    value: cooking.categories[item],
+                    value: cooking.categories[cat],
                   };
                 }),
-            },
+            } as CategoryValue,
           ])
         ) as Record<SocioEconomicCategory, CategoryValue>,
       };
@@ -175,7 +202,7 @@ export default class EnergyResult extends Vue {
       for (let index = 1; index < this.years.length; index++) {
         const previousSite = sites[index - 1];
         const site = cloneDeep(previousSite);
-        site.proportions = this.updateProportions(site.proportions);
+        site.proportions = this.getNewProportions(site);
         sites[index] = site;
       }
       return sites;
@@ -188,19 +215,56 @@ export default class EnergyResult extends Vue {
     return this.sites.map((site) => this.computeSite(site));
   }
 
-  updateProportions(
-    proportions: Record<SocioEconomicCategory, number>
-  ): Record<SocioEconomicCategory, number> {
+  getNewProportions(site: Site): Record<SocioEconomicCategory, number> {
+    const precision = 2;
+    const proportions = cloneDeep(site.proportions);
+    for (let index = 0; index < socioEconomicCategories.length - 1; index++) {
+      const currentCat = socioEconomicCategories[index];
+      const nextCat = socioEconomicCategories[index + 1];
+      const idealDelta = round(
+        (proportions[currentCat] *
+          site.categories[currentCat].income *
+          (1 - site.incomeRate) -
+          proportions[nextCat] *
+            site.categories[nextCat].income *
+            (site.incomeRate - 1) +
+          sum(
+            socioEconomicCategories
+              .filter((cat) => cat !== currentCat && cat !== nextCat)
+              .map((cat) => proportions[cat] * site.categories[cat].income)
+          ) *
+            (1 - site.incomeRate)) /
+          (site.categories[currentCat].income -
+            site.categories[nextCat].income),
+        precision
+      );
+      const effectiveDelta: number =
+        min([idealDelta, proportions[currentCat]]) ?? 0;
+      proportions[currentCat] = round(
+        proportions[currentCat] - effectiveDelta,
+        precision
+      );
+      proportions[nextCat] = round(
+        proportions[nextCat] + effectiveDelta,
+        precision
+      );
+      if (proportions[currentCat] > 0) {
+        break;
+      }
+    }
     return proportions;
   }
 
   computeSite(site: Site): SiteResult {
     const results: [SocioEconomicCategory, CookingResult][] =
       socioEconomicCategories.map((cat) => {
-        const count = site.householdsCount * site.proportions[cat];
         return [
           cat,
-          this.computeCategory(count, site.categories[cat].cookingTechnologies),
+          this.computeCategory(
+            site,
+            site.proportions[cat],
+            site.categories[cat]
+          ),
         ];
       });
     return {
@@ -216,10 +280,11 @@ export default class EnergyResult extends Vue {
   }
 
   computeCategory(
-    count: number,
-    technologies: CookingTechnology[]
+    site: Site,
+    proportion: number,
+    value: CategoryValue
   ): CookingResult {
-    const results: CookingResult[] = technologies.map((item) => {
+    const results = value.cookingTechnologies.map((item) => {
       // CEu
       const usefulEnergy =
         item.stove.capacity *
@@ -251,17 +316,26 @@ export default class EnergyResult extends Vue {
       emissionCo: 0,
       emissionPm: 0,
     });
-    return applyMap(result, (v) => v * count);
+    const householdCount = site.householdsCount * proportion;
+    return {
+      proportion: proportion * 100,
+      householdCount: householdCount,
+      populationCount: site.populationCount * proportion,
+      ...applyMap(result, (v) => v * householdCount),
+    };
   }
 }
 
 interface Site {
   householdsCount: number;
+  populationCount: number;
+  incomeRate: number;
   proportions: Record<SocioEconomicCategory, number>;
   categories: Record<SocioEconomicCategory, CategoryValue>;
 }
 
 interface CategoryValue {
+  income: number;
   cookingTechnologies: CookingTechnology[];
 }
 
@@ -272,6 +346,9 @@ interface CookingTechnology {
 }
 
 interface CookingResult {
+  proportion: number;
+  householdCount: number;
+  populationCount: number;
   /**
    * CEf
    */
