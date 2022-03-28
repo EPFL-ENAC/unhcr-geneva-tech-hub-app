@@ -90,6 +90,7 @@ import { ExistingDocument } from "@/models/couchdbModel";
 import { Modules, ProjectDocument } from "@/models/energyModel";
 import { SyncDatabase } from "@/utils/couchdb";
 import { checkRequired } from "@/utils/rules";
+import { cloneDeep, isEqual } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
@@ -179,6 +180,7 @@ export default class EnergyProject extends Vue {
   ];
 
   document: ExistingDocument<ProjectDocument> | null = null;
+  lastDocument?: ExistingDocument<ProjectDocument>;
   tab: string | null = null;
 
   get name(): string {
@@ -208,18 +210,9 @@ export default class EnergyProject extends Vue {
   }
 
   @Watch("modules", { deep: true })
-  onModulesUpdated(
-    newValue: Modules | undefined,
-    oldValue: Modules | undefined
-  ): void {
-    if (oldValue && newValue) {
-      this.updateDocument((document) => (document.modules = newValue));
-    }
-  }
-
-  updateDocument(update: (document: ProjectDocument) => void): void {
-    if (this.document) {
-      update(this.document);
+  onModulesUpdated(): void {
+    if (this.document && !isEqual(this.lastDocument, this.document)) {
+      console.debug("updating document", this.document._id);
       this.database.db.put(this.document);
       this.getDocument();
     }
@@ -229,7 +222,8 @@ export default class EnergyProject extends Vue {
     this.database.db
       .get(this.documentId)
       .then((document) => {
-        this.document = document;
+        this.document = cloneDeep(document);
+        this.lastDocument = document;
       })
       .catch(() => {
         this.$router.push({ name: "energy" });
