@@ -17,7 +17,7 @@ export const shelter = {
 };
 export const energy = {
   title: "Energy planning",
-  to: "Energy",
+  to: "energy",
   logoIcon: "mdi-flash",
   description:
     "The best technology options for reliable and sustainable energy needs for different shelters based on available local options.",

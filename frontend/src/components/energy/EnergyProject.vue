@@ -15,17 +15,17 @@
     </v-row>
     <v-row>
       <v-col>
-        <v-tabs v-model="tab" center-active show-arrows>
-          <template v-for="item in tabItems">
+        <v-tabs v-model="tab" center-active hide-slider show-arrows>
+          <template v-for="(item, index) in tabItems">
             <v-divider
               v-if="!item.text"
-              :key="item.id"
+              :key="index"
               class="mx-2"
               vertical
             ></v-divider>
             <v-menu
               v-else-if="item.children"
-              :key="item.id"
+              :key="index"
               offset-y
               open-on-hover
             >
@@ -33,22 +33,38 @@
                 <v-tab
                   v-bind="attrs"
                   v-on="on"
-                  :href="`#${item.id}-${item.children[0].id}`"
+                  :disabled="!item.toName"
+                  :to="{ name: routerPrefix + item.toName }"
                 >
                   <v-icon left>{{ item.icon }}</v-icon>
                   {{ item.text }}
                 </v-tab>
               </template>
               <v-list>
-                <v-list-item v-for="subItem in item.children" :key="subItem.id">
-                  <v-tab :href="`#${item.id}-${subItem.id}`">
+                <v-list-item
+                  v-for="(subItem, subIndex) in item.children"
+                  :key="subIndex"
+                >
+                  <v-tab
+                    :disabled="!subItem.toName"
+                    :to="{
+                      name: subItem.toName
+                        ? routerPrefix + item.toName + subItem.toName
+                        : undefined,
+                    }"
+                  >
                     <v-icon left>{{ subItem.icon }}</v-icon>
                     {{ subItem.text }}
                   </v-tab>
                 </v-list-item>
               </v-list>
             </v-menu>
-            <v-tab v-else :key="item.id" :href="`#${item.id}`">
+            <v-tab
+              v-else
+              :key="index"
+              :disabled="!item.toName"
+              :to="{ name: routerPrefix + item.toName }"
+            >
               <v-icon left>{{ item.icon }}</v-icon>
               {{ item.text }}
             </v-tab>
@@ -56,39 +72,9 @@
         </v-tabs>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="modules">
       <v-col>
-        <v-tabs-items v-model="tab">
-          <v-tab-item value="general">
-            <energy-general
-              :initial-module="generalModule"
-              @save="saveGeneral"
-            ></energy-general>
-          </v-tab-item>
-          <v-tab-item value="household-cooking">
-            <energy-household-cooking
-              :initial-module="householdCookingModule"
-              @save="saveHouseholdCooking"
-            ></energy-household-cooking>
-          </v-tab-item>
-          <v-tab-item value="household-lighting">TODO</v-tab-item>
-          <v-tab-item value="household-heating">TODO</v-tab-item>
-          <v-tab-item value="community-lighting">TODO</v-tab-item>
-          <v-tab-item value="community-heating">TODO</v-tab-item>
-          <v-tab-item value="community-service">TODO</v-tab-item>
-          <v-tab-item value="scenario">
-            <energy-scenario
-              :initial-module="scenarioModule"
-              @save="saveScenario"
-            ></energy-scenario>
-          </v-tab-item>
-          <v-tab-item value="intervention">
-            <energy-intervention></energy-intervention>
-          </v-tab-item>
-          <v-tab-item value="result">
-            <energy-result :modules="modules"></energy-result>
-          </v-tab-item>
-        </v-tabs-items>
+        <router-view v-model="modules"></router-view>
       </v-col>
     </v-row>
   </v-container>
@@ -101,17 +87,11 @@ import EnergyIntervention from "@/components/energy/EnergyIntervention.vue";
 import EnergyResult from "@/components/energy/EnergyResult.vue";
 import EnergyScenario from "@/components/energy/EnergyScenario.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
-import {
-  GeneralModule,
-  HouseholdCookingModule,
-  Modules,
-  ProjectDocument,
-  ScenarioModule,
-} from "@/models/energyModel";
+import { Modules, ProjectDocument } from "@/models/energyModel";
 import { SyncDatabase } from "@/utils/couchdb";
 import { checkRequired } from "@/utils/rules";
 import "vue-class-component/hooks";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 @Component({
   components: {
@@ -129,6 +109,8 @@ export default class EnergyProject extends Vue {
   readonly idName!: string;
   @Prop(String)
   readonly databaseName!: string;
+  @Prop(String)
+  readonly routerPrefix!: string;
 
   readonly database: SyncDatabase<ProjectDocument> = new SyncDatabase(
     this.databaseName
@@ -136,71 +118,63 @@ export default class EnergyProject extends Vue {
   readonly tabItems: TabItem[] = [
     {
       text: "General",
-      id: "general",
       icon: "mdi-information",
+      toName: "General",
     },
     {
       text: "Household",
-      id: "household",
       icon: "mdi-home",
+      toName: "Household",
       children: [
         {
           text: "Cooking",
-          id: "cooking",
           icon: "mdi-stove",
+          toName: "Cooking",
         },
         {
           text: "Lighting",
-          id: "lighting",
           icon: "mdi-lightbulb",
         },
         {
           text: "Heating & Cooling",
-          id: "heating",
           icon: "mdi-sun-snowflake",
         },
       ],
     },
     {
       text: "Community",
-      id: "community",
       icon: "mdi-home-city",
+      toName: "Community",
       children: [
         {
           text: "Lighting",
-          id: "lighting",
           icon: "mdi-lightbulb",
         },
         {
           text: "Heating & Cooling",
-          id: "heating",
           icon: "mdi-sun-snowflake",
         },
         {
           text: "Good & Service",
-          id: "service",
           icon: "mdi-room-service",
         },
       ],
     },
-    {
-      text: "",
-      id: "divider",
-    },
+    {},
     {
       text: "Scenario",
-      id: "scenario",
       icon: "mdi-skip-next",
+      toName: "Scenario",
     },
     {
       text: "Intervention",
-      id: "intervention",
       icon: "mdi-gesture-tap",
+      toName: "Intervention",
     },
     {
       text: "Results",
-      id: "result",
       icon: "mdi-chart-box",
+      toName: "Result",
     },
   ];
 
@@ -221,18 +195,6 @@ export default class EnergyProject extends Vue {
     return this.$route.params.id;
   }
 
-  get generalModule(): GeneralModule | undefined {
-    return this.document?.modules?.general;
-  }
-
-  get householdCookingModule(): HouseholdCookingModule | undefined {
-    return this.document?.modules?.householdCooking;
-  }
-
-  get scenarioModule(): ScenarioModule | undefined {
-    return this.document?.modules.scenario;
-  }
-
   get modules(): Modules | undefined {
     return this.document?.modules;
   }
@@ -243,6 +205,16 @@ export default class EnergyProject extends Vue {
 
   destroyed(): void {
     this.database.cancel();
+  }
+
+  @Watch("modules", { deep: true })
+  onModulesUpdated(
+    newValue: Modules | undefined,
+    oldValue: Modules | undefined
+  ): void {
+    if (oldValue && newValue) {
+      this.updateDocument((document) => (document.modules = newValue));
+    }
   }
 
   updateDocument(update: (document: ProjectDocument) => void): void {
@@ -260,7 +232,7 @@ export default class EnergyProject extends Vue {
         this.document = document;
       })
       .catch(() => {
-        this.$router.push("/energy");
+        this.$router.push({ name: "energy" });
       });
   }
 
@@ -270,25 +242,11 @@ export default class EnergyProject extends Vue {
       this.getDocument();
     }
   }
-
-  saveGeneral(module: GeneralModule): void {
-    this.updateDocument((document) => (document.modules.general = module));
-  }
-
-  saveHouseholdCooking(module: HouseholdCookingModule): void {
-    this.updateDocument(
-      (document) => (document.modules.householdCooking = module)
-    );
-  }
-
-  saveScenario(module: ScenarioModule): void {
-    this.updateDocument((document) => (document.modules.scenario = module));
-  }
 }
 
 interface TabItem {
-  text: string;
-  id: string;
+  text?: string;
+  toName?: string;
   icon?: string;
   children?: TabItem[];
 }

@@ -2,6 +2,7 @@
   <energy-project
     id-name="Templates"
     database-name="energy_templates"
+    router-prefix="energyTemplate"
   ></energy-project>
 </template>
 

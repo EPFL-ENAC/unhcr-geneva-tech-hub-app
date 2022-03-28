@@ -21,8 +21,8 @@ enum MutationTypes {
 }
 
 export enum ActionTypes {
-  Created = "SetCookingDatabase",
-  Destroyed = "SetCookings",
+  Created = "Created",
+  Destroyed = "Destroyed",
   UpdateCookingFuels = "UpdateCookingFuels",
   UpdateCookingStoves = "UpdateCookingStoves",
 }

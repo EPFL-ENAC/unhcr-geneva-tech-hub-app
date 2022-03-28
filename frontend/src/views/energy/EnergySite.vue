@@ -1,5 +1,9 @@
 <template>
-  <energy-project id-name="Site" database-name="energy_sites"></energy-project>
+  <energy-project
+    id-name="Site"
+    database-name="energy_sites"
+    router-prefix="energySite"
+  ></energy-project>
 </template>
 
 <script lang="ts">
