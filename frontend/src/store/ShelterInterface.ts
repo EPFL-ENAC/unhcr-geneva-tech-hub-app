@@ -22,6 +22,12 @@ export interface Shelter {
   technical_performance: Score;
   technical_performance_score: number | undefined;
 
+  geometry: Geometry;
+
+  users: string[];
+  created_by: string;
+}
+export interface Geometry {
   shelter_geometry_type: string;
   shelter_dimensions: ShelterDimensions;
   doors_dimensions: DoorDimensions[];
@@ -29,10 +35,8 @@ export interface Shelter {
   windowArea: number;
   floorArea: number;
   volume: number;
-
-  users: string[];
-  created_by: string;
 }
+
 export interface Score {
   [property: string]: number | Score;
 }
