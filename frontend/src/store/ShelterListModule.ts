@@ -1,6 +1,6 @@
 import { RootState } from "@/store/index";
-import { Shelter } from "@/store/ShelterInterface";
-import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
+import { Geometry, Shelter } from "@/store/ShelterInterface";
+import { SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -24,7 +24,7 @@ function generateState(): ShelterState {
 
 const DB_NAME = "shelters";
 
-function generateNewShelter(name: string) {
+export function generateNewShelter(name: string): Shelter {
   return {
     _id: name,
     name,
@@ -45,13 +45,22 @@ function generateNewShelter(name: string) {
     habitability_score: undefined,
     technical_performance_score: undefined,
     technical_performance: {},
-    shelter_dimensions: { L: undefined, W: undefined },
-    doors_dimensions: [{ Wd: undefined, Hd: undefined }],
-    windows_dimensions: [{ Ww: undefined, Hw: undefined, Hs: undefined }],
-    shelter_geometry_type: "",
+    geometry: getNewGeometry(),
     users: [""],
     created_by: "",
   } as Shelter;
+}
+
+export function getNewGeometry(): Geometry {
+  return {
+    shelter_dimensions: { L: 0, W: 0 },
+    doors_dimensions: [{ Wd: 0, Hd: 0 }],
+    windows_dimensions: [{ Ww: 0, Hw: 0, Hs: 0 }],
+    shelter_geometry_type: "",
+    windowArea: 0,
+    floorArea: 0,
+    volume: 0,
+  };
 }
 /** Getters */
 const getters: GetterTree<ShelterState, RootState> = {
@@ -61,7 +70,7 @@ const getters: GetterTree<ShelterState, RootState> = {
 /** Mutations */
 const mutations: MutationTree<ShelterState> = {
   INIT_DB(state) {
-    state.localCouch = createSyncDatabase(DB_NAME);
+    state.localCouch = new SyncDatabase(DB_NAME);
   },
   CLOSE_DB(state) {
     state.localCouch?.cancel();
