@@ -50,34 +50,6 @@ export enum ItemTypes {
   Labour = "labour",
 }
 
-export const OMaterial = {
-  ALU: "Aluminium",
-  BMB: "Bamboo",
-  BIT: "Bitumen",
-  PLC: "Canvas, Polycotton",
-  CDB: "Cardboard, paper",
-  CEM: "Cement",
-  CLA: "Clay",
-  CON: "Concrete",
-  EAR: "Earth, soil, clay, mud",
-  GLA: "Glass",
-  GRA: "Grass, straw",
-  GYP: "Gypsum, plaster",
-  HMP: "Hemp",
-  LME: "Lime",
-  MFX: "Metal fixture, fixing (inc with steel embodied CO2)",
-  PLA: "Plastic, polymer",
-  RBR: "Rubber",
-  SND: "Sand",
-  STE: "Steel",
-  STO: "Stone",
-  TIM: "Timber",
-} as {
-  [key: string]: string;
-};
-
-export type MaterialId = typeof OMaterial[keyof typeof OMaterial];
-
 export type FormTypeMaterial =
   | "Cube"
   | "UProfile"
@@ -88,200 +60,6 @@ export type FormTypeMaterial =
   | "Cylinder"
   | "Kilogram"
   | "Liter";
-
-export interface FormMaterial {
-  type: FormTypeMaterial;
-  name: string;
-  code: string;
-}
-export type MaterialsForms = Record<MaterialId, FormMaterial[]>;
-
-export const MaterialSubCategory = {
-  ALU: [
-    {
-      type: "Sandwitch",
-      name: "Composite panel (polystyrene core)",
-      code: "ALU-ALL_DEN",
-    },
-    { type: "Sheet", name: "Sheet", code: "ALU-ALL_DEN" },
-    {
-      type: "UProfile",
-      name: "Other (e.g window profile)",
-      code: "ALU-ALL_DEN",
-    },
-  ],
-  BMB: [
-    { type: "Cylinder", name: "Pole", code: "BMB-POL_DEN" },
-    { type: "Sheet", name: "Woven mat", code: "BMB-MAT_DEN" },
-  ],
-  BIT: [{ type: "Sheet", name: "Bitumen", code: "BIT-ALL_DEN" }],
-  PLC: [
-    {
-      code: "PLC-HVY_DEN",
-      type: "Sheet",
-      name: "Heavy - sheet, tarpaulin, tent (e.g. SFT outer)",
-    },
-    {
-      code: "PLC-LHT_DEN",
-      type: "Sheet",
-      name: "Light - sheet, tarpaulin, tent (e.g. SFT outer)",
-    },
-  ],
-  CDB: [{ code: "CDB-ALL_DEN", type: "Sheet", name: "Cardboard, paper" }],
-  CEM: [
-    { code: "CEM-MTR_DEN", type: "Cube", name: "Mortar" },
-    { code: "CEM-PUR_DEN", type: "Kilogram", name: "Pure cement powder" },
-  ],
-  CLA: [
-    { code: "CLA-BRF_DEN", type: "Cube", name: "Brick, fired" },
-    { code: "CLA-BRU_DEN", type: "Cube", name: "Brick, unfired" },
-    { code: "CLA-TIL_DEN", type: "Cube", name: "Floor tile, fired" },
-    { code: "CLA-TIL_DEN", type: "Cube", name: "Roof tile, fired" },
-  ],
-  CON: [
-    { code: "CON-AEB_DEN", type: "Cube", name: "Aerated/lightweight block" },
-    { code: "CON-GEN_DEN", type: "Cube", name: "General" },
-    { code: "CON-PCB_DEN", type: "Cube", name: "Precast, block" },
-    { code: "CON-PCU_DEN", type: "Cube", name: "Precast, other unit" },
-    { code: "CON-REI_DEN", type: "Cube", name: "Reinforced" },
-  ],
-  EAR: [
-    { code: "EAR-ALL_DEN", type: "Cube", name: "Earth roof" },
-    { code: "EAR-ALL_DEN", type: "Cube", name: "Mud plaster" },
-    { code: "EAR-ALL_DEN", type: "Cube", name: "Rammed earth" },
-  ],
-  GLA: [
-    { code: "GLA-WIN_DEN", type: "Sheet", name: "Glass pane (window)" },
-    { code: "GLA-WOO_DEN", type: "Cube", name: "Glass wool (insulation)" },
-  ],
-  GRA: [{ code: "GRA-ALL_DEN", type: "Kilogram", name: "Grass, straw" }],
-  GYP: [{ code: "GYP-ALL_DEN", type: "Kilogram", name: "Gypsum, plaster" }],
-  HMP: [
-    {
-      code: "HMP-ROP_DEN",
-      type: "Rope",
-      name: "Rope, hemp (or other natural fiber)(10mm)",
-    },
-  ],
-  LME: [{ code: "LIME-ALL_DEN", type: "Kilogram", name: "Lime" }],
-  MFX: [
-    { code: "STE-ALL_DEN", type: "Kilogram", name: "Hinge" },
-    { code: "STE-ALL_DEN", type: "Kilogram", name: "Lock" },
-    {
-      code: "STE-ALL_DEN",
-      type: "Kilogram",
-      name: "Nails, screws, bolts, other fixings",
-    },
-  ],
-  PLA: [
-    {
-      code: "PLA-PCS_DEN",
-      type: "Kilogram",
-      name: "Polycarbonate, PC sheet - solid",
-    },
-    {
-      code: "PLA-PCS_DEN",
-      type: "Kilogram",
-      name: "Polycarbonate, PC sheet - corrugated",
-    },
-    {
-      code: "PLA-PCS_DEN",
-      type: "Kilogram",
-      name: "Polycarbonate, PC sheet - twinwall",
-    },
-    {
-      code: "PLA-PSY_DEN",
-      type: "Kilogram",
-      name: "Polystyrene - sheet (e.g. for insulation)",
-    },
-    {
-      code: "PLA-PVC_DEN",
-      type: "Kilogram",
-      name: "Polyvinyl chloride, PVC pipe",
-    },
-    {
-      code: "PLA-ROP_DEN",
-      type: "Kilogram",
-      name: "Rope, polypropylene, nylon (or other synthetic material) (8mm)",
-    },
-    { code: "PLA-TAR_DEN", type: "Kilogram", name: "Tarpaulin, polyester    " },
-  ],
-  RBR: [{ code: "RBR-ALL_DEN", type: "Kilogram", name: "Rubber" }],
-  SND: [{ code: "SND-ALL_DEN", type: "Kilogram", name: "Sand" }],
-  STE: [
-    { code: "STE-ALL_DEN", type: "Kilogram", name: "Rebar" },
-    { code: "STE-ALL_DEN", type: "Kilogram", name: "Wire" },
-    { code: "STE-ALL_DEN", type: "Kilogram", name: "Sheet - corrugated" },
-    { code: "STE-ALL_DEN", type: "Kilogram", name: "Sheet/plate - flat" },
-    { code: "STE-ALL_DEN", type: "Kilogram", name: "Strap" },
-    {
-      code: "STE-ALL_DEN",
-      type: "Kilogram",
-      name: "Structural section - circular hollow section (tube)",
-    },
-    {
-      code: "STE-ALL_DEN",
-      type: "Kilogram",
-      name: "Structural section - square hollow section",
-    },
-    {
-      code: "STE-ALL_DEN",
-      type: "Kilogram",
-      name: "Structural section - rectangular hollow section",
-    },
-    {
-      code: "STE-ALL_DEN",
-      type: "Kilogram",
-      name: "Structural section - other",
-    },
-    {
-      code: "STE-ALL_DEN",
-      type: "Kilogram",
-      name: "Structural section - I section",
-    },
-    {
-      code: "STE-ALL_DEN",
-      type: "Kilogram",
-      name: "Structural section - C section",
-    },
-    {
-      code: "STE-ALL_DEN",
-      type: "Kilogram",
-      name: "Structural section - Equal angle section",
-    },
-  ],
-  STO: [
-    { code: "STO-BLK_DEN", type: "Cube", name: "Block" },
-    { code: "STO-AGG_DEN", type: "Cube", name: "Gravel, aggregate" },
-  ],
-  TIM: [
-    {
-      code: "TIM-HRD_DEN",
-      type: "Kilogram",
-      name: "Hardwood - rectangular section",
-    },
-    {
-      code: "TIM-HRD_DEN",
-      type: "Kilogram",
-      name: "Hardwood - circular section",
-    },
-    {
-      code: "TIM-PLY_DEN",
-      type: "Kilogram",
-      name: "Plywood, chipboard, fibreboard",
-    },
-    {
-      code: "TIM-SFT_DEN",
-      type: "Kilogram",
-      name: "Softwood - rectangular section",
-    },
-    {
-      code: "TIM-SFT_DEN",
-      type: "Kilogram",
-      name: "Softwood - circular section",
-    },
-  ],
-} as MaterialsForms;
 
 type Weight = number;
 type Meter = number;
@@ -407,30 +185,55 @@ export const materialFunction = {
   },
 } as MaterialsFunction;
 
-export interface Material {
+export type itemTypes = "Labour" | "Material";
+export interface Item {
+  _id: string; // as uuid4
+  itemType: itemTypes;
+  quantity: number;
+  unitCost: number; // in USD
+}
+export interface Material extends Item {
   name: string | undefined;
   source: string | undefined;
-  materialId: MaterialId | undefined;
-  form: string | undefined;
+  materialId: string | undefined;
+  formId: string | undefined;
   unit: Units | undefined;
-  density_code: string | undefined;
   dimensions: MaterialDimensions | undefined;
-  pieces: number;
+  embodiedCarbon: number;
+  embodiedWater: number;
+}
+export interface Labour extends Item {
+  // 2 skilled worker for 2 day : 3USD per person
+  // 1 unskilled worker for 1 day: 1 USD per person
+  workerType: WorkerType;
+  unit: WorkLabourTimeUnit; // number of day/hours necessary for construction
+}
+export interface MaterialReferenceData {
+  density: number;
+  density_ref: string; //"ICE DB V2.0 (2011)"
+  density_unit: string; //"kg/m3"
+  embodied_carbon: number; // kgCO2e/kg
+  embodied_carbon_ref: string; //"ICE DB V3.0 (10.11.2019)"
+  embodied_water: number; //
+  embodied_water_ref: string; //"EcoInvent 3.8, aluminium alloy production, Metallic Matrix Composite, GLO (Global)"
+  form: string; // "Composite panel"
+  material: string; //"Aluminium"
+  units: string[]; //['KG', 'M2', 'PCE']
+  _id: string; // "ALU-CPA_"
 }
 
 export enum WorkerType {
   Skilled = "skilled",
   Unskilled = "unskilled",
 }
-export interface Labour {
-  // 2 skilled worker for 2 day : 3USD per person
-  // 1 unskilled worker for 1 day: 1 USD per person
-  workerType: WorkerType;
-  pricePerPerson: number; // in USD
-  workDays: number; // number of day necessary
+
+export enum WorkLabourTimeUnit {
+  Hour = "Hour",
+  Day = "Day",
+  LumpSum = "Lump sum",
 }
 
-export type Item = Material | Labour;
+// export type Item = Material | Labour;
 
 // TODO change. MaterialDimension should be argument of MaterialsFunction
 export interface MaterialDimensions {

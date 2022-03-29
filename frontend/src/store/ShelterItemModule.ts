@@ -1,4 +1,4 @@
-import { createSyncDatabase, SyncDatabase } from "@/utils/couchdb";
+import { SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -31,13 +31,18 @@ const getters: GetterTree<ShelterState, RootState> = {
 /** Mutations */
 const mutations: MutationTree<ShelterState> = {
   INIT_DB(state) {
-    state.localCouch = createSyncDatabase(DB_NAME);
+    state.localCouch = new SyncDatabase(DB_NAME);
   },
   CLOSE_DB(state) {
     state.localCouch?.cancel();
   },
   SET_SHELTER(state, value) {
     state.shelter = value;
+  },
+  SET_SHELTER_ITEMS(state, value) {
+    if (state.shelter) {
+      state.shelter.items = value;
+    }
   },
 };
 
