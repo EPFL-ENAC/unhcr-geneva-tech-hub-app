@@ -115,12 +115,14 @@
                           label="Site name"
                           type="text"
                         />
-                        <v-text-field
-                          id="location_country"
+                        <country-select
                           v-model="localShelter.location_country"
-                          name="location_country"
+                          required
+                          :rules="rules"
                           label="Country"
                           type="text"
+                          name="location_country"
+                          id="location_country"
                         />
                         <v-text-field
                           id="location_distance_from_capital"
@@ -249,6 +251,7 @@
 </template>
 
 <script lang="ts">
+import CountrySelect from "@/components/commons/CountrySelect.vue";
 import { Shelter } from "@/store/ShelterInterface";
 import { CouchUser } from "@/store/UserModule";
 import { cloneDeep } from "lodash";
@@ -262,6 +265,9 @@ import { mapActions, mapGetters, mapState } from "vuex";
   },
   methods: {
     ...mapActions("ShelterItemModule", ["updateDoc"]),
+  },
+  components: {
+    CountrySelect,
   },
 })
 /** Project */

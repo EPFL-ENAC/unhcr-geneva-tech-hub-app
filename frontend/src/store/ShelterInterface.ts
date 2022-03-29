@@ -47,6 +47,7 @@ export enum Units {
   M2 = "m2",
   M3 = "m3",
   L = "l",
+  PCE = "pce",
 }
 
 export enum ItemTypes {
@@ -189,21 +190,23 @@ export const materialFunction = {
   },
 } as MaterialsFunction;
 
-export type itemTypes = "Labour" | "Material";
+export type itemTypes = "Labour" | "Material" | "Other";
 export interface Item {
   _id: string; // as uuid4
   itemType: itemTypes;
+  source: string | undefined; // country
   quantity: number;
   unitCost: number; // in USD
+  totalCost: number;
 }
 export interface Material extends Item {
   name: string | undefined;
-  source: string | undefined;
   materialId: string | undefined;
   formId: string | undefined;
   unit: Units | undefined;
   dimensions: MaterialDimensions | undefined;
   embodiedCarbon: number;
+  embodiedCarbonTransport: number;
   embodiedWater: number;
 }
 export interface Labour extends Item {
@@ -212,6 +215,11 @@ export interface Labour extends Item {
   workerType: WorkerType;
   unit: WorkLabourTimeUnit; // number of day/hours necessary for construction
 }
+export interface Other extends Item {
+  name: string | undefined;
+  unit: Units | undefined;
+}
+
 export interface MaterialReferenceData {
   density: number;
   density_ref: string; //"ICE DB V2.0 (2011)"
