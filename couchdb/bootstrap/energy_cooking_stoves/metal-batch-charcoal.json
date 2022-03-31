@@ -1,0 +1,20 @@
+{
+  "_id": "metal-batch-charcoal",
+  "name": "Improved stove from metal that is batch loaded",
+  "fuel": "charcoal",
+  "technologyType": "improved",
+  "energyEfficiency": 0.4,
+  "capacity": 1,
+  "investmentCost": 60,
+  "lifetime": 5,
+  "emissionFactorCo": 4.4,
+  "emissionFactorPm": 62,
+  "iwaEfficiencyTier": [
+    3,
+    4
+  ],
+  "iwaIndoorEmissionTier": [
+    3,
+    4
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "_id": "pellets",
+  "name": "Pellets",
+  "energy": 17,
+  "emissionFactorCo2": 2.5,
+  "price": 0.1
+}

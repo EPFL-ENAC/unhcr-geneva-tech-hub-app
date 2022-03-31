@@ -1,0 +1,17 @@
+_id,name,fuel,technologyType,energyEfficiency,capacity,investmentCost,lifetime,emissionFactorCo,emissionFactorPm,iwaEfficiencyTier,iwaIndoorEmissionTier
+traditional-wood,Traditional stove - three stones with pot or alternatives,wood,conventional,0.09,1,0,25,19,1050,0,0
+traditional-charcoal,Traditional stove - three stones with pot or alternatives,charcoal,conventional,0.09,1,0,25,19,1050,0,0
+clay-wood,Basic cooking stove made out of clay,wood,conventional,0.15,1,5.4,5,15,750,"[0,1]","[0,1]"
+clay-charcoal,Basic cooking stove made out of clay,charcoal,conventional,0.15,1,5.4,5,15,750,"[0,1]","[0,1]"
+ceramic-wood,Cookstove made with fired clay (ceramic),wood,conventional,0.25,1,6.5,5,9,350,2,"[0,1]"
+ceramic-charcoal,Cookstove made with fired clay (ceramic),charcoal,conventional,0.25,1,6.5,5,9,350,2,"[0,1]"
+metal-side-wood,Improved stove from metal fueled with side feeder,wood,improved,0.18,1,60,5,13,550,"[0,2]","[0,2]"
+metal-side-charcoal,Improved stove from metal fueled with side feeder,charcoal,improved,0.18,1,60,5,13,550,"[0,2]","[0,2]"
+metal-batch-wood,Improved stove from metal that is batch loaded,wood,improved,0.25,1,60,5,9,350,2,"[0,1]"
+metal-batch-charcoal,Improved stove from metal that is batch loaded,charcoal,improved,0.4,1,60,5,4.4,62,"[3,4]","[3,4]"
+gasifier,Gasifier Stove built for burning pellets ,pellets,improved,0.4,1,51.7,8,4.4,62,"[3,4]","[3,4]"
+ethanol,Cook stove for ethanol / kerosene combustion,ethanol,clean,0.45,1,61,10,3.7,35,4,4
+kerosene,Cook stove for ethanol / kerosene combustion,kerosene,clean,0.45,1,61,10,3.7,35,4,4
+lpg,"Cook stove for burning gas (LPG, biogas)",lpg,clean,0.35,1,41.3,15,5.7,150,3,3
+biogas,"Cook stove for burning gas (LPG, biogas)",giogas,clean,0.35,1,41.3,15,5.7,150,3,3
+induction,Modern Cook Stoves - Induction Electric Cooker,electricity,electric,0.73,1,70,15,0,0,4,4

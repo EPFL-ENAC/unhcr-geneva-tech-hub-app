@@ -1,0 +1,20 @@
+{
+  "_id": "clay-charcoal",
+  "name": "Basic cooking stove made out of clay",
+  "fuel": "charcoal",
+  "technologyType": "conventional",
+  "energyEfficiency": 0.15,
+  "capacity": 1,
+  "investmentCost": 5.4,
+  "lifetime": 5,
+  "emissionFactorCo": 15,
+  "emissionFactorPm": 750,
+  "iwaEfficiencyTier": [
+    0,
+    1
+  ],
+  "iwaIndoorEmissionTier": [
+    0,
+    1
+  ]
+}

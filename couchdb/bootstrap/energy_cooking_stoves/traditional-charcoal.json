@@ -3,7 +3,7 @@
   "name": "Traditional stove - three stones with pot or alternatives",
   "fuel": "charcoal",
   "technologyType": "conventional",
-  "energyEfficiency": 9,
+  "energyEfficiency": 0.09,
   "capacity": 1,
   "investmentCost": 0,
   "lifetime": 25,

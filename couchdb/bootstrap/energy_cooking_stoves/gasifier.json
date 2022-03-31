@@ -1,0 +1,20 @@
+{
+  "_id": "gasifier",
+  "name": "Gasifier Stove built for burning pellets ",
+  "fuel": "pellets",
+  "technologyType": "improved",
+  "energyEfficiency": 0.4,
+  "capacity": 1,
+  "investmentCost": 51.7,
+  "lifetime": 8,
+  "emissionFactorCo": 4.4,
+  "emissionFactorPm": 62,
+  "iwaEfficiencyTier": [
+    3,
+    4
+  ],
+  "iwaIndoorEmissionTier": [
+    3,
+    4
+  ]
+}

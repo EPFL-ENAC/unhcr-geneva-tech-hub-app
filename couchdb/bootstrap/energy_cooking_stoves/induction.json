@@ -1,0 +1,14 @@
+{
+  "_id": "induction",
+  "name": "Modern Cook Stoves - Induction Electric Cooker",
+  "fuel": "electricity",
+  "technologyType": "electric",
+  "energyEfficiency": 0.73,
+  "capacity": 1,
+  "investmentCost": 70,
+  "lifetime": 15,
+  "emissionFactorCo": 0,
+  "emissionFactorPm": 0,
+  "iwaEfficiencyTier": 4,
+  "iwaIndoorEmissionTier": 4
+}

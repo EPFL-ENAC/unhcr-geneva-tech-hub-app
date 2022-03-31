@@ -1,0 +1,14 @@
+{
+  "_id": "ethanol",
+  "name": "Cook stove for ethanol / kerosene combustion",
+  "fuel": "ethanol",
+  "technologyType": "clean",
+  "energyEfficiency": 0.45,
+  "capacity": 1,
+  "investmentCost": 61,
+  "lifetime": 10,
+  "emissionFactorCo": 3.7,
+  "emissionFactorPm": 35,
+  "iwaEfficiencyTier": 4,
+  "iwaIndoorEmissionTier": 4
+}

@@ -1,0 +1,20 @@
+{
+  "_id": "metal-side-wood",
+  "name": "Improved stove from metal fueled with side feeder",
+  "fuel": "wood",
+  "technologyType": "improved",
+  "energyEfficiency": 0.18,
+  "capacity": 1,
+  "investmentCost": 60,
+  "lifetime": 5,
+  "emissionFactorCo": 13,
+  "emissionFactorPm": 550,
+  "iwaEfficiencyTier": [
+    0,
+    2
+  ],
+  "iwaIndoorEmissionTier": [
+    0,
+    2
+  ]
+}

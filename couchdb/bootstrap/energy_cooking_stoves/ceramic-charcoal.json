@@ -1,0 +1,17 @@
+{
+  "_id": "ceramic-charcoal",
+  "name": "Cookstove made with fired clay (ceramic)",
+  "fuel": "charcoal",
+  "technologyType": "conventional",
+  "energyEfficiency": 0.25,
+  "capacity": 1,
+  "investmentCost": 6.5,
+  "lifetime": 5,
+  "emissionFactorCo": 9,
+  "emissionFactorPm": 350,
+  "iwaEfficiencyTier": 2,
+  "iwaIndoorEmissionTier": [
+    0,
+    1
+  ]
+}
