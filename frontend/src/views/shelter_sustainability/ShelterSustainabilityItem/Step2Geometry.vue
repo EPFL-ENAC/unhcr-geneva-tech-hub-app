@@ -196,9 +196,12 @@
           <v-btn type="submit"> Save changes </v-btn>
         </v-col>
       </v-row>
-      <v-overlay v-if="selectedItem"  @click="selectedItem = null">
-
-          <v-img :src="selectedItem? selectedItem.image_url :''" contain  @click="selectedItem = null"></v-img>
+      <v-overlay v-if="selectedItem" @click="selectedItem = null">
+        <v-img
+          :src="selectedItem ? selectedItem.image_url : ''"
+          contain
+          @click="selectedItem = null"
+        ></v-img>
       </v-overlay>
     </v-form>
   </v-container>

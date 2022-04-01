@@ -93,7 +93,7 @@ const actions: ActionTree<UserState, RootState> = {
   logout: (context: ActionContext<UserState, RootState>) => {
     context.commit("SET_USER_LOADING");
     logoutTool()
-      .then((response) => {
+      .then(() => {
         context.commit("SET_USER", generateEmptyUser());
       })
       .finally(() => {

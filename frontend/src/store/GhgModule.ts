@@ -1,3 +1,6 @@
+/** Config store */
+import { Country, GreenHouseGaz } from "@/store/GhgInterface";
+import { SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -5,12 +8,8 @@ import {
   Module,
   MutationTree,
 } from "vuex";
-/** Config store */
-import { Country, GreenHouseGaz } from "@/store/GhgInterface";
-
-import { CouchUser } from "./UserModule";
 import { RootState } from ".";
-import { SyncDatabase } from "@/utils/couchdb";
+import { CouchUser } from "./UserModule";
 
 const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 
