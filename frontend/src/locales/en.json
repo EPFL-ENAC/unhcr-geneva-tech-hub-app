@@ -1,7 +1,8 @@
 {
   "energy": {
-    "name": "Name",
-    "fuel": "Fuel",
+    "cookstoveName": "Cookstove",
+    "fuelName": "Fuel",
+    "action": "Action",
     "veryLow": "Very Low",
     "low": "Low",
     "middle": "Middle",

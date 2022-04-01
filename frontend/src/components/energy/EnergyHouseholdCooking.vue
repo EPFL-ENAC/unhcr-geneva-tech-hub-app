@@ -60,6 +60,11 @@
             unit="h"
           ></form-item-component>
         </template>
+        <template v-slot:[`item.action`]="{ item }">
+          <v-btn icon @click="deleteItem(item)">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </template>
       </v-data-table>
     </template>
   </energy-form>
@@ -97,12 +102,14 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   cookingStoves!: CookingStove[];
 
   readonly tableHeaders: DataTableHeader[] = [
-    "name",
-    "fuel",
+    "cookstoveName",
+    "fuelName",
     ...socioEconomicCategories,
+    "action",
   ].map((item) => ({
     text: this.$t(`energy.${item}`).toString(),
     value: item,
+    sortable: ["cookstoveName", "fuelName"].includes(item),
   }));
   readonly inputNumberColumnNames: string[] = socioEconomicCategories;
   readonly tableExpandProperties: {
@@ -217,11 +224,22 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
       ...item.categories,
       ...item.fuel,
       ...item.stove,
+      cookstoveName: item.stove.name,
+      fuelName: item.fuel.name,
     }));
+  }
+
+  deleteItem(item: TableItem): void {
+    this.tableItems = this.tableItems.filter(
+      (tableItem) => tableItem._id !== item._id
+    );
   }
 }
 
 type TableItem = Record<SocioEconomicCategory, CookingCategoryValue> &
   CookingStove &
-  CookingFuel;
+  CookingFuel & {
+    cookstoveName: string;
+    fuelName: string;
+  };
 </script>
