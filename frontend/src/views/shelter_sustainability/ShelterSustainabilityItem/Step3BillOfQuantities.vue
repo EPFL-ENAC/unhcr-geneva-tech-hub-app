@@ -105,7 +105,7 @@ import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("ShelterItemModule", ["shelter"]),
+    ...mapGetters("ShelterModule", ["shelter"]),
     ...mapGetters("ShelterBillOfQuantitiesModule", [
       "items",
       "isItemDialogOpen",
@@ -113,7 +113,7 @@ import { mapActions, mapGetters } from "vuex";
     ...mapGetters("GhgReferenceModule", ["materialMap"]),
   },
   methods: {
-    ...mapActions("ShelterItemModule", ["updateDoc"]),
+    ...mapActions("ShelterModule", ["updateDoc"]),
     ...mapActions("ShelterBillOfQuantitiesModule", [
       "setItems",
       "openNewItemDialog",
@@ -167,7 +167,7 @@ export default class Step3Materials extends Vue {
     this.setLocalShelter(this.shelter);
 
     this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["ShelterItemModule/SET_SHELTER"];
+      const shouldUpdate = ["ShelterModule/SET_SHELTER"];
       if (shouldUpdate.includes(mutation.type)) {
         this.setLocalShelter(mutation.payload);
       }

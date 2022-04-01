@@ -219,7 +219,7 @@ import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("ShelterItemModule", ["shelter"]),
+    ...mapGetters("ShelterModule", ["shelter"]),
     ...mapGetters("ShelterBillOfQuantitiesModule", [
       "isItemDialogOpen",
       "editedItem",
@@ -281,7 +281,7 @@ export default class DeleteItemDialog extends Vue {
   }
 
   public computeCost(): void {
-    // side effect function: TODO: transform to pure function
+    // side effect function: TODO: transform to pure function and move to utils
     const { quantity, formId, unit, unitCost } = this.localItem as Material;
     const newValue = cloneDeep(this.localItem) as Material;
     if (formId && quantity && unit) {
@@ -296,6 +296,7 @@ export default class DeleteItemDialog extends Vue {
         const volume = 0; // TODO : fixme with form functions
         weight = density * volume;
       }
+      newValue.weight = weight;
 
       newValue.embodiedCarbon = weight * embodied_carbon;
       newValue.embodiedWater = weight * embodied_water;
@@ -329,7 +330,7 @@ export default class DeleteItemDialog extends Vue {
 
   public resetLocalItemFormId(): void {
     const clone = cloneDeep(this.localItem) as Material;
-    clone.formId = undefined;
+    clone.formId = "";
     this.localItem = clone;
     this.validate();
   }

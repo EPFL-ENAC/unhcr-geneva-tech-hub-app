@@ -1,82 +1,46 @@
 <template>
-  <v-form
-    :readonly="!$can('edit', project)"
-    v-if="project"
-    @submit.prevent="() => submitForm(project)"
-  >
-    <v-container fluid>
-      <v-row>
-        <v-col>
-          <h2 class="text-h4 project-shelter__h3 font-weight-medium">
-            Score Card
-          </h2>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-divider></v-divider>
-        </v-col>
-      </v-row>
+  <v-container fluid v-if="shelter">
+    <v-row>
+      <v-col>
+        <h2 class="text-h4 project-shelter__h3 font-weight-medium">
+          Score Card
+        </h2>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-divider></v-divider>
+      </v-col>
+    </v-row>
 
-      <v-row>
-        <v-col>
-          <v-sheet elevation="2" rounded v-if="project">
-            <v-container fluid>
-              <v-row>
-                <v-col class="about-first-column d-flex justify-center" lg="12">
-                  <v-img
-                    max-width="70%"
-                    class="d-flex justify-center"
-                    src="/shelter/scorecard.png"
-                  ></v-img>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-sheet>
-        </v-col>
-      </v-row>
-      <v-row v-if="$can('edit', project)">
-        <v-col class="d-flex justify-end">
-          <v-btn type="submit"> Save changes </v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-form>
+    <v-row>
+      <v-col>
+        <v-sheet elevation="2" rounded>
+          <v-container fluid>
+            <v-row>
+              <v-col class="about-first-column d-flex justify-center" lg="12">
+                {{ shelter.scorecard }}
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-sheet>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
 import { Shelter } from "@/store/ShelterInterface";
-import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
-import { mapActions, mapState } from "vuex";
+import { mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapState("ShelterItemModule", ["shelter"]),
-  },
-  methods: {
-    ...mapActions("ShelterItemModule", ["updateDoc"]),
+    ...mapGetters("ShelterModule", ["shelter"]),
   },
 })
 /** Project */
 export default class Step8ScoreCard extends Vue {
   shelter!: Shelter;
-  updateDoc!: (doc: Shelter) => void;
-
-  get project(): Shelter {
-    // return {
-    //   ...cloneDeep(this.shelter),
-    //   habitability: this.shelter.habitability, // if you want to make reactive you have to predefine things
-    // };
-    return cloneDeep(this.shelter);
-  }
-
-  public submitForm(value: Shelter): void {
-    if (value.name !== "") {
-      this.updateDoc(value);
-    } else {
-      console.error("please send a valid document");
-    }
-  }
 }
 </script>

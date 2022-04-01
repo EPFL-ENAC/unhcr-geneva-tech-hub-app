@@ -1,3 +1,9 @@
+import { SyncDatabase } from "@/utils/couchdb";
+export interface ShelterState {
+  shelter: Shelter;
+  shelters: Array<Shelter>;
+  localCouch: SyncDatabase<Shelter> | null;
+}
 export interface Shelter {
   _id: string;
   name: string;
@@ -16,16 +22,28 @@ export interface Shelter {
   risk_seismic: string;
 
   items: Item[];
+  envPerfItems: EnvPerf[];
+  totalEnvPerf: EnvPerf;
 
   habitability: Score;
   habitability_score: number | undefined;
   technical_performance: Score;
   technical_performance_score: number | undefined;
 
+  scorecard: ScoreCard;
   geometry: Geometry;
 
   users: string[];
   created_by: string;
+}
+
+export interface ScoreCard {
+  weight: number;
+  co2: number;
+  h2o: number;
+  techPerf: number;
+  habitability: number;
+  affordability: number;
 }
 export interface Geometry {
   shelter_geometry_type: string;
@@ -200,14 +218,15 @@ export interface Item {
   totalCost: number;
 }
 export interface Material extends Item {
-  name: string | undefined;
-  materialId: string | undefined;
-  formId: string | undefined;
-  unit: Units | undefined;
-  dimensions: MaterialDimensions | undefined;
+  name: string;
+  materialId: string;
+  formId: string;
+  unit: Units;
+  dimensions: MaterialDimensions;
   embodiedCarbon: number;
   embodiedCarbonTransport: number;
   embodiedWater: number;
+  weight: number;
 }
 export interface Labour extends Item {
   // 2 skilled worker for 2 day : 3USD per person
@@ -278,7 +297,6 @@ export interface WindowDimensions {
   Hs: number | undefined;
 }
 
-// TODO: improve types for unit and variables at least
 export interface ShelterMaterial {
   source: string; // : "EcoInvent 3.8\nbamboo pole production\nGLO (Global)",
   name: string; // : "Bamboo, pole",
@@ -291,4 +309,18 @@ export interface ShelterMaterial {
   embodied_water: number; // : 0.00234,
   embodied_water_ref: string; // source reference for embodied water
   _id: string; // : "BMB-POL_DEN"
+}
+
+export type EnvPerfRecord = Record<string, EnvPerf>;
+
+export interface EnvPerf {
+  material: string;
+  weight: number;
+  embodied_carbon_production: number;
+  embodied_carbon_transport: number;
+  embodied_carbon_total: number;
+  embodied_water: number;
+  unit_cost: number;
+  total_cost: number;
+  items: Item[];
 }

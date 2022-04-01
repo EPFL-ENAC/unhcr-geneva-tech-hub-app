@@ -84,20 +84,22 @@
 </template>
 
 <script lang="ts">
+import { Shelter } from "@/store/ShelterInterface";
+import { SyncDatabase } from "@/utils/couchdb";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
 
 @Component({
   computed: {
-    ...mapState("ShelterListModule", ["shelters"]),
+    ...mapState("ShelterModule", ["shelters", "db"]),
   },
 
   methods: {
-    ...mapActions("ShelterListModule", [
+    ...mapActions("ShelterModule", [
       "addDoc",
       "removeDoc",
       "syncDB",
-      "getDB",
+      "getShelters",
       "closeDB",
     ]),
   },
@@ -109,7 +111,8 @@ export default class ProjectList extends Vue {
   addDoc!: (name: string) => null;
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
-  getDB!: () => Promise<null>;
+  getShelters!: () => Promise<null>;
+  db!: SyncDatabase<Shelter> | null;
 
   createProjectFormValid = true;
   rules = [
@@ -131,7 +134,9 @@ export default class ProjectList extends Vue {
 
   mounted(): void {
     this.syncDB();
-    this.getDB();
+    this.getShelters();
+
+    this.db?.onChange(this.getShelters);
   }
 
   destroyed(): void {

@@ -260,11 +260,11 @@ import { mapActions, mapGetters, mapState } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("ShelterItemModule", ["shelter"]),
+    ...mapGetters("ShelterModule", ["shelter"]),
     ...mapState("UserModule", ["user"]),
   },
   methods: {
-    ...mapActions("ShelterItemModule", ["updateDoc"]),
+    ...mapActions("ShelterModule", ["updateDoc"]),
   },
   components: {
     CountrySelect,
@@ -350,7 +350,7 @@ export default class Step1 extends Vue {
     this.setLocalShelter();
 
     this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["ShelterItemModule/SET_SHELTER"];
+      const shouldUpdate = ["ShelterModule/SET_SHELTER"];
       if (shouldUpdate.includes(mutation.type)) {
         this.setLocalShelter();
       }
@@ -361,8 +361,7 @@ export default class Step1 extends Vue {
     this.syncLocalShelter();
   }
 
-  public addUser(value: string): void {
-    console.log("add new user", value, this.tab);
+  public addUser(): void {
     this.localShelter.users.push(this.newUser);
     this.newUser = "";
     this.submitForm(this.localShelter);
@@ -380,7 +379,6 @@ export default class Step1 extends Vue {
   }
 
   public submitForm(value: Shelter): void {
-    console.log("setter shelter", value, this.tab);
     if (value.name !== "") {
       this.updateDoc(value);
     } else {

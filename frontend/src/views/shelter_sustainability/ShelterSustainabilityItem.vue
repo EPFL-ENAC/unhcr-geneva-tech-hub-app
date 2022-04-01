@@ -19,13 +19,18 @@
 </template>
 
 <script lang="ts">
+import { Shelter } from "@/store/ShelterInterface";
+import { SyncDatabase } from "@/utils/couchdb";
 import { Component, Vue } from "vue-property-decorator";
 import { Route } from "vue-router";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 @Component({
+  computed: {
+    ...mapGetters("ShelterModule", ["db"]),
+  },
   methods: {
-    ...mapActions("ShelterItemModule", [
+    ...mapActions("ShelterModule", [
       "getDoc",
       "updateDoc",
       "syncDB",
@@ -39,7 +44,7 @@ export default class ProjectItem extends Vue {
   getDoc!: (id: string) => null;
   closeDB!: () => null;
   $route!: Route;
-
+  db!: SyncDatabase<Shelter> | null;
   readonly menuItems: MenuItem[] = [
     {
       icon: "mdi-information",
@@ -73,9 +78,15 @@ export default class ProjectItem extends Vue {
       to: "ShelterSustainabilityStep9",
     },
   ];
+
+  public retrieveData(): void {
+    this.getDoc(decodeURIComponent(this.$route.params.id));
+  }
   mounted(): void {
     this.syncDB();
-    this.getDoc(decodeURIComponent(this.$route.params.id));
+    this.retrieveData();
+
+    this.db?.onChange(this.retrieveData);
   }
   destroyed(): void {
     this.closeDB();

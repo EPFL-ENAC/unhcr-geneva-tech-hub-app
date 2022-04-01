@@ -1,5 +1,12 @@
 import { RootState } from "@/store/index";
-import { Geometry, Shelter } from "@/store/ShelterInterface";
+import { Shelter, ShelterState } from "@/store/ShelterInterface";
+import {
+  generateNewShelter,
+  generateState,
+  getEnvPerfItems,
+  getScoreCard,
+  getTotalEnvPerf,
+} from "@/store/ShelterModuleUtils";
 import { SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
@@ -10,61 +17,14 @@ import {
 } from "vuex";
 import { CouchUser } from "./UserModule";
 
-interface ShelterState {
-  shelters: Array<Shelter>;
-  localCouch: SyncDatabase<Shelter> | null;
-}
-
-function generateState(): ShelterState {
-  return {
-    shelters: [],
-    localCouch: null,
-  };
-}
-
 const DB_NAME = "shelters";
+const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 
-export function generateNewShelter(name: string): Shelter {
-  return {
-    _id: name,
-    name,
-    organisation: "",
-    shelter_total: undefined, // number of shelters
-    shelter_occupants: undefined, // people
-    shelter_lifespan: undefined, // years
-    setup_people: undefined, // 2 people necessary for setup
-    setup_time: undefined, // days,
-    location_name: "",
-    location_country: "", // iso code ?
-    location_distance_from_capital: undefined, // km
-    location_lat: undefined, // option
-    location_lon: undefined, // option
-    risk_flood: "",
-    risk_seismic: "",
-    habitability: {},
-    habitability_score: undefined,
-    technical_performance_score: undefined,
-    technical_performance: {},
-    geometry: getNewGeometry(),
-    users: [""],
-    created_by: "",
-  } as Shelter;
-}
-
-export function getNewGeometry(): Geometry {
-  return {
-    shelter_dimensions: { L: 0, W: 0 },
-    doors_dimensions: [{ Wd: 0, Hd: 0 }],
-    windows_dimensions: [{ Ww: 0, Hw: 0, Hs: 0 }],
-    shelter_geometry_type: "",
-    windowArea: 0,
-    floorArea: 0,
-    volume: 0,
-  };
-}
 /** Getters */
 const getters: GetterTree<ShelterState, RootState> = {
   shelters: (s): Array<Shelter> => s.shelters,
+  shelter: (s): Shelter | null => s.shelter,
+  db: (s): SyncDatabase<Shelter> | null => s.localCouch,
 };
 
 /** Mutations */
@@ -78,13 +38,19 @@ const mutations: MutationTree<ShelterState> = {
   SET_SHELTERS(state, value) {
     state.shelters = value;
   },
+  SET_SHELTER(state, value) {
+    state.shelter = value;
+    state.shelter.envPerfItems = getEnvPerfItems(value?.items ?? []);
+    state.shelter.totalEnvPerf = getTotalEnvPerf(state.shelter.envPerfItems);
+    state.shelter.scorecard = getScoreCard(value);
+  },
   ADD_DOC(state, value) {
     state.localCouch?.db
       .put(value)
       .then(() => {
         state.shelters.push(value);
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         console.log(error);
       });
   },
@@ -101,16 +67,11 @@ const mutations: MutationTree<ShelterState> = {
 const actions: ActionTree<ShelterState, RootState> = {
   syncDB: (context: ActionContext<ShelterState, RootState>) => {
     context.commit("INIT_DB");
-    const localCouch = context.state.localCouch;
-
-    localCouch?.onChange(function () {
-      context.dispatch("getDB");
-    });
   },
   closeDB: (context: ActionContext<ShelterState, RootState>) => {
     context.commit("CLOSE_DB");
   },
-  getDB: (context: ActionContext<ShelterState, RootState>) => {
+  getShelters: (context: ActionContext<ShelterState, RootState>) => {
     const localCouch = context.state.localCouch;
     // shelters/_design/shelter/_view/lits?include_docs=true
     return localCouch?.db
@@ -136,6 +97,25 @@ const actions: ActionTree<ShelterState, RootState> = {
   },
   removeDoc: (context: ActionContext<ShelterState, RootState>, id) => {
     context.commit("REMOVE_DOC", id);
+  },
+  updateDoc: (context: ActionContext<ShelterState, RootState>, value) => {
+    context.commit("SET_SHELTER", value);
+    const db = context.state.localCouch?.db;
+    if (db) {
+      db.put(value);
+    } else {
+      throw new Error(MSG_DB_DOES_NOT_EXIST);
+    }
+  },
+  getDoc: (context: ActionContext<ShelterState, RootState>, id) => {
+    const db = context.state.localCouch?.db;
+    if (db) {
+      db.get(id).then(function (result: Shelter) {
+        context.commit("SET_SHELTER", result);
+      });
+    } else {
+      throw new Error(MSG_DB_DOES_NOT_EXIST);
+    }
   },
 };
 

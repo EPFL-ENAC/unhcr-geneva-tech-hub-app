@@ -3,8 +3,7 @@ import EnergyModule from "@/store/EnergyModule";
 import GhgModule from "@/store/GhgModule";
 import GhgReferenceModule from "@/store/GhgReferenceModule";
 import ShelterBillOfQuantitiesModule from "@/store/ShelterBillOfQuantitiesModule";
-import ShelterItemModule from "@/store/ShelterItemModule";
-import ShelterListModule from "@/store/ShelterListModule";
+import ShelterModule from "@/store/ShelterModule";
 import SheltersTransportModule from "@/store/SheltersTransportModule";
 import UserModule from "@/store/UserModule";
 import Vue from "vue";
@@ -15,7 +14,8 @@ import Vuex, {
   MutationTree,
   StoreOptions,
 } from "vuex";
-import VuexPersistence from "vuex-persist";
+
+// import VuexPersistence from "vuex-persist";
 
 // import createPersistedState from 'vuex-persist-indexeddb';
 
@@ -173,8 +173,7 @@ const store: StoreOptions<RootState> = {
   actions,
   modules: {
     ConfigModule,
-    ShelterListModule,
-    ShelterItemModule,
+    ShelterModule,
     SheltersTransportModule,
     ShelterBillOfQuantitiesModule,
     GhgModule,
@@ -183,11 +182,11 @@ const store: StoreOptions<RootState> = {
     energy: EnergyModule,
   },
   plugins: [
-    new VuexPersistence({
-      key: "dev_web_vuex_persistant_namespace", // change with env variable
-      storage: window.localStorage,
-      modules: ["ConfigModule"],
-    }).plugin,
+    // new VuexPersistence({
+    //   key: "dev_web_vuex_persistant_namespace", // change with env variable
+    //   storage: window.localStorage,
+    //   modules: ["ConfigModule"],
+    // }).plugin,
     /*
     // store as session storage
     new VuexPersistence({
