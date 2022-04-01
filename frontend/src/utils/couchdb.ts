@@ -70,7 +70,9 @@ export function createSyncDatabase<T>(name: string): SyncDatabase<T> {
 
 export class SyncDatabase<T> {
   public db: PouchDB.Database<T>;
+  public remoteDB: PouchDB.Database<T>;
   private sync: PouchDB.Replication.Sync<T>;
+  private onChangeListener: PouchDB.Core.Changes<T> | undefined;
 
   constructor(name: string) {
     const localDB = new PouchDB<T>(name);
@@ -80,17 +82,18 @@ export class SyncDatabase<T> {
       retry: true,
     });
     this.db = localDB;
+    this.remoteDB = remoteDB;
   }
 
   onChange(
     listener: (value: PouchDB.Core.ChangesResponseChange<T>) => unknown
   ): PouchDB.Core.Changes<T> {
-    return this.db
-      .changes({
-        since: "now",
-        live: true,
-      })
-      .on("change", listener);
+    this.onChangeListener = this.db.changes({
+      since: "now",
+      live: true,
+    });
+    this.onChangeListener.on("change", listener);
+    return this.onChangeListener;
   }
 
   async getAllDocuments(): Promise<ExistingDocument<T>[]> {
@@ -102,5 +105,6 @@ export class SyncDatabase<T> {
 
   cancel(): void {
     this.sync.cancel();
+    this.onChangeListener?.cancel();
   }
 }

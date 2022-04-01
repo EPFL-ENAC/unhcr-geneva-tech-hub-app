@@ -2,6 +2,7 @@ import {
   Item,
   Material,
   MaterialDimensions,
+  Other,
   Units,
 } from "@/store/ShelterInterface";
 import { v4 as uuidv4 } from "uuid";
@@ -43,6 +44,14 @@ function getDefaultLabourItem(): Item {
     _id: uuidv4(),
     itemType: "Labour",
   } as Item;
+}
+
+function getDefaultOther(): Item {
+  return {
+    _id: uuidv4(),
+    itemType: "Other",
+    unit: Units.PCE,
+  } as Other;
 }
 
 /** Default Configure state value */
@@ -106,9 +115,9 @@ const actions: ActionTree<BoqState, RootState> = {
   },
   openNewItemDialog: (context: ActionContext<BoqState, RootState>) => {
     // open dialog and set store item and index for future save
-    context.commit("SET_EDIT_ITEM_DIALOG", true);
-    context.commit("SET_EDITED_INDEX", -1);
     context.commit("RESET_EDITED_ITEM");
+    context.commit("SET_EDITED_INDEX", -1);
+    context.commit("SET_EDIT_ITEM_DIALOG", true);
   },
   openEditItemDialog: (
     context: ActionContext<BoqState, RootState>,
@@ -127,6 +136,9 @@ const actions: ActionTree<BoqState, RootState> = {
   },
   setItemToDefaultMaterial: (context: ActionContext<BoqState, RootState>) => {
     context.commit("SET_EDITED_ITEM", getDefaultMaterialItem());
+  },
+  setItemToDefaultOther: (context: ActionContext<BoqState, RootState>) => {
+    context.commit("SET_EDITED_ITEM", getDefaultOther());
   },
   saveItem: (context: ActionContext<BoqState, RootState>, item: Item) => {
     if (context.state.editedIndex > -1) {

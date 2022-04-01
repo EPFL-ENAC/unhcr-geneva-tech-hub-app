@@ -43,6 +43,37 @@
                   <delete-item-dialog />
                 </v-toolbar>
               </template>
+              <template v-slot:item.name="{ item }">
+                <span v-if="item.itemType === 'Labour'"
+                  >{{ item.itemType }} / {{ item.workerType }}
+                </span>
+                <span v-else-if="item.itemType === 'Material'">{{
+                  item.name
+                }}</span>
+                <span v-else-if="item.itemType === 'Other'"
+                  >Other / {{ item.name }}</span
+                >
+              </template>
+              <template v-slot:item.source="{ item }">
+                <!-- todo default value for source for Labour/Other set to shelter default country  -->
+                {{ item.source }}
+              </template>
+              <template v-slot:item.formId="{ item }">
+                <!-- todo default value for source for Labour/Other set to shelter default country  -->
+                <span v-if="item.itemType === 'Material'">{{
+                  materialMap[item.formId].form
+                }}</span>
+                <span v-else>--</span>
+              </template>
+
+              <template v-slot:item.materialId="{ item }">
+                <!-- todo default value for source for Labour/Other set to shelter default country  -->
+                <span v-if="item.itemType === 'Material'">{{
+                  item.materialId
+                }}</span>
+                <span v-else>--</span>
+              </template>
+
               <template v-slot:item.actions="{ item }">
                 <v-icon small class="mr-2" @click="openEditItemDialog(item)">
                   mdi-pencil
@@ -74,14 +105,15 @@ import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("ShelterItemModule", ["shelter"]),
+    ...mapGetters("ShelterModule", ["shelter"]),
     ...mapGetters("ShelterBillOfQuantitiesModule", [
       "items",
       "isItemDialogOpen",
     ]),
+    ...mapGetters("GhgReferenceModule", ["materialMap"]),
   },
   methods: {
-    ...mapActions("ShelterItemModule", ["updateDoc"]),
+    ...mapActions("ShelterModule", ["updateDoc"]),
     ...mapActions("ShelterBillOfQuantitiesModule", [
       "setItems",
       "openNewItemDialog",
@@ -115,7 +147,7 @@ export default class Step3Materials extends Vue {
     { text: "Quantity", value: "quantity" },
     { text: "Unit", value: "unit" },
     { text: "Unit cost", value: "unitCost" },
-    { text: "Total cost", value: "totalcost" },
+    { text: "Total cost", value: "totalCost" },
     { text: "", value: "actions", sortable: false },
   ];
 
@@ -135,7 +167,7 @@ export default class Step3Materials extends Vue {
     this.setLocalShelter(this.shelter);
 
     this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["ShelterItemModule/SET_SHELTER"];
+      const shouldUpdate = ["ShelterModule/SET_SHELTER"];
       if (shouldUpdate.includes(mutation.type)) {
         this.setLocalShelter(mutation.payload);
       }

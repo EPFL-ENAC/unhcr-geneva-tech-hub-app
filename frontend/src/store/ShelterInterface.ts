@@ -1,3 +1,9 @@
+import { SyncDatabase } from "@/utils/couchdb";
+export interface ShelterState {
+  shelter: Shelter;
+  shelters: Array<Shelter>;
+  localCouch: SyncDatabase<Shelter> | null;
+}
 export interface Shelter {
   _id: string;
   name: string;
@@ -16,16 +22,28 @@ export interface Shelter {
   risk_seismic: string;
 
   items: Item[];
+  envPerfItems: EnvPerf[];
+  totalEnvPerf: EnvPerf;
 
   habitability: Score;
   habitability_score: number | undefined;
   technical_performance: Score;
   technical_performance_score: number | undefined;
 
+  scorecard: ScoreCard;
   geometry: Geometry;
 
   users: string[];
   created_by: string;
+}
+
+export interface ScoreCard {
+  weight: number;
+  co2: number;
+  h2o: number;
+  techPerf: number;
+  habitability: number;
+  affordability: number;
 }
 export interface Geometry {
   shelter_geometry_type: string;
@@ -47,6 +65,7 @@ export enum Units {
   M2 = "m2",
   M3 = "m3",
   L = "l",
+  PCE = "pce",
 }
 
 export enum ItemTypes {
@@ -189,22 +208,25 @@ export const materialFunction = {
   },
 } as MaterialsFunction;
 
-export type itemTypes = "Labour" | "Material";
+export type itemTypes = "Labour" | "Material" | "Other";
 export interface Item {
   _id: string; // as uuid4
   itemType: itemTypes;
+  source: string | undefined; // country
   quantity: number;
   unitCost: number; // in USD
+  totalCost: number;
 }
 export interface Material extends Item {
-  name: string | undefined;
-  source: string | undefined;
-  materialId: string | undefined;
-  formId: string | undefined;
-  unit: Units | undefined;
-  dimensions: MaterialDimensions | undefined;
+  name: string;
+  materialId: string;
+  formId: string;
+  unit: Units;
+  dimensions: MaterialDimensions;
   embodiedCarbon: number;
+  embodiedCarbonTransport: number;
   embodiedWater: number;
+  weight: number;
 }
 export interface Labour extends Item {
   // 2 skilled worker for 2 day : 3USD per person
@@ -212,6 +234,11 @@ export interface Labour extends Item {
   workerType: WorkerType;
   unit: WorkLabourTimeUnit; // number of day/hours necessary for construction
 }
+export interface Other extends Item {
+  name: string | undefined;
+  unit: Units | undefined;
+}
+
 export interface MaterialReferenceData {
   density: number;
   density_ref: string; //"ICE DB V2.0 (2011)"
@@ -270,7 +297,6 @@ export interface WindowDimensions {
   Hs: number | undefined;
 }
 
-// TODO: improve types for unit and variables at least
 export interface ShelterMaterial {
   source: string; // : "EcoInvent 3.8\nbamboo pole production\nGLO (Global)",
   name: string; // : "Bamboo, pole",
@@ -283,4 +309,18 @@ export interface ShelterMaterial {
   embodied_water: number; // : 0.00234,
   embodied_water_ref: string; // source reference for embodied water
   _id: string; // : "BMB-POL_DEN"
+}
+
+export type EnvPerfRecord = Record<string, EnvPerf>;
+
+export interface EnvPerf {
+  material: string;
+  weight: number;
+  embodied_carbon_production: number;
+  embodied_carbon_transport: number;
+  embodied_carbon_total: number;
+  embodied_water: number;
+  unit_cost: number;
+  total_cost: number;
+  items: Item[];
 }

@@ -86,30 +86,12 @@ export default {
             ),
         },
         {
-          name: "ShelterSustainabilityStep8",
-          path: "8",
-          meta: { step: 8 },
-          component: () =>
-            import(
-              /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step8Affordability.vue"
-            ),
-        },
-        {
           name: "ShelterSustainabilityStep9",
           path: "9",
           meta: { step: 9 },
           component: () =>
             import(
               /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step9ScoreCard.vue"
-            ),
-        },
-        {
-          name: "ShelterSustainabilityStep10",
-          path: "10",
-          meta: { step: 9 },
-          component: () =>
-            import(
-              /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step10BackgroundData.vue"
             ),
         },
       ],

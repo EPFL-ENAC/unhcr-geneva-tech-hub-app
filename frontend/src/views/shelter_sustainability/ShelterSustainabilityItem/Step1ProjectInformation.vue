@@ -115,12 +115,14 @@
                           label="Site name"
                           type="text"
                         />
-                        <v-text-field
-                          id="location_country"
+                        <country-select
                           v-model="localShelter.location_country"
-                          name="location_country"
+                          required
+                          :rules="rules"
                           label="Country"
                           type="text"
+                          name="location_country"
+                          id="location_country"
                         />
                         <v-text-field
                           id="location_distance_from_capital"
@@ -249,6 +251,7 @@
 </template>
 
 <script lang="ts">
+import CountrySelect from "@/components/commons/CountrySelect.vue";
 import { Shelter } from "@/store/ShelterInterface";
 import { CouchUser } from "@/store/UserModule";
 import { cloneDeep } from "lodash";
@@ -257,11 +260,14 @@ import { mapActions, mapGetters, mapState } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("ShelterItemModule", ["shelter"]),
+    ...mapGetters("ShelterModule", ["shelter"]),
     ...mapState("UserModule", ["user"]),
   },
   methods: {
-    ...mapActions("ShelterItemModule", ["updateDoc"]),
+    ...mapActions("ShelterModule", ["updateDoc"]),
+  },
+  components: {
+    CountrySelect,
   },
 })
 /** Project */
@@ -344,7 +350,7 @@ export default class Step1 extends Vue {
     this.setLocalShelter();
 
     this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["ShelterItemModule/SET_SHELTER"];
+      const shouldUpdate = ["ShelterModule/SET_SHELTER"];
       if (shouldUpdate.includes(mutation.type)) {
         this.setLocalShelter();
       }
@@ -355,8 +361,7 @@ export default class Step1 extends Vue {
     this.syncLocalShelter();
   }
 
-  public addUser(value: string): void {
-    console.log("add new user", value, this.tab);
+  public addUser(): void {
     this.localShelter.users.push(this.newUser);
     this.newUser = "";
     this.submitForm(this.localShelter);
@@ -374,7 +379,6 @@ export default class Step1 extends Vue {
   }
 
   public submitForm(value: Shelter): void {
-    console.log("setter shelter", value, this.tab);
     if (value.name !== "") {
       this.updateDoc(value);
     } else {

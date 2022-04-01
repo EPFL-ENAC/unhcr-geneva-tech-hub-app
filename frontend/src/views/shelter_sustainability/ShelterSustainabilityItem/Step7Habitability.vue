@@ -31,10 +31,10 @@ import { mapActions, mapGetters } from "vuex";
     FormGroup,
   },
   computed: {
-    ...mapGetters("ShelterItemModule", ["shelter"]),
+    ...mapGetters("ShelterModule", ["shelter"]),
   },
   methods: {
-    ...mapActions("ShelterItemModule", ["updateDoc", "computeScore"]),
+    ...mapActions("ShelterModule", ["updateDoc"]),
   },
 })
 /** Project */
@@ -57,7 +57,7 @@ export default class Step7 extends Vue {
     this.setLocalShelter();
 
     this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["ShelterItemModule/SET_SHELTER"];
+      const shouldUpdate = ["ShelterModule/SET_SHELTER"];
       if (shouldUpdate.includes(mutation.type)) {
         this.setLocalShelter();
       }

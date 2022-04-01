@@ -210,7 +210,7 @@ import {
   ShelterDimensions,
   WindowDimensions,
 } from "@/store/ShelterInterface";
-import { getNewGeometry } from "@/store/ShelterListModule";
+import { getNewGeometry } from "@/store/ShelterModuleUtils";
 import { cloneDeep } from "lodash";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
@@ -223,10 +223,10 @@ for the original discussion
 */
 @Component({
   computed: {
-    ...mapGetters("ShelterItemModule", ["shelter"]),
+    ...mapGetters("ShelterModule", ["shelter"]),
   },
   methods: {
-    ...mapActions("ShelterItemModule", ["updateDoc"]),
+    ...mapActions("ShelterModule", ["updateDoc"]),
   },
 })
 /** Project */
@@ -252,7 +252,7 @@ export default class Step2Geometry extends Vue {
     this.setLocalShelter();
 
     this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["ShelterItemModule/SET_SHELTER"];
+      const shouldUpdate = ["ShelterModule/SET_SHELTER"];
       if (shouldUpdate.includes(mutation.type)) {
         this.setLocalShelter();
       }
@@ -392,7 +392,7 @@ export default class Step2Geometry extends Vue {
   dimensions = [
     { label: "Floor area", key: "floorArea", suffix: "m²" },
     { label: "Volume", key: "volume", suffix: "m³" },
-    { label: "Window area", key: "windowArea", suffix: "m²" },
+    { label: "Openings area", key: "windowArea", suffix: "m²" },
   ];
 
   geometries = [

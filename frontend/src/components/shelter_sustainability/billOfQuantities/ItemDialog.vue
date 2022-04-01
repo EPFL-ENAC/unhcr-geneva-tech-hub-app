@@ -5,7 +5,7 @@
       ref="form"
       :lazy-validation="false"
       v-model="formValid"
-      @submit.prevent="() => saveItem(localItem)"
+      @submit.prevent="() => submitFn()"
     >
       <v-card>
         <v-card-title>
@@ -111,7 +111,6 @@
                   label="Item Form"
                   v-model="localItem.formId"
                   item-text="form"
-                  @input="onFormSelect"
                   item-value="_id"
                   name="type"
                   type="string"
@@ -130,10 +129,8 @@
                 <!-- temporary disabled of units -->
               </v-col>
               <v-col cols="12" sm="6" md="6">
-                <!-- If Lump Sum then quantity is disabled for the user and default is 1 -->
                 <v-text-field
                   v-model.number="localItem.quantity"
-                  @input="onQuantityChange"
                   type="number"
                   label="Quantity"
                   required
@@ -152,6 +149,37 @@
                 ></v-text-field>
               </v-col>
               <!-- Spec will be below with rebar length width diameter etc  -->
+            </v-row>
+
+            <v-row v-else-if="localItem.itemType === 'Other'">
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                  v-model="localItem.name"
+                  label="Item name"
+                  required
+                  :rules="rules"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                  v-model.number="localItem.quantity"
+                  type="number"
+                  label="Quantity"
+                  required
+                  suffix="Pce"
+                  :rules="rules"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                  v-model="localItem.unitCost"
+                  type="number"
+                  suffix="$"
+                  label="Unit cost"
+                  required
+                  :rules="rules"
+                ></v-text-field>
+              </v-col>
             </v-row>
           </v-container>
         </v-card-text>
@@ -181,15 +209,17 @@ import {
   Item,
   Material,
   MaterialReferenceData,
+  Shelter,
   Units,
 } from "@/store/ShelterInterface";
 import { VForm } from "@/utils/vuetify";
 import { cloneDeep } from "lodash";
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
+    ...mapGetters("ShelterModule", ["shelter"]),
     ...mapGetters("ShelterBillOfQuantitiesModule", [
       "isItemDialogOpen",
       "editedItem",
@@ -207,6 +237,7 @@ import { mapActions, mapGetters } from "vuex";
       "setItem",
       "setItemToDefaultLabour",
       "setItemToDefaultMaterial",
+      "setItemToDefaultOther",
       "closeEditDialog",
       "setEditDialog",
       "setItem",
@@ -221,8 +252,10 @@ export default class DeleteItemDialog extends Vue {
   editedIndex!: number;
   isItemDialogOpen!: boolean;
   setItem!: (item: Item) => void;
+  saveItem!: (item: Item) => void;
   setItemToDefaultLabour!: () => void;
   setItemToDefaultMaterial!: () => void;
+  setItemToDefaultOther!: () => void;
   $refs!: {
     form: VForm;
   };
@@ -230,9 +263,10 @@ export default class DeleteItemDialog extends Vue {
   materialForms!: Record<string, MaterialReferenceData[]>;
   materialMap!: Record<string, MaterialReferenceData>;
   localItem: Item = {} as Item;
+  shelter!: Shelter;
 
   formValid = false;
-  itemTypes = ["Labour", "Material"];
+  itemTypes = ["Material", "Labour", "Other"];
   labourUnits = ["Hour", "Day", "Lump sum"];
   workerTypes = ["Skilled", "Unskilled"];
 
@@ -241,17 +275,16 @@ export default class DeleteItemDialog extends Vue {
   public get title(): string {
     return this.editedIndex === -1 ? "New item" : "Edit item";
   }
-  public onFormSelect(): void {
-    this.computeEmbodied();
+  public submitFn(): void {
+    this.computeCost();
+    this.saveItem(this.localItem);
   }
 
-  public onQuantityChange(): void {
-    this.computeEmbodied();
-  }
-
-  public computeEmbodied(): void {
-    const { quantity, formId, unit } = this.localItem as Material;
-    if (formId && quantity) {
+  public computeCost(): void {
+    // side effect function: TODO: transform to pure function and move to utils
+    const { quantity, formId, unit, unitCost } = this.localItem as Material;
+    const newValue = cloneDeep(this.localItem) as Material;
+    if (formId && quantity && unit) {
       const { embodied_carbon, embodied_water, density } =
         this.materialMap[formId];
 
@@ -263,11 +296,22 @@ export default class DeleteItemDialog extends Vue {
         const volume = 0; // TODO : fixme with form functions
         weight = density * volume;
       }
-      const newValue = this.localItem as Material;
+      newValue.weight = weight;
+
       newValue.embodiedCarbon = weight * embodied_carbon;
       newValue.embodiedWater = weight * embodied_water;
-      this.localItem = newValue;
+
+      // compute embodiedCarbonTransport
+      // TODO: replace by constant from table
+      const country_src_dst_embodied_carbon = 0.3;
+      newValue.embodiedCarbonTransport =
+        weight * country_src_dst_embodied_carbon;
     }
+    if (quantity && unitCost) {
+      // compute totalCost
+      newValue.totalCost = quantity * unitCost;
+    }
+    this.localItem = newValue;
   }
 
   private isMaterial(object: unknown): object is Material {
@@ -278,15 +322,15 @@ export default class DeleteItemDialog extends Vue {
   }
 
   public get currentMaterialForms(): MaterialReferenceData[] {
-    if (this.isMaterial(this.editedItem) && this.editedItem.materialId) {
-      return this.materialForms[this.editedItem.materialId];
+    if (this.isMaterial(this.localItem) && this.localItem.materialId) {
+      return this.materialForms[this.localItem.materialId];
     }
     return [] as MaterialReferenceData[];
   }
 
   public resetLocalItemFormId(): void {
     const clone = cloneDeep(this.localItem) as Material;
-    clone.formId = undefined;
+    clone.formId = "";
     this.localItem = clone;
     this.validate();
   }
@@ -306,24 +350,38 @@ export default class DeleteItemDialog extends Vue {
       this.setItemToDefaultLabour();
     } else if (newValue === "Material") {
       this.setItemToDefaultMaterial();
+    } else if (newValue === "Other") {
+      this.setItemToDefaultOther();
     }
-    this.setLocalItem();
+    // set default country
+    this.localItem.source = this.shelter.location_country;
     this.validate();
   }
 
-  @Watch("localItem", { deep: true })
-  onLocalItemChange(newValue: Item): void {
-    if (newValue) {
-      this.setItem(newValue);
+  private setLocalItem(value: Item) {
+    if (value) {
+      // thanks typescript
+      this.localItem = cloneDeep(value);
     }
   }
 
-  private setLocalItem() {
-    this.localItem = cloneDeep(this.editedItem);
+  public syncLocalItem(): void {
+    // init function
+    this.setLocalItem(this.editedItem);
+
+    this.$store.subscribe((mutation) => {
+      const shouldUpdate = [
+        "ShelterBillOfQuantitiesModule/SET_EDITED_ITEM",
+        "ShelterBillOfQuantitiesModule/RESET_EDITED_ITEM",
+      ];
+      if (shouldUpdate.includes(mutation.type)) {
+        this.setLocalItem(this.editedItem);
+      }
+    });
   }
 
-  mounted(): void {
-    this.setLocalItem();
+  created(): void {
+    this.syncLocalItem();
   }
 }
 </script>
