@@ -200,10 +200,12 @@ export default class EnergyResult extends Vue {
       };
       const sites: Site[] = [firstSite];
       for (let index = 1; index < this.years.length; index++) {
-        const previousSite = sites[index - 1];
-        const site = cloneDeep(previousSite);
-        site.proportions = this.getNewProportions(site);
-        sites[index] = site;
+        const oldSite = sites[index - 1];
+        const newSite = cloneDeep(oldSite);
+        newSite.populationCount =
+          oldSite.populationCount * scenario.demographicGrowth;
+        newSite.proportions = this.getNewProportions(oldSite);
+        sites[index] = newSite;
       }
       return sites;
     } else {

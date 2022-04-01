@@ -62,7 +62,12 @@
                   >
                     <td class="font-weight-bold">{{ property.text }}</td>
                     <td>
-                      {{ item[property.key] }}
+                      <template v-if="property.getDisplayValue">
+                        {{ property.getDisplayValue(item[property.key]) }}
+                      </template>
+                      <template v-else>
+                        {{ item[property.key] }}
+                      </template>
                       <template v-if="property.unit">
                         [{{ property.unit }}]
                       </template>
@@ -156,6 +161,7 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
     text: string;
     key: keyof TableItem;
     unit?: string;
+    getDisplayValue?: (value: number) => number | string;
   }[] = [
     {
       text: "Technology type",
@@ -165,6 +171,7 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
       text: "Energy efficiency",
       key: "energyEfficiency",
       unit: "%",
+      getDisplayValue: (value: number): number => value * 100,
     },
     {
       text: "Capacity",
@@ -194,10 +201,16 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
     {
       text: "IWA efficiency TIER",
       key: "iwaEfficiencyTier",
+      getDisplayValue: (value: number | [number, number]): string | number => {
+        return typeof value === "number" ? value : `${value[0]}-${value[1]}`;
+      },
     },
     {
       text: "IWA indoor emission TIER",
       key: "iwaIndoorEmissionTier",
+      getDisplayValue: (value: number | [number, number]): string | number => {
+        return typeof value === "number" ? value : `${value[0]}-${value[1]}`;
+      },
     },
     {
       text: "Fuel energy",
