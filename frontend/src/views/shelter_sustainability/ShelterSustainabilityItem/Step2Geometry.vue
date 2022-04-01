@@ -455,7 +455,7 @@ export default class Step2Geometry extends Vue {
     {
       _id: "others",
       hiddenInputs: true,
-      image_url: "/houses_new/SSC_P4_Shelter-Dome_220201.png",
+      image_url: "/houses_new/GTH-SSC_Graphics_Typology_Other_5.png",
     },
   ];
 }

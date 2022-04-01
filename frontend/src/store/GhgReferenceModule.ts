@@ -1,6 +1,3 @@
-import { GreenHouseGazReference } from "@/store/GhgInterface";
-import { MaterialReferenceData } from "@/store/ShelterInterface";
-import { SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -8,7 +5,11 @@ import {
   Module,
   MutationTree,
 } from "vuex";
+
+import { GreenHouseGazReference } from "@/store/GhgInterface";
+import { MaterialReferenceData } from "@/store/ShelterInterface";
 import { RootState } from ".";
+import { SyncDatabase } from "@/utils/couchdb";
 
 interface GhgReferenceState {
   reference: GreenHouseGazReference | null;
@@ -81,7 +82,6 @@ const actions: ActionTree<GhgReferenceState, RootState> = {
     if (db) {
       db.get(id)
         .then(function (result) {
-          console.log(result);
           context.commit("SET_REFERENCE", result);
           context.dispatch("setMaterialForm", result.materials);
         })

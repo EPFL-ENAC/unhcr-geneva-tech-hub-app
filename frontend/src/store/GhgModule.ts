@@ -1,6 +1,3 @@
-/** Config store */
-import { Country, GreenHouseGaz } from "@/store/GhgInterface";
-import { SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -8,8 +5,12 @@ import {
   Module,
   MutationTree,
 } from "vuex";
-import { RootState } from ".";
+/** Config store */
+import { Country, GreenHouseGaz } from "@/store/GhgInterface";
+
 import { CouchUser } from "./UserModule";
+import { RootState } from ".";
+import { SyncDatabase } from "@/utils/couchdb";
 
 const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 
@@ -148,7 +149,6 @@ const actions: ActionTree<ProjectsState, RootState> = {
     if (db) {
       db.get(id)
         .then(function (result) {
-          console.log(result);
           context.commit("SET_PROJECT", result);
         })
         .catch(function (err: Error) {

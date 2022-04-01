@@ -1,15 +1,16 @@
 import {
-  getSession as getSessionTool,
-  login as loginTool,
-  logout as logoutTool,
-} from "@/utils/couchdb";
-import {
   ActionContext,
   ActionTree,
   GetterTree,
   Module,
   MutationTree,
 } from "vuex";
+import {
+  getSession as getSessionTool,
+  login as loginTool,
+  logout as logoutTool,
+} from "@/utils/couchdb";
+
 import { RootState } from ".";
 
 /** Config store */
@@ -93,7 +94,6 @@ const actions: ActionTree<UserState, RootState> = {
     context.commit("SET_USER_LOADING");
     logoutTool()
       .then((response) => {
-        console.log("logout", response);
         context.commit("SET_USER", generateEmptyUser());
       })
       .finally(() => {
@@ -105,7 +105,6 @@ const actions: ActionTree<UserState, RootState> = {
     getSessionTool()
       .then((response) => {
         const user = response.data;
-        console.log(user.userCtx);
         context.commit("SET_USER", user.userCtx);
       })
       .finally(() => {

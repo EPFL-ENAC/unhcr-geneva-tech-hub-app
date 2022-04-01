@@ -1,4 +1,3 @@
-import { SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -6,7 +5,9 @@ import {
   Module,
   MutationTree,
 } from "vuex";
+
 import { RootState } from ".";
+import { SyncDatabase } from "@/utils/couchdb";
 
 interface SheltersTransportState {
   item: ShelterTransport;
@@ -100,7 +101,6 @@ const actions: ActionTree<SheltersTransportState, RootState> = {
     if (db) {
       db.get(id)
         .then(function (result) {
-          console.log(result);
           context.commit("SET_ITEM", result);
         })
         .catch(function (err: Error) {
