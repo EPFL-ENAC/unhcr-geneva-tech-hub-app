@@ -1,16 +1,15 @@
 import {
+  getSession as getSessionTool,
+  login as loginTool,
+  logout as logoutTool,
+} from "@/utils/couchdb";
+import {
   ActionContext,
   ActionTree,
   GetterTree,
   Module,
   MutationTree,
 } from "vuex";
-import {
-  getSession as getSessionTool,
-  login as loginTool,
-  logout as logoutTool,
-} from "@/utils/couchdb";
-
 import { RootState } from ".";
 
 /** Config store */
