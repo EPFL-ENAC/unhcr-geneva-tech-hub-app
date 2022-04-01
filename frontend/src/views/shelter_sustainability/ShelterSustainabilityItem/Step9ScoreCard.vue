@@ -59,7 +59,7 @@ import { mapActions, mapState } from "vuex";
   },
 })
 /** Project */
-export default class Step8Affordability extends Vue {
+export default class Step8ScoreCard extends Vue {
   shelter!: Shelter;
   updateDoc!: (doc: Shelter) => void;
 

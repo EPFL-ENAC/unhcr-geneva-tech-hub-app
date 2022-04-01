@@ -392,7 +392,7 @@ export default class Step2Geometry extends Vue {
   dimensions = [
     { label: "Floor area", key: "floorArea", suffix: "m²" },
     { label: "Volume", key: "volume", suffix: "m³" },
-    { label: "Window area", key: "windowArea", suffix: "m²" },
+    { label: "Openings area", key: "windowArea", suffix: "m²" },
   ];
 
   geometries = [

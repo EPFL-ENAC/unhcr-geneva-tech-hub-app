@@ -55,18 +55,18 @@ export interface FacilitySurvey {
 export interface GreenHouseGazReference {
   _id: string;
   iges_grid_2021: IgesItemInterface[];
-  energy: EnergyInterface;
+  energy: EnergyReferences;
   materials: ShelterMaterial[];
   // to be completed
 }
 
-export type EnergyInterface = Record<string, ReferenceItemInterface>;
+export type EnergyReferences = Record<string, ReferenceItemInterface>;
 export type referenceType = "number" | "percentage";
 export interface ReferenceItemInterface {
   description: string;
   value: number;
   type?: referenceType;
-  source: string;
+  source?: string;
 }
 
 export interface IgesItemInterface {

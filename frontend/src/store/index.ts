@@ -5,7 +5,7 @@ import GhgReferenceModule from "@/store/GhgReferenceModule";
 import ShelterBillOfQuantitiesModule from "@/store/ShelterBillOfQuantitiesModule";
 import ShelterItemModule from "@/store/ShelterItemModule";
 import ShelterListModule from "@/store/ShelterListModule";
-import ShelterMaterialsModule from "@/store/ShelterMaterialsModule";
+import SheltersTransportModule from "@/store/SheltersTransportModule";
 import UserModule from "@/store/UserModule";
 import Vue from "vue";
 import Vuex, {
@@ -175,7 +175,7 @@ const store: StoreOptions<RootState> = {
     ConfigModule,
     ShelterListModule,
     ShelterItemModule,
-    ShelterMaterialsModule,
+    SheltersTransportModule,
     ShelterBillOfQuantitiesModule,
     GhgModule,
     GhgReferenceModule,

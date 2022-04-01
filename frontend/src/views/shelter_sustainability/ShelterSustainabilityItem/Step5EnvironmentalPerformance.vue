@@ -24,11 +24,6 @@
             <v-container fluid>
               <v-row>
                 <v-col class="about-first-column d-flex justify-center" lg="12">
-                  <v-img
-                    max-width="70%"
-                    class="d-flex justify-center"
-                    src="/shelter/env_perf.png"
-                  ></v-img>
                 </v-col>
               </v-row>
             </v-container>

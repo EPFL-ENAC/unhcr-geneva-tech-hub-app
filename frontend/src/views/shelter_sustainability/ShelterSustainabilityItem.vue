@@ -68,20 +68,10 @@ export default class ProjectItem extends Vue {
       to: "ShelterSustainabilityStep7",
     },
     {
-      icon: "mdi-account-cash",
-      text: "Affordability",
-      to: "ShelterSustainabilityStep8",
-    },
-    {
       icon: "mdi-scoreboard",
       text: "Scorecard",
       to: "ShelterSustainabilityStep9",
     },
-    // {
-    //   icon: "mdi-database-arrow-right",
-    //   text: "Background",
-    //   to: "ShelterSustainabilityStep10",
-    // },
   ];
   mounted(): void {
     this.syncDB();

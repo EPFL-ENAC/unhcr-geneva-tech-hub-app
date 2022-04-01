@@ -31,14 +31,6 @@ export default {
               /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazDashboard/GreenHouseGazList.vue"
             ),
         },
-        {
-          path: "references",
-          name: "GreenHouseGazReferences",
-          component: () =>
-            import(
-              /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazDashboard/GreenHouseGazReferences.vue"
-            ),
-        },
       ],
     },
     {
