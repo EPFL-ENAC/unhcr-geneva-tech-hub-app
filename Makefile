@@ -10,7 +10,7 @@ run-database:
 	docker-compose up -d couchdb
 
 setup-database:
-	docker-compose up --build couchdb-setup
+	docker-compose up --build --force-recreate couchdb-setup
 
 test:
 	$(MAKE) -C frontend test

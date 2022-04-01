@@ -9,7 +9,9 @@
         :headers="tableHeaders"
         item-key="_id"
         :items="tableItems"
+        :items-per-page="5"
         show-expand
+        sort-by="index"
       >
         <template v-slot:expanded-item="{ headers, item }">
           <td class="pa-2" :colspan="headers.length">
@@ -91,6 +93,9 @@ import { mapState } from "vuex";
   },
 })
 export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCookingModule> {
+  cookingFuels!: CookingFuel[];
+  cookingStoves!: CookingStove[];
+
   readonly tableHeaders: DataTableHeader[] = [
     "name",
     "fuel",
@@ -130,7 +135,7 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
       unit: "years",
     },
     {
-      text: "Emission factor for CO2",
+      text: "Emission factor for CO",
       key: "emissionFactorCo",
       unit: "g/MJ delivered",
     },
@@ -147,10 +152,22 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
       text: "IWA indoor emission TIER",
       key: "iwaIndoorEmissionTier",
     },
+    {
+      text: "Fuel energy",
+      key: "energy",
+      unit: "MJ/kg",
+    },
+    {
+      text: "Fuel emission factor for CO2",
+      key: "emissionFactorCo2",
+      unit: "ton/ton of fuel",
+    },
+    {
+      text: "Fuel price",
+      key: "price",
+      unit: "$/kg",
+    },
   ];
-
-  cookingFuels!: CookingFuel[];
-  cookingStoves!: CookingStove[];
 
   module: HouseholdCookingModule = {
     categoryCookings: [],
@@ -169,27 +186,42 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
     if (this.initialModule) {
       this.module = cloneDeep(this.initialModule);
     } else {
-      this.module.categoryCookings = this.cookingStoves.map((item) => ({
-        stove: item,
-        categories: Object.fromEntries<CookingCategoryValue>(
-          socioEconomicCategories.map((item) => [
-            item,
-            {
-              countPerHousehold: 0,
-              useFactor: 0,
-              cookingTime: 0,
-            },
-          ])
-        ) as Record<SocioEconomicCategory, CookingCategoryValue>,
-      }));
+      this.module.categoryCookings = this.cookingStoves.map((item) => {
+        const fuel: CookingFuel = this.cookingFuels.find(
+          (fuel) => fuel._id === item.fuel
+        ) ?? {
+          _id: item.fuel,
+          name: item.fuel,
+          index: -1,
+          energy: 0,
+          emissionFactorCo2: 0,
+          price: 0,
+        };
+        return {
+          categories: Object.fromEntries<CookingCategoryValue>(
+            socioEconomicCategories.map((item) => [
+              item,
+              {
+                countPerHousehold: 0,
+                useFactor: 0,
+                cookingTime: 0,
+              },
+            ])
+          ) as Record<SocioEconomicCategory, CookingCategoryValue>,
+          stove: item,
+          fuel: fuel,
+        };
+      });
     }
     this.tableItems = this.module.categoryCookings.map((item) => ({
-      ...item.stove,
       ...item.categories,
+      ...item.fuel,
+      ...item.stove,
     }));
   }
 }
 
-type TableItem = CookingStove &
-  Record<SocioEconomicCategory, CookingCategoryValue>;
+type TableItem = Record<SocioEconomicCategory, CookingCategoryValue> &
+  CookingStove &
+  CookingFuel;
 </script>

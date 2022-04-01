@@ -3,5 +3,6 @@
   "name": "Biogas",
   "energy": 30.5,
   "emissionFactorCo2": 2.5,
-  "price": 0.4
+  "price": 0.4,
+  "index": 6
 }

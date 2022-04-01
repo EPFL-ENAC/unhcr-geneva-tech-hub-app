@@ -77,8 +77,9 @@ export interface GeneralCategory {
 
 export interface HouseholdCookingModule {
   categoryCookings: {
-    stove: CookingStove;
     categories: Record<SocioEconomicCategory, CookingCategoryValue>;
+    stove: CookingStove;
+    fuel: CookingFuel;
   }[];
 }
 
@@ -140,6 +141,7 @@ export interface Scenario {
 
 export interface CookingStove {
   _id: string;
+  index: number;
   name: string;
   fuel: "wood" | "charcoal" | "pellet" | "ethanol" | "kerosene";
   technologyType: "conventional" | "improved";
@@ -173,6 +175,7 @@ export interface CookingStove {
 
 export interface CookingFuel {
   _id: string;
+  index: number;
   name: string;
   /**
    * LHV

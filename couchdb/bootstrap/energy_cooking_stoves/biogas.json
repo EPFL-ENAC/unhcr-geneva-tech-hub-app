@@ -1,7 +1,7 @@
 {
   "_id": "biogas",
   "name": "Cook stove for burning gas (LPG, biogas)",
-  "fuel": "giogas",
+  "fuel": "biogas",
   "technologyType": "clean",
   "energyEfficiency": 0.35,
   "capacity": 1,
@@ -10,5 +10,6 @@
   "emissionFactorCo": 5.7,
   "emissionFactorPm": 150,
   "iwaEfficiencyTier": 3,
-  "iwaIndoorEmissionTier": 3
+  "iwaIndoorEmissionTier": 3,
+  "index": 14
 }

@@ -10,5 +10,6 @@
   "emissionFactorCo": 19,
   "emissionFactorPm": 1050,
   "iwaEfficiencyTier": 0,
-  "iwaIndoorEmissionTier": 0
+  "iwaIndoorEmissionTier": 0,
+  "index": 1
 }

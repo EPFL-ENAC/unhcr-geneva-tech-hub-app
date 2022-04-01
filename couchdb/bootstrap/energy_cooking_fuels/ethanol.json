@@ -3,5 +3,6 @@
   "name": "Ethanol",
   "energy": 31.1,
   "emissionFactorCo2": 2,
-  "price": 0.3
+  "price": 0.3,
+  "index": 3
 }

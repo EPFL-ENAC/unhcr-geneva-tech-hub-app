@@ -3,5 +3,6 @@
   "name": "Charcoal",
   "energy": 31,
   "emissionFactorCo2": 2,
-  "price": 0.18
+  "price": 0.18,
+  "index": 1
 }

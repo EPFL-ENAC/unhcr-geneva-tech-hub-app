@@ -10,8 +10,9 @@ def convert(filename: str, output: str):
     folder = os.path.join(output, os.path.splitext(os.path.basename(filename))[0])
     with open(filename, newline="") as file:
         reader = csv.DictReader(file)
-        for row in reader:
+        for index, row in enumerate(reader):
             item = {k: mapValue(v) for k, v in row.items()}
+            item["index"] = index
             with open(os.path.join(folder, f"{row['_id']}.json"), "w") as jsonFile:
                 json.dump(item, jsonFile, indent=2)
 
