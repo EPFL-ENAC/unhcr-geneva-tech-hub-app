@@ -46,6 +46,9 @@
                       :src="geometry.image_url"
                       :aria-label="geometry._id"
                     ></v-img>
+                    <v-btn icon @click.stop="selectedItem = geometry">
+                      <v-icon>mdi-magnify</v-icon>
+                    </v-btn>
                   </v-card-title>
                 </template>
                 <span>{{ geometry._id }}</span>
@@ -193,6 +196,13 @@
           <v-btn type="submit"> Save changes </v-btn>
         </v-col>
       </v-row>
+      <v-overlay v-if="selectedItem" @click="selectedItem = null">
+        <v-img
+          :src="selectedItem ? selectedItem.image_url : ''"
+          contain
+          @click="selectedItem = null"
+        ></v-img>
+      </v-overlay>
     </v-form>
   </v-container>
 </template>
@@ -235,6 +245,7 @@ export default class Step2Geometry extends Vue {
   updateDoc!: (doc: Shelter) => void;
 
   localShelter = {} as Shelter;
+  selectedItem = null;
 
   public setLocalShelter(): void {
     if (!this.shelter) {
@@ -455,7 +466,7 @@ export default class Step2Geometry extends Vue {
     {
       _id: "others",
       hiddenInputs: true,
-      image_url: "/houses_new/SSC_P4_Shelter-Dome_220201.png",
+      image_url: "/houses_new/GTH-SSC_Graphics_Typology_Other_5.png",
     },
   ];
 }

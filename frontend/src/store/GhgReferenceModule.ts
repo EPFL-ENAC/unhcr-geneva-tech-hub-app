@@ -81,7 +81,6 @@ const actions: ActionTree<GhgReferenceState, RootState> = {
     if (db) {
       db.get(id)
         .then(function (result) {
-          console.log(result);
           context.commit("SET_REFERENCE", result);
           context.dispatch("setMaterialForm", result.materials);
         })

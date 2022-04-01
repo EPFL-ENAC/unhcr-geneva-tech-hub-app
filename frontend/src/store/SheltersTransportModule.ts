@@ -100,7 +100,6 @@ const actions: ActionTree<SheltersTransportState, RootState> = {
     if (db) {
       db.get(id)
         .then(function (result) {
-          console.log(result);
           context.commit("SET_ITEM", result);
         })
         .catch(function (err: Error) {

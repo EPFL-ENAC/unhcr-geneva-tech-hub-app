@@ -148,7 +148,6 @@ const actions: ActionTree<ProjectsState, RootState> = {
     if (db) {
       db.get(id)
         .then(function (result) {
-          console.log(result);
           context.commit("SET_PROJECT", result);
         })
         .catch(function (err: Error) {
