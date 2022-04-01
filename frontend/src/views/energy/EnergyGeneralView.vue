@@ -19,7 +19,7 @@ import { Component } from "vue-property-decorator";
 })
 export default class EnergyGeneralView extends EnergyModuleMixin {
   save(module: GeneralModule): void {
-    this.modules.general = module;
+    this.$set(this.modules, "general", module);
   }
 }
 </script>

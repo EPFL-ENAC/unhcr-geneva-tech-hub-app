@@ -19,7 +19,7 @@ import { Component } from "vue-property-decorator";
 })
 export default class EnergyHouseholdCookingView extends EnergyModuleMixin {
   save(module: HouseholdCookingModule): void {
-    this.modules.householdCooking = module;
+    this.$set(this.modules, "householdCooking", module);
   }
 }
 </script>

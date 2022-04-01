@@ -76,11 +76,13 @@ export interface GeneralCategory {
 }
 
 export interface HouseholdCookingModule {
-  categoryCookings: {
-    categories: Record<SocioEconomicCategory, CookingCategoryValue>;
-    stove: CookingStove;
-    fuel: CookingFuel;
-  }[];
+  categoryCookings: CategoryCooking[];
+}
+
+export interface CategoryCooking {
+  categories: Record<SocioEconomicCategory, CookingCategoryValue>;
+  stove: CookingStove;
+  fuel: CookingFuel;
 }
 
 export interface CookingCategoryValue {

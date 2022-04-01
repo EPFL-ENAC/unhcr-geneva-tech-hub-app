@@ -19,7 +19,7 @@ import { Component } from "vue-property-decorator";
 })
 export default class EnergyScenarioView extends EnergyModuleMixin {
   save(module: ScenarioModule): void {
-    this.modules.scenario = module;
+    this.$set(this.modules, "scenario", module);
   }
 }
 </script>

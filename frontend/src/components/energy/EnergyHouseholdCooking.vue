@@ -4,7 +4,7 @@
     :initial-module="initialModule"
     @save="save"
   >
-    <template v-slot:append>
+    <template v-slot:prepend>
       <v-data-table
         :headers="tableHeaders"
         item-key="_id"
@@ -13,6 +13,44 @@
         show-expand
         sort-by="index"
       >
+        <template v-slot:top>
+          <v-toolbar dense flat>
+            <v-spacer></v-spacer>
+            <v-dialog v-model="addDialog" max-width="256px">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  color="primary"
+                  :disabled="addSelectItems.length === 0"
+                >
+                  <v-icon left>mdi-plus</v-icon>
+                  Add
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-text>
+                  <v-select
+                    v-model="addSelectedItem"
+                    hide-details="auto"
+                    :items="addSelectItems"
+                    label="Available technologies"
+                  ></v-select>
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn
+                    :disabled="!addSelectedItem"
+                    color="primary"
+                    @click="addItem(addSelectedItem)"
+                  >
+                    <v-icon left>mdi-plus</v-icon>
+                    Add
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-toolbar>
+        </template>
         <template v-slot:expanded-item="{ headers, item }">
           <td class="pa-2" :colspan="headers.length">
             <v-simple-table dense>
@@ -36,25 +74,25 @@
           </td>
         </template>
         <template
-          v-for="name in inputNumberColumnNames"
-          v-slot:[`item.${name}`]="{ item }"
+          v-for="cat in socioEconomicCategories"
+          v-slot:[`item.${cat}`]="{ item }"
         >
           <form-item-component
-            :key="name + '-count'"
-            v-model="item[name].countPerHousehold"
+            :key="cat + '-count'"
+            v-model="categoryCooking(item).categories[cat].countPerHousehold"
             type="number"
             label="Count per household"
           ></form-item-component>
           <form-item-component
-            :key="name + '-use'"
-            v-model="item[name].useFactor"
+            :key="cat + '-use'"
+            v-model="categoryCooking(item).categories[cat].useFactor"
             type="number"
             label="Use Factor"
             subtype="percent"
           ></form-item-component>
           <form-item-component
-            :key="name + '-time'"
-            v-model="item[name].cookingTime"
+            :key="cat + '-time'"
+            v-model="categoryCooking(item).categories[cat].cookingTime"
             type="number"
             label="Daily Cooking Time"
             unit="h"
@@ -62,7 +100,7 @@
         </template>
         <template v-slot:[`item.action`]="{ item }">
           <v-btn icon @click="deleteItem(item)">
-            <v-icon>mdi-delete</v-icon>
+            <v-icon>mdi-close</v-icon>
           </v-btn>
         </template>
       </v-data-table>
@@ -75,6 +113,7 @@ import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
 import {
+  CategoryCooking,
   CookingCategoryValue,
   CookingFuel,
   CookingStove,
@@ -82,9 +121,10 @@ import {
   socioEconomicCategories,
   SocioEconomicCategory,
 } from "@/models/energyModel";
-import { assign, cloneDeep, keys, pick, zip } from "lodash";
+import { SelectItemObject } from "@/utils/vuetify";
+import { chain, cloneDeep } from "lodash";
 import "vue-class-component/hooks";
-import { Component, Watch } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";
 import { mapState } from "vuex";
 
@@ -101,6 +141,7 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   cookingFuels!: CookingFuel[];
   cookingStoves!: CookingStove[];
 
+  readonly socioEconomicCategories = socioEconomicCategories;
   readonly tableHeaders: DataTableHeader[] = [
     "cookstoveName",
     "fuelName",
@@ -111,7 +152,6 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
     value: item,
     sortable: ["cookstoveName", "fuelName"].includes(item),
   }));
-  readonly inputNumberColumnNames: string[] = socioEconomicCategories;
   readonly tableExpandProperties: {
     text: string;
     key: keyof TableItem;
@@ -179,60 +219,92 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   module: HouseholdCookingModule = {
     categoryCookings: [],
   };
-  tableItems: TableItem[] = [];
+  addDialog = false;
+  addSelectedItem: CookingStove | null = null;
 
-  @Watch("tableItems", { deep: true })
-  onTableItemsChanged(tableItems: TableItem[]): void {
-    zip(this.module.categoryCookings, tableItems).forEach(([cooking, item]) => {
-      assign(cooking?.stove, pick(item, keys(cooking?.stove)));
-      assign(cooking?.categories, pick(item, keys(cooking?.categories)));
-    });
+  get addSelectItems(): SelectItemObject<string, CookingStove>[] {
+    const existingIds = new Set(this.tableItems.map((item) => item._id));
+    return chain(this.cookingStoves)
+      .filter((stove) => !existingIds.has(stove._id))
+      .sortBy((stove) => stove.index)
+      .map((stove) => ({
+        text: `${stove.name} - ${this.getFuel(stove).name}`,
+        value: stove,
+      }))
+      .value();
+  }
+
+  get tableItems(): TableItem[] {
+    return this.module.categoryCookings.map((item) => ({
+      ...item.categories,
+      ...item.stove,
+      ...item.fuel,
+      cookstoveName: item.stove.name,
+      fuelName: item.fuel.name,
+      _id: item.stove._id,
+      index: item.stove.index,
+    }));
   }
 
   created(): void {
     if (this.initialModule) {
       this.module = cloneDeep(this.initialModule);
     } else {
-      this.module.categoryCookings = this.cookingStoves.map((item) => {
-        const fuel: CookingFuel = this.cookingFuels.find(
-          (fuel) => fuel._id === item.fuel
-        ) ?? {
-          _id: item.fuel,
-          name: item.fuel,
-          index: -1,
-          energy: 0,
-          emissionFactorCo2: 0,
-          price: 0,
-        };
-        return {
-          categories: Object.fromEntries<CookingCategoryValue>(
-            socioEconomicCategories.map((item) => [
-              item,
-              {
-                countPerHousehold: 0,
-                useFactor: 0,
-                cookingTime: 0,
-              },
-            ])
-          ) as Record<SocioEconomicCategory, CookingCategoryValue>,
-          stove: item,
-          fuel: fuel,
-        };
-      });
+      this.module.categoryCookings = this.cookingStoves.map(
+        this.mapCategoryCooking
+      );
     }
-    this.tableItems = this.module.categoryCookings.map((item) => ({
-      ...item.categories,
-      ...item.fuel,
-      ...item.stove,
-      cookstoveName: item.stove.name,
-      fuelName: item.fuel.name,
-    }));
   }
 
-  deleteItem(item: TableItem): void {
-    this.tableItems = this.tableItems.filter(
-      (tableItem) => tableItem._id !== item._id
+  private getFuel(stove: CookingStove): CookingFuel {
+    return (
+      this.cookingFuels.find((fuel) => fuel._id === stove.fuel) ?? {
+        _id: stove.fuel,
+        name: stove.fuel,
+        index: -1,
+        energy: 0,
+        emissionFactorCo2: 0,
+        price: 0,
+      }
     );
+  }
+
+  private mapCategoryCooking(stove: CookingStove): CategoryCooking {
+    return {
+      categories: Object.fromEntries<CookingCategoryValue>(
+        socioEconomicCategories.map((item) => [
+          item,
+          {
+            countPerHousehold: 0,
+            useFactor: 0,
+            cookingTime: 0,
+          },
+        ])
+      ) as Record<SocioEconomicCategory, CookingCategoryValue>,
+      stove: cloneDeep(stove),
+      fuel: this.getFuel(stove),
+    };
+  }
+
+  addItem(item: CookingStove): void {
+    this.module.categoryCookings.push(this.mapCategoryCooking(item));
+    this.addDialog = false;
+  }
+
+  deleteItem(tableItem: TableItem): void {
+    this.module.categoryCookings = this.module.categoryCookings.filter(
+      (item) => item.stove._id !== tableItem._id
+    );
+  }
+
+  categoryCooking(item: TableItem): CategoryCooking {
+    const categoryCooking = this.module.categoryCookings.find(
+      (cooking) => cooking.stove._id === item._id
+    );
+    if (!categoryCooking) {
+      throw new Error(`id ${item._id} not found`);
+    }
+    return categoryCooking;
   }
 }
 

@@ -7,7 +7,7 @@
             <slot name="prepend"></slot>
           </v-col>
         </v-row>
-        <v-row v-if="items">
+        <v-row v-if="items.length > 0">
           <v-col>
             <v-row v-for="(rowItem, index) in items" :key="index">
               <template v-for="(item, index) in rowItem">
