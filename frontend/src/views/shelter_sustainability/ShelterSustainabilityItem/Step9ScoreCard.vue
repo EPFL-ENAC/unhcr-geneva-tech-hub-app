@@ -78,6 +78,7 @@ export default class Step8ScoreCard extends Vue {
 
   alpha = 0.2;
   alphaSecondary = 0.6;
+  primaryColor = `rgba(157,72,56,1)`;
   secondaryColor = `rgba(84,84,86,${this.alphaSecondary})`;
 
   configs = [
@@ -133,6 +134,7 @@ export default class Step8ScoreCard extends Vue {
   get option(): EChartsOption {
     const scorecards = this.scorecards ?? [];
     const secondaryColor = this.secondaryColor;
+    const primaryColor = this.primaryColor;
     const title: Record<string, string | number>[] = [];
     const singleAxis: Record<
       string,
@@ -167,9 +169,9 @@ export default class Step8ScoreCard extends Vue {
             const scor = item as ScoreCardScatter;
             const key = config.id as ScoreCardsKey;
             return {
-              value: [scor[key], 3],
+              value: [scor[key], scor.selected ? 4 : 2, key, scor],
               itemStyle: {
-                color: scor.selected ? config.colors.primary : secondaryColor, //config.colors.secondary,
+                color: scor.selected ? primaryColor : secondaryColor, //config.colors.secondary,
               },
             };
           }) ?? [],
@@ -186,10 +188,21 @@ export default class Step8ScoreCard extends Vue {
       },
       grid: {
         bottom: 42,
+        left: 500,
       },
       tooltip: {
         trigger: "axis",
         confine: true,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        formatter: (params: any): string => {
+          return params.reduce((acc: string, param: Serie) => {
+            acc = acc ? `${acc}<br/>` : "";
+            const key = param.value[2] as ScoreCardsKey;
+            const scorecard = param.value[3] as ScoreCardScatter;
+            const id = scorecard.id;
+            return `${acc}</div>${id}: ${scorecard[key]}</div>`;
+          }, "");
+        },
       },
     };
   }
@@ -203,7 +216,7 @@ export default class Step8ScoreCard extends Vue {
     // frontend/src/views/shelter_sustainability/ShelterSustainabilityItem.vue
     const id = decodeURIComponent(this.$route.params.id);
 
-    // this.getScorecards(id);
+    this.getScorecards(id);
     this.db?.onChange(() => {
       this.getScorecards(id);
     });
@@ -219,6 +232,7 @@ export default class Step8ScoreCard extends Vue {
 
 interface ScoreCardScatter extends ScoreCard {
   selected: boolean;
+  id: string;
 }
 interface Config {
   id: string;
@@ -229,7 +243,7 @@ interface Config {
   };
 }
 interface Serie {
-  value: number[];
+  value: (number | string | ScoreCardScatter)[];
 }
 
 type SymbSizeFn = (a: number[]) => number;

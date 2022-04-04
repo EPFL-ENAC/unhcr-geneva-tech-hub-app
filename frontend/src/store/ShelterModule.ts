@@ -99,13 +99,12 @@ const actions: ActionTree<ShelterState, RootState> = {
     return localCouch?.db
       .query("shelter/scorecards", { include_docs: true })
       .then(function (result) {
-        context.commit(
-          "SET_SCORECARDS",
-          result.rows
-            .filter((x) => x.value !== undefined)
-            .map((x) => ({ ...x.value, id: x.id, selected: x.id === id }))
-          // .sort((a,b) => a.selected > b.selected)
-        );
+        const scorecards = result.rows
+          .filter((x) => x.value !== undefined)
+          .map((x) => ({ ...x.value, id: x.id, selected: x.id === id }));
+        scorecards.sort((a, b) => Number(a.selected) - Number(b.selected));
+        // we needed to sort the scorecards, so the selected may appear at the end
+        context.commit("SET_SCORECARDS", scorecards);
       })
       .catch(function (err: Error) {
         console.log(err);

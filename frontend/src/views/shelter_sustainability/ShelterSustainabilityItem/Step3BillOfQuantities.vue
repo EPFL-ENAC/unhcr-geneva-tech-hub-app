@@ -45,13 +45,13 @@
               </template>
               <template v-slot:item.name="{ item }">
                 <span v-if="item.itemType === 'Labour'"
-                  >{{ item.itemType }} / {{ item.workerType }}
+                  >{{ item.itemType }} ({{ item.workerType }})
                 </span>
                 <span v-else-if="item.itemType === 'Material'">{{
                   item.name
                 }}</span>
                 <span v-else-if="item.itemType === 'Other'"
-                  >Other / {{ item.name }}</span
+                  >Other ({{ item.name }})</span
                 >
               </template>
               <template v-slot:item.source="{ item }">
@@ -141,7 +141,7 @@ export default class Step3Materials extends Vue {
       sortable: false,
       value: "name",
     },
-    { text: "Source", value: "source" },
+    { text: "Origin", value: "source" },
     { text: "Material", value: "materialId" },
     { text: "Form", value: "formId" },
     { text: "Quantity", value: "quantity" },
