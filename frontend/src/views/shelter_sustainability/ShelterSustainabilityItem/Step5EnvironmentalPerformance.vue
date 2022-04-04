@@ -37,6 +37,15 @@
                         item.items && slot.expand(!slot.isExpanded)
                     "
                   >
+                    <template v-slot:header>
+                      <thead>
+                        <tr>
+                          <th colspan="3"></th>
+                          <th colspan="3">Embodied carbon in kgCO2e/kg</th>
+                          <th colspan="3"></th>
+                        </tr>
+                      </thead>
+                    </template>
                     <template v-slot:expanded-item="{ headers, item }">
                       <td :colspan="headers.length">
                         <v-data-table
@@ -55,7 +64,7 @@
                 </v-col>
               </v-row>
               <v-row>
-                <v-col> GRAPH HERE </v-col>
+                <v-col> <graph-tree :items="items" /></v-col>
               </v-row>
               <v-row>
                 <v-col>
@@ -108,6 +117,7 @@
 </template>
 
 <script lang="ts">
+import GraphTree from "@/components/shelter_sustainability/billOfQuantities/graphTree.vue";
 import InfoGroup from "@/components/shelter_sustainability/InfoGroup.vue";
 import {
   EnvPerf,
@@ -119,6 +129,7 @@ import habitatRisks from "@/views/shelter_sustainability/ShelterSustainabilityIt
 import reuseRecycling from "@/views/shelter_sustainability/ShelterSustainabilityItem/reuseRecycling";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
+import { DataTableHeader } from "vuetify";
 import { mapGetters } from "vuex";
 
 @Component({
@@ -128,6 +139,7 @@ import { mapGetters } from "vuex";
   },
   components: {
     InfoGroup,
+    GraphTree,
   },
 })
 /** Project */
@@ -155,34 +167,39 @@ export default class Step3Materials extends Vue {
     return getFormIdItems(this.shelter.items);
   }
 
-  public get headers(): HeaderInterface[] {
+  public get headers(): DataTableHeader[] {
     return [
-      { text: "Material", value: "material", sortable: false },
-      { text: "Weight", value: "weight", sortable: false },
+      { text: "Material", value: "material", sortable: false, width: "100px" },
+      { text: "Weight in kg", value: "weight", sortable: false },
       {
-        text: "embodied_carbon_production in Kg/CO2",
+        text: "Production",
         value: "embodied_carbon_production",
         sortable: false,
       },
       {
-        text: "embodied_carbon_transport",
+        text: "Transport",
         value: "embodied_carbon_transport",
         sortable: false,
       },
       {
-        text: "embodied_carbon_total",
+        text: "Total",
         value: "embodied_carbon_total",
         sortable: false,
       },
-      { text: "embodied_water", value: "embodied_water", sortable: false },
-      { text: "unit_cost", value: "unit_cost", sortable: false },
-      { text: "total_cost", value: "total_cost", sortable: false },
-    ];
+      {
+        text: "Embodied water in L/kg",
+        value: "embodied_water",
+        sortable: false,
+      },
+      { text: "Unit cost in $", value: "unit_cost", sortable: false },
+      { text: "Total cost in $", value: "total_cost", sortable: false },
+    ].map((x) => ({ ...x, class: "test", cellClass: "class-test" }));
   }
 
-  public get headersSubItems(): HeaderInterface[] {
+  public get headersSubItems(): DataTableHeader[] {
     return [
-      { text: "Form", value: "formId", sortable: false },
+      { text: "", value: "data-null" },
+      { text: "Form", value: "formId", sortable: false, width: "100px" },
       { text: "Weight", value: "weight", sortable: false },
       {
         text: "embodied_carbon_production",
@@ -226,14 +243,29 @@ export default class Step3Materials extends Vue {
   }
 }
 
-interface HeaderInterface {
-  text: string;
-  align?: string;
-  sortable?: boolean;
-  value: string;
-}
 interface Info {
   id: string;
   description: string;
 }
 </script>
+
+<style scoped lang="scss">
+.v-data-table ::v-deep {
+  thead {
+    tr > th {
+      border: 1px solid rgba(0, 0, 0, 0.12);
+    }
+  }
+}
+.v-data-table tbody tr:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+.v-data-table
+  ::v-deep
+  .v-data-table__wrapper
+  tbody
+  tr.v-data-table__expanded__content {
+  box-shadow: none;
+}
+</style>

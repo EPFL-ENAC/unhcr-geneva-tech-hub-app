@@ -140,7 +140,7 @@
               </v-col>
               <v-col cols="12" sm="6" md="6">
                 <v-text-field
-                  v-model="localItem.unitCost"
+                  v-model.number="localItem.unitCost"
                   type="number"
                   suffix="$"
                   label="Unit cost"
@@ -172,7 +172,7 @@
               </v-col>
               <v-col cols="12" sm="6" md="6">
                 <v-text-field
-                  v-model="localItem.unitCost"
+                  v-model.number="localItem.unitCost"
                   type="number"
                   suffix="$"
                   label="Unit cost"

@@ -19,7 +19,6 @@
       <v-row>
         <v-col>
           <v-sheet elevation="2" rounded v-if="items">
-            <!-- {{ items }} {{ isItemDialogOpen }} -->
             <v-data-table
               :headers="headers"
               :items="items"
@@ -55,11 +54,9 @@
                 >
               </template>
               <template v-slot:item.source="{ item }">
-                <!-- todo default value for source for Labour/Other set to shelter default country  -->
                 {{ item.source }}
               </template>
               <template v-slot:item.formId="{ item }">
-                <!-- todo default value for source for Labour/Other set to shelter default country  -->
                 <span v-if="item.itemType === 'Material'">{{
                   materialMap[item.formId].form
                 }}</span>
@@ -67,11 +64,22 @@
               </template>
 
               <template v-slot:item.materialId="{ item }">
-                <!-- todo default value for source for Labour/Other set to shelter default country  -->
                 <span v-if="item.itemType === 'Material'">{{
                   item.materialId
                 }}</span>
                 <span v-else>--</span>
+              </template>
+
+              <template v-slot:item.quantity="{ item }">
+                <span>{{ item.quantity | formatNumber }}</span>
+              </template>
+
+              <template v-slot:item.unitCost="{ item }">
+                <span>{{ item.unitCost | formatNumber }}</span>
+              </template>
+
+              <template v-slot:item.totalCost="{ item }">
+                <span>{{ item.totalCost | formatNumber }}</span>
               </template>
 
               <template v-slot:item.actions="{ item }">
@@ -146,8 +154,8 @@ export default class Step3Materials extends Vue {
     { text: "Form", value: "formId" },
     { text: "Quantity", value: "quantity" },
     { text: "Unit", value: "unit" },
-    { text: "Unit cost", value: "unitCost" },
-    { text: "Total cost", value: "totalCost" },
+    { text: "Unit cost in $", value: "unitCost" },
+    { text: "Total cost in $", value: "totalCost" },
     { text: "", value: "actions", sortable: false },
   ];
 

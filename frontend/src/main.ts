@@ -1,3 +1,4 @@
+import filters from "@/plugins/filters";
 import User from "@/plugins/user";
 import "@fontsource/lato";
 import "font-proxima-nova-css/fonts.min.css";
@@ -14,6 +15,7 @@ import store from "./store";
 Vue.config.productionTip = false;
 
 Vue.use(User, { store });
+Vue.use(filters);
 
 export default new Vue({
   router,
