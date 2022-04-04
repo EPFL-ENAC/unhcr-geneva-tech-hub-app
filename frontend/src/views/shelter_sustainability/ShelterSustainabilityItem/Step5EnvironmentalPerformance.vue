@@ -54,6 +54,51 @@
                   </v-data-table>
                 </v-col>
               </v-row>
+              <v-row>
+                <v-col> GRAPH HERE </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-card>
+                    <v-card-title>
+                      <h2
+                        class="text-h5 project-shelter__h4 font-weight-medium"
+                      >
+                        Habitat risks
+                      </h2>
+                    </v-card-title>
+                    <v-card-text>
+                      <info-group
+                        v-for="risk in habitatRiskFiltered"
+                        :key="risk.id"
+                        :info="risk"
+                        :depth="2"
+                      />
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-card>
+                    <v-card-title>
+                      <h2
+                        class="text-h5 project-shelter__h4 font-weight-medium"
+                      >
+                        Reuse and recyle considerations
+                      </h2>
+                    </v-card-title>
+                    <v-card-text>
+                      <info-group
+                        v-for="info in reuseRecyclingFiltered"
+                        :key="info.id"
+                        :info="info"
+                        :depth="2"
+                      />
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
             </v-container>
           </v-sheet>
         </v-col>
@@ -63,8 +108,15 @@
 </template>
 
 <script lang="ts">
-import { EnvPerf, Shelter } from "@/store/ShelterInterface";
-import descriptions from "@/views/shelter_sustainability/ShelterSustainabilityItem/environementalPerformanceDescription";
+import InfoGroup from "@/components/shelter_sustainability/InfoGroup.vue";
+import {
+  EnvPerf,
+  MaterialReferenceData,
+  Shelter,
+} from "@/store/ShelterInterface";
+import { getFormIdItems } from "@/store/ShelterModuleUtils";
+import habitatRisks from "@/views/shelter_sustainability/ShelterSustainabilityItem/habitatRisks";
+import reuseRecycling from "@/views/shelter_sustainability/ShelterSustainabilityItem/reuseRecycling";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
@@ -72,16 +124,25 @@ import { mapGetters } from "vuex";
 @Component({
   computed: {
     ...mapGetters("ShelterModule", ["shelter"]),
-    ...mapGetters("GhgReferenceModule", ["materialMap"]),
+    ...mapGetters("GhgReferenceModule", ["materialMap", "materials"]),
+  },
+  components: {
+    InfoGroup,
   },
 })
 /** Project */
 export default class Step3Materials extends Vue {
   shelter!: Shelter;
   updateDoc!: (doc: Shelter) => void;
+  materialMap!: Record<string, MaterialReferenceData>;
 
   singleExpand = true;
   expanded = [];
+
+  showSubPanel = {} as Record<string, boolean>;
+  public toggle(key: string): void {
+    this.showSubPanel[key] = !this.showSubPanel[key];
+  }
 
   get items(): EnvPerf[] {
     const res = cloneDeep(this.shelter.envPerfItems) as EnvPerf[];
@@ -90,6 +151,10 @@ export default class Step3Materials extends Vue {
     }
     return res;
   }
+  get currentForms(): string[] {
+    return getFormIdItems(this.shelter.items);
+  }
+
   public get headers(): HeaderInterface[] {
     return [
       { text: "Material", value: "material", sortable: false },
@@ -140,7 +205,25 @@ export default class Step3Materials extends Vue {
     ];
   }
 
-  descriptions = descriptions;
+  get currentMaterials(): string[] {
+    return (
+      this.shelter.envPerfItems?.map(
+        (envPerf: EnvPerf): string => envPerf.material
+      ) ?? []
+    );
+  }
+  get habitatRiskFiltered(): Info[] {
+    return habitatRisks.filter(
+      (habitatRisk: Info) =>
+        this.currentMaterials.indexOf(habitatRisk.id) !== -1
+    );
+  }
+
+  get reuseRecyclingFiltered(): Info[] {
+    return reuseRecycling
+      .filter((info: Info) => this.currentForms.indexOf(info.id) !== -1)
+      .map((x) => ({ ...x, id: this.materialMap[x.id].form }));
+  }
 }
 
 interface HeaderInterface {
@@ -148,5 +231,9 @@ interface HeaderInterface {
   align?: string;
   sortable?: boolean;
   value: string;
+}
+interface Info {
+  id: string;
+  description: string;
 }
 </script>

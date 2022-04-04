@@ -83,16 +83,10 @@ export default class Step8ScoreCard extends Vue {
 
   configs = [
     {
-      id: "weight",
-      title: "Material efficiency",
-      colors: {
-        primary: `rgba(157,72,56,1)`, // secondary colour 2
-        secondary: `rgba(157,72,56,${this.alpha})`,
-      },
-    },
-    {
       id: "co2",
       title: "Embodied CO2",
+      description:
+        "Embodied CO2 score describes kg-CO2 per year (of intended use) per square meter (of habitable space), enabling comparison across shelters of differing size and durability.",
       colors: {
         primary: `rgba(84,84,86,1)`, // secondary colour 1
         secondary: `rgba(84,84,86,${this.alpha})`,
@@ -101,14 +95,40 @@ export default class Step8ScoreCard extends Vue {
     {
       id: "h2o",
       title: "Embodied water",
+      description:
+        "Embodied H2O score describes litres-H2O per year (of intended use) per square meter (of habitable space), enabling comparison across shelters of differing size and durability.",
       colors: {
         primary: `rgba(32,135,200,1)`, // primary colour
         secondary: `rgba(32,135,200,${this.alpha})`,
       },
     },
+
+    {
+      id: "weight",
+      title: "Material efficiency",
+      description:
+        "Material efficiency score describes total weight (kg) per year (of intended use) per square meter (of habitable space), enabling comparison across shelters of differing size and durability.",
+      colors: {
+        primary: `rgba(157,72,56,1)`, // secondary colour 2
+        secondary: `rgba(157,72,56,${this.alpha})`,
+      },
+    },
+
+    {
+      id: "affordability",
+      title: "Affordability",
+      description:
+        "Affordability score describes shelter cost (USD) per year (of intended use) per square meter (of habitable space), enabling comparison across shelters of differing size and durability.",
+      colors: {
+        primary: `rgba(248, 228, 210, 1)`, // seconday colour 5
+        secondary: `rgba(248, 228, 210, ${this.alpha})`,
+      },
+    },
     {
       id: "techPerf",
       title: "Technical performance",
+      description:
+        "Technical performance score is calculated from shelter characteristics identified in relation to: hazard-related structural performance, internal comfort, safety and security, and construction techniques.",
       colors: {
         primary: `rgba(212,140,116)`, // secondary colour 3
         secondary: `rgba(212,140,116, ${this.alpha})`,
@@ -117,17 +137,11 @@ export default class Step8ScoreCard extends Vue {
     {
       id: "habitability",
       title: "Habitability",
+      description:
+        "Habitability score is calculated from shelter characteristics identified in relation to: floor area, accessibility, privacy, artificial lighting, and complimentary facilities.",
       colors: {
         primary: `rgba(240,184,158,1)`, // secondary colour 4
         secondary: `rgba(240,184,158,${this.alpha})`,
-      },
-    },
-    {
-      id: "affordability",
-      title: "Affordability",
-      colors: {
-        primary: `rgba(248, 228, 210, 1)`, // seconday colour 5
-        secondary: `rgba(248, 228, 210, ${this.alpha})`,
       },
     },
   ];

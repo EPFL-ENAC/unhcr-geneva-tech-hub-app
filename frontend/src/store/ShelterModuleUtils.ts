@@ -24,6 +24,15 @@ export function isMaterial(object: unknown): object is Material {
   );
 }
 
+export function getFormIdItems(items: Item[] = []): string[] {
+  return items
+    .filter((el: Item) => {
+      // isMaterial
+      return isMaterial(el);
+    })
+    .map((el: Item) => (el as Material).formId);
+}
+
 export function getEnvPerfItems(items: Item[] = []): EnvPerf[] {
   const mats = items
     .filter((el: Item) => {
