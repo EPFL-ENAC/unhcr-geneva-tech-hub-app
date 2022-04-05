@@ -1,5 +1,5 @@
 import { RootState } from "@/store/index";
-import { Shelter, ShelterState } from "@/store/ShelterInterface";
+import { ScoreCard, Shelter, ShelterState } from "@/store/ShelterInterface";
 import {
   generateNewShelter,
   generateState,
@@ -25,6 +25,7 @@ const getters: GetterTree<ShelterState, RootState> = {
   shelters: (s): Array<Shelter> => s.shelters,
   shelter: (s): Shelter | null => s.shelter,
   db: (s): SyncDatabase<Shelter> | null => s.localCouch,
+  scorecards: (s): ScoreCard[] => s.scorecards,
 };
 
 /** Mutations */
@@ -43,6 +44,9 @@ const mutations: MutationTree<ShelterState> = {
     state.shelter.envPerfItems = getEnvPerfItems(value?.items ?? []);
     state.shelter.totalEnvPerf = getTotalEnvPerf(state.shelter.envPerfItems);
     state.shelter.scorecard = getScoreCard(value);
+  },
+  SET_SCORECARDS(state, value) {
+    state.scorecards = value;
   },
   ADD_DOC(state, value) {
     state.localCouch?.db
@@ -81,6 +85,26 @@ const actions: ActionTree<ShelterState, RootState> = {
           "SET_SHELTERS",
           result.rows.map((x) => x.value)
         );
+      })
+      .catch(function (err: Error) {
+        console.log(err);
+      });
+  },
+  getScorecards: (
+    context: ActionContext<ShelterState, RootState>,
+    id: string
+  ) => {
+    const localCouch = context.state.localCouch;
+    // shelters/_design/shelter/_view/scorecards?include_docs=true
+    return localCouch?.db
+      .query("shelter/scorecards", { include_docs: true })
+      .then(function (result) {
+        const scorecards = result.rows
+          .filter((x) => x.value !== undefined)
+          .map((x) => ({ ...x.value, id: x.id, selected: x.id === id }));
+        scorecards.sort((a, b) => Number(a.selected) - Number(b.selected));
+        // we needed to sort the scorecards, so the selected may appear at the end
+        context.commit("SET_SCORECARDS", scorecards);
       })
       .catch(function (err: Error) {
         console.log(err);

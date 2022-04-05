@@ -13,6 +13,7 @@ export function generateState(): ShelterState {
   return {
     shelter: {} as Shelter,
     shelters: [],
+    scorecards: [],
     localCouch: null,
   };
 }
@@ -21,6 +22,15 @@ export function isMaterial(object: unknown): object is Material {
     Object.prototype.hasOwnProperty.call(object, "materialId") &&
     Object.prototype.hasOwnProperty.call(object, "formId")
   );
+}
+
+export function getFormIdItems(items: Item[] = []): string[] {
+  return items
+    .filter((el: Item) => {
+      // isMaterial
+      return isMaterial(el);
+    })
+    .map((el: Item) => (el as Material).formId);
 }
 
 export function getEnvPerfItems(items: Item[] = []): EnvPerf[] {
@@ -83,26 +93,52 @@ export function getScoreCard(value: Shelter): ScoreCard {
     weight: 0, // l kg/m2/year
     co2: 0,
     h2o: 0,
-    techPerf: 0,
-    habitability: 0,
+    techPerf: value.technical_performance_score ?? 0,
+    habitability: value.habitability_score ?? 0,
     affordability: 0,
   };
   const { totalEnvPerf, shelter_lifespan, geometry } = value;
-  if (!shelter_lifespan || !geometry?.floorArea || !totalEnvPerf?.weight) {
+  if (!shelter_lifespan) {
+    console.log("Shelter lifespan not defined");
+  }
+  if (!geometry?.floorArea) {
+    console.log("Floor area not defined");
+  }
+  if (!shelter_lifespan || !geometry?.floorArea) {
     return returnValue;
   }
-  return {
-    weight: totalEnvPerf.weight / geometry.floorArea / shelter_lifespan, // l kg/m2/year
-    co2:
+  // start computing information here
+  if (totalEnvPerf?.total_cost) {
+    returnValue.affordability =
+      totalEnvPerf.total_cost / geometry.floorArea / shelter_lifespan;
+  } else {
+    console.log("total_cost not defined");
+  }
+
+  if (totalEnvPerf?.weight) {
+    returnValue.weight =
+      totalEnvPerf.weight / geometry.floorArea / shelter_lifespan;
+  } else {
+    console.log("weight not defined");
+  }
+
+  if (totalEnvPerf?.embodied_carbon_total) {
+    returnValue.co2 =
       totalEnvPerf.embodied_carbon_total /
       geometry.floorArea /
-      shelter_lifespan,
-    h2o: totalEnvPerf.embodied_water / geometry.floorArea / shelter_lifespan,
-    techPerf: value.technical_performance_score ?? 0,
-    habitability: value.habitability_score ?? 0,
-    affordability:
-      totalEnvPerf.total_cost / geometry.floorArea / shelter_lifespan,
-  };
+      shelter_lifespan;
+  } else {
+    console.log("embodied_carbon_total not defined");
+  }
+
+  if (totalEnvPerf?.embodied_water) {
+    returnValue.h2o =
+      totalEnvPerf.embodied_water / geometry.floorArea / shelter_lifespan;
+  } else {
+    console.log("embodied_carbon_total not defined");
+  }
+
+  return returnValue;
 }
 
 export function generateNewShelter(name: string): Shelter {

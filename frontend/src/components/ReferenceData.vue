@@ -15,14 +15,7 @@
 
     <v-divider></v-divider>
     <main class="green-house-gaz__references">
-      <v-tabs
-        v-model="tab"
-        class="fixed-tabs-bar"
-        centered
-        grow
-        :show-arrows="true"
-        elevation="2"
-      >
+      <v-tabs v-model="tab" centered grow :show-arrows="true" elevation="2">
         <v-tab v-for="item in menuItems" :key="item.tab">
           {{ item.tab }}
         </v-tab>
