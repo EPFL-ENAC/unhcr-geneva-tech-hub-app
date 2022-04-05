@@ -60,6 +60,7 @@ import { Component, Vue } from "vue-property-decorator";
   props: {
     form: {
       type: Object as () => ShelterForm,
+      default: { title: "" },
     },
     value: {
       type: Object as () => Score,

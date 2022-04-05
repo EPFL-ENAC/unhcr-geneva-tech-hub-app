@@ -60,7 +60,12 @@ use([
 
 @Component({
   computed: {
-    ...mapGetters("ShelterModule", ["shelter", "scorecards", "db"]),
+    ...mapGetters("ShelterModule", [
+      "shelter",
+      "scorecards",
+      "scorecard",
+      "db",
+    ]),
   },
   methods: {
     ...mapActions("ShelterModule", ["getScorecards"]),
@@ -145,6 +150,11 @@ export default class Step8ScoreCard extends Vue {
       },
     },
   ];
+
+  get scorecard(): ScoreCard {
+    return this.shelter?.scorecard ?? ({} as ScoreCard);
+  }
+
   get option(): EChartsOption {
     const scorecards = this.scorecards ?? [];
     const secondaryColor = this.secondaryColor;
@@ -162,7 +172,7 @@ export default class Step8ScoreCard extends Vue {
       title.push({
         textBaseline: "middle",
         top: ((idx + 0.5) * 100) / 7 + "%",
-        text: config.title,
+        text: `${config.title}: ${this.scorecard[config.id as ScoreCardsKey]}`,
       });
       singleAxis.push({
         left: 150,
