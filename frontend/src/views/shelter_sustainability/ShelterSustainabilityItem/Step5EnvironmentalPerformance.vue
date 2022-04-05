@@ -46,6 +46,33 @@
                         </tr>
                       </thead>
                     </template>
+                    <template v-slot:item.weight="{ item }">
+                      <span>{{ item.weight | formatNumber }} </span>
+                    </template>
+                    <template v-slot:item.embodied_carbon_production="{ item }">
+                      <span
+                        >{{ item.embodied_carbon_production | formatNumber }}
+                      </span>
+                    </template>
+                    <template v-slot:item.embodied_carbon_transport="{ item }">
+                      <span
+                        >{{ item.embodied_carbon_transport | formatNumber }}
+                      </span>
+                    </template>
+                    <template v-slot:item.embodied_carbon_total="{ item }">
+                      <span
+                        >{{ item.embodied_carbon_total | formatNumber }}
+                      </span>
+                    </template>
+                    <template v-slot:item.embodied_water="{ item }">
+                      <span>{{ item.embodied_water | formatNumber }} </span>
+                    </template>
+                    <template v-slot:item.unit_cost="{ item }">
+                      <span>{{ item.unit_cost | formatNumber }} </span>
+                    </template>
+                    <template v-slot:item.total_cost="{ item }">
+                      <span>{{ item.total_cost | formatNumber }} </span>
+                    </template>
                     <template v-slot:expanded-item="{ headers, item }">
                       <td :colspan="headers.length">
                         <v-data-table
