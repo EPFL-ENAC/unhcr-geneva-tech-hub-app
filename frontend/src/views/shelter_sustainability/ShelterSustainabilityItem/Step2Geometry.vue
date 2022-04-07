@@ -409,6 +409,7 @@ export default class Step2Geometry extends Vue {
   geometries = [
     {
       _id: "gableHW", // High wall
+      name: "Gable roof",
       image_url: "/houses_new/SSC_P1_Shelter-GableHW_220201.png",
       shelter_dimensions: ["L", "W", "H1", "H2"],
       door_dimensions: ["Wd", "Hd"],
@@ -421,22 +422,23 @@ export default class Step2Geometry extends Vue {
         return L * W * H1 + 0.5 * L * W * (H2 - H1);
       },
     },
-    {
-      _id: "gabelLW", // Low wall
-      image_url: "/houses_new/SSC_P2_Shelter-GableLW_220201.png",
-      shelter_dimensions: ["L", "W", "H1", "H2"],
-      door_dimensions: ["Wd", "Hd"],
-      window_dimensions: ["Ww", "Hw", "Hs"],
-      volumeFunction(shelterDimension: ShelterDimensions): number {
-        const { L, W, H1, H2 } = shelterDimension || {};
-        if (!L || !W || !H1 || !H2) {
-          return 0; // one dimension undefined volume is 0 by default
-        }
-        return L * W * H1 + 0.5 * L * W * (H2 - H1);
-      },
-    },
+    // {
+    //   _id: "gabelLW", // Low wall
+    //   image_url: "/houses_new/SSC_P2_Shelter-GableLW_220201.png",
+    //   shelter_dimensions: ["L", "W", "H1", "H2"],
+    //   door_dimensions: ["Wd", "Hd"],
+    //   window_dimensions: ["Ww", "Hw", "Hs"],
+    //   volumeFunction(shelterDimension: ShelterDimensions): number {
+    //     const { L, W, H1, H2 } = shelterDimension || {};
+    //     if (!L || !W || !H1 || !H2) {
+    //       return 0; // one dimension undefined volume is 0 by default
+    //     }
+    //     return L * W * H1 + 0.5 * L * W * (H2 - H1);
+    //   },
+    // },
     {
       _id: "flatRoof",
+      name: "Single pitch roof",
       image_url: "/houses_new/SSC_P3_Shelter-FlatRoof_220201.png",
       shelter_dimensions: ["L", "W", "H"],
       door_dimensions: ["Wd", "Hd"],
@@ -451,6 +453,7 @@ export default class Step2Geometry extends Vue {
     },
     {
       _id: "dome",
+      name: "Dome",
       image_url: "/houses_new/SSC_P4_Shelter-Dome_220201.png",
       shelter_dimensions: ["L", "W", "H"],
       door_dimensions: ["Wd", "Hd"],
@@ -464,7 +467,8 @@ export default class Step2Geometry extends Vue {
       },
     },
     {
-      _id: "others",
+      _id: "other",
+      name: "Other",
       hiddenInputs: true,
       image_url: "/houses_new/GTH-SSC_Graphics_Typology_Other_5.png",
     },

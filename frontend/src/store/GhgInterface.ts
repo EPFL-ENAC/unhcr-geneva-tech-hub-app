@@ -1,4 +1,4 @@
-import { ShelterMaterial } from "@/store/ShelterInterface";
+import { MaterialReferenceData } from "@/store/ShelterInterface";
 
 export type CountriesInfoMap = Record<string, CountryInfo>;
 export interface Country {
@@ -56,7 +56,7 @@ export interface GreenHouseGazReference {
   _id: string;
   iges_grid_2021: IgesItemInterface[];
   energy: EnergyReferences;
-  materials: ShelterMaterial[];
+  materials: MaterialReferenceData[];
   // to be completed
 }
 

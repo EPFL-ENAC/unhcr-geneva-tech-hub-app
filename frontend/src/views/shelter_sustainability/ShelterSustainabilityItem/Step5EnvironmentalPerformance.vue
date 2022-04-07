@@ -40,6 +40,17 @@
                     <template v-slot:header>
                       <thead>
                         <tr>
+                          <th colspan="1"></th>
+                          <th colspan="1">Material</th>
+                          <th colspan="3">Embodied carbon in kgCO2e/kg</th>
+                          <th colspan="3"></th>
+                        </tr>
+                        <tr>
+                          <th colspan="3"></th>
+                          <th colspan="3">Embodied carbon in kgCO2e/kg</th>
+                          <th colspan="3"></th>
+                        </tr>
+                        <tr>
                           <th colspan="3"></th>
                           <th colspan="3">Embodied carbon in kgCO2e/kg</th>
                           <th colspan="3"></th>
@@ -67,12 +78,12 @@
                     <template v-slot:item.embodied_water="{ item }">
                       <span>{{ item.embodied_water | formatNumber }} </span>
                     </template>
-                    <template v-slot:item.unit_cost="{ item }">
+                    <!-- <template v-slot:item.unit_cost="{ item }">
                       <span>{{ item.unit_cost | formatNumber }} </span>
                     </template>
                     <template v-slot:item.total_cost="{ item }">
                       <span>{{ item.total_cost | formatNumber }} </span>
-                    </template>
+                    </template> -->
                     <template v-slot:expanded-item="{ headers, item }">
                       <td :colspan="headers.length">
                         <v-data-table
@@ -147,8 +158,8 @@
 import GraphTree from "@/components/shelter_sustainability/billOfQuantities/graphTree.vue";
 import InfoGroup from "@/components/shelter_sustainability/InfoGroup.vue";
 import {
-  EnvPerf,
   MaterialReferenceData,
+  MaterialTree,
   Shelter,
 } from "@/store/ShelterInterface";
 import { getFormIdItems } from "@/store/ShelterModuleUtils";
@@ -183,8 +194,8 @@ export default class Step3Materials extends Vue {
     this.showSubPanel[key] = !this.showSubPanel[key];
   }
 
-  get items(): EnvPerf[] {
-    const res = cloneDeep(this.shelter.envPerfItems) as EnvPerf[];
+  get items(): MaterialTree[] {
+    const res = cloneDeep(this.shelter.envPerfItems) as MaterialTree[];
     if (this.shelter?.totalEnvPerf) {
       res.push(this.shelter?.totalEnvPerf);
     }
@@ -196,30 +207,35 @@ export default class Step3Materials extends Vue {
 
   public get headers(): DataTableHeader[] {
     return [
-      { text: "Material", value: "material", sortable: false, width: "100px" },
+      {
+        text: "Material",
+        value: "materialId",
+        sortable: false,
+        width: "100px",
+      },
       { text: "Weight in kg", value: "weight", sortable: false },
       {
         text: "Production",
-        value: "embodied_carbon_production",
+        value: "embodiedCarbonProduction",
         sortable: false,
       },
       {
         text: "Transport",
-        value: "embodied_carbon_transport",
+        value: "embodiedCarbonTransport",
         sortable: false,
       },
       {
         text: "Total",
-        value: "embodied_carbon_total",
+        value: "embodiedCarbonTotal",
         sortable: false,
       },
       {
         text: "Embodied water in L/kg",
-        value: "embodied_water",
+        value: "embodiedWater",
         sortable: false,
       },
-      { text: "Unit cost in $", value: "unit_cost", sortable: false },
-      { text: "Total cost in $", value: "total_cost", sortable: false },
+      // { text: "Unit cost in $", value: "unit_cost", sortable: false },
+      // { text: "Total cost in $", value: "total_cost", sortable: false },
     ].map((x) => ({ ...x, class: "test", cellClass: "class-test" }));
   }
 
@@ -229,30 +245,30 @@ export default class Step3Materials extends Vue {
       { text: "Form", value: "formId", sortable: false, width: "100px" },
       { text: "Weight", value: "weight", sortable: false },
       {
-        text: "embodied_carbon_production",
-        value: "embodiedCarbon",
+        text: "Embodied carbon production",
+        value: "embodiedCarbonProduction",
         sortable: false,
       },
       {
-        text: "embodied_carbon_transport",
+        text: "Embodied carbon transport",
         value: "embodiedCarbonTransport",
         sortable: false,
       },
       {
-        text: "embodied_carbon_total",
-        value: "embodied_carbon_total",
+        text: "Embodied carbon total",
+        value: "embodiedCarbonTotal",
         sortable: false,
       },
-      { text: "embodied_water", value: "embodiedWater", sortable: false },
-      { text: "unit_cost", value: "unitCost", sortable: false },
-      { text: "total_cost", value: "totalCost", sortable: false },
+      { text: "Embodied water", value: "embodiedWater", sortable: false },
+      { text: "Unit cost", value: "unitCost", sortable: false },
+      { text: "Total cost", value: "totalCost", sortable: false },
     ];
   }
 
   get currentMaterials(): string[] {
     return (
-      this.shelter.envPerfItems?.map(
-        (envPerf: EnvPerf): string => envPerf.material
+      this.shelter.envPerfItems.map(
+        (envPerf: MaterialTree): string => envPerf.materialId as string
       ) ?? []
     );
   }

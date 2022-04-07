@@ -1,9 +1,9 @@
 import {
-  EnvPerf,
-  EnvPerfRecord,
   Geometry,
   Item,
   Material,
+  MaterialTree,
+  MaterialTreeRecord,
   ScoreCard,
   Shelter,
   ShelterState,
@@ -33,58 +33,51 @@ export function getFormIdItems(items: Item[] = []): string[] {
     .map((el: Item) => (el as Material).formId);
 }
 
-export function getEnvPerfItems(items: Item[] = []): EnvPerf[] {
-  const mats = items
-    .filter((el: Item) => {
-      // isMaterial
-      return isMaterial(el);
-    })
-    .reduce((acc, n: Item) => {
-      const el = n as Material;
-      // only if el is a Material
-      const prevMat = acc[el.materialId];
-      const items = prevMat?.items
-        ? prevMat.items.push(el) && prevMat.items
-        : [el];
-      acc[el.materialId] = {
-        material: el.materialId,
-        weight: el.weight + (prevMat?.weight ?? 0),
-        embodied_carbon_production:
-          el.embodiedCarbon + (prevMat?.embodied_carbon_production ?? 0),
-        embodied_carbon_transport:
-          el.embodiedCarbonTransport +
-          (prevMat?.embodied_carbon_transport ?? 0),
-        embodied_carbon_total:
-          el.embodiedCarbon +
-          el.embodiedCarbonTransport +
-          (prevMat?.embodied_carbon_total ?? 0),
-        embodied_water: el.embodiedWater + (prevMat?.embodied_water ?? 0),
-        unit_cost: el.unitCost + (prevMat?.unit_cost ?? 0),
-        total_cost: el.totalCost + (prevMat?.total_cost ?? 0),
-        items,
-      } as EnvPerf;
-      return acc;
-    }, {} as EnvPerfRecord);
-  return Object.values(mats) as EnvPerf[];
+export function getEnvPerfItems(items: Item[] = []): MaterialTree[] {
+  const mats = items.filter(isMaterial).reduce((acc, n: Item) => {
+    const el = n as Material;
+    const prevMat = acc[el.materialId];
+    const items = prevMat?.children
+      ? prevMat.children.push(el) && prevMat.children
+      : [el];
+    acc[el.materialId] = {
+      materialId: el.materialId,
+      formId: "",
+      weight: el.weight + (prevMat?.weight ?? 0),
+      embodiedCarbonProduction:
+        el.embodiedCarbonProduction + (prevMat?.embodiedCarbonProduction ?? 0),
+      embodiedCarbonTransport:
+        el.embodiedCarbonTransport + (prevMat?.embodiedCarbonTransport ?? 0),
+      embodiedCarbonTotal:
+        el.embodiedCarbonTotal + (prevMat?.embodiedCarbonTotal ?? 0),
+      embodiedWater: el.embodiedWater + (prevMat?.embodiedWater ?? 0),
+      unitCost: el.unitCost + (prevMat?.unitCost ?? 0),
+      totalCost: el.totalCost + (prevMat?.totalCost ?? 0),
+      items,
+    } as MaterialTree;
+    return acc;
+  }, {} as MaterialTreeRecord);
+  return Object.values(mats) as MaterialTree[];
 }
 
-export function getTotalEnvPerf(values: EnvPerf[]): EnvPerf {
+export function getTotalEnvPerf(values: MaterialTree[]): MaterialTree {
+  // TODO: for unitCost and totalCost add also labour and other
   return values.reduce(
     (acc, el) => {
       acc.weight = el.weight + (acc?.weight ?? 0);
-      acc.embodied_carbon_production =
-        el.embodied_carbon_production + (acc?.embodied_carbon_production ?? 0);
-      acc.embodied_carbon_transport =
-        el.embodied_carbon_transport + (acc?.embodied_carbon_transport ?? 0);
-      acc.embodied_carbon_total =
-        el.embodied_carbon_total + (acc?.embodied_carbon_total ?? 0);
-      acc.embodied_water = el.embodied_water + (acc?.embodied_water ?? 0);
-      acc.unit_cost = el.unit_cost + (acc?.unit_cost ?? 0);
-      acc.total_cost = el.total_cost + (acc?.total_cost ?? 0);
+      acc.embodiedCarbonProduction =
+        el.embodiedCarbonProduction + (acc?.embodiedCarbonProduction ?? 0);
+      acc.embodiedCarbonTransport =
+        el.embodiedCarbonTransport + (acc?.embodiedCarbonTransport ?? 0);
+      acc.embodiedCarbonTotal =
+        el.embodiedCarbonTotal + (acc?.embodiedCarbonTotal ?? 0);
+      acc.embodiedWater = el.embodiedWater + (acc?.embodiedWater ?? 0);
+      acc.unitCost = el.unitCost + (acc?.unitCost ?? 0);
+      acc.totalCost = el.totalCost + (acc?.totalCost ?? 0);
 
       return acc;
     },
-    { material: "Total" } as EnvPerf
+    { materialId: "Total" } as MaterialTree
   );
 }
 
@@ -108,9 +101,9 @@ export function getScoreCard(value: Shelter): ScoreCard {
     return returnValue;
   }
   // start computing information here
-  if (totalEnvPerf?.total_cost) {
+  if (totalEnvPerf?.totalCost) {
     returnValue.affordability =
-      totalEnvPerf.total_cost / geometry.floorArea / shelter_lifespan;
+      totalEnvPerf.totalCost / geometry.floorArea / shelter_lifespan;
   } else {
     console.log("total_cost not defined");
   }
@@ -122,18 +115,16 @@ export function getScoreCard(value: Shelter): ScoreCard {
     console.log("weight not defined");
   }
 
-  if (totalEnvPerf?.embodied_carbon_total) {
+  if (totalEnvPerf?.embodiedCarbonTotal) {
     returnValue.co2 =
-      totalEnvPerf.embodied_carbon_total /
-      geometry.floorArea /
-      shelter_lifespan;
+      totalEnvPerf.embodiedCarbonTotal / geometry.floorArea / shelter_lifespan;
   } else {
     console.log("embodied_carbon_total not defined");
   }
 
-  if (totalEnvPerf?.embodied_water) {
+  if (totalEnvPerf?.embodiedWater) {
     returnValue.h2o =
-      totalEnvPerf.embodied_water / geometry.floorArea / shelter_lifespan;
+      totalEnvPerf.embodiedWater / geometry.floorArea / shelter_lifespan;
   } else {
     console.log("embodied_carbon_total not defined");
   }

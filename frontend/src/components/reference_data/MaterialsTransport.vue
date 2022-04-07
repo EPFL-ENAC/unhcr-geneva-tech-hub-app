@@ -114,6 +114,9 @@
         :server-items-length="itemsLength"
         hide-default-footer
       >
+        <template v-slot:item.source="{ item }">
+          {{ item.source.split("_")[0] }}
+        </template>
         <template v-slot:foot="{ pagination, options, updateOptions }">
           <v-data-footer
             :pagination="pagination"
@@ -224,9 +227,14 @@ export default class MaterialsTransport extends Vue {
       console.log("DESTROYED view reference list, closing DB");
     });
   }
+  public getSourceCountry(key: string): Record<string, string> {
+    const [source, destination] = key.split("_");
+    return { source, destination };
+  }
 
   public get headers(): HeaderInterface[] {
-    //     _id: string; // 'AAA_BBB' source country (AAA) / destination country (BBB) in iso3166 3 letters
+    // _id: string; // 'AAA_BBB' source country (AAA) / destination country (BBB)
+    // in iso3166 3 letters
     // t: number; // Transport   embodied carbon  kgCO2/kg (i.e. local materials)
     // o: number; // Transport   embodied carbon  kgCO2/kg (all others materials)
     return [

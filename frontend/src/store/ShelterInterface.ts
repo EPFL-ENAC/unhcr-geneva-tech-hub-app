@@ -23,8 +23,8 @@ export interface Shelter {
   risk_seismic: string;
 
   items: Item[];
-  envPerfItems: EnvPerf[];
-  totalEnvPerf: EnvPerf;
+  envPerfItems: MaterialTree[];
+  totalEnvPerf: MaterialTree;
 
   habitability: Score;
   habitability_score: number | undefined;
@@ -224,11 +224,34 @@ export interface Material extends Item {
   formId: string;
   unit: Units;
   dimensions: MaterialDimensions;
-  embodiedCarbon: number;
+  embodiedCarbonProduction: number;
   embodiedCarbonTransport: number;
+  embodiedCarbonTotal: number;
   embodiedWater: number;
   weight: number;
 }
+export type MaterialKeys = keyof Material;
+export interface MaterialTree {
+  materialId?: string;
+  formId?: string;
+  embodiedCarbonProduction: number;
+  embodiedCarbonTransport: number;
+  embodiedCarbonTotal: number;
+  embodiedWater: number;
+  weight: number;
+  unitCost: number;
+  totalCost: number;
+  children?: Material[];
+}
+
+// TODO this afternoon
+// rewrite embodiedCarbon by embodedCarbonProduction
+// add embodiedCarbonTotal
+// compute items at save (store instead of component scope)
+
+export type MaterialTreeKey = keyof MaterialTree;
+export type MaterialTreeRecord = Record<string, MaterialTree>;
+
 export interface Labour extends Item {
   // 2 skilled worker for 2 day : 3USD per person
   // 1 unskilled worker for 1 day: 1 USD per person
@@ -238,20 +261,6 @@ export interface Labour extends Item {
 export interface Other extends Item {
   name: string | undefined;
   unit: Units | undefined;
-}
-
-export interface MaterialReferenceData {
-  density: number;
-  density_ref: string; //"ICE DB V2.0 (2011)"
-  density_unit: string; //"kg/m3"
-  embodied_carbon: number; // kgCO2e/kg
-  embodied_carbon_ref: string; //"ICE DB V3.0 (10.11.2019)"
-  embodied_water: number; //
-  embodied_water_ref: string; //"EcoInvent 3.8, aluminium alloy production, Metallic Matrix Composite, GLO (Global)"
-  form: string; // "Composite panel"
-  material: string; //"Aluminium"
-  units: string[]; //['KG', 'M2', 'PCE']
-  _id: string; // "ALU-CPA_"
 }
 
 export enum WorkerType {
@@ -297,31 +306,17 @@ export interface WindowDimensions {
   Hw: number | undefined;
   Hs: number | undefined;
 }
-
-export interface ShelterMaterial {
-  source: string; // : "EcoInvent 3.8\nbamboo pole production\nGLO (Global)",
-  name: string; // : "Bamboo, pole",
-  density: number; // : 700,
-  density_ref: string;
-  variable: string; // : "BMB-POL_DEN",
-  embodied_carbon: number; // : 0.72,
-  embodied_carbon_ref: string;
-  unit: string; // : "L/kg",
-  embodied_water: number; // : 0.00234,
-  embodied_water_ref: string; // source reference for embodied water
-  _id: string; // : "BMB-POL_DEN"
-}
-
-export type EnvPerfRecord = Record<string, EnvPerf>;
-
-export interface EnvPerf {
-  material: string;
-  weight: number;
-  embodied_carbon_production: number;
-  embodied_carbon_transport: number;
-  embodied_carbon_total: number;
-  embodied_water: number;
-  unit_cost: number;
-  total_cost: number;
-  items: Item[];
+export interface MaterialReferenceData {
+  local: boolean; //
+  density: number;
+  density_ref: string; //"ICE DB V2.0 (2011)"
+  density_unit: string; //"kg/m3"
+  embodied_carbon: number; // kgCO2e/kg
+  embodied_carbon_ref: string; //"ICE DB V3.0 (10.11.2019)"
+  embodied_water: number; //
+  embodied_water_ref: string; //"EcoInvent 3.8, aluminium alloy production, Metallic Matrix Composite, GLO (Global)"
+  form: string; // "Composite panel"
+  material: string; //"Aluminium"
+  units: string[]; //['KG', 'M2', 'PCE']
+  _id: string; // "ALU-CPA_"
 }

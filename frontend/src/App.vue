@@ -98,11 +98,6 @@
     </v-navigation-drawer>
 
     <v-main v-if="$user('isLoggedOut')">
-      <!-- <v-row v-if="$router.currentRoute.name !== 'Login'">
-        <v-col :cols="12">
-          <v-alert type="warning"> You are not logged in </v-alert>
-        </v-col>
-      </v-row> -->
       <v-container
         class="login"
         fluid
@@ -119,11 +114,13 @@
     </v-main>
 
     <v-main v-else class="d-flex">
-      <reference-data />
-      <v-fade-transition mode="out-in">
-        <router-view />
-        <router-view name="Login" />
-      </v-fade-transition>
+      <v-container fluid>
+        <reference-data />
+        <v-fade-transition mode="out-in">
+          <router-view />
+          <router-view name="Login" />
+        </v-fade-transition>
+      </v-container>
     </v-main>
 
     <v-overlay v-model="loading">

@@ -5,72 +5,79 @@
 </template>
 
 <script lang="ts">
-import { TreemapChart } from "echarts/charts";
 import {
-  GridComponent,
-  LegendComponent,
-  TitleComponent,
-  TooltipComponent,
-} from "echarts/components";
+  MaterialReferenceData,
+  MaterialTree,
+  MaterialTreeKey,
+} from "@/store/ShelterInterface";
+import { TreemapChart } from "echarts/charts";
+import { TooltipComponent } from "echarts/components";
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
+import { EChartsOption } from "echarts/types/dist/shared";
 import VChart from "vue-echarts";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { mapGetters } from "vuex";
 
-use([
-  CanvasRenderer,
-  TreemapChart,
-  GridComponent,
-  LegendComponent,
-  TitleComponent,
-  TooltipComponent,
-]);
+use([CanvasRenderer, TreemapChart, TooltipComponent]);
 
 @Component({
   components: {
     VChart,
   },
+  ...mapGetters("GhgReferenceModule", ["materialMap"]),
 })
 export default class GraphTree extends Vue {
-  option = {
-    series: [
-      {
-        type: "treemap",
-        data: [
-          {
-            name: "nodeA", // First tree
-            value: 10,
-            children: [
-              {
-                name: "nodeAa", // First leaf of first tree
-                value: 4,
-              },
-              {
-                name: "nodeAb", // Second leaf of first tree
-                value: 6,
-              },
-            ],
-          },
-          {
-            name: "nodeB", // Second tree
-            value: 20,
-            children: [
-              {
-                name: "nodeBa", // Son of first tree
-                value: 20,
-                children: [
-                  {
-                    name: "nodeBa1", // Granson of first tree
-                    value: 20,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
+  @Prop([Object, Array])
+  readonly items: MaterialTree[] = [];
+  @Prop([String])
+  readonly selectedField: MaterialTreeKey | undefined;
+
+  materialMap!: Record<string, MaterialReferenceData>;
+
+  public generateDataTree(key: MaterialTreeKey): datatree[] {
+    return this.items.map(
+      (item: MaterialTree) =>
+        ({
+          name: item.materialId,
+          value: item[key],
+          children: item?.children?.map(
+            (value: MaterialTree) =>
+              ({
+                name: this.materialMap[value.formId as string].form,
+                value: value[key],
+              } as datatree)
+          ),
+        } as datatree)
+    );
+  }
+
+  public get option(): EChartsOption {
+    if (!this.selectedField) {
+      return {};
+    }
+    return {
+      tooltip: {
+        trigger: "item",
+        confine: true,
       },
-    ],
-  };
+      series: [
+        {
+          breadcrumb: {
+            show: false,
+          },
+          roam: false,
+          type: "treemap",
+          data: this.generateDataTree(this.selectedField),
+        },
+      ],
+    };
+  }
+}
+interface datatree {
+  name: string;
+  value: number;
+  children?: datatree[];
 }
 </script>
 

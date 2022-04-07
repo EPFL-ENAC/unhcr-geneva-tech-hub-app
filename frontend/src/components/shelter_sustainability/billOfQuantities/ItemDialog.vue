@@ -212,6 +212,7 @@ import {
   Shelter,
   Units,
 } from "@/store/ShelterInterface";
+import iso3166 from "@/utils/iso3166";
 import { VForm } from "@/utils/vuetify";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
@@ -252,7 +253,7 @@ export default class DeleteItemDialog extends Vue {
   editedIndex!: number;
   isItemDialogOpen!: boolean;
   setItem!: (item: Item) => void;
-  saveItem!: (item: Item) => void;
+  saveItem!: (item: Item) => Promise<void>;
   setItemToDefaultLabour!: () => void;
   setItemToDefaultMaterial!: () => void;
   setItemToDefaultOther!: () => void;
@@ -275,17 +276,25 @@ export default class DeleteItemDialog extends Vue {
   public get title(): string {
     return this.editedIndex === -1 ? "New item" : "Edit item";
   }
-  public submitFn(): void {
-    this.computeCost();
-    this.saveItem(this.localItem);
+  public async submitFn(): Promise<void> {
+    await this.computeCost();
+    await this.saveItem(this.localItem);
   }
 
-  public computeCost(): void {
+  public async getTransportFactorForMaterial(
+    id: string,
+    local: boolean
+  ): Promise<number> {
+    console.log(id, local);
+    return await 0.4;
+  }
+
+  public async computeCost(): Promise<void> {
     // side effect function: TODO: transform to pure function and move to utils
     const { quantity, formId, unit, unitCost } = this.localItem as Material;
     const newValue = cloneDeep(this.localItem) as Material;
     if (formId && quantity && unit) {
-      const { embodied_carbon, embodied_water, density } =
+      const { embodied_carbon, embodied_water, density, local } =
         this.materialMap[formId];
 
       // maybe use dimensions instead of quantity... but later
@@ -293,19 +302,26 @@ export default class DeleteItemDialog extends Vue {
       if (unit === Units.KG) {
         weight = quantity;
       } else {
-        const volume = 0; // TODO : fixme with form functions
+        const volume = 0; // TODO : use form function to compute volume based on predefined format
         weight = density * volume;
       }
       newValue.weight = weight;
 
-      newValue.embodiedCarbon = weight * embodied_carbon;
+      newValue.embodiedCarbonProduction = weight * embodied_carbon;
       newValue.embodiedWater = weight * embodied_water;
-
-      // compute embodiedCarbonTransport
-      // TODO: replace by constant from table
-      const country_src_dst_embodied_carbon = 0.3;
-      newValue.embodiedCarbonTransport =
-        weight * country_src_dst_embodied_carbon;
+      if (newValue.source && this.shelter.location_country) {
+        const src = iso3166[newValue.source as string];
+        const dst = iso3166[this.shelter.location_country];
+        const request_id = `${src}_${dst}`;
+        const country_src_dst_embodied_carbon =
+          await this.getTransportFactorForMaterial(request_id, local);
+        newValue.embodiedCarbonTransport =
+          weight * country_src_dst_embodied_carbon;
+      } else {
+        newValue.embodiedCarbonTransport = -1; // should have a src and dst
+      }
+      newValue.embodiedCarbonTotal =
+        newValue.embodiedCarbonProduction + newValue.embodiedCarbonTransport;
     }
     if (quantity && unitCost) {
       // compute totalCost

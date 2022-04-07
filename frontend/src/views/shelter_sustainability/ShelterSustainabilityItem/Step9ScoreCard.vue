@@ -172,7 +172,10 @@ export default class Step8ScoreCard extends Vue {
       title.push({
         textBaseline: "middle",
         top: ((idx + 0.5) * 100) / 7 + "%",
-        text: `${config.title}: ${this.scorecard[config.id as ScoreCardsKey]}`,
+        right: "400px",
+        text: `${config.title}: ${
+          this.scorecard[config.id as ScoreCardsKey]
+        } KgCO2`,
       });
       singleAxis.push({
         left: 150,
