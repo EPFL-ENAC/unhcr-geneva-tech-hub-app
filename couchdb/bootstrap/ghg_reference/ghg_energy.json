@@ -1,0 +1,70 @@
+[
+    {
+        "_id": "REF_GRD",
+        "description": "iges grid for country",
+        "value": 0,
+        "source": "iges_grid_2021",
+        "type": "number"
+    },
+    {
+        "_id": "REF_CONF_DGP",
+        "description": "Diesel generator power in Kilowatt",
+        "value": 20,
+        "type": "number"
+    },
+    {
+        "_id": "REF_CONF_DUSE",
+        "description": "Daily use time in hours",
+        "value": 10,
+        "type": "number"
+    },
+    {
+        "_id": "REF_CONF_KWHD",
+        "description": "kWh/day",
+        "value": 200,
+        "type": "number"
+    },
+    {
+        "_id": "REF_CONF_EFF",
+        "description": "Efficiency of diesel generator average kWh/liter",
+        "value": 2.5,
+        "type": "number"
+    },
+    {
+        "_id": "REF_CONF_LDF",
+        "description": "Estimated L/day / facility",
+        "value": 1,
+        "type": "number"
+    },
+    {
+        "_id": "REF_CONF_KWHDF",
+        "description": "Estimated kwh/day/facility",
+        "value": 1,
+        "type": "number"
+    },
+    {
+        "_id": "REF_CONF_HYB_DP",
+        "description": "Energy mix diesel generator",
+        "value": 50,
+        "type": "percentage"
+    },
+    {
+        "_id": "REF_CONF_HYB_GP",
+        "description": "Energy mix grid",
+        "value": 10,
+        "type": "percentage"
+    },
+    {
+        "_id": "REF_CONF_HYB_RP",
+        "description": "Energy mix renewable",
+        "value": 30,
+        "type": "percentage"
+    },
+    {
+        "_id": "REF_DIES",
+        "description": "diesel included estimated",
+        "value": 2.685640875,
+        "type": "number",
+        "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html"
+    }
+]
