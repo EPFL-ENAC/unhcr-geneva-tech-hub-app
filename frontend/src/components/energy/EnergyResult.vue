@@ -83,7 +83,7 @@ import {
   SocioEconomicCategory,
 } from "@/models/energyModel";
 import { applyMap, applyReduce } from "@/utils/energy";
-import { cloneDeep, min, range, round, sum } from "lodash";
+import { clamp, cloneDeep, range, round, sum } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapState } from "vuex";
@@ -101,8 +101,14 @@ import { mapState } from "vuex";
   },
 })
 export default class EnergyResult extends Vue {
-  readonly lines: { text: string; key: keyof CookingResult; unit?: string }[] =
-    [
+  @Prop({ type: Object as () => Modules })
+  modules!: Modules;
+
+  tab: string | null = null;
+  cookingFuels!: CookingFuel[];
+
+  get lines(): { text: string; key: keyof CookingResult; unit?: string }[] {
+    return [
       {
         text: "Proportion",
         key: "proportion",
@@ -136,13 +142,13 @@ export default class EnergyResult extends Vue {
         key: "emissionPm",
         unit: "g",
       },
+      {
+        text: "Income",
+        key: "income",
+        unit: this.modules.general?.currency,
+      },
     ];
-
-  @Prop({ type: Object as () => Modules })
-  modules!: Modules;
-
-  tab: string | null = null;
-  cookingFuels!: CookingFuel[];
+  }
 
   get years(): number[] {
     if (this.modules.general) {
@@ -204,7 +210,7 @@ export default class EnergyResult extends Vue {
         const newSite = cloneDeep(oldSite);
         newSite.populationCount =
           oldSite.populationCount * scenario.demographicGrowth;
-        newSite.proportions = this.getNewProportions(oldSite);
+        newSite.proportions = this.updateProportions(oldSite);
         sites[index] = newSite;
       }
       return sites;
@@ -217,7 +223,7 @@ export default class EnergyResult extends Vue {
     return this.sites.map((site) => this.computeSite(site));
   }
 
-  getNewProportions(site: Site): Record<SocioEconomicCategory, number> {
+  updateProportions(site: Site): Record<SocioEconomicCategory, number> {
     const precision = 2;
     const proportions = cloneDeep(site.proportions);
     for (let index = 0; index < socioEconomicCategories.length - 1; index++) {
@@ -240,8 +246,11 @@ export default class EnergyResult extends Vue {
             site.categories[nextCat].income),
         precision
       );
-      const effectiveDelta: number =
-        min([idealDelta, proportions[currentCat]]) ?? 0;
+      const effectiveDelta: number = clamp(
+        idealDelta,
+        0,
+        proportions[currentCat]
+      );
       proportions[currentCat] = round(
         proportions[currentCat] - effectiveDelta,
         precision
@@ -320,10 +329,11 @@ export default class EnergyResult extends Vue {
     });
     const householdCount = site.householdsCount * proportion;
     return {
+      ...applyMap(result, (v) => v * householdCount),
       proportion: proportion * 100,
       householdCount: householdCount,
       populationCount: site.populationCount * proportion,
-      ...applyMap(result, (v) => v * householdCount),
+      income: value.income * householdCount,
     };
   }
 }
@@ -358,6 +368,7 @@ interface CookingResult {
   emissionCo2: number;
   emissionCo: number;
   emissionPm: number;
+  income: number;
 }
 
 interface SiteResult {
