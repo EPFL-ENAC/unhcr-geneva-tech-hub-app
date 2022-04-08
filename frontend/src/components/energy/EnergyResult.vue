@@ -67,6 +67,29 @@
               </v-simple-table>
             </v-tab-item>
           </v-tabs-items>
+          <v-row>
+            <v-col cols="4">
+              <energy-chart
+                title="Income"
+                :x-data="years"
+                :y-data="income"
+              ></energy-chart>
+            </v-col>
+            <v-col cols="4">
+              <energy-chart
+                title="Energy"
+                :x-data="years"
+                :y-data="energy"
+              ></energy-chart>
+            </v-col>
+            <v-col cols="4">
+              <energy-chart
+                title="CO2 Emission"
+                :x-data="years"
+                :y-data="emissionCo2"
+              ></energy-chart>
+            </v-col>
+          </v-row>
         </v-card-text>
       </v-card>
     </v-col>
@@ -74,6 +97,7 @@
 </template>
 
 <script lang="ts">
+import EnergyChart from "@/components/energy/EnergyChart.vue";
 import {
   CookingCategoryValue,
   CookingFuel,
@@ -89,6 +113,9 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapState } from "vuex";
 
 @Component({
+  components: {
+    EnergyChart,
+  },
   computed: {
     ...mapState("energy", ["cookingFuels"]),
   },
@@ -161,6 +188,18 @@ export default class EnergyResult extends Vue {
     }
   }
 
+  get income(): Record<SocioEconomicCategory, number[]> {
+    return this.getChartData("income");
+  }
+
+  get energy(): Record<SocioEconomicCategory, number[]> {
+    return this.getChartData("energy");
+  }
+
+  get emissionCo2(): Record<SocioEconomicCategory, number[]> {
+    return this.getChartData("emissionCo2");
+  }
+
   get sites(): Site[] {
     const general = this.modules.general;
     const householdCooking = this.modules.householdCooking;
@@ -221,6 +260,17 @@ export default class EnergyResult extends Vue {
 
   get siteResults(): SiteResult[] {
     return this.sites.map((site) => this.computeSite(site));
+  }
+
+  private getChartData(
+    key: keyof CookingResult
+  ): Record<SocioEconomicCategory, number[]> {
+    return Object.fromEntries<number[]>(
+      socioEconomicCategories.map((cat) => [
+        cat,
+        this.siteResults.map((result) => round(result.categories[cat][key])),
+      ])
+    ) as Record<SocioEconomicCategory, number[]>;
   }
 
   updateProportions(site: Site): Record<SocioEconomicCategory, number> {
