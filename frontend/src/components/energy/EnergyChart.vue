@@ -1,5 +1,5 @@
 <template>
-  <v-responsive aspect-ratio="1" min-height="200">
+  <v-responsive aspect-ratio="1">
     <v-chart autoresize :option="option" />
   </v-responsive>
 </template>
@@ -63,8 +63,8 @@ export default class EnergyChart extends Vue {
       },
       grid: {
         containLabel: true,
-        left: 0,
-        right: 0,
+        left: 24,
+        right: 24,
       },
       xAxis: {
         type: "category",

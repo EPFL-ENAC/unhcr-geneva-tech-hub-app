@@ -80,21 +80,20 @@ export interface HouseholdCookingModule {
 }
 
 export interface CategoryCooking {
-  categories: Record<SocioEconomicCategory, CookingCategoryValue>;
+  categories: Record<SocioEconomicCategory, HouseholdCookingInput>;
   stove: CookingStove;
   fuel: CookingFuel;
 }
 
-export interface CookingCategoryValue {
-  countPerHousehold: number;
+export interface HouseholdCookingInput {
   /**
    * CU
    */
   useFactor: number;
   /**
-   * Ch
+   * n
    */
-  cookingTime: number;
+  countPerHousehold: number;
 }
 
 type Tier = number | [number, number];

@@ -95,13 +95,6 @@
             label="Use Factor"
             subtype="percent"
           ></form-item-component>
-          <form-item-component
-            :key="cat + '-time'"
-            v-model="categoryCooking(item).categories[cat].cookingTime"
-            type="number"
-            label="Daily Cooking Time"
-            unit="h"
-          ></form-item-component>
         </template>
         <template v-slot:[`item.action`]="{ item }">
           <v-btn icon @click="deleteItem(item)">
@@ -119,9 +112,9 @@ import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
 import {
   CategoryCooking,
-  CookingCategoryValue,
   CookingFuel,
   CookingStove,
+  HouseholdCookingInput,
   HouseholdCookingModule,
   socioEconomicCategories,
   SocioEconomicCategory,
@@ -284,16 +277,16 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
 
   private mapCategoryCooking(stove: CookingStove): CategoryCooking {
     return {
-      categories: Object.fromEntries<CookingCategoryValue>(
-        socioEconomicCategories.map((item) => [
-          item,
+      categories: Object.fromEntries<HouseholdCookingInput>(
+        socioEconomicCategories.map((cat) => [
+          cat,
           {
-            countPerHousehold: 0,
-            useFactor: 0,
-            cookingTime: 0,
-          },
+            capacity: 1,
+            useFactor: 0.8,
+            countPerHousehold: 1,
+          } as HouseholdCookingInput,
         ])
-      ) as Record<SocioEconomicCategory, CookingCategoryValue>,
+      ) as Record<SocioEconomicCategory, HouseholdCookingInput>,
       stove: cloneDeep(stove),
       fuel: this.getFuel(stove),
     };
@@ -321,7 +314,7 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   }
 }
 
-type TableItem = Record<SocioEconomicCategory, CookingCategoryValue> &
+type TableItem = Record<SocioEconomicCategory, HouseholdCookingInput> &
   CookingStove &
   CookingFuel & {
     cookstoveName: string;

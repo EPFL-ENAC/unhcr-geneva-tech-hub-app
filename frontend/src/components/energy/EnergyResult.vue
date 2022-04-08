@@ -99,15 +99,16 @@
 <script lang="ts">
 import EnergyChart from "@/components/energy/EnergyChart.vue";
 import {
-  CookingCategoryValue,
   CookingFuel,
   CookingStove,
+  GeneralCategory,
+  HouseholdCookingInput,
   Modules,
   socioEconomicCategories,
   SocioEconomicCategory,
 } from "@/models/energyModel";
 import { applyMap, applyReduce } from "@/utils/energy";
-import { clamp, cloneDeep, range, round, sum } from "lodash";
+import { chain, clamp, cloneDeep, range, round } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapState } from "vuex";
@@ -217,11 +218,11 @@ export default class EnergyResult extends Vue {
             general.categories[cat].proportion,
           ])
         ) as Record<SocioEconomicCategory, number>,
-        categories: Object.fromEntries<CategoryValue>(
+        categories: Object.fromEntries<CategoryInput>(
           socioEconomicCategories.map((cat) => [
             cat,
             {
-              income: general.categories[cat].annualIncome,
+              general: general.categories[cat],
               cookingTechnologies: householdCooking.categoryCookings
                 .filter(
                   (cooking) => cooking.categories[cat].countPerHousehold > 0
@@ -239,9 +240,9 @@ export default class EnergyResult extends Vue {
                     value: cooking.categories[cat],
                   };
                 }),
-            } as CategoryValue,
+            } as CategoryInput,
           ])
-        ) as Record<SocioEconomicCategory, CategoryValue>,
+        ) as Record<SocioEconomicCategory, CategoryInput>,
       };
       const sites: Site[] = [firstSite];
       for (let index = 1; index < this.years.length; index++) {
@@ -281,19 +282,22 @@ export default class EnergyResult extends Vue {
       const nextCat = socioEconomicCategories[index + 1];
       const idealDelta = round(
         (proportions[currentCat] *
-          site.categories[currentCat].income *
+          site.categories[currentCat].general.annualIncome *
           (1 - site.incomeRate) -
           proportions[nextCat] *
-            site.categories[nextCat].income *
+            site.categories[nextCat].general.annualIncome *
             (site.incomeRate - 1) +
-          sum(
-            socioEconomicCategories
-              .filter((cat) => cat !== currentCat && cat !== nextCat)
-              .map((cat) => proportions[cat] * site.categories[cat].income)
-          ) *
+          chain(socioEconomicCategories)
+            .filter((cat) => cat !== currentCat && cat !== nextCat)
+            .map(
+              (cat) =>
+                proportions[cat] * site.categories[cat].general.annualIncome
+            )
+            .sum()
+            .value() *
             (1 - site.incomeRate)) /
-          (site.categories[currentCat].income -
-            site.categories[nextCat].income),
+          (site.categories[currentCat].general.annualIncome -
+            site.categories[nextCat].general.annualIncome),
         precision
       );
       const effectiveDelta: number = clamp(
@@ -343,24 +347,31 @@ export default class EnergyResult extends Vue {
   computeCategory(
     site: Site,
     proportion: number,
-    value: CategoryValue
+    input: CategoryInput
   ): CookingResult {
-    const results = value.cookingTechnologies.map((item) => {
+    const results = input.cookingTechnologies.map((technology) => {
+      // Ch
+      const cookingTime =
+        input.general.cookingHours /
+        chain(input.cookingTechnologies)
+          .map((t) => t.value.countPerHousehold)
+          .sum()
+          .value();
       // CEu
       const usefulEnergy =
-        item.stove.capacity *
-        item.value.useFactor *
-        item.value.cookingTime *
+        technology.stove.capacity *
+        technology.value.useFactor *
+        cookingTime *
         365 *
         3.6;
       // CEf
-      const finalEnergy = usefulEnergy / item.stove.energyEfficiency;
+      const finalEnergy = usefulEnergy / technology.stove.energyEfficiency;
       // CWF
-      const fuelWeight = finalEnergy / item.fuel.energy;
+      const fuelWeight = finalEnergy / technology.fuel.energy;
       // CEmiss
-      const emissionCo2 = fuelWeight * item.fuel.emissionFactorCo2;
-      const emissionCo = finalEnergy * item.stove.emissionFactorCo;
-      const emissionPm = finalEnergy * item.stove.emissionFactorPm;
+      const emissionCo2 = fuelWeight * technology.fuel.emissionFactorCo2;
+      const emissionCo = finalEnergy * technology.stove.emissionFactorCo;
+      const emissionPm = finalEnergy * technology.stove.emissionFactorPm;
       return applyMap(
         {
           energy: finalEnergy,
@@ -368,7 +379,7 @@ export default class EnergyResult extends Vue {
           emissionCo,
           emissionPm,
         },
-        (v) => v * item.value.countPerHousehold
+        (v) => v * technology.value.countPerHousehold
       );
     });
     const result = applyReduce(results, (a, b) => a + b, {
@@ -383,7 +394,7 @@ export default class EnergyResult extends Vue {
       proportion: proportion * 100,
       householdCount: householdCount,
       populationCount: site.populationCount * proportion,
-      income: value.income * householdCount,
+      income: input.general.annualIncome * householdCount,
     };
   }
 }
@@ -393,18 +404,18 @@ interface Site {
   populationCount: number;
   incomeRate: number;
   proportions: Record<SocioEconomicCategory, number>;
-  categories: Record<SocioEconomicCategory, CategoryValue>;
+  categories: Record<SocioEconomicCategory, CategoryInput>;
 }
 
-interface CategoryValue {
-  income: number;
+interface CategoryInput {
+  general: GeneralCategory;
   cookingTechnologies: CookingTechnology[];
 }
 
 interface CookingTechnology {
   stove: CookingStove;
   fuel: CookingFuel;
-  value: CookingCategoryValue;
+  value: HouseholdCookingInput;
 }
 
 interface CookingResult {
