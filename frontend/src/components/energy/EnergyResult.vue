@@ -175,6 +175,16 @@ export default class EnergyResult extends Vue {
         key: "income",
         unit: this.modules.general?.currency,
       },
+      {
+        text: "Wood requirement",
+        key: "woodNeed",
+        unit: "kg",
+      },
+      {
+        text: "Required biomass area for wood collection",
+        key: "woodArea",
+        unit: "ha",
+      },
     ];
   }
 
@@ -211,7 +221,11 @@ export default class EnergyResult extends Vue {
       const firstSite: Site = {
         householdsCount: general.totalPopulation / general.familiesCount,
         populationCount: general.totalPopulation,
+        woodCarbonation: general.woodCarbonation,
+        woodDensity: general.woodDensity,
+
         incomeRate: scenario.incomeRate,
+
         proportions: Object.fromEntries<number>(
           socioEconomicCategories.map((cat) => [
             cat,
@@ -365,19 +379,28 @@ export default class EnergyResult extends Vue {
         365 *
         3.6;
       // CEf
-      const finalEnergy = usefulEnergy / technology.stove.energyEfficiency;
+      const energy = usefulEnergy / technology.stove.energyEfficiency;
       // CWF
-      const fuelWeight = finalEnergy / technology.fuel.energy;
+      const fuelWeight = energy / technology.fuel.energy;
+      const woodWeight = technology.stove.fuel === "wood" ? fuelWeight : 0;
+      const charcoalWeight =
+        technology.stove.fuel === "charcoal" ? fuelWeight : 0;
+      // Rwood
+      const woodNeed = woodWeight + charcoalWeight / site.woodCarbonation;
+      // Awood
+      const woodArea = woodNeed / site.woodDensity;
       // CEmiss
       const emissionCo2 = fuelWeight * technology.fuel.emissionFactorCo2;
-      const emissionCo = finalEnergy * technology.stove.emissionFactorCo;
-      const emissionPm = finalEnergy * technology.stove.emissionFactorPm;
+      const emissionCo = energy * technology.stove.emissionFactorCo;
+      const emissionPm = energy * technology.stove.emissionFactorPm;
       return applyMap(
         {
-          energy: finalEnergy,
+          energy,
           emissionCo2,
           emissionCo,
           emissionPm,
+          woodNeed,
+          woodArea,
         },
         (v) => v * technology.value.countPerHousehold
       );
@@ -387,6 +410,8 @@ export default class EnergyResult extends Vue {
       emissionCo2: 0,
       emissionCo: 0,
       emissionPm: 0,
+      woodNeed: 0,
+      woodArea: 0,
     });
     const householdCount = site.householdsCount * proportion;
     return {
@@ -402,6 +427,8 @@ export default class EnergyResult extends Vue {
 interface Site {
   householdsCount: number;
   populationCount: number;
+  woodCarbonation: number;
+  woodDensity: number;
   incomeRate: number;
   proportions: Record<SocioEconomicCategory, number>;
   categories: Record<SocioEconomicCategory, CategoryInput>;
@@ -422,6 +449,7 @@ interface CookingResult {
   proportion: number;
   householdCount: number;
   populationCount: number;
+  income: number;
   /**
    * CEf
    */
@@ -429,7 +457,8 @@ interface CookingResult {
   emissionCo2: number;
   emissionCo: number;
   emissionPm: number;
-  income: number;
+  woodNeed: number;
+  woodArea: number;
 }
 
 interface SiteResult {

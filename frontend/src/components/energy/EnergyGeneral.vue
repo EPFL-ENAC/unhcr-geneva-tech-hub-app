@@ -128,6 +128,8 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
       woodLandscape: "rain",
       topography: "flat",
       vacantSpaceOutside: "no",
+      woodCarbonation: 0,
+      woodDensity: 0,
       categories: Object.fromEntries<GeneralCategory>(
         socioEconomicCategories.map((item) => [
           item,
@@ -525,6 +527,20 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
             },
           ],
         } as FormItem<keyof GeneralModule, vacantSpaceOutside>,
+      ],
+      [
+        {
+          type: "number",
+          key: "woodCarbonation",
+          label: "Wood carbonation efficiency",
+          unit: "g/g",
+        },
+        {
+          type: "number",
+          key: "woodDensity",
+          label: "Yield of wood per hectare",
+          unit: "kg/ha",
+        },
       ],
     ];
   }

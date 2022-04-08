@@ -47,6 +47,8 @@ export interface GeneralModule {
   woodLandscape: WoodLandscape;
   topography: Topography;
   vacantSpaceOutside: vacantSpaceOutside;
+  woodCarbonation: number;
+  woodDensity: number;
   categories: Record<SocioEconomicCategory, GeneralCategory>;
 }
 export type Integration = "well" | "moderately" | "badly";
