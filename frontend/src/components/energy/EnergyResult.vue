@@ -20,11 +20,13 @@
                   <thead>
                     <tr>
                       <th></th>
-                      <th class="text-right">Very Low</th>
-                      <th class="text-right">Low</th>
-                      <th class="text-right">Middle</th>
-                      <th class="text-right">High</th>
-                      <th class="text-right">Very High</th>
+                      <th
+                        v-for="cat in categories"
+                        :key="cat"
+                        class="text-right"
+                      >
+                        {{ $t(`energy.${cat}`) }}
+                      </th>
                       <th class="text-right">Total</th>
                     </tr>
                   </thead>
@@ -34,32 +36,21 @@
                         {{ item.text }}
                         <template v-if="item.unit">[{{ item.unit }}]</template>
                       </td>
-                      <td class="text-right">
+                      <td
+                        v-for="cat in categories"
+                        :key="cat"
+                        class="text-right"
+                      >
                         {{
-                          siteResult.categories.veryLow[item.key] | formatNumber
-                        }}
-                      </td>
-                      <td class="text-right">
-                        {{ siteResult.categories.low[item.key] | formatNumber }}
-                      </td>
-                      <td class="text-right">
-                        {{
-                          siteResult.categories.middle[item.key] | formatNumber
-                        }}
-                      </td>
-                      <td class="text-right">
-                        {{
-                          siteResult.categories.high[item.key] | formatNumber
-                        }}
-                      </td>
-                      <td class="text-right">
-                        {{
-                          siteResult.categories.veryHigh[item.key]
-                            | formatNumber
+                          siteResult.categories[cat][item.key]
+                            | formatNumber(item.decimal)
                         }}
                       </td>
                       <td class="font-weight-bold text-right">
-                        {{ siteResult.total[item.key] | formatNumber }}
+                        {{
+                          siteResult.total[item.key]
+                            | formatNumber(item.decimal)
+                        }}
                       </td>
                     </tr>
                   </tbody>
@@ -121,21 +112,29 @@ import { mapState } from "vuex";
     ...mapState("energy", ["cookingFuels"]),
   },
   filters: {
-    formatNumber(value: number): string {
+    formatNumber(value: number, decimal = 0): string {
       return value.toLocaleString(undefined, {
-        maximumFractionDigits: 0,
+        maximumFractionDigits: decimal,
       });
     },
   },
 })
 export default class EnergyResult extends Vue {
+  readonly categories = socioEconomicCategories;
+
   @Prop({ type: Object as () => Modules })
   modules!: Modules;
 
   tab: string | null = null;
   cookingFuels!: CookingFuel[];
 
-  get lines(): { text: string; key: keyof CookingResult; unit?: string }[] {
+  get lines(): {
+    text: string;
+    key: keyof CookingResult;
+    unit?: string;
+    decimal?: number;
+  }[] {
+    const currency = this.modules.general?.currency;
     return [
       {
         text: "Proportion",
@@ -173,7 +172,7 @@ export default class EnergyResult extends Vue {
       {
         text: "Income",
         key: "income",
-        unit: this.modules.general?.currency,
+        unit: currency,
       },
       {
         text: "Wood requirement",
@@ -184,6 +183,16 @@ export default class EnergyResult extends Vue {
         text: "Required biomass area for wood collection",
         key: "woodArea",
         unit: "ha",
+      },
+      {
+        text: "Cooking cost",
+        key: "cookingCost",
+        unit: currency,
+      },
+      {
+        text: "Cost affordability",
+        key: "costAffordability",
+        decimal: 2,
       },
     ];
   }
@@ -225,6 +234,7 @@ export default class EnergyResult extends Vue {
         woodDensity: general.woodDensity,
 
         incomeRate: scenario.incomeRate,
+        discountRate: scenario.discountRate,
 
         proportions: Object.fromEntries<number>(
           socioEconomicCategories.map((cat) => [
@@ -363,7 +373,8 @@ export default class EnergyResult extends Vue {
     proportion: number,
     input: CategoryInput
   ): CookingResult {
-    const results = input.cookingTechnologies.map((technology) => {
+    const technologyResults = input.cookingTechnologies.map((technology) => {
+      site.householdsCount * proportion;
       // Ch
       const cookingTime =
         input.general.cookingHours /
@@ -385,41 +396,59 @@ export default class EnergyResult extends Vue {
       const woodWeight = technology.stove.fuel === "wood" ? fuelWeight : 0;
       const charcoalWeight =
         technology.stove.fuel === "charcoal" ? fuelWeight : 0;
-      // Rwood
-      const woodNeed = woodWeight + charcoalWeight / site.woodCarbonation;
-      // Awood
-      const woodArea = woodNeed / site.woodDensity;
       // CEmiss
       const emissionCo2 = fuelWeight * technology.fuel.emissionFactorCo2;
       const emissionCo = energy * technology.stove.emissionFactorCo;
       const emissionPm = energy * technology.stove.emissionFactorPm;
+      // CCI
+      const cookingCost =
+        (site.discountRate /
+          Math.pow(site.discountRate, -technology.stove.lifetime)) *
+          technology.stove.investmentCost +
+        fuelWeight * technology.fuel.price;
       return applyMap(
         {
           energy,
+          woodWeight,
+          charcoalWeight,
           emissionCo2,
           emissionCo,
           emissionPm,
-          woodNeed,
-          woodArea,
+          cookingCost,
         },
         (v) => v * technology.value.countPerHousehold
       );
     });
-    const result = applyReduce(results, (a, b) => a + b, {
+    const householdResult = applyReduce(technologyResults, (a, b) => a + b, {
       energy: 0,
+      woodWeight: 0,
+      charcoalWeight: 0,
       emissionCo2: 0,
       emissionCo: 0,
       emissionPm: 0,
-      woodNeed: 0,
-      woodArea: 0,
+      cookingCost: 0,
     });
     const householdCount = site.householdsCount * proportion;
+    const categoryResult = applyMap(householdResult, (v) => v * householdCount);
+    const income = input.general.annualIncome * householdCount;
+    // Rwood
+    const woodNeed =
+      householdResult.woodWeight +
+      householdResult.charcoalWeight / site.woodCarbonation;
+    // Awood
+    const woodArea = woodNeed / site.woodDensity;
+    // Cafford
+    const costAffordability =
+      householdResult.cookingCost / input.general.annualIncome;
     return {
-      ...applyMap(result, (v) => v * householdCount),
+      ...categoryResult,
       proportion: proportion * 100,
-      householdCount: householdCount,
+      householdCount,
       populationCount: site.populationCount * proportion,
-      income: input.general.annualIncome * householdCount,
+      income,
+      woodNeed,
+      woodArea,
+      costAffordability,
     };
   }
 }
@@ -429,7 +458,10 @@ interface Site {
   populationCount: number;
   woodCarbonation: number;
   woodDensity: number;
+
   incomeRate: number;
+  discountRate: number;
+
   proportions: Record<SocioEconomicCategory, number>;
   categories: Record<SocioEconomicCategory, CategoryInput>;
 }
@@ -459,6 +491,8 @@ interface CookingResult {
   emissionPm: number;
   woodNeed: number;
   woodArea: number;
+  cookingCost: number;
+  costAffordability: number;
 }
 
 interface SiteResult {
