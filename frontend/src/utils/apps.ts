@@ -10,6 +10,8 @@ export const shelter = {
   title: "Shelter sustainability",
   to: "ShelterSustainability",
   logoImg: "/app_logo/shelter.png",
+  link: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2022-04-11/houses_new.pdf",
+  linkName: "A technical and environmental comparative overview of common shelter typologies found in settlements across UNHCR operations",
   description:
     "A tool supporting comparative assessments of environmental \
       impacts, technical performance, habitability and affordability of \
