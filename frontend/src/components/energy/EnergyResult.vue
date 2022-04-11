@@ -92,6 +92,8 @@ import EnergyChart from "@/components/energy/EnergyChart.vue";
 import {
   CookingFuel,
   CookingStove,
+  CookingStoveId,
+  CookingTechnologyIntervention,
   GeneralCategory,
   HouseholdCookingInput,
   Modules,
@@ -99,7 +101,7 @@ import {
   SocioEconomicCategory,
 } from "@/models/energyModel";
 import { applyMap, applyReduce } from "@/utils/energy";
-import { chain, clamp, cloneDeep, range, round } from "lodash";
+import { chain, clamp, cloneDeep, range, round, sortBy } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapState } from "vuex";
@@ -128,14 +130,9 @@ export default class EnergyResult extends Vue {
   tab: string | null = null;
   cookingFuels!: CookingFuel[];
 
-  get lines(): {
-    text: string;
-    key: keyof CookingResult;
-    unit?: string;
-    decimal?: number;
-  }[] {
+  get lines(): TableRow[] {
     const currency = this.modules.general?.currency;
-    return [
+    const results: TableRow[] = [
       {
         text: "Proportion",
         key: "proportion",
@@ -195,6 +192,14 @@ export default class EnergyResult extends Vue {
         decimal: 2,
       },
     ];
+    const stoves: TableRow[] = sortBy(
+      this.modules.householdCooking?.categoryCookings,
+      (item) => item.stove.index
+    ).map((cooking) => ({
+      text: `${cooking.stove.name} - ${cooking.fuel.name}`,
+      key: cooking.stove._id,
+    }));
+    return [...results, ...stoves];
   }
 
   get years(): number[] {
@@ -247,11 +252,8 @@ export default class EnergyResult extends Vue {
             cat,
             {
               general: general.categories[cat],
-              cookingTechnologies: householdCooking.categoryCookings
-                .filter(
-                  (cooking) => cooking.categories[cat].countPerHousehold > 0
-                )
-                .map((cooking) => {
+              cookingTechnologies: householdCooking.categoryCookings.map(
+                (cooking) => {
                   const fuel = this.cookingFuels.find(
                     (fuel) => fuel._id === cooking.stove.fuel
                   );
@@ -263,18 +265,33 @@ export default class EnergyResult extends Vue {
                     fuel: fuel,
                     value: cooking.categories[cat],
                   };
-                }),
+                }
+              ),
             } as CategoryInput,
           ])
         ) as Record<SocioEconomicCategory, CategoryInput>,
       };
       const sites: Site[] = [firstSite];
+      const actions: Action[] = (
+        this.modules.intervention?.interventions.filter(
+          (intervention) => intervention.selected
+        ) ?? []
+      ).map((intervention) => {
+        switch (intervention.type) {
+          case "cooking-technology":
+            return new CookingTechnologyAction(intervention);
+        }
+      });
       for (let index = 1; index < this.years.length; index++) {
+        const year = this.years[index];
         const oldSite = sites[index - 1];
-        const newSite = cloneDeep(oldSite);
+        let newSite = cloneDeep(oldSite);
         newSite.populationCount =
           oldSite.populationCount * scenario.demographicGrowth;
         newSite.proportions = this.updateProportions(oldSite);
+        newSite = actions
+          .filter((action) => action.isActive(year))
+          .reduce((site, action) => action.apply(site), newSite);
         sites[index] = newSite;
       }
       return sites;
@@ -419,15 +436,23 @@ export default class EnergyResult extends Vue {
         (v) => v * technology.value.countPerHousehold
       );
     });
-    const householdResult = applyReduce(technologyResults, (a, b) => a + b, {
-      energy: 0,
-      woodWeight: 0,
-      charcoalWeight: 0,
-      emissionCo2: 0,
-      emissionCo: 0,
-      emissionPm: 0,
-      cookingCost: 0,
-    });
+    const householdResult = {
+      ...Object.fromEntries(
+        input.cookingTechnologies.map((technology) => [
+          technology.stove._id,
+          technology.value.countPerHousehold,
+        ])
+      ),
+      ...applyReduce(technologyResults, (a, b) => a + b, {
+        energy: 0,
+        woodWeight: 0,
+        charcoalWeight: 0,
+        emissionCo2: 0,
+        emissionCo: 0,
+        emissionPm: 0,
+        cookingCost: 0,
+      }),
+    };
     const householdCount = site.householdsCount * proportion;
     const categoryResult = applyMap(householdResult, (v) => v * householdCount);
     const income = input.general.annualIncome * householdCount;
@@ -453,6 +478,13 @@ export default class EnergyResult extends Vue {
   }
 }
 
+interface TableRow {
+  text: string;
+  key: keyof CookingResult | CookingStoveId;
+  unit?: string;
+  decimal?: number;
+}
+
 interface Site {
   householdsCount: number;
   populationCount: number;
@@ -465,16 +497,76 @@ interface Site {
   proportions: Record<SocioEconomicCategory, number>;
   categories: Record<SocioEconomicCategory, CategoryInput>;
 }
-
 interface CategoryInput {
   general: GeneralCategory;
   cookingTechnologies: CookingTechnology[];
 }
-
 interface CookingTechnology {
   stove: CookingStove;
   fuel: CookingFuel;
   value: HouseholdCookingInput;
+}
+
+abstract class Action {
+  constructor(private yearStart: number, private yearEnd: number) {}
+
+  isActive(year: number): boolean {
+    return this.yearStart <= year && year <= this.yearEnd;
+  }
+
+  abstract apply(site: Site): Site;
+}
+
+class CookingTechnologyAction extends Action {
+  private readonly precision = 4;
+  constructor(private intervention: CookingTechnologyIntervention) {
+    super(intervention.yearStart, intervention.yearEnd);
+  }
+
+  apply(site: Site): Site {
+    let remainingCount = this.intervention.count;
+    mainLoop: for (const category of this.intervention.categories) {
+      const householdCount = site.proportions[category] * site.householdsCount;
+      if (householdCount > 0) {
+        const input = site.categories[category];
+        const newStove = this.getStove(input, this.intervention.newStoveId);
+        for (const item of this.intervention.oldStoveIds
+          .map((id) => this.getStove(input, id))
+          .filter((item) => item.countPerHousehold > 0)) {
+          const count = round(item.countPerHousehold * householdCount);
+          const replaceCount = clamp(count, remainingCount);
+          remainingCount -= replaceCount;
+          const replacePerHousehold = replaceCount / householdCount;
+          item.countPerHousehold = round(
+            item.countPerHousehold - replacePerHousehold,
+            this.precision
+          );
+          newStove.countPerHousehold = round(
+            newStove.countPerHousehold + replacePerHousehold,
+            this.precision
+          );
+          if (remainingCount === 0) {
+            break mainLoop;
+          }
+        }
+      }
+    }
+    return site;
+  }
+
+  private getStove(
+    input: CategoryInput,
+    id: CookingStoveId
+  ): HouseholdCookingInput {
+    const value = input.cookingTechnologies.find(
+      (tech) => tech.stove._id === id
+    )?.value;
+    if (value) {
+      return value;
+    } else {
+      throw new Error(`Stove id ${id} should be defined in Household Cooking`);
+    }
+  }
 }
 
 interface CookingResult {

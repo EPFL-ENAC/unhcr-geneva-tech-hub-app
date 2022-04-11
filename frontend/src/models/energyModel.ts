@@ -7,6 +7,7 @@ export interface Modules {
   general?: GeneralModule;
   householdCooking?: HouseholdCookingModule;
   scenario?: ScenarioModule;
+  intervention?: InterventionModule;
 }
 
 // Common
@@ -106,13 +107,13 @@ export interface CategoryCooking {
 }
 export interface HouseholdCookingInput {
   /**
-   * CU
-   */
-  useFactor: number;
-  /**
    * n
    */
   countPerHousehold: number;
+  /**
+   * CU
+   */
+  useFactor: number;
 }
 
 // Scenario
@@ -146,7 +147,7 @@ export type ScenarioTrend = "stable" | "increase" | "decrease";
 export interface InterventionModule {
   interventions: Intervention[];
 }
-type Intervention = CookingTechnologyIntervention;
+export type Intervention = CookingTechnologyIntervention;
 interface ParentIntervention {
   type: "cooking-technology";
   name: string;

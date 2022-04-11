@@ -274,10 +274,9 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
         socioEconomicCategories.map((cat) => [
           cat,
           {
-            capacity: 1,
+            countPerHousehold: 0,
             useFactor: 0.8,
-            countPerHousehold: 1,
-          } as HouseholdCookingInput,
+          },
         ])
       ) as Record<SocioEconomicCategory, HouseholdCookingInput>,
       stove: cloneDeep(stove),
