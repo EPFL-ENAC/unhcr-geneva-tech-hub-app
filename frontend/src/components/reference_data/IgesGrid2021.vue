@@ -1,7 +1,7 @@
 <template>
   <v-card flat>
-    <v-card-text>
-      <v-data-table :headers="headers" :items="reference.iges_grid_2021">
+    <v-card-text v-if="iges_grid_2021">
+      <v-data-table :headers="headers" :items="iges_grid_2021">
         <template v-slot:item.value="props">
           <v-edit-dialog
             :return-value.sync="props.item.name"
@@ -41,7 +41,7 @@
             @open="open"
             @close="close"
           >
-            {{ props.item.name }} {{ flagEmoji(props.item.country_code) }}
+            {{ props.item.name }} {{ flagEmoji(props.item._id) }}
             <template v-slot:input>
               <v-text-field
                 v-model="props.item.name"
@@ -66,22 +66,20 @@
 </template>
 
 <script lang="ts">
-import { GreenHouseGazReference } from "@/store/GhgInterface";
+import { IgesItemInterface } from "@/store/GhgReferenceIgesGridModule";
 import flagEmoji from "@/utils/flagEmoji";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
-const REFERENCE_DOC_ID = "reference";
-
 @Component({
   computed: {
-    ...mapGetters("GhgReferenceModule", ["reference"]),
+    ...mapGetters("GhgReferenceIgesGridModule", ["iges_grid_2021"]),
     ...mapGetters(["referenceDataDrawer"]),
   },
   methods: {
-    ...mapActions("GhgReferenceModule", [
+    ...mapActions("GhgReferenceIgesGridModule", [
       "syncDB",
-      "getDoc",
+      "getAllDocs",
       "updateDoc",
       "closeDB",
     ]),
@@ -90,13 +88,11 @@ const REFERENCE_DOC_ID = "reference";
 export default class IgesGrid2021 extends Vue {
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
-  getDoc!: (id: string) => Promise<null>;
+  getAllDocs!: () => Promise<null>;
 
-  updateDoc!: (
-    obj: GreenHouseGazReference
-  ) => PromiseLike<GreenHouseGazReference>;
+  updateDoc!: (obj: IgesItemInterface) => PromiseLike<IgesItemInterface>;
 
-  reference!: GreenHouseGazReference;
+  iges_grid_2021!: IgesItemInterface[];
   flagEmoji = flagEmoji;
   snack = false;
   snackColor = "";
@@ -107,7 +103,7 @@ export default class IgesGrid2021 extends Vue {
 
   mounted(): void {
     this.syncDB();
-    this.getDoc(REFERENCE_DOC_ID);
+    this.getAllDocs();
   }
 
   destroyed(): void {

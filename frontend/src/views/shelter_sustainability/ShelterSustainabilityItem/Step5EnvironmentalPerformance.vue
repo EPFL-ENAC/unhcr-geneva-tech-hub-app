@@ -1,168 +1,152 @@
 <template>
-  <v-form
-    :readonly="!$can('edit', shelter)"
-    v-if="shelter"
-    @submit.prevent="() => submitForm(shelter)"
-  >
-    <v-container fluid>
-      <v-row>
-        <v-col>
-          <h2 class="text-h4 project-shelter__h3 font-weight-medium">
-            Environmental Performance
-          </h2>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-divider></v-divider>
-        </v-col>
-      </v-row>
+  <v-container fluid v-if="shelter">
+    <v-row>
+      <v-col>
+        <h2 class="text-h4 project-shelter__h3 font-weight-medium">
+          Environmental Performance
+        </h2>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-divider></v-divider>
+      </v-col>
+    </v-row>
 
-      <v-row>
-        <v-col>
-          <v-sheet elevation="2" rounded v-if="shelter">
-            <v-container fluid>
-              <v-row>
-                <v-col class="about-first-column d-flex justify-center" lg="12">
-                  <v-data-table
-                    :headers="headers"
-                    :items="items"
-                    :single-expand="singleExpand"
-                    :expanded.sync="expanded"
-                    item-key="material"
-                    hide-default-footer
-                    :show-expand="true"
-                    @click:row="
-                      (item, slot) =>
-                        item.items && slot.expand(!slot.isExpanded)
-                    "
-                  >
-                    <template v-slot:header>
-                      <thead>
-                        <tr>
-                          <th colspan="1"></th>
-                          <th colspan="1">Material</th>
-                          <th colspan="3">Embodied carbon in kgCO2e/kg</th>
-                          <th colspan="3"></th>
-                        </tr>
-                        <tr>
-                          <th colspan="3"></th>
-                          <th colspan="3">Embodied carbon in kgCO2e/kg</th>
-                          <th colspan="3"></th>
-                        </tr>
-                        <tr>
-                          <th colspan="3"></th>
-                          <th colspan="3">Embodied carbon in kgCO2e/kg</th>
-                          <th colspan="3"></th>
-                        </tr>
-                      </thead>
-                    </template>
-                    <template v-slot:item.weight="{ item }">
-                      <span>{{ item.weight | formatNumber }} </span>
-                    </template>
-                    <template v-slot:item.embodied_carbon_production="{ item }">
-                      <span
-                        >{{ item.embodied_carbon_production | formatNumber }}
-                      </span>
-                    </template>
-                    <template v-slot:item.embodied_carbon_transport="{ item }">
-                      <span
-                        >{{ item.embodied_carbon_transport | formatNumber }}
-                      </span>
-                    </template>
-                    <template v-slot:item.embodied_carbon_total="{ item }">
-                      <span
-                        >{{ item.embodied_carbon_total | formatNumber }}
-                      </span>
-                    </template>
-                    <template v-slot:item.embodied_water="{ item }">
-                      <span>{{ item.embodied_water | formatNumber }} </span>
-                    </template>
-                    <!-- <template v-slot:item.unit_cost="{ item }">
+    <v-row>
+      <v-col>
+        <v-sheet elevation="2" rounded v-if="shelter">
+          <v-container fluid>
+            <v-row>
+              <v-col class="about-first-column d-flex justify-center" lg="12">
+                <v-data-table
+                  :headers="headers"
+                  :items="items"
+                  :single-expand="singleExpand"
+                  :expanded.sync="expanded"
+                  item-key="material"
+                  hide-default-footer
+                  :show-expand="true"
+                  @click:row="
+                    (item, slot) => item.items && slot.expand(!slot.isExpanded)
+                  "
+                >
+                  <template v-slot:header>
+                    <thead>
+                      <tr>
+                        <th colspan="1"></th>
+                        <th colspan="1">Material</th>
+                        <th colspan="3">Embodied carbon in kgCO2e/kg</th>
+                        <th colspan="3"></th>
+                      </tr>
+                      <tr>
+                        <th colspan="3"></th>
+                        <th colspan="3">Embodied carbon in kgCO2e/kg</th>
+                        <th colspan="3"></th>
+                      </tr>
+                      <tr>
+                        <th colspan="3"></th>
+                        <th colspan="3">Embodied carbon in kgCO2e/kg</th>
+                        <th colspan="3"></th>
+                      </tr>
+                    </thead>
+                  </template>
+                  <template v-slot:item.weight="{ item }">
+                    <span>{{ item.weight | formatNumber }} </span>
+                  </template>
+                  <template v-slot:item.embodiedCarbonProduction="{ item }">
+                    <span
+                      >{{ item.embodiedCarbonProduction | formatNumber }}
+                    </span>
+                  </template>
+                  <template v-slot:item.embodiedCarbonTransport="{ item }">
+                    <span
+                      >{{ item.embodiedCarbonTransport | formatNumber }}
+                    </span>
+                  </template>
+                  <template v-slot:item.embodiedCarbonTotal="{ item }">
+                    <span>{{ item.embodiedCarbonTotal | formatNumber }} </span>
+                  </template>
+                  <template v-slot:item.embodiedWater="{ item }">
+                    <span>{{ item.embodiedWater | formatNumber }} </span>
+                  </template>
+                  <!-- <template v-slot:item.unit_cost="{ item }">
                       <span>{{ item.unit_cost | formatNumber }} </span>
                     </template>
                     <template v-slot:item.total_cost="{ item }">
                       <span>{{ item.total_cost | formatNumber }} </span>
                     </template> -->
-                    <template v-slot:expanded-item="{ headers, item }">
-                      <td :colspan="headers.length">
-                        <v-data-table
-                          hide-default-footer
-                          hide-default-header
-                          :headers="headersSubItems"
-                          :items="item.items"
-                        >
-                          <template v-slot:item.formId="{ item }">
-                            <span>{{ materialMap[item.formId].form }}</span>
-                          </template>
-                        </v-data-table>
-                      </td>
-                    </template>
-                  </v-data-table>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col> <graph-tree :items="items" /></v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-card>
-                    <v-card-title>
-                      <h2
-                        class="text-h5 project-shelter__h4 font-weight-medium"
+                  <template v-slot:expanded-item="{ headers, item }">
+                    <td :colspan="headers.length">
+                      <v-data-table
+                        hide-default-footer
+                        hide-default-header
+                        :headers="headersSubItems"
+                        :items="item.items"
                       >
-                        Habitat risks
-                      </h2>
-                    </v-card-title>
-                    <v-card-text>
-                      <info-group
-                        v-for="risk in habitatRiskFiltered"
-                        :key="risk.id"
-                        :info="risk"
-                        :depth="2"
-                      />
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-card>
-                    <v-card-title>
-                      <h2
-                        class="text-h5 project-shelter__h4 font-weight-medium"
-                      >
-                        Reuse and recyle considerations
-                      </h2>
-                    </v-card-title>
-                    <v-card-text>
-                      <info-group
-                        v-for="info in reuseRecyclingFiltered"
-                        :key="info.id"
-                        :info="info"
-                        :depth="2"
-                      />
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-sheet>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-form>
+                        <template v-slot:item.formId="{ item }">
+                          <span>{{ materialMap[item.formId].form }}</span>
+                        </template>
+                      </v-data-table>
+                    </td>
+                  </template>
+                </v-data-table>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col> <graph-tree :items="items" /></v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-card>
+                  <v-card-title>
+                    <h2 class="text-h5 project-shelter__h4 font-weight-medium">
+                      Habitat risks
+                    </h2>
+                  </v-card-title>
+                  <v-card-text>
+                    <info-group
+                      v-for="risk in habitatRiskFiltered"
+                      :key="risk.id"
+                      :info="risk"
+                      :depth="2"
+                    />
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-card>
+                  <v-card-title>
+                    <h2 class="text-h5 project-shelter__h4 font-weight-medium">
+                      Reuse and recyle considerations
+                    </h2>
+                  </v-card-title>
+                  <v-card-text>
+                    <info-group
+                      v-for="info in reuseRecyclingFiltered"
+                      :key="info.id"
+                      :info="info"
+                      :depth="2"
+                    />
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-sheet>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
 import GraphTree from "@/components/shelter_sustainability/billOfQuantities/graphTree.vue";
 import InfoGroup from "@/components/shelter_sustainability/InfoGroup.vue";
-import {
-  MaterialReferenceData,
-  MaterialTree,
-  Shelter,
-} from "@/store/ShelterInterface";
+import { MaterialTree, Shelter } from "@/store/ShelterInterface";
 import { getFormIdItems } from "@/store/ShelterModuleUtils";
+import { ShelterMaterial } from "@/store/SheltersMaterialModule";
 import habitatRisks from "@/views/shelter_sustainability/ShelterSustainabilityItem/habitatRisks";
 import reuseRecycling from "@/views/shelter_sustainability/ShelterSustainabilityItem/reuseRecycling";
 import { cloneDeep } from "lodash";
@@ -173,7 +157,7 @@ import { mapGetters } from "vuex";
 @Component({
   computed: {
     ...mapGetters("ShelterModule", ["shelter"]),
-    ...mapGetters("GhgReferenceModule", ["materialMap", "materials"]),
+    ...mapGetters("SheltersMaterialModule", ["materialMap", "materials"]),
   },
   components: {
     InfoGroup,
@@ -184,7 +168,7 @@ import { mapGetters } from "vuex";
 export default class Step3Materials extends Vue {
   shelter!: Shelter;
   updateDoc!: (doc: Shelter) => void;
-  materialMap!: Record<string, MaterialReferenceData>;
+  materialMap!: Record<string, ShelterMaterial>;
 
   singleExpand = true;
   expanded = [];
@@ -267,7 +251,7 @@ export default class Step3Materials extends Vue {
 
   get currentMaterials(): string[] {
     return (
-      this.shelter.envPerfItems.map(
+      this.shelter?.envPerfItems?.map(
         (envPerf: MaterialTree): string => envPerf.materialId as string
       ) ?? []
     );

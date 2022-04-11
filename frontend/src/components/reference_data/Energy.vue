@@ -66,22 +66,21 @@
 <script lang="ts">
 import {
   EnergyReferences,
-  GreenHouseGazReference,
   ReferenceItemInterface,
-} from "@/store/GhgInterface";
+} from "@/store/GhgReferenceEnergyModule";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
-const REFERENCE_DOC_ID = "reference";
 @Component({
   computed: {
-    ...mapGetters("GhgReferenceModule", ["reference"]),
+    ...mapGetters("GhgReferenceEnergyModule", ["energy"]),
+
     ...mapGetters(["referenceDataDrawer"]),
   },
   methods: {
-    ...mapActions("GhgReferenceModule", [
+    ...mapActions("GhgReferenceEnergyModule", [
       "syncDB",
-      "getDoc",
+      "getAllDocs",
       "updateDoc",
       "closeDB",
     ]),
@@ -90,13 +89,11 @@ const REFERENCE_DOC_ID = "reference";
 export default class Energy extends Vue {
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
-  getDoc!: (id: string) => Promise<null>;
+  getAllDocs!: () => Promise<EnergyReferences>;
 
-  updateDoc!: (
-    obj: GreenHouseGazReference
-  ) => PromiseLike<GreenHouseGazReference>;
+  updateDoc!: (obj: EnergyReferences) => PromiseLike<EnergyReferences>;
 
-  reference!: GreenHouseGazReference;
+  energy!: EnergyReferences;
 
   snack = false;
   snackColor = "";
@@ -105,7 +102,7 @@ export default class Energy extends Vue {
 
   mounted(): void {
     this.syncDB();
-    this.getDoc(REFERENCE_DOC_ID);
+    this.getAllDocs();
   }
 
   destroyed(): void {
@@ -128,8 +125,8 @@ export default class Energy extends Vue {
   }
 
   public get items(): ReferenceItemInterface[] {
-    if (this.reference) {
-      const obj: EnergyReferences = this.reference.energy;
+    if (this.energy) {
+      const obj: EnergyReferences = this.energy;
       return Object.values(obj) as ReferenceItemInterface[];
     }
     return [];

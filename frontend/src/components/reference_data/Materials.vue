@@ -1,7 +1,7 @@
 <template>
   <v-card flat>
     <v-card-text>
-      <v-data-table :headers="headers" :items="reference.materials">
+      <v-data-table :headers="headers" :items="items">
         <template v-slot:item.density="props">
           <v-tooltip right>
             <template v-slot:activator="{ on, attrs }">
@@ -41,31 +41,33 @@
 </template>
 
 <script lang="ts">
-import { GreenHouseGazReference } from "@/store/GhgInterface";
+import { ShelterMaterial } from "@/store/SheltersMaterialModule";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
-const REFERENCE_DOC_ID = "reference";
-
 @Component({
   computed: {
-    ...mapGetters("GhgReferenceModule", ["reference"]),
+    ...mapGetters("SheltersMaterialModule", ["items"]),
   },
   methods: {
-    ...mapActions("GhgReferenceModule", ["syncDB", "getDoc", "closeDB"]),
+    ...mapActions("SheltersMaterialModule", [
+      "syncDB",
+      "getAllDocs",
+      "closeDB",
+    ]),
   },
 })
 export default class Materials extends Vue {
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
-  getDoc!: (id: string) => Promise<null>;
+  getAllDocs!: () => Promise<null>;
 
-  reference!: GreenHouseGazReference;
+  items!: ShelterMaterial[];
   pagination = {};
 
   mounted(): void {
     this.syncDB();
-    this.getDoc(REFERENCE_DOC_ID);
+    this.getAllDocs();
   }
 
   destroyed(): void {
@@ -78,6 +80,7 @@ export default class Materials extends Vue {
     return [
       { text: "Material", value: "material" },
       { text: "Form", value: "form" },
+      { text: "local", value: "local" },
       { text: "density", value: "density" },
       { text: "embodied_carbon", value: "embodied_carbon" },
       { text: "embodied_water", value: "embodied_water" },

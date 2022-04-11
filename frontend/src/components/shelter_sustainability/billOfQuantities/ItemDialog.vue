@@ -205,13 +205,9 @@
 
 <script lang="ts">
 import CountrySelect from "@/components/commons/CountrySelect.vue";
-import {
-  Item,
-  Material,
-  MaterialReferenceData,
-  Shelter,
-  Units,
-} from "@/store/ShelterInterface";
+import { Item, Material, Shelter, Units } from "@/store/ShelterInterface";
+import { ShelterMaterial } from "@/store/SheltersMaterialModule";
+import { ShelterTransport } from "@/store/SheltersTransportModule";
 import iso3166 from "@/utils/iso3166";
 import { VForm } from "@/utils/vuetify";
 import { cloneDeep } from "lodash";
@@ -226,7 +222,8 @@ import { mapActions, mapGetters } from "vuex";
       "editedItem",
       "editedIndex",
     ]),
-    ...mapGetters("GhgReferenceModule", [
+    ...mapGetters("SheltersMaterialModule", [
+      "items",
       "materials",
       "materialForms",
       "materialMap",
@@ -243,6 +240,7 @@ import { mapActions, mapGetters } from "vuex";
       "setEditDialog",
       "setItem",
     ]),
+    ...mapActions("SheltersTransportModule", ["syncDB", "getDoc", "closeDB"]),
   },
   components: {
     CountrySelect,
@@ -261,10 +259,14 @@ export default class DeleteItemDialog extends Vue {
     form: VForm;
   };
   materials!: string[];
-  materialForms!: Record<string, MaterialReferenceData[]>;
-  materialMap!: Record<string, MaterialReferenceData>;
+  materialForms!: Record<string, ShelterMaterial[]>;
+  materialMap!: Record<string, ShelterMaterial>;
   localItem: Item = {} as Item;
   shelter!: Shelter;
+
+  syncDB!: () => null;
+  closeDB!: () => Promise<null>;
+  getDoc!: (id: string) => Promise<ShelterTransport>;
 
   formValid = false;
   itemTypes = ["Material", "Labour", "Other"];
@@ -285,8 +287,9 @@ export default class DeleteItemDialog extends Vue {
     id: string,
     local: boolean
   ): Promise<number> {
-    console.log(id, local);
-    return await 0.4;
+    const shelter = await this.getDoc(id);
+    console.log(id, local, shelter.t, shelter.o);
+    return local ? shelter.t : shelter.o;
   }
 
   public async computeCost(): Promise<void> {
@@ -337,11 +340,11 @@ export default class DeleteItemDialog extends Vue {
     );
   }
 
-  public get currentMaterialForms(): MaterialReferenceData[] {
+  public get currentMaterialForms(): ShelterMaterial[] {
     if (this.isMaterial(this.localItem) && this.localItem.materialId) {
       return this.materialForms[this.localItem.materialId];
     }
-    return [] as MaterialReferenceData[];
+    return [] as ShelterMaterial[];
   }
 
   public resetLocalItemFormId(): void {
@@ -398,6 +401,13 @@ export default class DeleteItemDialog extends Vue {
 
   created(): void {
     this.syncLocalItem();
+  }
+
+  mounted(): void {
+    this.syncDB();
+  }
+  destroyed(): void {
+    this.closeDB();
   }
 }
 </script>

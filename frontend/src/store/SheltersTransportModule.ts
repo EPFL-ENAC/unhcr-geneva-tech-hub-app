@@ -30,7 +30,7 @@ export interface Paginate {
   Sand
   Stone
 */
-interface ShelterTransport {
+export interface ShelterTransport {
   _id: string; // 'AAA_BBB' source country (AAA) / destination country (BBB) in iso3166 3 letters
   t: number; // Transport   embodied carbon  kgCO2/kg (i.e. local materials)
   o: number; // Transport   embodied carbon  kgCO2/kg (all others materials)
@@ -95,12 +95,17 @@ const actions: ActionTree<SheltersTransportState, RootState> = {
   closeDB: (context: ActionContext<SheltersTransportState, RootState>) => {
     context.commit("CLOSE_DB");
   },
-  getDoc: (context: ActionContext<SheltersTransportState, RootState>, id) => {
+  getDoc: (
+    context: ActionContext<SheltersTransportState, RootState>,
+    id
+  ): Promise<ShelterTransport | void> => {
     const db = context.state.localCouch?.db;
     if (db) {
-      db.get(id)
+      return db
+        .get(id)
         .then(function (result) {
           context.commit("SET_ITEM", result);
+          return result;
         })
         .catch(function (err: Error) {
           console.log(err);
@@ -127,6 +132,7 @@ const actions: ActionTree<SheltersTransportState, RootState> = {
   getAllDocs: (context: ActionContext<SheltersTransportState, RootState>) => {
     const db = context.state.localCouch?.db;
     if (db) {
+      // todo: use views to avoid returning _design_document
       db.allDocs({
         include_docs: true,
         ...context.state.paginate,

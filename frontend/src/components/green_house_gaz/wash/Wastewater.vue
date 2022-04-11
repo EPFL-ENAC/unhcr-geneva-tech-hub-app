@@ -41,11 +41,7 @@
 </template>
 
 <script lang="ts">
-import {
-  GreenHouseGaz,
-  GreenHouseGazReference,
-  Survey,
-} from "@/store/GhgInterface";
+import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
@@ -63,7 +59,6 @@ import { mapActions, mapGetters } from "vuex";
 export default class WasteWater extends Vue {
   project!: GreenHouseGaz;
   localProject = {} as GreenHouseGaz;
-  reference!: GreenHouseGazReference;
 
   configuration = {};
   localSurvey = {} as Survey;

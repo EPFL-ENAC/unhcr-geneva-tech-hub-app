@@ -5,11 +5,8 @@
 </template>
 
 <script lang="ts">
-import {
-  MaterialReferenceData,
-  MaterialTree,
-  MaterialTreeKey,
-} from "@/store/ShelterInterface";
+import { MaterialTree, MaterialTreeKey } from "@/store/ShelterInterface";
+import { ShelterMaterial } from "@/store/SheltersMaterialModule";
 import { TreemapChart } from "echarts/charts";
 import { TooltipComponent } from "echarts/components";
 import { use } from "echarts/core";
@@ -25,15 +22,15 @@ use([CanvasRenderer, TreemapChart, TooltipComponent]);
   components: {
     VChart,
   },
-  ...mapGetters("GhgReferenceModule", ["materialMap"]),
+  ...mapGetters("SheltersMaterialModule", ["materialMap"]),
 })
 export default class GraphTree extends Vue {
-  @Prop([Object, Array])
-  readonly items: MaterialTree[] = [];
+  @Prop({ type: [Object, Array], default: () => [] })
+  readonly items!: MaterialTree[];
   @Prop([String])
   readonly selectedField: MaterialTreeKey | undefined;
 
-  materialMap!: Record<string, MaterialReferenceData>;
+  materialMap!: Record<string, ShelterMaterial>;
 
   public generateDataTree(key: MaterialTreeKey): datatree[] {
     return this.items.map(

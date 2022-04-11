@@ -7,7 +7,7 @@
       <v-row>
         <v-col>
           <h2 class="text-h4 project-shelter__h3 font-weight-medium">
-            WASH - Water
+            WASH - TRUCKING
           </h2>
         </v-col>
       </v-row>
@@ -50,13 +50,12 @@ import { mapActions, mapGetters } from "vuex";
 @Component({
   computed: {
     ...mapGetters("GhgModule", ["project"]),
-    ...mapGetters("GhgReferenceModule", ["reference"]),
   },
   methods: {
     ...mapActions("GhgModule", ["getDoc", "updateDoc"]),
   },
 })
-export default class Water extends Vue {
+export default class WASH extends Vue {
   project!: GreenHouseGaz;
   localProject = {} as GreenHouseGaz;
 

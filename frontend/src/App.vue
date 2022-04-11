@@ -114,7 +114,7 @@
     </v-main>
 
     <v-main v-else class="d-flex">
-      <v-container fluid>
+      <v-container fluid fill-height>
         <reference-data />
         <v-fade-transition mode="out-in">
           <router-view />

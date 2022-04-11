@@ -115,7 +115,10 @@
         hide-default-footer
       >
         <template v-slot:item.source="{ item }">
-          {{ item.source.split("_")[0] }}
+          {{ item._id.split("_")[0] }}
+        </template>
+        <template v-slot:item.destination="{ item }">
+          {{ item._id.split("_")[1] }}
         </template>
         <template v-slot:foot="{ pagination, options, updateOptions }">
           <v-data-footer
@@ -132,7 +135,6 @@
 </template>
 
 <script lang="ts">
-import { GreenHouseGazReference } from "@/store/GhgInterface";
 import { Paginate } from "@/store/SheltersTransportModule";
 import { cloneDeep } from "lodash";
 import { Component, Vue, Watch } from "vue-property-decorator";
@@ -169,7 +171,6 @@ export default class MaterialsTransport extends Vue {
 
   paginate!: Paginate;
 
-  reference!: GreenHouseGazReference;
   localPagination = {} as Paginate;
 
   get options(): Options {
@@ -224,7 +225,7 @@ export default class MaterialsTransport extends Vue {
 
   destroyed(): void {
     this.closeDB().then(() => {
-      console.log("DESTROYED view reference list, closing DB");
+      console.log("DESTROYED view list, closing DB");
     });
   }
   public getSourceCountry(key: string): Record<string, string> {
@@ -238,8 +239,8 @@ export default class MaterialsTransport extends Vue {
     // t: number; // Transport   embodied carbon  kgCO2/kg (i.e. local materials)
     // o: number; // Transport   embodied carbon  kgCO2/kg (all others materials)
     return [
-      { text: "Source country", value: "_id", sortable: false },
-      { text: "Destination country", value: "_id", sortable: false },
+      { text: "Source country", value: "source", sortable: false },
+      { text: "Destination country", value: "destination", sortable: false },
       {
         text: "Transport embodied carbon  kgCO2/kg (i.e. local materials)",
         value: "t",

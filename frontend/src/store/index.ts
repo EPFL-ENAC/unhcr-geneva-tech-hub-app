@@ -1,9 +1,11 @@
 import ConfigModule from "@/store/ConfigModule";
 import EnergyModule from "@/store/EnergyModule";
 import GhgModule from "@/store/GhgModule";
-import GhgReferenceModule from "@/store/GhgReferenceModule";
+import GhgReferenceEnergyModule from "@/store/GhgReferenceEnergyModule";
+import GhgReferenceIgesGridModule from "@/store/GhgReferenceIgesGridModule";
 import ShelterBillOfQuantitiesModule from "@/store/ShelterBillOfQuantitiesModule";
 import ShelterModule from "@/store/ShelterModule";
+import SheltersMaterialModule from "@/store/SheltersMaterialModule";
 import SheltersTransportModule from "@/store/SheltersTransportModule";
 import UserModule from "@/store/UserModule";
 import Vue from "vue";
@@ -175,9 +177,11 @@ const store: StoreOptions<RootState> = {
     ConfigModule,
     ShelterModule,
     SheltersTransportModule,
+    SheltersMaterialModule,
     ShelterBillOfQuantitiesModule,
     GhgModule,
-    GhgReferenceModule,
+    GhgReferenceEnergyModule,
+    GhgReferenceIgesGridModule,
     UserModule,
     energy: EnergyModule,
   },

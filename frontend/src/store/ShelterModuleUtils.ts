@@ -119,14 +119,14 @@ export function getScoreCard(value: Shelter): ScoreCard {
     returnValue.co2 =
       totalEnvPerf.embodiedCarbonTotal / geometry.floorArea / shelter_lifespan;
   } else {
-    console.log("embodied_carbon_total not defined");
+    console.log("embodiedCarbonTotal not defined");
   }
 
   if (totalEnvPerf?.embodiedWater) {
     returnValue.h2o =
       totalEnvPerf.embodiedWater / geometry.floorArea / shelter_lifespan;
   } else {
-    console.log("embodied_carbon_total not defined");
+    console.log("embodiedWater not defined");
   }
 
   return returnValue;

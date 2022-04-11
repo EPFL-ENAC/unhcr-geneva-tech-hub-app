@@ -306,17 +306,3 @@ export interface WindowDimensions {
   Hw: number | undefined;
   Hs: number | undefined;
 }
-export interface MaterialReferenceData {
-  local: boolean; //
-  density: number;
-  density_ref: string; //"ICE DB V2.0 (2011)"
-  density_unit: string; //"kg/m3"
-  embodied_carbon: number; // kgCO2e/kg
-  embodied_carbon_ref: string; //"ICE DB V3.0 (10.11.2019)"
-  embodied_water: number; //
-  embodied_water_ref: string; //"EcoInvent 3.8, aluminium alloy production, Metallic Matrix Composite, GLO (Global)"
-  form: string; // "Composite panel"
-  material: string; //"Aluminium"
-  units: string[]; //['KG', 'M2', 'PCE']
-  _id: string; // "ALU-CPA_"
-}

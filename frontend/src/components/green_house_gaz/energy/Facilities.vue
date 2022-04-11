@@ -149,12 +149,9 @@
 </template>
 
 <script lang="ts">
-import {
-  EnergySurvey,
-  GreenHouseGaz,
-  GreenHouseGazReference,
-  Survey,
-} from "@/store/GhgInterface";
+import { EnergySurvey, GreenHouseGaz, Survey } from "@/store/GhgInterface";
+import { EnergyReferences } from "@/store/GhgReferenceEnergyModule";
+import { IgesItemInterface } from "@/store/GhgReferenceIgesGridModule";
 import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Vue, Watch } from "vue-property-decorator";
@@ -163,7 +160,8 @@ import { mapActions, mapGetters } from "vuex";
 @Component({
   computed: {
     ...mapGetters("GhgModule", ["project"]),
-    ...mapGetters("GhgReferenceModule", ["reference"]),
+    ...mapGetters("GhgReferenceEnergyModule", ["energy"]),
+    ...mapGetters("GhgReferenceIgesGridModule", ["iges_grid_2021"]),
   },
   methods: {
     ...mapActions("GhgModule", ["getDoc", "updateDoc"]),
@@ -177,7 +175,8 @@ import { mapActions, mapGetters } from "vuex";
 export default class Facilities extends Vue {
   project!: GreenHouseGaz;
   localProject = {} as GreenHouseGaz;
-  reference!: GreenHouseGazReference;
+  iges_grid_2021!: IgesItemInterface[];
+  energy!: EnergyReferences;
 
   configuration = {};
   localSurvey = {} as Survey;
@@ -426,19 +425,13 @@ export default class Facilities extends Vue {
       REF_CONF_LDF,
       REF_DIES,
       REF_GRD,
-    } = this.reference.energy;
+    } = this.energy;
 
-    const iges_grid_2021 = this.reference.iges_grid_2021.find(
-      (el) => el.country_code === this.localProject.country_code
+    const iges_grid_2021 = this.iges_grid_2021.find(
+      (el) => el._id === this.localProject.country_code
     );
     REF_GRD.value = iges_grid_2021?.value || REF_GRD.value; // find REF_GRD per country
     /* for ECONF_DIES_EM */
-    console.log(
-      "iges",
-      iges_grid_2021,
-      this.reference.iges_grid_2021[0],
-      REF_GRD
-    );
     res.ECONF_PKW = REF_CONF_DGP.value; // DG power in kilowatt
     res.ECONF_DUSE = REF_CONF_DUSE.value; // Daily use time in h
 
@@ -474,7 +467,7 @@ export default class Facilities extends Vue {
   ): Record<string, number> {
     const res: Record<string, number> = {};
     try {
-      const { REF_DIES, REF_GRD } = this.reference.energy;
+      const { REF_DIES, REF_GRD } = this.energy;
 
       res.ECONF_KWD = configuration.ECONF_PKW * configuration.ECONF_DUSE; // kWh/day/facility /// TODO: SEEMS WRONG
       res.ECONF_PYR = res.ECONF_KWD * 365; // Energy needed per year in kWh

@@ -57,9 +57,13 @@
                 {{ item.source }}
               </template>
               <template v-slot:item.formId="{ item }">
-                <span v-if="item.itemType === 'Material'">{{
-                  materialMap[item.formId].form
-                }}</span>
+                <span
+                  v-if="
+                    item.itemType === 'Material' && materialMap[item.formId]
+                  "
+                >
+                  {{ materialMap[item.formId].form }}
+                </span>
                 <span v-else>--</span>
               </template>
 
@@ -118,7 +122,7 @@ import { mapActions, mapGetters } from "vuex";
       "items",
       "isItemDialogOpen",
     ]),
-    ...mapGetters("GhgReferenceModule", ["materialMap"]),
+    ...mapGetters("SheltersMaterialModule", ["materialMap"]),
   },
   methods: {
     ...mapActions("ShelterModule", ["updateDoc"]),
@@ -127,6 +131,11 @@ import { mapActions, mapGetters } from "vuex";
       "openNewItemDialog",
       "openEditItemDialog",
       "openDeleteDialog",
+    ]),
+    ...mapActions("SheltersMaterialModule", [
+      "syncDB",
+      "getAllDocs",
+      "closeDB",
     ]),
   },
   components: {
@@ -141,6 +150,10 @@ export default class Step3Materials extends Vue {
   isItemDialogOpen!: boolean;
   setItems!: (items: Item[]) => void;
   updateDoc!: (doc: Shelter) => void;
+
+  syncDB!: () => null;
+  closeDB!: () => Promise<null>;
+  getAllDocs!: () => Promise<null>;
 
   headers = [
     {
@@ -184,6 +197,14 @@ export default class Step3Materials extends Vue {
 
   created(): void {
     this.syncLocalShelter();
+  }
+
+  mounted(): void {
+    this.syncDB();
+    this.getAllDocs();
+  }
+  destroyed(): void {
+    this.closeDB();
   }
 }
 </script>

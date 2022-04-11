@@ -1,5 +1,3 @@
-import { MaterialReferenceData } from "@/store/ShelterInterface";
-
 export type CountriesInfoMap = Record<string, CountryInfo>;
 export interface Country {
   key: CountryCode;
@@ -50,27 +48,4 @@ export interface FacilitySurvey {
   inputs: Record<string, number>;
   inputsComputed: Record<string, number>;
   results: Record<string, number>;
-}
-
-export interface GreenHouseGazReference {
-  _id: string;
-  iges_grid_2021: IgesItemInterface[];
-  energy: EnergyReferences;
-  materials: MaterialReferenceData[];
-  // to be completed
-}
-
-export type EnergyReferences = Record<string, ReferenceItemInterface>;
-export type referenceType = "number" | "percentage";
-export interface ReferenceItemInterface {
-  description: string;
-  value: number;
-  type?: referenceType;
-  source?: string;
-}
-
-export interface IgesItemInterface {
-  name: string;
-  value: number;
-  country_code: string;
 }

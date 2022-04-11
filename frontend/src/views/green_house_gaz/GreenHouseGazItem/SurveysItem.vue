@@ -94,9 +94,10 @@ import HHWaste from "@/components/green_house_gaz/materials/HHWaste.vue";
 import Shelter from "@/components/green_house_gaz/materials/Shelter.vue";
 import TreePlanting from "@/components/green_house_gaz/offset/TreePlanting.vue";
 import Results from "@/components/green_house_gaz/Results.vue";
-import Transport from "@/components/green_house_gaz/wash/Transport.vue";
-import Wastewater from "@/components/green_house_gaz/wash/Wastewater.vue";
-import Water from "@/components/green_house_gaz/wash/Water.vue";
+// import Transport from "@/components/green_house_gaz/wash/Transport.vue";
+// import Wastewater from "@/components/green_house_gaz/wash/Wastewater.vue";
+// import Water from "@/components/green_house_gaz/wash/Water.vue";
+import WASH from "@/components/green_house_gaz/wash/WASH.vue";
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import getFlagEmoji from "@/utils/flagEmoji";
 import getCountryName from "@/utils/getCountryName";
@@ -115,9 +116,10 @@ import { mapGetters } from "vuex";
     CRI,
     HHWaste,
     Shelter,
-    Transport,
-    Water,
-    Wastewater,
+    // Transport, // to remove old WASH
+    // Water,// to remove old WASH
+    // Wastewater,// to remove old WASH
+    WASH,
     TreePlanting,
     Results,
   },
@@ -161,13 +163,13 @@ export default class SurveyList extends Vue {
     },
     {
       icon: "mdi-water",
-      text: "Wash transport",
-      to: "WASH",
-      children: [
-        { text: "Water", to: "Water", icon: "mdi-cup-water" },
-        { text: "Wastewater", to: "Wastewater", icon: "mdi-hand-water" },
-        { text: "Transport", to: "Transport", icon: "mdi-tanker-truck" },
-      ],
+      text: "WASH TRUCKING",
+      to: "WASH-WASH",
+      // children: [
+      //   { text: "Water", to: "Water", icon: "mdi-cup-water" },
+      //   { text: "Wastewater", to: "Wastewater", icon: "mdi-hand-water" },
+      //   { text: "Transport", to: "Transport", icon: "mdi-tanker-truck" },
+      // ],
     },
     {
       icon: "mdi-home",
