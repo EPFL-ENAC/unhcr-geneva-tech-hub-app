@@ -8,13 +8,18 @@ from typing import Any, List, Union
 def convert(filename: str, output: str):
     print(f"processing {filename} to {output}")
     folder = os.path.join(output, os.path.splitext(os.path.basename(filename))[0])
+    ids: List[str] = []
     with open(filename, newline="") as file:
         reader = csv.DictReader(file)
         for index, row in enumerate(reader):
+            id = row["_id"]
+            ids.append(id)
             item = {k: mapValue(v) for k, v in row.items()}
             item["index"] = index
-            with open(os.path.join(folder, f"{row['_id']}.json"), "w") as jsonFile:
+            with open(os.path.join(folder, f"{id}.json"), "w") as jsonFile:
                 json.dump(item, jsonFile, indent=2)
+    print(" | ".join([f'"{id}"' for id in ids]))
+    print()
 
 
 def mapValue(value: str) -> Union[str, int, float, List[Any]]:

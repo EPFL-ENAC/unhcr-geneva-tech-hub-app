@@ -40,10 +40,10 @@ import FormItemComponent, {
   SelectOption,
 } from "@/components/commons/FormItemComponent.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
+import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
 import { Scenario, ScenarioModule, ScenarioTrend } from "@/models/energyModel";
 import "vue-class-component/hooks";
 import { Component } from "vue-property-decorator";
-import EnergyFormMixin from "./EnergyFormMixin.vue";
 
 @Component({
   components: {

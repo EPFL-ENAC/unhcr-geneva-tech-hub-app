@@ -51,6 +51,7 @@ import {
   vacantSpaceOutside,
   WoodLandscape,
 } from "@/models/energyModel";
+import { getCurrentYear } from "@/utils/energy";
 import { checkSum } from "@/utils/rules";
 import "vue-class-component/hooks";
 import { Component } from "vue-property-decorator";
@@ -95,7 +96,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
   }
 
   get emptyModule(): GeneralModule {
-    const currentYear = new Date().getFullYear();
+    const currentYear = getCurrentYear();
     return {
       name: "",
       yearStart: currentYear,

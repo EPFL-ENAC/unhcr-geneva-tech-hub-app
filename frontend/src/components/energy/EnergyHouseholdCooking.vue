@@ -7,7 +7,7 @@
     <template v-slot:prepend>
       <v-data-table
         :headers="tableHeaders"
-        item-key="_id"
+        item-key="id"
         :items="tableItems"
         :items-per-page="5"
         show-expand
@@ -114,11 +114,13 @@ import {
   CategoryCooking,
   CookingFuel,
   CookingStove,
+  CookingStoveId,
   HouseholdCookingInput,
   HouseholdCookingModule,
   socioEconomicCategories,
   SocioEconomicCategory,
 } from "@/models/energyModel";
+import { getCookingFuel } from "@/utils/energy";
 import { SelectItemObject } from "@/utils/vuetify";
 import { chain, cloneDeep } from "lodash";
 import "vue-class-component/hooks";
@@ -229,10 +231,9 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   addSelectedItem: CookingStove | null = null;
 
   get addSelectItems(): SelectItemObject<string, CookingStove>[] {
-    const existingIds = new Set(this.tableItems.map((item) => item._id));
+    const existingIds = new Set(this.tableItems.map((item) => item.id));
     return chain(this.cookingStoves)
       .filter((stove) => !existingIds.has(stove._id))
-      .sortBy((stove) => stove.index)
       .map((stove) => ({
         text: `${stove.name} - ${this.getFuel(stove).name}`,
         value: stove,
@@ -244,10 +245,11 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
     return this.module.categoryCookings.map((item) => ({
       ...item.categories,
       ...item.stove,
-      ...item.fuel,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...(item.fuel as any),
       cookstoveName: item.stove.name,
       fuelName: item.fuel.name,
-      _id: item.stove._id,
+      id: item.stove._id,
       index: item.stove.index,
     }));
   }
@@ -263,16 +265,7 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   }
 
   private getFuel(stove: CookingStove): CookingFuel {
-    return (
-      this.cookingFuels.find((fuel) => fuel._id === stove.fuel) ?? {
-        _id: stove.fuel,
-        name: stove.fuel,
-        index: -1,
-        energy: 0,
-        emissionFactorCo2: 0,
-        price: 0,
-      }
-    );
+    return getCookingFuel(this.cookingFuels, stove);
   }
 
   private mapCategoryCooking(stove: CookingStove): CategoryCooking {
@@ -299,16 +292,16 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
 
   deleteItem(tableItem: TableItem): void {
     this.module.categoryCookings = this.module.categoryCookings.filter(
-      (item) => item.stove._id !== tableItem._id
+      (item) => item.stove._id !== tableItem.id
     );
   }
 
   categoryCooking(item: TableItem): CategoryCooking {
     const categoryCooking = this.module.categoryCookings.find(
-      (cooking) => cooking.stove._id === item._id
+      (cooking) => cooking.stove._id === item.id
     );
     if (!categoryCooking) {
-      throw new Error(`id ${item._id} not found`);
+      throw new Error(`id ${item.id} not found`);
     }
     return categoryCooking;
   }
@@ -317,6 +310,7 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
 type TableItem = Record<SocioEconomicCategory, HouseholdCookingInput> &
   CookingStove &
   CookingFuel & {
+    id: CookingStoveId;
     cookstoveName: string;
     fuelName: string;
   };

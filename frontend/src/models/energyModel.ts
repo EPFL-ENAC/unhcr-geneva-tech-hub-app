@@ -3,12 +3,29 @@ export interface ProjectDocument {
   users: string[];
   modules: Modules;
 }
-
 export interface Modules {
   general?: GeneralModule;
   householdCooking?: HouseholdCookingModule;
   scenario?: ScenarioModule;
 }
+
+// Common
+
+export type SocioEconomicCategory =
+  | "veryLow"
+  | "low"
+  | "middle"
+  | "high"
+  | "veryHigh";
+export const socioEconomicCategories: SocioEconomicCategory[] = [
+  "veryLow",
+  "low",
+  "middle",
+  "high",
+  "veryHigh",
+];
+
+// General
 
 export interface GeneralModule {
   name: string;
@@ -77,16 +94,16 @@ export interface GeneralCategory {
   annualIncome: number;
 }
 
+// Household Cooking
+
 export interface HouseholdCookingModule {
   categoryCookings: CategoryCooking[];
 }
-
 export interface CategoryCooking {
   categories: Record<SocioEconomicCategory, HouseholdCookingInput>;
   stove: CookingStove;
   fuel: CookingFuel;
 }
-
 export interface HouseholdCookingInput {
   /**
    * CU
@@ -98,23 +115,8 @@ export interface HouseholdCookingInput {
   countPerHousehold: number;
 }
 
-type Tier = number | [number, number];
+// Scenario
 
-export type SocioEconomicCategory =
-  | "veryLow"
-  | "low"
-  | "middle"
-  | "high"
-  | "veryHigh";
-export const socioEconomicCategories: SocioEconomicCategory[] = [
-  "veryLow",
-  "low",
-  "middle",
-  "high",
-  "veryHigh",
-];
-
-export type ScenarioTrend = "stable" | "increase" | "decrease";
 export interface ScenarioModule {
   selectedId: string;
   scenarios: Scenario[];
@@ -137,16 +139,64 @@ export interface Scenario {
    */
   demographicGrowth: number;
 }
+export type ScenarioTrend = "stable" | "increase" | "decrease";
 
-/**
- * CouchDB Models
- */
+// Intervention
+
+export interface InterventionModule {
+  interventions: Intervention[];
+}
+type Intervention = CookingTechnologyIntervention;
+interface ParentIntervention {
+  type: "cooking-technology";
+  name: string;
+  selected: boolean;
+  yearStart: number;
+  yearEnd: number;
+}
+export interface CookingTechnologyIntervention extends ParentIntervention {
+  type: "cooking-technology";
+  newStoveId: CookingStoveId;
+  oldStoveIds: CookingStoveId[];
+  count: number;
+  categories: SocioEconomicCategory[];
+  cost: number;
+  donnorSubsidy: number;
+}
+
+// CouchDB Models
+
+export type CookingStoveId =
+  | "traditional-wood"
+  | "traditional-charcoal"
+  | "clay-wood"
+  | "clay-charcoal"
+  | "ceramic-wood"
+  | "ceramic-charcoal"
+  | "metal-side-wood"
+  | "metal-side-charcoal"
+  | "metal-batch-wood"
+  | "metal-batch-charcoal"
+  | "gasifier"
+  | "ethanol"
+  | "kerosene"
+  | "lpg"
+  | "biogas"
+  | "induction";
+export type CookingFuelId =
+  | "wood"
+  | "charcoal"
+  | "pellets"
+  | "ethanol"
+  | "kerosene"
+  | "lpg"
+  | "biogas";
 
 export interface CookingStove {
-  _id: string;
+  _id: CookingStoveId;
   index: number;
   name: string;
-  fuel: "wood" | "charcoal" | "pellet" | "ethanol" | "kerosene";
+  fuel: CookingFuelId;
   technologyType: "conventional" | "improved";
   /**
    * CE
@@ -175,9 +225,10 @@ export interface CookingStove {
    */
   iwaIndoorEmissionTier: Tier;
 }
+type Tier = number | [number, number];
 
 export interface CookingFuel {
-  _id: string;
+  _id: CookingFuelId;
   index: number;
   name: string;
   /**

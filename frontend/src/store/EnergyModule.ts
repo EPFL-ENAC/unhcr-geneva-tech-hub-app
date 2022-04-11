@@ -3,6 +3,7 @@ import {
   CookingStove as CookingStove,
 } from "@/models/energyModel";
 import { DatabaseName, SyncDatabase } from "@/utils/couchdb";
+import { sortBy } from "lodash";
 import { Module } from "vuex";
 import { RootState } from ".";
 
@@ -41,7 +42,7 @@ const energyModule: Module<State, RootState> = {
       state.cookingFuelsDatabase = value;
     },
     [MutationTypes.SetCookingFuels](state, value: CookingFuel[]) {
-      state.cookingFuels = value;
+      state.cookingFuels = sortBy(value, (item) => item.index);
     },
     [MutationTypes.SetCookingStovesDatabase](
       state,
@@ -50,7 +51,7 @@ const energyModule: Module<State, RootState> = {
       state.cookingStovesDatabase = value;
     },
     [MutationTypes.SetCookingStoves](state, value: CookingStove[]) {
-      state.cookingStoves = value;
+      state.cookingStoves = sortBy(value, (item) => item.index);
     },
   },
   actions: {

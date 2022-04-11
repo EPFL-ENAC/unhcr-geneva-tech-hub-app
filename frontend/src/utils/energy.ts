@@ -1,3 +1,9 @@
+import { CookingFuel, CookingStove } from "@/models/energyModel";
+
+export function getCurrentYear(): number {
+  return new Date().getFullYear();
+}
+
 export function applyMap<T extends Record<keyof T, number>>(
   t: T,
   fn: (value: number) => number
@@ -21,4 +27,19 @@ export function applyReduce<T extends Record<keyof T, number>>(
   } else {
     return ts.reduce(callbackFn);
   }
+}
+
+export function getCookingFuel(
+  cookingFuels: CookingFuel[],
+  stove: CookingStove,
+  defaultFuel: CookingFuel = {
+    _id: stove.fuel,
+    name: stove.fuel,
+    index: -1,
+    energy: 0,
+    emissionFactorCo2: 0,
+    price: 0,
+  }
+): CookingFuel {
+  return cookingFuels.find((fuel) => fuel._id === stove.fuel) ?? defaultFuel;
 }
