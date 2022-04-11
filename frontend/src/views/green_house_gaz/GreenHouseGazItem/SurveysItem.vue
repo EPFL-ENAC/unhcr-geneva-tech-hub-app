@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid v-if="project && currentSurvey">
+  <div v-if="project && currentSurvey" class="fluid surveys-item">
     <header>
       <v-row>
         <v-col :cols="10">
@@ -81,7 +81,7 @@
         <component :is="$router.currentRoute.query.subcategory" />
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script lang="ts">
@@ -139,27 +139,27 @@ export default class SurveyList extends Vue {
 
   readonly menuItems: MenuItem[] = [
     {
-      children: [
-        {
-          icon: "mdi-shower",
-          text: "Facilities",
-          to: "Facilities",
-        },
-        { icon: "mdi-stove", text: "Cooking", to: "cooking" },
-        {
-          icon: "mdi-lightbulb",
-          text: "Lighting",
-          to: "lighting",
-        },
-        {
-          icon: "mdi-water-pump",
-          text: "Pumping",
-          to: "pumping",
-        },
-      ],
+      // children: [
+      //   {
+      //     icon: "mdi-shower",
+      //     text: "Facilities",
+      //     to: "Facilities",
+      //   },
+      //   { icon: "mdi-stove", text: "Cooking", to: "cooking" },
+      //   {
+      //     icon: "mdi-lightbulb",
+      //     text: "Lighting",
+      //     to: "lighting",
+      //   },
+      //   {
+      //     icon: "mdi-water-pump",
+      //     text: "Pumping",
+      //     to: "pumping",
+      //   },
+      // ],
       icon: "mdi-lightning-bolt",
       text: "Energy",
-      to: "Energy",
+      to: "Energy-Facilities",
     },
     {
       icon: "mdi-water",
@@ -187,11 +187,11 @@ export default class SurveyList extends Vue {
       text: "Offset",
       to: "Offset-TreePlanting",
     },
-    {
-      icon: "mdi-newspaper-variant-outline",
-      text: "Results",
-      to: "Results-Results",
-    },
+    // {
+    //   icon: "mdi-newspaper-variant-outline",
+    //   text: "Results",
+    //   to: "Results-Results",
+    // },
   ];
 
   _tabSelected = "";
@@ -243,3 +243,9 @@ interface MenuItem {
   children?: MenuItem[];
 }
 </script>
+
+<style scoped>
+.surveys-item {
+  width: 100%;
+}
+</style>
