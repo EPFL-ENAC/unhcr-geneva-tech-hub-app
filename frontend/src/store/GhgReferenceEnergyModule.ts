@@ -19,7 +19,7 @@ export interface ReferenceItemInterface {
 }
 
 interface GhgReferenceEnergyState {
-  items: EnergyReferences | null;
+  items: ReferenceItemInterface[] | null;
   itemsLength: number;
   localCouch: SyncDatabase<EnergyReferences> | null;
 }
@@ -38,7 +38,7 @@ function generateState(): GhgReferenceEnergyState {
 
 /** Getters */
 const getters: GetterTree<GhgReferenceEnergyState, RootState> = {
-  energy: (s): EnergyReferences | null => s.items,
+  energy: (s): ReferenceItemInterface[] | null => s.items,
 };
 
 /** Mutations */

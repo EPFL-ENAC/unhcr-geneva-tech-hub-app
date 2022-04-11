@@ -15,7 +15,7 @@ export interface IgesItemInterface {
 }
 
 interface GhgReferenceIgesGridState {
-  items: IgesItemInterface | null;
+  items: IgesItemInterface[] | null;
   itemsLength: number;
   localCouch: SyncDatabase<IgesItemInterface> | null;
 }
@@ -34,7 +34,7 @@ function generateState(): GhgReferenceIgesGridState {
 
 /** Getters */
 const getters: GetterTree<GhgReferenceIgesGridState, RootState> = {
-  iges_grid_2021: (s): IgesItemInterface | null => s.items,
+  iges_grid_2021: (s): IgesItemInterface[] | null => s.items,
 };
 
 /** Mutations */

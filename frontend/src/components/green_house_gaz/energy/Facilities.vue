@@ -150,7 +150,10 @@
 
 <script lang="ts">
 import { EnergySurvey, GreenHouseGaz, Survey } from "@/store/GhgInterface";
-import { EnergyReferences } from "@/store/GhgReferenceEnergyModule";
+import {
+  EnergyReferences,
+  ReferenceItemInterface,
+} from "@/store/GhgReferenceEnergyModule";
 import { IgesItemInterface } from "@/store/GhgReferenceIgesGridModule";
 import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
@@ -165,6 +168,16 @@ import { mapActions, mapGetters } from "vuex";
   },
   methods: {
     ...mapActions("GhgModule", ["getDoc", "updateDoc"]),
+    ...mapActions("GhgReferenceEnergyModule", {
+      syncDBGhgEnergy: "syncDB",
+      closeDBGhgEnergy: "closeDB",
+      getAllDocsGhgEnergy: "getAllDocs",
+    }),
+    ...mapActions("GhgReferenceIgesGridModule", {
+      syncDBGhgIgesGrid: "syncDB",
+      closeDBGhgIgesGrid: "closeDB",
+      getAllDocsGhgIgesGrid: "getAllDocs",
+    }),
   },
   filters: {
     formatNumber(n: number): string {
@@ -176,12 +189,20 @@ export default class Facilities extends Vue {
   project!: GreenHouseGaz;
   localProject = {} as GreenHouseGaz;
   iges_grid_2021!: IgesItemInterface[];
-  energy!: EnergyReferences;
+  energy!: ReferenceItemInterface[];
 
   configuration = {};
   localSurvey = {} as Survey;
   localSurveyIndex = -1;
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
+
+  syncDBGhgEnergy!: () => null;
+  closeDBGhgEnergy!: () => Promise<null>;
+  getAllDocsGhgEnergy!: () => Promise<EnergyReferences>;
+
+  syncDBGhgIgesGrid!: () => null;
+  closeDBGhgIgesGrid!: () => Promise<null>;
+  getAllDocsGhgIgesGrid!: () => Promise<IgesItemInterface[]>;
 
   public get currentSurvey(): Survey | undefined {
     if (!this.project) {
@@ -210,8 +231,15 @@ export default class Facilities extends Vue {
       ) ?? -1;
     this.localSurvey =
       this.localProject.surveys?.[this.localSurveyIndex] ?? ({} as Survey);
-    if (!this.localSurvey.energy) {
-      // this.localSurvey.energy = this.newEnergySurvey();
+
+    this.initEnergy();
+  }
+
+  public initEnergy(): void {
+    const energyForm = this.localSurvey.energy;
+    const conf = energyForm?.facilities?.configuration ?? {};
+    const confDefined = Object.keys(conf).length !== 0;
+    if (!confDefined) {
       this.$set(this.localSurvey, "energy", this.newEnergySurvey());
     }
   }
@@ -232,6 +260,19 @@ export default class Facilities extends Vue {
     this.syncLocalProject();
   }
 
+  public mounted(): void {
+    this.syncDBGhgEnergy();
+    this.getAllDocsGhgEnergy();
+
+    this.syncDBGhgIgesGrid();
+    this.getAllDocsGhgIgesGrid();
+  }
+
+  public destroyed(): void {
+    this.closeDBGhgEnergy();
+    this.closeDBGhgIgesGrid();
+  }
+
   public async submitForm(value: GreenHouseGaz): Promise<void> {
     if (value.name !== "") {
       value.surveys.splice(this.localSurveyIndex, 1, this.localSurvey);
@@ -244,7 +285,7 @@ export default class Facilities extends Vue {
 
   private newEnergySurvey(): EnergySurvey {
     // warning reference may not have been downloaded yet!
-    // TODO: add safeguard
+    // that's why we run this in a Watch for energy&& grid2021
     const configuration = this.getDefaultConfiguration();
     return {
       facilities: {
@@ -412,9 +453,25 @@ export default class Facilities extends Vue {
     },
   ];
 
+  private get energyMap(): EnergyReferences | undefined {
+    if (!this.energy) {
+      return undefined;
+    }
+    return this.energy.reduce(
+      (acc: EnergyReferences, item: ReferenceItemInterface) => {
+        acc[item._id] = item;
+        return acc;
+      },
+      {} as EnergyReferences
+    );
+  }
+
   private getDefaultConfiguration(): Record<string, number> {
     let res = {} as Record<string, number>;
-
+    if (!this.energy || !this.iges_grid_2021 || !this.energyMap) {
+      // energy and iges not retrieved yet.
+      return res;
+    }
     const {
       REF_CONF_HYB_DP,
       REF_CONF_HYB_GP,
@@ -425,7 +482,7 @@ export default class Facilities extends Vue {
       REF_CONF_LDF,
       REF_DIES,
       REF_GRD,
-    } = this.energy;
+    } = this.energyMap;
 
     const iges_grid_2021 = this.iges_grid_2021.find(
       (el) => el._id === this.localProject.country_code
@@ -467,7 +524,10 @@ export default class Facilities extends Vue {
   ): Record<string, number> {
     const res: Record<string, number> = {};
     try {
-      const { REF_DIES, REF_GRD } = this.energy;
+      if (!this.energyMap) {
+        return res;
+      }
+      const { REF_DIES, REF_GRD } = this.energyMap;
 
       res.ECONF_KWD = configuration.ECONF_PKW * configuration.ECONF_DUSE; // kWh/day/facility /// TODO: SEEMS WRONG
       res.ECONF_PYR = res.ECONF_KWD * 365; // Energy needed per year in kWh
@@ -493,6 +553,13 @@ export default class Facilities extends Vue {
         configurationComputed
       );
     }
+  }
+
+  @Watch("energy", { deep: true })
+  @Watch("iges_grid_2021", { deep: true })
+  public onReferenceChange(): void {
+    this.initEnergy();
+    // it shoudl trigger onConfigurationChange afterward
   }
 
   @Watch("localSurvey.energy.facilities.configurationComputed", { deep: true })

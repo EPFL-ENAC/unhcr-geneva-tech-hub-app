@@ -23,7 +23,14 @@
                 <v-list-item-title class="text-h5 mb-1">
                   {{ app.title }}
                 </v-list-item-title>
-                {{ app.description }} <a @click.stop="" v-if="app.link" :href="app.link" target="_blank">{{app.linkName}}</a>
+                {{ app.description }}
+                <a
+                  @click.stop=""
+                  v-if="app.link"
+                  :href="app.link"
+                  target="_blank"
+                  >{{ app.linkName }}</a
+                >
               </v-list-item-content>
 
               <div class="icon-and-click">
