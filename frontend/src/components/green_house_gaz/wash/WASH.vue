@@ -19,7 +19,19 @@
       <v-row>
         <v-col :cols="4">
           <v-card flat>
-            <v-card-title><h2>Baseline</h2></v-card-title>
+            <v-card-title><h1>Baseline</h1></v-card-title>
+          </v-card>
+        </v-col>
+        <v-col :cols="4">
+          <v-card flat>
+            <v-card-title> <h1>Endline</h1></v-card-title>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col :cols="4">
+          <v-card flat>
+            <v-card-title><h2>Inputs</h2></v-card-title>
             <v-card-text>
               <div v-for="washInput in washInputs" :key="washInput.code">
                 <v-text-field
@@ -43,7 +55,7 @@
         </v-col>
         <v-col :cols="4">
           <v-card flat>
-            <v-card-title><h2>Endline</h2></v-card-title>
+            <v-card-title><h2>Inputs</h2></v-card-title>
             <v-card-text>
               <div v-for="washInput in washInputs" :key="washInput.code">
                 <v-text-field
@@ -104,7 +116,7 @@
         </v-col>
         <v-col :cols="4">
           <v-card flat>
-            <v-card-title><h2>Balance</h2></v-card-title>
+            <v-card-title><h1>Balance</h1></v-card-title>
             <v-card-text>
               <v-text-field
                 v-for="washBalanceResult in washBalanceResults"
@@ -366,6 +378,9 @@ interface WashBalanceResult {
 </script>
 
 <style lang="scss" scoped>
+::v-deep .theme--light.v-input--is-disabled input {
+  color: black;
+}
 ::v-deep .wash-negative.theme--light.v-input--is-disabled input {
   color: red;
 }
