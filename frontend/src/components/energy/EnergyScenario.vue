@@ -72,13 +72,13 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
       key: "energyPriceTrend",
       label: "Energy Price",
       options: this.trendOptions,
-    },
+    } as FormItem<keyof Scenario, ScenarioTrend>,
     {
       type: "select",
       key: "investmentCostTrend",
       label: "Investment Cost",
       options: this.trendOptions,
-    },
+    } as FormItem<keyof Scenario, ScenarioTrend>,
     {
       type: "number",
       key: "discountRate",

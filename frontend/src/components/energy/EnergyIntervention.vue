@@ -47,6 +47,8 @@ import {
   CookingStoveId,
   CookingTechnologyIntervention,
   InterventionModule,
+  socioEconomicCategories,
+  SocioEconomicCategory,
 } from "@/models/energyModel";
 import { getCookingFuel, getCurrentYear } from "@/utils/energy";
 import "vue-class-component/hooks";
@@ -96,7 +98,7 @@ export default class EnergyIntervention extends EnergyFormMixin<InterventionModu
         key: "newStoveId",
         label: "New technology",
         options: this.stoveIdOptions,
-      },
+      } as FormItem<keyof CookingTechnologyIntervention, CookingStoveId>,
       {
         type: "number",
         key: "yearStart",
@@ -107,13 +109,25 @@ export default class EnergyIntervention extends EnergyFormMixin<InterventionModu
         key: "yearEnd",
         label: "Ending year of the diffusion",
       },
-      // TODO oldStoveIds
+      {
+        type: "select",
+        key: "oldStoveIds",
+        label: "Technologies to replace",
+        options: this.stoveIdOptions,
+        multiple: true,
+      } as FormItem<keyof CookingTechnologyIntervention, CookingStoveId>,
       {
         type: "number",
         key: "count",
         label: "Number of cookstoves per year",
       },
-      // TODO categories
+      {
+        type: "select",
+        key: "categories",
+        label: "Target socio-economic categories",
+        options: this.categoryOptions,
+        multiple: true,
+      } as FormItem<keyof CookingTechnologyIntervention, SocioEconomicCategory>,
       {
         type: "number",
         key: "cost",
@@ -131,6 +145,13 @@ export default class EnergyIntervention extends EnergyFormMixin<InterventionModu
     return this.cookingStoves.map((stove) => ({
       text: `${stove.name} - ${getCookingFuel(this.cookingFuels, stove).name}`,
       value: stove._id,
+    }));
+  }
+
+  get categoryOptions(): SelectOption<SocioEconomicCategory>[] {
+    return socioEconomicCategories.map((cat) => ({
+      text: this.$t("energy." + cat).toString(),
+      value: cat,
     }));
   }
 

@@ -393,9 +393,9 @@ export default class EnergyResult extends Vue {
       const energy = usefulEnergy / technology.stove.energyEfficiency;
       // CWF
       const fuelWeight = energy / technology.fuel.energy;
-      const woodWeight = technology.stove.fuel === "wood" ? fuelWeight : 0;
+      const woodWeight = technology.fuel._id === "wood" ? fuelWeight : 0;
       const charcoalWeight =
-        technology.stove.fuel === "charcoal" ? fuelWeight : 0;
+        technology.fuel._id === "charcoal" ? fuelWeight : 0;
       // CEmiss
       const emissionCo2 = fuelWeight * technology.fuel.emissionFactorCo2;
       const emissionCo = energy * technology.stove.emissionFactorCo;

@@ -3,6 +3,7 @@
     <v-text-field
       v-if="type === 'text'"
       v-model="model"
+      clearable
       hide-details="auto"
       required
       :rules="actualRules"
@@ -19,6 +20,7 @@
     <v-text-field
       v-if="type === 'number'"
       v-model.number="numberModel"
+      :clearable="!actualUnit"
       hide-details="auto"
       hide-spin-buttons
       required
@@ -38,8 +40,12 @@
     <v-select
       v-if="type === 'boolean' || type === 'select'"
       v-model="model"
+      :small-chips="multiple"
+      :clearable="multiple"
+      deletable-chips
       hide-details="auto"
       :items="items"
+      :multiple="multiple"
       required
       :rules="actualRules"
     >
@@ -64,8 +70,8 @@ import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 
 @Component
 export default class FormItemComponent extends Vue {
-  @VModel({ type: [String, Number, Boolean] })
-  model!: string | number | boolean;
+  @VModel({ type: [String, Number, Boolean, Array] })
+  model!: string | number | boolean | string[];
   @Prop({ type: String as () => "text" | "number" | "boolean" | "select" })
   readonly type!: "text" | "number" | "boolean" | "select";
   @Prop({ type: String as () => "percent" })
@@ -86,6 +92,8 @@ export default class FormItemComponent extends Vue {
   readonly optional!: boolean;
   @Prop(Number)
   readonly ratio: number | undefined;
+  @Prop(Boolean)
+  readonly multiple: boolean | undefined;
 
   get items(): SelectItemObject<string, SelectValue>[] {
     switch (this.type) {
@@ -200,6 +208,7 @@ interface SelectFormItem<K, V> extends AbstractFormItem<K> {
   type: "select";
   options: SelectOption<V>[];
   unit?: string;
+  multiple?: boolean;
 }
 
 interface BooleanOptions {
