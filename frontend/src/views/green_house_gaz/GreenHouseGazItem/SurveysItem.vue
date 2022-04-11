@@ -187,11 +187,11 @@ export default class SurveyList extends Vue {
       text: "Offset",
       to: "Offset-TreePlanting",
     },
-    // {
-    //   icon: "mdi-newspaper-variant-outline",
-    //   text: "Results",
-    //   to: "Results-Results",
-    // },
+    {
+      icon: "mdi-newspaper-variant-outline",
+      text: "Results",
+      to: "Results-Results",
+    },
   ];
 
   _tabSelected = "";
