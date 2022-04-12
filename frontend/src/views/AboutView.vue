@@ -1,5 +1,5 @@
 <template>
-  <main class="about-view">
+  <main class="about-view d-flex space-between">
     <v-card class="about ma-4" elevation="2">
       <v-card-text>
         <h2 class="mx-8">Disclaimer</h2>
