@@ -129,7 +129,7 @@ a:active {
 .fixed-tabs-bar {
   position: -webkit-sticky;
   position: sticky;
-  top: 4rem; // 16px*4
+  top: 3rem; // 16px*3
   z-index: 2;
 }
 </style>

@@ -76,6 +76,14 @@
                           :rules="shelterOccupantRules"
                         ></v-select>
                         <v-select
+                          :items="shelterTypes"
+                          label="Shelter type"
+                          v-model.number="localShelter.shelter_type"
+                          name="shelter_type"
+                          required
+                          :rules="shelterTypeRules"
+                        ></v-select>
+                        <v-select
                           :items="lifeExpectancy"
                           v-model.number="localShelter.shelter_lifespan"
                           name="shelter_lifespan"
@@ -279,6 +287,7 @@ export default class Step1 extends Vue {
   tab = 0;
   newUser = "";
   occupantsOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  shelterTypes = ["Emergency", "Transitional", "Durable"];
   lifeExpectancy = [
     { label: "6 months or less", value: 0.5 },
     { label: "1 year", value: 1 },
@@ -298,6 +307,7 @@ export default class Step1 extends Vue {
     (v: string): boolean | string =>
       v?.length > 1 || `should have a length >= 1`,
   ];
+  shelterTypeRules = this.textRules;
 
   shelterTotalRules = [
     (v: number): boolean | string => !!v || `is required`,

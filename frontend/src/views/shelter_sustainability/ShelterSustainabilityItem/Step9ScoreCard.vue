@@ -22,16 +22,24 @@
               </v-col>
             </v-row>
             <v-row v-for="(option, idx) in options" :key="idx">
-              <v-col :cols="2">
-                <span v-if="option.config.subpart" class="mx-4">
-                  {{ option.config.title }}</span
-                >
-                <h2 v-else>{{ option.config.title }}</h2>
+              <v-col :cols="3">
+                <v-layout class="align-center">
+                  <span v-if="option.config.subpart" class="mx-4">
+                    {{ option.config.title }}</span
+                  >
+                  <h2 v-else>{{ option.config.title }}</h2>
+
+                  <v-tooltip right :max-width="300">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn icon v-bind="attrs" v-on="on">
+                        <v-icon v-text="'mdi-information'"></v-icon>
+                      </v-btn>
+                    </template>
+                    <span>{{ option.config.description }}</span>
+                  </v-tooltip>
+                </v-layout>
               </v-col>
-              <v-col
-                class="about-first-column d-flex justify-center"
-                :cols="10"
-              >
+              <v-col class="about-first-column d-flex justify-center" :cols="9">
                 <v-responsive aspect-ratio="5" min-height="20" max-height="90">
                   <v-chart autoresize :option="options[idx]"></v-chart>
                 </v-responsive>
@@ -45,22 +53,23 @@
 </template>
 
 <script lang="ts">
-import { ScoreCard,Shelter } from "@/store/ShelterInterface";
+import { ScoreCard, Shelter } from "@/store/ShelterInterface";
 import { SyncDatabase } from "@/utils/couchdb";
 import { ScatterChart } from "echarts/charts";
 import {
-GridComponent,
-LegendComponent,
-SingleAxisComponent,
-TitleComponent,
-TooltipComponent
+  GridComponent,
+  LegendComponent,
+  MarkPointComponent,
+  SingleAxisComponent,
+  TitleComponent,
+  TooltipComponent,
 } from "echarts/components";
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
-import { CallbackDataParams,EChartsOption } from "echarts/types/dist/shared";
+import { CallbackDataParams, EChartsOption } from "echarts/types/dist/shared";
 import VChart from "vue-echarts";
-import { Component,Vue } from "vue-property-decorator";
-import { mapActions,mapGetters } from "vuex";
+import { Component, Vue } from "vue-property-decorator";
+import { mapActions, mapGetters } from "vuex";
 use([
   CanvasRenderer,
   SingleAxisComponent,
@@ -69,6 +78,7 @@ use([
   LegendComponent,
   TitleComponent,
   TooltipComponent,
+  MarkPointComponent,
 ]);
 
 @Component({
@@ -96,16 +106,34 @@ export default class Step8ScoreCard extends Vue {
 
   alpha = 0.2;
   alphaSecondary = 0.6;
-  primaryColor = `rgba(157,72,56,1)`;
-  secondaryColor = `rgba(84,84,86,${this.alphaSecondary})`;
 
+  colors = {
+    Emergency: {
+      primary: `rgba(32,135,200,1)`, // secondary colour 1
+      secondary: `rgba(32,135,200,${this.alphaSecondary})`,
+    },
+    Transitional: {
+      primary: `rgba(157,72,56,1)`, // secondary colour 1
+      secondary: `rgba(157,72,56,${this.alphaSecondary})`,
+    },
+    Durable: {
+      primary: `rgba(248, 228, 210,1)`, // secondary colour 1
+      secondary: `rgba(248, 228, 210,${this.alphaSecondary})`,
+    },
+    "": {
+      // default
+      primary: `rgba(84,84,86,1)`, // secondary colour 1
+      secondary: `rgba(84,84,86,${this.alphaSecondary})`,
+    },
+  };
 
   configs = [
     {
       id: "co2",
-      min: 0,
-      max: 100,
+      // min: 0,
+      // max: 100,
       title: "Embodied CO2",
+      unit: "kg-CO2/year/m²",
       subpart: true,
       description:
         "Embodied CO2 score describes kg-CO2 per year (of intended use) per square meter (of habitable space), enabling comparison across shelters of differing size and durability.",
@@ -116,10 +144,11 @@ export default class Step8ScoreCard extends Vue {
     },
     {
       id: "h2o",
-      min: 0,
-      max: 10000,
+      // min: 0,
+      // max: 10000,
       title: "Embodied water",
       subpart: true,
+      unit: "L/year/m²",
       description:
         "Embodied H2O score describes litres-H2O per year (of intended use) per square meter (of habitable space), enabling comparison across shelters of differing size and durability.",
       colors: {
@@ -132,8 +161,9 @@ export default class Step8ScoreCard extends Vue {
       id: "weight",
       title: "Material efficiency",
       subpart: true,
-      min: 0,
-      max: 100,
+      // min: 0,
+      // max: 100,
+      unit: "kg/year/m²",
       description:
         "Material efficiency score describes total weight (kg) per year (of intended use) per square meter (of habitable space), enabling comparison across shelters of differing size and durability.",
       colors: {
@@ -145,8 +175,9 @@ export default class Step8ScoreCard extends Vue {
     {
       id: "affordability",
       title: "Affordability",
-      min: 0,
-      max: 100,
+      // min: 0,
+      // max: 100,
+      unit: "$/year/m²",
       description:
         "Affordability score describes shelter cost (USD) per year (of intended use) per square meter (of habitable space), enabling comparison across shelters of differing size and durability.",
       colors: {
@@ -159,6 +190,7 @@ export default class Step8ScoreCard extends Vue {
       min: 0,
       max: 42,
       title: "Technical performance",
+      unit: " out of 42",
       description:
         "Technical performance score is calculated from shelter characteristics identified in relation to: hazard-related structural performance, internal comfort, safety and security, and construction techniques.",
       colors: {
@@ -170,6 +202,7 @@ export default class Step8ScoreCard extends Vue {
       id: "habitability",
       min: 0,
       max: 17,
+      unit: "out of 17",
       title: "Habitability",
       description:
         "Habitability score is calculated from shelter characteristics identified in relation to: floor area, accessibility, privacy, artificial lighting, and complimentary facilities.",
@@ -186,8 +219,6 @@ export default class Step8ScoreCard extends Vue {
 
   get options(): EChartsOption[] {
     const scorecards = this.scorecards ?? [];
-    const secondaryColor = this.secondaryColor;
-    const primaryColor = this.primaryColor;
     const title: Record<string, string | number>[] = [];
     const singleAxis: Record<
       string,
@@ -197,17 +228,17 @@ export default class Step8ScoreCard extends Vue {
       string,
       string | number | boolean | Serie[] | SymbSizeFn
     >[] = [];
-    this.configs.forEach((config: Config, idx: number): void => {
+    this.configs.forEach((config: Config): void => {
       singleAxis.push({
         left: 100,
         type: "value",
         boundaryGap: false,
-        min: config.min,
-        max: config.max,
-        height: '10%',
+        height: "10%",
         axisLabel: {
           interval: 2,
         },
+        min: config.min ?? "dataMin",
+        max: config.max ?? "dataMax",
       });
       series.push({
         singleAxisIndex: 0,
@@ -217,17 +248,20 @@ export default class Step8ScoreCard extends Vue {
           scorecards?.map((item: ScoreCard) => {
             const scor = item as ScoreCardScatter;
             const key = config.id as ScoreCardsKey;
+            const shelter_type = scor.shelter_type as colorType;
+            const colors = this.colors[shelter_type];
             return {
-              value: [scor[key], scor.selected ? 4 : 2, key, scor],
+              value: [scor[key], scor.selected ? 4 : 2, key, scor, config],
               itemStyle: {
-                color: scor.selected ? primaryColor : secondaryColor, //config.colors.secondary,
+                color: scor.selected ? colors.primary : colors.secondary, //config.colors.secondary,
               },
+              symbol: scor.selected ? "diamond" : "circle",
             };
           }) ?? [],
         symbolSize: (dataItem: number[]) => dataItem[1] * 4,
       });
     });
-    return this.configs.map((config,idx) => ({
+    return this.configs.map((config, idx) => ({
       title: title[idx],
       singleAxis: singleAxis[idx],
       series: series[idx],
@@ -246,14 +280,16 @@ export default class Step8ScoreCard extends Vue {
         formatter: (params: any): string => {
           const formatNumber = this.$options.filters?.formatNumber;
           if (!formatNumber) {
-            return 'error: format number undefined';
+            return "error: format number undefined";
           }
           return params.reduce((acc: string, param: Serie) => {
             acc = acc ? `${acc}<br/>` : "";
             const key = param.value[2] as ScoreCardsKey;
             const scorecard = param.value[3] as ScoreCardScatter;
             const id = scorecard.id;
-            return `${acc}</div>${id}: ${formatNumber(scorecard[key])}</div>`;
+            return `${acc}</div>${id}: ${formatNumber(scorecard[key])} ${
+              config.unit
+            }</div>`;
           }, "");
         },
       },
@@ -285,21 +321,26 @@ export default class Step8ScoreCard extends Vue {
 
 interface ScoreCardScatter extends ScoreCard {
   selected: boolean;
+  shelter_type: string;
   id: string;
 }
+
 interface Config {
   id: string;
   title: string;
-  min: number,
-  max: number,
+  unit: string;
+  min?: number;
+  max?: number;
   colors: {
     primary: string;
     secondary: string;
   };
 }
 interface Serie {
-  value: (number | string | ScoreCardScatter)[];
+  value: (number | string | ScoreCardScatter | Config)[];
 }
+
+type colorType = "Emergency" | "Transitional" | "Durable" | "";
 
 type SymbSizeFn = (a: number[]) => number;
 type ScoreCardsKey =
