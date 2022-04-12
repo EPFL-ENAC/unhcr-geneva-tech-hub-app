@@ -132,52 +132,15 @@
                           name="location_country"
                           id="location_country"
                         />
-                        <v-text-field
-                          id="location_distance_from_capital"
-                          v-model.number="
-                            localShelter.location_distance_from_capital
-                          "
-                          name="location_distance_from_capital"
-                          label="Distance from capital (km)"
-                          type="number"
-                        />
-                        <v-text-field
-                          id="location_lat"
-                          v-model.number="localShelter.location_lat"
-                          name="location_lat"
-                          label="Latitude"
-                          type="number"
-                          step="0.001"
-                          :rules="latitudeRules"
-                        />
-                        <v-text-field
-                          id="location_lon"
-                          v-model.number="localShelter.location_lon"
-                          name="location_lon"
-                          label="Longitude"
-                          :rules="longitudeRules"
-                          type="number"
-                          step="0.001"
-                        />
                         <v-divider />
-                        <!-- hover: Flood risk depends on various factors including site elevation and slope, as well as rainfall and proximity to water courses. Consult project site risk analyses if available. -->
-                        <v-select
+                        <input-with-info
+                          :info="riskFlood"
                           v-model="localShelter.risk_flood"
-                          :items="risks"
-                          label="Local flood risk"
-                          :hint="`Local flood risk`"
-                          persistent-hint
-                          single-line
-                        />
-                        <!-- [hover: Seismic risk factors depend on geological conditions. Consult project site risk analyses if available.] -->
-                        <v-select
-                          v-model="localShelter.risk_seismic"
-                          :hint="`Local seismic risk`"
-                          :items="risks"
-                          label="Local seismic risk"
-                          persistent-hint
-                          single-line
-                        />
+                          :depth="2" />
+                        <input-with-info
+                        v-model="localShelter.risk_seismic"
+                          :info="riskSeismic"
+                          :depth="2" />
                       </v-col>
                     </v-row>
                   </v-container>
@@ -265,6 +228,7 @@ import { CouchUser } from "@/store/UserModule";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters, mapState } from "vuex";
+import InputWithInfo from "@/components/shelter_sustainability/InputWithInfo.vue";
 
 @Component({
   computed: {
@@ -276,6 +240,7 @@ import { mapActions, mapGetters, mapState } from "vuex";
   },
   components: {
     CountrySelect,
+    InputWithInfo
   },
 })
 /** Project */
@@ -347,6 +312,15 @@ export default class Step1 extends Vue {
       v?.length > 1 || `Name should have a length >= 1`,
   ];
 
+
+  riskFlood = {
+    id: "Local flood risk",
+    description: "Local flood risk at shelter sites depends on numerous factors including: general area flood risk, local topography, local soil type, ground coverage/permeability, natural drainage patterns, drainage infrastructure, density of shelter and other building construction, etc. In defining shelter-specific flood risk, refer to broader settlement flood risk assessments and take into account immediate conditions around shelter sites."
+  }
+  riskSeismic = {
+    id: "Local seismic risk",
+    description: "Local seismic risk depends on numerous factors incuding: general area seismic risk (taking into account geological conditions), local soil type, density of shelter and other building construction, shelter and surrounding building heights, shelter and surrounding building construction techniques, etc. In defining shelter-specific seismic risk, refer to broader settlement seismic risk assessments and take into account immediate conditions around shelter sites."
+  }
   public setLocalShelter(): void {
     if (!this.shelter) {
       this.localShelter = {} as Shelter;

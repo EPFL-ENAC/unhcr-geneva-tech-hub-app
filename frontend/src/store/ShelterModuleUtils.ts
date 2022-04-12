@@ -152,9 +152,6 @@ export function generateNewShelter(name: string): Shelter {
     setup_time: undefined, // days,
     location_name: "",
     location_country: "", // iso code ?
-    location_distance_from_capital: undefined, // km
-    location_lat: undefined, // option
-    location_lon: undefined, // option
     risk_flood: "",
     risk_seismic: "",
     habitability: {},
