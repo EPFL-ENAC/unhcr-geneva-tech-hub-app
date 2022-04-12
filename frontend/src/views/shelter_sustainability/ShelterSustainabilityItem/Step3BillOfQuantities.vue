@@ -54,7 +54,8 @@
                 >
               </template>
               <template v-slot:item.source="{ item }">
-                {{ item.source }}
+                {{ countriesMap[item.source].name }}
+                {{ countriesMap[item.source].emoji }}
               </template>
               <template v-slot:item.formId="{ item }">
                 <span
@@ -110,7 +111,10 @@
 <script lang="ts">
 import DeleteItemDialog from "@/components/shelter_sustainability/billOfQuantities/DeleteItemDialog.vue";
 import ItemDialog from "@/components/shelter_sustainability/billOfQuantities/ItemDialog.vue";
+import { CountriesInfoMap } from "@/store/GhgInterface";
 import { Item, Shelter } from "@/store/ShelterInterface";
+import Countries from "@/utils/countriesAsList";
+import flagEmoji from "@/utils/flagEmoji";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
@@ -154,6 +158,11 @@ export default class Step3Materials extends Vue {
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
   getAllDocs!: () => Promise<null>;
+
+  countriesMap = Countries.reduce((acc, country) => {
+    acc[country.code] = { ...country, emoji: flagEmoji(country.code) };
+    return acc;
+  }, {} as CountriesInfoMap);
 
   headers = [
     {

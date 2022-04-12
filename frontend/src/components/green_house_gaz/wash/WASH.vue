@@ -30,7 +30,7 @@
       </v-row>
       <v-row>
         <v-col :cols="4">
-          <v-card flat>
+          <v-card elevation="2">
             <v-card-title><h2>Inputs</h2></v-card-title>
             <v-card-text>
               <div v-for="washInput in washInputs" :key="washInput.code">
@@ -54,7 +54,7 @@
           </v-card>
         </v-col>
         <v-col :cols="4">
-          <v-card flat>
+          <v-card elevation="2">
             <v-card-title><h2>Inputs</h2></v-card-title>
             <v-card-text>
               <div v-for="washInput in washInputs" :key="washInput.code">
@@ -77,6 +77,32 @@
                 >
                 </v-select>
               </div>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col :cols="4">
+          <v-card elevation="2">
+            <v-card-title><h1>Balance</h1></v-card-title>
+            <v-card-text>
+              <v-text-field
+                v-for="washBalanceResult in washBalanceResults"
+                :key="washBalanceResult.code"
+                :value="
+                  washForm.endline.resultsBalance[washBalanceResult.code]
+                    | formatNumber
+                "
+                :label="washBalanceResult.description"
+                :disabled="washBalanceResult.disabled"
+                :suffix="washBalanceResult.suffix"
+                :class="{
+                  'wash-positive':
+                    washBalanceResult.code === 'CO2_WSH_TRB_PER' &&
+                    washForm.endline.resultsBalance[washBalanceResult.code] > 0,
+                  'wash-negative':
+                    washBalanceResult.code === 'CO2_WSH_TRB_PER' &&
+                    washForm.endline.resultsBalance[washBalanceResult.code] < 0,
+                }"
+              ></v-text-field>
             </v-card-text>
           </v-card>
         </v-col>
@@ -110,32 +136,6 @@
                 "
                 :label="washResult.description"
                 :disabled="washResult.disabled"
-              ></v-text-field>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-col :cols="4">
-          <v-card flat>
-            <v-card-title><h1>Balance</h1></v-card-title>
-            <v-card-text>
-              <v-text-field
-                v-for="washBalanceResult in washBalanceResults"
-                :key="washBalanceResult.code"
-                :value="
-                  washForm.endline.resultsBalance[washBalanceResult.code]
-                    | formatNumber
-                "
-                :label="washBalanceResult.description"
-                :disabled="washBalanceResult.disabled"
-                :suffix="washBalanceResult.suffix"
-                :class="{
-                  'wash-positive':
-                    washBalanceResult.code === 'CO2_WSH_TRB_PER' &&
-                    washForm.endline.resultsBalance[washBalanceResult.code] > 0,
-                  'wash-negative':
-                    washBalanceResult.code === 'CO2_WSH_TRB_PER' &&
-                    washForm.endline.resultsBalance[washBalanceResult.code] < 0,
-                }"
               ></v-text-field>
             </v-card-text>
           </v-card>

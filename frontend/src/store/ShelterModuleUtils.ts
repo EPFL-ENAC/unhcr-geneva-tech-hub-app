@@ -60,9 +60,11 @@ export function getEnvPerfItems(items: Item[] = []): MaterialTree[] {
   return Object.values(mats) as MaterialTree[];
 }
 
-export function getTotalEnvPerf(values: MaterialTree[]): MaterialTree {
-  // TODO: for unitCost and totalCost add also labour and other
-  return values.reduce(
+export function getTotalEnvPerf(
+  values: MaterialTree[],
+  items: Item[] = []
+): MaterialTree {
+  const total = values.reduce(
     (acc, el) => {
       acc.weight = el.weight + (acc?.weight ?? 0);
       acc.embodiedCarbonProduction =
@@ -72,13 +74,19 @@ export function getTotalEnvPerf(values: MaterialTree[]): MaterialTree {
       acc.embodiedCarbonTotal =
         el.embodiedCarbonTotal + (acc?.embodiedCarbonTotal ?? 0);
       acc.embodiedWater = el.embodiedWater + (acc?.embodiedWater ?? 0);
-      acc.unitCost = el.unitCost + (acc?.unitCost ?? 0);
+      acc.unitCost = el.unitCost + (acc?.unitCost ?? 0); // useless
       acc.totalCost = el.totalCost + (acc?.totalCost ?? 0);
 
       return acc;
     },
     { materialId: "Total" } as MaterialTree
   );
+  total.totalCost = items.reduce(
+    (acc: number, n: Item) => n.totalCost + acc,
+    0
+  );
+  // filter out labour and others and add to unitCost and totalCost
+  return total;
 }
 
 export function getScoreCard(value: Shelter): ScoreCard {

@@ -24,11 +24,14 @@
             <v-row v-for="(option, idx) in options" :key="idx">
               <v-col :cols="3">
                 <v-layout class="align-center">
-                  <span v-if="option.config.subpart" class="mx-4">
-                    {{ option.config.title }}</span
+                  <span v-if="option.config.subpart" class="ml-4">
+                    {{ option.config.title }}:</span
                   >
-                  <h2 v-else>{{ option.config.title }}</h2>
-
+                  <h2 v-else>{{ option.config.title }}:</h2>
+                  <span class="ml-4">
+                    {{ scorecard[option.config.id] | formatNumber }}
+                    {{ option.config.unit }}
+                  </span>
                   <v-tooltip right :max-width="300">
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn icon v-bind="attrs" v-on="on">
@@ -107,23 +110,24 @@ export default class Step8ScoreCard extends Vue {
   alpha = 0.2;
   alphaSecondary = 0.6;
 
+  ///Blue = emergency shelter; Brown = transitional shelter; Grey = Durable shelter
   colors = {
     Emergency: {
-      primary: `rgba(32,135,200,1)`, // secondary colour 1
+      primary: `rgba(32,135,200,1)`, // blue unhcr cccm
       secondary: `rgba(32,135,200,${this.alphaSecondary})`,
     },
     Transitional: {
-      primary: `rgba(157,72,56,1)`, // secondary colour 1
+      primary: `rgba(157,72,56,1)`, // brown unhcr cccm
       secondary: `rgba(157,72,56,${this.alphaSecondary})`,
     },
     Durable: {
-      primary: `rgba(248, 228, 210,1)`, // secondary colour 1
-      secondary: `rgba(248, 228, 210,${this.alphaSecondary})`,
+      primary: `rgba(84,84,86,1)`, // grey unhcr
+      secondary: `rgba(84,84,86,${this.alphaSecondary})`,
     },
     "": {
       // default
-      primary: `rgba(84,84,86,1)`, // secondary colour 1
-      secondary: `rgba(84,84,86,${this.alphaSecondary})`,
+      primary: `rgba(248, 228, 210,1)`, // secondary colour 1
+      secondary: `rgba(248, 228, 210,${this.alphaSecondary})`,
     },
   };
 
