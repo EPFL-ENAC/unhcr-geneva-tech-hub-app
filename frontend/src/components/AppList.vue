@@ -24,13 +24,13 @@
                   {{ app.title }}
                 </v-list-item-title>
                 {{ app.description }}
-                <a
+                <!-- <a
                   @click.stop=""
                   v-if="app.link"
                   :href="app.link"
                   target="_blank"
                   >{{ app.linkName }}</a
-                >
+                > -->
               </v-list-item-content>
 
               <div class="icon-and-click">

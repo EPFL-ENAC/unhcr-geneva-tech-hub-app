@@ -98,29 +98,27 @@
     </v-navigation-drawer>
 
     <v-main v-if="$user('isLoggedOut')">
-      <v-container
+      <v-layout
+        align-center
+        justify-center
         class="login"
         fluid
         fill-height
         v-if="$router.currentRoute.name !== 'Login'"
       >
-        <v-layout align-content-start justify-center>
-          <v-flex xs12 sm8 md4>
-            <login-component />
-          </v-flex>
-        </v-layout>
-      </v-container>
+        <v-flex xs12 sm8 md4>
+          <login-component />
+        </v-flex>
+      </v-layout>
       <router-view name="Login" />
     </v-main>
 
-    <v-main v-else class="d-flex">
-      <v-container fluid fill-height>
-        <reference-data />
-        <v-fade-transition mode="out-in">
-          <router-view />
-          <router-view name="Login" />
-        </v-fade-transition>
-      </v-container>
+    <v-main v-else>
+      <reference-data />
+      <v-fade-transition mode="out-in">
+        <router-view />
+        <router-view name="Login" />
+      </v-fade-transition>
     </v-main>
 
     <v-overlay v-model="loading">

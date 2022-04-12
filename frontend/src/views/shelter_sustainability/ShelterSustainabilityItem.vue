@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="project my-8">
+  <v-container fluid class="project">
     <v-tabs
       class="fixed-tabs-bar"
       centered
@@ -114,12 +114,12 @@ a:active {
 
 <style lang="scss">
 // modify all v-slide-group
-.project {
-  padding: 0; // cancel padding from container to allow sticky
-  .v-slide-group__content {
-    justify-content: center;
-  }
-}
+// .project {
+//   padding: 0; // cancel padding from container to allow sticky
+//   .v-slide-group__content {
+//     justify-content: center;
+//   }
+// }
 
 .project-shelter__header,
 .project-shelter__h3 {
