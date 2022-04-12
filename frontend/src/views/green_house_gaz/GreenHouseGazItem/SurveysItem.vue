@@ -163,7 +163,7 @@ export default class SurveyList extends Vue {
     },
     {
       icon: "mdi-water",
-      text: "WASH TRUCKING",
+      text: "WASH",
       to: "WASH-WASH",
       // children: [
       //   { text: "Water", to: "Water", icon: "mdi-cup-water" },
@@ -175,12 +175,12 @@ export default class SurveyList extends Vue {
       icon: "mdi-home",
       // text: "Shelter, Site and material",
       text: "Material",
-      to: "Material",
-      children: [
-        { text: "Shelter", to: "Shelter", icon: "mdi-home-group" },
-        { text: "CRI", to: "CRI", icon: "mdi-wizard-hat" },
-        { text: "HH waste", to: "HHWaste", icon: "mdi-toilet" },
-      ],
+      to: "Material-Shelter",
+      // children: [
+      //   { text: "Shelter", to: "Shelter", icon: "mdi-home-group" },
+      //   { text: "CRI", to: "CRI", icon: "mdi-wizard-hat" },
+      //   { text: "HH waste", to: "HHWaste", icon: "mdi-toilet" },
+      // ],
     },
     {
       icon: "mdi-leaf",
