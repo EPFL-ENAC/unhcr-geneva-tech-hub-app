@@ -4,7 +4,8 @@
       <v-row>
         <v-col cols="11">
           <v-select
-            v-model="value"
+            :value="value"
+            @input="(v) => $emit('input', v)"
             :items="risks"
             :label="info.id"
             :hint="info.id"
@@ -46,13 +47,17 @@ import { Component, Vue } from "vue-property-decorator";
       type: Number,
       default: 0,
     },
+    value: {
+      type: String,
+      default: "",
+    },
   },
 })
 /** InputWithInfo */
 export default class InputWithInfo extends Vue {
   info!: Record<string, string>;
   expandPanel = false;
-  value = "";
+
   risks: string[] = ["low", "medium", "high"];
   public toggle(): void {
     this.expandPanel = !this.expandPanel;
