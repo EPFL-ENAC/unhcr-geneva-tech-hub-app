@@ -301,6 +301,7 @@ interface Info {
       // border-right: 1px solid rgba(0, 0, 0, 0.12);
     }
   }
+  tbody > tr:last-child { background:#ddd; }
 }
 .v-data-table tbody tr:not(:last-child) {
   border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
