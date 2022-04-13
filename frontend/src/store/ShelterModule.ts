@@ -39,11 +39,24 @@ const mutations: MutationTree<ShelterState> = {
   SET_SHELTERS(state, value) {
     state.shelters = value;
   },
-  SET_SHELTER(state, value) {
-    state.shelter = value;
-    state.shelter.envPerfItems = getEnvPerfItems(value?.items ?? []);
-    state.shelter.totalEnvPerf = getTotalEnvPerf(state.shelter.envPerfItems);
-    state.shelter.scorecard = getScoreCard(value);
+  SET_SHELTER(state, newShelter) {
+    state.shelter = newShelter;
+    state.shelter.envPerfItems = getEnvPerfItems(newShelter?.items);
+    state.shelter.totalEnvPerf = getTotalEnvPerf(
+      state.shelter.envPerfItems,
+      newShelter?.items
+    );
+
+    const values = Object.values(
+      state.shelter.technical_performance
+    ) as number[];
+    state.shelter.technical_performance_score = values.reduce(
+      (acc, el) => acc + el
+    );
+
+    const valuesHab = Object.values(state.shelter.habitability) as number[];
+    state.shelter.habitability_score = valuesHab.reduce((acc, el) => acc + el);
+    state.shelter.scorecard = getScoreCard(newShelter);
   },
   SET_SCORECARDS(state, value) {
     state.scorecards = value;

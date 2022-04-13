@@ -16,9 +16,6 @@ export interface Shelter {
   setup_time: number | undefined;
   location_name: string;
   location_country: string;
-  location_distance_from_capital: number | undefined;
-  location_lat: number | undefined;
-  location_lon: number | undefined;
   risk_flood: string;
   risk_seismic: string;
 

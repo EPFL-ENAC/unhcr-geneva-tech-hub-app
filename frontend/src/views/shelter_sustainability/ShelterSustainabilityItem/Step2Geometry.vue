@@ -302,7 +302,7 @@ export default class Step2Geometry extends Vue {
 
   public get hasComputedFloorAndVolume(): boolean {
     const geometryType = this.localShelter.geometry.shelter_geometry_type;
-    return geometryType !== "others" && geometryType !== "";
+    return geometryType !== this.geometryOtherName && geometryType !== "";
   }
 
   @Watch("localShelter.geometry.shelter_dimensions", { deep: true })
@@ -406,6 +406,8 @@ export default class Step2Geometry extends Vue {
     { label: "Openings area", key: "windowArea", suffix: "m²" },
   ];
 
+  geometryOtherName = "other";
+
   geometries = [
     {
       _id: "gableHW", // High wall
@@ -422,20 +424,6 @@ export default class Step2Geometry extends Vue {
         return L * W * H1 + 0.5 * L * W * (H2 - H1);
       },
     },
-    // {
-    //   _id: "gabelLW", // Low wall
-    //   image_url: "/houses_new/SSC_P2_Shelter-GableLW_220201.png",
-    //   shelter_dimensions: ["L", "W", "H1", "H2"],
-    //   door_dimensions: ["Wd", "Hd"],
-    //   window_dimensions: ["Ww", "Hw", "Hs"],
-    //   volumeFunction(shelterDimension: ShelterDimensions): number {
-    //     const { L, W, H1, H2 } = shelterDimension || {};
-    //     if (!L || !W || !H1 || !H2) {
-    //       return 0; // one dimension undefined volume is 0 by default
-    //     }
-    //     return L * W * H1 + 0.5 * L * W * (H2 - H1);
-    //   },
-    // },
     {
       _id: "flatRoof",
       name: "Single pitch roof",
@@ -467,7 +455,7 @@ export default class Step2Geometry extends Vue {
       },
     },
     {
-      _id: "other",
+      _id: this.geometryOtherName,
       name: "Other",
       hiddenInputs: true,
       image_url: "/houses_new/GTH-SSC_Graphics_Typology_Other_5.png",

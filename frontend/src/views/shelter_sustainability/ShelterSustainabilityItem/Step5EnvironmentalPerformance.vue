@@ -25,6 +25,7 @@
                   :single-expand="singleExpand"
                   :expanded.sync="expanded"
                   item-key="material"
+                  hide-default-header
                   hide-default-footer
                   :show-expand="true"
                   @click:row="
@@ -35,18 +36,37 @@
                     <thead>
                       <tr>
                         <th colspan="1"></th>
-                        <th colspan="1">Material</th>
-                        <th colspan="3">Embodied carbon in kgCO2e/kg</th>
-                        <th colspan="3"></th>
+                        <th rowspan="3">Material</th>
+                        <th style="vertical-align: middle; text-align: center">
+                          Material efficiency (weight)
+                        </th>
+                        <th
+                          colspan="3"
+                          style="vertical-align: middle; text-align: center"
+                        >
+                          Embodied carbon
+                        </th>
+                        <th>Embodied water</th>
                       </tr>
                       <tr>
-                        <th colspan="3"></th>
-                        <th colspan="3">Embodied carbon in kgCO2e/kg</th>
-                        <th colspan="3"></th>
+                        <th></th>
+                        <th style="vertical-align: middle; text-align: center">
+                          kg
+                        </th>
+                        <th
+                          colspan="3"
+                          style="vertical-align: middle; text-align: center"
+                        >
+                          kgCO2e/kg
+                        </th>
+                        <th style="text-align: center">L</th>
                       </tr>
                       <tr>
-                        <th colspan="3"></th>
-                        <th colspan="3">Embodied carbon in kgCO2e/kg</th>
+                        <th></th>
+                        <th></th>
+                        <th>Production</th>
+                        <th>Transportation</th>
+                        <th>Total</th>
                         <th colspan="3"></th>
                       </tr>
                     </thead>
@@ -70,12 +90,9 @@
                   <template v-slot:item.embodiedWater="{ item }">
                     <span>{{ item.embodiedWater | formatNumber }} </span>
                   </template>
-                  <!-- <template v-slot:item.unit_cost="{ item }">
-                      <span>{{ item.unit_cost | formatNumber }} </span>
-                    </template>
-                    <template v-slot:item.total_cost="{ item }">
-                      <span>{{ item.total_cost | formatNumber }} </span>
-                    </template> -->
+                  <template v-slot:item.totalCost="{ item }">
+                    <span>{{ item.totalCost | formatNumber }} </span>
+                  </template>
                   <template v-slot:expanded-item="{ headers, item }">
                     <td :colspan="headers.length">
                       <v-data-table
@@ -219,7 +236,7 @@ export default class Step3Materials extends Vue {
         sortable: false,
       },
       // { text: "Unit cost in $", value: "unit_cost", sortable: false },
-      // { text: "Total cost in $", value: "total_cost", sortable: false },
+      // { text: "Total cost in $", value: "totalCost", sortable: false },
     ].map((x) => ({ ...x, class: "test", cellClass: "class-test" }));
   }
 
@@ -266,7 +283,7 @@ export default class Step3Materials extends Vue {
   get reuseRecyclingFiltered(): Info[] {
     return reuseRecycling
       .filter((info: Info) => this.currentForms.indexOf(info.id) !== -1)
-      .map((x) => ({ ...x, id: this.materialMap[x.id].form }));
+      .map((x) => ({ ...x, id: this.materialMap[x.id]?.form }));
   }
 }
 
@@ -280,7 +297,8 @@ interface Info {
 .v-data-table ::v-deep {
   thead {
     tr > th {
-      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-left: 1px solid rgba(0, 0, 0, 0.12);
+      // border-right: 1px solid rgba(0, 0, 0, 0.12);
     }
   }
 }
@@ -294,5 +312,9 @@ interface Info {
   tbody
   tr.v-data-table__expanded__content {
   box-shadow: none;
+}
+.center-table {
+  vertical-align: middle;
+  text-align: center;
 }
 </style>

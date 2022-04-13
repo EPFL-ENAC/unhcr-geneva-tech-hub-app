@@ -34,6 +34,7 @@
                 <v-expansion-panel-header :hide-actions="!child.description">
                   <v-checkbox
                     :input-value="checkbox[child._id]"
+                    :disabled="child.disabled"
                     @mousedown.stop.prevent
                     @click.stop.prevent
                     @change="(v) => updateValue(child._id, v)"
@@ -45,7 +46,7 @@
                   </v-checkbox>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content v-if="!!child.description">
-                  {{ child.description }}
+                  <p v-html="child.description"></p>
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>

@@ -1,9 +1,5 @@
 <template>
-  <v-form
-    :readonly="!$can('edit', shelter)"
-    v-if="shelter"
-    @submit.prevent="() => submitForm()"
-  >
+  <v-form :readonly="!$can('edit', shelter)" v-if="shelter">
     <v-container fluid>
       <v-row>
         <v-col>
@@ -35,6 +31,7 @@
                     dark
                     class="mb-2"
                     @click="openNewItemDialog"
+                    :disabled="!$can('edit', shelter)"
                   >
                     New item
                   </v-btn>
@@ -54,7 +51,8 @@
                 >
               </template>
               <template v-slot:item.source="{ item }">
-                {{ item.source }}
+                {{ countriesMap[item.source].name }}
+                {{ countriesMap[item.source].emoji }}
               </template>
               <template v-slot:item.formId="{ item }">
                 <span
@@ -87,22 +85,35 @@
               </template>
 
               <template v-slot:item.actions="{ item }">
-                <v-icon small class="mr-2" @click="openEditItemDialog(item)">
-                  mdi-pencil
-                </v-icon>
-                <v-icon small @click="() => openDeleteDialog(item)">
-                  mdi-delete
-                </v-icon>
+                <v-btn
+                  icon
+                  small
+                  class="mr-2"
+                  @click="openEditItemDialog(item)"
+                  :disabled="!$can('edit', shelter)"
+                >
+                  <v-icon> mdi-pencil</v-icon>
+                </v-btn>
+
+                <v-btn
+                  icon
+                  small
+                  class="mr-2"
+                  @click="openDeleteDialog(item)"
+                  :disabled="!$can('edit', shelter)"
+                >
+                  <v-icon> mdi-delete</v-icon>
+                </v-btn>
               </template>
             </v-data-table>
           </v-sheet>
         </v-col>
       </v-row>
-      <v-row v-if="$can('edit', shelter)">
+      <!-- <v-row v-if="$can('edit', shelter)">
         <v-col class="d-flex justify-end">
           <v-btn type="submit"> Save changes </v-btn>
         </v-col>
-      </v-row>
+      </v-row> -->
     </v-container>
   </v-form>
 </template>
@@ -110,7 +121,10 @@
 <script lang="ts">
 import DeleteItemDialog from "@/components/shelter_sustainability/billOfQuantities/DeleteItemDialog.vue";
 import ItemDialog from "@/components/shelter_sustainability/billOfQuantities/ItemDialog.vue";
+import { CountriesInfoMap } from "@/store/GhgInterface";
 import { Item, Shelter } from "@/store/ShelterInterface";
+import Countries from "@/utils/countriesAsList";
+import flagEmoji from "@/utils/flagEmoji";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
@@ -155,6 +169,11 @@ export default class Step3Materials extends Vue {
   closeDB!: () => Promise<null>;
   getAllDocs!: () => Promise<null>;
 
+  countriesMap = Countries.reduce((acc, country) => {
+    acc[country.code] = { ...country, emoji: flagEmoji(country.code) };
+    return acc;
+  }, {} as CountriesInfoMap);
+
   headers = [
     {
       text: "Name",
@@ -195,8 +214,22 @@ export default class Step3Materials extends Vue {
     });
   }
 
+  public autoSubmit(): void {
+    this.$store.subscribe((mutation) => {
+      const shouldUpdate = [
+        "ShelterBillOfQuantitiesModule/ADD_ITEM",
+        "ShelterBillOfQuantitiesModule/DELETE_ITEM",
+        "ShelterBillOfQuantitiesModule/UPDATE_ITEM",
+      ];
+      if (shouldUpdate.includes(mutation.type)) {
+        this.submitForm();
+      }
+    });
+  }
+
   created(): void {
     this.syncLocalShelter();
+    this.autoSubmit();
   }
 
   mounted(): void {

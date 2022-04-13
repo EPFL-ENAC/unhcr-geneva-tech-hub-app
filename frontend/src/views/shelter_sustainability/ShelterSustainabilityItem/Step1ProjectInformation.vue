@@ -76,6 +76,14 @@
                           :rules="shelterOccupantRules"
                         ></v-select>
                         <v-select
+                          :items="shelterTypes"
+                          label="Shelter type"
+                          v-model.number="localShelter.shelter_type"
+                          name="shelter_type"
+                          required
+                          :rules="shelterTypeRules"
+                        ></v-select>
+                        <v-select
                           :items="lifeExpectancy"
                           v-model.number="localShelter.shelter_lifespan"
                           name="shelter_lifespan"
@@ -124,51 +132,16 @@
                           name="location_country"
                           id="location_country"
                         />
-                        <v-text-field
-                          id="location_distance_from_capital"
-                          v-model.number="
-                            localShelter.location_distance_from_capital
-                          "
-                          name="location_distance_from_capital"
-                          label="Distance from capital (km)"
-                          type="number"
-                        />
-                        <v-text-field
-                          id="location_lat"
-                          v-model.number="localShelter.location_lat"
-                          name="location_lat"
-                          label="Latitude"
-                          type="number"
-                          step="0.001"
-                          :rules="latitudeRules"
-                        />
-                        <v-text-field
-                          id="location_lon"
-                          v-model.number="localShelter.location_lon"
-                          name="location_lon"
-                          label="Longitude"
-                          :rules="longitudeRules"
-                          type="number"
-                          step="0.001"
-                        />
                         <v-divider />
-                        <!-- hover: Flood risk depends on various factors including site elevation and slope, as well as rainfall and proximity to water courses. Consult project site risk analyses if available. -->
-                        <v-select
+                        <input-with-info
+                          :info="riskFlood"
                           v-model="localShelter.risk_flood"
-                          :items="risks"
-                          label="Local flood risk"
-                          :hint="`Local flood risk`"
-                          persistent-hint
-                          single-line
+                          :depth="2"
                         />
-                        <!-- [hover: Seismic risk factors depend on geological conditions. Consult project site risk analyses if available.] -->
-                        <v-select
+                        <input-with-info
                           v-model="localShelter.risk_seismic"
-                          :hint="`Local seismic risk`"
-                          :items="risks"
-                          label="Local seismic risk"
-                          persistent-hint
-                          single-line
+                          :info="riskSeismic"
+                          :depth="2"
                         />
                       </v-col>
                     </v-row>
@@ -252,6 +225,7 @@
 
 <script lang="ts">
 import CountrySelect from "@/components/commons/CountrySelect.vue";
+import InputWithInfo from "@/components/shelter_sustainability/InputWithInfo.vue";
 import { Shelter } from "@/store/ShelterInterface";
 import { CouchUser } from "@/store/UserModule";
 import { cloneDeep } from "lodash";
@@ -268,6 +242,7 @@ import { mapActions, mapGetters, mapState } from "vuex";
   },
   components: {
     CountrySelect,
+    InputWithInfo,
   },
 })
 /** Project */
@@ -279,6 +254,7 @@ export default class Step1 extends Vue {
   tab = 0;
   newUser = "";
   occupantsOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  shelterTypes = ["Emergency", "Transitional", "Durable"];
   lifeExpectancy = [
     { label: "6 months or less", value: 0.5 },
     { label: "1 year", value: 1 },
@@ -298,6 +274,7 @@ export default class Step1 extends Vue {
     (v: string): boolean | string =>
       v?.length > 1 || `should have a length >= 1`,
   ];
+  shelterTypeRules = this.textRules;
 
   shelterTotalRules = [
     (v: number): boolean | string => !!v || `is required`,
@@ -337,6 +314,16 @@ export default class Step1 extends Vue {
       v?.length > 1 || `Name should have a length >= 1`,
   ];
 
+  riskFlood = {
+    id: "Local flood risk",
+    description:
+      "Local flood risk at shelter sites depends on numerous factors including: general area flood risk, local topography, local soil type, ground coverage/permeability, natural drainage patterns, drainage infrastructure, density of shelter and other building construction, etc. In defining shelter-specific flood risk, refer to broader settlement flood risk assessments and take into account immediate conditions around shelter sites.",
+  };
+  riskSeismic = {
+    id: "Local seismic risk",
+    description:
+      "Local seismic risk depends on numerous factors incuding: general area seismic risk (taking into account geological conditions), local soil type, density of shelter and other building construction, shelter and surrounding building heights, shelter and surrounding building construction techniques, etc. In defining shelter-specific seismic risk, refer to broader settlement seismic risk assessments and take into account immediate conditions around shelter sites.",
+  };
   public setLocalShelter(): void {
     if (!this.shelter) {
       this.localShelter = {} as Shelter;

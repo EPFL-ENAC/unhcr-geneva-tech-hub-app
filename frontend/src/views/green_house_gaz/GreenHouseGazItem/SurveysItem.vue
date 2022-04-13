@@ -139,24 +139,24 @@ export default class SurveyList extends Vue {
 
   readonly menuItems: MenuItem[] = [
     {
-      // children: [
-      //   {
-      //     icon: "mdi-shower",
-      //     text: "Facilities",
-      //     to: "Facilities",
-      //   },
-      //   { icon: "mdi-stove", text: "Cooking", to: "cooking" },
-      //   {
-      //     icon: "mdi-lightbulb",
-      //     text: "Lighting",
-      //     to: "lighting",
-      //   },
-      //   {
-      //     icon: "mdi-water-pump",
-      //     text: "Pumping",
-      //     to: "pumping",
-      //   },
-      // ],
+      children: [
+        {
+          icon: "mdi-shower",
+          text: "Facilities",
+          to: "Facilities",
+        },
+        { icon: "mdi-stove", text: "Cooking", to: "cooking" },
+        {
+          icon: "mdi-lightbulb",
+          text: "Lighting",
+          to: "lighting",
+        },
+        {
+          icon: "mdi-water-pump",
+          text: "Pumping",
+          to: "pumping",
+        },
+      ],
       icon: "mdi-lightning-bolt",
       text: "Energy",
       to: "Energy-Facilities",
@@ -165,22 +165,18 @@ export default class SurveyList extends Vue {
       icon: "mdi-water",
       text: "WASH",
       to: "WASH-WASH",
-      // children: [
-      //   { text: "Water", to: "Water", icon: "mdi-cup-water" },
-      //   { text: "Wastewater", to: "Wastewater", icon: "mdi-hand-water" },
-      //   { text: "Transport", to: "Transport", icon: "mdi-tanker-truck" },
-      // ],
+      children: [{ text: "Trucking", to: "WASH", icon: "mdi-tanker-truck" }],
     },
     {
       icon: "mdi-home",
       // text: "Shelter, Site and material",
       text: "Material",
       to: "Material-Shelter",
-      // children: [
-      //   { text: "Shelter", to: "Shelter", icon: "mdi-home-group" },
-      //   { text: "CRI", to: "CRI", icon: "mdi-wizard-hat" },
-      //   { text: "HH waste", to: "HHWaste", icon: "mdi-toilet" },
-      // ],
+      children: [
+        { text: "Shelter", to: "Shelter", icon: "mdi-home-group" },
+        { text: "CRI", to: "CRI", icon: "mdi-wizard-hat" },
+        { text: "HH waste", to: "HHWaste", icon: "mdi-toilet" },
+      ],
     },
     {
       icon: "mdi-leaf",

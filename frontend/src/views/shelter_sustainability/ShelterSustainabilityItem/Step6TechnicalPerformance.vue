@@ -1,21 +1,11 @@
 <template>
-  <v-form
-    v-if="localShelter.technical_performance"
-    @submit.prevent="() => submitForm(localShelter)"
-  >
+  <v-form v-if="localShelter.technical_performance">
     <component
       :is="technicalPerformanceForm.type"
       :form="technicalPerformanceForm"
       :value="localShelter.technical_performance"
       @input="(v) => update(v)"
     ></component>
-    <v-container fluid>
-      <v-row>
-        <v-col class="d-flex justify-end">
-          <v-btn type="submit" tabindex="2">Save changes</v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
   </v-form>
 </template>
 
@@ -74,10 +64,13 @@ export default class Step6 extends Vue {
   }
   public async update(value: Score): Promise<void> {
     this.localShelter.technical_performance = value;
-    const values = Object.values(value) as number[];
-    this.localShelter.technical_performance_score = values.reduce(
-      (acc, el) => acc + el
-    );
+
+    // update habitability, because it should be done like this (defined in the specs)
+    this.localShelter.habitability.input12 =
+      this.technical_performance.input_3b_6;
+    this.localShelter.habitability.input13 =
+      this.technical_performance.input_3b_7;
+    this.submitForm(this.localShelter);
   }
 
   public async submitForm(value: Shelter): Promise<void> {
