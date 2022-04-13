@@ -34,6 +34,7 @@
                 <v-expansion-panel-header :hide-actions="!child.description">
                   <v-checkbox
                     :input-value="checkbox[child._id]"
+                    :disabled="child.disabled"
                     @mousedown.stop.prevent
                     @click.stop.prevent
                     @change="(v) => updateValue(child._id, v)"
