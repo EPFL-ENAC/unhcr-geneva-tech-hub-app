@@ -4,13 +4,13 @@
       <v-row>
         <v-col cols="11">
           <v-select
-                v-model="value"
-                :items="risks"
-                :label="info.id"
-                :hint="info.id"
-                persistent-hint
-                single-line
-              />
+            v-model="value"
+            :items="risks"
+            :label="info.id"
+            :hint="info.id"
+            persistent-hint
+            single-line
+          />
         </v-col>
         <v-col cols="1" class="d-flex justify-end align-center">
           <v-btn icon @click="toggle">

@@ -45,7 +45,7 @@
                   </v-checkbox>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content v-if="!!child.description">
-                  {{ child.description }}
+                  <p v-html="child.description"></p>
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>

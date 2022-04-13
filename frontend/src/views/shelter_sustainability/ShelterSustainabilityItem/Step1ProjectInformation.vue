@@ -136,11 +136,13 @@
                         <input-with-info
                           :info="riskFlood"
                           v-model="localShelter.risk_flood"
-                          :depth="2" />
+                          :depth="2"
+                        />
                         <input-with-info
-                        v-model="localShelter.risk_seismic"
+                          v-model="localShelter.risk_seismic"
                           :info="riskSeismic"
-                          :depth="2" />
+                          :depth="2"
+                        />
                       </v-col>
                     </v-row>
                   </v-container>
@@ -223,12 +225,12 @@
 
 <script lang="ts">
 import CountrySelect from "@/components/commons/CountrySelect.vue";
+import InputWithInfo from "@/components/shelter_sustainability/InputWithInfo.vue";
 import { Shelter } from "@/store/ShelterInterface";
 import { CouchUser } from "@/store/UserModule";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters, mapState } from "vuex";
-import InputWithInfo from "@/components/shelter_sustainability/InputWithInfo.vue";
 
 @Component({
   computed: {
@@ -240,7 +242,7 @@ import InputWithInfo from "@/components/shelter_sustainability/InputWithInfo.vue
   },
   components: {
     CountrySelect,
-    InputWithInfo
+    InputWithInfo,
   },
 })
 /** Project */
@@ -312,15 +314,16 @@ export default class Step1 extends Vue {
       v?.length > 1 || `Name should have a length >= 1`,
   ];
 
-
   riskFlood = {
     id: "Local flood risk",
-    description: "Local flood risk at shelter sites depends on numerous factors including: general area flood risk, local topography, local soil type, ground coverage/permeability, natural drainage patterns, drainage infrastructure, density of shelter and other building construction, etc. In defining shelter-specific flood risk, refer to broader settlement flood risk assessments and take into account immediate conditions around shelter sites."
-  }
+    description:
+      "Local flood risk at shelter sites depends on numerous factors including: general area flood risk, local topography, local soil type, ground coverage/permeability, natural drainage patterns, drainage infrastructure, density of shelter and other building construction, etc. In defining shelter-specific flood risk, refer to broader settlement flood risk assessments and take into account immediate conditions around shelter sites.",
+  };
   riskSeismic = {
     id: "Local seismic risk",
-    description: "Local seismic risk depends on numerous factors incuding: general area seismic risk (taking into account geological conditions), local soil type, density of shelter and other building construction, shelter and surrounding building heights, shelter and surrounding building construction techniques, etc. In defining shelter-specific seismic risk, refer to broader settlement seismic risk assessments and take into account immediate conditions around shelter sites."
-  }
+    description:
+      "Local seismic risk depends on numerous factors incuding: general area seismic risk (taking into account geological conditions), local soil type, density of shelter and other building construction, shelter and surrounding building heights, shelter and surrounding building construction techniques, etc. In defining shelter-specific seismic risk, refer to broader settlement seismic risk assessments and take into account immediate conditions around shelter sites.",
+  };
   public setLocalShelter(): void {
     if (!this.shelter) {
       this.localShelter = {} as Shelter;
