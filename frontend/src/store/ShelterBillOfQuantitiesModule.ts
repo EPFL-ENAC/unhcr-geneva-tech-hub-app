@@ -77,7 +77,7 @@ const getters: GetterTree<BoqState, RootState> = {
 /** Mutations */
 const mutations: MutationTree<BoqState> = {
   SET_ITEMS(state: BoqState, items: Item[]): void {
-    state.items = items;
+    state.items = items ?? [];
   },
   ADD_ITEM(state: BoqState, item: Item): void {
     state.items.push(item);

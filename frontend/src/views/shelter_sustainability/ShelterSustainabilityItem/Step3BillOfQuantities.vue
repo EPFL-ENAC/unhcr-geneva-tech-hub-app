@@ -51,8 +51,12 @@
                 >
               </template>
               <template v-slot:item.source="{ item }">
-                {{ countriesMap[item.source].name }}
-                <!-- {{ countriesMap[item.source].emoji }} -->
+                <span v-if="countriesMap[item.source]">
+                  {{ countriesMap[item.source].name }}
+                </span>
+                <span v-else>
+                  {{ item.source }}
+                </span>
               </template>
               <template v-slot:item.formId="{ item }">
                 <span
@@ -197,22 +201,6 @@ export default class Step3Materials extends Vue {
     this.updateDoc(localShelter);
   }
 
-  public setLocalShelter(shelter: Shelter): void {
-    this.setItems(cloneDeep(shelter?.items ?? []));
-  }
-
-  public syncLocalShelter(): void {
-    // init function
-    this.setLocalShelter(this.shelter);
-
-    this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["ShelterModule/SET_SHELTER"];
-      if (shouldUpdate.includes(mutation.type)) {
-        this.setLocalShelter(mutation.payload);
-      }
-    });
-  }
-
   public autoSubmit(): void {
     this.$store.subscribe((mutation) => {
       const shouldUpdate = [
@@ -227,7 +215,6 @@ export default class Step3Materials extends Vue {
   }
 
   created(): void {
-    this.syncLocalShelter();
     this.autoSubmit();
   }
 

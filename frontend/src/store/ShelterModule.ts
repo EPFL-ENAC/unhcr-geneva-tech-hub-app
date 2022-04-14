@@ -40,6 +40,9 @@ const mutations: MutationTree<ShelterState> = {
   SET_SHELTERS(state, value) {
     state.shelters = value;
   },
+  SET_SCORECARDS(state, value) {
+    state.scorecards = value;
+  },
   SET_SHELTER(state, newShelter) {
     state.shelter = newShelter;
     state.shelter.envPerfItems = getEnvPerfItems(newShelter?.items);
@@ -71,9 +74,6 @@ const mutations: MutationTree<ShelterState> = {
     const { scorecard, errors } = getScoreCard(newShelter);
     state.shelter.scorecard = scorecard;
     state.shelter.scorecard_errors = errors;
-  },
-  SET_SCORECARDS(state, value) {
-    state.scorecards = value;
   },
   ADD_DOC(state, value) {
     state.localCouch?.remoteDB
@@ -150,10 +150,11 @@ const actions: ActionTree<ShelterState, RootState> = {
     context.commit("REMOVE_DOC", id);
   },
   updateDoc: (context: ActionContext<ShelterState, RootState>, value) => {
-    context.commit("SET_SHELTER", value);
     const db = context.state.localCouch?.remoteDB;
     if (db) {
       db.put(value);
+      // on success update set shelter
+      // context.commit("SET_SHELTER", value);
     } else {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
@@ -163,6 +164,11 @@ const actions: ActionTree<ShelterState, RootState> = {
     if (db) {
       db.get(id).then(function (result: Shelter) {
         context.commit("SET_SHELTER", result);
+        context.dispatch(
+          "ShelterBillOfQuantitiesModule/setItems",
+          result.items,
+          { root: true }
+        );
       });
     } else {
       throw new Error(MSG_DB_DOES_NOT_EXIST);

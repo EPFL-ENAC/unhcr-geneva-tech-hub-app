@@ -7,10 +7,10 @@
       :show-arrows="true"
       elevation="2"
     >
-      <template v-for="item in menuItems">
+      <template v-for="(item, idx) in menuItems">
         <v-tooltip
           bottom
-          :key="item.to"
+          :key="idx"
           v-if="item.disabled && !!item.tooltipDisabledText"
         >
           <span v-html="item.tooltipDisabledText"></span>
