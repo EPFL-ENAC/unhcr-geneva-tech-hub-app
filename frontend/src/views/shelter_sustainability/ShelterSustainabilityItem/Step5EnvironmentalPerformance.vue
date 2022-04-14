@@ -336,12 +336,13 @@ export default class Step3Materials extends Vue {
   get reuseRecyclingFiltered(): Info[] {
     return reuseRecycling
       .filter((info: Info) => this.currentForms.indexOf(info.id) !== -1)
-      .map((x) => ({
-        ...x,
-        id: `${this.materialMap[x.id]?.material}—${
-          this.materialMap[x.id]?.form
-        }`,
-      }));
+      .map((x) => {
+        const localMap = this.materialMap[x.id] || {};
+        return {
+          ...x,
+          id: `${localMap.material ?? x.id}—${localMap.form ?? x.id}`,
+        };
+      });
   }
 
   mounted(): void {
