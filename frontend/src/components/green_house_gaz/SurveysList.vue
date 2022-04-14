@@ -28,6 +28,9 @@
         </v-dialog>
       </template>
 
+      <template v-slot:item.created_at="{ item }">
+        {{ item.created_at | formatDate }}
+      </template>
       <template v-slot:item.actions="{ item }">
         <div class="survey-list__actions">
           <router-link
@@ -94,8 +97,8 @@ export default class ProjectItem extends Vue {
   user!: CouchUser;
 
   headersSurvey = [
-    { text: "description", value: "name" },
-    { text: "created_at", value: "created_at" },
+    { text: "Description", value: "name" },
+    { text: "Creation date", value: "created_at" },
     { text: "Actions", value: "actions", sortable: false, align: "end" },
   ];
 

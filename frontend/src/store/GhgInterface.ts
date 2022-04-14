@@ -33,6 +33,7 @@ export interface Survey {
   created_by: string;
   name: string; // name is year
   energy: EnergySurvey;
+  wash: WashSurvey;
 }
 
 export interface EnergySurvey {
@@ -48,4 +49,40 @@ export interface FacilitySurvey {
   inputs: Record<string, number>;
   inputsComputed: Record<string, number>;
   results: Record<string, number>;
+}
+
+export interface WashSurvey {
+  trucking: WashTruckingSurvey;
+}
+
+export interface WashTruckingItemInputs {
+  US_TYP: string;
+  TOT_WS: number;
+  WACL: number;
+  TR_VOL: number;
+  TR_TYP: string;
+}
+
+export interface WashTruckingItemResults {
+  TR_NUM: number;
+  TR_DIST: number;
+  CO2_WSH_TRB: number;
+}
+export interface WashTruckingItem {
+  inputs: WashTruckingItemInputs;
+  results: WashTruckingItemResults;
+}
+
+export interface WashTruckingItemBalance {
+  TR_NUM_DIFF: number;
+  TR_DIST_DIFF: number;
+  CO2_WSH_TRB_DIFF: number;
+  CO2_WSH_TRB_PER: number;
+}
+export interface WashTruckingItemWithBalance extends WashTruckingItem {
+  resultsBalance: WashTruckingItemBalance;
+}
+export interface WashTruckingSurvey {
+  baseline: WashTruckingItem;
+  endline: WashTruckingItemWithBalance;
 }

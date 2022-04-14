@@ -18,20 +18,8 @@
       </v-row>
       <v-row>
         <v-col :cols="4">
-          <v-card flat>
-            <v-card-title><h1>Baseline</h1></v-card-title>
-          </v-card>
-        </v-col>
-        <v-col :cols="4">
-          <v-card flat>
-            <v-card-title> <h1>Endline</h1></v-card-title>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col :cols="4">
           <v-card elevation="2">
-            <v-card-title><h2>Inputs</h2></v-card-title>
+            <v-card-title><h1>Baseline</h1></v-card-title>
             <v-card-text>
               <div v-for="washInput in washInputs" :key="washInput.code">
                 <v-text-field
@@ -51,22 +39,34 @@
                 </v-select>
               </div>
             </v-card-text>
+            <v-divider />
+            <v-card flat>
+              <v-card-title><h2>Results</h2></v-card-title>
+              <v-card-text>
+                <div v-for="washResult in washResults" :key="washResult.code">
+                  <v-text-field
+                    :value="
+                      washForm.baseline.results[washResult.code] | formatNumber
+                    "
+                    :label="washResult.description"
+                    :disabled="washResult.disabled"
+                  ></v-text-field>
+                </div>
+              </v-card-text>
+            </v-card>
           </v-card>
         </v-col>
         <v-col :cols="4">
           <v-card elevation="2">
-            <v-card-title><h2>Inputs</h2></v-card-title>
+            <v-card-title> <h1>Endline</h1></v-card-title>
             <v-card-text>
               <div v-for="washInput in washInputs" :key="washInput.code">
                 <v-text-field
                   v-if="washInput.type === 'number'"
                   v-model.number="washForm.endline.inputs[washInput.code]"
-                  min="1"
-                  max="100"
                   :label="washInput.description"
                   type="number"
                   :disabled="washInput.disabled"
-                  suffix="%"
                 ></v-text-field>
                 <v-select
                   v-if="washInput.type === 'select'"
@@ -78,6 +78,21 @@
                 </v-select>
               </div>
             </v-card-text>
+            <v-divider />
+            <v-card flat>
+              <v-card-title><h2>Results</h2></v-card-title>
+              <v-card-text>
+                <v-text-field
+                  v-for="washResult in washResults"
+                  :key="washResult.code"
+                  :value="
+                    washForm.endline.results[washResult.code] | formatNumber
+                  "
+                  :label="washResult.description"
+                  :disabled="washResult.disabled"
+                ></v-text-field>
+              </v-card-text>
+            </v-card>
           </v-card>
         </v-col>
         <v-col :cols="4">
@@ -85,7 +100,7 @@
             <v-card-title><h1>Balance</h1></v-card-title>
             <v-card-text>
               <v-text-field
-                v-for="washBalanceResult in washBalanceResults"
+                v-for="washBalanceResult in washBalanceResultsPart1"
                 :key="washBalanceResult.code"
                 :value="
                   washForm.endline.resultsBalance[washBalanceResult.code]
@@ -94,50 +109,34 @@
                 :label="washBalanceResult.description"
                 :disabled="washBalanceResult.disabled"
                 :suffix="washBalanceResult.suffix"
-                :class="{
-                  'wash-positive':
-                    washBalanceResult.code === 'CO2_WSH_TRB_PER' &&
-                    washForm.endline.resultsBalance[washBalanceResult.code] > 0,
-                  'wash-negative':
-                    washBalanceResult.code === 'CO2_WSH_TRB_PER' &&
-                    washForm.endline.resultsBalance[washBalanceResult.code] < 0,
-                }"
               ></v-text-field>
             </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col :cols="4">
-          <v-card flat>
-            <v-card-title><h2>Results</h2></v-card-title>
-            <v-card-text>
-              <div v-for="washResult in washResults" :key="washResult.code">
+            <v-divider />
+            <v-card outlined>
+              <v-card-text>
                 <v-text-field
+                  v-for="washBalanceResult in washBalanceResultsPart2"
+                  :key="washBalanceResult.code"
                   :value="
-                    washForm.baseline.results[washResult.code] | formatNumber
+                    washForm.endline.resultsBalance[washBalanceResult.code]
+                      | formatNumber
                   "
-                  :label="washResult.description"
-                  :disabled="washResult.disabled"
+                  :label="washBalanceResult.description"
+                  :disabled="washBalanceResult.disabled"
+                  :suffix="washBalanceResult.suffix"
+                  :class="{
+                    'wash-positive':
+                      washBalanceResult.code === 'CO2_WSH_TRB_PER' &&
+                      washForm.endline.resultsBalance[washBalanceResult.code] >
+                        0,
+                    'wash-negative':
+                      washBalanceResult.code === 'CO2_WSH_TRB_PER' &&
+                      washForm.endline.resultsBalance[washBalanceResult.code] <
+                        0,
+                  }"
                 ></v-text-field>
-              </div>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-col :cols="4">
-          <v-card flat>
-            <v-card-title><h2>Results</h2></v-card-title>
-            <v-card-text>
-              <v-text-field
-                v-for="washResult in washResults"
-                :key="washResult.code"
-                :value="
-                  washForm.endline.results[washResult.code] | formatNumber
-                "
-                :label="washResult.description"
-                :disabled="washResult.disabled"
-              ></v-text-field>
-            </v-card-text>
+              </v-card-text>
+            </v-card>
           </v-card>
         </v-col>
       </v-row>
@@ -151,7 +150,11 @@
 </template>
 
 <script lang="ts">
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
+import {
+  GreenHouseGaz,
+  Survey,
+  WashTruckingSurvey,
+} from "@/store/GhgInterface";
 import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Vue, Watch } from "vue-property-decorator";
@@ -169,52 +172,78 @@ export default class WASH extends Vue {
   project!: GreenHouseGaz;
   localProject = {} as GreenHouseGaz;
 
-  washForm = {
-    baseline: {
-      inputs: {
-        US_TYP: "WATER",
-        TOT_WS: 10000,
-        WACL: 5,
-        TR_VOL: 2.5,
-        TR_TYP: "DIESEL",
-      },
-      results: {
-        TR_NUM: 0,
-        TR_DIST: 0,
-        CO2_WSH_TRB: 0,
-      },
-    },
-    endline: {
-      inputs: {
-        US_TYP: "WATER",
-        TOT_WS: 10000,
-        WACL: 5,
-        TR_VOL: 2,
-        TR_TYP: "DIESEL",
-      },
-      results: {
-        TR_NUM: 0,
-        TR_DIST: 0,
-        CO2_WSH_TRB: 0,
-      },
-      resultsBalance: {
-        TR_NUM_DIFF: 0,
-        TR_DIST_DIFF: 0,
-        CO2_WSH_TRB_DIFF: 0,
-        CO2_WSH_TRB_PER: 0,
-      },
-    },
-  };
+  washForm = this.generateNewWashForm();
   localSurvey = {} as Survey;
   localSurveyIndex = -1;
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
+
+  private generateNewWashForm(): WashTruckingSurvey {
+    return {
+      baseline: {
+        inputs: {
+          US_TYP: "WATER",
+          TOT_WS: 10000,
+          WACL: 5,
+          TR_VOL: 2.5,
+          TR_TYP: "DIESEL",
+        },
+        results: {
+          TR_NUM: 0,
+          TR_DIST: 0,
+          CO2_WSH_TRB: 0,
+        },
+      },
+      endline: {
+        inputs: {
+          US_TYP: "WATER",
+          TOT_WS: 10000,
+          WACL: 5,
+          TR_VOL: 2,
+          TR_TYP: "DIESEL",
+        },
+        results: {
+          TR_NUM: 0,
+          TR_DIST: 0,
+          CO2_WSH_TRB: 0,
+        },
+        resultsBalance: {
+          TR_NUM_DIFF: 0,
+          TR_DIST_DIFF: 0,
+          CO2_WSH_TRB_DIFF: 0,
+          CO2_WSH_TRB_PER: 0,
+        },
+      },
+    };
+  }
 
   public setLocalProject(): void {
     if (!this.project) {
       this.localProject = {} as GreenHouseGaz;
     } else {
       this.localProject = cloneDeep(this.project);
+      // find current survey
+      const surveyId = decodeURIComponent(this.$route.params.surveyId);
+      this.localSurveyIndex =
+        this.localProject.surveys?.findIndex(
+          (el: Survey) => el.name === surveyId
+        ) ?? -1;
+      this.localSurvey =
+        this.localProject.surveys?.[this.localSurveyIndex] ?? ({} as Survey);
+      this.initWash();
     }
+  }
+
+  public initWash(): void {
+    const washForm = this.localSurvey.wash;
+    const trucking = washForm?.trucking ?? {};
+    const truckingDefined = Object.keys(trucking).length !== 0;
+    if (!truckingDefined) {
+      this.$set(this.localSurvey, "wash", {
+        trucking: this.generateNewWashForm(),
+      });
+    }
+
+    this.washForm = cloneDeep(this.localSurvey.wash.trucking);
   }
 
   public syncLocalProject(): void {
@@ -227,6 +256,19 @@ export default class WASH extends Vue {
         this.setLocalProject();
       }
     });
+  }
+
+  public async submitForm(value: GreenHouseGaz): Promise<void> {
+    if (value.name !== "") {
+      this.$set(this.localSurvey, "wash", {
+        trucking: this.washForm,
+      });
+      value.surveys.splice(this.localSurveyIndex, 1, this.localSurvey);
+      console.log(value);
+      await this.updateDoc(value);
+    } else {
+      throw new Error("please fill the new Name");
+    }
   }
 
   public created(): void {
@@ -324,7 +366,7 @@ export default class WASH extends Vue {
     },
   ];
 
-  readonly washBalanceResults = [
+  readonly washBalanceResultsPart1 = [
     {
       description: "Change in number of trucks used",
       code: "TR_NUM_DIFF",
@@ -337,6 +379,9 @@ export default class WASH extends Vue {
       type: "number",
       disabled: true,
     },
+  ];
+
+  readonly washBalanceResultsPart2 = [
     {
       description:
         "Total CO2 Produced(+) or Saved (-) (kg CO2eq per year / kg)",
@@ -386,5 +431,17 @@ interface WashBalanceResult {
 }
 ::v-deep .wash-positive.theme--light.v-input--is-disabled input {
   color: green;
+}
+
+::v-deep.theme--light.v-sheet--outlined {
+  border: 2px solid rgba(255, 0, 0, 0.9);
+  .v-label {
+    color: black;
+    font-weight: 700;
+    font-size: large;
+  }
+  input {
+    font-size: larger;
+  }
 }
 </style>

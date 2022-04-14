@@ -8,5 +8,9 @@ export default {
         maximumFractionDigits: 2,
       }).format(n);
     });
+
+    Vue.filter("formatDate", (date: string): string => {
+      return Intl.DateTimeFormat("fr").format(new Date(date));
+    });
   },
 };

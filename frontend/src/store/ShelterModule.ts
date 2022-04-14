@@ -150,11 +150,10 @@ const actions: ActionTree<ShelterState, RootState> = {
     context.commit("REMOVE_DOC", id);
   },
   updateDoc: (context: ActionContext<ShelterState, RootState>, value) => {
+    context.commit("SET_SHELTER", value);
     const db = context.state.localCouch?.remoteDB;
     if (db) {
       db.put(value);
-      // on success update set shelter
-      // context.commit("SET_SHELTER", value);
     } else {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
