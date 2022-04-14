@@ -97,7 +97,7 @@
                         hide-default-footer
                         hide-default-header
                         :headers="headersSubItems"
-                        :items="item.items"
+                        :items="item.children"
                       >
                         <template v-slot:item.formId="{ item }">
                           <span v-if="materialMap[item.formId]">{{
@@ -336,7 +336,12 @@ export default class Step3Materials extends Vue {
   get reuseRecyclingFiltered(): Info[] {
     return reuseRecycling
       .filter((info: Info) => this.currentForms.indexOf(info.id) !== -1)
-      .map((x) => ({ ...x, id: this.materialMap[x.id]?.form }));
+      .map((x) => ({
+        ...x,
+        id: `${this.materialMap[x.id]?.material}—${
+          this.materialMap[x.id]?.form
+        }`,
+      }));
   }
 
   mounted(): void {
@@ -359,7 +364,7 @@ export default class Step3Materials extends Vue {
       unitName: "kgCO2e/kg",
     },
     {
-      title: "Embodied carbon total",
+      title: "Embodied water",
       selectedField: "embodiedWater",
       unitName: "L",
     },

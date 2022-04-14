@@ -24,13 +24,6 @@
                   {{ app.title }}
                 </v-list-item-title>
                 {{ app.description }}
-                <!-- <a
-                  @click.stop=""
-                  v-if="app.link"
-                  :href="app.link"
-                  target="_blank"
-                  >{{ app.linkName }}</a
-                > -->
               </v-list-item-content>
 
               <div class="icon-and-click">
@@ -41,6 +34,17 @@
                   </v-icon>
                 </v-list-item-avatar>
                 <v-card-actions class="app-action">
+                  <v-btn
+                    outlined
+                    rounded
+                    text
+                    @click.stop=""
+                    v-if="app.link"
+                    :href="app.link"
+                    target="_blank"
+                  >
+                    report
+                  </v-btn>
                   <v-btn outlined rounded text :to="{ name: app.to }">
                     Access
                   </v-btn>
@@ -83,5 +87,7 @@ export default class AppList extends Vue {
   width: 80px; // like the logo app
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  gap: 10px;
 }
 </style>

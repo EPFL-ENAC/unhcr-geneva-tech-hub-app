@@ -37,7 +37,7 @@ export function getEnvPerfItems(items: Item[] = []): MaterialTree[] {
   const mats = items.filter(isMaterial).reduce((acc, n: Item) => {
     const el = n as Material;
     const prevMat = acc[el.materialId];
-    const items = prevMat?.children
+    const children = prevMat?.children
       ? prevMat.children.push(el) && prevMat.children
       : [el];
     acc[el.materialId] = {
@@ -53,7 +53,7 @@ export function getEnvPerfItems(items: Item[] = []): MaterialTree[] {
       embodiedWater: el.embodiedWater + (prevMat?.embodiedWater ?? 0),
       unitCost: el.unitCost + (prevMat?.unitCost ?? 0),
       totalCost: el.totalCost + (prevMat?.totalCost ?? 0),
-      items,
+      children,
     } as MaterialTree;
     return acc;
   }, {} as MaterialTreeRecord);

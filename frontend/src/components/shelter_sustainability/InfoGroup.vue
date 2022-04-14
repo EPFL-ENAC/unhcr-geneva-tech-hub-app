@@ -25,7 +25,7 @@
       <v-expand-transition>
         <v-row v-show="expandPanel">
           <v-col cols="12">
-            {{ info.description }}
+            <p v-html="info.description"></p>
           </v-col>
         </v-row>
       </v-expand-transition>

@@ -22,7 +22,9 @@ use([CanvasRenderer, TreemapChart, TooltipComponent, TitleComponent]);
   components: {
     VChart,
   },
-  ...mapGetters("SheltersMaterialModule", ["materialMap"]),
+  computed: {
+    ...mapGetters("SheltersMaterialModule", ["materialMap"]),
+  },
 })
 export default class GraphTree extends Vue {
   @Prop({ type: [Object, Array], default: () => [] })
@@ -40,19 +42,26 @@ export default class GraphTree extends Vue {
     return this.items.length === 0 ? this.items : this.items.slice(0, -1);
   }
 
-  public generateDataTree(key: MaterialTreeKey, unitName: string): datatree[] {
+  public get generateDataTree(): datatree[] {
+    const key = this.selectedField as MaterialTreeKey;
+    const unitName = this.unitName as string;
+    const localMaterialMap = this.materialMap;
+    if (!localMaterialMap) {
+      return [];
+    }
     return this.itemsWithoutTotal.map(
       (item: MaterialTree) =>
         ({
           name: item.materialId,
           value: [item[key], unitName],
-          children: item?.children?.map(
-            (value: MaterialTree) =>
-              ({
-                name: this.materialMap[value.formId as string].form,
-                value: [value[key], unitName],
-              } as datatree)
-          ),
+          children: item?.children?.map((value: MaterialTree) => {
+            const matched = localMaterialMap[value.formId as string] ?? {};
+            const name = `${matched?.material}—${matched?.form}`;
+            return {
+              name,
+              value: [value[key], unitName],
+            } as datatree;
+          }),
         } as datatree)
     );
   }
@@ -71,9 +80,15 @@ export default class GraphTree extends Vue {
           if (!formatNumber) {
             return "error: format number undefined";
           }
-          const name = params.data.name;
+          const name = params.treeAncestors.reduce(
+            (acc: string, node: nodeInterface) => {
+              return `${acc}${acc === "" ? "" : "—"}${node.name}`;
+            },
+            ""
+          );
           const v = params.data.value[0];
           const unit = params.data.value[1];
+          // debugger;
           return `</div>${name}: ${formatNumber(v)} ${unit}</div>`;
         },
       },
@@ -91,7 +106,7 @@ export default class GraphTree extends Vue {
           },
           roam: false,
           type: "treemap",
-          data: this.generateDataTree(this.selectedField, this.unitName),
+          data: this.generateDataTree,
         },
       ],
     };
@@ -101,6 +116,9 @@ interface datatree {
   name: string;
   value: number[];
   children?: datatree[];
+}
+interface nodeInterface {
+  name: string;
 }
 </script>
 
