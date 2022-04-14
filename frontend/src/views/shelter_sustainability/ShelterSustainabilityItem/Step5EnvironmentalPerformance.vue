@@ -20,17 +20,15 @@
             <v-row>
               <v-col class="about-first-column d-flex justify-center" lg="12">
                 <v-data-table
+                  class="first-level"
                   :headers="headers"
                   :items="items"
-                  :single-expand="singleExpand"
-                  :expanded.sync="expanded"
-                  item-key="material"
                   hide-default-header
                   hide-default-footer
-                  :show-expand="true"
-                  @click:row="
-                    (item, slot) => item.items && slot.expand(!slot.isExpanded)
-                  "
+                  :single-expand="singleExpand"
+                  :expanded.sync="expanded"
+                  item-key="materialId"
+                  show-expand
                 >
                   <template v-slot:header>
                     <thead>
@@ -102,7 +100,39 @@
                         :items="item.items"
                       >
                         <template v-slot:item.formId="{ item }">
-                          <span>{{ materialMap[item.formId].form }}</span>
+                          <span v-if="materialMap[item.formId]">{{
+                            materialMap[item.formId].form
+                          }}</span>
+                          <span v-else> {{ item.formId }}</span>
+                        </template>
+                        <!-- beware duplicated code from above -->
+                        <template v-slot:item.weight="{ item }">
+                          <span>{{ item.weight | formatNumber }} </span>
+                        </template>
+                        <template
+                          v-slot:item.embodiedCarbonProduction="{ item }"
+                        >
+                          <span
+                            >{{ item.embodiedCarbonProduction | formatNumber }}
+                          </span>
+                        </template>
+                        <template
+                          v-slot:item.embodiedCarbonTransport="{ item }"
+                        >
+                          <span
+                            >{{ item.embodiedCarbonTransport | formatNumber }}
+                          </span>
+                        </template>
+                        <template v-slot:item.embodiedCarbonTotal="{ item }">
+                          <span
+                            >{{ item.embodiedCarbonTotal | formatNumber }}
+                          </span>
+                        </template>
+                        <template v-slot:item.embodiedWater="{ item }">
+                          <span>{{ item.embodiedWater | formatNumber }} </span>
+                        </template>
+                        <template v-slot:item.totalCost="{ item }">
+                          <span>{{ item.totalCost | formatNumber }} </span>
                         </template>
                       </v-data-table>
                     </td>
@@ -111,7 +141,19 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col> <graph-tree :items="items" /></v-col>
+              <v-col
+                :md="12"
+                :lg="4"
+                v-for="(option, $idx) in graphTreeOptions"
+                :key="$idx"
+              >
+                <graph-tree
+                  :selected-field="option.selectedField"
+                  :unit-name="option.unitName"
+                  :title="option.title"
+                  :items="items"
+                />
+              </v-col>
             </v-row>
             <v-row>
               <v-col>
@@ -169,12 +211,19 @@ import reuseRecycling from "@/views/shelter_sustainability/ShelterSustainability
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
     ...mapGetters("ShelterModule", ["shelter"]),
     ...mapGetters("SheltersMaterialModule", ["materialMap", "materials"]),
+  },
+  methods: {
+    ...mapActions("SheltersMaterialModule", [
+      "syncDB",
+      "getAllDocs",
+      "closeDB",
+    ]),
   },
   components: {
     InfoGroup,
@@ -183,6 +232,10 @@ import { mapGetters } from "vuex";
 })
 /** Project */
 export default class Step3Materials extends Vue {
+  syncDB!: () => null;
+  closeDB!: () => Promise<null>;
+  getAllDocs!: () => Promise<null>;
+
   shelter!: Shelter;
   updateDoc!: (doc: Shelter) => void;
   materialMap!: Record<string, ShelterMaterial>;
@@ -261,8 +314,8 @@ export default class Step3Materials extends Vue {
         sortable: false,
       },
       { text: "Embodied water", value: "embodiedWater", sortable: false },
-      { text: "Unit cost", value: "unitCost", sortable: false },
-      { text: "Total cost", value: "totalCost", sortable: false },
+      // { text: "Unit cost", value: "unitCost", sortable: false },
+      // { text: "Total cost", value: "totalCost", sortable: false },
     ];
   }
 
@@ -285,6 +338,32 @@ export default class Step3Materials extends Vue {
       .filter((info: Info) => this.currentForms.indexOf(info.id) !== -1)
       .map((x) => ({ ...x, id: this.materialMap[x.id]?.form }));
   }
+
+  mounted(): void {
+    this.syncDB();
+    this.getAllDocs();
+  }
+  destroyed(): void {
+    this.closeDB();
+  }
+
+  graphTreeOptions = [
+    {
+      selectedField: "weight",
+      title: "Weight",
+      unitName: "Kg",
+    },
+    {
+      title: "Embodied carbon total",
+      selectedField: "embodiedCarbonTotal",
+      unitName: "kgCO2e/kg",
+    },
+    {
+      title: "Embodied carbon total",
+      selectedField: "embodiedWater",
+      unitName: "L",
+    },
+  ];
 }
 
 interface Info {
@@ -299,11 +378,28 @@ interface Info {
     tr > th {
       border-left: 1px solid rgba(0, 0, 0, 0.12);
       // border-right: 1px solid rgba(0, 0, 0, 0.12);
+      width: 200px;
+    }
+  }
+
+  tbody {
+    tr > td {
+      width: 200px;
     }
   }
 }
-.v-data-table tbody tr:not(:last-child) {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+.v-data-table.first-level ::v-deep {
+  tbody tr:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+  }
+}
+.v-data-table.first-level
+  ::v-deep
+  > .v-data-table__wrapper
+  > table
+  > tbody
+  > tr:last-child {
+  background-color: #ccc;
 }
 
 .v-data-table

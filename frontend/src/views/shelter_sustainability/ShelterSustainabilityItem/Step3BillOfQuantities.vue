@@ -52,7 +52,7 @@
               </template>
               <template v-slot:item.source="{ item }">
                 {{ countriesMap[item.source].name }}
-                {{ countriesMap[item.source].emoji }}
+                <!-- {{ countriesMap[item.source].emoji }} -->
               </template>
               <template v-slot:item.formId="{ item }">
                 <span
@@ -196,7 +196,6 @@ export default class Step3Materials extends Vue {
     localShelter.items = this.items;
     this.updateDoc(localShelter);
   }
-  // localItems is in the store
 
   public setLocalShelter(shelter: Shelter): void {
     this.setItems(cloneDeep(shelter?.items ?? []));
