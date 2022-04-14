@@ -63,6 +63,7 @@ export default class GraphTree extends Vue {
       tooltip: {
         trigger: "item",
         confine: true,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         formatter: (params: any): string => {
           const formatNumber = this.$options.filters?.formatNumber;
           if (!formatNumber) {

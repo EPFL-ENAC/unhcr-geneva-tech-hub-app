@@ -1,3 +1,4 @@
+import { SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -5,9 +6,7 @@ import {
   Module,
   MutationTree,
 } from "vuex";
-
 import { RootState } from ".";
-import { SyncDatabase } from "@/utils/couchdb";
 
 interface SheltersMaterialState {
   item: ShelterMaterial;

@@ -118,7 +118,11 @@
                 v-for="(option, $idx) in graphTreeOptions"
                 :key="$idx"
               >
-                <graph-tree :selected-field="option.selectedField" :unit-name="option.unitName" :items="items" />
+                <graph-tree
+                  :selected-field="option.selectedField"
+                  :unit-name="option.unitName"
+                  :items="items"
+                />
               </v-col>
             </v-row>
             <v-row>
