@@ -93,7 +93,7 @@ export default class ProjectItem extends Vue {
       {
         icon: "mdi-leaf",
         text: "Environmental Perf",
-        disabled: !this.shelter?.items?.length,
+        disabled: !this.shelter?.envPerfItems?.length,
         tooltipDisabledText:
           "Bill of quantities needed to assess environmental performance",
         to: "ShelterSustainabilityStep5",
