@@ -8,9 +8,32 @@
       elevation="2"
     >
       <template v-for="item in menuItems">
-        <v-tab :key="item.to" :to="{ name: item.to }">
+        <v-tooltip
+          bottom
+          :key="item.to"
+          v-if="item.disabled && !!item.tooltipDisabledText"
+        >
+          <span v-html="item.tooltipDisabledText"></span>
+          <template v-slot:activator="{ on }">
+            <a class="v-tab" v-on="on">
+              <!--
+              ----  when v-tab disabled, tooltip does not work: wrap inside <a> element
+              ----    cf issue: https://github.com/vuetifyjs/vuetify/issues/7077
+              --->
+              <v-tab ripple :to="{ name: item.to }" :disabled="item.disabled">
+                <v-icon left>{{ item.icon }}</v-icon>
+                <span>
+                  {{ item.text }}
+                </span>
+              </v-tab>
+            </a>
+          </template>
+        </v-tooltip>
+        <v-tab :key="item.to" v-else ripple :to="{ name: item.to }">
           <v-icon left>{{ item.icon }}</v-icon>
-          {{ item.text }}
+          <span>
+            {{ item.text }}
+          </span>
         </v-tab>
       </template>
     </v-tabs>
@@ -27,7 +50,7 @@ import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("ShelterModule", ["db"]),
+    ...mapGetters("ShelterModule", ["db", "shelter"]),
   },
   methods: {
     ...mapActions("ShelterModule", [
@@ -45,39 +68,55 @@ export default class ProjectItem extends Vue {
   closeDB!: () => null;
   $route!: Route;
   db!: SyncDatabase<Shelter> | null;
-  readonly menuItems: MenuItem[] = [
-    {
-      icon: "mdi-information",
-      text: "About",
-      to: "ShelterSustainabilityStep1",
-    },
-    { icon: "mdi-shape", text: "Geometry", to: "ShelterSustainabilityStep2" },
-    {
-      icon: "mdi-clipboard-text-multiple",
-      text: "Bill of Quantities",
-      to: "ShelterSustainabilityStep3",
-    },
-    {
-      icon: "mdi-leaf",
-      text: "Environmental Perf",
-      to: "ShelterSustainabilityStep5",
-    },
-    {
-      icon: "mdi-poll",
-      text: "Technical Perf",
-      to: "ShelterSustainabilityStep6",
-    },
-    {
-      icon: "mdi-home",
-      text: "Habitability",
-      to: "ShelterSustainabilityStep7",
-    },
-    {
-      icon: "mdi-scoreboard",
-      text: "Scorecard",
-      to: "ShelterSustainabilityStep9",
-    },
-  ];
+  shelter!: Shelter;
+
+  public get menuItems(): MenuItem[] {
+    const scorecardErrorText = !this.shelter?.scorecard_errors?.length
+      ? ""
+      : this.shelter?.scorecard_errors?.reduce(
+          (acc: string, el: string) => `${acc}<li>${el}</li>`
+        );
+    return [
+      {
+        icon: "mdi-information",
+        text: "About",
+        to: "ShelterSustainabilityStep1",
+      },
+      { icon: "mdi-shape", text: "Geometry", to: "ShelterSustainabilityStep2" },
+      {
+        icon: "mdi-clipboard-text-multiple",
+        text: "Bill of Quantities",
+        disabled: !this.shelter.location_country,
+        tooltipDisabledText: "Site country is not reference in the about page",
+        to: "ShelterSustainabilityStep3",
+      },
+      {
+        icon: "mdi-leaf",
+        text: "Environmental Perf",
+        disabled: !this.shelter?.items?.length,
+        tooltipDisabledText:
+          "Bill of quantities needed to assess environmental performance",
+        to: "ShelterSustainabilityStep5",
+      },
+      {
+        icon: "mdi-poll",
+        text: "Technical Perf",
+        to: "ShelterSustainabilityStep6",
+      },
+      {
+        icon: "mdi-home",
+        text: "Habitability",
+        to: "ShelterSustainabilityStep7",
+      },
+      {
+        icon: "mdi-scoreboard",
+        disabled: !!this.shelter?.scorecard_errors?.length,
+        text: "Scorecard",
+        tooltipDisabledText: `Scorecard requires completion of other sections<br/> <br/><ul>${scorecardErrorText}</ul>`,
+        to: "ShelterSustainabilityStep9",
+      },
+    ];
+  }
 
   public retrieveData(): void {
     this.getDoc(decodeURIComponent(this.$route.params.id));
@@ -97,6 +136,8 @@ interface MenuItem {
   text: string;
   icon: string;
   to: string;
+  disabled?: boolean;
+  tooltipDisabledText?: string;
   children?: MenuItem[];
 }
 </script>

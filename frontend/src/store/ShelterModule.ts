@@ -28,6 +28,7 @@ const getters: GetterTree<ShelterState, RootState> = {
   scorecards: (s): ScoreCard[] => s.scorecards,
 };
 
+// WARNING: WRITE on remote / READ on local
 /** Mutations */
 const mutations: MutationTree<ShelterState> = {
   INIT_DB(state) {
@@ -47,22 +48,35 @@ const mutations: MutationTree<ShelterState> = {
       newShelter?.items
     );
 
-    const values = Object.values(
+    const valuesTech = Object.values(
       state.shelter.technical_performance
     ) as number[];
-    state.shelter.technical_performance_score = values.reduce(
-      (acc, el) => acc + el
-    );
+
+    if (valuesTech.length) {
+      state.shelter.technical_performance_score = valuesTech.reduce(
+        (acc, el) => acc + el
+      );
+    } else {
+      state.shelter.technical_performance_score = 0;
+    }
 
     const valuesHab = Object.values(state.shelter.habitability) as number[];
-    state.shelter.habitability_score = valuesHab.reduce((acc, el) => acc + el);
-    state.shelter.scorecard = getScoreCard(newShelter);
+    if (valuesHab.length) {
+      state.shelter.habitability_score = valuesHab.reduce(
+        (acc, el) => acc + el
+      );
+    } else {
+      state.shelter.habitability_score = 0;
+    }
+    const { scorecard, errors } = getScoreCard(newShelter);
+    state.shelter.scorecard = scorecard;
+    state.shelter.scorecard_errors = errors;
   },
   SET_SCORECARDS(state, value) {
     state.scorecards = value;
   },
   ADD_DOC(state, value) {
-    state.localCouch?.db
+    state.localCouch?.remoteDB
       .put(value)
       .then(() => {
         state.shelters.push(value);
@@ -74,8 +88,8 @@ const mutations: MutationTree<ShelterState> = {
   REMOVE_DOC(state, value) {
     const indexToRemove = state.shelters.findIndex((el) => el._id === value);
     state.shelters.splice(indexToRemove, 1);
-    state.localCouch?.db.get(value).then(function (doc) {
-      return state.localCouch?.db.remove(doc);
+    state.localCouch?.remoteDB.get(value).then(function (doc) {
+      return state.localCouch?.remoteDB.remove(doc);
     });
   },
 };
@@ -137,7 +151,7 @@ const actions: ActionTree<ShelterState, RootState> = {
   },
   updateDoc: (context: ActionContext<ShelterState, RootState>, value) => {
     context.commit("SET_SHELTER", value);
-    const db = context.state.localCouch?.db;
+    const db = context.state.localCouch?.remoteDB;
     if (db) {
       db.put(value);
     } else {
@@ -145,7 +159,7 @@ const actions: ActionTree<ShelterState, RootState> = {
     }
   },
   getDoc: (context: ActionContext<ShelterState, RootState>, id) => {
-    const db = context.state.localCouch?.db;
+    const db = context.state.localCouch?.remoteDB;
     if (db) {
       db.get(id).then(function (result: Shelter) {
         context.commit("SET_SHELTER", result);

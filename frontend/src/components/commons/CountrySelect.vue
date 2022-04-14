@@ -3,7 +3,7 @@
     tabindex="0"
     :input="currentValue"
     @change="(value) => $emit('input', value)"
-    :items="countriesRef"
+    :items="countriesSorted"
     item-value="code"
     item-text="name"
     label="Select country"
@@ -62,6 +62,22 @@ export default class CountrySelect extends Vue {
         emoji: flagEmoji(country.code),
       })) as CountryInfo[];
     }
+  }
+
+  public get countriesSorted(): CountryInfo[] {
+    const result = cloneDeep(this.countriesRef);
+    result.sort((a: CountryInfo, b: CountryInfo): number => {
+      if (a.name === b.name) {
+        return 0;
+      }
+
+      if (a.name > b.name) {
+        return 1;
+      }
+
+      return -1;
+    });
+    return result;
   }
 }
 </script>

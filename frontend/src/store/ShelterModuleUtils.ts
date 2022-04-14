@@ -5,6 +5,7 @@ import {
   MaterialTree,
   MaterialTreeRecord,
   ScoreCard,
+  ScoreCardWithErrors,
   Shelter,
   ShelterState,
 } from "@/store/ShelterInterface";
@@ -89,55 +90,58 @@ export function getTotalEnvPerf(
   return total;
 }
 
-export function getScoreCard(value: Shelter): ScoreCard {
-  const returnValue = {
+export function getScoreCard(value: Shelter): ScoreCardWithErrors {
+  const scorecard = {
     weight: 0, // l kg/m2/year
     co2: 0,
     h2o: 0,
     techPerf: value.technical_performance_score ?? 0,
     habitability: value.habitability_score ?? 0,
     affordability: 0,
-  };
+  } as ScoreCard;
+  const errors: string[] = [];
   const { totalEnvPerf, shelter_lifespan, geometry } = value;
   if (!shelter_lifespan) {
-    console.log("Shelter lifespan not defined");
+    errors.push("Shelter lifespan not defined");
   }
   if (!geometry?.floorArea) {
-    console.log("Floor area not defined");
+    errors.push("Floor area not defined");
   }
   if (!shelter_lifespan || !geometry?.floorArea) {
-    return returnValue;
+    return { scorecard, errors };
   }
   // start computing information here
   if (totalEnvPerf?.totalCost) {
-    returnValue.affordability =
+    scorecard.affordability =
       totalEnvPerf.totalCost / geometry.floorArea / shelter_lifespan;
   } else {
-    console.log("total_cost not defined");
+    errors.push("total cost not defined, missing bill of quantities");
   }
 
   if (totalEnvPerf?.weight) {
-    returnValue.weight =
+    scorecard.weight =
       totalEnvPerf.weight / geometry.floorArea / shelter_lifespan;
   } else {
-    console.log("weight not defined");
+    errors.push("weight not defined, missing bill of quantities");
   }
 
   if (totalEnvPerf?.embodiedCarbonTotal) {
-    returnValue.co2 =
+    scorecard.co2 =
       totalEnvPerf.embodiedCarbonTotal / geometry.floorArea / shelter_lifespan;
   } else {
-    console.log("embodiedCarbonTotal not defined");
+    errors.push(
+      "embodied carbon total not defined, missing bill of quantities"
+    );
   }
 
   if (totalEnvPerf?.embodiedWater) {
-    returnValue.h2o =
+    scorecard.h2o =
       totalEnvPerf.embodiedWater / geometry.floorArea / shelter_lifespan;
   } else {
-    console.log("embodiedWater not defined");
+    errors.push("embodied water not defined, missing bill of quantities");
   }
 
-  return returnValue;
+  return { scorecard, errors };
 }
 
 export function generateNewShelter(name: string): Shelter {
@@ -155,8 +159,8 @@ export function generateNewShelter(name: string): Shelter {
     risk_flood: "",
     risk_seismic: "",
     habitability: {},
-    habitability_score: undefined,
-    technical_performance_score: undefined,
+    habitability_score: 0,
+    technical_performance_score: 0,
     technical_performance: {},
     geometry: getNewGeometry(),
     users: [""],

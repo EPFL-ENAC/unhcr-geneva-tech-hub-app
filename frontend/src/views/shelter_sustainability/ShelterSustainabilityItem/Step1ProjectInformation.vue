@@ -78,7 +78,7 @@
                         <v-select
                           :items="shelterTypes"
                           label="Shelter type"
-                          v-model.number="localShelter.shelter_type"
+                          v-model="localShelter.shelter_type"
                           name="shelter_type"
                           required
                           :rules="shelterTypeRules"
@@ -205,7 +205,7 @@
                                 tabindex="2"
                                 :disabled="!addUserValid"
                               >
-                                New shelter
+                                New user
                               </v-btn>
                             </v-card-actions>
                           </v-card>

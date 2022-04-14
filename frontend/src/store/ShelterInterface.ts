@@ -29,6 +29,7 @@ export interface Shelter {
   technical_performance_score: number | undefined;
 
   scorecard: ScoreCard;
+  scorecard_errors: string[];
   geometry: Geometry;
 
   users: string[];
@@ -43,6 +44,12 @@ export interface ScoreCard {
   habitability: number;
   affordability: number;
 }
+
+export interface ScoreCardWithErrors {
+  scorecard: ScoreCard;
+  errors: string[];
+}
+
 export interface Geometry {
   shelter_geometry_type: string;
   shelter_dimensions: ShelterDimensions;

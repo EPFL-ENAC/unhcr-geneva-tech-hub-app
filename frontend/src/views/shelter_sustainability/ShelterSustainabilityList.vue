@@ -108,7 +108,7 @@ import { mapActions, mapState } from "vuex";
 export default class ProjectList extends Vue {
   newName = "";
   shelters!: [];
-  addDoc!: (name: string) => null;
+  addDoc!: (name: string) => Promise<null>;
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
   getShelters!: () => Promise<null>;
@@ -126,7 +126,12 @@ export default class ProjectList extends Vue {
   }
   public submitForm(): void {
     if (this.newName !== "") {
-      this.addDoc(this.newName);
+      this.addDoc(this.newName).then(() => {
+        this.$router.push({
+          name: "ShelterSustainabilityEdit",
+          params: { id: encodeURIComponent(this.newName) },
+        });
+      });
     } else {
       console.error("please fill the new Name");
     }
