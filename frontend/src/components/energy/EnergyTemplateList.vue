@@ -1,8 +1,7 @@
 <template>
   <sync-document-list
-    ref="list"
     title="Templates"
-    databaseName="energy_templates"
+    :documents="templates"
     @click:item="clickItem"
     @create="create"
   >
@@ -31,21 +30,26 @@
 import SyncDocumentList from "@/components/commons/SyncDocumentList.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
 import { ProjectDocument } from "@/models/energyModel";
+import { SyncDatabase } from "@/utils/couchdb";
 import { checkRequired } from "@/utils/rules";
 import "vue-class-component/hooks";
-import { Component, Ref, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
+import { mapState } from "vuex";
 
 @Component({
   components: { SyncDocumentList },
+  computed: {
+    ...mapState("energy", ["templates", "templatesDatabase"]),
+  },
 })
 export default class EnergyTemplateList extends Vue {
+  templates!: ExistingDocument<ProjectDocument>[];
+  templatesDatabase!: SyncDatabase<ProjectDocument>;
+
   readonly rules = [checkRequired];
 
   createDialog = false;
   name = "";
-
-  @Ref()
-  readonly list!: SyncDocumentList<ProjectDocument>;
 
   clickItem(document: ExistingDocument<ProjectDocument>): void {
     this.$router.push({ path: `templates/${document._id}`, append: true });
@@ -53,18 +57,19 @@ export default class EnergyTemplateList extends Vue {
 
   deleteItem(document: ExistingDocument<ProjectDocument>, event: Event): void {
     event.stopPropagation();
-    this.list.database.db.remove(document);
+    this.templatesDatabase.remoteDB.remove(document);
   }
 
   create(): void {
-    this.list.database.db.post({
-      name: this.name,
-      users: [
-        // TODO current user
-      ],
-      modules: {},
-    });
-    this.name = "";
+    const username = this.$userName();
+    this.templatesDatabase.remoteDB
+      .post({
+        name: this.name,
+        users: [username],
+        modules: {},
+      })
+      .then(() => (this.name = ""))
+      .catch((reason) => console.error(reason));
   }
 }
 </script>

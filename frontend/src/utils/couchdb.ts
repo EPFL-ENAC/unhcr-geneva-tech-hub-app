@@ -4,6 +4,7 @@ import PouchDB from "pouchdb";
 import qs from "qs";
 
 const databaseUrl: string = url(process.env.VUE_APP_COUCHDB_URL);
+const designDocumentPrefix = "_design/";
 
 function url(value = ""): string {
   try {
@@ -19,6 +20,8 @@ function url(value = ""): string {
 export enum DatabaseName {
   EnergyCookingFuels = "energy_cooking_fuels",
   EnergyCookingStoves = "energy_cooking_stoves",
+  EnergySites = "energy_sites",
+  EnergyTemplates = "energy_templates",
 }
 
 function getUrl(path: string): string {
@@ -69,7 +72,7 @@ export function createSyncDatabase<T>(name: string): SyncDatabase<T> {
 }
 
 export class SyncDatabase<T> {
-  public db: PouchDB.Database<T>;
+  public localDB: PouchDB.Database<T>;
   public remoteDB: PouchDB.Database<T>;
   private sync: PouchDB.Replication.Sync<T>;
   private onChangeListener: PouchDB.Core.Changes<T> | undefined;
@@ -77,18 +80,35 @@ export class SyncDatabase<T> {
   constructor(name: string) {
     const localDB = new PouchDB<T>(name);
     const remoteDB = new PouchDB<T>(getUrl(name));
-    this.sync = localDB.sync(remoteDB, {
-      live: true,
-      retry: true,
-    });
-    this.db = localDB;
+    this.sync = localDB.sync(
+      remoteDB,
+      {
+        live: true,
+        retry: true,
+      },
+      (error, result) => {
+        if (error) {
+          console.error(error);
+        } else {
+          console.debug("sync", result);
+        }
+      }
+    );
+    this.localDB = localDB;
     this.remoteDB = remoteDB;
+  }
+
+  /**
+   * @deprecated use localDB
+   */
+  get db(): PouchDB.Database<T> {
+    return this.localDB;
   }
 
   onChange(
     listener: (value: PouchDB.Core.ChangesResponseChange<T>) => unknown
   ): PouchDB.Core.Changes<T> {
-    this.onChangeListener = this.db.changes({
+    this.onChangeListener = this.localDB.changes({
       since: "now",
       live: true,
     });
@@ -97,10 +117,16 @@ export class SyncDatabase<T> {
   }
 
   async getAllDocuments(): Promise<ExistingDocument<T>[]> {
-    const result = await this.db.allDocs({
+    const result = await this.localDB.allDocs({
       include_docs: true,
     });
     return result.rows.map((row) => row.doc as ExistingDocument<T>);
+  }
+
+  async getDocuments(): Promise<ExistingDocument<T>[]> {
+    return (await this.getAllDocuments()).filter(
+      (doc) => !doc._id.startsWith(designDocumentPrefix)
+    );
   }
 
   cancel(): void {

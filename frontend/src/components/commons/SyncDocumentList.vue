@@ -48,8 +48,6 @@
 
 <script lang="ts">
 import { ExistingDocument } from "@/models/couchdbModel";
-import { SyncDatabase } from "@/utils/couchdb";
-import PouchDB from "pouchdb";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
@@ -57,34 +55,11 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class SyncDocumentList<T> extends Vue {
   @Prop(String)
   readonly title!: string;
-  @Prop(String)
-  readonly databaseName!: string;
+  @Prop({ type: Array as () => ExistingDocument<T>[] })
+  readonly documents!: ExistingDocument<T>[];
 
-  readonly database: SyncDatabase<T> = new SyncDatabase(this.databaseName);
-
-  documents: ExistingDocument<T>[] = [];
-  changes?: PouchDB.Core.Changes<T>;
   createDialog = false;
   formValid = true;
-
-  created(): void {
-    this.updateProjects();
-
-    this.changes = this.database.onChange(() => {
-      this.updateProjects();
-    });
-  }
-
-  destroyed(): void {
-    this.database.cancel();
-    this.changes?.cancel();
-  }
-
-  updateProjects(): void {
-    this.database.getAllDocuments().then((documents) => {
-      this.documents = documents;
-    });
-  }
 
   clickItem(document: T): void {
     this.$emit("click:item", document);

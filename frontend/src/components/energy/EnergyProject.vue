@@ -91,6 +91,7 @@ import { Modules, ProjectDocument } from "@/models/energyModel";
 import { SyncDatabase } from "@/utils/couchdb";
 import { checkRequired } from "@/utils/rules";
 import { cloneDeep, isEqual } from "lodash";
+import PouchDB from "pouchdb";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
@@ -108,14 +109,11 @@ export default class EnergyProject extends Vue {
 
   @Prop(String)
   readonly idName!: string;
-  @Prop(String)
-  readonly databaseName!: string;
+  @Prop({ type: Object as () => SyncDatabase<ProjectDocument> })
+  readonly database!: SyncDatabase<ProjectDocument>;
   @Prop(String)
   readonly routerPrefix!: string;
 
-  readonly database: SyncDatabase<ProjectDocument> = new SyncDatabase(
-    this.databaseName
-  );
   readonly tabItems: TabItem[] = [
     {
       text: "General",
@@ -182,6 +180,7 @@ export default class EnergyProject extends Vue {
   document: ExistingDocument<ProjectDocument> | null = null;
   lastDocument?: ExistingDocument<ProjectDocument>;
   tab: string | null = null;
+  changes?: PouchDB.Core.Changes<ProjectDocument>;
 
   get name(): string {
     return this.document?.name ?? "";
@@ -203,27 +202,40 @@ export default class EnergyProject extends Vue {
 
   created(): void {
     this.getDocument();
+    this.changes = this.database.localDB.changes({
+      doc_ids: [this.documentId],
+    });
+    this.changes.on("change", this.getDocument);
+    // TODO use changed document
   }
 
   destroyed(): void {
-    this.database.cancel();
+    this.changes?.cancel();
   }
 
   @Watch("modules", { deep: true })
   onModulesUpdated(): void {
     if (this.document && !isEqual(this.lastDocument, this.document)) {
-      console.debug("updating document", this.document._id);
-      this.database.db.put(this.document);
-      this.getDocument();
+      this.database.remoteDB
+        .put(this.document)
+        .then(() => {
+          console.debug(`document ${this.document?._id} updated`);
+        })
+        .catch((reason) => {
+          console.error(reason);
+          this.document = this.lastDocument
+            ? cloneDeep(this.lastDocument)
+            : null;
+        });
     }
   }
 
   getDocument(): void {
-    this.database.db
+    this.database.localDB
       .get(this.documentId)
       .then((document) => {
         this.document = cloneDeep(document);
-        this.lastDocument = document;
+        this.lastDocument = cloneDeep(document);
       })
       .catch(() => {
         this.$router.push({ name: "energy" });
@@ -232,8 +244,7 @@ export default class EnergyProject extends Vue {
 
   changeName(): void {
     if (this.document) {
-      this.database.db.put(this.document);
-      this.getDocument();
+      this.database.localDB.put(this.document).then(() => this.getDocument());
     }
   }
 }

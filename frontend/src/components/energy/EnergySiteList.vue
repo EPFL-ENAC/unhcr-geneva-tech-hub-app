@@ -1,8 +1,7 @@
 <template>
   <sync-document-list
-    ref="list"
     title="Sites"
-    databaseName="energy_sites"
+    :documents="sites"
     @click:item="clickItem"
     @create="create"
   >
@@ -25,7 +24,7 @@
       ></v-text-field>
       <v-select
         v-model="templateDocument"
-        :items="templates"
+        :items="templateOptions"
         label="Select template"
         required
         :rules="rules"
@@ -43,48 +42,31 @@ import { checkRequired } from "@/utils/rules";
 import { SelectItemObject } from "@/utils/vuetify";
 import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
-import { Component, Ref, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
+import { mapState } from "vuex";
 
 @Component({
   components: { SyncDocumentList },
+  computed: {
+    ...mapState("energy", ["sites", "sitesDatabase", "templates"]),
+  },
 })
 class EnergySiteList extends Vue {
+  sites!: ExistingDocument<ProjectDocument>[];
+  templates!: ExistingDocument<ProjectDocument>[];
+  sitesDatabase!: SyncDatabase<ProjectDocument>;
+
   readonly rules = [checkRequired];
-  // TODO vuex
-  readonly templateDatabase: SyncDatabase<ProjectDocument> = new SyncDatabase(
-    "energy_templates"
-  );
 
   createDialog = false;
   name = "";
-  templateDocuments: ExistingDocument<ProjectDocument>[] = [];
   templateDocument: ProjectDocument | null = null;
 
-  @Ref()
-  readonly list!: SyncDocumentList<ProjectDocument>;
-
-  created(): void {
-    this.updateTemplates();
-    this.templateDatabase.onChange(() => {
-      this.updateTemplates();
-    });
-  }
-
-  destroyed(): void {
-    this.templateDatabase.cancel();
-  }
-
-  get templates(): SelectItemObject<string, ProjectDocument>[] {
-    return this.templateDocuments.map((document) => ({
+  get templateOptions(): SelectItemObject<string, ProjectDocument>[] {
+    return this.templates.map((document) => ({
       text: document.name,
       value: document,
     }));
-  }
-
-  updateTemplates(): void {
-    this.templateDatabase.getAllDocuments().then((documents) => {
-      this.templateDocuments = documents;
-    });
   }
 
   clickItem(document: ExistingDocument<ProjectDocument>): void {
@@ -93,19 +75,20 @@ class EnergySiteList extends Vue {
 
   deleteItem(document: ExistingDocument<ProjectDocument>, event: Event): void {
     event.stopPropagation();
-    this.list.database.db.remove(document);
+    this.sitesDatabase.remoteDB.remove(document);
   }
 
   create(): void {
     if (this.templateDocument) {
-      this.list.database.db.post({
-        name: this.name,
-        users: [
-          // TODO current user
-        ],
-        modules: cloneDeep(this.templateDocument.modules),
-      });
-      this.name = "";
+      const username = this.$userName();
+      this.sitesDatabase.remoteDB
+        .post({
+          name: this.name,
+          users: [username],
+          modules: cloneDeep(this.templateDocument.modules),
+        })
+        .then(() => (this.name = ""))
+        .catch((reason) => console.error(reason));
     }
   }
 }
