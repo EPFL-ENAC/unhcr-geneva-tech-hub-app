@@ -1,3 +1,4 @@
+import { Material } from "@/store/ShelterInterface";
 export type CountriesInfoMap = Record<string, CountryInfo>;
 export interface Country {
   key: CountryCode;
@@ -34,6 +35,7 @@ export interface Survey {
   name: string; // name is year
   energy: EnergySurvey;
   wash: WashSurvey;
+  material: MaterialSurvey;
 }
 
 export interface EnergySurvey {
@@ -85,4 +87,27 @@ export interface WashTruckingItemWithBalance extends WashTruckingItem {
 export interface WashTruckingSurvey {
   baseline: WashTruckingItem;
   endline: WashTruckingItemWithBalance;
+}
+
+export interface MaterialSurvey {
+  shelter: MaterialShelterSurvey;
+}
+
+export interface MaterialShelterSurvey {
+  baseline: MaterialShelterSurveyItem;
+  endline: MaterialShelterSurveyItemWithBalance;
+}
+export interface MaterialShelterSurveyItem {
+  inputs: Material[];
+  results: Material[];
+}
+
+export interface MaterialShelterSurveyItemWithBalance
+  extends MaterialShelterSurveyItem {
+  resultsBalance: MaterialShelterSurveyBalance;
+}
+
+export interface MaterialShelterSurveyBalance {
+  SH_BAL_MAT: number; // Difference in material used
+  SH_BAL_CO2: number; // Difference in CO2 Emissions
 }
