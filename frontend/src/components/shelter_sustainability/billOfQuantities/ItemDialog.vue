@@ -288,7 +288,6 @@ export default class DeleteItemDialog extends Vue {
     local: boolean
   ): Promise<number> {
     const shelter = await this.getDoc(id);
-    console.log(id, local, shelter.t, shelter.o);
     return local ? shelter.t : shelter.o;
   }
 

@@ -196,7 +196,6 @@ export default class Step3Materials extends Vue {
     localShelter.items = this.items;
     this.updateDoc(localShelter);
   }
-  // localItems is in the store
 
   public setLocalShelter(shelter: Shelter): void {
     this.setItems(cloneDeep(shelter?.items ?? []));

@@ -8,7 +8,7 @@
 import { MaterialTree, MaterialTreeKey } from "@/store/ShelterInterface";
 import { ShelterMaterial } from "@/store/SheltersMaterialModule";
 import { TreemapChart } from "echarts/charts";
-import { TooltipComponent } from "echarts/components";
+import { TitleComponent, TooltipComponent } from "echarts/components";
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
 import { EChartsOption } from "echarts/types/dist/shared";
@@ -16,7 +16,7 @@ import VChart from "vue-echarts";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 
-use([CanvasRenderer, TreemapChart, TooltipComponent]);
+use([CanvasRenderer, TreemapChart, TooltipComponent, TitleComponent]);
 
 @Component({
   components: {
@@ -29,20 +29,26 @@ export default class GraphTree extends Vue {
   readonly items!: MaterialTree[];
   @Prop([String])
   readonly selectedField: MaterialTreeKey | undefined;
+  @Prop([String])
+  readonly unitName: string | undefined;
 
   materialMap!: Record<string, ShelterMaterial>;
 
-  public generateDataTree(key: MaterialTreeKey): datatree[] {
-    return this.items.map(
+  private get itemsWithoutTotal(): MaterialTree[] {
+    return this.items.length === 0 ? this.items : this.items.slice(0, -1);
+  }
+
+  public generateDataTree(key: MaterialTreeKey, unitName: string): datatree[] {
+    return this.itemsWithoutTotal.map(
       (item: MaterialTree) =>
         ({
           name: item.materialId,
-          value: item[key],
+          value: [item[key], unitName],
           children: item?.children?.map(
             (value: MaterialTree) =>
               ({
                 name: this.materialMap[value.formId as string].form,
-                value: value[key],
+                value: [value[key], unitName],
               } as datatree)
           ),
         } as datatree)
@@ -50,14 +56,35 @@ export default class GraphTree extends Vue {
   }
 
   public get option(): EChartsOption {
-    if (!this.selectedField) {
+    if (!this.selectedField || !this.unitName) {
       return {};
     }
     return {
       tooltip: {
         trigger: "item",
         confine: true,
+        formatter: (params: any): string => {
+          const formatNumber = this.$options.filters?.formatNumber;
+          if (!formatNumber) {
+            return "error: format number undefined";
+          }
+          const name = params.data.name;
+          const v = params.data.value[0];
+          const unit = params.data.value[1];
+          return `</div>${name}: ${formatNumber(v)} ${unit}</div>`;
+        },
       },
+      titles: [
+        {
+          text: "Weight",
+        },
+        {
+          text: "Embodied carbon total",
+        },
+        {
+          text: "Embodied water",
+        },
+      ],
       series: [
         {
           breadcrumb: {
@@ -65,7 +92,7 @@ export default class GraphTree extends Vue {
           },
           roam: false,
           type: "treemap",
-          data: this.generateDataTree(this.selectedField),
+          data: this.generateDataTree(this.selectedField, this.unitName),
         },
       ],
     };
@@ -73,7 +100,7 @@ export default class GraphTree extends Vue {
 }
 interface datatree {
   name: string;
-  value: number;
+  value: number[];
   children?: datatree[];
 }
 </script>
