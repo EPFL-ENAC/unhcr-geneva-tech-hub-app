@@ -105,6 +105,35 @@
                           }}</span>
                           <span v-else> {{ item.formId }}</span>
                         </template>
+                        <!-- beware duplicated code from above -->
+                        <template v-slot:item.weight="{ item }">
+                          <span>{{ item.weight | formatNumber }} </span>
+                        </template>
+                        <template
+                          v-slot:item.embodiedCarbonProduction="{ item }"
+                        >
+                          <span
+                            >{{ item.embodiedCarbonProduction | formatNumber }}
+                          </span>
+                        </template>
+                        <template
+                          v-slot:item.embodiedCarbonTransport="{ item }"
+                        >
+                          <span
+                            >{{ item.embodiedCarbonTransport | formatNumber }}
+                          </span>
+                        </template>
+                        <template v-slot:item.embodiedCarbonTotal="{ item }">
+                          <span
+                            >{{ item.embodiedCarbonTotal | formatNumber }}
+                          </span>
+                        </template>
+                        <template v-slot:item.embodiedWater="{ item }">
+                          <span>{{ item.embodiedWater | formatNumber }} </span>
+                        </template>
+                        <template v-slot:item.totalCost="{ item }">
+                          <span>{{ item.totalCost | formatNumber }} </span>
+                        </template>
                       </v-data-table>
                     </td>
                   </template>
@@ -121,6 +150,7 @@
                 <graph-tree
                   :selected-field="option.selectedField"
                   :unit-name="option.unitName"
+                  :title="option.title"
                   :items="items"
                 />
               </v-col>
@@ -320,13 +350,16 @@ export default class Step3Materials extends Vue {
   graphTreeOptions = [
     {
       selectedField: "weight",
+      title: "Weight",
       unitName: "Kg",
     },
     {
+      title: "Embodied carbon total",
       selectedField: "embodiedCarbonTotal",
       unitName: "kgCO2e/kg",
     },
     {
+      title: "Embodied carbon total",
       selectedField: "embodiedWater",
       unitName: "L",
     },

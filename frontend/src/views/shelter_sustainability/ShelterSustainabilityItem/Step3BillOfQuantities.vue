@@ -52,7 +52,7 @@
               </template>
               <template v-slot:item.source="{ item }">
                 {{ countriesMap[item.source].name }}
-                {{ countriesMap[item.source].emoji }}
+                <!-- {{ countriesMap[item.source].emoji }} -->
               </template>
               <template v-slot:item.formId="{ item }">
                 <span

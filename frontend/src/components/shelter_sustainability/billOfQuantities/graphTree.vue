@@ -1,5 +1,5 @@
 <template>
-  <v-responsive aspect-ratio="10" min-height="200">
+  <v-responsive aspect-ratio="10" min-height="230">
     <v-chart autoresize :option="option"></v-chart>
   </v-responsive>
 </template>
@@ -31,6 +31,8 @@ export default class GraphTree extends Vue {
   readonly selectedField: MaterialTreeKey | undefined;
   @Prop([String])
   readonly unitName: string | undefined;
+  @Prop([String])
+  readonly title: string | undefined;
 
   materialMap!: Record<string, ShelterMaterial>;
 
@@ -75,15 +77,11 @@ export default class GraphTree extends Vue {
           return `</div>${name}: ${formatNumber(v)} ${unit}</div>`;
         },
       },
-      titles: [
+      title: [
         {
-          text: "Weight",
-        },
-        {
-          text: "Embodied carbon total",
-        },
-        {
-          text: "Embodied water",
+          text: this.title ?? "",
+          left: "center",
+          padding: [0, 0, 24, 0],
         },
       ],
       series: [
