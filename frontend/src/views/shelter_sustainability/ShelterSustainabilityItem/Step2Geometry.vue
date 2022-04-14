@@ -301,8 +301,11 @@ export default class Step2Geometry extends Vue {
   }
 
   public get hasComputedFloorAndVolume(): boolean {
-    const geometryType = this.localShelter.geometry.shelter_geometry_type;
-    return geometryType !== this.geometryOtherName && geometryType !== "";
+    const geometryType =
+      this.localShelter?.geometry?.shelter_geometry_type ?? "";
+    return (
+      geometryType.indexOf(this.geometryOtherName) === -1 && geometryType !== ""
+    );
   }
 
   @Watch("localShelter.geometry.shelter_dimensions", { deep: true })
@@ -314,7 +317,8 @@ export default class Step2Geometry extends Vue {
       // works for other since L & W will always be zero for 'Others' type of geometry
       this.localShelter.geometry.floorArea =
         this.floorArea(newShelterDimensions);
-      this.localShelter.geometry.volume = this.volume(newShelterDimensions);
+      this.localShelter.geometry.volume =
+        this.computeVolume(newShelterDimensions);
     }
   }
 
@@ -390,7 +394,7 @@ export default class Step2Geometry extends Vue {
     return L * W;
   }
 
-  private volume(shelterDimension: ShelterDimensions): number {
+  private computeVolume(shelterDimension: ShelterDimensions): number {
     const geometry = this.geometries.find(
       (g) => g._id === this.shelter_geometry_type
     );
