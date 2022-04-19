@@ -5,31 +5,56 @@
     @save="save"
   >
     <template v-slot:append>
-      <v-expansion-panels v-model="selectedIndexes" multiple>
-        <v-expansion-panel
-          v-for="(interventionItem, index) in module.interventions"
-          :key="index"
-        >
-          <v-expansion-panel-header>
-            <template v-slot:default="{ open }">
-              <v-checkbox
-                hide-details="auto"
-                :input-value="open"
-                :label="interventionItem.name"
-                readonly
-              ></v-checkbox>
-            </template>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <form-item-component
-              v-for="item in formItems"
-              :key="item.key"
-              v-model="interventionItem[item.key]"
-              v-bind="item"
-            ></form-item-component>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
+      <v-row>
+        <v-spacer></v-spacer>
+        <v-col class="col-auto">
+          <v-btn color="primary" @click="addDiffusion">
+            <v-icon left>mdi-plus</v-icon>
+            Add Diffusion Intervention
+          </v-btn>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-expansion-panels v-model="selectedIndexes" multiple>
+            <v-expansion-panel
+              v-for="(interventionItem, index) in module.interventions"
+              :key="index"
+            >
+              <v-expansion-panel-header>
+                <template v-slot:default="{ open }">
+                  <v-checkbox
+                    hide-details="auto"
+                    :input-value="open"
+                    :label="interventionItem.name"
+                    readonly
+                  ></v-checkbox>
+                </template>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-row>
+                  <v-col>
+                    <form-item-component
+                      v-for="item in formItems"
+                      :key="item.key"
+                      v-model="interventionItem[item.key]"
+                      v-bind="item"
+                    ></form-item-component>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-btn @click="deleteDuffusion(index)">
+                      <v-icon left>mdi-delete</v-icon>
+                      Delete
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-col>
+      </v-row>
     </template>
   </energy-form>
 </template>
@@ -93,6 +118,11 @@ export default class EnergyIntervention extends EnergyFormMixin<InterventionModu
 
   get formItems(): FormItem<keyof CookingTechnologyIntervention>[] {
     return [
+      {
+        type: "text",
+        key: "name",
+        label: "Name",
+      },
       {
         type: "select",
         key: "newStoveId",
@@ -166,6 +196,27 @@ export default class EnergyIntervention extends EnergyFormMixin<InterventionModu
     this.module.interventions.forEach(
       (intervention, index) => (intervention.selected = indexes.has(index))
     );
+  }
+
+  addDiffusion(): void {
+    const currentYear = getCurrentYear();
+    this.module.interventions.push({
+      type: "cooking-technology",
+      name: "Diffusion of new technology",
+      selected: false,
+      yearStart: currentYear,
+      yearEnd: currentYear,
+      newStoveId: "lpg",
+      oldStoveIds: [],
+      count: 0,
+      categories: [],
+      cost: 0,
+      donnorSubsidy: 0,
+    });
+  }
+
+  deleteDuffusion(index: number): void {
+    this.module.interventions.splice(index, 1);
   }
 }
 </script>

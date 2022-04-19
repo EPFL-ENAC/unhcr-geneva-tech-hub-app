@@ -16,7 +16,7 @@
         <template v-slot:top>
           <v-toolbar dense flat>
             <v-spacer></v-spacer>
-            <v-dialog v-model="addDialog" max-width="256px">
+            <v-dialog v-model="addDialog" max-width="512px">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   v-bind="attrs"
@@ -25,7 +25,7 @@
                   :disabled="addSelectItems.length === 0"
                 >
                   <v-icon left>mdi-plus</v-icon>
-                  Add
+                  Add Cooking Technology
                 </v-btn>
               </template>
               <v-card>
@@ -44,7 +44,7 @@
                     @click="addItem(addSelectedItem)"
                   >
                     <v-icon left>mdi-plus</v-icon>
-                    Add
+                    Add Cooking Technology
                   </v-btn>
                 </v-card-actions>
               </v-card>
