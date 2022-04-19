@@ -47,3 +47,8 @@ export function checkSumByKeys<T>(
     sumBy(keys, (key) => t[key] as unknown as number) === expected ||
     `Sum to ${text ?? expected}`;
 }
+
+export function checkExists(values: string[]): Rule {
+  return (value) =>
+    (typeof value === "string" && !values.includes(value)) || "Already exists.";
+}

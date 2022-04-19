@@ -9,8 +9,18 @@
           outlined
           required
           :rules="rules"
-          @change="changeName"
+          @change="changeDocument"
         ></v-text-field>
+      </v-col>
+      <v-col class="col-auto">
+        <user-manager v-model="users" @change="changeDocument">
+          <template v-slot="{ on, attrs }">
+            <v-btn v-bind="attrs" v-on="on" height="100%">
+              <v-icon left>mdi-account-multiple</v-icon>
+              Users
+            </v-btn>
+          </template>
+        </user-manager>
       </v-col>
     </v-row>
     <v-row>
@@ -81,6 +91,7 @@
 </template>
 
 <script lang="ts">
+import UserManager from "@/components/commons/UserManager.vue";
 import EnergyGeneral from "@/components/energy/EnergyGeneral.vue";
 import EnergyHouseholdCooking from "@/components/energy/EnergyHouseholdCooking.vue";
 import EnergyIntervention from "@/components/energy/EnergyIntervention.vue";
@@ -102,6 +113,7 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
     EnergyScenario,
     EnergyIntervention,
     EnergyResult,
+    UserManager,
   },
 })
 export default class EnergyProject extends Vue {
@@ -192,6 +204,16 @@ export default class EnergyProject extends Vue {
     }
   }
 
+  get users(): string[] {
+    return this.document?.users ?? [];
+  }
+
+  set users(value: string[]) {
+    if (this.document) {
+      this.document.users = value;
+    }
+  }
+
   get documentId(): string {
     return this.$route.params.id;
   }
@@ -216,17 +238,7 @@ export default class EnergyProject extends Vue {
   @Watch("modules", { deep: true })
   onModulesUpdated(): void {
     if (this.document && !isEqual(this.lastDocument, this.document)) {
-      this.database.remoteDB
-        .put(this.document)
-        .then(() => {
-          console.debug(`document ${this.document?._id} updated`);
-        })
-        .catch((reason) => {
-          console.error(reason);
-          this.document = this.lastDocument
-            ? cloneDeep(this.lastDocument)
-            : null;
-        });
+      this.updateDocument(this.document);
     }
   }
 
@@ -242,10 +254,22 @@ export default class EnergyProject extends Vue {
       });
   }
 
-  changeName(): void {
+  changeDocument(): void {
     if (this.document) {
-      this.database.localDB.put(this.document).then(() => this.getDocument());
+      this.updateDocument(this.document);
     }
+  }
+
+  private updateDocument(document: ExistingDocument<ProjectDocument>): void {
+    this.database.remoteDB
+      .put(document)
+      .then(() => {
+        console.debug(`document ${this.document?._id} updated`);
+      })
+      .catch((reason) => {
+        console.error(reason);
+        this.document = this.lastDocument ? cloneDeep(this.lastDocument) : null;
+      });
   }
 }
 
