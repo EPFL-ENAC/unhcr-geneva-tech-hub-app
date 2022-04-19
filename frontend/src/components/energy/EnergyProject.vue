@@ -154,7 +154,7 @@ export default class EnergyProject extends Vue {
           icon: "mdi-sun-snowflake",
         },
         {
-          text: "Good & Service",
+          text: "Goods & Services",
           icon: "mdi-room-service",
         },
       ],

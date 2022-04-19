@@ -83,17 +83,10 @@
           v-slot:[`item.${cat}`]="{ item }"
         >
           <form-item-component
-            :key="cat + '-count'"
-            v-model="categoryCooking(item).categories[cat].countPerHousehold"
-            type="number"
-            label="Count per household"
-          ></form-item-component>
-          <form-item-component
-            :key="cat + '-use'"
-            v-model="categoryCooking(item).categories[cat].useFactor"
-            type="number"
-            label="Use Factor"
-            subtype="percent"
+            v-for="cellItem in tableCellItems"
+            :key="`${cat}-${cellItem.key}`"
+            v-model="categoryCooking(item).categories[cat][cellItem.key]"
+            v-bind="cellItem"
           ></form-item-component>
         </template>
         <template v-slot:[`item.action`]="{ item }">
@@ -107,7 +100,9 @@
 </template>
 
 <script lang="ts">
-import FormItemComponent from "@/components/commons/FormItemComponent.vue";
+import FormItemComponent, {
+  FormItem,
+} from "@/components/commons/FormItemComponent.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
 import {
@@ -152,6 +147,20 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
     value: item,
     sortable: ["cookstoveName", "fuelName"].includes(item),
   }));
+  readonly tableCellItems: FormItem<keyof HouseholdCookingInput>[] = [
+    {
+      type: "number",
+      key: "countPerHousehold",
+      label: "Count per 10 households",
+      ratio: 10,
+    },
+    {
+      type: "number",
+      key: "useFactor",
+      label: "Use Factor",
+      subtype: "percent",
+    },
+  ];
   readonly tableExpandProperties: {
     text: string;
     key: keyof TableItem;
