@@ -7,5 +7,8 @@
     "admin"
   ],
   "name": "cara",
-  "password": "password"
+  "password_scheme": "pbkdf2",
+  "iterations": 10,
+  "derived_key": "1321754dfb1afafe56c3f24576010a4e02246e8b",
+  "salt": "eb91c766d6476b5762b5ad3037a5a20e"
 }

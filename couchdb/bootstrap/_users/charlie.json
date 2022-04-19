@@ -7,5 +7,8 @@
     "admin"
   ],
   "name": "charlie",
-  "password": "password"
+  "password_scheme": "pbkdf2",
+  "iterations": 10,
+  "derived_key": "9a2d7af12e7c0eee29a14432a2eb7ea1363c335c",
+  "salt": "1071d9ae7519e958abd4539fc5c53901"
 }

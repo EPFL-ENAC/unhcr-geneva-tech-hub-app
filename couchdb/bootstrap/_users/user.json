@@ -5,5 +5,8 @@
     "user"
   ],
   "name": "user",
-  "password": "user"
+  "password_scheme": "pbkdf2",
+  "iterations": 10,
+  "derived_key": "d015807aa801651c43e7164598d32f1925dac480",
+  "salt": "c95f8554e8b1424ac21198d440f87ebc"
 }

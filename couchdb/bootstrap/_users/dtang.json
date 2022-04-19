@@ -7,5 +7,8 @@
     "admin"
   ],
   "name": "dtang",
-  "password": "js2UEWT44ZqL28rULgW6G2MJE4PpQXZJ"
+  "password_scheme": "pbkdf2",
+  "iterations": 10,
+  "derived_key": "b1999dc18fd0ca3676f3c8d276ac9a7471d97acb",
+  "salt": "4f1f8df8e3352726ccdeb1e21b0e0142"
 }
