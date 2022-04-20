@@ -2,7 +2,7 @@ import argparse
 import csv
 import json
 import os
-from typing import Any, List, Union
+from typing import Any, List, Optional, Union
 
 
 def convert(filename: str, output: str):
@@ -22,7 +22,9 @@ def convert(filename: str, output: str):
     print()
 
 
-def mapValue(value: str) -> Union[str, int, float, List[Any]]:
+def mapValue(value: str) -> Optional[Union[str, int, float, List[Any]]]:
+    if len(value) == 0:
+        return None
     if value.startswith("[") and value.endswith("]"):
         return [
             mapValue(v) for v in value.removeprefix("[").removesuffix("]").split(",")

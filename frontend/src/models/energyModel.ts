@@ -183,7 +183,11 @@ export type CookingStoveId =
   | "kerosene"
   | "lpg"
   | "biogas"
-  | "induction";
+  | "induction"
+  | "solar-panel"
+  | "solar-box"
+  | "solar-parabolic"
+  | "solar-tube";
 export type CookingFuelId =
   | "wood"
   | "charcoal"
@@ -191,14 +195,16 @@ export type CookingFuelId =
   | "ethanol"
   | "kerosene"
   | "lpg"
-  | "biogas";
+  | "biogas"
+  | "electricity"
+  | "solar";
 
 export interface CookingStove {
   _id: CookingStoveId;
   index: number;
   name: string;
   fuel: CookingFuelId;
-  technologyType: "conventional" | "improved";
+  technologyType: "conventional" | "improved" | "clean" | "electric" | "solar";
   /**
    * CE
    */
@@ -220,11 +226,11 @@ export interface CookingStove {
   /**
    * CTE
    */
-  iwaEfficiencyTier: Tier;
+  iwaEfficiencyTier?: Tier;
   /**
    * CTP
    */
-  iwaIndoorEmissionTier: Tier;
+  iwaIndoorEmissionTier?: Tier;
 }
 type Tier = number | [number, number];
 

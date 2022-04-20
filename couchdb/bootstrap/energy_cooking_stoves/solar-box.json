@@ -1,0 +1,15 @@
+{
+  "_id": "solar-box",
+  "name": "Solar box cookers / Sun oven",
+  "fuel": "solar",
+  "technologyType": "solar",
+  "energyEfficiency": 1,
+  "capacity": 1,
+  "investmentCost": 350,
+  "lifetime": 15,
+  "emissionFactorCo": 0,
+  "emissionFactorPm": 0,
+  "iwaEfficiencyTier": null,
+  "iwaIndoorEmissionTier": null,
+  "index": 17
+}

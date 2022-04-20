@@ -15,3 +15,7 @@ kerosene,Cook stove for ethanol / kerosene combustion,kerosene,clean,0.45,1,61,1
 lpg,"Cook stove for burning gas (LPG, biogas)",lpg,clean,0.35,1,41.3,15,5.7,150,3,3
 biogas,"Cook stove for burning gas (LPG, biogas)",biogas,clean,0.35,1,41.3,15,5.7,150,3,3
 induction,Modern Cook Stoves - Induction Electric Cooker,electricity,electric,0.73,1,70,15,0,0,4,4
+solar-panel,Solar panel cookers ,solar,solar,1,1,5,5,0,0,,
+solar-box,Solar box cookers / Sun oven,solar,solar,1,1,350,15,0,0,,
+solar-parabolic,Parabolic solar cookers,solar,solar,1,1,200,15,0,0,,
+solar-tube,Evacuated tube solar cookers,solar,solar,1,1,150,10,0,0,,
