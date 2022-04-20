@@ -43,7 +43,7 @@
                   {{ item.text }}
                 </v-tab>
               </template>
-              <v-list>
+              <v-list nav>
                 <v-list-item
                   v-for="(subItem, subIndex) in item.children"
                   :key="subIndex"
