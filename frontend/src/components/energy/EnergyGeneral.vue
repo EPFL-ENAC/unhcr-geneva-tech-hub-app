@@ -78,7 +78,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
         key: "proportion",
         label: "Proportion",
         subtype: "percent",
-        rules: [checkSum(this.categoryProportions, 1, "100%")],
+        rules: [checkSum(this.categoryProportions, 1, 2, "100%")],
       },
       {
         type: "number",

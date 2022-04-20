@@ -1,4 +1,4 @@
-import { sum, sumBy } from "lodash";
+import { round, sum, sumBy } from "lodash";
 
 export type Rule = (
   value: string | boolean | number | null | undefined
@@ -32,9 +32,11 @@ export function check(predicate: () => boolean, error: string): Rule {
 export function checkSum(
   values: number[],
   expected: number,
+  precision: number,
   text?: string
 ): Rule {
-  return () => sum(values) === expected || `Sum to ${text ?? expected}`;
+  return () =>
+    round(sum(values), precision) === expected || `Sum to ${text ?? expected}`;
 }
 
 export function checkSumByKeys<T>(
