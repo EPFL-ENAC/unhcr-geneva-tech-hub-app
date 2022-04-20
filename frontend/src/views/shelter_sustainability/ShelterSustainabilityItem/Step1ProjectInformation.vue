@@ -16,17 +16,17 @@
           <v-divider></v-divider>
         </v-col>
       </v-row>
-      <v-tabs v-model="tab">
-        <v-tab>
-          <v-icon left> mdi-briefcase </v-icon>
-          information
-        </v-tab>
-        <v-tab>
-          <v-icon left> mdi-account </v-icon>
-          Users
-        </v-tab>
-
-        <v-tab-item>
+      <v-row>
+        <v-spacer></v-spacer>
+        <v-col class="col-auto">
+          <user-manager
+            v-model="localShelter.users"
+            @change="submitForm"
+          ></user-manager>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
           <v-card flat>
             <v-row>
               <v-col>
@@ -155,76 +155,15 @@
               </v-col>
             </v-row>
           </v-card>
-        </v-tab-item>
-        <v-tab-item>
-          <v-card flat>
-            <v-row>
-              <v-col>
-                <v-sheet elevation="2" rounded v-if="localShelter">
-                  <v-container fluid>
-                    <v-row
-                      v-for="(userEmail, $userKey) in localShelter.users"
-                      :key="$userKey"
-                    >
-                      <v-col>{{ userEmail }}</v-col>
-                      <v-col>
-                        <v-btn
-                          @click="() => removeUser(userEmail)"
-                          :disabled="
-                            user.name === userEmail ||
-                            localShelter.users.length === 1
-                          "
-                          >remove user</v-btn
-                        ></v-col
-                      >
-                    </v-row>
-                    <v-row>
-                      <v-col>
-                        <v-form
-                          @submit.prevent="addUser"
-                          v-model="addUserValid"
-                        >
-                          <v-card class="mx-auto" max-width="344" outlined>
-                            <v-card-text>
-                              <v-text-field
-                                tabindex="1"
-                                v-model="newUser"
-                                :rules="rules"
-                                required
-                                name="email"
-                                label="Email"
-                                type="text"
-                              />
-                            </v-card-text>
-                            <v-card-actions class="justify-end">
-                              <v-btn
-                                outlined
-                                rounded
-                                text
-                                type="submit"
-                                tabindex="2"
-                                :disabled="!addUserValid"
-                              >
-                                New user
-                              </v-btn>
-                            </v-card-actions>
-                          </v-card>
-                        </v-form>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-sheet>
-              </v-col>
-            </v-row>
-          </v-card>
-        </v-tab-item>
-      </v-tabs>
+        </v-col>
+      </v-row>
     </v-form>
   </v-container>
 </template>
 
 <script lang="ts">
 import CountrySelect from "@/components/commons/CountrySelect.vue";
+import UserManager from "@/components/commons/UserManager.vue";
 import InputWithInfo from "@/components/shelter_sustainability/InputWithInfo.vue";
 import { Shelter } from "@/store/ShelterInterface";
 import { CouchUser } from "@/store/UserModule";
@@ -243,6 +182,7 @@ import { mapActions, mapGetters, mapState } from "vuex";
   components: {
     CountrySelect,
     InputWithInfo,
+    UserManager,
   },
 })
 /** Project */
@@ -307,7 +247,6 @@ export default class Step1 extends Vue {
 
   localShelter = {} as Shelter;
 
-  addUserValid = true;
   rules = [
     (v: string): boolean | string => !!v || `A name is required`,
     (v: string): boolean | string =>
@@ -348,24 +287,7 @@ export default class Step1 extends Vue {
     this.syncLocalShelter();
   }
 
-  public addUser(): void {
-    this.localShelter.users.push(this.newUser);
-    this.newUser = "";
-    this.submitForm(this.localShelter);
-  }
-
-  public removeUser(value: string): void {
-    if (value === this.user.name) {
-      throw new Error("cannot remove yourself from the list");
-    }
-    const indexToRemove = this.localShelter.users.findIndex(
-      (el: string): boolean => el === value
-    );
-    this.localShelter.users.splice(indexToRemove, 1);
-    this.submitForm(this.localShelter);
-  }
-
-  public submitForm(value: Shelter): void {
+  public submitForm(value: Shelter = this.localShelter): void {
     if (value.name !== "") {
       this.updateDoc(value);
     } else {

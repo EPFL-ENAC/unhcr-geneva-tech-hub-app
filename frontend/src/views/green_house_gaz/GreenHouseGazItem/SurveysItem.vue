@@ -2,28 +2,32 @@
   <div v-if="project && currentSurvey" class="fluid surveys-item">
     <header>
       <v-row>
-        <v-col :cols="10">
+        <v-col>
           <h2>
             {{ currentProjectEmoji }} {{ currentProjectCountryName }},
             {{ project.name }},
             {{ currentSurvey.name }}
           </h2>
         </v-col>
-        <v-col :cols="2">
-          <span class="d-flex justify-end">
-            <v-btn
-              icon
-              :to="{
-                name: 'GreenHouseGazItem',
-                params: {
-                  country: encodeURIComponent(project.country_code),
-                  site: encodeURIComponent(project.name),
-                },
-              }"
-            >
-              <v-icon>mdi-cog-outline</v-icon>
-            </v-btn>
-          </span>
+        <v-col class="col-auto">
+          <user-manager
+            v-model="project.users"
+            @change="submitForm"
+          ></user-manager>
+        </v-col>
+        <v-col class="col-auto">
+          <v-btn
+            icon
+            :to="{
+              name: 'GreenHouseGazItem',
+              params: {
+                country: encodeURIComponent(project.country_code),
+                site: encodeURIComponent(project.name),
+              },
+            }"
+          >
+            <v-icon>mdi-cog-outline</v-icon>
+          </v-btn>
         </v-col>
       </v-row>
     </header>
@@ -85,6 +89,7 @@
 </template>
 
 <script lang="ts">
+import UserManager from "@/components/commons/UserManager.vue";
 import Cooking from "@/components/green_house_gaz/energy/Cooking.vue";
 import Facilities from "@/components/green_house_gaz/energy/Facilities.vue";
 import Lighting from "@/components/green_house_gaz/energy/Lighting.vue";
@@ -102,11 +107,14 @@ import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import getFlagEmoji from "@/utils/flagEmoji";
 import getCountryName from "@/utils/getCountryName";
 import { Component, Vue } from "vue-property-decorator";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
     ...mapGetters("GhgModule", ["project"]),
+  },
+  methods: {
+    ...mapActions("GhgModule", ["updateDoc"]),
   },
   components: {
     Cooking,
@@ -122,6 +130,7 @@ import { mapGetters } from "vuex";
     WASH,
     TreePlanting,
     Results,
+    UserManager,
   },
   filters: {
     date: function (value: string) {
@@ -136,6 +145,7 @@ import { mapGetters } from "vuex";
 /** ProjectList */
 export default class SurveyList extends Vue {
   project!: GreenHouseGaz;
+  updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
 
   readonly menuItems: MenuItem[] = [
     {
@@ -229,6 +239,14 @@ export default class SurveyList extends Vue {
       );
     }
     return undefined;
+  }
+
+  public submitForm(value: GreenHouseGaz = this.project): void {
+    if (value.name !== "") {
+      this.updateDoc(value);
+    } else {
+      throw new Error("please fill the new Name");
+    }
   }
 }
 

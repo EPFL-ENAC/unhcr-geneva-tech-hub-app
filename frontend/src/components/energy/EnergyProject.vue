@@ -12,15 +12,8 @@
           @change="changeDocument"
         ></v-text-field>
       </v-col>
-      <v-col class="col-auto">
-        <user-manager v-model="users" @change="changeDocument">
-          <template v-slot="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on" height="100%">
-              <v-icon left>mdi-account-multiple</v-icon>
-              Users
-            </v-btn>
-          </template>
-        </user-manager>
+      <v-col class="col-auto d-flex align-center">
+        <user-manager v-model="users" @change="changeDocument"></user-manager>
       </v-col>
     </v-row>
     <v-row>
