@@ -64,6 +64,7 @@
                 title="Income"
                 :x-data="years"
                 :y-data="income"
+                y-label="Total Income"
               ></energy-chart>
             </v-col>
             <v-col cols="4">
@@ -71,6 +72,7 @@
                 title="Energy"
                 :x-data="years"
                 :y-data="energy"
+                y-label="Total Energy [MJ]"
               ></energy-chart>
             </v-col>
             <v-col cols="4">
@@ -78,6 +80,7 @@
                 title="CO2 Emission"
                 :x-data="years"
                 :y-data="emissionCo2"
+                y-label="Total CO2 Emission [kg]"
               ></energy-chart>
             </v-col>
           </v-row>

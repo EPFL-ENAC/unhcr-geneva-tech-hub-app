@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { SocioEconomicCategory } from "@/models/energyModel";
-import { LineChart } from "echarts/charts";
+import { BarChart } from "echarts/charts";
 import {
   GridComponent,
   LegendComponent,
@@ -22,7 +22,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 use([
   CanvasRenderer,
-  LineChart,
+  BarChart,
   GridComponent,
   LegendComponent,
   TitleComponent,
@@ -44,6 +44,10 @@ export default class EnergyChart extends Vue {
     default: () => ({}),
   })
   readonly yData!: Record<SocioEconomicCategory, number[]>;
+  @Prop({ type: String, default: "Year" })
+  readonly xLabel!: string;
+  @Prop({ type: String, default: "" })
+  readonly yLabel!: string;
 
   get option(): EChartsOption {
     return {
@@ -63,22 +67,30 @@ export default class EnergyChart extends Vue {
       },
       grid: {
         containLabel: true,
-        left: 24,
-        right: 24,
+        left: 32,
+        right: 32,
       },
       xAxis: {
         type: "category",
-        boundaryGap: false,
         data: this.xData,
+        axisTick: {
+          alignWithLabel: true,
+        },
+        name: this.xLabel,
+        nameLocation: "middle",
+        nameGap: 24,
       },
       yAxis: {
         type: "value",
+        name: this.yLabel,
+        nameLocation: "middle",
+        nameRotate: 90,
+        nameGap: 82,
       },
       series: Object.entries(this.yData).map(([cat, data]) => ({
         name: this.$t(`energy.${cat}`).toString(),
         stack: "total",
-        type: "line",
-        areaStyle: {},
+        type: "bar",
         data: data,
       })),
     };
