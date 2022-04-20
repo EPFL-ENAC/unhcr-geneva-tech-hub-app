@@ -61,26 +61,23 @@
           <v-row>
             <v-col cols="4">
               <energy-chart
-                title="Income"
+                title="Total Income [$]"
                 :x-data="years"
                 :y-data="income"
-                y-label="Total Income"
               ></energy-chart>
             </v-col>
             <v-col cols="4">
               <energy-chart
-                title="Energy"
+                title="Total Energy [MJ]"
                 :x-data="years"
                 :y-data="energy"
-                y-label="Total Energy [MJ]"
               ></energy-chart>
             </v-col>
             <v-col cols="4">
               <energy-chart
-                title="CO2 Emission"
+                title="Total CO2 Emission [kg]"
                 :x-data="years"
                 :y-data="emissionCo2"
-                y-label="Total CO2 Emission [kg]"
               ></energy-chart>
             </v-col>
           </v-row>
@@ -134,7 +131,6 @@ export default class EnergyResult extends Vue {
   cookingFuels!: CookingFuel[];
 
   get lines(): TableRow[] {
-    const currency = this.modules.general?.currency;
     const results: TableRow[] = [
       {
         text: "Proportion",
@@ -150,9 +146,19 @@ export default class EnergyResult extends Vue {
         key: "populationCount",
       },
       {
-        text: "Energy",
-        key: "energy",
+        text: "Useful Energy",
+        key: "usefulEnergy",
         unit: "MJ",
+      },
+      {
+        text: "Final Energy",
+        key: "finalEnergy",
+        unit: "MJ",
+      },
+      {
+        text: "Energy Efficiency",
+        key: "energyEfficiency",
+        unit: "%",
       },
       {
         text: "CO2 Emission",
@@ -171,8 +177,8 @@ export default class EnergyResult extends Vue {
       },
       {
         text: "Income",
-        key: "income",
-        unit: currency,
+        key: "usdIncome",
+        unit: "$",
       },
       {
         text: "Wood requirement",
@@ -186,8 +192,13 @@ export default class EnergyResult extends Vue {
       },
       {
         text: "Cooking cost",
-        key: "cookingCost",
-        unit: currency,
+        key: "usdCookingCost",
+        unit: "$",
+      },
+      {
+        text: "Discounted cost",
+        key: "usdDiscountedCost",
+        unit: "$",
       },
       {
         text: "Cost affordability",
@@ -221,7 +232,7 @@ export default class EnergyResult extends Vue {
   }
 
   get energy(): Record<SocioEconomicCategory, number[]> {
-    return this.getChartData("energy");
+    return this.getChartData("finalEnergy");
   }
 
   get emissionCo2(): Record<SocioEconomicCategory, number[]> {
@@ -236,10 +247,12 @@ export default class EnergyResult extends Vue {
     );
     if (general && householdCooking && scenario) {
       const firstSite: Site = {
+        yearCount: 0,
         householdsCount: general.totalPopulation / general.familiesCount,
         populationCount: general.totalPopulation,
         woodCarbonation: general.woodCarbonation,
         woodDensity: general.woodDensity,
+        usdExchangeRate: general.exchangeRateUsd,
 
         incomeRate: scenario.incomeRate,
         discountRate: scenario.discountRate,
@@ -289,6 +302,7 @@ export default class EnergyResult extends Vue {
         const year = this.years[index];
         const oldSite = sites[index - 1];
         let newSite = cloneDeep(oldSite);
+        newSite.yearCount = index;
         newSite.populationCount =
           oldSite.populationCount * scenario.demographicGrowth;
         newSite.proportions = this.updateProportions(oldSite);
@@ -410,16 +424,16 @@ export default class EnergyResult extends Vue {
         365 *
         3.6;
       // CEf
-      const energy = usefulEnergy / technology.stove.energyEfficiency;
+      const finalEnergy = usefulEnergy / technology.stove.energyEfficiency;
       // CWF
-      const fuelWeight = energy / technology.fuel.energy;
+      const fuelWeight = finalEnergy / technology.fuel.energy;
       const woodWeight = technology.fuel._id === "wood" ? fuelWeight : 0;
       const charcoalWeight =
         technology.fuel._id === "charcoal" ? fuelWeight : 0;
       // CEmiss
       const emissionCo2 = fuelWeight * technology.fuel.emissionFactorCo2;
-      const emissionCo = energy * technology.stove.emissionFactorCo;
-      const emissionPm = energy * technology.stove.emissionFactorPm;
+      const emissionCo = finalEnergy * technology.stove.emissionFactorCo;
+      const emissionPm = finalEnergy * technology.stove.emissionFactorPm;
       // CCI
       const cookingCost =
         (site.discountRate /
@@ -428,7 +442,8 @@ export default class EnergyResult extends Vue {
         fuelWeight * technology.fuel.price;
       return applyMap(
         {
-          energy,
+          usefulEnergy,
+          finalEnergy,
           woodWeight,
           charcoalWeight,
           emissionCo2,
@@ -447,7 +462,8 @@ export default class EnergyResult extends Vue {
         ])
       ),
       ...applyReduce(technologyResults, (a, b) => a + b, {
-        energy: 0,
+        usefulEnergy: 0,
+        finalEnergy: 0,
         woodWeight: 0,
         charcoalWeight: 0,
         emissionCo2: 0,
@@ -468,15 +484,26 @@ export default class EnergyResult extends Vue {
     // Cafford
     const costAffordability =
       householdResult.cookingCost / input.general.annualIncome;
+    const energyEfficiency =
+      (categoryResult.finalEnergy !== 0
+        ? categoryResult.usefulEnergy / categoryResult.finalEnergy
+        : 0) * 100;
+    const discountedCost =
+      categoryResult.cookingCost / Math.pow(site.discountRate, site.yearCount);
     return {
       ...categoryResult,
       proportion: proportion * 100,
       householdCount,
       populationCount: site.populationCount * proportion,
       income,
+      energyEfficiency,
       woodNeed,
       woodArea,
       costAffordability,
+      discountedCost,
+      usdIncome: income / site.usdExchangeRate,
+      usdCookingCost: categoryResult.cookingCost / site.usdExchangeRate,
+      usdDiscountedCost: discountedCost / site.usdExchangeRate,
     };
   }
 }
@@ -489,10 +516,12 @@ interface TableRow {
 }
 
 interface Site {
+  yearCount: number;
   householdsCount: number;
   populationCount: number;
   woodCarbonation: number;
   woodDensity: number;
+  usdExchangeRate: number;
 
   incomeRate: number;
   discountRate: number;
@@ -580,7 +609,9 @@ interface CookingResult {
   /**
    * CEf
    */
-  energy: number;
+  usefulEnergy: number;
+  finalEnergy: number;
+  energyEfficiency: number;
   emissionCo2: number;
   emissionCo: number;
   emissionPm: number;
@@ -588,6 +619,10 @@ interface CookingResult {
   woodArea: number;
   cookingCost: number;
   costAffordability: number;
+  discountedCost: number;
+  usdIncome: number;
+  usdCookingCost: number;
+  usdDiscountedCost: number;
 }
 
 interface SiteResult {

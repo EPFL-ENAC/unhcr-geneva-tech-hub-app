@@ -9,7 +9,6 @@ import { SocioEconomicCategory } from "@/models/energyModel";
 import { BarChart } from "echarts/charts";
 import {
   GridComponent,
-  LegendComponent,
   TitleComponent,
   TooltipComponent,
 } from "echarts/components";
@@ -24,7 +23,6 @@ use([
   CanvasRenderer,
   BarChart,
   GridComponent,
-  LegendComponent,
   TitleComponent,
   TooltipComponent,
 ]);
@@ -46,8 +44,8 @@ export default class EnergyChart extends Vue {
   readonly yData!: Record<SocioEconomicCategory, number[]>;
   @Prop({ type: String, default: "Year" })
   readonly xLabel!: string;
-  @Prop({ type: String, default: "" })
-  readonly yLabel!: string;
+  @Prop({ type: String })
+  readonly yLabel: string | undefined;
 
   get option(): EChartsOption {
     return {
@@ -60,10 +58,6 @@ export default class EnergyChart extends Vue {
         axisPointer: {
           type: "cross",
         },
-      },
-      legend: {
-        type: "scroll",
-        top: 24,
       },
       grid: {
         containLabel: true,
@@ -85,7 +79,7 @@ export default class EnergyChart extends Vue {
         name: this.yLabel,
         nameLocation: "middle",
         nameRotate: 90,
-        nameGap: 82,
+        nameGap: 80,
       },
       series: Object.entries(this.yData).map(([cat, data]) => ({
         name: this.$t(`energy.${cat}`).toString(),
