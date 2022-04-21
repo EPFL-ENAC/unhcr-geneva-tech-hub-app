@@ -140,6 +140,7 @@ export default class EnergyResult extends Vue {
       {
         text: "Households",
         key: "householdCount",
+        decimal: 2,
       },
       {
         text: "Population",
@@ -177,11 +178,21 @@ export default class EnergyResult extends Vue {
       },
       {
         text: "Income",
-        key: "usdIncome",
+        key: "income",
         unit: "$",
       },
       {
-        text: "Wood requirement",
+        text: "Wood weight",
+        key: "woodWeight",
+        unit: "kg",
+      },
+      {
+        text: "Charcoal weight",
+        key: "charcoalWeight",
+        unit: "kg",
+      },
+      {
+        text: "Equivalent wood weight",
         key: "woodNeed",
         unit: "kg",
       },
@@ -191,19 +202,29 @@ export default class EnergyResult extends Vue {
         unit: "ha",
       },
       {
-        text: "Cooking cost",
-        key: "usdCookingCost",
+        text: "Fixed cost",
+        key: "fixedCost",
+        unit: "$",
+      },
+      {
+        text: "Variable cost",
+        key: "variableCost",
+        unit: "$",
+      },
+      {
+        text: "Total cost",
+        key: "totalCost",
         unit: "$",
       },
       {
         text: "Discounted cost",
-        key: "usdDiscountedCost",
+        key: "discountedCost",
         unit: "$",
       },
       {
         text: "Cost affordability",
         key: "costAffordability",
-        decimal: 2,
+        unit: "%",
       },
     ];
     const stoves: TableRow[] = sortBy(
@@ -248,11 +269,10 @@ export default class EnergyResult extends Vue {
     if (general && householdCooking && scenario) {
       const firstSite: Site = {
         yearCount: 0,
-        householdsCount: general.totalPopulation / general.familiesCount,
+        householdsCount: general.familiesCount,
         populationCount: general.totalPopulation,
         woodCarbonation: general.woodCarbonation,
         woodDensity: general.woodDensity,
-        usdExchangeRate: general.exchangeRateUsd,
 
         incomeRate: scenario.incomeRate,
         discountRate: scenario.discountRate,
@@ -408,7 +428,6 @@ export default class EnergyResult extends Vue {
     input: CategoryInput
   ): CookingResult {
     const technologyResults = input.cookingTechnologies.map((technology) => {
-      site.householdsCount * proportion;
       // Ch
       const cookingTime =
         input.general.cookingHours /
@@ -430,29 +449,39 @@ export default class EnergyResult extends Vue {
       const woodWeight = technology.fuel._id === "wood" ? fuelWeight : 0;
       const charcoalWeight =
         technology.fuel._id === "charcoal" ? fuelWeight : 0;
+      // Rwood
+      const woodNeed = woodWeight + charcoalWeight / site.woodCarbonation;
+      // Awood
+      const woodArea = woodNeed / site.woodDensity;
       // CEmiss
       const emissionCo2 = fuelWeight * technology.fuel.emissionFactorCo2;
-      const emissionCo = finalEnergy * technology.stove.emissionFactorCo;
-      const emissionPm = finalEnergy * technology.stove.emissionFactorPm;
-      // CCI
-      const cookingCost =
+      const emissionCo = usefulEnergy * technology.stove.emissionFactorCo;
+      const emissionPm = usefulEnergy * technology.stove.emissionFactorPm;
+      const fixedCost =
         (site.discountRate /
           Math.pow(site.discountRate, -technology.stove.lifetime)) *
-          technology.stove.investmentCost +
-        fuelWeight * technology.fuel.price;
-      return applyMap(
+        technology.stove.investmentCost;
+      const variableCost = fuelWeight * technology.fuel.price;
+      // CCI
+      const totalCost = fixedCost + variableCost;
+      const result = applyMap(
         {
           usefulEnergy,
           finalEnergy,
           woodWeight,
           charcoalWeight,
+          woodNeed,
+          woodArea,
           emissionCo2,
           emissionCo,
           emissionPm,
-          cookingCost,
+          fixedCost,
+          variableCost,
+          totalCost,
         },
         (v) => v * technology.value.countPerHousehold
       );
+      return result;
     });
     const householdResult = {
       ...Object.fromEntries(
@@ -466,30 +495,28 @@ export default class EnergyResult extends Vue {
         finalEnergy: 0,
         woodWeight: 0,
         charcoalWeight: 0,
+        woodNeed: 0,
+        woodArea: 0,
         emissionCo2: 0,
         emissionCo: 0,
         emissionPm: 0,
-        cookingCost: 0,
+        fixedCost: 0,
+        variableCost: 0,
+        totalCost: 0,
       }),
     };
     const householdCount = site.householdsCount * proportion;
     const categoryResult = applyMap(householdResult, (v) => v * householdCount);
     const income = input.general.annualIncome * householdCount;
-    // Rwood
-    const woodNeed =
-      householdResult.woodWeight +
-      householdResult.charcoalWeight / site.woodCarbonation;
-    // Awood
-    const woodArea = woodNeed / site.woodDensity;
     // Cafford
     const costAffordability =
-      householdResult.cookingCost / input.general.annualIncome;
+      householdResult.totalCost / input.general.annualIncome;
     const energyEfficiency =
       (categoryResult.finalEnergy !== 0
         ? categoryResult.usefulEnergy / categoryResult.finalEnergy
         : 0) * 100;
     const discountedCost =
-      categoryResult.cookingCost / Math.pow(site.discountRate, site.yearCount);
+      categoryResult.totalCost / Math.pow(site.discountRate, site.yearCount);
     return {
       ...categoryResult,
       proportion: proportion * 100,
@@ -497,13 +524,8 @@ export default class EnergyResult extends Vue {
       populationCount: site.populationCount * proportion,
       income,
       energyEfficiency,
-      woodNeed,
-      woodArea,
-      costAffordability,
+      costAffordability: costAffordability * 100,
       discountedCost,
-      usdIncome: income / site.usdExchangeRate,
-      usdCookingCost: categoryResult.cookingCost / site.usdExchangeRate,
-      usdDiscountedCost: discountedCost / site.usdExchangeRate,
     };
   }
 }
@@ -521,7 +543,6 @@ interface Site {
   populationCount: number;
   woodCarbonation: number;
   woodDensity: number;
-  usdExchangeRate: number;
 
   incomeRate: number;
   discountRate: number;
@@ -615,14 +636,15 @@ interface CookingResult {
   emissionCo2: number;
   emissionCo: number;
   emissionPm: number;
+  woodWeight: number;
+  charcoalWeight: number;
   woodNeed: number;
   woodArea: number;
-  cookingCost: number;
+  fixedCost: number;
+  variableCost: number;
+  totalCost: number;
   costAffordability: number;
   discountedCost: number;
-  usdIncome: number;
-  usdCookingCost: number;
-  usdDiscountedCost: number;
 }
 
 interface SiteResult {

@@ -90,7 +90,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
         type: "number",
         key: "annualIncome",
         label: "Annual Income by Household",
-        unit: this.module.currency,
+        unit: "$",
       },
     ];
   }
@@ -533,13 +533,13 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
         {
           type: "number",
           key: "woodCarbonation",
-          label: "Wood carbonation efficiency",
-          unit: "g/g",
+          label: "Carbonation yield of wood to charcoal",
+          subtype: "percent",
         },
         {
           type: "number",
           key: "woodDensity",
-          label: "Yield of wood per hectare",
+          label: "Plantations biomass growth per hectare per year",
           unit: "kg/ha",
         },
       ],
