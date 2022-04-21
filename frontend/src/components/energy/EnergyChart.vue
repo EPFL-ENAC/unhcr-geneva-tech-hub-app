@@ -1,12 +1,12 @@
 <template>
-  <v-responsive aspect-ratio="1">
+  <v-responsive aspect-ratio="2">
     <v-chart autoresize :option="option" />
   </v-responsive>
 </template>
 
 <script lang="ts">
 import { SocioEconomicCategory } from "@/models/energyModel";
-import { BarChart } from "echarts/charts";
+import { BarChart, LineChart } from "echarts/charts";
 import {
   GridComponent,
   TitleComponent,
@@ -22,6 +22,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 use([
   CanvasRenderer,
   BarChart,
+  LineChart,
   GridComponent,
   TitleComponent,
   TooltipComponent,
@@ -35,17 +36,15 @@ use([
 export default class EnergyChart extends Vue {
   @Prop(String)
   readonly title: string | undefined;
-  @Prop({ type: Array as () => (string | number)[], default: () => [] })
-  readonly xData!: (string | number)[];
   @Prop({
-    type: Object as () => Record<SocioEconomicCategory, number[]>,
-    default: () => ({}),
+    type: Array as () => ChartItem[],
+    default: () => [],
   })
-  readonly yData!: Record<SocioEconomicCategory, number[]>;
+  readonly items!: ChartItem[];
+  @Prop({ type: Array as () => number[], default: () => [] })
+  readonly years!: number[];
   @Prop({ type: String, default: "Year" })
-  readonly xLabel!: string;
-  @Prop({ type: String })
-  readonly yLabel: string | undefined;
+  readonly yearLabel!: string;
 
   get option(): EChartsOption {
     return {
@@ -54,40 +53,54 @@ export default class EnergyChart extends Vue {
         left: "center",
       },
       tooltip: {
-        trigger: "axis",
+        trigger: "item",
         axisPointer: {
           type: "cross",
         },
+        confine: true,
       },
       grid: {
         containLabel: true,
         left: 32,
         right: 32,
+        top: 32,
+        bottom: 32,
       },
       xAxis: {
         type: "category",
-        data: this.xData,
+        data: this.years,
         axisTick: {
           alignWithLabel: true,
         },
-        name: this.xLabel,
+        name: this.yearLabel,
         nameLocation: "middle",
         nameGap: 24,
       },
       yAxis: {
         type: "value",
-        name: this.yLabel,
-        nameLocation: "middle",
-        nameRotate: 90,
-        nameGap: 80,
       },
-      series: Object.entries(this.yData).map(([cat, data]) => ({
-        name: this.$t(`energy.${cat}`).toString(),
-        stack: "total",
-        type: "bar",
-        data: data,
-      })),
+      series: this.items.flatMap((item) => {
+        return Object.entries(item.data).map(([cat, data]) => {
+          const name = this.$t(`energy.${cat}`).toString();
+          return {
+            name: item.prefix ? `${item.prefix} ${name}` : name,
+            stack: item.type === "bar" ? "total" : undefined,
+            type: item.type,
+            data: data,
+          };
+        });
+      }),
+      color: this.items.flatMap(() => {
+        // https://data2.unhcr.org/en/documents/download/60115
+        return ["#f8e4d2", "#f0b89e", "#d48c74", "#9d4838", "#545456"];
+      }),
     };
   }
+}
+
+export interface ChartItem {
+  type: "bar" | "line";
+  data: Record<SocioEconomicCategory, number[]>;
+  prefix?: string;
 }
 </script>

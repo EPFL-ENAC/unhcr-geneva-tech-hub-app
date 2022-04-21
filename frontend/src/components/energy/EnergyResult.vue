@@ -4,81 +4,129 @@
       <v-card v-if="siteResults" flat>
         <v-card-title>Household Cooking</v-card-title>
         <v-card-text>
-          <v-tabs v-model="tab" center-active show-arrows>
-            <v-tab v-for="item in years" :key="item" :href="`#${item}`">
-              {{ item }}
-            </v-tab>
-          </v-tabs>
-          <v-tabs-items v-model="tab">
-            <v-tab-item
-              v-for="(siteResult, index) in siteResults"
-              :key="index"
-              :value="`${years[index]}`"
-            >
-              <v-simple-table dense>
-                <template v-slot:default>
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <th
-                        v-for="cat in categories"
-                        :key="cat"
-                        class="text-right"
-                      >
-                        {{ $t(`energy.${cat}`) }}
-                      </th>
-                      <th class="text-right">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="item in lines" :key="item.key">
-                      <td class="font-weight-black">
-                        {{ item.text }}
-                        <template v-if="item.unit">[{{ item.unit }}]</template>
-                      </td>
-                      <td
-                        v-for="cat in categories"
-                        :key="cat"
-                        class="text-right"
-                      >
-                        {{
-                          siteResult.categories[cat][item.key]
-                            | formatNumber(item.decimal)
-                        }}
-                      </td>
-                      <td class="font-weight-bold text-right">
-                        {{
-                          siteResult.total[item.key]
-                            | formatNumber(item.decimal)
-                        }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
-            </v-tab-item>
-          </v-tabs-items>
           <v-row>
             <v-col cols="4">
+              <h2>Energy</h2>
               <energy-chart
-                title="Total Income [$]"
-                :x-data="years"
-                :y-data="income"
+                title="Energy consumption [MJ]"
+                :years="years"
+                :items="energy"
+              ></energy-chart>
+              <energy-chart
+                title="Energy efficiency [%]"
+                :years="years"
+                :items="energyEfficiency"
+              ></energy-chart>
+              <h3>Requirement of fuelwood and charcoal</h3>
+              <energy-chart
+                title="Equivalent forested area [ha]"
+                :years="years"
+                :items="wood"
               ></energy-chart>
             </v-col>
+            <v-divider vertical></v-divider>
             <v-col cols="4">
+              <h2>Emissions</h2>
               <energy-chart
-                title="Total Energy [MJ]"
-                :x-data="years"
-                :y-data="energy"
+                title="CO2 [kg]"
+                :years="years"
+                :items="emissionCo2"
+              ></energy-chart>
+              <energy-chart
+                title="CO [g]"
+                :years="years"
+                :items="emissionCo"
+              ></energy-chart>
+              <energy-chart
+                title="PM [g]"
+                :years="years"
+                :items="emissionPm"
               ></energy-chart>
             </v-col>
+            <v-divider vertical></v-divider>
             <v-col cols="4">
+              <h2>Economy</h2>
               <energy-chart
-                title="Total CO2 Emission [kg]"
-                :x-data="years"
-                :y-data="emissionCo2"
+                title="Income/Cost [$]"
+                :years="years"
+                :items="income"
               ></energy-chart>
+              <energy-chart
+                title="Affordability [%]"
+                :years="years"
+                :items="affordability"
+              ></energy-chart>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-expansion-panels>
+                <v-expansion-panel>
+                  <v-expansion-panel-header> Details </v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <v-tabs v-model="tab" center-active show-arrows>
+                      <v-tab
+                        v-for="item in years"
+                        :key="item"
+                        :href="`#${item}`"
+                      >
+                        {{ item }}
+                      </v-tab>
+                    </v-tabs>
+                    <v-tabs-items v-model="tab">
+                      <v-tab-item
+                        v-for="(siteResult, index) in siteResults"
+                        :key="index"
+                        :value="`${years[index]}`"
+                      >
+                        <v-simple-table dense>
+                          <template v-slot:default>
+                            <thead>
+                              <tr>
+                                <th></th>
+                                <th
+                                  v-for="cat in categories"
+                                  :key="cat"
+                                  class="text-right"
+                                >
+                                  {{ $t(`energy.${cat}`) }}
+                                </th>
+                                <th class="text-right">Total</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr v-for="item in lines" :key="item.key">
+                                <td class="font-weight-black">
+                                  {{ item.text }}
+                                  <template v-if="item.unit"
+                                    >[{{ item.unit }}]</template
+                                  >
+                                </td>
+                                <td
+                                  v-for="cat in categories"
+                                  :key="cat"
+                                  class="text-right"
+                                >
+                                  {{
+                                    siteResult.categories[cat][item.key]
+                                      | formatNumber(item.decimal)
+                                  }}
+                                </td>
+                                <td class="font-weight-bold text-right">
+                                  {{
+                                    siteResult.categoryTotal[item.key]
+                                      | formatNumber(item.decimal)
+                                  }}
+                                </td>
+                              </tr>
+                            </tbody>
+                          </template>
+                        </v-simple-table>
+                      </v-tab-item>
+                    </v-tabs-items>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
             </v-col>
           </v-row>
         </v-card-text>
@@ -88,7 +136,7 @@
 </template>
 
 <script lang="ts">
-import EnergyChart from "@/components/energy/EnergyChart.vue";
+import EnergyChart, { ChartItem } from "@/components/energy/EnergyChart.vue";
 import {
   CookingFuel,
   CookingStove,
@@ -248,16 +296,82 @@ export default class EnergyResult extends Vue {
     }
   }
 
-  get income(): Record<SocioEconomicCategory, number[]> {
-    return this.getChartData("income");
+  get income(): ChartItem[] {
+    return [
+      {
+        type: "bar",
+        data: this.getChartData("income"),
+        prefix: "Income",
+      },
+      {
+        type: "bar",
+        data: this.getChartData("totalCost", -1),
+        prefix: "Cost",
+      },
+    ];
   }
 
-  get energy(): Record<SocioEconomicCategory, number[]> {
-    return this.getChartData("finalEnergy");
+  get affordability(): ChartItem[] {
+    return [
+      {
+        type: "line",
+        data: this.getChartData("costAffordability"),
+      },
+    ];
   }
 
-  get emissionCo2(): Record<SocioEconomicCategory, number[]> {
-    return this.getChartData("emissionCo2");
+  get energy(): ChartItem[] {
+    return [
+      {
+        type: "bar",
+        data: this.getChartData("finalEnergy"),
+      },
+    ];
+  }
+
+  get energyEfficiency(): ChartItem[] {
+    return [
+      {
+        type: "line",
+        data: this.getChartData("energyEfficiency"),
+      },
+    ];
+  }
+
+  get wood(): ChartItem[] {
+    return [
+      {
+        type: "bar",
+        data: this.getChartData("woodArea"),
+      },
+    ];
+  }
+
+  get emissionCo2(): ChartItem[] {
+    return [
+      {
+        type: "bar",
+        data: this.getChartData("emissionCo2"),
+      },
+    ];
+  }
+
+  get emissionCo(): ChartItem[] {
+    return [
+      {
+        type: "bar",
+        data: this.getChartData("emissionCo"),
+      },
+    ];
+  }
+
+  get emissionPm(): ChartItem[] {
+    return [
+      {
+        type: "bar",
+        data: this.getChartData("emissionPm"),
+      },
+    ];
   }
 
   get sites(): Site[] {
@@ -342,12 +456,15 @@ export default class EnergyResult extends Vue {
   }
 
   private getChartData(
-    key: keyof CookingResult
+    key: keyof CategoryResult,
+    ratio = 1
   ): Record<SocioEconomicCategory, number[]> {
     return Object.fromEntries<number[]>(
       socioEconomicCategories.map((cat) => [
         cat,
-        this.siteResults.map((result) => round(result.categories[cat][key])),
+        this.siteResults.map((result) =>
+          round(ratio * result.categories[cat][key])
+        ),
       ])
     ) as Record<SocioEconomicCategory, number[]>;
   }
@@ -399,34 +516,44 @@ export default class EnergyResult extends Vue {
   }
 
   computeSite(site: Site): SiteResult {
-    const results: [SocioEconomicCategory, CookingResult][] =
-      socioEconomicCategories.map((cat) => {
-        return [
-          cat,
-          this.computeCategory(
-            site,
-            site.proportions[cat],
-            site.categories[cat]
-          ),
-        ];
-      });
+    const results: [
+      SocioEconomicCategory,
+      HouseholdResult,
+      HouseholdResult,
+      CategoryResult
+    ][] = socioEconomicCategories.map((cat) => {
+      const householdResult = this.computeHousehold(site, site.categories[cat]);
+      const proportion = site.proportions[cat];
+      const proportionalHousehold = applyMap(
+        householdResult,
+        (value) => value * proportion
+      );
+      return [
+        cat,
+        householdResult,
+        proportionalHousehold,
+        this.computeCategory(site, proportion, householdResult),
+      ];
+    });
     return {
-      categories: Object.fromEntries<CookingResult>(results) as Record<
-        SocioEconomicCategory,
-        CookingResult
-      >,
-      total: applyReduce(
-        results.map((item) => item[1]),
+      households: Object.fromEntries<HouseholdResult>(
+        results.map(([cat, item]) => [cat, item])
+      ) as Record<SocioEconomicCategory, HouseholdResult>,
+      householdAverage: applyReduce(
+        results.map((item) => item[2]),
+        (a, b) => a + b
+      ),
+      categories: Object.fromEntries<CategoryResult>(
+        results.map(([cat, , , item]) => [cat, item])
+      ) as Record<SocioEconomicCategory, CategoryResult>,
+      categoryTotal: applyReduce(
+        results.map((item) => item[3]),
         (a, b) => a + b
       ),
     };
   }
 
-  computeCategory(
-    site: Site,
-    proportion: number,
-    input: CategoryInput
-  ): CookingResult {
+  computeHousehold(site: Site, input: CategoryInput): HouseholdResult {
     const technologyResults = input.cookingTechnologies.map((technology) => {
       // Ch
       const cookingTime =
@@ -504,13 +631,24 @@ export default class EnergyResult extends Vue {
         variableCost: 0,
         totalCost: 0,
       }),
+      income: input.general.annualIncome,
     };
-    const householdCount = site.householdsCount * proportion;
-    const categoryResult = applyMap(householdResult, (v) => v * householdCount);
-    const income = input.general.annualIncome * householdCount;
     // Cafford
     const costAffordability =
-      householdResult.totalCost / input.general.annualIncome;
+      householdResult.totalCost / householdResult.income;
+    return {
+      ...householdResult,
+      costAffordability,
+    };
+  }
+
+  computeCategory(
+    site: Site,
+    proportion: number,
+    householdResult: HouseholdResult
+  ): CategoryResult {
+    const householdCount = site.householdsCount * proportion;
+    const categoryResult = applyMap(householdResult, (v) => v * householdCount);
     const energyEfficiency =
       (categoryResult.finalEnergy !== 0
         ? categoryResult.usefulEnergy / categoryResult.finalEnergy
@@ -522,17 +660,16 @@ export default class EnergyResult extends Vue {
       proportion: proportion * 100,
       householdCount,
       populationCount: site.populationCount * proportion,
-      income,
       energyEfficiency,
-      costAffordability: costAffordability * 100,
       discountedCost,
+      costAffordability: householdResult.costAffordability * 100,
     };
   }
 }
 
 interface TableRow {
   text: string;
-  key: keyof CookingResult | CookingStoveId;
+  key: keyof CategoryResult | CookingStoveId;
   unit?: string;
   decimal?: number;
 }
@@ -622,17 +759,10 @@ class CookingTechnologyAction extends Action {
   }
 }
 
-interface CookingResult {
-  proportion: number;
-  householdCount: number;
-  populationCount: number;
+interface HouseholdResult {
   income: number;
-  /**
-   * CEf
-   */
   usefulEnergy: number;
   finalEnergy: number;
-  energyEfficiency: number;
   emissionCo2: number;
   emissionCo: number;
   emissionPm: number;
@@ -644,11 +774,20 @@ interface CookingResult {
   variableCost: number;
   totalCost: number;
   costAffordability: number;
+}
+
+interface CategoryResult extends HouseholdResult {
+  proportion: number;
+  householdCount: number;
+  populationCount: number;
+  energyEfficiency: number;
   discountedCost: number;
 }
 
 interface SiteResult {
-  categories: Record<SocioEconomicCategory, CookingResult>;
-  total: CookingResult;
+  households: Record<SocioEconomicCategory, HouseholdResult>;
+  householdAverage: HouseholdResult;
+  categories: Record<SocioEconomicCategory, CategoryResult>;
+  categoryTotal: CategoryResult;
 }
 </script>
