@@ -1,4 +1,9 @@
-import { CookingFuel, CookingStove } from "@/models/energyModel";
+import {
+  CookingFuel,
+  CookingStove,
+  SocioEconomicCategory,
+} from "@/models/energyModel";
+import { cccmColors } from "@/plugins/vuetify";
 
 export function getCurrentYear(): number {
   return new Date().getFullYear();
@@ -42,4 +47,19 @@ export function getCookingFuel(
   }
 ): CookingFuel {
   return cookingFuels.find((fuel) => fuel._id === stove.fuel) ?? defaultFuel;
+}
+
+export function getColor(cat: SocioEconomicCategory): string {
+  switch (cat) {
+    case "veryLow":
+      return cccmColors.secondary5;
+    case "low":
+      return cccmColors.secondary4;
+    case "middle":
+      return cccmColors.secondary3;
+    case "high":
+      return cccmColors.secondary2;
+    case "veryHigh":
+      return cccmColors.secondary1;
+  }
 }

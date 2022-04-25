@@ -24,7 +24,6 @@ export default new Vuetify({
     },
     themes: {
       // https://www.ungm.org/UNUser/Documents/DownloadPublicDocument?docId=782892
-      // https://data2.unhcr.org/en/documents/download/60115
       light: {
         primary: "#0072BC",
         secondary: "#000000",
@@ -37,3 +36,15 @@ export default new Vuetify({
     },
   },
 });
+
+/**
+ * https://data2.unhcr.org/en/documents/download/60115
+ */
+export const cccmColors = {
+  primary: "#2A87C8",
+  secondary1: "#545456",
+  secondary2: "#9d4838",
+  secondary3: "#d48c74",
+  secondary4: "#f0b89e",
+  secondary5: "#f8e4d2",
+};

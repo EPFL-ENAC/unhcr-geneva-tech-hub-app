@@ -5,7 +5,6 @@
 </template>
 
 <script lang="ts">
-import { SocioEconomicCategory } from "@/models/energyModel";
 import { BarChart, LineChart } from "echarts/charts";
 import {
   GridComponent,
@@ -53,7 +52,9 @@ export default class EnergyChart extends Vue {
         left: "center",
       },
       tooltip: {
-        trigger: "item",
+        trigger: this.items.every((item) => item.type === "bar")
+          ? "item"
+          : "axis",
         axisPointer: {
           type: "cross",
         },
@@ -78,29 +79,27 @@ export default class EnergyChart extends Vue {
       },
       yAxis: {
         type: "value",
+        scale: true,
       },
       series: this.items.flatMap((item) => {
-        return Object.entries(item.data).map(([cat, data]) => {
-          const name = this.$t(`energy.${cat}`).toString();
-          return {
-            name: item.prefix ? `${item.prefix} ${name}` : name,
-            stack: item.type === "bar" ? "total" : undefined,
-            type: item.type,
-            data: data,
-          };
-        });
+        return {
+          name: item.name,
+          stack: item.type === "bar" ? "total" : undefined,
+          type: item.type,
+          data: item.data,
+        };
       }),
-      color: this.items.flatMap(() => {
-        // https://data2.unhcr.org/en/documents/download/60115
-        return ["#f8e4d2", "#f0b89e", "#d48c74", "#9d4838", "#545456"];
-      }),
+      color: this.items.flatMap((item) => item.color),
     };
   }
 }
 
 export interface ChartItem {
-  type: "bar" | "line";
-  data: Record<SocioEconomicCategory, number[]>;
-  prefix?: string;
+  type: ChartItemType;
+  name: string;
+  data: number[];
+  color: string;
 }
+
+export type ChartItemType = "bar" | "line";
 </script>

@@ -136,7 +136,10 @@
 </template>
 
 <script lang="ts">
-import EnergyChart, { ChartItem } from "@/components/energy/EnergyChart.vue";
+import EnergyChart, {
+  ChartItem,
+  ChartItemType,
+} from "@/components/energy/EnergyChart.vue";
 import {
   CookingFuel,
   CookingStove,
@@ -148,7 +151,8 @@ import {
   socioEconomicCategories,
   SocioEconomicCategory,
 } from "@/models/energyModel";
-import { applyMap, applyReduce } from "@/utils/energy";
+import { cccmColors } from "@/plugins/vuetify";
+import { applyMap, applyReduce, getColor } from "@/utils/energy";
 import { chain, clamp, cloneDeep, range, round, sortBy } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -209,6 +213,7 @@ export default class EnergyResult extends Vue {
         text: "Energy Efficiency",
         key: "energyEfficiency",
         unit: "%",
+        decimal: 2,
       },
       {
         text: "CO2 Emission",
@@ -300,80 +305,44 @@ export default class EnergyResult extends Vue {
 
   get income(): ChartItem[] {
     return [
-      {
-        type: "bar",
-        data: this.getChartData("income"),
-        prefix: "Income",
-      },
-      {
-        type: "bar",
-        data: this.getChartData("totalCost", -1),
+      ...this.getDetailChartItems("bar", "income", { prefix: "Income" }),
+      ...this.getDetailChartItems("bar", "totalCost", {
         prefix: "Cost",
-      },
+        ratio: -1,
+      }),
     ];
   }
 
   get affordability(): ChartItem[] {
     return [
-      {
-        type: "line",
-        data: this.getChartData("costAffordability"),
-      },
+      this.getTotalChartItem("line", "costAffordability", { precision: 4 }),
     ];
   }
 
   get energy(): ChartItem[] {
-    return [
-      {
-        type: "bar",
-        data: this.getChartData("finalEnergy"),
-      },
-    ];
+    return this.getDetailChartItems("bar", "finalEnergy");
   }
 
   get energyEfficiency(): ChartItem[] {
     return [
-      {
-        type: "line",
-        data: this.getChartData("energyEfficiency"),
-      },
+      this.getTotalChartItem("line", "energyEfficiency", { precision: 4 }),
     ];
   }
 
   get wood(): ChartItem[] {
-    return [
-      {
-        type: "bar",
-        data: this.getChartData("woodArea"),
-      },
-    ];
+    return [this.getTotalChartItem("bar", "woodArea")];
   }
 
   get emissionCo2(): ChartItem[] {
-    return [
-      {
-        type: "bar",
-        data: this.getChartData("emissionCo2"),
-      },
-    ];
+    return this.getDetailChartItems("bar", "emissionCo2");
   }
 
   get emissionCo(): ChartItem[] {
-    return [
-      {
-        type: "bar",
-        data: this.getChartData("emissionCo"),
-      },
-    ];
+    return this.getDetailChartItems("bar", "emissionCo");
   }
 
   get emissionPm(): ChartItem[] {
-    return [
-      {
-        type: "bar",
-        data: this.getChartData("emissionPm"),
-      },
-    ];
+    return this.getDetailChartItems("bar", "emissionPm");
   }
 
   get sites(): Site[] {
@@ -459,18 +428,50 @@ export default class EnergyResult extends Vue {
     return this.sites.map((site) => this.computeSite(site));
   }
 
-  private getChartData(
+  private getDetailChartItems(
+    type: ChartItemType,
     key: keyof CategoryResult,
-    ratio = 1
-  ): Record<SocioEconomicCategory, number[]> {
-    return Object.fromEntries<number[]>(
-      socioEconomicCategories.map((cat) => [
-        cat,
-        this.siteResults.map((result) =>
-          round(ratio * result.categories[cat][key])
+    option?: {
+      prefix?: string;
+      precision?: number;
+      ratio?: number;
+    }
+  ): ChartItem[] {
+    return socioEconomicCategories.map((cat) => {
+      const name = this.$t(`energy.${cat}`).toString();
+      return {
+        type: type,
+        name: option?.prefix ? `${option?.prefix} ${name}` : name,
+        data: this.siteResults.map((result) =>
+          round(
+            (option?.ratio ?? 1) * result.categories[cat][key],
+            option?.precision
+          )
         ),
-      ])
-    ) as Record<SocioEconomicCategory, number[]>;
+        color: getColor(cat),
+      };
+    });
+  }
+
+  private getTotalChartItem(
+    type: ChartItemType,
+    key: keyof CategoryResult,
+    option?: {
+      precision?: number;
+      ratio?: number;
+    }
+  ): ChartItem {
+    return {
+      type: type,
+      name: "Total",
+      data: this.siteResults.map((result) =>
+        round(
+          (option?.ratio ?? 1) * result.categoryTotal[key],
+          option?.precision
+        )
+      ),
+      color: cccmColors.primary,
+    };
   }
 
   updateProportions(site: Site): Record<SocioEconomicCategory, number> {
@@ -539,6 +540,10 @@ export default class EnergyResult extends Vue {
         this.computeCategory(site, proportion, householdResult),
       ];
     });
+    const categoryTotal = applyReduce(
+      results.map((item) => item[3]),
+      (a, b) => a + b
+    );
     return {
       households: Object.fromEntries<HouseholdResult>(
         results.map(([cat, item]) => [cat, item])
@@ -550,10 +555,13 @@ export default class EnergyResult extends Vue {
       categories: Object.fromEntries<CategoryResult>(
         results.map(([cat, , , item]) => [cat, item])
       ) as Record<SocioEconomicCategory, CategoryResult>,
-      categoryTotal: applyReduce(
-        results.map((item) => item[3]),
-        (a, b) => a + b
-      ),
+      categoryTotal: {
+        ...categoryTotal,
+        energyEfficiency:
+          (categoryTotal.usefulEnergy / categoryTotal.finalEnergy) * 100,
+        costAffordability:
+          (categoryTotal.totalCost / categoryTotal.income) * 100,
+      },
     };
   }
 
@@ -654,9 +662,7 @@ export default class EnergyResult extends Vue {
     const householdCount = site.householdsCount * proportion;
     const categoryResult = applyMap(householdResult, (v) => v * householdCount);
     const energyEfficiency =
-      (categoryResult.finalEnergy !== 0
-        ? categoryResult.usefulEnergy / categoryResult.finalEnergy
-        : 0) * 100;
+      categoryResult.usefulEnergy / categoryResult.finalEnergy;
     const discountedCost =
       categoryResult.totalCost / Math.pow(site.discountRate, site.yearCount);
     return {
@@ -664,7 +670,7 @@ export default class EnergyResult extends Vue {
       proportion: proportion * 100,
       householdCount,
       populationCount: site.populationCount * proportion,
-      energyEfficiency,
+      energyEfficiency: energyEfficiency * 100,
       discountedCost,
       costAffordability: householdResult.costAffordability * 100,
     };
