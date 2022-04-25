@@ -20,15 +20,15 @@
         </v-select>
       </v-col>
     </v-row>
-    <!-- <v-row> -->
-    <!-- <v-col cols="12">
+    <v-row>
+      <v-col cols="12">
         <v-img class="d-flex justify-center" src="/ghg/compare.png"></v-img>
-      </v-col> -->
-    <!-- <v-col :cols="6">graph 0 Facilities</v-col>
+      </v-col>
+      <v-col :cols="6">graph 0 Facilities</v-col>
       <v-col :cols="6">graph 1 WASH</v-col>
       <v-col :cols="6">graph 2 Shelter and Site</v-col>
-      <v-col :cols="6">graph 3 Sequestration</v-col> -->
-    <!-- </v-row> -->
+      <v-col :cols="6">graph 3 Sequestration</v-col>
+    </v-row>
   </v-container>
 </template>
 
