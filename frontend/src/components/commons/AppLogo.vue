@@ -9,7 +9,7 @@
     >
       <a :href="logo.urlDescription" target="_blank">
         <v-img
-          :height="logo.height | '100px'"
+          :height="logo.height || '100px'"
           contain
           :src="logo.imgPath"
         ></v-img>
@@ -68,10 +68,6 @@ export default class AppLogo extends Vue {
       imgPath: "/app_logo_new/enac-it4r.png",
       urlDescription: "https://enac-it4r.epfl.ch/",
     },
-
-    // "/app_logo_new/logo 2.png",
-    // "/app_logo_new/Logo_UNHCR.svg",
-    // "/app_logo_new/Swiss Agency for Development and Cooperation (SDC) card.jpeg",
   ];
 }
 </script>
