@@ -1,3 +1,11 @@
+import Vuex, {
+  ActionContext,
+  ActionTree,
+  GetterTree,
+  MutationTree,
+  StoreOptions,
+} from "vuex";
+
 import ConfigModule from "@/store/ConfigModule";
 import EnergyModule from "@/store/EnergyModule";
 import GhgModule from "@/store/GhgModule";
@@ -9,15 +17,7 @@ import SheltersMaterialModule from "@/store/SheltersMaterialModule";
 import SheltersTransportModule from "@/store/SheltersTransportModule";
 import UserModule from "@/store/UserModule";
 import Vue from "vue";
-import Vuex, {
-  ActionContext,
-  ActionTree,
-  GetterTree,
-  MutationTree,
-  StoreOptions,
-} from "vuex";
-
-// import VuexPersistence from "vuex-persist";
+import VuexPersistence from "vuex-persist";
 
 // import createPersistedState from 'vuex-persist-indexeddb';
 
@@ -186,24 +186,17 @@ const store: StoreOptions<RootState> = {
     energy: EnergyModule,
   },
   plugins: [
-    // new VuexPersistence({
-    //   key: "dev_web_vuex_persistant_namespace", // change with env variable
-    //   storage: window.localStorage,
-    //   modules: ["ConfigModule"],
-    // }).plugin,
-    /*
     // store as session storage
     new VuexPersistence({
-      key: import.meta.env.VITE_APP_WEBSTORAGE_NAMESPACE,
-      storage: window.sessionStorage,
-      modules: ['SomeModule'],
+      key: process.env.VUE_APP_USER_NAMESPACE,
+      storage: window.sessionStorage, //   storage: window.localStorage,
+      modules: ['UserModule'],
     }).plugin,
     // store as Indexed DB (using vuex-persist-indexeddb)
-    createPersistedState({
-      key: import.meta.env.VITE_APP_WEBSTORAGE_NAMESPACE,
-      paths: ['SomeLargeModule'],
-    }),
-    */
+    // createPersistedState({
+    //   key: import.meta.env.VITE_APP_WEBSTORAGE_NAMESPACE,
+    //   paths: ['SomeLargeModule'],
+    // }),
   ],
 };
 

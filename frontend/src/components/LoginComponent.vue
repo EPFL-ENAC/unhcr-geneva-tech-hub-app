@@ -30,6 +30,13 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
+        <v-btn
+          color="primary"
+          :disabled="!formValid"
+          @click="submitLoginAsGuest"
+        >
+          Login as guest
+        </v-btn>
         <v-btn color="primary" :disabled="!formValid" type="submit">
           Login
         </v-btn>
@@ -51,7 +58,7 @@ import { mapActions, mapGetters } from "vuex";
   },
 
   methods: {
-    ...mapActions("UserModule", ["login", "logout"]),
+    ...mapActions("UserModule", ["login", "loginAsGuest", "logout"]),
   },
 })
 export default class LoginComponent extends Vue {
@@ -60,10 +67,19 @@ export default class LoginComponent extends Vue {
   password = "";
   error = "";
   login!: (doc: UserCouchCredentials) => AxiosPromise;
+  loginAsGuest!: () => AxiosPromise;
 
   public get destinationRouteName(): string {
     const currentRouteName = this.$router.currentRoute.name as string;
     return currentRouteName === "Login" ? "Apps" : currentRouteName;
+  }
+  submitLoginAsGuest(): void {
+    this.username = "";
+    this.password = ""; // to show visually the change
+    
+    this.loginAsGuest().then(() => {
+      this.$router.push({ name: this.destinationRouteName });
+    });
   }
   submitLoginForm(): void {
     this.error = "";
