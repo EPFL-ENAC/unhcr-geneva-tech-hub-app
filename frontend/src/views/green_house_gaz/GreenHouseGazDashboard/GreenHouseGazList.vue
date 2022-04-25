@@ -31,7 +31,7 @@
               <survey-list :site="item.name" :country-code="country.key" />
             </td>
           </template>
-          <template v-slot:item.data-table-compare="props">
+          <!-- <template v-slot:item.data-table-compare="props">
             <v-btn
               icon
               :to="{
@@ -44,7 +44,7 @@
             >
               <v-icon>mdi-chart-areaspline</v-icon>
             </v-btn>
-          </template>
+          </template> -->
         </v-data-table>
       </v-expansion-panel-content>
     </v-expansion-panel>

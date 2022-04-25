@@ -278,7 +278,7 @@ export default class WASH extends Vue {
   private computeResults(washInput: WashInput): WashResult {
     const REF_WSH_D = 0.25213; //	Need reference cf with cara@epfl.ch
     const res = {} as WashResult;
-    res.TR_NUM = washInput.WACL / washInput.TR_VOL;
+    res.TR_NUM = Math.ceil(washInput.WACL / washInput.TR_VOL);
     res.TR_DIST = res.TR_NUM * washInput.TOT_WS * 2;
     res.CO2_WSH_TRB = (REF_WSH_D * res.TR_DIST) / 1000;
     return res;
@@ -288,8 +288,14 @@ export default class WASH extends Vue {
     const res = {} as WashBalanceResult;
     const baselineRes = this.washForm.baseline.results;
     const endlineRes = this.washForm.endline.results;
-    res.TR_NUM_DIFF = endlineRes.TR_NUM - baselineRes.TR_NUM;
-    res.TR_DIST_DIFF = endlineRes.TR_DIST - baselineRes.TR_DIST;
+    // ABSOLUTE (TR_NUM_B - TR_NUM_D) / TR_NUM_B
+    // res.TR_NUM_DIFF = endlineRes.TR_NUM - baselineRes.TR_NUM;
+    res.TR_NUM_DIFF =
+      Math.abs(baselineRes.TR_NUM - endlineRes.TR_NUM) / baselineRes.TR_NUM;
+    // ABSOLUTE (TR_DIST_B - TR_DIST_D) / TR_DIST_B
+    // res.TR_DIST_DIFF = endlineRes.TR_DIST - baselineRes.TR_DIST;
+    res.TR_DIST_DIFF =
+      Math.abs(baselineRes.TR_DIST - endlineRes.TR_DIST) / baselineRes.TR_DIST;
     res.CO2_WSH_TRB_DIFF = endlineRes.CO2_WSH_TRB - baselineRes.CO2_WSH_TRB;
     res.CO2_WSH_TRB_PER =
       ((baselineRes.CO2_WSH_TRB - endlineRes.CO2_WSH_TRB) /
@@ -370,13 +376,15 @@ export default class WASH extends Vue {
     {
       description: "Change in number of trucks used",
       code: "TR_NUM_DIFF",
-      type: "number",
+      type: "percentage",
+      suffix: "%",
       disabled: true,
     },
     {
       description: "Change in total distance travelled",
       code: "TR_DIST_DIFF",
-      type: "number",
+      suffix: "%",
+      type: "percentage",
       disabled: true,
     },
   ];
