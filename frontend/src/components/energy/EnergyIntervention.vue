@@ -4,7 +4,7 @@
     :initial-module="initialModule"
     @save="save"
   >
-    <template v-slot:append>
+    <template v-slot>
       <v-row>
         <v-spacer></v-spacer>
         <v-col class="col-auto">

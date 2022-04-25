@@ -2,32 +2,43 @@
   <energy-form
     :module.sync="module"
     :initial-module="initialModule"
-    :items="items"
     @save="save"
   >
-    <template v-slot:append>
-      <h2>Socio-Economic Categories</h2>
-      <v-simple-table>
-        <template v-slot:default>
-          <thead>
-            <tr>
-              <th v-for="item in socioEconomicCategories" :key="item">
-                {{ $t(`energy.${item}`) }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in categoryFormItems" :key="item.key">
-              <td v-for="category in socioEconomicCategories" :key="category">
-                <form-item-component
-                  v-model="module.categories[category][item.key]"
-                  v-bind="item"
-                ></form-item-component>
-              </td>
-            </tr>
-          </tbody>
-        </template>
-      </v-simple-table>
+    <template v-slot>
+      <energy-form-row v-model="module" :items="items"></energy-form-row>
+      <v-row>
+        <v-col>
+          <h2>Socio-Economic Categories</h2>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-simple-table>
+            <template v-slot:default>
+              <thead>
+                <tr>
+                  <th v-for="item in socioEconomicCategories" :key="item">
+                    {{ $t(`energy.${item}`) }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in categoryFormItems" :key="item.key">
+                  <td
+                    v-for="category in socioEconomicCategories"
+                    :key="category"
+                  >
+                    <form-item-component
+                      v-model="module.categories[category][item.key]"
+                      v-bind="item"
+                    ></form-item-component>
+                  </td>
+                </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+        </v-col>
+      </v-row>
     </template>
   </energy-form>
 </template>
@@ -38,6 +49,7 @@ import FormItemComponent, {
 } from "@/components/commons/FormItemComponent.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
+import EnergyFormRow from "@/components/energy/EnergyFormRow.vue";
 import {
   AreaPerPerson,
   FarApartHouses,
@@ -59,6 +71,7 @@ import { Component } from "vue-property-decorator";
 @Component({
   components: {
     EnergyForm,
+    EnergyFormRow,
     FormItemComponent,
   },
 })

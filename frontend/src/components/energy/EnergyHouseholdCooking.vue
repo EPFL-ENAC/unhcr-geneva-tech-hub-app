@@ -4,7 +4,7 @@
     :initial-module="initialModule"
     @save="save"
   >
-    <template v-slot:prepend>
+    <template v-slot>
       <v-data-table
         :headers="tableHeaders"
         item-key="id"

@@ -2,38 +2,7 @@
   <v-card flat>
     <v-card-text>
       <v-form ref="form" v-model="formValid" lazy-validation>
-        <v-row v-if="$slots.prepend">
-          <v-col>
-            <slot name="prepend"></slot>
-          </v-col>
-        </v-row>
-        <v-row v-if="items.length > 0">
-          <v-col>
-            <v-row v-for="(rowItem, index) in items" :key="index">
-              <template v-for="(item, index) in rowItem">
-                <v-col
-                  v-if="!item.hidden"
-                  :key="index"
-                  cols="12"
-                  sm="6"
-                  md="4"
-                  lg="3"
-                  xl="2"
-                >
-                  <form-item-component
-                    v-model="syncedModule[item.key]"
-                    v-bind="item"
-                  ></form-item-component>
-                </v-col>
-              </template>
-            </v-row>
-          </v-col>
-        </v-row>
-        <v-row v-if="$slots.append">
-          <v-col>
-            <slot name="append"></slot>
-          </v-col>
-        </v-row>
+        <slot></slot>
       </v-form>
     </v-card-text>
     <v-card-actions>
@@ -46,9 +15,7 @@
 </template>
 
 <script lang="ts">
-import FormItemComponent, {
-  FormItem,
-} from "@/components/commons/FormItemComponent.vue";
+import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import { VForm } from "@/utils/vuetify";
 import { cloneDeep, isEqual } from "lodash";
 import "vue-class-component/hooks";
@@ -69,8 +36,6 @@ import {
 export default class EnergyForm<M> extends Vue {
   @Prop({ type: Object as () => M })
   readonly initialModule!: M;
-  @Prop({ type: Array as () => FormItem<keyof M>[][], default: () => [] })
-  readonly items!: FormItem<keyof M>[][];
   @PropSync("module", { type: Object as () => M })
   syncedModule!: M;
 

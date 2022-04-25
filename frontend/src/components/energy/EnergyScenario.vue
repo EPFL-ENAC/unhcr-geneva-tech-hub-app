@@ -4,7 +4,7 @@
     :initial-module="initialModule"
     @save="save"
   >
-    <template v-slot:append>
+    <template v-slot>
       <v-expansion-panels v-model="selectedIndex" mandatory>
         <v-expansion-panel
           v-for="scenarioItem in module.scenarios"
