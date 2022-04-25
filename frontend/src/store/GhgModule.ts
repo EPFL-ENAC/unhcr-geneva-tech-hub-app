@@ -162,7 +162,7 @@ const actions: ActionTree<ProjectsState, RootState> = {
     value
   ) => {
     context.commit("SET_PROJECT", value);
-    const db = context.state.localCouch?.remoteDB;
+    const db = context.state.localCouch?.localDB;
     if (db) {
       await db.put(value);
     } else {

@@ -76,7 +76,7 @@ export default class LoginComponent extends Vue {
   submitLoginAsGuest(): void {
     this.username = "";
     this.password = ""; // to show visually the change
-    
+
     this.loginAsGuest().then(() => {
       this.$router.push({ name: this.destinationRouteName });
     });

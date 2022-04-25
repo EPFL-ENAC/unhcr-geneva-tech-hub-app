@@ -1,6 +1,6 @@
 import { CouchUser } from "@/store/UserModule";
-import { Store } from "vuex";
 import { VueConstructor } from "vue";
+import { Store } from "vuex";
 
 declare module "vue/types/vue" {
   // 3. Declare augmentation for Vue

@@ -1,16 +1,15 @@
 import {
+  getSession as getSessionTool,
+  login as loginTool,
+  logout as logoutTool,
+} from "@/utils/couchdb";
+import {
   ActionContext,
   ActionTree,
   GetterTree,
   Module,
   MutationTree,
 } from "vuex";
-import {
-  getSession as getSessionTool,
-  login as loginTool,
-  logout as logoutTool,
-} from "@/utils/couchdb";
-
 import { RootState } from ".";
 
 /** Config store */
@@ -116,7 +115,7 @@ const actions: ActionTree<UserState, RootState> = {
   },
   getSession: (context: ActionContext<UserState, RootState>) => {
     // if user logged in as guest no session needed!
-    const currentUser = context.getters['user'];
+    const currentUser = context.getters["user"];
     if (currentUser.name !== "guest") {
       context.commit("SET_USER_LOADING");
       getSessionTool()
@@ -127,7 +126,7 @@ const actions: ActionTree<UserState, RootState> = {
         .finally(() => {
           context.commit("UNSET_USER_LOADING");
         });
-    }    
+    }
   },
 };
 
