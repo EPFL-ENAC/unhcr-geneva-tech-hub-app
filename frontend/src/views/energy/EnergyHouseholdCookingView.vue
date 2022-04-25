@@ -1,8 +1,11 @@
 <template>
-  <energy-household-cooking
-    :initial-module="modules.householdCooking"
-    @save="save"
-  ></energy-household-cooking>
+  <div>
+    <h1>Cooking</h1>
+    <energy-household-cooking
+      :initial-module="modules.householdCooking"
+      @save="save"
+    ></energy-household-cooking>
+  </div>
 </template>
 
 <script lang="ts">

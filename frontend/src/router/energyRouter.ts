@@ -69,15 +69,58 @@ function projectChildren(prefix: string): RouteConfig[] {
               /* webpackChunkName: "energy" */ "../views/energy/EnergyHouseholdCookingView.vue"
             ),
         },
+        {
+          path: "lighting",
+          name: prefix + "HouseholdLighting",
+          component: () =>
+            import(
+              /* webpackChunkName: "energy" */ "../views/energy/EnergyHouseholdLightingView.vue"
+            ),
+        },
+        {
+          path: "heating",
+          name: prefix + "HouseholdHeating",
+          component: () =>
+            import(
+              /* webpackChunkName: "energy" */ "../views/energy/EnergyHouseholdHeatingView.vue"
+            ),
+        },
       ],
     },
     {
       path: "community",
       name: prefix + "Community",
+      redirect: { name: prefix + "CommunityLighting" },
       component: () =>
         import(
           /* webpackChunkName: "energy" */ "../views/energy/EnergyCommunityView.vue"
         ),
+      children: [
+        {
+          path: "lighting",
+          name: prefix + "CommunityLighting",
+          component: () =>
+            import(
+              /* webpackChunkName: "energy" */ "../views/energy/EnergyCommunityLightingView.vue"
+            ),
+        },
+        {
+          path: "heating",
+          name: prefix + "CommunityHeating",
+          component: () =>
+            import(
+              /* webpackChunkName: "energy" */ "../views/energy/EnergyCommunityHeatingView.vue"
+            ),
+        },
+        {
+          path: "services",
+          name: prefix + "CommunityServices",
+          component: () =>
+            import(
+              /* webpackChunkName: "energy" */ "../views/energy/EnergyCommunityServicesView.vue"
+            ),
+        },
+      ],
     },
     {
       path: "scenario",

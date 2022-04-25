@@ -23,7 +23,7 @@ export const energy = {
   to: "energy",
   logoIcon: "mdi-flash",
   description:
-    "The best technology options for reliable and sustainable energy needs for different shelters based on available local options.",
+    "This Decision Support Tool assesses from a sustainability perspective, multi-year comparative performances of energy interventions for refugee camps. The boundaries of the energy system is Scope 1, i.e. activities in the camps. The energy system is composed of the following sub-systems: household, Community, Production of goods and services, Central energy supply. The results encompass energy demand and supply, environmental and economic performances of the interventions under various (up to three) scenarios of the future.",
 };
 
 export default [shelter, ghg, energy] as {

@@ -1,5 +1,5 @@
 <template>
-  <span>TODO</span>
+  <router-view v-model="modules"></router-view>
 </template>
 
 <script lang="ts">

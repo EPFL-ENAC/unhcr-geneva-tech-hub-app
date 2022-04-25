@@ -23,7 +23,9 @@
                 <v-list-item-title class="text-h5 mb-1">
                   {{ app.title }}
                 </v-list-item-title>
-                {{ app.description }}
+                <div class="description">
+                  {{ app.description }}
+                </div>
               </v-list-item-content>
 
               <div class="icon-and-click">
@@ -89,5 +91,10 @@ export default class AppList extends Vue {
   justify-content: center;
   flex-direction: column;
   gap: 10px;
+}
+
+.description {
+  overflow: auto;
+  height: 128px;
 }
 </style>

@@ -693,3 +693,9 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.leaflet-container {
+  z-index: 0;
+}
+</style>
