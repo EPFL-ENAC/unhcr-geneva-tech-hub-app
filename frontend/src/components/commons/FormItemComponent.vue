@@ -65,6 +65,7 @@
 <script lang="ts">
 import { checkMax, checkMin, checkRequired, Rule } from "@/utils/rules";
 import { SelectItemObject } from "@/utils/vuetify";
+import { round } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 
@@ -75,7 +76,7 @@ export default class FormItemComponent extends Vue {
   @Prop({ type: String as () => "text" | "number" | "boolean" | "select" })
   readonly type!: "text" | "number" | "boolean" | "select";
   @Prop({ type: String as () => "percent" })
-  readonly subtype: "percent" | undefined;
+  readonly subtype: "percent" | "rate" | undefined;
   @Prop(String)
   readonly label: string | undefined;
   @Prop([Object, Array])
@@ -94,6 +95,8 @@ export default class FormItemComponent extends Vue {
   readonly ratio: number | undefined;
   @Prop(Boolean)
   readonly multiple: boolean | undefined;
+  @Prop(Number)
+  readonly precision: number | undefined;
 
   get items(): SelectItemObject<string, SelectValue>[] {
     switch (this.type) {
@@ -136,7 +139,7 @@ export default class FormItemComponent extends Vue {
   }
 
   get actualUnit(): string | undefined {
-    if (this.subtype === "percent") {
+    if (this.subtype === "percent" || this.subtype === "rate") {
       return "%";
     }
     return this.unit;
@@ -157,18 +160,32 @@ export default class FormItemComponent extends Vue {
   }
 
   get actualRatio(): number {
-    if (this.subtype === "percent") {
+    if (this.subtype === "percent" || this.subtype === "rate") {
       return 100;
     }
     return this.ratio ?? 1;
   }
 
+  get actualOffset(): number {
+    if (this.subtype === "rate") {
+      return 1;
+    }
+    return 0;
+  }
+
+  get actualPrecision(): number {
+    return this.precision ?? 4;
+  }
+
   get numberModel(): number {
-    return (this.model as number) * this.actualRatio;
+    return round(
+      ((this.model as number) - this.actualOffset) * this.actualRatio,
+      this.actualPrecision
+    );
   }
 
   set numberModel(value: number) {
-    this.model = (value as number) / this.actualRatio;
+    this.model = (value as number) / this.actualRatio + this.actualOffset;
   }
 }
 
@@ -192,11 +209,12 @@ interface TextFormItem<K> extends AbstractFormItem<K> {
 
 interface NumberFormItem<K> extends AbstractFormItem<K> {
   type: "number";
-  subtype?: "percent";
+  subtype?: "percent" | "rate";
   unit?: string;
   min?: number;
   max?: number;
   ratio?: number;
+  precision?: number;
 }
 
 interface BooleanFormItem<K> extends AbstractFormItem<K> {

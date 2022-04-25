@@ -83,16 +83,19 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
       type: "number",
       key: "discountRate",
       label: "Discount Rate",
+      subtype: "rate",
     },
     {
       type: "number",
       key: "incomeRate",
       label: "Average Income Rate per household",
+      subtype: "rate",
     },
     {
       type: "number",
       key: "demographicGrowth",
       label: "Demographic Growth",
+      subtype: "rate",
     },
   ];
 
