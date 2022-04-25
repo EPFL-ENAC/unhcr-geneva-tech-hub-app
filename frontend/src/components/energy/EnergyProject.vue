@@ -121,7 +121,7 @@ export default class EnergyProject extends Vue {
 
   readonly tabItems: TabItem[] = [
     {
-      text: "General",
+      text: "Information",
       icon: "mdi-information",
       toName: "General",
     },

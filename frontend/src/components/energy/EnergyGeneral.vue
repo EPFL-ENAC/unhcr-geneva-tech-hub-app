@@ -5,38 +5,94 @@
     @save="save"
   >
     <template v-slot>
-      <energy-form-row v-model="module" :items="items"></energy-form-row>
       <v-row>
-        <v-col>
-          <h2>Socio-Economic Categories</h2>
+        <v-col cols="6">
+          <h2>General</h2>
+          <energy-form-row
+            v-model="module"
+            :items="generalItems"
+          ></energy-form-row>
+        </v-col>
+        <v-divider vertical></v-divider>
+        <v-col cols="6">
+          <l-map :zoom="zoom" :center="latLng">
+            <l-control-scale :imperial="false" :metric="true"></l-control-scale>
+            <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
+            <l-marker :lat-lng="latLng"></l-marker>
+          </l-map>
         </v-col>
       </v-row>
       <v-row>
-        <v-col>
-          <v-simple-table>
-            <template v-slot:default>
-              <thead>
-                <tr>
-                  <th v-for="item in socioEconomicCategories" :key="item">
-                    {{ $t(`energy.${item}`) }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="item in categoryFormItems" :key="item.key">
-                  <td
-                    v-for="category in socioEconomicCategories"
-                    :key="category"
-                  >
-                    <form-item-component
-                      v-model="module.categories[category][item.key]"
-                      v-bind="item"
-                    ></form-item-component>
-                  </td>
-                </tr>
-              </tbody>
-            </template>
-          </v-simple-table>
+        <v-divider></v-divider>
+      </v-row>
+      <v-row>
+        <v-col cols="6">
+          <h2>Electricity</h2>
+          <energy-form-row
+            v-model="module"
+            :items="electricityItems"
+          ></energy-form-row>
+        </v-col>
+        <v-divider vertical></v-divider>
+        <v-col cols="6">
+          <h2>Shelters Types</h2>
+          <energy-form-row
+            v-model="module"
+            :items="shelterItems"
+          ></energy-form-row>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-divider></v-divider>
+      </v-row>
+      <v-row>
+        <v-col cols="6">
+          <h2>Environment</h2>
+          <energy-form-row
+            v-model="module"
+            :items="environmentItems"
+          ></energy-form-row>
+        </v-col>
+        <v-divider vertical></v-divider>
+        <v-col cols="6">
+          <v-row>
+            <v-col>
+              <h2>Population</h2>
+              <energy-form-row
+                v-model="module"
+                :items="populationItems"
+              ></energy-form-row>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <h3>Socio-Economic Categories</h3>
+              <v-simple-table>
+                <template v-slot:default>
+                  <thead>
+                    <tr>
+                      <th v-for="item in socioEconomicCategories" :key="item">
+                        {{ $t(`energy.${item}`) }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="item in categoryFormItems" :key="item.key">
+                      <td
+                        v-for="category in socioEconomicCategories"
+                        :key="category"
+                      >
+                        <form-item-component
+                          v-model="module.categories[category][item.key]"
+                          v-bind="item"
+                        ></form-item-component>
+                      </td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
     </template>
@@ -65,23 +121,53 @@ import {
 } from "@/models/energyModel";
 import { getCurrentYear } from "@/utils/energy";
 import { checkSum } from "@/utils/rules";
+import { LatLngExpression } from "leaflet";
 import "vue-class-component/hooks";
 import { Component } from "vue-property-decorator";
+import { LControlScale, LMap, LMarker, LTileLayer } from "vue2-leaflet";
 
 @Component({
   components: {
     EnergyForm,
     EnergyFormRow,
     FormItemComponent,
+    LControlScale,
+    LMap,
+    LMarker,
+    LTileLayer,
   },
 })
 export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
   readonly socioEconomicCategories = socioEconomicCategories;
+  readonly zoom = 4;
+  readonly url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+  readonly attribution =
+    '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors';
 
   module: GeneralModule = this.emptyModule;
 
   get categoryProportions(): number[] {
     return Object.values(this.module.categories).map((item) => item.proportion);
+  }
+
+  get shelterProportions(): number[] {
+    return [this.module.shelterTemporary, this.module.shelterPermanent];
+  }
+
+  get shelterTemporaryProportions(): number[] {
+    return [
+      this.module.shelterTemporaryTent,
+      this.module.shelterTemporarySheeting,
+      this.module.shelterTemporaryKit,
+    ];
+  }
+
+  get shelterPermanentProportions(): number[] {
+    return [
+      this.module.shelterPermanentContainer,
+      this.module.shelterPermanentPrefabricated,
+      this.module.shelterPermanentRhu,
+    ];
   }
 
   get categoryFormItems(): FormItem<keyof GeneralCategory>[] {
@@ -119,14 +205,14 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
       temporary: false,
       expirationYear: currentYear,
       publicGridConnection: false,
-      shelterTemporary: 0,
-      shelterTemporaryTent: 0,
-      shelterTemporarySheeting: 0,
-      shelterTemporaryKit: 0,
-      shelterPermanent: 0,
-      shelterPermanentContainer: 0,
-      shelterPermanentPrefabricated: 0,
-      shelterPermanentRhu: 0,
+      shelterTemporary: 50,
+      shelterTemporaryTent: 30,
+      shelterTemporarySheeting: 30,
+      shelterTemporaryKit: 40,
+      shelterPermanent: 50,
+      shelterPermanentContainer: 30,
+      shelterPermanentPrefabricated: 30,
+      shelterPermanentRhu: 40,
       electricalSafetyCompliance: 0,
       annualLocalWindMinimum: 0,
       annualLocalWindAverage: 0,
@@ -157,14 +243,36 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
     };
   }
 
-  get items(): FormItem<keyof GeneralModule>[][] {
+  get latLng(): LatLngExpression {
+    return [this.module.locationLatitude, this.module.locationLongitude];
+  }
+
+  get generalItems(): FormItem<keyof GeneralModule>[][] {
     return [
       [
         {
           type: "text",
           key: "name",
-          label: "Name of the camp",
+          label: "Name of the site",
         },
+        {
+          type: "number",
+          key: "locationLatitude",
+          label: "Latitude of the site",
+          unit: "Decimal Degrees",
+          min: -90,
+          max: 90,
+        },
+        {
+          type: "number",
+          key: "locationLongitude",
+          label: "Longitude of the site",
+          unit: "Decimal Degrees",
+          min: -180,
+          max: 180,
+        },
+      ],
+      [
         {
           type: "number",
           key: "yearStart",
@@ -175,30 +283,23 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
           key: "yearEnd",
           label: "Ending Year ",
         },
-      ],
-      [
         {
-          type: "number",
-          key: "locationLatitude",
-          label: "Latitude of the camp",
-          unit: "Decimal Degrees",
-          min: -90,
-          max: 90,
+          type: "text",
+          key: "currency",
+          label: "National currency",
         },
         {
           type: "number",
-          key: "locationLongitude",
-          label: "Longitude of the camp",
-          unit: "Decimal Degrees",
-          min: -180,
-          max: 180,
+          key: "exchangeRateUsd",
+          label: "Exchange rate with the US dollar",
+          unit: `${this.module.currency} = 1 USD`,
         },
       ],
       [
         {
           type: "boolean",
           key: "temporary",
-          label: "Is the camp temporary?",
+          label: "Is the site temporary?",
           options: {
             true: "Yes, temporary",
             false: "No, permanent",
@@ -230,7 +331,18 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
           ],
           hidden: this.module.temporary,
         } as FormItem<keyof GeneralModule, Integration>,
+        {
+          type: "number",
+          subtype: "percent",
+          key: "businessShare",
+          label: "What share of households operate a business in their house?",
+        },
       ],
+    ];
+  }
+
+  get electricityItems(): FormItem<keyof GeneralModule>[][] {
+    return [
       [
         {
           type: "text",
@@ -253,7 +365,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
         {
           type: "number",
           key: "publicGridDistance",
-          label: "How far is the camp from the public grid?",
+          label: "How far is the site from the public grid?",
           unit: "m",
           hidden: !this.module.publicGridConnection,
         },
@@ -269,8 +381,36 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
         {
           type: "number",
           subtype: "percent",
+          key: "electricalSafetyCompliance",
+          label:
+            "What proportion of shelters are in compliance with the electrical safety codes?",
+        },
+      ],
+    ];
+  }
+
+  get shelterItems(): FormItem<keyof GeneralModule>[][] {
+    const checkShelter = checkSum(this.shelterProportions, 1, 2, "100%");
+    const checkShelterTemporary = checkSum(
+      this.shelterTemporaryProportions,
+      1,
+      2,
+      "100%"
+    );
+    const checkShelterPermanent = checkSum(
+      this.shelterPermanentProportions,
+      1,
+      2,
+      "100%"
+    );
+    return [
+      [
+        {
+          type: "number",
+          subtype: "percent",
           key: "shelterTemporary",
           label: "Temporary and transitional shelters proportion",
+          rules: [checkShelter],
         },
         {
           type: "number",
@@ -278,6 +418,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
           key: "shelterTemporaryTent",
           label: "Tents proportion",
           hidden: this.module.shelterTemporary === 0,
+          rules: [checkShelterTemporary],
         },
         {
           type: "number",
@@ -285,6 +426,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
           key: "shelterTemporarySheeting",
           label: "Plastic sheeting proportion",
           hidden: this.module.shelterTemporary === 0,
+          rules: [checkShelterTemporary],
         },
         {
           type: "number",
@@ -292,6 +434,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
           key: "shelterTemporaryKit",
           label: "Self construction with shelter kits proportion",
           hidden: this.module.shelterTemporary === 0,
+          rules: [checkShelterTemporary],
         },
       ],
       [
@@ -300,6 +443,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
           subtype: "percent",
           key: "shelterPermanent",
           label: "Permanent shelters proportion",
+          rules: [checkShelter],
         },
         {
           type: "number",
@@ -307,6 +451,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
           key: "shelterPermanentContainer",
           label: "Containers proportion",
           hidden: this.module.shelterPermanent === 0,
+          rules: [checkShelterPermanent],
         },
         {
           type: "number",
@@ -314,6 +459,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
           key: "shelterPermanentPrefabricated",
           label: "Prefabricated proportion",
           hidden: this.module.shelterPermanent === 0,
+          rules: [checkShelterPermanent],
         },
         {
           type: "number",
@@ -321,17 +467,14 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
           key: "shelterPermanentRhu",
           label: "RHU refugee housing unit ( prefabricated IKEA) proportion",
           hidden: this.module.shelterPermanent === 0,
+          rules: [checkShelterPermanent],
         },
       ],
-      [
-        {
-          type: "number",
-          subtype: "percent",
-          key: "electricalSafetyCompliance",
-          label:
-            "What proportion of shelters are in compliance with the electrical safety codes?",
-        },
-      ],
+    ];
+  }
+
+  get environmentItems(): FormItem<keyof GeneralModule>[][] {
+    return [
       [
         {
           type: "number",
@@ -353,35 +496,6 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
         },
       ],
       [
-        {
-          type: "number",
-          key: "totalPopulation",
-          label: "Total population of the camp",
-        },
-        {
-          type: "number",
-          key: "familiesCount",
-          label: "How many families are in the camp?",
-        },
-        {
-          type: "text",
-          key: "currency",
-          label: "National currency",
-        },
-        {
-          type: "number",
-          key: "exchangeRateUsd",
-          label: "Exchange rate with the US dollar",
-          unit: `${this.module.currency} = 1 USD`,
-        },
-      ],
-      [
-        {
-          type: "number",
-          subtype: "percent",
-          key: "businessShare",
-          label: "What share of households operate a business in their house?",
-        },
         {
           type: "select",
           key: "farApartHouses",
@@ -413,7 +527,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
         {
           type: "select",
           key: "areaPerPerson",
-          label: "Average camp area per person",
+          label: "Average site area per person",
           options: [
             {
               text: "29 or less",
@@ -436,7 +550,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
         {
           type: "select",
           key: "vacantSpaceInside",
-          label: "Available vacant inside camp spaces",
+          label: "Available vacant inside site spaces",
           options: [
             {
               text: "No Space",
@@ -468,6 +582,31 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
             },
           ],
         } as FormItem<keyof GeneralModule, VacantSpaceInside>,
+        {
+          type: "select",
+          key: "vacantSpaceOutside",
+          label: "Available vacant outside site spaces",
+          options: [
+            {
+              text: "No Space",
+              value: "no",
+            },
+            {
+              text: "Little Space",
+              value: "little",
+            },
+            {
+              text: "Medium Space",
+              value: "medium",
+            },
+            {
+              text: "Lots of Space",
+              value: "lots",
+            },
+          ],
+        } as FormItem<keyof GeneralModule, vacantSpaceOutside>,
+      ],
+      [
         {
           type: "select",
           key: "woodLandscape",
@@ -502,7 +641,7 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
         {
           type: "select",
           key: "topography",
-          label: "What does the topography outside of the camp look like?",
+          label: "What does the topography outside of the site look like?",
           options: [
             {
               text: "Flat",
@@ -518,29 +657,6 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
             },
           ],
         } as FormItem<keyof GeneralModule, Topography>,
-        {
-          type: "select",
-          key: "vacantSpaceOutside",
-          label: "Available vacant outside camp spaces",
-          options: [
-            {
-              text: "No Space",
-              value: "no",
-            },
-            {
-              text: "Little Space",
-              value: "little",
-            },
-            {
-              text: "Medium Space",
-              value: "medium",
-            },
-            {
-              text: "Lots of Space",
-              value: "lots",
-            },
-          ],
-        } as FormItem<keyof GeneralModule, vacantSpaceOutside>,
       ],
       [
         {
@@ -554,6 +670,23 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
           key: "woodDensity",
           label: "Plantations biomass growth per hectare per year",
           unit: "kg/ha",
+        },
+      ],
+    ];
+  }
+
+  get populationItems(): FormItem<keyof GeneralModule>[][] {
+    return [
+      [
+        {
+          type: "number",
+          key: "totalPopulation",
+          label: "Total population of the site",
+        },
+        {
+          type: "number",
+          key: "familiesCount",
+          label: "How many families are in the site?",
         },
       ],
     ];
