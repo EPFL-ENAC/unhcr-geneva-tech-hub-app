@@ -184,6 +184,7 @@ export default class EnergyResult extends Vue {
         text: "Proportion",
         key: "proportion",
         unit: "%",
+        decimal: 2,
       },
       {
         text: "Households",
@@ -281,6 +282,7 @@ export default class EnergyResult extends Vue {
     ).map((cooking) => ({
       text: `${cooking.stove.name} - ${cooking.fuel.name}`,
       key: cooking.stove._id,
+      decimal: 2,
     }));
     return [...results, ...stoves];
   }
@@ -439,6 +441,8 @@ export default class EnergyResult extends Vue {
         newSite.yearCount = index;
         newSite.populationCount =
           oldSite.populationCount * scenario.demographicGrowth;
+        newSite.householdsCount =
+          oldSite.householdsCount * scenario.demographicGrowth;
         newSite.proportions = this.updateProportions(oldSite);
         newSite = actions
           .filter((action) => action.isActive(year))
@@ -470,7 +474,7 @@ export default class EnergyResult extends Vue {
   }
 
   updateProportions(site: Site): Record<SocioEconomicCategory, number> {
-    const precision = 2;
+    const precision = 8;
     const proportions = cloneDeep(site.proportions);
     for (let index = 0; index < socioEconomicCategories.length - 1; index++) {
       const currentCat = socioEconomicCategories[index];
