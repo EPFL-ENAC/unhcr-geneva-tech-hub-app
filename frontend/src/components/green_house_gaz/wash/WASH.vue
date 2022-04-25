@@ -291,11 +291,14 @@ export default class WASH extends Vue {
     // ABSOLUTE (TR_NUM_B - TR_NUM_D) / TR_NUM_B
     // res.TR_NUM_DIFF = endlineRes.TR_NUM - baselineRes.TR_NUM;
     res.TR_NUM_DIFF =
-      Math.abs(baselineRes.TR_NUM - endlineRes.TR_NUM) / baselineRes.TR_NUM;
+      (Math.abs(baselineRes.TR_NUM - endlineRes.TR_NUM) / baselineRes.TR_NUM) *
+      100;
     // ABSOLUTE (TR_DIST_B - TR_DIST_D) / TR_DIST_B
     // res.TR_DIST_DIFF = endlineRes.TR_DIST - baselineRes.TR_DIST;
     res.TR_DIST_DIFF =
-      Math.abs(baselineRes.TR_DIST - endlineRes.TR_DIST) / baselineRes.TR_DIST;
+      (Math.abs(baselineRes.TR_DIST - endlineRes.TR_DIST) /
+        baselineRes.TR_DIST) *
+      100;
     res.CO2_WSH_TRB_DIFF = endlineRes.CO2_WSH_TRB - baselineRes.CO2_WSH_TRB;
     res.CO2_WSH_TRB_PER =
       ((baselineRes.CO2_WSH_TRB - endlineRes.CO2_WSH_TRB) /
