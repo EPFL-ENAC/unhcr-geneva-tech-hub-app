@@ -2,7 +2,6 @@
   <v-row>
     <v-col>
       <v-card v-if="siteResults" flat>
-        <v-card-title>Household Cooking</v-card-title>
         <v-card-text>
           <v-row>
             <v-col cols="4">
@@ -96,6 +95,11 @@
             </v-col>
           </v-row>
           <v-row>
+            <v-col class="col-auto">
+              <energy-legend></energy-legend>
+            </v-col>
+          </v-row>
+          <v-row>
             <v-col>
               <v-expansion-panels>
                 <v-expansion-panel>
@@ -178,6 +182,7 @@ import EnergyChart, {
   ChartItemType,
 } from "@/components/energy/EnergyChart.vue";
 import EnergyKeyIndicator from "@/components/energy/EnergyKeyIndicator.vue";
+import EnergyLegend from "@/components/energy/EnergyLegend.vue";
 import {
   CookingFuel,
   CookingStove,
@@ -200,16 +205,10 @@ import { mapState } from "vuex";
   components: {
     EnergyChart,
     EnergyKeyIndicator,
+    EnergyLegend,
   },
   computed: {
     ...mapState("energy", ["cookingFuels"]),
-  },
-  filters: {
-    formatNumber(value: number, decimal = 0): string {
-      return value.toLocaleString(undefined, {
-        maximumFractionDigits: decimal,
-      });
-    },
   },
 })
 export default class EnergyResult extends Vue {
