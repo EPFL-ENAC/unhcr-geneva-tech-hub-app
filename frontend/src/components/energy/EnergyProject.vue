@@ -329,9 +329,13 @@ export default class EnergyProject extends Vue {
     return this.documents.find((doc) => doc._id === this.documentId) ?? null;
   }
 
+  created(): void {
+    this.resetDocument();
+  }
+
   @Watch("savedDocument", { deep: true })
   onSavedDocumentUpdated(): void {
-    this.document = this.savedDocument ? cloneDeep(this.savedDocument) : null;
+    this.resetDocument();
   }
 
   @Watch("modules", { deep: true })
@@ -339,6 +343,10 @@ export default class EnergyProject extends Vue {
     if (this.document && !isEqual(this.savedDocument, this.document)) {
       this.updateDocument(this.document);
     }
+  }
+
+  resetDocument(): void {
+    this.document = this.savedDocument ? cloneDeep(this.savedDocument) : null;
   }
 
   changeDocument(): void {
@@ -355,9 +363,7 @@ export default class EnergyProject extends Vue {
       })
       .catch((reason) => {
         console.error(reason);
-        this.document = this.savedDocument
-          ? cloneDeep(this.savedDocument)
-          : null;
+        this.resetDocument();
       });
   }
 }

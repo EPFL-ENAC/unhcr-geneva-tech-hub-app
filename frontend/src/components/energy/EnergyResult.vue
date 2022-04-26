@@ -7,6 +7,18 @@
           <v-row>
             <v-col cols="4">
               <h2>Energy</h2>
+              <energy-key-indicator
+                name="Total Energy"
+                unit="MJ/household"
+                :baseValue="baselineResult.energy"
+                :value="globalResult.energy"
+              ></energy-key-indicator>
+              <energy-key-indicator
+                name="Global Efficiency"
+                unit="%"
+                :baseValue="baselineResult.energyEfficiency"
+                :value="globalResult.energyEfficiency"
+              ></energy-key-indicator>
               <energy-chart
                 title="Energy consumption [MJ]"
                 :years="years"
@@ -18,6 +30,12 @@
                 :items="energyEfficiency"
               ></energy-chart>
               <h3>Requirement of fuelwood and charcoal</h3>
+              <energy-key-indicator
+                name="Maximum annual wood equivalent area"
+                unit="ha"
+                :baseValue="baselineResult.woodArea"
+                :value="globalResult.woodArea"
+              ></energy-key-indicator>
               <energy-chart
                 title="Equivalent forested area [ha]"
                 :years="years"
@@ -27,6 +45,12 @@
             <v-divider vertical></v-divider>
             <v-col cols="4">
               <h2>Emissions</h2>
+              <energy-key-indicator
+                name="CO2 Emission"
+                unit="kg/household"
+                :baseValue="baselineResult.emissionCo2"
+                :value="globalResult.emissionCo2"
+              ></energy-key-indicator>
               <energy-chart
                 title="CO2 [kg]"
                 :years="years"
@@ -46,11 +70,24 @@
             <v-divider vertical></v-divider>
             <v-col cols="4">
               <h2>Economy</h2>
+              <energy-key-indicator
+                name="Sum Discounted Cost"
+                unit="$"
+                :baseValue="baselineResult.discountedCost"
+                :value="globalResult.discountedCost"
+              ></energy-key-indicator>
               <energy-chart
                 title="Income/Cost [$]"
                 :years="years"
                 :items="income"
               ></energy-chart>
+              <energy-key-indicator
+                name="Affordability"
+                unit="%"
+                :baseValue="baselineResult.affordability"
+                :value="globalResult.affordability"
+                greater-better
+              ></energy-key-indicator>
               <energy-chart
                 title="Affordability [%]"
                 :years="years"
@@ -140,6 +177,7 @@ import EnergyChart, {
   ChartItem,
   ChartItemType,
 } from "@/components/energy/EnergyChart.vue";
+import EnergyKeyIndicator from "@/components/energy/EnergyKeyIndicator.vue";
 import {
   CookingFuel,
   CookingStove,
@@ -161,6 +199,7 @@ import { mapState } from "vuex";
 @Component({
   components: {
     EnergyChart,
+    EnergyKeyIndicator,
   },
   computed: {
     ...mapState("energy", ["cookingFuels"]),
@@ -315,7 +354,10 @@ export default class EnergyResult extends Vue {
 
   get affordability(): ChartItem[] {
     return [
-      this.getTotalChartItem("line", "costAffordability", { precision: 4 }),
+      ...this.getDetailChartItems("line", "costAffordability", {
+        precision: 2,
+      }),
+      this.getTotalChartItem("line", "costAffordability", { precision: 2 }),
     ];
   }
 
@@ -345,7 +387,115 @@ export default class EnergyResult extends Vue {
     return this.getDetailChartItems("bar", "emissionPm");
   }
 
-  get sites(): Site[] {
+  get siteResults(): SiteResult[] {
+    const actions: Action[] = (
+      this.modules.intervention?.interventions.filter(
+        (intervention) => intervention.selected
+      ) ?? []
+    ).map((intervention) => {
+      switch (intervention.type) {
+        case "cooking-technology":
+          return new CookingTechnologyAction(intervention);
+      }
+    });
+    return this.getSites(actions).map((site) => this.computeSite(site));
+  }
+
+  get baselineResults(): SiteResult[] {
+    return this.getSites([]).map((site) => this.computeSite(site));
+  }
+
+  get globalResult(): GlobalResult {
+    return this.getGlobalResult(this.siteResults);
+  }
+
+  get baselineResult(): GlobalResult {
+    return this.getGlobalResult(this.baselineResults);
+  }
+
+  getGlobalResult(results: SiteResult[]): GlobalResult {
+    const finalEnergy = chain(results)
+      .sumBy((r) => r.categoryTotal.finalEnergy)
+      .value();
+    const households = chain(results)
+      .sumBy((r) => r.categoryTotal.householdCount)
+      .value();
+    const usefulEnergy = chain(results)
+      .sumBy((r) => r.categoryTotal.usefulEnergy)
+      .value();
+    const emissionCo2 = chain(results)
+      .sumBy((r) => r.categoryTotal.emissionCo2)
+      .value();
+    const maxWoodArea = chain(results)
+      .map((r) => r.categoryTotal.woodArea)
+      .max()
+      .value();
+    const discountedCost = chain(results)
+      .sumBy((r) => r.categoryTotal.discountedCost)
+      .value();
+    const totalCost = chain(results)
+      .sumBy((r) => r.categoryTotal.totalCost)
+      .value();
+    const income = chain(results)
+      .sumBy((r) => r.categoryTotal.income)
+      .value();
+    return {
+      energy: finalEnergy / households,
+      energyEfficiency: (usefulEnergy / finalEnergy) * 100,
+      emissionCo2: emissionCo2 / households,
+      woodArea: maxWoodArea,
+      discountedCost,
+      affordability: (totalCost / income) * 100,
+    };
+  }
+
+  private getDetailChartItems(
+    type: ChartItemType,
+    key: keyof CategoryResult,
+    option?: {
+      prefix?: string;
+      precision?: number;
+      ratio?: number;
+    }
+  ): ChartItem[] {
+    return socioEconomicCategories.map((cat) => {
+      const name = this.$t(`energy.${cat}`).toString();
+      return {
+        type: type,
+        name: option?.prefix ? `${option?.prefix} ${name}` : name,
+        data: this.siteResults.map((result) =>
+          round(
+            (option?.ratio ?? 1) * result.categories[cat][key],
+            option?.precision
+          )
+        ),
+        color: getColor(cat),
+      };
+    });
+  }
+
+  private getTotalChartItem(
+    type: ChartItemType,
+    key: keyof CategoryResult,
+    option?: {
+      precision?: number;
+      ratio?: number;
+    }
+  ): ChartItem {
+    return {
+      type: type,
+      name: "Total",
+      data: this.siteResults.map((result) =>
+        round(
+          (option?.ratio ?? 1) * result.categoryTotal[key],
+          option?.precision
+        )
+      ),
+      color: cccmColors.primary,
+    };
+  }
+
+  getSites(actions: Action[]): Site[] {
     const general = this.modules.general;
     const householdCooking = this.modules.householdCooking;
     const scenario = this.modules.scenario?.scenarios.find(
@@ -393,16 +543,6 @@ export default class EnergyResult extends Vue {
         ) as Record<SocioEconomicCategory, CategoryInput>,
       };
       const sites: Site[] = [firstSite];
-      const actions: Action[] = (
-        this.modules.intervention?.interventions.filter(
-          (intervention) => intervention.selected
-        ) ?? []
-      ).map((intervention) => {
-        switch (intervention.type) {
-          case "cooking-technology":
-            return new CookingTechnologyAction(intervention);
-        }
-      });
       for (let index = 1; index < this.years.length; index++) {
         const year = this.years[index];
         const oldSite = sites[index - 1];
@@ -422,56 +562,6 @@ export default class EnergyResult extends Vue {
     } else {
       return [];
     }
-  }
-
-  get siteResults(): SiteResult[] {
-    return this.sites.map((site) => this.computeSite(site));
-  }
-
-  private getDetailChartItems(
-    type: ChartItemType,
-    key: keyof CategoryResult,
-    option?: {
-      prefix?: string;
-      precision?: number;
-      ratio?: number;
-    }
-  ): ChartItem[] {
-    return socioEconomicCategories.map((cat) => {
-      const name = this.$t(`energy.${cat}`).toString();
-      return {
-        type: type,
-        name: option?.prefix ? `${option?.prefix} ${name}` : name,
-        data: this.siteResults.map((result) =>
-          round(
-            (option?.ratio ?? 1) * result.categories[cat][key],
-            option?.precision
-          )
-        ),
-        color: getColor(cat),
-      };
-    });
-  }
-
-  private getTotalChartItem(
-    type: ChartItemType,
-    key: keyof CategoryResult,
-    option?: {
-      precision?: number;
-      ratio?: number;
-    }
-  ): ChartItem {
-    return {
-      type: type,
-      name: "Total",
-      data: this.siteResults.map((result) =>
-        round(
-          (option?.ratio ?? 1) * result.categoryTotal[key],
-          option?.precision
-        )
-      ),
-      color: cccmColors.primary,
-    };
   }
 
   updateProportions(site: Site): Record<SocioEconomicCategory, number> {
@@ -799,5 +889,14 @@ interface SiteResult {
   householdAverage: HouseholdResult;
   categories: Record<SocioEconomicCategory, CategoryResult>;
   categoryTotal: CategoryResult;
+}
+
+interface GlobalResult {
+  energy: number;
+  energyEfficiency: number;
+  emissionCo2: number;
+  woodArea: number;
+  discountedCost: number;
+  affordability: number;
 }
 </script>
