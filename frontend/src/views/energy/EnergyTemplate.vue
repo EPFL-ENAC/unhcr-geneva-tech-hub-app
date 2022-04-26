@@ -2,12 +2,14 @@
   <energy-project
     id-name="Templates"
     :database="templatesDatabase"
+    :documents="templates"
     router-prefix="energyTemplate"
   ></energy-project>
 </template>
 
 <script lang="ts">
 import EnergyProject from "@/components/energy/EnergyProject.vue";
+import { ExistingDocument } from "@/models/couchdbModel";
 import { ProjectDocument } from "@/models/energyModel";
 import { SyncDatabase } from "@/utils/couchdb";
 import "vue-class-component/hooks";
@@ -19,10 +21,11 @@ import { mapState } from "vuex";
     EnergyProject,
   },
   computed: {
-    ...mapState("energy", ["templatesDatabase"]),
+    ...mapState("energy", ["templatesDatabase", "templates"]),
   },
 })
 export default class EnergyTemplate extends Vue {
   templatesDatabase!: SyncDatabase<ProjectDocument>;
+  templates!: ExistingDocument<ProjectDocument>[];
 }
 </script>
