@@ -174,7 +174,7 @@ export default class FormItemComponent extends Vue {
   }
 
   get actualPrecision(): number {
-    return this.precision ?? 4;
+    return this.precision ?? 8;
   }
 
   get numberModel(): number {

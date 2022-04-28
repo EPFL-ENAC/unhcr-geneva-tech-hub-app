@@ -196,7 +196,7 @@ import {
 } from "@/models/energyModel";
 import { cccmColors } from "@/plugins/vuetify";
 import { applyMap, applyReduce, getColor } from "@/utils/energy";
-import { chain, clamp, cloneDeep, range, round, sortBy } from "lodash";
+import { chain, clamp, cloneDeep, range, round, sortBy, sumBy } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapState } from "vuex";
@@ -551,7 +551,7 @@ export default class EnergyResult extends Vue {
           oldSite.populationCount * scenario.demographicGrowth;
         newSite.householdsCount =
           oldSite.householdsCount * scenario.demographicGrowth;
-        newSite.proportions = this.updateProportions(oldSite);
+        newSite.proportions = this.getNewProportions(oldSite);
         newSite = actions
           .filter((action) => action.isActive(year))
           .reduce((site, action) => action.apply(site), newSite);
@@ -563,45 +563,39 @@ export default class EnergyResult extends Vue {
     }
   }
 
-  updateProportions(site: Site): Record<SocioEconomicCategory, number> {
-    const precision = 8;
+  getNewProportions(site: Site): Record<SocioEconomicCategory, number> {
     const proportions = cloneDeep(site.proportions);
+    const incomes = Object.fromEntries(
+      socioEconomicCategories.map((cat) => [
+        cat,
+        site.categories[cat].general.annualIncome,
+      ])
+    ) as Record<SocioEconomicCategory, number>;
+    const goalTotalIncome =
+      sumBy(socioEconomicCategories, (cat) => proportions[cat] * incomes[cat]) *
+      site.incomeRate;
     for (let index = 0; index < socioEconomicCategories.length - 1; index++) {
+      const totalIncome = sumBy(
+        socioEconomicCategories,
+        (cat) => proportions[cat] * incomes[cat]
+      );
+      const rate = goalTotalIncome / totalIncome;
       const currentCat = socioEconomicCategories[index];
       const nextCat = socioEconomicCategories[index + 1];
-      const idealDelta = round(
-        (proportions[currentCat] *
-          site.categories[currentCat].general.annualIncome *
-          (1 - site.incomeRate) -
-          proportions[nextCat] *
-            site.categories[nextCat].general.annualIncome *
-            (site.incomeRate - 1) +
-          chain(socioEconomicCategories)
-            .filter((cat) => cat !== currentCat && cat !== nextCat)
-            .map(
-              (cat) =>
-                proportions[cat] * site.categories[cat].general.annualIncome
-            )
-            .sum()
-            .value() *
-            (1 - site.incomeRate)) /
-          (site.categories[currentCat].general.annualIncome -
-            site.categories[nextCat].general.annualIncome),
-        precision
-      );
+      const currentProduct = proportions[currentCat] * incomes[currentCat];
+      const nextProduct = proportions[nextCat] * incomes[nextCat];
+      const idealDelta =
+        (currentProduct * (1 - rate) -
+          nextProduct * (rate - 1) +
+          (totalIncome - (currentProduct + nextProduct)) * (1 - rate)) /
+        (incomes[currentCat] - incomes[nextCat]);
       const effectiveDelta: number = clamp(
         idealDelta,
         0,
         proportions[currentCat]
       );
-      proportions[currentCat] = round(
-        proportions[currentCat] - effectiveDelta,
-        precision
-      );
-      proportions[nextCat] = round(
-        proportions[nextCat] + effectiveDelta,
-        precision
-      );
+      proportions[currentCat] -= effectiveDelta;
+      proportions[nextCat] += effectiveDelta;
       if (proportions[currentCat] > 0) {
         break;
       }
