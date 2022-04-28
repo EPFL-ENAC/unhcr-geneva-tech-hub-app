@@ -510,6 +510,7 @@ export default class EnergyResult extends Vue {
 
         incomeRate: scenario.incomeRate,
         discountRate: scenario.discountRate,
+        fuelPriceRate: scenario.fuelPriceRate,
 
         proportions: Object.fromEntries<number>(
           socioEconomicCategories.map((cat) => [
@@ -683,7 +684,10 @@ export default class EnergyResult extends Vue {
         ((site.discountRate - 1) /
           (1 - Math.pow(site.discountRate, -technology.stove.lifetime))) *
         technology.stove.investmentCost;
-      const variableCost = fuelWeight * technology.fuel.price;
+      const variableCost =
+        fuelWeight *
+        technology.fuel.price *
+        Math.pow(site.fuelPriceRate, site.yearCount);
       // CCI
       const totalCost = fixedCost + variableCost;
       const result = applyMap(
@@ -776,6 +780,7 @@ interface Site {
 
   incomeRate: number;
   discountRate: number;
+  fuelPriceRate: number;
 
   proportions: Record<SocioEconomicCategory, number>;
   categories: Record<SocioEconomicCategory, CategoryInput>;

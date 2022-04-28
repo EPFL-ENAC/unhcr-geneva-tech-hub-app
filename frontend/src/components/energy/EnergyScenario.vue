@@ -94,7 +94,13 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
     {
       type: "number",
       key: "demographicGrowth",
-      label: "Demographic Growth",
+      label: "Demographic Increase Rate",
+      subtype: "rate",
+    },
+    {
+      type: "number",
+      key: "fuelPriceRate",
+      label: "Fuel Price Increase Rate",
       subtype: "rate",
     },
   ];
@@ -110,6 +116,7 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
         discountRate: 1,
         incomeRate: 1,
         demographicGrowth: 1,
+        fuelPriceRate: 1,
       },
       {
         id: "optimistic",
@@ -119,6 +126,7 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
         discountRate: 1,
         incomeRate: 1,
         demographicGrowth: 1,
+        fuelPriceRate: 1,
       },
       {
         id: "pessimistic",
@@ -128,6 +136,7 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
         discountRate: 1,
         incomeRate: 1,
         demographicGrowth: 1,
+        fuelPriceRate: 1,
       },
     ],
   };

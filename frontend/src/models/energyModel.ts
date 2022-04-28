@@ -139,6 +139,7 @@ export interface Scenario {
    * a1
    */
   demographicGrowth: number;
+  fuelPriceRate: number;
 }
 export type ScenarioTrend = "stable" | "increase" | "decrease";
 
