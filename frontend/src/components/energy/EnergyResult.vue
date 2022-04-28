@@ -610,8 +610,8 @@ export default class EnergyResult extends Vue {
       HouseholdResult,
       CategoryResult
     ][] = socioEconomicCategories.map((cat) => {
-      const householdResult = this.computeHousehold(site, site.categories[cat]);
       const proportion = site.proportions[cat];
+      const householdResult = this.computeHousehold(site, site.categories[cat]);
       const proportionalHousehold = applyMap(
         householdResult,
         (value) => value * proportion
@@ -680,8 +680,8 @@ export default class EnergyResult extends Vue {
       const emissionCo = usefulEnergy * technology.stove.emissionFactorCo;
       const emissionPm = usefulEnergy * technology.stove.emissionFactorPm;
       const fixedCost =
-        (site.discountRate /
-          Math.pow(site.discountRate, -technology.stove.lifetime)) *
+        ((site.discountRate - 1) /
+          (1 - Math.pow(site.discountRate, -technology.stove.lifetime))) *
         technology.stove.investmentCost;
       const variableCost = fuelWeight * technology.fuel.price;
       // CCI
