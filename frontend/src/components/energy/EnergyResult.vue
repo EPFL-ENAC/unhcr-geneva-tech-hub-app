@@ -61,7 +61,7 @@
                 :items="emissionCo"
               ></energy-chart>
               <energy-chart
-                title="PM [g]"
+                title="PM [mg]"
                 :years="years"
                 :items="emissionPm"
               ></energy-chart>
@@ -266,7 +266,7 @@ export default class EnergyResult extends Vue {
       {
         text: "Particles Emission",
         key: "emissionPm",
-        unit: "g",
+        unit: "mg",
       },
       {
         text: "Income",
