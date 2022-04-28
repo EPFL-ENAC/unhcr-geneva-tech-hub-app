@@ -6,7 +6,7 @@ import {
 } from "@/models/energyModel";
 import { DatabaseName, SyncDatabase } from "@/utils/couchdb";
 import { sortBy } from "lodash";
-import { Module } from "vuex";
+import { ActionContext, Module } from "vuex";
 import { RootState } from ".";
 
 interface State {
@@ -38,6 +38,18 @@ export enum ActionTypes {
   UpdateCookingStoves = "UpdateCookingStoves",
   UpdateSites = "UpdateSites",
   UpdateTemplates = "UpdateTemplates",
+}
+
+function createDatabase<T>(
+  context: ActionContext<State, RootState>,
+  databaseName: DatabaseName,
+  setDatabaseMutation: MutationTypes,
+  updateDocumentsAction: ActionTypes
+): void {
+  const database = new SyncDatabase<T>(databaseName);
+  database.onChange(() => context.dispatch(updateDocumentsAction));
+  context.commit(setDatabaseMutation, database);
+  context.dispatch(updateDocumentsAction);
 }
 
 const energyModule: Module<State, RootState> = {
@@ -94,45 +106,33 @@ const energyModule: Module<State, RootState> = {
   },
   actions: {
     [ActionTypes.Created](context) {
-      const cookingStovesDatabase = new SyncDatabase<CookingStove>(
-        DatabaseName.EnergyCookingStoves
-      );
-      cookingStovesDatabase.onChange(() =>
-        context.dispatch(ActionTypes.UpdateCookingStoves)
-      );
-      context.commit(
+      createDatabase(
+        context,
+        DatabaseName.EnergyCookingStoves,
         MutationTypes.SetCookingStovesDatabase,
-        cookingStovesDatabase
+        ActionTypes.UpdateCookingStoves
       );
-      context.dispatch(ActionTypes.UpdateCookingStoves);
 
-      const cookingFuelsDatabase = new SyncDatabase<CookingFuel>(
-        DatabaseName.EnergyCookingFuels
-      );
-      cookingFuelsDatabase.onChange(() =>
-        context.dispatch(ActionTypes.UpdateCookingFuels)
-      );
-      context.commit(
+      createDatabase(
+        context,
+        DatabaseName.EnergyCookingFuels,
         MutationTypes.SetCookingFuelsDatabase,
-        cookingFuelsDatabase
+        ActionTypes.UpdateCookingFuels
       );
-      context.dispatch(ActionTypes.UpdateCookingFuels);
 
-      const sitesDatabase = new SyncDatabase<ProjectDocument>(
-        DatabaseName.EnergySites
+      createDatabase(
+        context,
+        DatabaseName.EnergySites,
+        MutationTypes.SetSitesDatabase,
+        ActionTypes.UpdateSites
       );
-      sitesDatabase.onChange(() => context.dispatch(ActionTypes.UpdateSites));
-      context.commit(MutationTypes.SetSitesDatabase, sitesDatabase);
-      context.dispatch(ActionTypes.UpdateSites);
 
-      const templatesDatabase = new SyncDatabase<ProjectDocument>(
-        DatabaseName.EnergyTemplates
+      createDatabase(
+        context,
+        DatabaseName.EnergyTemplates,
+        MutationTypes.SetTemplatesDatabase,
+        ActionTypes.UpdateTemplates
       );
-      templatesDatabase.onChange(() =>
-        context.dispatch(ActionTypes.UpdateTemplates)
-      );
-      context.commit(MutationTypes.SetTemplatesDatabase, templatesDatabase);
-      context.dispatch(ActionTypes.UpdateTemplates);
     },
     [ActionTypes.Destroyed](context) {
       context.state.cookingFuelsDatabase?.cancel();

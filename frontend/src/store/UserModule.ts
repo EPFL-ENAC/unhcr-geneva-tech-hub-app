@@ -1,6 +1,7 @@
 import {
   getSession as getSessionTool,
   login as loginTool,
+  loginToken as loginTokenTool,
   logout as logoutTool,
 } from "@/utils/couchdb";
 import {
@@ -22,9 +23,10 @@ enum Roles {
 }
 
 export interface CouchUser {
-  name: string;
-  roles: Roles[];
+  name?: string;
+  roles?: Roles[];
   loaded: boolean;
+  token?: string;
 }
 export interface UserState {
   user: CouchUser;
@@ -38,7 +40,7 @@ export interface UserCouchCredentials {
 
 function generateEmptyUser(): CouchUser {
   // return { name: "", roles: [] };
-  return { loaded: false } as CouchUser;
+  return { loaded: false };
 }
 /** Default Configure state value */
 function generateState(): UserState {
@@ -55,10 +57,18 @@ const getters: GetterTree<UserState, RootState> = {
 
 /** Mutations */
 const mutations: MutationTree<UserState> = {
-  SET_USER(state, value) {
-    const name = value.name ?? "";
-    const roles = value.roles ?? [];
-    state.user = { name, roles, loaded: false };
+  SET_USER(
+    state,
+    value: {
+      name?: string;
+      roles?: string[];
+    }
+  ) {
+    state.user = {
+      name: value.name ?? "",
+      roles: value.roles ? (value.roles as unknown as Roles[]) : [],
+      loaded: false,
+    };
   },
   SET_USER_LOADING(state) {
     state.userLoading = true;
@@ -80,6 +90,20 @@ const actions: ActionTree<UserState, RootState> = {
     return loginTool(username, password)
       .then((axiosResponse) => {
         context.commit("SET_USER", axiosResponse.data);
+        return axiosResponse;
+      })
+      .catch((error) => {
+        throw error;
+      })
+      .finally(() => {
+        context.commit("UNSET_USER_LOADING");
+      });
+  },
+  loginToken: (context: ActionContext<UserState, RootState>, token: string) => {
+    context.commit("SET_USER_LOADING");
+    return loginTokenTool(token)
+      .then((axiosResponse) => {
+        context.commit("SET_USER", axiosResponse.data.userCtx);
         return axiosResponse;
       })
       .catch((error) => {

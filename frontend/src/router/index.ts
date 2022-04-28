@@ -1,10 +1,10 @@
 import energyRouter from "@/router/energyRouter";
 import ghgRouter from "@/router/ghgRouter";
 import shelterRouter from "@/router/shelterRouter";
+import Apps from "@/views/AppListView.vue";
+import Login from "@/views/LoginView.vue";
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import Apps from "../views/AppListView.vue";
-import Login from "../views/LoginView.vue";
 
 Vue.use(VueRouter);
 
@@ -22,6 +22,10 @@ const routes: Array<RouteConfig> = [
     components: {
       Login,
     },
+  },
+  {
+    path: "/auth",
+    redirect: "/login",
   },
   {
     path: "/apps",

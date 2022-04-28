@@ -7,7 +7,7 @@ run-frontend:
 	$(MAKE) -C frontend run
 
 run-database:
-	docker-compose up -d couchdb
+	docker-compose up --build -d couchdb
 
 setup-database:
 	docker-compose up --build --force-recreate couchdb-setup

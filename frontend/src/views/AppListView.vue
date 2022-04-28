@@ -9,15 +9,15 @@
 import AppList from "@/components/AppList.vue";
 import AppLogo from "@/components/commons/AppLogo.vue";
 import Vue from "vue";
+import Component from "vue-class-component";
 
-export default Vue.extend({
-  name: "AppListView",
-
+@Component({
   components: {
     AppList,
     AppLogo,
   },
-});
+})
+export default class AppListView extends Vue {}
 </script>
 
 <style lang="scss" scoped>

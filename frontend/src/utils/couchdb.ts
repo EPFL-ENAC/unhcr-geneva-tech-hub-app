@@ -1,4 +1,5 @@
 import { ExistingDocument } from "@/models/couchdbModel";
+import { SessionStorageKey } from "@/utils/sessionStorage";
 import axios, { AxiosPromise } from "axios";
 import PouchDB from "pouchdb";
 import qs from "qs";
@@ -45,6 +46,19 @@ export function login(username: string, password: string): AxiosPromise {
   });
 }
 
+export function loginToken(token: string): AxiosPromise {
+  return axios({
+    method: "get",
+    url: sessionUrl,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    sessionStorage.setItem(SessionStorageKey.Token, token);
+    return response;
+  });
+}
+
 export function logout(): AxiosPromise {
   return axios({
     method: "delete",
@@ -78,8 +92,19 @@ export class SyncDatabase<T> {
   private onChangeListener: PouchDB.Core.Changes<T> | undefined;
 
   constructor(name: string) {
+    const token = sessionStorage.getItem(SessionStorageKey.Token);
     const localDB = new PouchDB<T>(name);
-    const remoteDB = new PouchDB<T>(getUrl(name));
+    const remoteDB = new PouchDB<T>(getUrl(name), {
+      fetch: token
+        ? (url, opts) => {
+            (opts?.headers as Headers | undefined)?.set(
+              "Authorization",
+              `Bearer ${token}`
+            );
+            return PouchDB.fetch(url, opts);
+          }
+        : undefined,
+    });
     this.sync = localDB.sync(
       remoteDB,
       {
