@@ -19,14 +19,10 @@
                 :value="globalResult.energyEfficiency"
               ></energy-key-indicator>
               <energy-chart
-                title="Energy consumption [MJ]"
+                title="Energy"
                 :years="years"
                 :items="energy"
-              ></energy-chart>
-              <energy-chart
-                title="Energy efficiency [%]"
-                :years="years"
-                :items="energyEfficiency"
+                :y-labels="['Emission [MJ]', 'Efficiency [%]']"
               ></energy-chart>
               <h3>Requirement of fuelwood and charcoal</h3>
               <energy-key-indicator
@@ -362,7 +358,16 @@ export default class EnergyResult extends Vue {
   }
 
   get energy(): ChartItem[] {
-    return this.getDetailChartItems("bar", "finalEnergy");
+    return [
+      ...this.getDetailChartItems("bar", "finalEnergy", {
+        prefix: "Consumption",
+      }),
+      this.getTotalChartItem("line", "energyEfficiency", {
+        name: "Efficiency",
+        precision: 4,
+        yAxisIndex: 1,
+      }),
+    ];
   }
 
   get energyEfficiency(): ChartItem[] {
@@ -478,13 +483,15 @@ export default class EnergyResult extends Vue {
     type: ChartItemType,
     key: keyof CategoryResult,
     option?: {
+      name?: string;
       precision?: number;
       ratio?: number;
+      yAxisIndex?: number;
     }
   ): ChartItem {
     return {
       type: type,
-      name: "Total",
+      name: option?.name ?? "Total",
       data: this.siteResults.map((result) =>
         round(
           (option?.ratio ?? 1) * result.categoryTotal[key],
@@ -492,6 +499,7 @@ export default class EnergyResult extends Vue {
         )
       ),
       color: cccmColors.primary,
+      yAxisIndex: option?.yAxisIndex,
     };
   }
 

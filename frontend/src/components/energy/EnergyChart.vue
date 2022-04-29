@@ -13,7 +13,11 @@ import {
 } from "echarts/components";
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
-import { EChartsOption } from "echarts/types/dist/shared";
+import {
+  BarSeriesOption,
+  EChartsOption,
+  LineSeriesOption,
+} from "echarts/types/dist/shared";
 import "vue-class-component/hooks";
 import VChart from "vue-echarts";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -44,6 +48,8 @@ export default class EnergyChart extends Vue {
   readonly years!: number[];
   @Prop({ type: String, default: "Year" })
   readonly yearLabel!: string;
+  @Prop({ type: Array as () => string[] })
+  readonly yLabels: string[] | undefined;
 
   get option(): EChartsOption {
     return {
@@ -77,17 +83,23 @@ export default class EnergyChart extends Vue {
         nameLocation: "middle",
         nameGap: 24,
       },
-      yAxis: {
+      yAxis: this.yLabels?.map((label) => ({
+        type: "value",
+        scale: true,
+        name: label,
+      })) ?? {
         type: "value",
         scale: true,
       },
       series: this.items.flatMap((item) => {
-        return {
+        const option: BarSeriesOption | LineSeriesOption = {
           name: item.name,
           stack: item.type === "bar" ? "total" : undefined,
           type: item.type,
+          yAxisIndex: item.yAxisIndex,
           data: item.data,
         };
+        return option;
       }),
       color: this.items.flatMap((item) => item.color),
     };
@@ -99,6 +111,7 @@ export interface ChartItem {
   name: string;
   data: number[];
   color: string;
+  yAxisIndex?: number;
 }
 
 export type ChartItemType = "bar" | "line";
