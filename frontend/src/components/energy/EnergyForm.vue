@@ -10,7 +10,7 @@
     </v-card-text>
     <v-card-actions>
       <v-btn color="primary" :disabled="saveDisabled" @click="save">
-        <v-icon left>mdi-check</v-icon>
+        <v-icon left>mdi-content-save</v-icon>
         Save
       </v-btn>
     </v-card-actions>

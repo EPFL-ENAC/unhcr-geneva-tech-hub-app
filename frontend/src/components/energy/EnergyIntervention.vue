@@ -23,33 +23,31 @@
                 >
                   <v-expansion-panel-header>
                     <template v-slot:default="{ open }">
-                      <v-checkbox
-                        hide-details="auto"
-                        :input-value="open"
-                        :label="interventionItem.name"
-                        readonly
-                      ></v-checkbox>
+                      <v-row>
+                        <v-col class="col-auto">
+                          <v-checkbox
+                            hide-details="auto"
+                            :input-value="open"
+                            :label="interventionItem.name"
+                            readonly
+                          ></v-checkbox>
+                        </v-col>
+                        <v-spacer></v-spacer>
+                        <v-col class="col-auto d-flex align-center">
+                          <v-btn icon @click="deleteDuffusion(index)">
+                            <v-icon>mdi-close</v-icon>
+                          </v-btn>
+                        </v-col>
+                      </v-row>
                     </template>
                   </v-expansion-panel-header>
                   <v-expansion-panel-content>
-                    <v-row>
-                      <v-col>
-                        <form-item-component
-                          v-for="item in formItems"
-                          :key="item.key"
-                          v-model="interventionItem[item.key]"
-                          v-bind="item"
-                        ></form-item-component>
-                      </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col>
-                        <v-btn @click="deleteDuffusion(index)">
-                          <v-icon left>mdi-delete</v-icon>
-                          Delete
-                        </v-btn>
-                      </v-col>
-                    </v-row>
+                    <form-item-component
+                      v-for="item in formItems"
+                      :key="item.key"
+                      v-model="interventionItem[item.key]"
+                      v-bind="item"
+                    ></form-item-component>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
@@ -61,10 +59,39 @@
             <v-card-title>
               Energy efficiency improvement
               <v-spacer></v-spacer>
-              <v-btn color="primary" icon disabled>
+              <v-btn color="primary" icon @click="addEfficiency">
                 <v-icon large>mdi-plus-box</v-icon>
               </v-btn>
             </v-card-title>
+            <v-card-text>
+              <v-expansion-panels multiple>
+                <v-expansion-panel
+                  v-for="(interventionItem, index) in efficiencyInterventions"
+                  :key="index"
+                >
+                  <v-expansion-panel-header>
+                    <template v-slot:default="{ open }">
+                      <v-row>
+                        <v-col class="col-auto">
+                          <v-checkbox
+                            hide-details="auto"
+                            :input-value="open"
+                            :label="interventionItem.name"
+                            readonly
+                          ></v-checkbox>
+                        </v-col>
+                        <v-spacer></v-spacer>
+                        <v-col class="col-auto d-flex align-center">
+                          <v-btn icon @click="deleteEfficiency(index)">
+                            <v-icon>mdi-close</v-icon>
+                          </v-btn>
+                        </v-col>
+                      </v-row>
+                    </template>
+                  </v-expansion-panel-header>
+                </v-expansion-panel>
+              </v-expansion-panels>
+            </v-card-text>
           </v-card>
         </v-col>
         <v-col cols="4">
@@ -72,10 +99,39 @@
             <v-card-title>
               Cash-based interventions
               <v-spacer></v-spacer>
-              <v-btn color="primary" icon disabled>
+              <v-btn color="primary" icon @click="addCash">
                 <v-icon large>mdi-plus-box</v-icon>
               </v-btn>
             </v-card-title>
+            <v-card-text>
+              <v-expansion-panels multiple>
+                <v-expansion-panel
+                  v-for="(interventionItem, index) in cashInterventions"
+                  :key="index"
+                >
+                  <v-expansion-panel-header>
+                    <template v-slot:default="{ open }">
+                      <v-row>
+                        <v-col class="col-auto">
+                          <v-checkbox
+                            hide-details="auto"
+                            :input-value="open"
+                            :label="interventionItem.name"
+                            readonly
+                          ></v-checkbox>
+                        </v-col>
+                        <v-spacer></v-spacer>
+                        <v-col class="col-auto d-flex align-center">
+                          <v-btn icon @click="deleteCash(index)">
+                            <v-icon>mdi-close</v-icon>
+                          </v-btn>
+                        </v-col>
+                      </v-row>
+                    </template>
+                  </v-expansion-panel-header>
+                </v-expansion-panel>
+              </v-expansion-panels>
+            </v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -118,6 +174,13 @@ export default class EnergyIntervention extends EnergyFormMixin<InterventionModu
   cookingStoves!: CookingStove[];
 
   module: InterventionModule = this.defaultModule;
+  // TODO remove and group types of intervention
+  efficiencyInterventions: {
+    name: string;
+  }[] = [];
+  cashInterventions: {
+    name: string;
+  }[] = [];
 
   get defaultModule(): InterventionModule {
     const currentYear = getCurrentYear();
@@ -241,6 +304,26 @@ export default class EnergyIntervention extends EnergyFormMixin<InterventionModu
 
   deleteDuffusion(index: number): void {
     this.module.interventions.splice(index, 1);
+  }
+
+  addEfficiency(): void {
+    this.efficiencyInterventions.push({
+      name: "New efficiency improvement",
+    });
+  }
+
+  deleteEfficiency(index: number): void {
+    this.efficiencyInterventions.splice(index, 1);
+  }
+
+  addCash(): void {
+    this.cashInterventions.push({
+      name: "New cash-based intervention",
+    });
+  }
+
+  deleteCash(index: number): void {
+    this.cashInterventions.splice(index, 1);
   }
 }
 </script>
