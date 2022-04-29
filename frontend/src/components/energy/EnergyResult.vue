@@ -95,6 +95,7 @@
             </v-col>
           </v-row>
           <v-row>
+            <v-spacer></v-spacer>
             <v-col class="col-auto">
               <energy-legend></energy-legend>
             </v-col>

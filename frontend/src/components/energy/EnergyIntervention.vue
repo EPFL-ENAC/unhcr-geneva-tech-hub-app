@@ -6,53 +6,77 @@
   >
     <template v-slot>
       <v-row>
-        <v-spacer></v-spacer>
-        <v-col class="col-auto">
-          <v-btn color="primary" @click="addDiffusion">
-            <v-icon left>mdi-plus</v-icon>
-            Add Diffusion Intervention
-          </v-btn>
+        <v-col cols="4">
+          <v-card height="100%">
+            <v-card-title>
+              Efficient and clean technologies diffusion
+              <v-spacer></v-spacer>
+              <v-btn color="primary" icon @click="addDiffusion">
+                <v-icon large>mdi-plus-box</v-icon>
+              </v-btn>
+            </v-card-title>
+            <v-card-text>
+              <v-expansion-panels v-model="selectedIndexes" multiple>
+                <v-expansion-panel
+                  v-for="(interventionItem, index) in module.interventions"
+                  :key="index"
+                >
+                  <v-expansion-panel-header>
+                    <template v-slot:default="{ open }">
+                      <v-checkbox
+                        hide-details="auto"
+                        :input-value="open"
+                        :label="interventionItem.name"
+                        readonly
+                      ></v-checkbox>
+                    </template>
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <v-row>
+                      <v-col>
+                        <form-item-component
+                          v-for="item in formItems"
+                          :key="item.key"
+                          v-model="interventionItem[item.key]"
+                          v-bind="item"
+                        ></form-item-component>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col>
+                        <v-btn @click="deleteDuffusion(index)">
+                          <v-icon left>mdi-delete</v-icon>
+                          Delete
+                        </v-btn>
+                      </v-col>
+                    </v-row>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
+            </v-card-text>
+          </v-card>
         </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-expansion-panels v-model="selectedIndexes" multiple>
-            <v-expansion-panel
-              v-for="(interventionItem, index) in module.interventions"
-              :key="index"
-            >
-              <v-expansion-panel-header>
-                <template v-slot:default="{ open }">
-                  <v-checkbox
-                    hide-details="auto"
-                    :input-value="open"
-                    :label="interventionItem.name"
-                    readonly
-                  ></v-checkbox>
-                </template>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <v-row>
-                  <v-col>
-                    <form-item-component
-                      v-for="item in formItems"
-                      :key="item.key"
-                      v-model="interventionItem[item.key]"
-                      v-bind="item"
-                    ></form-item-component>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-btn @click="deleteDuffusion(index)">
-                      <v-icon left>mdi-delete</v-icon>
-                      Delete
-                    </v-btn>
-                  </v-col>
-                </v-row>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
+        <v-col cols="4">
+          <v-card height="100%">
+            <v-card-title>
+              Energy efficiency improvement
+              <v-spacer></v-spacer>
+              <v-btn color="primary" icon disabled>
+                <v-icon large>mdi-plus-box</v-icon>
+              </v-btn>
+            </v-card-title>
+          </v-card>
+        </v-col>
+        <v-col cols="4">
+          <v-card height="100%">
+            <v-card-title>
+              Cash-based interventions
+              <v-spacer></v-spacer>
+              <v-btn color="primary" icon disabled>
+                <v-icon large>mdi-plus-box</v-icon>
+              </v-btn>
+            </v-card-title>
+          </v-card>
         </v-col>
       </v-row>
     </template>
