@@ -1,5 +1,8 @@
 <template>
   <v-card flat>
+    <v-card-title v-if="$slots.title">
+      <slot name="title"></slot>
+    </v-card-title>
     <v-card-text>
       <v-form ref="form" v-model="formValid" lazy-validation>
         <slot></slot>

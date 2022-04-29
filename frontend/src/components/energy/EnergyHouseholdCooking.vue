@@ -4,7 +4,47 @@
     :initial-module="initialModule"
     @save="save"
   >
+    <template v-slot:title>
+      <span>Cooking Technologies</span>
+      <v-dialog v-model="addDialog" max-width="512px">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            v-bind="attrs"
+            v-on="on"
+            color="primary"
+            :disabled="addSelectItems.length === 0"
+            icon
+          >
+            <v-icon large>mdi-plus-box</v-icon>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title>Add Cooking Technology</v-card-title>
+          <v-card-text>
+            <v-select
+              v-model="addSelectedItem"
+              hide-details="auto"
+              :items="addSelectItems"
+              label="Available technologies"
+            ></v-select>
+          </v-card-text>
+          <v-card-actions class="justify-end">
+            <v-btn
+              :disabled="!addSelectedItem"
+              color="primary"
+              icon
+              @click="addItem(addSelectedItem)"
+            >
+              <v-icon large>mdi-plus-box</v-icon>
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </template>
     <template v-slot>
+      <v-tabs>
+        <v-tab>{{ generalModule.yearStart }}</v-tab>
+      </v-tabs>
       <v-data-table
         :headers="tableHeaders"
         item-key="id"
@@ -13,44 +53,6 @@
         show-expand
         sort-by="index"
       >
-        <template v-slot:top>
-          <v-toolbar dense flat>
-            <v-spacer></v-spacer>
-            <v-dialog v-model="addDialog" max-width="512px">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  v-bind="attrs"
-                  v-on="on"
-                  color="primary"
-                  :disabled="addSelectItems.length === 0"
-                >
-                  <v-icon left>mdi-plus</v-icon>
-                  Add Cooking Technology
-                </v-btn>
-              </template>
-              <v-card>
-                <v-card-text>
-                  <v-select
-                    v-model="addSelectedItem"
-                    hide-details="auto"
-                    :items="addSelectItems"
-                    label="Available technologies"
-                  ></v-select>
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn
-                    :disabled="!addSelectedItem"
-                    color="primary"
-                    @click="addItem(addSelectedItem)"
-                  >
-                    <v-icon left>mdi-plus</v-icon>
-                    Add Cooking Technology
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-toolbar>
-        </template>
         <template v-slot:expanded-item="{ headers, item }">
           <td class="pa-2" :colspan="headers.length">
             <v-simple-table dense>
@@ -110,6 +112,7 @@ import {
   CookingFuel,
   CookingStove,
   CookingStoveId,
+  GeneralModule,
   HouseholdCookingInput,
   HouseholdCookingModule,
   socioEconomicCategories,
@@ -119,7 +122,7 @@ import { getCookingFuel } from "@/utils/energy";
 import { SelectItemObject } from "@/utils/vuetify";
 import { chain, cloneDeep } from "lodash";
 import "vue-class-component/hooks";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";
 import { mapState } from "vuex";
 
@@ -232,6 +235,9 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
       unit: "$/kg",
     },
   ];
+
+  @Prop({ type: Object as () => GeneralModule })
+  generalModule!: GeneralModule;
 
   module: HouseholdCookingModule = {
     categoryCookings: [],

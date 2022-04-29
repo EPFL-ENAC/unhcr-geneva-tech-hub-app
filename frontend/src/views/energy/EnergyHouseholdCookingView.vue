@@ -3,6 +3,7 @@
     <h1>Cooking</h1>
     <energy-household-cooking
       :initial-module="modules.householdCooking"
+      :general-module="modules.general"
       @save="save"
     ></energy-household-cooking>
   </div>
@@ -10,7 +11,7 @@
 
 <script lang="ts">
 import EnergyHouseholdCooking from "@/components/energy/EnergyHouseholdCooking.vue";
-import { HouseholdCookingModule } from "@/models/energyModel";
+import { HouseholdCookingModule, Modules } from "@/models/energyModel";
 import EnergyModuleMixin from "@/views/energy/EnergyModuleMixin.vue";
 import "vue-class-component/hooks";
 import { Component } from "vue-property-decorator";
@@ -22,7 +23,7 @@ import { Component } from "vue-property-decorator";
 })
 export default class EnergyHouseholdCookingView extends EnergyModuleMixin {
   save(module: HouseholdCookingModule): void {
-    this.$set(this.modules, "householdCooking", module);
+    this.$set(this.modules, "householdCooking" as keyof Modules, module);
   }
 }
 </script>
