@@ -22,7 +22,7 @@
                 title="Energy"
                 :years="years"
                 :items="energy"
-                :y-labels="['Emission [MJ]', 'Efficiency [%]']"
+                :y-labels="['Final Energy [MJ]', 'Efficiency [%]']"
               ></energy-chart>
               <h3>Requirement of fuelwood and charcoal</h3>
               <energy-key-indicator
@@ -223,12 +223,10 @@ export default class EnergyResult extends Vue {
         text: "Proportion",
         key: "proportion",
         unit: "%",
-        decimal: 2,
       },
       {
         text: "Households",
         key: "householdCount",
-        decimal: 2,
       },
       {
         text: "Population",
@@ -248,7 +246,6 @@ export default class EnergyResult extends Vue {
         text: "Energy Efficiency",
         key: "energyEfficiency",
         unit: "%",
-        decimal: 2,
       },
       {
         text: "CO2 Emission",
@@ -340,10 +337,14 @@ export default class EnergyResult extends Vue {
 
   get income(): ChartItem[] {
     return [
-      ...this.getDetailChartItems("bar", "income", { prefix: "Income" }),
+      ...this.getDetailChartItems("bar", "income", {
+        prefix: "Income",
+        unit: "$",
+      }),
       ...this.getDetailChartItems("bar", "totalCost", {
         prefix: "Cost",
         ratio: -1,
+        unit: "$",
       }),
     ];
   }
@@ -352,44 +353,44 @@ export default class EnergyResult extends Vue {
     return [
       ...this.getDetailChartItems("line", "costAffordability", {
         precision: 2,
+        unit: "%",
       }),
-      this.getTotalChartItem("line", "costAffordability", { precision: 2 }),
+      this.getTotalChartItem("line", "costAffordability", {
+        precision: 2,
+        unit: "%",
+      }),
     ];
   }
 
   get energy(): ChartItem[] {
     return [
       ...this.getDetailChartItems("bar", "finalEnergy", {
-        prefix: "Consumption",
+        prefix: "Final Energy",
+        unit: "MJ",
       }),
       this.getTotalChartItem("line", "energyEfficiency", {
         name: "Efficiency",
         precision: 4,
         yAxisIndex: 1,
+        unit: "%",
       }),
     ];
   }
 
-  get energyEfficiency(): ChartItem[] {
-    return [
-      this.getTotalChartItem("line", "energyEfficiency", { precision: 4 }),
-    ];
-  }
-
   get wood(): ChartItem[] {
-    return [this.getTotalChartItem("bar", "woodArea")];
+    return [this.getTotalChartItem("bar", "woodArea", { unit: "ha" })];
   }
 
   get emissionCo2(): ChartItem[] {
-    return this.getDetailChartItems("bar", "emissionCo2");
+    return this.getDetailChartItems("bar", "emissionCo2", { unit: "kg" });
   }
 
   get emissionCo(): ChartItem[] {
-    return this.getDetailChartItems("bar", "emissionCo");
+    return this.getDetailChartItems("bar", "emissionCo", { unit: "g" });
   }
 
   get emissionPm(): ChartItem[] {
-    return this.getDetailChartItems("bar", "emissionPm");
+    return this.getDetailChartItems("bar", "emissionPm", { unit: "mg" });
   }
 
   get siteResults(): SiteResult[] {
@@ -456,25 +457,40 @@ export default class EnergyResult extends Vue {
 
   private getDetailChartItems(
     type: ChartItemType,
-    key: keyof CategoryResult,
+    key: keyof HouseholdResult,
     option?: {
       prefix?: string;
       precision?: number;
       ratio?: number;
+      yAxisIndex?: number;
+      unit?: string;
     }
   ): ChartItem[] {
     return socioEconomicCategories.map((cat) => {
       const name = this.$t(`energy.${cat}`).toString();
+      const ratio = option?.ratio ?? 1;
+      const mapValue = (value: number) =>
+        round(ratio * value, option?.precision);
       return {
         type: type,
         name: option?.prefix ? `${option?.prefix} ${name}` : name,
-        data: this.siteResults.map((result) =>
-          round(
-            (option?.ratio ?? 1) * result.categories[cat][key],
-            option?.precision
-          )
-        ),
+        data: this.siteResults.map((result) => ({
+          value: mapValue(result.categories[cat][key]),
+          average: mapValue(result.households[cat][key]),
+        })),
         color: getColor(cat),
+        yAxisIndex: option?.yAxisIndex,
+        unit: option?.unit,
+        tooltips: [
+          {
+            name: "Total",
+            key: "value",
+          },
+          {
+            name: "Average",
+            key: "average",
+          },
+        ],
       };
     });
   }
@@ -487,6 +503,7 @@ export default class EnergyResult extends Vue {
       precision?: number;
       ratio?: number;
       yAxisIndex?: number;
+      unit?: string;
     }
   ): ChartItem {
     return {
@@ -500,6 +517,7 @@ export default class EnergyResult extends Vue {
       ),
       color: cccmColors.primary,
       yAxisIndex: option?.yAxisIndex,
+      unit: option?.unit,
     };
   }
 

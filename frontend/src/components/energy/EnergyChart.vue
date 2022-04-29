@@ -5,6 +5,7 @@
 </template>
 
 <script lang="ts">
+import { TooltipFormatterParams } from "@/utils/echarts";
 import { BarChart, LineChart } from "echarts/charts";
 import {
   GridComponent,
@@ -17,6 +18,7 @@ import {
   BarSeriesOption,
   EChartsOption,
   LineSeriesOption,
+  TopLevelFormatterParams,
 } from "echarts/types/dist/shared";
 import "vue-class-component/hooks";
 import VChart from "vue-echarts";
@@ -58,9 +60,7 @@ export default class EnergyChart extends Vue {
         left: "center",
       },
       tooltip: {
-        trigger: this.items.every((item) => item.type === "bar")
-          ? "item"
-          : "axis",
+        trigger: "item",
         axisPointer: {
           type: "cross",
         },
@@ -92,12 +92,30 @@ export default class EnergyChart extends Vue {
         scale: true,
       },
       series: this.items.flatMap((item) => {
+        const tooltips = item.tooltips;
         const option: BarSeriesOption | LineSeriesOption = {
           name: item.name,
           stack: item.type === "bar" ? "total" : undefined,
           type: item.type,
           yAxisIndex: item.yAxisIndex,
           data: item.data,
+          tooltip: {
+            formatter: tooltips
+              ? (params: TopLevelFormatterParams) => {
+                  const p = params as TooltipFormatterParams<
+                    Record<string, number>
+                  >;
+                  const unitText = item.unit ? ` [${item.unit}]` : "";
+                  const text = tooltips
+                    .map((t) => `${t.name}: ${p.data[t.key]}` + unitText)
+                    .join("<br>");
+                  return `${p.seriesName}<br>${text}`;
+                }
+              : undefined,
+            valueFormatter: item.unit
+              ? (value) => `${value} [${item.unit}]`
+              : undefined,
+          },
         };
         return option;
       }),
@@ -109,9 +127,14 @@ export default class EnergyChart extends Vue {
 export interface ChartItem {
   type: ChartItemType;
   name: string;
-  data: number[];
+  data: (number | Record<string, number>)[];
   color: string;
   yAxisIndex?: number;
+  unit?: string;
+  tooltips?: {
+    name: string;
+    key: string;
+  }[];
 }
 
 export type ChartItemType = "bar" | "line";
