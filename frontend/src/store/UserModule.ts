@@ -4,6 +4,7 @@ import {
   loginToken as loginTokenTool,
   logout as logoutTool,
 } from "@/utils/couchdb";
+import { SessionStorageKey } from "@/utils/storage";
 import {
   ActionContext,
   ActionTree,
@@ -26,7 +27,6 @@ export interface CouchUser {
   name?: string;
   roles?: Roles[];
   loaded: boolean;
-  token?: string;
 }
 export interface UserState {
   user: CouchUser;
@@ -72,6 +72,7 @@ const mutations: MutationTree<UserState> = {
   },
   SET_USER_LOADING(state) {
     state.userLoading = true;
+    sessionStorage.removeItem(SessionStorageKey.Token);
   },
   UNSET_USER_LOADING(state) {
     state.userLoading = false;
@@ -139,8 +140,9 @@ const actions: ActionTree<UserState, RootState> = {
   },
   getSession: (context: ActionContext<UserState, RootState>) => {
     // if user logged in as guest no session needed!
-    const currentUser = context.getters["user"];
-    if (currentUser.name !== "guest") {
+    const currentUser: CouchUser = context.getters["user"];
+    const token = sessionStorage.getItem(SessionStorageKey.Token);
+    if (currentUser.name !== "guest" && !token) {
       context.commit("SET_USER_LOADING");
       getSessionTool()
         .then((response) => {

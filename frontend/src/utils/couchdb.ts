@@ -1,5 +1,5 @@
 import { ExistingDocument } from "@/models/couchdbModel";
-import { SessionStorageKey } from "@/utils/sessionStorage";
+import { SessionStorageKey } from "@/utils/storage";
 import axios, { AxiosPromise } from "axios";
 import PouchDB from "pouchdb";
 import qs from "qs";
