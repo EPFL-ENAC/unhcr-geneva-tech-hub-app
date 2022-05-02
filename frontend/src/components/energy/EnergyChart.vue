@@ -5,6 +5,7 @@
 </template>
 
 <script lang="ts">
+import { formatNumber } from "@/plugins/filters";
 import { TooltipFormatterParams } from "@/utils/echarts";
 import { BarChart, LineChart } from "echarts/charts";
 import {
@@ -107,14 +108,19 @@ export default class EnergyChart extends Vue {
                   >;
                   const unitText = item.unit ? ` [${item.unit}]` : "";
                   const text = tooltips
-                    .map((t) => `${t.name}: ${p.data[t.key]}` + unitText)
+                    .map(
+                      (t) =>
+                        `${t.name}: <b>${formatNumber(
+                          p.data[t.key]
+                        )}${unitText}</b>`
+                    )
                     .join("<br>");
                   return `${p.seriesName}<br>${text}`;
                 }
               : undefined,
             valueFormatter: item.unit
-              ? (value) => `${value} [${item.unit}]`
-              : undefined,
+              ? (value) => `${formatNumber(value as number)} [${item.unit}]`
+              : (value) => formatNumber(value as number),
           },
         };
         return option;

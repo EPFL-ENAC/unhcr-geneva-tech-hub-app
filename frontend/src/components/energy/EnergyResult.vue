@@ -352,11 +352,9 @@ export default class EnergyResult extends Vue {
   get affordability(): ChartItem[] {
     return [
       ...this.getDetailChartItems("line", "costAffordability", {
-        precision: 2,
         unit: "%",
       }),
       this.getTotalChartItem("line", "costAffordability", {
-        precision: 2,
         unit: "%",
       }),
     ];
@@ -370,7 +368,6 @@ export default class EnergyResult extends Vue {
       }),
       this.getTotalChartItem("line", "energyEfficiency", {
         name: "Efficiency",
-        precision: 4,
         yAxisIndex: 1,
         unit: "%",
       }),
@@ -460,7 +457,6 @@ export default class EnergyResult extends Vue {
     key: keyof HouseholdResult,
     option?: {
       prefix?: string;
-      precision?: number;
       ratio?: number;
       yAxisIndex?: number;
       unit?: string;
@@ -469,8 +465,7 @@ export default class EnergyResult extends Vue {
     return socioEconomicCategories.map((cat) => {
       const name = this.$t(`energy.${cat}`).toString();
       const ratio = option?.ratio ?? 1;
-      const mapValue = (value: number) =>
-        round(ratio * value, option?.precision);
+      const mapValue = (value: number) => ratio * value;
       return {
         type: type,
         name: option?.prefix ? `${option?.prefix} ${name}` : name,
@@ -500,7 +495,6 @@ export default class EnergyResult extends Vue {
     key: keyof CategoryResult,
     option?: {
       name?: string;
-      precision?: number;
       ratio?: number;
       yAxisIndex?: number;
       unit?: string;
@@ -509,11 +503,8 @@ export default class EnergyResult extends Vue {
     return {
       type: type,
       name: option?.name ?? "Total",
-      data: this.siteResults.map((result) =>
-        round(
-          (option?.ratio ?? 1) * result.categoryTotal[key],
-          option?.precision
-        )
+      data: this.siteResults.map(
+        (result) => (option?.ratio ?? 1) * result.categoryTotal[key]
       ),
       color: cccmColors.primary,
       yAxisIndex: option?.yAxisIndex,
