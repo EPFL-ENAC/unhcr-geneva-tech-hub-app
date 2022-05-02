@@ -88,7 +88,6 @@ export default class GraphTree extends Vue {
           );
           const v = params.data.value[0];
           const unit = params.data.value[1];
-          // debugger;
           return `</div>${name}: ${formatNumber(v)} ${unit}</div>`;
         },
       },

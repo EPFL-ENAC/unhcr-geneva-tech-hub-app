@@ -92,7 +92,7 @@ const actions: ActionTree<ProjectsState, RootState> = {
     context.commit("CLOSE_DB");
   },
   getDB: (context: ActionContext<ProjectsState, RootState>) => {
-    const db = context.state.localCouch?.db;
+    const db = context.state.localCouch?.remoteDB;
     if (db) {
       db?.query("project/list")
         .then(function (result) {
@@ -109,7 +109,7 @@ const actions: ActionTree<ProjectsState, RootState> = {
     }
   },
   getCountries: (context: ActionContext<ProjectsState, RootState>) => {
-    const db = context.state.localCouch?.db;
+    const db = context.state.localCouch?.remoteDB;
     if (db) {
       db?.query("project/countries_with_info", {
         reduce: true,
@@ -144,7 +144,7 @@ const actions: ActionTree<ProjectsState, RootState> = {
     context.commit("REMOVE_DOC", id);
   },
   getDoc: (context: ActionContext<ProjectsState, RootState>, id) => {
-    const db = context.state.localCouch?.db;
+    const db = context.state.localCouch?.remoteDB;
     if (db) {
       db.get(id)
         .then(function (result) {
@@ -162,15 +162,25 @@ const actions: ActionTree<ProjectsState, RootState> = {
     value
   ) => {
     context.commit("SET_PROJECT", value);
-    const db = context.state.localCouch?.localDB;
+    const db = context.state.localCouch?.remoteDB;
     if (db) {
-      await db.put(value);
+      await db
+        .put(value, { force: true })
+        .then((response) => {
+          // set new rev
+          return context.dispatch("getDoc", response.id);
+        })
+        .catch((response) => {
+          // because error, we need to dispatch doc again
+          context.dispatch("getDoc", value._id);
+          console.log("error", response);
+        });
     } else {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
   },
   hasDB: async (context: ActionContext<ProjectsState, RootState>) => {
-    return context.state.localCouch?.db;
+    return context.state.localCouch?.remoteDB;
   },
 };
 

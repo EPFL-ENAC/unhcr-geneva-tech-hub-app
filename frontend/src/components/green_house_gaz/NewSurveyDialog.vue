@@ -12,10 +12,10 @@
               <v-col cols="12">
                 <country-select v-model="newCampSite.country_code" />
               </v-col>
-              <v-col>
+              <v-col cols="12">
                 <v-divider />
               </v-col>
-              <v-col cols="12">
+              <v-col cols="5">
                 <v-select
                   :disabled="existingSites.length === 0 || newName !== ''"
                   tabindex="0"
@@ -37,9 +37,11 @@
                   </template>
                 </v-select>
               </v-col>
-              <v-col> Or </v-col>
+              <v-col cols="2" style="text-align: center">
+                <span style="line-height: 64px">or</span>
+              </v-col>
 
-              <v-col cols="12">
+              <v-col cols="5">
                 <v-text-field
                   tabindex="1"
                   v-model="newName"
@@ -51,19 +53,19 @@
                 />
               </v-col>
 
-              <v-col>
+              <v-col cols="12">
                 <v-divider />
               </v-col>
               <v-col cols="12">
-                <v-select
-                  tabindex="3"
+                <v-text-field
+                  tabindex="2"
                   v-model="editedItem.name"
-                  :rules="[ruleAYearIsRequired, ruleSurveyYearAlreadyExist]"
                   required
-                  :items="['2019', '2020', '2021', '2022']"
-                  label="Select survey year"
-                >
-                </v-select>
+                  name="description"
+                  :rules="[ruleAYearIsRequired, ruleSurveyYearAlreadyExist]"
+                  label="Survey description"
+                  type="text"
+                />
               </v-col>
             </v-row>
           </v-container>
@@ -113,7 +115,7 @@ import { Country, GreenHouseGaz, Sites, Survey } from "@/store/GhgInterface.js";
 import Countries from "@/utils/countriesAsList";
 import flagEmoji from "@/utils/flagEmoji";
 import { cloneDeep } from "lodash";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
@@ -243,7 +245,8 @@ export default class ProjectList extends Vue {
     // update doc with new survey
     const saveFn = this.newName ? this.addDoc : this.updateDoc;
     this.newCampSite.surveys.push(this.editedItem);
-    this.newCampSite.name = this.newCampSite.name || this.newName;
+    // newName has priority
+    this.newCampSite.name = this.newName || this.newCampSite.name;
 
     // TODO When selecting an existing site; we need to retrieve the actual site
     // to avoid having to erase all surveys
@@ -298,6 +301,13 @@ export default class ProjectList extends Vue {
     });
   }
 
+  @Watch("open", { immediate: true })
+  onOpenChange(value: boolean): void {
+    // reset form on dialog open
+    if (value === true) {
+      this.newCampSite = this.newDefaultCampSite();
+    }
+  }
   created(): void {
     this.syncLocalCampSite();
   }

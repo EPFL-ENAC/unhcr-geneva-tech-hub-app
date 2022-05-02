@@ -2,7 +2,7 @@
   <v-card flat>
     <v-card-text v-if="iges_grid_2021">
       <v-data-table :headers="headers" :items="iges_grid_2021">
-        <template v-slot:item.value="props">
+        <!-- <template v-slot:item.value="props">
           <v-edit-dialog
             :return-value.sync="props.item.name"
             @save="save"
@@ -31,9 +31,9 @@
               ></v-text-field>
             </template>
           </v-edit-dialog>
-        </template>
+        </template> -->
 
-        <template v-slot:item.name="props">
+        <!-- <template v-slot:item.name="props">
           <v-edit-dialog
             :return-value.sync="props.item.name"
             @save="save"
@@ -52,7 +52,7 @@
               ></v-text-field>
             </template>
           </v-edit-dialog>
-        </template>
+        </template> -->
       </v-data-table>
       <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
         {{ snackText }}
