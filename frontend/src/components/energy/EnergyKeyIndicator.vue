@@ -1,12 +1,12 @@
 <template>
-  <v-tooltip bottom>
+  <v-tooltip bottom :disabled="percentage === 0">
     <template v-slot:activator="{ on, attrs }">
       <div v-bind="attrs" v-on="on" class="text-overline">
         {{ name }}:
-        <span :style="{ color: color }">
-          {{ value | formatNumber }}
-          <template v-if="unit">[{{ unit }}]</template>
-          <v-icon :color="color">{{ icon }}</v-icon>
+        {{ value | formatNumber }}
+        <template v-if="unit">[{{ unit }}]</template>
+        <span v-if="percentage !== 0" :style="{ color: color }">
+          <v-icon :color="color" small>{{ icon }}</v-icon>
           {{ percentage | formatNumber(2, true) }} %
         </span>
       </div>
@@ -52,11 +52,11 @@ export default class EnergyKeyIndicator extends Vue {
 
   get icon(): string {
     if (this.value < this.baseValue) {
-      return "mdi-trending-down";
+      return "mdi-triangle mdi-rotate-180";
     } else if (this.value > this.baseValue) {
-      return "mdi-trending-up";
+      return "mdi-triangle";
     } else {
-      return "mdi-trending-neutral";
+      return "mdi-triangle mdi-rotate-90";
     }
   }
 
