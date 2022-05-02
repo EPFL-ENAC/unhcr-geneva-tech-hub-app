@@ -44,8 +44,7 @@
                 surveyId: encodeURIComponent(item.name),
               },
               query: {
-                category: 'Energy',
-                subcategory: 'Facilities',
+                category: 'Info',
               },
             }"
           >
@@ -128,8 +127,7 @@ export default class ProjectItem extends Vue {
         surveyId: encodeURIComponent(item.name),
       },
       query: {
-        category: "Energy",
-        subcategory: "Facilities",
+        category: "Info",
       },
     });
   }

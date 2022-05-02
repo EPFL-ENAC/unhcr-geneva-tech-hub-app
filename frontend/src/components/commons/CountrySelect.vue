@@ -3,7 +3,7 @@
     tabindex="0"
     :input="currentValue"
     @change="(value) => $emit('input', value)"
-    :items="countriesSorted"
+    :items="countriesRef"
     item-value="code"
     item-text="name"
     label="Select country"

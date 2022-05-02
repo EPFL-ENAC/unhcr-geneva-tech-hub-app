@@ -137,7 +137,7 @@ export default class SurveyList extends Vue {
   readonly menuItems: MenuItem[] = [
     {
       to: "Info",
-      text: "Info",
+      text: "Information",
       icon: "mdi-information",
     },
     {
@@ -283,7 +283,6 @@ export default class SurveyList extends Vue {
       result.energy = result.energy || {};
       result.material = result.material || {};
       result.offset = result.offset || {};
-      result.info = result.info || {};
       return result;
     }
     return undefined;
