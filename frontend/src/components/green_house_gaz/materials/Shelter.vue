@@ -179,7 +179,6 @@ export default class WASH extends Vue {
         shelter: this.shelterForm,
       });
       value.surveys.splice(this.localSurveyIndex, 1, this.localSurvey);
-      console.log(value);
       await this.updateDoc(value);
     } else {
       throw new Error("please fill the new Name");

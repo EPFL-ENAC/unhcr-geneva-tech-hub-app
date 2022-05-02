@@ -3,31 +3,56 @@
     :readonly="!$can('edit', localProject)"
     @submit.prevent="() => submitForm(localProject)"
   >
-    <v-sheet>
-      <v-text-field
-        v-model="localProject.name"
-        name="name"
-        label="Camp name"
-        type="text"
-        required
-        :rules="textRules"
-      />
-      <v-select
-        tabindex="2"
-        v-model="localProject.country_code"
-        :items="countriesRef"
-        item-value="code"
-        item-text="name"
-        label="Select country"
-      >
-        <template v-slot:item="slotProps">
-          <div class="d-flex justify-space-between" style="width: 300px">
-            <span> {{ slotProps.item.emoji }} </span>
-            {{ slotProps.item.name }}
-          </div>
-        </template>
-      </v-select>
-    </v-sheet>
+    <v-container fluid v-if="project.users">
+      <!-- <v-row>
+        <v-col>
+          <h2 class="text-h4 project-shelter__h3 font-weight-medium">Info</h2>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-divider></v-divider>
+        </v-col>
+      </v-row> -->
+      <v-row>
+        <v-col>
+          <v-card elevation="2" rounded>
+            <v-card-title>
+              <h3 class="baseline-title">Information</h3>
+            </v-card-title>
+            <v-card-text>
+              <v-text-field
+                v-model="localProject.name"
+                name="name"
+                label="Camp name"
+                type="text"
+                required
+                :rules="textRules"
+              />
+              <v-select
+                tabindex="2"
+                v-model="localProject.country_code"
+                :items="countriesRef"
+                item-value="code"
+                item-text="name"
+                label="Select country"
+              >
+                <template v-slot:item="slotProps">
+                  <div
+                    class="d-flex justify-space-between"
+                    style="width: 300px"
+                  >
+                    <span> {{ slotProps.item.emoji }} </span>
+                    {{ slotProps.item.name }}
+                  </div>
+                </template>
+              </v-select>
+            </v-card-text>
+            <v-card-actions> </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-form>
 </template>
 
@@ -49,7 +74,7 @@ import { mapActions, mapGetters } from "vuex";
   },
 })
 /** ProjectItem */
-export default class ProjectItem extends Vue {
+export default class GhgInfo extends Vue {
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
   project!: GreenHouseGaz;
   user!: CouchUser;

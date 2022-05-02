@@ -37,6 +37,15 @@ export interface Survey {
   wash: WashSurvey;
   material: MaterialSurvey;
   offset: OffsetSurvey;
+  info: InfoSurvey;
+}
+
+export interface InfoSurvey {
+  latitude: number;
+  longitude: number;
+  name?: string; // should replace GreenHouseGaz fields
+  country_code?: string; // should replace GreenHouseGaz fields
+  description?: string; // should replace GreenHouseGaz fields
 }
 
 export interface EnergySurvey {

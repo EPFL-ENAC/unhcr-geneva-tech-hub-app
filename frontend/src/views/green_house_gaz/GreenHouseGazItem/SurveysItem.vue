@@ -1,6 +1,6 @@
 <template>
   <div v-if="project && currentSurvey" class="fluid surveys-item">
-    <header>
+    <header class="ma-5">
       <v-row>
         <v-col>
           <h2>
@@ -14,20 +14,6 @@
             v-model="project.users"
             @change="submitForm"
           ></user-manager>
-        </v-col>
-        <v-col class="col-auto">
-          <v-btn
-            icon
-            :to="{
-              name: 'GreenHouseGazItem',
-              params: {
-                country: encodeURIComponent(project.country_code),
-                site: encodeURIComponent(project.name),
-              },
-            }"
-          >
-            <v-icon>mdi-cog-outline</v-icon>
-          </v-btn>
         </v-col>
       </v-row>
     </header>
@@ -68,6 +54,7 @@
               <v-tab
                 :key="`${$itemIndex}${$subItemIndex}`"
                 :href="`#${item.to}-${subItem.to}`"
+                :class="{ 'v-tab--active': subcategory === subItem.to }"
               >
                 <v-icon left>{{ subItem.icon }}</v-icon>
                 {{ subItem.text }}
@@ -75,7 +62,7 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <v-tab v-else :key="item.to" :href="`#${item.to}`">
+        <v-tab v-else :key="item.to">
           <v-icon left>{{ item.icon }}</v-icon>
           {{ item.text }}
         </v-tab>
@@ -84,9 +71,16 @@
     <v-row>
       <v-col>
         <component
+          v-if="subcategory"
           :form.sync="currentSurvey[normedCategory][normedSubcategory]"
           @update:form="updateCurrentSurvey"
           :is="subcategory"
+        />
+        <component
+          v-else
+          :survey.sync="currentSurvey"
+          @update:survey="updateCurrentSurvey"
+          :is="category"
         />
       </v-col>
     </v-row>
@@ -99,16 +93,17 @@ import Cooking from "@/components/green_house_gaz/energy/Cooking.vue";
 import Facilities from "@/components/green_house_gaz/energy/Facilities.vue";
 import Lighting from "@/components/green_house_gaz/energy/Lighting.vue";
 import Pumping from "@/components/green_house_gaz/energy/Pumping.vue";
+import Info from "@/components/green_house_gaz/Info.vue";
 import CRI from "@/components/green_house_gaz/materials/CRI.vue";
 import HHWaste from "@/components/green_house_gaz/materials/HHWaste.vue";
 import Shelter from "@/components/green_house_gaz/materials/Shelter.vue";
-import TreePlanting from "@/components/green_house_gaz/offset/TreePlanting.vue";
 import Results from "@/components/green_house_gaz/Results.vue";
+import TreePlanting from "@/components/green_house_gaz/TreePlanting.vue";
 import Trucking from "@/components/green_house_gaz/wash/Trucking.vue";
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import getFlagEmoji from "@/utils/flagEmoji";
 import getCountryName from "@/utils/getCountryName";
-import { cloneDeep } from "lodash";
+import { cloneDeep, isEqual } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
@@ -131,6 +126,7 @@ import { mapActions, mapGetters } from "vuex";
     TreePlanting,
     Results,
     UserManager,
+    Info,
   },
 })
 /** ProjectList */
@@ -139,6 +135,11 @@ export default class SurveyList extends Vue {
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
 
   readonly menuItems: MenuItem[] = [
+    {
+      to: "Info",
+      text: "Info",
+      icon: "mdi-information",
+    },
     {
       children: [
         {
@@ -161,11 +162,13 @@ export default class SurveyList extends Vue {
       icon: "mdi-lightning-bolt",
       text: "Energy",
       to: "Energy",
+      redirect: "Energy-Facilities",
     },
     {
       icon: "mdi-water",
       text: "WASH",
       to: "WASH",
+      redirect: "WASH-Trucking",
       children: [
         { text: "Trucking", to: "Trucking", icon: "mdi-tanker-truck" },
       ],
@@ -174,7 +177,8 @@ export default class SurveyList extends Vue {
       icon: "mdi-home",
       // text: "Shelter, Site and material",
       text: "Material",
-      to: "Material-Shelter",
+      to: "Material",
+      redirect: "Material-Shelter",
       children: [
         { text: "Shelter", to: "Shelter", icon: "mdi-home-group" },
         { text: "CRI", to: "CRI", icon: "mdi-wizard-hat" },
@@ -184,16 +188,16 @@ export default class SurveyList extends Vue {
     {
       icon: "mdi-leaf",
       text: "Offset",
-      to: "Offset-TreePlanting",
+      to: "Offset",
+      redirect: "Offset-TreePlanting",
     },
     {
       icon: "mdi-newspaper-variant-outline",
       text: "Results",
-      to: "Results-Results",
+      to: "Results",
+      // redirect: "Results-Results",
     },
   ];
-
-  _tabSelected = "";
 
   public get category(): string {
     return (this.$route.query.category as string) ?? "";
@@ -210,16 +214,36 @@ export default class SurveyList extends Vue {
   public get normedSubcategory(): string {
     return this.subcategory.toLowerCase();
   }
-  public get tabSelected(): string {
-    const tab = `${this.category}-${this.subcategory}`;
-    return tab;
+  public get tabSelected(): string | number {
+    const tabIndex = this.menuItems.findIndex((value: MenuItem) => {
+      const [category] = value.to.split("-");
+      return category === this.category;
+    });
+    return tabIndex;
   }
-  public set tabSelected(value: string) {
-    if (value && value.split) {
-      const [category, subcategory] = value.split("-");
+  public set tabSelected(value: string | number) {
+    // Warning should not push to current route if same path!
+    const currentRouteQuery = this.$router.currentRoute.query as Record<
+      string,
+      string
+    >;
+    let query;
+    if (typeof value === "number") {
+      const name = this.menuItems[value].redirect || this.menuItems[value].to;
+      let [category, subcategory] = name.split("-");
+      query = { category, subcategory };
+    }
+    if (typeof value === "string") {
+      let [category, subcategory] = value.split("-");
       if (category && subcategory) {
-        this.$router.push({ query: { category, subcategory } });
+        query = { category, subcategory };
+      } else if (category) {
+        query = { category };
       }
+    }
+
+    if (!isEqual(currentRouteQuery, query)) {
+      this.$router.push({ query });
     }
   }
 
@@ -259,6 +283,7 @@ export default class SurveyList extends Vue {
       result.energy = result.energy || {};
       result.material = result.material || {};
       result.offset = result.offset || {};
+      result.info = result.info || {};
       return result;
     }
     return undefined;
@@ -294,6 +319,7 @@ interface MenuItem {
   text: string;
   icon: string;
   to: string;
+  redirect?: string;
   children?: MenuItem[];
 }
 </script>
