@@ -3,7 +3,6 @@
   "type": "user",
   "roles": [
     "user",
-    "specialist",
     "admin"
   ],
   "name": "charlie",

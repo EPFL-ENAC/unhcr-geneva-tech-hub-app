@@ -39,6 +39,7 @@
       :show-arrows="true"
       elevation="2"
       v-model="tabSelected"
+      hide-slider
     >
       <template v-for="(item, $itemIndex) in menuItems">
         <v-divider
@@ -82,7 +83,11 @@
     </v-tabs>
     <v-row>
       <v-col>
-        <component :is="$router.currentRoute.query.subcategory" />
+        <component
+          :form.sync="currentSurvey[normedCategory][normedSubcategory]"
+          @update:form="updateCurrentSurvey"
+          :is="subcategory"
+        />
       </v-col>
     </v-row>
   </div>
@@ -99,13 +104,11 @@ import HHWaste from "@/components/green_house_gaz/materials/HHWaste.vue";
 import Shelter from "@/components/green_house_gaz/materials/Shelter.vue";
 import TreePlanting from "@/components/green_house_gaz/offset/TreePlanting.vue";
 import Results from "@/components/green_house_gaz/Results.vue";
-// import Transport from "@/components/green_house_gaz/wash/Transport.vue";
-// import Wastewater from "@/components/green_house_gaz/wash/Wastewater.vue";
-// import Water from "@/components/green_house_gaz/wash/Water.vue";
-import WASH from "@/components/green_house_gaz/wash/WASH.vue";
+import Trucking from "@/components/green_house_gaz/wash/Trucking.vue";
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import getFlagEmoji from "@/utils/flagEmoji";
 import getCountryName from "@/utils/getCountryName";
+import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
@@ -124,22 +127,10 @@ import { mapActions, mapGetters } from "vuex";
     CRI,
     HHWaste,
     Shelter,
-    // Transport, // to remove old WASH
-    // Water,// to remove old WASH
-    // Wastewater,// to remove old WASH
-    WASH,
+    Trucking,
     TreePlanting,
     Results,
     UserManager,
-  },
-  filters: {
-    date: function (value: string) {
-      if (!value) return "";
-      value = value.toString();
-      return value.substring(0, 4);
-      // const locale = navigator?.languages?.[0] ?? navigator.language;
-      // return new Intl.DateTimeFormat(locale).format(new Date(value));
-    },
   },
 })
 /** ProjectList */
@@ -169,13 +160,15 @@ export default class SurveyList extends Vue {
       ],
       icon: "mdi-lightning-bolt",
       text: "Energy",
-      to: "Energy-Facilities",
+      to: "Energy",
     },
     {
       icon: "mdi-water",
       text: "WASH",
-      to: "WASH-WASH",
-      children: [{ text: "Trucking", to: "WASH", icon: "mdi-tanker-truck" }],
+      to: "WASH",
+      children: [
+        { text: "Trucking", to: "Trucking", icon: "mdi-tanker-truck" },
+      ],
     },
     {
       icon: "mdi-home",
@@ -201,12 +194,24 @@ export default class SurveyList extends Vue {
   ];
 
   _tabSelected = "";
+
+  public get category(): string {
+    return (this.$route.query.category as string) ?? "";
+  }
+
+  public get normedCategory(): string {
+    return this.category.toLowerCase();
+  }
+
+  public get subcategory(): string {
+    return (this.$route.query.subcategory as string) ?? "";
+  }
+
+  public get normedSubcategory(): string {
+    return this.subcategory.toLowerCase();
+  }
   public get tabSelected(): string {
-    // return this._tabSelected;
-    // return this.$route.query.toString();
-    const category = this.$router.currentRoute.query.category as string;
-    const subcategory = this.$router.currentRoute.query.subcategory as string;
-    const tab = `${category}-${subcategory}`;
+    const tab = `${this.category}-${this.subcategory}`;
     return tab;
   }
   public set tabSelected(value: string) {
@@ -232,13 +237,48 @@ export default class SurveyList extends Vue {
     return "";
   }
 
+  public get currentSurveyId(): string {
+    return decodeURIComponent(this.$route.params.surveyId);
+  }
+
+  public get currentSurveyIndex(): number {
+    return (
+      this.project.surveys?.findIndex(
+        (el: Survey) => el.name === this.currentSurveyId
+      ) ?? -1
+    );
+  }
+
   public get currentSurvey(): Survey | undefined {
     if (this.project?.surveys) {
-      return this.project.surveys.find(
-        (el: Survey) => el.name === this.$route.params.surveyId
+      const result = cloneDeep(
+        this.project.surveys?.[this.currentSurveyIndex] ?? ({} as Survey)
       );
+      // ensure at least first level
+      result.wash = result.wash || {};
+      result.energy = result.energy || {};
+      result.material = result.material || {};
+      result.offset = result.offset || {};
+      return result;
     }
     return undefined;
+  }
+
+  public set currentSurvey(survey: Survey | undefined) {
+    const newProject = cloneDeep(this.project);
+    // update array of survey and then submit!
+    if (survey) {
+      newProject.surveys.splice(this.currentSurveyIndex, 1, survey);
+    } else {
+      // in case of undefined remove survey
+      newProject.surveys.splice(this.currentSurveyIndex, 1);
+    }
+    this.updateDoc(newProject);
+  }
+
+  public updateCurrentSurvey(): void {
+    // force update via setter
+    this.currentSurvey = Object.assign({}, this.currentSurvey);
   }
 
   public submitForm(value: GreenHouseGaz = this.project): void {

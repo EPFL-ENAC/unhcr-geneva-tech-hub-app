@@ -36,21 +36,14 @@ export interface Survey {
   energy: EnergySurvey;
   wash: WashSurvey;
   material: MaterialSurvey;
+  offset: OffsetSurvey;
 }
 
 export interface EnergySurvey {
-  facilities: FacilitySurvey;
+  facilities: EnergyFacilitySurvey;
   cooking: Record<string, number>;
   lighting: Record<string, number>;
   pumping: Record<string, number>;
-}
-
-export interface FacilitySurvey {
-  configuration: Record<string, number>;
-  configurationComputed: Record<string, number>;
-  inputs: Record<string, number>;
-  inputsComputed: Record<string, number>;
-  results: Record<string, number>;
 }
 
 export interface WashSurvey {
@@ -89,10 +82,73 @@ export interface WashTruckingSurvey {
   endline: WashTruckingItemWithBalance;
 }
 
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+// start of energy facility survey
+export interface EnergyFacilitySurvey {
+  baseline: {
+    inputs: EnergyFacilityItem[];
+    results: EnergyFacilityItemResult;
+  };
+  endline: {
+    inputs: EnergyFacilityInterventionItem[];
+    results: EnergyFacilityInterventionItemResult;
+    resultsBalance: EnergyFacilityInterventionBalance;
+  };
+}
+
+export interface EnergyFacilityInterventionBalance {
+  TR_NUM_DIFF: number;
+  TR_DIST_DIFF: number;
+  CO2_WSH_TRB_PER: number;
+  CO2_WSH_TRB_DIFF: number;
+}
+
+type FacilityType =
+  | "DieselGenerators"
+  | "NationalGrid"
+  | "RenewableEnergy"
+  | "HybridMix"
+  | "NotPowered";
+
+export interface EnergyFacilityItem {
+  name: string;
+  facilityType: FacilityType;
+  gridPower: number;
+  dieselLiters: number;
+  renewablePower: number;
+  totalCO2Emission: number;
+}
+
+export type EnergyFacilityItemResult = Omit<
+  EnergyFacilityItem,
+  "name" | "facilityType"
+>;
+
+export interface EnergyFacilityInterventionItem
+  extends Omit<EnergyFacilityItem, "facilityType"> {
+  description: string;
+  changeInEmission: number;
+}
+
+export type EnergyFacilityInterventionItemResult = Omit<
+  EnergyFacilityInterventionItem,
+  "description" | "name"
+>;
+
+// start of material survey
 export interface MaterialSurvey {
   shelter: MaterialShelterSurvey;
 }
 
+export interface OffsetSurvey {
+  treeplanting: OffsetTreePlantingSurvey;
+}
+
+export interface OffsetTreePlantingSurvey {
+  baseline: number;
+  endline: number;
+}
 export interface MaterialShelterSurvey {
   baseline: MaterialShelterSurveyItem;
   endline: MaterialShelterSurveyItemWithBalance;

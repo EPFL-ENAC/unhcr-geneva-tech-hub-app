@@ -25,6 +25,8 @@
           show-expand
           hide-default-footer
           hide-default-header
+          :item-class="rowClasses"
+          @click:row="(item, event) => clickSite(item, keyIndex, event)"
         >
           <template v-slot:expanded-item="{ headers, item }">
             <td :colspan="headers.length">
@@ -39,7 +41,7 @@
 
 <script lang="ts">
 import SurveyList from "@/components/green_house_gaz/SurveysList.vue";
-import { CountriesInfoMap, Country } from "@/store/GhgInterface";
+import { CountriesInfoMap, Country, Site } from "@/store/GhgInterface";
 import Countries from "@/utils/countriesAsList";
 import flagEmoji from "@/utils/flagEmoji";
 import { Component, Vue } from "vue-property-decorator";
@@ -59,11 +61,10 @@ export default class ProjectList extends Vue {
   countries!: [];
   setup = 0;
   singleExpand = true;
-  expanded = {};
+  expanded: ExpandedObject = {};
 
   readonly tableHeaders: DataTableHeader[] = [
     { text: "Site", value: "name" },
-    { text: "Compare surveys", value: "data-table-compare" },
     { text: "", value: "data-table-expand", align: "end", sortable: false },
   ];
 
@@ -73,6 +74,10 @@ export default class ProjectList extends Vue {
   }, {} as CountriesInfoMap);
 
   countriesList = Countries;
+
+  public rowClasses(): string {
+    return "site-row-pointer";
+  }
 
   public getFlagEmoji = flagEmoji;
   private setCountry(country: Country): void {
@@ -105,6 +110,26 @@ export default class ProjectList extends Vue {
       this.unsetCountry();
     }
   }
+
+  public clickSite(item: Site, keyIndex: number, event: EventClickRow): void {
+    if (this.expanded) {
+      const accessKey = `${item.country_code}${keyIndex}`;
+      const currentExpandedArray = this.expanded[accessKey] ?? [];
+      if (event.isExpanded) {
+        const index = currentExpandedArray.findIndex((i) => i === item);
+        currentExpandedArray.splice(index, 1);
+      } else {
+        currentExpandedArray.push(item);
+      }
+
+      this.$set(this.expanded, accessKey, currentExpandedArray);
+    }
+  }
+}
+
+type ExpandedObject = Record<string, Site[]>;
+interface EventClickRow extends Event {
+  isExpanded: boolean;
 }
 </script>
 
@@ -115,5 +140,9 @@ export default class ProjectList extends Vue {
   tbody
   tr.v-data-table__expanded__content {
   box-shadow: none;
+}
+::v-deep .site-row-pointer {
+  cursor: pointer;
+  outline: none;
 }
 </style>

@@ -5,6 +5,8 @@
       :items="localProject.surveys"
       sort-by="created_at"
       hide-default-footer
+      @click:row="handleClick"
+      :item-class="rowClasses"
     >
       <template v-slot:top>
         <v-divider class="mx-4" inset vertical></v-divider>
@@ -113,12 +115,24 @@ export default class ProjectItem extends Vue {
   }
   editedItem = this.newDefaultItem();
 
-  // editItem(item: Survey): void {
-  //   this.editedIndex = this.localProject.surveys.indexOf(item);
-  //   // create a local copy
-  //   this.editedItem = Object.assign({}, item) as Survey;
-  //   this.dialog = true;
-  // }
+  public rowClasses(): string {
+    return "site-row-pointer";
+  }
+
+  handleClick(item: Survey): void {
+    this.$router.push({
+      name: "GreenHouseGazItemSurveyId",
+      params: {
+        country: encodeURIComponent(this.localProject.country_code),
+        site: encodeURIComponent(this.localProject.name),
+        surveyId: encodeURIComponent(item.name),
+      },
+      query: {
+        category: "Energy",
+        subcategory: "Facilities",
+      },
+    });
+  }
 
   deleteItem(item: Survey): void {
     this.editedIndex = this.localProject.surveys.indexOf(item);
@@ -213,8 +227,6 @@ export default class ProjectItem extends Vue {
   onSiteChange(newValue: string): void {
     this.hasDB().then((db: SyncDatabase<GreenHouseGaz> | null) => {
       if (db && newValue) {
-        console.log("on site change", newValue);
-        console.log("get doc from watch");
         this.getDoc(newValue);
       }
     });
@@ -230,5 +242,10 @@ export default class ProjectItem extends Vue {
   display: flex;
   justify-content: space-around;
   align-items: center;
+}
+
+::v-deep .site-row-pointer {
+  cursor: pointer;
+  outline: none;
 }
 </style>

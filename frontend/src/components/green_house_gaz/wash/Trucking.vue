@@ -1,9 +1,6 @@
 <template>
-  <v-container fluid v-if="localProject.users">
-    <v-form
-      :readonly="!$can('edit', localProject)"
-      @submit.prevent="() => submitForm(localProject)"
-    >
+  <v-container fluid v-if="project.users">
+    <v-form :readonly="!$can('edit', project)">
       <v-row>
         <v-col>
           <h2 class="text-h4 project-shelter__h3 font-weight-medium">
@@ -24,14 +21,17 @@
               <div v-for="washInput in washInputs" :key="washInput.code">
                 <v-text-field
                   v-if="washInput.type === 'number'"
-                  v-model.number="washForm.baseline.inputs[washInput.code]"
+                  v-model="washForm.baseline.inputs[washInput.code]"
+                  @change="(e) => updateWashForm(e, 'baseline textfield')"
                   :label="washInput.description"
+                  hide-spin-buttons
                   type="number"
                   :disabled="washInput.disabled"
                 ></v-text-field>
                 <v-select
                   v-if="washInput.type === 'select'"
                   v-model="washForm.baseline.inputs[washInput.code]"
+                  @change="(e) => updateWashForm(e, 'baseline select')"
                   :items="washInput.items"
                   :label="washInput.description"
                   :disabled="washInput.disabled"
@@ -45,6 +45,7 @@
               <v-card-text>
                 <div v-for="washResult in washResults" :key="washResult.code">
                   <v-text-field
+                    hide-spin-buttons
                     :value="
                       washForm.baseline.results[washResult.code] | formatNumber
                     "
@@ -64,13 +65,17 @@
                 <v-text-field
                   v-if="washInput.type === 'number'"
                   v-model.number="washForm.endline.inputs[washInput.code]"
+                  @change="(e) => updateWashForm(e, 'Endline select')"
                   :label="washInput.description"
+                  hide-spin-buttons
                   type="number"
                   :disabled="washInput.disabled"
                 ></v-text-field>
                 <v-select
                   v-if="washInput.type === 'select'"
                   v-model="washForm.endline.inputs[washInput.code]"
+                  @change="(e) => updateWashForm(e, 'Endline select')"
+                  hide-spin-buttons
                   :items="washInput.items"
                   :label="washInput.description"
                   :disabled="washInput.disabled"
@@ -140,11 +145,6 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-row v-if="$can('edit', localProject)">
-        <v-col class="d-flex justify-end">
-          <v-btn type="submit"> Save changes </v-btn>
-        </v-col>
-      </v-row>
     </v-form>
   </v-container>
 </template>
@@ -152,30 +152,43 @@
 <script lang="ts">
 import {
   GreenHouseGaz,
-  Survey,
+  WashTruckingItemBalance,
+  WashTruckingItemInputs,
+  WashTruckingItemResults,
   WashTruckingSurvey,
 } from "@/store/GhgInterface";
-import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
-import { Component, Vue, Watch } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { mapGetters } from "vuex";
 
 @Component({
   computed: {
     ...mapGetters("GhgModule", ["project"]),
   },
-  methods: {
-    ...mapActions("GhgModule", ["getDoc", "updateDoc"]),
-  },
 })
-export default class WASH extends Vue {
-  project!: GreenHouseGaz;
-  localProject = {} as GreenHouseGaz;
+export default class Trucking extends Vue {
+  @Prop([Object, Array])
+  readonly form: WashTruckingSurvey | undefined;
 
-  washForm = this.generateNewWashForm();
-  localSurvey = {} as Survey;
-  localSurveyIndex = -1;
-  updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
+  project!: GreenHouseGaz;
+
+  public get washForm(): WashTruckingSurvey {
+    return this.form || this.generateNewWashForm();
+  }
+
+  public set washForm(newForm: WashTruckingSurvey) {
+    this.$emit("update:form", newForm);
+  }
+  public updateWashForm(): void {
+    this.washForm.baseline.results = this.computeResults(
+      this.washForm.baseline.inputs
+    );
+    this.washForm.endline.results = this.computeResults(
+      this.washForm.endline.inputs
+    );
+    this.washForm.endline.resultsBalance = this.computeBalance();
+    this.washForm = Object.assign({}, this.washForm);
+  }
 
   private generateNewWashForm(): WashTruckingSurvey {
     return {
@@ -216,76 +229,19 @@ export default class WASH extends Vue {
     };
   }
 
-  public setLocalProject(): void {
-    if (!this.project) {
-      this.localProject = {} as GreenHouseGaz;
-    } else {
-      this.localProject = cloneDeep(this.project);
-      // find current survey
-      const surveyId = decodeURIComponent(this.$route.params.surveyId);
-      this.localSurveyIndex =
-        this.localProject.surveys?.findIndex(
-          (el: Survey) => el.name === surveyId
-        ) ?? -1;
-      this.localSurvey =
-        this.localProject.surveys?.[this.localSurveyIndex] ?? ({} as Survey);
-      this.initWash();
-    }
-  }
-
-  public initWash(): void {
-    const washForm = this.localSurvey.wash;
-    const trucking = washForm?.trucking ?? {};
-    const truckingDefined = Object.keys(trucking).length !== 0;
-    if (!truckingDefined) {
-      this.$set(this.localSurvey, "wash", {
-        trucking: this.generateNewWashForm(),
-      });
-    }
-
-    this.washForm = cloneDeep(this.localSurvey.wash.trucking);
-  }
-
-  public syncLocalProject(): void {
-    // init function
-    this.setLocalProject();
-
-    this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["GhgModule/SET_PROJECT"];
-      if (shouldUpdate.includes(mutation.type)) {
-        this.setLocalProject();
-      }
-    });
-  }
-
-  public async submitForm(value: GreenHouseGaz): Promise<void> {
-    if (value.name !== "") {
-      this.$set(this.localSurvey, "wash", {
-        trucking: this.washForm,
-      });
-      value.surveys.splice(this.localSurveyIndex, 1, this.localSurvey);
-      console.log(value);
-      await this.updateDoc(value);
-    } else {
-      throw new Error("please fill the new Name");
-    }
-  }
-
-  public created(): void {
-    this.syncLocalProject();
-  }
-
-  private computeResults(washInput: WashInput): WashResult {
+  private computeResults(
+    washInput: WashTruckingItemInputs
+  ): WashTruckingItemResults {
     const REF_WSH_D = 0.25213; //	Need reference cf with cara@epfl.ch
-    const res = {} as WashResult;
+    const res = {} as WashTruckingItemResults;
     res.TR_NUM = Math.ceil(washInput.WACL / washInput.TR_VOL);
     res.TR_DIST = res.TR_NUM * washInput.TOT_WS * 2;
     res.CO2_WSH_TRB = (REF_WSH_D * res.TR_DIST) / 1000;
     return res;
   }
 
-  private computeBalance(): WashBalanceResult {
-    const res = {} as WashBalanceResult;
+  private computeBalance(): WashTruckingItemBalance {
+    const res = {} as WashTruckingItemBalance;
     const baselineRes = this.washForm.baseline.results;
     const endlineRes = this.washForm.endline.results;
     // ABSOLUTE (TR_NUM_B - TR_NUM_D) / TR_NUM_B
@@ -305,21 +261,6 @@ export default class WASH extends Vue {
         baselineRes.CO2_WSH_TRB) *
       100;
     return res;
-  }
-
-  @Watch("washForm.baseline.inputs", { deep: true, immediate: true })
-  public onBaselineChange(newValue: WashInput): void {
-    if (newValue) {
-      this.washForm.baseline.results = this.computeResults(newValue);
-    }
-  }
-
-  @Watch("washForm.endline.inputs", { deep: true, immediate: true })
-  public onEndline(newValue: WashInput): void {
-    if (newValue) {
-      this.washForm.endline.results = this.computeResults(newValue);
-      this.washForm.endline.resultsBalance = this.computeBalance();
-    }
   }
 
   // B is for Baseline
@@ -408,28 +349,6 @@ export default class WASH extends Vue {
       disabled: true,
     },
   ];
-}
-
-interface WashInput {
-  US_TYP: truckingType;
-  TOT_WS: number;
-  WACL: number;
-  TR_VOL: number;
-  TR_TYP: truckType;
-}
-type truckingType = "WATER" | "WASTEWATER" | "FAECAL SLUDGE";
-type truckType = "DIESEL";
-
-interface WashResult {
-  TR_NUM: number;
-  TR_DIST: number;
-  CO2_WSH_TRB: number;
-}
-interface WashBalanceResult {
-  TR_NUM_DIFF: number;
-  TR_DIST_DIFF: number;
-  CO2_WSH_TRB_DIFF: number;
-  CO2_WSH_TRB_PER: number;
 }
 </script>
 
