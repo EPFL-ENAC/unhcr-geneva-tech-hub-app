@@ -14,10 +14,15 @@
           persistent-placeholder
           required
           type="text"
+          id="username"
+          name="username"
         />
         <v-text-field
           outlined
           v-model="password"
+          name="current-password"
+          autocomplete="current-password"
+          id="current-password"
           label="Password"
           placeholder=" "
           persistent-placeholder

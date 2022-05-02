@@ -279,8 +279,7 @@ export default class ProjectList extends Vue {
         surveyId: encodeURIComponent(surveyId),
       },
       query: {
-        category: "Energy",
-        subcategory: "Facilities",
+        category: "Info",
       },
     });
   }

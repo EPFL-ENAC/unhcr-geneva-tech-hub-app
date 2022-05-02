@@ -24,6 +24,8 @@ export interface GreenHouseGaz {
   _id: string;
   name: string;
   country_code: string;
+  latitude: number;
+  longitude: number;
   surveys: Survey[];
   users: string[];
   created_by: string;

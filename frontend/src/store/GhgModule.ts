@@ -119,8 +119,9 @@ const actions: ActionTree<ProjectsState, RootState> = {
       })
         .then(function (result) {
           if (result?.rows) {
-            context.commit("SET_COUNTRIES", result.rows);
-            return result.rows;
+            const countries = result.rows.filter((item) => item !== null);
+            context.commit("SET_COUNTRIES", countries);
+            return countries;
           }
           throw new Error("undefined 'project/countries_with_info' response");
         })

@@ -40,55 +40,8 @@ export default {
         import(
           /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem.vue"
         ),
-      redirect: { name: "GreenHouseGazItemAbout" },
-      children: [
-        {
-          path: "users",
-          meta: {
-            title: "Users",
-          },
-          name: "GreenHouseGazItemUsers",
-          component: () =>
-            import(
-              /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/Users.vue"
-            ),
-        },
-        ghgSurveysRouter,
-        {
-          path: "configuration",
-          meta: {
-            title: "Configuration",
-          },
-          name: "GreenHouseGazItemConfiguration",
-          component: () =>
-            import(
-              /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/Configuration.vue"
-            ),
-        },
-        {
-          path: "about",
-          meta: {
-            title: "About",
-          },
-          name: "GreenHouseGazItemAbout",
-          component: () =>
-            import(
-              /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/About.vue"
-            ),
-        },
-        {
-          name: "GreenHouseGazCompareSurveys",
-          path: "compare-surveys",
-          meta: {
-            hideSiteTabs: true,
-          },
-          component: () => {
-            return import(
-              /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/Compare.vue"
-            );
-          },
-        },
-      ],
+      redirect: { name: "GreenHouseGazItemSurveysList" },
+      children: [ghgSurveysRouter],
     },
   ],
 } as RouteConfig;
