@@ -18,10 +18,27 @@
             >
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete"
+              <v-btn color="blue darken-1" text @click="closeDialog"
                 >Cancel</v-btn
               >
               <v-btn color="blue darken-1" text @click="deleteItemConfirm"
+                >OK</v-btn
+              >
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-dialog v-model="dialogDuplicate" max-width="500px">
+          <v-card>
+            <v-card-title class="text-h5"
+              >Confirm copy of this survey?</v-card-title
+            >
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeDialog"
+                >Cancel</v-btn
+              >
+              <v-btn color="blue darken-1" text @click="duplicateItemConfirm"
                 >OK</v-btn
               >
               <v-spacer></v-spacer>
@@ -36,6 +53,7 @@
       <template v-slot:[`item.actions`]="{ item }">
         <div v-if="$can('edit', localProject)" class="survey-list__actions">
           <router-link
+            class="better-click"
             :to="{
               name: 'GreenHouseGazItemSurveyId',
               params: {
@@ -50,7 +68,12 @@
           >
             <v-icon small class="mr-2"> mdi-pencil </v-icon>
           </router-link>
-          <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+          <v-icon class="better-click" small @click.stop="duplicateItem(item)">
+            mdi-content-duplicate
+          </v-icon>
+          <v-icon class="better-click" small @click.stop="deleteItem(item)">
+            mdi-delete
+          </v-icon>
         </div>
       </template>
     </v-data-table>
@@ -104,6 +127,7 @@ export default class ProjectItem extends Vue {
 
   dialog = false;
   dialogDelete = false;
+  dialogDuplicate = false;
   editedIndex = -1;
   private newDefaultItem(): Survey {
     return {
@@ -131,6 +155,19 @@ export default class ProjectItem extends Vue {
     });
   }
 
+  duplicateItem(item: Survey): void {
+    this.editedIndex = this.localProject.surveys.indexOf(item);
+    this.editedItem = cloneDeep(item) as Survey;
+    this.dialogDuplicate = true;
+  }
+
+  async duplicateItemConfirm(): Promise<void> {
+    this.editedItem.name = `${this.editedItem.name} (copy)`;
+    this.localProject.surveys.push(this.editedItem);
+    await this.submitForm(this.localProject);
+    await this.closeDialog();
+  }
+
   deleteItem(item: Survey): void {
     this.editedIndex = this.localProject.surveys.indexOf(item);
     this.editedItem = Object.assign({}, item) as Survey;
@@ -140,18 +177,12 @@ export default class ProjectItem extends Vue {
   async deleteItemConfirm(): Promise<void> {
     this.localProject.surveys.splice(this.editedIndex, 1);
     await this.submitForm(this.localProject);
-    await this.closeDelete();
+    await this.closeDialog();
   }
 
-  async close(): Promise<void> {
-    this.dialog = false;
-    await this.$nextTick();
-    this.editedItem = this.newDefaultItem();
-    this.editedIndex = -1;
-  }
-
-  closeDelete(): void {
+  closeDialog(): void {
     this.dialogDelete = false;
+    this.dialogDuplicate = false;
     this.$nextTick().then(() => {
       this.editedItem = this.newDefaultItem();
       this.editedIndex = -1;
@@ -168,9 +199,7 @@ export default class ProjectItem extends Vue {
       this.localProject.surveys.push(this.editedItem);
     }
     const createdName = this.editedItem.name;
-    // createdName will be country_site_year_month_day
     await this.submitForm(this.localProject);
-    await this.close();
     // TODO: should check unicity of name
     await this.$router.push({
       name: "GreenHouseGazItemSurveyId",
@@ -243,5 +272,10 @@ export default class ProjectItem extends Vue {
 ::v-deep .site-row-pointer {
   cursor: pointer;
   outline: none;
+}
+.better-click {
+  // so to increase clickable zone
+  padding: 1em;
+  margin: -1em;
 }
 </style>
