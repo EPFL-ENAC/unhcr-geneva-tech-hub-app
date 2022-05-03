@@ -49,23 +49,25 @@ export default class CountrySelect extends Vue {
   public get countriesRef(): CountryInfo[] {
     const countriesCloned = cloneDeep(this.countries);
     if (countriesCloned && countriesCloned.length) {
-      return countriesCloned.map(
+      const result = countriesCloned.map(
         (v: string): CountryInfo => ({
           emoji: flagEmoji(v),
           name: v,
           code: v,
         })
       ) as CountryInfo[];
+      return this.countriesSorted(result);
     } else {
-      return Countries.map((country) => ({
+      const result = Countries.map((country) => ({
         ...country,
         emoji: flagEmoji(country.code),
       })) as CountryInfo[];
+      return this.countriesSorted(result);
     }
   }
 
-  public get countriesSorted(): CountryInfo[] {
-    const result = cloneDeep(this.countriesRef);
+  public countriesSorted(value: CountryInfo[]): CountryInfo[] {
+    const result = cloneDeep(value);
     result.sort((a: CountryInfo, b: CountryInfo): number => {
       if (a.name === b.name) {
         return 0;
