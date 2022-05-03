@@ -26,18 +26,10 @@
               hide-details="auto"
               :items="addSelectItems"
               label="Available technologies"
+              append-outer-icon="mdi-plus-box"
+              @click:append-outer="addItem(addSelectedItem)"
             ></v-select>
           </v-card-text>
-          <v-card-actions class="justify-end">
-            <v-btn
-              :disabled="!addSelectedItem"
-              color="primary"
-              icon
-              @click="addItem(addSelectedItem)"
-            >
-              <v-icon large>mdi-plus-box</v-icon>
-            </v-btn>
-          </v-card-actions>
         </v-card>
       </v-dialog>
     </template>
@@ -300,8 +292,10 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   }
 
   addItem(item: CookingStove): void {
-    this.module.categoryCookings.push(this.mapCategoryCooking(item));
-    this.addDialog = false;
+    if (item) {
+      this.module.categoryCookings.push(this.mapCategoryCooking(item));
+      this.addDialog = false;
+    }
   }
 
   deleteItem(tableItem: TableItem): void {

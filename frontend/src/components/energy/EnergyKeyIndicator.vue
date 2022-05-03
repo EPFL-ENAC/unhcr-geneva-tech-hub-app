@@ -3,11 +3,11 @@
     <template v-slot:activator="{ on, attrs }">
       <div v-bind="attrs" class="text-overline" v-on="on">
         {{ name }}:
-        {{ value | formatNumber }}
-        <template v-if="unit">[{{ unit }}]</template>
-        <span v-if="percentage !== 0" :style="{ color: color }">
-          <v-icon :color="color" small>{{ icon }}</v-icon>
-          {{ percentage | formatNumber(2, true) }} %
+        <span class="font-weight-black">{{ value | formatNumber }}</span>
+        <template v-if="unit"> [{{ unit }}]</template>
+        <span v-if="percentage !== 0" :style="{ color: color }"
+          >&nbsp;<v-icon :color="color" small>{{ icon }}</v-icon>
+          <span>{{ percentage | formatNumber(2, true) }} %</span>
         </span>
       </div>
     </template>

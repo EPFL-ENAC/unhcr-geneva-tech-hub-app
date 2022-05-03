@@ -5,7 +5,7 @@
         <v-card-text>
           <v-row>
             <v-col cols="4">
-              <h2>Energy</h2>
+              <h1>Energy</h1>
               <energy-key-indicator
                 name="Total Energy"
                 unit="MJ/household"
@@ -24,7 +24,7 @@
                 :items="energy"
                 :y-labels="['Final Energy [MJ]', 'Efficiency [%]']"
               ></energy-chart>
-              <h3>Requirement of fuelwood and charcoal</h3>
+              <h2>Requirement of fuelwood and charcoal</h2>
               <energy-key-indicator
                 name="Maximum annual wood equivalent area"
                 unit="ha"
@@ -32,14 +32,15 @@
                 :value="globalResult.woodArea"
               ></energy-key-indicator>
               <energy-chart
-                title="Equivalent forested area [ha]"
+                title="Equivalent forested area"
                 :years="years"
                 :items="wood"
+                :y-labels="['[ha]']"
               ></energy-chart>
             </v-col>
             <v-divider vertical></v-divider>
             <v-col cols="4">
-              <h2>Emissions</h2>
+              <h1>Emissions</h1>
               <energy-key-indicator
                 name="CO2 Emission"
                 unit="kg/household"
@@ -47,24 +48,27 @@
                 :value="globalResult.emissionCo2"
               ></energy-key-indicator>
               <energy-chart
-                title="CO2 [kg]"
+                title="CO2"
                 :years="years"
                 :items="emissionCo2"
+                :y-labels="['[kg]']"
               ></energy-chart>
               <energy-chart
-                title="CO [g]"
+                title="CO"
                 :years="years"
                 :items="emissionCo"
+                :y-labels="['[g]']"
               ></energy-chart>
               <energy-chart
-                title="PM [mg]"
+                title="PM"
                 :years="years"
                 :items="emissionPm"
+                :y-labels="['[mg]']"
               ></energy-chart>
             </v-col>
             <v-divider vertical></v-divider>
             <v-col cols="4">
-              <h2>Economy</h2>
+              <h1>Economy</h1>
               <energy-key-indicator
                 name="Sum Discounted Cost"
                 unit="$"
@@ -72,9 +76,10 @@
                 :value="globalResult.discountedCost"
               ></energy-key-indicator>
               <energy-chart
-                title="Income/Cost [$]"
+                title="Income/Cost"
                 :years="years"
                 :items="income"
+                :y-labels="['[$]']"
               ></energy-chart>
               <energy-key-indicator
                 name="Affordability"
@@ -84,9 +89,10 @@
                 greater-better
               ></energy-key-indicator>
               <energy-chart
-                title="Affordability [%]"
+                title="Affordability"
                 :years="years"
                 :items="affordability"
+                :y-labels="['[%]']"
               ></energy-chart>
             </v-col>
           </v-row>
@@ -916,3 +922,9 @@ interface GlobalResult {
   affordability: number;
 }
 </script>
+
+<style lang="scss" scoped>
+h1 {
+  text-align: center;
+}
+</style>
