@@ -36,6 +36,9 @@
       </v-toolbar>
     </template>
 
+    <template v-slot:[`item.facilityType`]="{ item }">
+      {{ facilityTypesMap[item.facilityType] }}
+    </template>
     <template v-slot:item.dieselLiters="{ item }">
       {{ item.dieselLiters | formatNumber }}
     </template>
@@ -101,6 +104,7 @@
 <script lang="ts">
 import DeleteFacilityDialog from "@/components/green_house_gaz/energy/DeleteFacilityDialog.vue";
 import DuplicateFacilityDialog from "@/components/green_house_gaz/energy/DuplicateFacilityDialog.vue";
+import { facilityTypes } from "@/components/green_house_gaz/energy/Facility";
 import FacilityDialog from "@/components/green_house_gaz/energy/FacilityDialog.vue";
 import { EnergyFacilityItem } from "@/store/GhgInterface";
 import { cloneDeep } from "lodash";
@@ -147,6 +151,17 @@ export default class BaselineFacilitiesTable extends Vue {
   @Watch("items", { immediate: true, deep: true })
   onItemChange(value: EnergyFacilityItem[]): void {
     this.localItems = cloneDeep(value);
+  }
+
+  public get facilityTypesMap(): Record<string, string> {
+    const acc: Record<string, string> = {};
+    return facilityTypes.reduce(
+      (acc: Record<string, string>, item: Record<string, string>) => {
+        acc[item.componentName] = item.name;
+        return acc;
+      },
+      acc
+    );
   }
 
   public get facilitiesName(): string[] {

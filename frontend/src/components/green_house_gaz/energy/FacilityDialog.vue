@@ -30,12 +30,7 @@
               </v-col>
             </v-row>
 
-            <v-row
-              v-if="
-                localItem.facilityType !== '' &&
-                localItem.facilityType !== 'NotPowered'
-              "
-            >
+            <v-row>
               <v-col cols="6">
                 <v-text-field
                   v-model="localItem.name"
@@ -47,6 +42,10 @@
               </v-col>
               <component
                 :is="localItem.facilityType"
+                v-if="
+                  localItem.facilityType !== '' &&
+                  localItem.facilityType !== notPoweredName
+                "
                 :edit-mode="!isNewMode"
                 :facilities-name="facilitiesName"
                 :facility.sync="localItem"
@@ -84,7 +83,11 @@
 
 <script lang="ts">
 import DieselGenerators from "@/components/green_house_gaz/energy/DieselGenerators.vue";
-import { Facility } from "@/components/green_house_gaz/energy/Facility";
+import {
+  Facility,
+  facilityTypes,
+  notPoweredName,
+} from "@/components/green_house_gaz/energy/Facility";
 import HybridMix from "@/components/green_house_gaz/energy/HybridMix.vue";
 import NationalGrid from "@/components/green_house_gaz/energy/NationalGrid.vue";
 import RenewableEnergy from "@/components/green_house_gaz/energy/RenewableEnergy.vue";
@@ -157,13 +160,8 @@ export default class FacilityDialog extends Vue {
     this.localItem = cloneDeep(value);
   }
 
-  facilityTypes = [
-    { name: "Diesel generators", componentName: "DieselGenerators" },
-    { name: "National Grid", componentName: "NationalGrid" },
-    { name: "Renewable Energy", componentName: "RenewableEnergy" },
-    { name: "Hybrid Mix", componentName: "HybridMix" },
-    { name: "Not powered" },
-  ];
+  notPoweredName = notPoweredName;
+  facilityTypes = facilityTypes;
 
   rules = [(v: string): boolean | string => !!v || `field is required`];
 

@@ -57,15 +57,17 @@
       <v-col>
         <v-card elevation="2" rounded>
           <v-card-title> <h3 class="endline-title">Endline</h3> </v-card-title>
-          <v-card-text v-if="showEndLines">
-            <endline-facilities-table
-              :facilities="facilityForm.baseline.inputs"
-              :items.sync="facilityForm.endline.inputs"
-              :results="facilityForm.endline.results"
-              :balance="facilityForm.endline.resultsBalance"
-              :disabled="baselineMode"
-              @update:items="computeEndlineResults"
-            />
+          <div v-if="showEndLines">
+            <v-card-text>
+              <endline-facilities-table
+                :facilities="facilityForm.baseline.inputs"
+                :items.sync="facilityForm.endline.inputs"
+                :results="facilityForm.endline.results"
+                :balance="facilityForm.endline.resultsBalance"
+                :disabled="baselineMode"
+                @update:items="computeEndlineResults"
+              />
+            </v-card-text>
             <v-container class="d-flex flex-column" fluid>
               <v-row>
                 <v-col class="d-flex justify-end mx-2 mb-2">
@@ -95,10 +97,15 @@
                 </v-col>
               </v-row>
             </v-container>
-          </v-card-text>
-          <v-card-text v-else>
-            <h4>{{ endlineText }}</h4>
-          </v-card-text>
+          </div>
+
+          <div v-else>
+            <v-row>
+              <v-col class="d-flex justify-end mx-2 mb-2">
+                <h3>{{ endlineText }}</h3>
+              </v-col>
+            </v-row>
+          </div>
         </v-card>
       </v-col>
     </v-row>
@@ -134,7 +141,7 @@ export default class Facilities extends Vue {
   readonly form: EnergyFacilitySurvey | undefined;
 
   project!: GreenHouseGaz;
-  baselineMode = false; // should be true in production
+  baselineMode = true;
 
   public get facilityForm(): EnergyFacilitySurvey {
     return this.form || this.generateNewFacilitiesForm();
@@ -183,10 +190,13 @@ export default class Facilities extends Vue {
           let changeInEmission = 0;
           if (baselineInput) {
             const localCO2 = endlineInput.totalCO2Emission;
-            const refCO2 = baselineInput.totalCO2Emission;
+            let refCO2 = baselineInput.totalCO2Emission;
             if (refCO2 !== 0) {
               // if refCO2 is 0 it's not valid
-              changeInEmission = ((refCO2 - localCO2) / refCO2) * 100;
+              changeInEmission = ((localCO2 - refCO2) / refCO2) * 100;
+            } else {
+              refCO2 = 0.001;
+              changeInEmission = ((localCO2 - refCO2) / refCO2) * 100;
             }
           }
           return {
