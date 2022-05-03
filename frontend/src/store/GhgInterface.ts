@@ -11,10 +11,13 @@ export interface CountryInfo {
   emoji: string;
 }
 export interface Site {
+  id: string; // site unique identitier (name as first)
+  name: string; // site name // location
   country_code: CountryCode;
   created_by: Email;
-  name: string; // site name // location
   users: Email[];
+  lat?: number;
+  lon?: number;
 }
 type CountryCode = string;
 type Email = string;

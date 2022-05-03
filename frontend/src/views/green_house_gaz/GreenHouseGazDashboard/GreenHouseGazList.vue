@@ -30,7 +30,7 @@
         >
           <template v-slot:expanded-item="{ headers, item }">
             <td :colspan="headers.length">
-              <survey-list :site="item.name" :country-code="country.key" />
+              <survey-list :site="item.id" :country-code="country.key" />
             </td>
           </template>
         </v-data-table>

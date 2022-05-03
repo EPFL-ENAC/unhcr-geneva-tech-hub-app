@@ -30,17 +30,17 @@
         </v-dialog>
       </template>
 
-      <template v-slot:item.created_at="{ item }">
+      <template v-slot:[`item.created_at`]="{ item }">
         {{ item.created_at | formatDate }}
       </template>
-      <template v-slot:item.actions="{ item }">
-        <div class="survey-list__actions">
+      <template v-slot:[`item.actions`]="{ item }">
+        <div v-if="$can('edit', localProject)" class="survey-list__actions">
           <router-link
             :to="{
               name: 'GreenHouseGazItemSurveyId',
               params: {
                 country: encodeURIComponent(localProject.country_code),
-                site: encodeURIComponent(localProject.name),
+                site: encodeURIComponent(localProject._id),
                 surveyId: encodeURIComponent(item.name),
               },
               query: {
@@ -64,7 +64,6 @@ import { SyncDatabase } from "@/utils/couchdb";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-
 @Component({
   computed: {
     ...mapGetters("GhgModule", ["project"]),
@@ -123,7 +122,7 @@ export default class ProjectItem extends Vue {
       name: "GreenHouseGazItemSurveyId",
       params: {
         country: encodeURIComponent(this.localProject.country_code),
-        site: encodeURIComponent(this.localProject.name),
+        site: encodeURIComponent(this.localProject._id),
         surveyId: encodeURIComponent(item.name),
       },
       query: {
@@ -214,7 +213,6 @@ export default class ProjectItem extends Vue {
   mounted(): void {
     this.syncDB();
     if (this.site) {
-      console.log("get doc from mounted");
       this.getDoc(this.site);
     }
   }
