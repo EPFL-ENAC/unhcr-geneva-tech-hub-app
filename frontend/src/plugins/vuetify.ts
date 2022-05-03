@@ -1,5 +1,6 @@
 import "@mdi/font/css/materialdesignicons.css";
 import Vue from "vue";
+import { colors } from "vuetify/lib";
 import Vuetify from "vuetify/lib/framework";
 import { VuetifyParsedTheme } from "vuetify/types/services/theme";
 
@@ -47,4 +48,10 @@ export const cccmColors = {
   secondary3: "#d48c74",
   secondary4: "#f0b89e",
   secondary5: "#f8e4d2",
+};
+
+export const indicatorColors = {
+  good: colors.green.base,
+  bad: colors.red.base,
+  neutral: colors.blue.base,
 };

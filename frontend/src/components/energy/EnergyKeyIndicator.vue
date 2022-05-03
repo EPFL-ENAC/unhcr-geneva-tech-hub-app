@@ -3,32 +3,28 @@
     <template v-slot:activator="{ on, attrs }">
       <div v-bind="attrs" class="text-overline" v-on="on">
         {{ name }}:
-        <span class="font-weight-black">{{ value | formatNumber }}</span>
+        <span class="font-weight-black">{{ value | formatNumber(0) }}</span>
         <template v-if="unit"> [{{ unit }}]</template>
         <span v-if="percentage !== 0" :style="{ color: color }"
           >&nbsp;<v-icon :color="color" small>{{ icon }}</v-icon>
-          <span>{{ percentage | formatNumber(2, true) }} %</span>
+          <span>{{ percentage | formatNumber(0, true) }} %</span>
         </span>
       </div>
     </template>
     <div class="text-overline">
-      Baseline: {{ baseValue | formatNumber }}
+      Baseline: {{ baseValue | formatNumber(0) }}
       <template v-if="unit">[{{ unit }}]</template>
     </div>
   </v-tooltip>
 </template>
 
 <script lang="ts">
+import { indicatorColors } from "@/plugins/vuetify";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { colors } from "vuetify/lib";
 
 @Component
 export default class EnergyKeyIndicator extends Vue {
-  readonly betterColor = colors.green.base;
-  readonly worseColor = colors.red.base;
-  readonly sameColor = colors.blue.base;
-
   @Prop(String)
   readonly name!: string;
   @Prop(Number)
@@ -42,11 +38,11 @@ export default class EnergyKeyIndicator extends Vue {
 
   get color(): string {
     if (this.value < this.baseValue) {
-      return this.greaterBetter ? this.worseColor : this.betterColor;
+      return this.greaterBetter ? indicatorColors.bad : indicatorColors.good;
     } else if (this.value > this.baseValue) {
-      return this.greaterBetter ? this.betterColor : this.worseColor;
+      return this.greaterBetter ? indicatorColors.good : indicatorColors.bad;
     } else {
-      return this.sameColor;
+      return indicatorColors.neutral;
     }
   }
 

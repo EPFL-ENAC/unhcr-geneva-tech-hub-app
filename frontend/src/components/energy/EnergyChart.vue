@@ -20,6 +20,7 @@ import {
   EChartsOption,
   LineSeriesOption,
   TopLevelFormatterParams,
+  YAXisOption,
 } from "echarts/types/dist/shared";
 import "vue-class-component/hooks";
 import VChart from "vue-echarts";
@@ -84,14 +85,19 @@ export default class EnergyChart extends Vue {
         nameLocation: "middle",
         nameGap: 24,
       },
-      yAxis: this.yLabels?.map((label) => ({
-        type: "value",
-        scale: true,
-        name: label,
-      })) ?? {
-        type: "value",
-        scale: true,
-      },
+      yAxis: ((this.yLabels ?? [undefined]) as (string | undefined)[]).map(
+        (label?: string) => {
+          const option: YAXisOption = {
+            type: "value",
+            scale: true,
+            name: label,
+            axisLabel: {
+              formatter: (value: number) => formatNumber(value),
+            },
+          };
+          return option;
+        }
+      ),
       series: this.items.flatMap((item) => {
         const tooltips = item.tooltips;
         const option: BarSeriesOption | LineSeriesOption = {

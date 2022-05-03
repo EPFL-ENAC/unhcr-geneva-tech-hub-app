@@ -371,6 +371,7 @@ export default class EnergyResult extends Vue {
       ...this.getDetailChartItems("bar", "finalEnergy", {
         prefix: "Final Energy",
         unit: "MJ",
+        keys: ["usefulEnergy"],
       }),
       this.getTotalChartItem("line", "energyEfficiency", {
         name: "Efficiency",
@@ -466,18 +467,28 @@ export default class EnergyResult extends Vue {
       ratio?: number;
       yAxisIndex?: number;
       unit?: string;
+      keys?: (keyof HouseholdResult)[];
     }
   ): ChartItem[] {
     return socioEconomicCategories.map((cat) => {
       const name = this.$t(`energy.${cat}`).toString();
       const ratio = option?.ratio ?? 1;
       const mapValue = (value: number) => ratio * value;
+      const keys = option?.keys;
       return {
         type: type,
         name: option?.prefix ? `${option?.prefix} ${name}` : name,
         data: this.siteResults.map((result) => ({
           value: mapValue(result.categories[cat][key]),
           average: mapValue(result.households[cat][key]),
+          ...(keys
+            ? Object.fromEntries(
+                keys.flatMap((key) => [
+                  [`${key}-total`, mapValue(result.categories[cat][key])],
+                  [`${key}-average`, mapValue(result.households[cat][key])],
+                ])
+              )
+            : {}),
         })),
         color: getColor(cat),
         yAxisIndex: option?.yAxisIndex,
@@ -491,6 +502,21 @@ export default class EnergyResult extends Vue {
             name: "Average",
             key: "average",
           },
+          ...(keys
+            ? keys.flatMap((key) => {
+                const name = this.$t(`energy.${key}`).toString();
+                return [
+                  {
+                    name: `${name} Total`,
+                    key: `${key}-total`,
+                  },
+                  {
+                    name: `${name} Average`,
+                    key: `${key}-average`,
+                  },
+                ];
+              })
+            : []),
         ],
       };
     });

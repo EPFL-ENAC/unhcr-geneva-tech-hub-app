@@ -3,6 +3,7 @@
     "cookstoveName": "Cookstove",
     "fuelName": "Fuel",
     "action": "Action",
+    "usefulEnergy": "Useful Energy",
     "veryLow": "Very Low",
     "low": "Low",
     "middle": "Middle",
