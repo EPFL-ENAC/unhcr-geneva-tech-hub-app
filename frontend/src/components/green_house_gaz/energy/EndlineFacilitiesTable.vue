@@ -10,16 +10,6 @@
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>Endline</v-toolbar-title>
-          <v-divider class="mx-4" inset vertical></v-divider>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            dark
-            class="mb-2"
-            @click="() => openItemDialog(newDefaultItem(), -1)"
-          >
-            New intervention
-          </v-btn>
           <!-- weird sync because new intervention is not a new item, but a modification of an existing -->
           <intervention-dialog
             :dialog-open.sync="dialogs['intervention-dialog']"
@@ -39,22 +29,22 @@
         </v-toolbar>
       </template>
 
-      <template v-slot:item.dieselLiters="{ item }">
+      <template v-slot:[`item.dieselLiters`]="{ item }">
         {{ item.dieselLiters | formatNumber }}
       </template>
-      <template v-slot:item.gridPower="{ item }">
+      <template v-slot:[`item.gridPower`]="{ item }">
         {{ item.gridPower | formatNumber }}
       </template>
-      <template v-slot:item.renewablePower="{ item }">
+      <template v-slot:[`item.renewablePower`]="{ item }">
         {{ item.renewablePower | formatNumber }}
       </template>
-      <template v-slot:item.totalCO2Emission="{ item }">
+      <template v-slot:[`item.totalCO2Emission`]="{ item }">
         <span class="bold-table-cell-content">
           {{ item.totalCO2Emission | formatNumber }}
         </span>
       </template>
 
-      <template v-slot:item.changeInEmission="{ item }">
+      <template v-slot:[`item.changeInEmission`]="{ item }">
         <span
           :class="{
             'facilities-positive': item.changeInEmission > 0,
@@ -66,7 +56,7 @@
         </span>
       </template>
 
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:[`item.actions`]="{ item }">
         <v-btn
           icon
           small
@@ -76,26 +66,6 @@
         >
           <v-icon> mdi-pencil</v-icon>
         </v-btn>
-
-        <!-- <v-btn
-          icon
-          small
-          class="mr-2"
-          @click="openDuplicateItemDialog(item, item.name)"
-          :disabled="disabled"
-        >
-          <v-icon> mdi-content-duplicate</v-icon>
-        </v-btn>
-
-        <v-btn
-          icon
-          small
-          class="mr-2"
-          @click="openDeleteDialog(item, item.name)"
-          :disabled="disabled"
-        >
-          <v-icon> mdi-delete</v-icon>
-        </v-btn> -->
       </template>
       <template v-slot:foot="{}">
         <tr>
@@ -104,7 +74,17 @@
             :key="$index"
             class="facilities-footer-like-vuetify"
           >
-            <span v-if="!header.hideFooterContent">
+            <span
+              v-if="header.value === 'changeInEmission'"
+              :class="{
+                'facilities-positive': results[header.value] > 0,
+                'facilities-negative': results[header.value] < 0,
+                'bold-table-cell-content': results[header.value] === 0,
+              }"
+            >
+              {{ results[header.value] | formatNumber }}%
+            </span>
+            <span v-else-if="!header.hideFooterContent">
               {{ results[header.value] | formatNumber }}
             </span>
           </td>
