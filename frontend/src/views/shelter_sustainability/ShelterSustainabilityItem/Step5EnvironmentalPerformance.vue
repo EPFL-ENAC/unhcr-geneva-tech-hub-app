@@ -69,26 +69,26 @@
                       </tr>
                     </thead>
                   </template>
-                  <template v-slot:item.weight="{ item }">
+                  <template v-slot:[`item.weight`]="{ item }">
                     <span>{{ item.weight | formatNumber }} </span>
                   </template>
-                  <template v-slot:item.embodiedCarbonProduction="{ item }">
+                  <template v-slot:[`item.embodiedCarbonProduction`]="{ item }">
                     <span
                       >{{ item.embodiedCarbonProduction | formatNumber }}
                     </span>
                   </template>
-                  <template v-slot:item.embodiedCarbonTransport="{ item }">
+                  <template v-slot:[`item.embodiedCarbonTransport`]="{ item }">
                     <span
                       >{{ item.embodiedCarbonTransport | formatNumber }}
                     </span>
                   </template>
-                  <template v-slot:item.embodiedCarbonTotal="{ item }">
+                  <template v-slot:[`item.embodiedCarbonTotal`]="{ item }">
                     <span>{{ item.embodiedCarbonTotal | formatNumber }} </span>
                   </template>
-                  <template v-slot:item.embodiedWater="{ item }">
+                  <template v-slot:[`item.embodiedWater`]="{ item }">
                     <span>{{ item.embodiedWater | formatNumber }} </span>
                   </template>
-                  <template v-slot:item.totalCost="{ item }">
+                  <template v-slot:[`item.totalCost`]="{ item }">
                     <span>{{ item.totalCost | formatNumber }} </span>
                   </template>
                   <template v-slot:expanded-item="{ headers, item }">
@@ -99,35 +99,35 @@
                         :headers="headersSubItems"
                         :items="item.children"
                       >
-                        <template v-slot:item.formId="{}">
+                        <template v-slot:[`item.formId`]="{}">
                           <span v-if="materialMap[item.formId]">{{
                             materialMap[item.formId].form
                           }}</span>
                           <span v-else> {{ item.formId }}</span>
                         </template>
                         <!-- beware duplicated code from above -->
-                        <template v-slot:item.weight="{}">
+                        <template v-slot:[`item.weight`]="{}">
                           <span>{{ item.weight | formatNumber }} </span>
                         </template>
-                        <template v-slot:item.embodiedCarbonProduction="{}">
+                        <template v-slot:[`item.embodiedCarbonProduction`]="{}">
                           <span
                             >{{ item.embodiedCarbonProduction | formatNumber }}
                           </span>
                         </template>
-                        <template v-slot:item.embodiedCarbonTransport="{}">
+                        <template v-slot:[`item.embodiedCarbonTransport`]="{}">
                           <span
                             >{{ item.embodiedCarbonTransport | formatNumber }}
                           </span>
                         </template>
-                        <template v-slot:item.embodiedCarbonTotal="{}">
+                        <template v-slot:[`item.embodiedCarbonTotal`]="{}">
                           <span
                             >{{ item.embodiedCarbonTotal | formatNumber }}
                           </span>
                         </template>
-                        <template v-slot:item.embodiedWater="{}">
+                        <template v-slot:[`item.embodiedWater`]="{}">
                           <span>{{ item.embodiedWater | formatNumber }} </span>
                         </template>
-                        <template v-slot:item.totalCost="{}">
+                        <template v-slot:[`item.totalCost`]="{}">
                           <span>{{ item.totalCost | formatNumber }} </span>
                         </template>
                       </v-data-table>

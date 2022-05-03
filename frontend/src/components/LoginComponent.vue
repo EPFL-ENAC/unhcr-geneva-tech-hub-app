@@ -82,7 +82,10 @@ export default class LoginComponent extends Vue {
       const idToken = params.get("id_token");
       if (idToken) {
         this.loginToken(idToken).then(() => {
-          this.$router.push({ name: this.destinationRouteName });
+          // push to current route if not current route
+          if (this.$route.name !== this.destinationRouteName) {
+            this.$router.push({ name: this.destinationRouteName });
+          }
         });
       }
     }
@@ -97,7 +100,9 @@ export default class LoginComponent extends Vue {
     this.password = ""; // to show visually the change
 
     this.loginAsGuest().then(() => {
-      this.$router.push({ name: this.destinationRouteName });
+      if (this.$route.name !== this.destinationRouteName) {
+        this.$router.push({ name: this.destinationRouteName });
+      }
     });
   }
   loginUnhcr(): void {
@@ -115,7 +120,9 @@ export default class LoginComponent extends Vue {
     const { username, password } = this;
     this.login({ username, password })
       .then(() => {
-        this.$router.push({ name: this.destinationRouteName });
+        if (this.$route.name !== this.destinationRouteName) {
+          this.$router.push({ name: this.destinationRouteName });
+        }
       })
       .catch((error: AxiosError) => {
         switch (error.response?.status) {

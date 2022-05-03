@@ -240,7 +240,7 @@ import { mapActions, mapGetters } from "vuex";
       "setEditDialog",
       "setItem",
     ]),
-    ...mapActions("SheltersTransportModule", ["syncDB", "getDoc", "closeDB"]),
+    ...mapActions("SheltersTransportModule", ["getAllDocs", "getDoc"]),
   },
   components: {
     CountrySelect,
@@ -264,8 +264,7 @@ export default class DeleteItemDialog extends Vue {
   localItem: Item = {} as Item;
   shelter!: Shelter;
 
-  syncDB!: () => null;
-  closeDB!: () => Promise<null>;
+  getAllDocs!: () => Promise<ShelterTransport[]>
   getDoc!: (id: string) => Promise<ShelterTransport>;
 
   formValid = false;
@@ -403,10 +402,7 @@ export default class DeleteItemDialog extends Vue {
   }
 
   mounted(): void {
-    this.syncDB();
-  }
-  destroyed(): void {
-    this.closeDB();
+    this.getAllDocs();
   }
 }
 </script>
