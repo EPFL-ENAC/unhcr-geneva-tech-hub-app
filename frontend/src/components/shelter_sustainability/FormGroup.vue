@@ -53,6 +53,7 @@ import { Score } from "@/store/ShelterInterface";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
+  name: "FormGroup",
   components: {
     RadioGroup,
     CheckboxGroup,
