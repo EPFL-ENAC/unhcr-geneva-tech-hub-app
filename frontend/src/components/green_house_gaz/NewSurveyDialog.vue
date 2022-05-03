@@ -63,7 +63,7 @@
                   required
                   name="description"
                   :rules="[ruleAYearIsRequired, ruleSurveyYearAlreadyExist]"
-                  label="Survey description"
+                  label="Assessment description"
                   type="text"
                 />
               </v-col>

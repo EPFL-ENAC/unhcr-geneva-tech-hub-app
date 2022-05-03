@@ -6,7 +6,7 @@ function(keys, values, rereduce) {
       },[]);
   } else {
     return keys.map(function(item) {
-      return values.filter(function(el) { return el.name === item[1]})[0]
+      return values.filter(function(el) { return el.id === item[1]})[0]
     });
   }
 }

@@ -1,5 +1,5 @@
 /** Config store */
-import { Country, GreenHouseGaz } from "@/store/GhgInterface";
+import { Country, GreenHouseGaz, Site } from "@/store/GhgInterface";
 import { SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
@@ -17,6 +17,7 @@ interface ProjectsState {
   projects: Array<GreenHouseGaz>;
   project: GreenHouseGaz;
   countries: Array<Country>;
+  sites: Site[];
   localCouch: SyncDatabase<GreenHouseGaz> | null;
 }
 
@@ -27,6 +28,7 @@ function generateState(): ProjectsState {
     projects: [],
     project: {} as GreenHouseGaz,
     countries: [],
+    sites: [],
     localCouch: null,
   };
 }
@@ -43,7 +45,7 @@ function generateNewProject(newGhg: GreenHouseGaz, user: CouchUser) {
 const getters: GetterTree<ProjectsState, RootState> = {
   projects: (s): Array<GreenHouseGaz> => s.projects,
   project: (s): GreenHouseGaz | null => s.project,
-
+  sites: (s): Array<Site> => s.sites,
   countries: (s): Array<Country> => s.countries,
 };
 
@@ -64,6 +66,9 @@ const mutations: MutationTree<ProjectsState> = {
   SET_COUNTRIES(state, countries) {
     state.countries = countries;
   },
+  SET_SITES(state, sites) {
+    state.sites = sites[0].value;
+  },
   ADD_DOC(state, value) {
     state.localCouch?.db.put(value).then(() => {
       state.projects.push(value);
@@ -77,6 +82,38 @@ const mutations: MutationTree<ProjectsState> = {
     });
   },
 };
+
+function getGenericCountries(
+  queryParams: CouchQuery = {
+    reduce: true,
+    group: true,
+    skip: 0,
+    limit: 1000,
+  },
+  COMMIT_NAME = "SET_COUNTRIES"
+) {
+  return function getCountries(
+    context: ActionContext<ProjectsState, RootState>
+  ) {
+    const db = context.state.localCouch?.remoteDB;
+    if (db) {
+      db?.query("project/countries_with_info", queryParams)
+        .then(function (result) {
+          if (result?.rows) {
+            const countries = result.rows.filter((item) => item !== null);
+            context.commit(COMMIT_NAME, countries);
+            return countries;
+          }
+          throw new Error("undefined 'project/countries_with_info' response");
+        })
+        .catch(function (err: Error) {
+          console.log(err);
+        });
+    } else {
+      throw new Error(MSG_DB_DOES_NOT_EXIST);
+    }
+  };
+}
 
 /** Action */
 const actions: ActionTree<ProjectsState, RootState> = {
@@ -108,30 +145,8 @@ const actions: ActionTree<ProjectsState, RootState> = {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
   },
-  getCountries: (context: ActionContext<ProjectsState, RootState>) => {
-    const db = context.state.localCouch?.remoteDB;
-    if (db) {
-      db?.query("project/countries_with_info", {
-        reduce: true,
-        group: true,
-        skip: 0,
-        limit: 100,
-      })
-        .then(function (result) {
-          if (result?.rows) {
-            const countries = result.rows.filter((item) => item !== null);
-            context.commit("SET_COUNTRIES", countries);
-            return countries;
-          }
-          throw new Error("undefined 'project/countries_with_info' response");
-        })
-        .catch(function (err: Error) {
-          console.log(err);
-        });
-    } else {
-      throw new Error(MSG_DB_DOES_NOT_EXIST);
-    }
-  },
+  getSites: getGenericCountries({}, "SET_SITES"),
+  getCountries: getGenericCountries(),
   addDoc: (
     context: ActionContext<ProjectsState, RootState>,
     newGhg: GreenHouseGaz
@@ -193,5 +208,12 @@ const GhgModule: Module<ProjectsState, RootState> = {
   mutations,
   actions,
 };
+
+interface CouchQuery {
+  reduce?: boolean;
+  group?: boolean;
+  skip?: number;
+  limit?: number;
+}
 
 export default GhgModule;

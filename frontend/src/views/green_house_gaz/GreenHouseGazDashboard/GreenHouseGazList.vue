@@ -30,7 +30,7 @@
         >
           <template v-slot:expanded-item="{ headers, item }">
             <td :colspan="headers.length">
-              <survey-list :site="item.name" :country-code="country.key" />
+              <survey-list :site="item.id" :country-code="country.key" />
             </td>
           </template>
         </v-data-table>
@@ -114,12 +114,12 @@ export default class ProjectList extends Vue {
   public clickSite(item: Site, keyIndex: number, event: EventClickRow): void {
     if (this.expanded) {
       const accessKey = `${item.country_code}${keyIndex}`;
-      const currentExpandedArray = this.expanded[accessKey] ?? [];
+      let currentExpandedArray = this.expanded[accessKey] ?? [];
       if (event.isExpanded) {
         const index = currentExpandedArray.findIndex((i) => i === item);
         currentExpandedArray.splice(index, 1);
       } else {
-        currentExpandedArray.push(item);
+        currentExpandedArray = [item]; // instead of push. to avoid multi expanded
       }
 
       this.$set(this.expanded, accessKey, currentExpandedArray);

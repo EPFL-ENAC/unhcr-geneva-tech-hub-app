@@ -33,7 +33,13 @@ import { mapActions } from "vuex";
 
 @Component({
   methods: {
-    ...mapActions("GhgModule", ["syncDB", "addDoc", "closeDB", "getCountries"]),
+    ...mapActions("GhgModule", [
+      "syncDB",
+      "addDoc",
+      "closeDB",
+      "getCountries",
+      "getSites",
+    ]),
   },
   components: {
     TerritoryMap,
@@ -45,12 +51,14 @@ export default class ProjectList extends Vue {
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
   getCountries!: () => Promise<null>;
+  getSites!: () => Promise<null>;
 
   siteDialog = false;
 
   mounted(): void {
     this.syncDB();
     this.getCountries();
+    this.getSites();
   }
 
   destroyed(): void {
