@@ -23,6 +23,7 @@ enum Roles {
   // "author" // does not exist, it's in the document if user is in the users field
 }
 
+export const GUEST_NAME = "guest";
 export interface CouchUser {
   name?: string;
   roles?: Roles[];
@@ -39,7 +40,6 @@ export interface UserCouchCredentials {
 }
 
 function generateEmptyUser(): CouchUser {
-  // return { name: "", roles: [] };
   return { loaded: false };
 }
 /** Default Configure state value */
@@ -120,7 +120,7 @@ const actions: ActionTree<UserState, RootState> = {
     logoutTool()
       .then(() => {
         context.commit("SET_USER", {
-          name: "guest",
+          name: GUEST_NAME,
           roles: [],
         });
       })
@@ -142,7 +142,7 @@ const actions: ActionTree<UserState, RootState> = {
     // if user logged in as guest no session needed!
     const currentUser: CouchUser = context.getters["user"];
     const token = sessionStorage.getItem(SessionStorageKey.Token);
-    if (currentUser.name !== "guest" && !token) {
+    if (currentUser.name !== GUEST_NAME && !token) {
       context.commit("SET_USER_LOADING");
       getSessionTool()
         .then((response) => {

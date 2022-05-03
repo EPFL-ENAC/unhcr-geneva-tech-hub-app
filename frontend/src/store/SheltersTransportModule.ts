@@ -1,3 +1,4 @@
+import axios, { AxiosPromise } from "axios";
 import {
   ActionContext,
   ActionTree,
@@ -5,8 +6,6 @@ import {
   Module,
   MutationTree,
 } from "vuex";
-import axios, { AxiosPromise } from "axios";
-
 import { RootState } from ".";
 
 interface SheltersTransportState {
@@ -89,17 +88,21 @@ const actions: ActionTree<SheltersTransportState, RootState> = {
     }
     return foundItem;
   },
-  getAllDocs: (context: ActionContext<SheltersTransportState, RootState>): AxiosPromise<(ShelterTransport|void)[]> => {
+  getAllDocs: (
+    context: ActionContext<SheltersTransportState, RootState>
+  ): AxiosPromise<(ShelterTransport | void)[]> => {
     return axios({
       method: "get",
       url: `${process.env.BASE_URL}shelter/transports.json`,
-      transformResponse: (data) => JSON.parse(data)
-    }).then((response) => {
-      context.commit("SET_ITEMS", response.data);
-      return response.data;
-    }).catch((error) => {
-      console.log(error);
+      transformResponse: (data) => JSON.parse(data),
     })
+      .then((response) => {
+        context.commit("SET_ITEMS", response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
 };
 

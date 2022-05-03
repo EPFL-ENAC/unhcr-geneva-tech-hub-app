@@ -297,7 +297,7 @@ export default class SurveyList extends Vue {
       // in case of undefined remove survey
       newProject.surveys.splice(this.currentSurveyIndex, 1);
     }
-    this.updateDoc(newProject);
+    this.submitForm(newProject);
   }
 
   public updateCurrentSurvey(): void {
@@ -306,10 +306,14 @@ export default class SurveyList extends Vue {
   }
 
   public submitForm(value: GreenHouseGaz = this.project): void {
-    if (value.name !== "") {
-      this.updateDoc(value);
+    if (this.$can("edit", value)) {
+      if (value.name !== "") {
+        this.updateDoc(value);
+      } else {
+        throw new Error("please fill the new Name");
+      }
     } else {
-      throw new Error("please fill the new Name");
+      console.log("you don't have the proper rights");
     }
   }
 }

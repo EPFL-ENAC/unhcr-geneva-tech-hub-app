@@ -71,7 +71,7 @@
                 text
                 type="submit"
                 tabindex="2"
-                :disabled="!createProjectFormValid"
+                :disabled="!createProjectFormValid || !$can('create')"
               >
                 New shelter
               </v-btn>

@@ -264,7 +264,7 @@ export default class DeleteItemDialog extends Vue {
   localItem: Item = {} as Item;
   shelter!: Shelter;
 
-  getAllDocs!: () => Promise<ShelterTransport[]>
+  getAllDocs!: () => Promise<ShelterTransport[]>;
   getDoc!: (id: string) => Promise<ShelterTransport>;
 
   formValid = false;

@@ -1,4 +1,4 @@
-import { CouchUser } from "@/store/UserModule";
+import { CouchUser, GUEST_NAME } from "@/store/UserModule";
 import { VueConstructor } from "vue";
 import { Store } from "vuex";
 
@@ -27,25 +27,23 @@ export default new (class User {
       actionName: string,
       obj: ObjWithUsersField
     ): boolean => {
-      // v-if="$can('edit', project)"
-      // this function may return false or true
+      // return false or true
       const user = store.getters["UserModule/user"];
       if (user.loaded) {
         //   const isUserAdmin = user.roles.indexOf(USER_ADMIN) >= 0;
-        const isDBAdmin = user.roles.indexOf(DB_ADMIN) >= 0;
         //   const isSpecialist = user.roles.indexOf(SPECIALIST) >= 0;
-        //   const isUser = user.roles.indexOf(USER) >= 0;
-        if (!obj || !obj.users) {
-          return false;
-        }
-        const isAuthor = obj.users.indexOf(user.name) >= 0 ?? false;
         //   const isLoggedIn = user.name.length > 0;
-
-        if (actionName === "edit") {
-          return isAuthor;
-        }
+        const isDBAdmin = user.roles.indexOf(DB_ADMIN) >= 0;
         if (actionName === "delete") {
           return isDBAdmin;
+        }
+        const isUser = user.roles.indexOf(USER) >= 0;
+        if (actionName === "create") {
+          return isUser;
+        }
+        const isAuthor = obj.users.indexOf(user.name) >= 0 ?? false;
+        if (actionName === "edit" && obj?.users) {
+          return isAuthor;
         }
       }
 
@@ -59,6 +57,7 @@ export default new (class User {
         isDBAdmin: user.loaded && user.roles.indexOf(DB_ADMIN) >= 0,
         isSpecialist: user.loaded && user.roles.indexOf(SPECIALIST) >= 0,
         isUser: user.loaded && user.roles.indexOf(USER) >= 0,
+        isGuest: user.loaded && user.name === GUEST_NAME,
         isLoggedIn: user.loaded && user.name.length > 0,
         isLoggedOut: user.loaded && user.name.length == 0,
       } as Record<string, boolean>;
