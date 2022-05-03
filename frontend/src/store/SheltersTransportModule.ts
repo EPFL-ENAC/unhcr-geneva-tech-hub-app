@@ -1,4 +1,3 @@
-import { SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -6,12 +5,13 @@ import {
   Module,
   MutationTree,
 } from "vuex";
+import axios, { AxiosPromise } from "axios";
+
 import { RootState } from ".";
 
 interface SheltersTransportState {
   item: ShelterTransport;
   items: ShelterTransport[];
-  localCouch: SyncDatabase<ShelterTransport> | null;
   paginate: Paginate;
   itemsLength: number;
 }
@@ -36,15 +36,13 @@ export interface ShelterTransport {
   o: number; // Transport   embodied carbon  kgCO2/kg (all others materials)
 }
 
-const DB_NAME = "shelters_transport";
-const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
+const MSG_COULD_NOT_FIND_ITEM = "Could not find item with this id";
 
 /** Default Configure state value */
 function generateState(): SheltersTransportState {
   return {
     item: {} as ShelterTransport,
-    items: [] as ShelterTransport[],
-    localCouch: null,
+    items: [],
     paginate: {
       limit: 10,
       skip: 0,
@@ -63,12 +61,6 @@ const getters: GetterTree<SheltersTransportState, RootState> = {
 
 /** Mutations */
 const mutations: MutationTree<SheltersTransportState> = {
-  INIT_DB(state) {
-    state.localCouch = new SyncDatabase(DB_NAME);
-  },
-  CLOSE_DB(state) {
-    state.localCouch?.cancel();
-  },
   SET_ITEM(state, value) {
     state.item = value;
   },
@@ -85,83 +77,29 @@ const mutations: MutationTree<SheltersTransportState> = {
 
 /** Action */
 const actions: ActionTree<SheltersTransportState, RootState> = {
-  syncDB: (context: ActionContext<SheltersTransportState, RootState>) => {
-    context.commit("INIT_DB");
-    // const localCouch = context.state.localCouch;
-    // localCouch?.onChange(function () {
-    //   // TODO retrieve all documents on remote change only
-    // });
-  },
-  closeDB: (context: ActionContext<SheltersTransportState, RootState>) => {
-    context.commit("CLOSE_DB");
-  },
   getDoc: (
     context: ActionContext<SheltersTransportState, RootState>,
-    id
-  ): Promise<ShelterTransport | void> => {
-    const db = context.state.localCouch?.db;
-    if (db) {
-      return db
-        .get(id)
-        .then(function (result) {
-          context.commit("SET_ITEM", result);
-          return result;
-        })
-        .catch(function (err: Error) {
-          console.log(err);
-        });
+    id: string
+  ): ShelterTransport | undefined => {
+    const foundItem = context.state.items.find((item) => item._id === id);
+    if (foundItem) {
+      context.commit("SET_ITEM", foundItem);
     } else {
-      throw new Error(MSG_DB_DOES_NOT_EXIST);
+      console.log(MSG_COULD_NOT_FIND_ITEM);
     }
+    return foundItem;
   },
-  changePaginate: (
-    context: ActionContext<SheltersTransportState, RootState>,
-    paginate: Paginate
-  ) => {
-    // compage paginate and current paginate to avoid infinite loop.
-    const hasSameLimit = paginate.limit === context.state.paginate.limit;
-    const hasSameSkip = paginate.skip === context.state.paginate.skip;
-    if (hasSameLimit && hasSameSkip) {
-      return;
-    }
-    context.commit("SET_PAGINATE", paginate);
-    return context.dispatch("getAllDocs");
-  },
-  // we need pagination for this; not ready for startKey/endKey with vuetify
-  //https://pouchdb.com/2014/04/14/pagination-strategies-with-pouchdb.html
-  getAllDocs: (context: ActionContext<SheltersTransportState, RootState>) => {
-    const db = context.state.localCouch?.db;
-    if (db) {
-      // todo: use views to avoid returning _design_document
-      db.allDocs({
-        include_docs: true,
-        ...context.state.paginate,
-      })
-        .then(function (result) {
-          context.commit("SET_ITEMS_LENGTH", result.total_rows);
-          context.commit(
-            "SET_ITEMS",
-            result.rows.map((x) => x.doc)
-          );
-        })
-        .catch(function (err: Error) {
-          console.log(err);
-        });
-    } else {
-      throw new Error(MSG_DB_DOES_NOT_EXIST);
-    }
-  },
-
-  updateDoc: (
-    context: ActionContext<SheltersTransportState, RootState>,
-    value
-  ) => {
-    const db = context.state.localCouch?.db;
-    if (db) {
-      db.put(value);
-    } else {
-      throw new Error(MSG_DB_DOES_NOT_EXIST);
-    }
+  getAllDocs: (context: ActionContext<SheltersTransportState, RootState>): AxiosPromise<(ShelterTransport|void)[]> => {
+    return axios({
+      method: "get",
+      url: `${process.env.BASE_URL}shelter/transports.json`,
+      transformResponse: (data) => JSON.parse(data)
+    }).then((response) => {
+      context.commit("SET_ITEMS", response.data);
+      return response.data;
+    }).catch((error) => {
+      console.log(error);
+    })
   },
 };
 

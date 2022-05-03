@@ -1,7 +1,7 @@
 <template>
   <v-card flat>
     <v-card-text>
-      <v-data-table :headers="headers" :items="items" :items-per-page="20">
+      <v-data-table :headers="headers" :items="items" :items-per-page="-1" hide-default-footer>
         <template v-slot:item.density="props">
           <v-tooltip right>
             <template v-slot:activator="{ on, attrs }">

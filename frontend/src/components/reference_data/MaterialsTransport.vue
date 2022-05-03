@@ -107,27 +107,12 @@
           </ol>
         </v-col>
       </v-row>
-      <v-data-table
-        :headers="headers"
-        :items="items"
-        :options.sync="options"
-        :server-items-length="itemsLength"
-        hide-default-footer
-      >
-        <template v-slot:item.source="{ item }">
+      <v-data-table :headers="headers" :items="items">
+        <template v-slot:[`item.source`]="{ item }">
           {{ item._id.split("_")[0] }}
         </template>
-        <template v-slot:item.destination="{ item }">
+        <template v-slot:[`item.destination`]="{ item }">
           {{ item._id.split("_")[1] }}
-        </template>
-        <template v-slot:foot="{ pagination, options, updateOptions }">
-          <v-data-footer
-            :pagination="pagination"
-            :options="options"
-            :items-per-page-options="[5, 10, 20, 100]"
-            items-per-page-text="$vuetify.dataTable.itemsPerPageText"
-            @update:options="updateOptions"
-          />
         </template>
       </v-data-table>
     </v-card-text>
@@ -135,99 +120,23 @@
 </template>
 
 <script lang="ts">
-import { Paginate } from "@/store/SheltersTransportModule";
-import { cloneDeep } from "lodash";
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-
-interface Options {
-  page: number;
-  itemsPerPage?: number;
-}
 
 @Component({
   computed: {
-    ...mapGetters("SheltersTransportModule", [
-      "items",
-      "item",
-      "paginate",
-      "itemsLength",
-    ]),
+    ...mapGetters("SheltersTransportModule", ["items", "item", "itemsLength"]),
   },
   methods: {
-    ...mapActions("SheltersTransportModule", [
-      "syncDB",
-      "getAllDocs",
-      "closeDB",
-      "changePaginate",
-    ]),
+    ...mapActions("SheltersTransportModule", ["getAllDocs"]),
   },
 })
 export default class MaterialsTransport extends Vue {
-  syncDB!: () => null;
-  closeDB!: () => Promise<null>;
   getAllDocs!: () => Promise<null>;
-  changePaginate!: (paginate: Paginate) => Promise<null>;
-
-  paginate!: Paginate;
-
-  localPagination = {} as Paginate;
-
-  get options(): Options {
-    const { limit, skip } = this.localPagination;
-
-    return {
-      page: ((skip ?? 0) + limit) / limit,
-      itemsPerPage: limit,
-    };
-  }
-
-  set options(newValue: Options) {
-    const { page, itemsPerPage } = newValue;
-    this.localPagination = {
-      limit: newValue.itemsPerPage ?? 0,
-      skip: (itemsPerPage ?? 0) * page - (itemsPerPage ?? 0),
-    };
-  }
-
-  @Watch("localPagination", { deep: true })
-  public onPaginateChange(newValue: Paginate): void {
-    this.changePaginate(newValue);
-  }
-
-  public setLocalPaginate(): void {
-    if (!this.paginate) {
-      return;
-    }
-    this.localPagination = cloneDeep(this.paginate);
-  }
-
-  public syncLocalPaginate(): void {
-    // init function
-    this.setLocalPaginate();
-
-    this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["SheltersTransportModule/SET_PAGINATE"];
-      if (shouldUpdate.includes(mutation.type)) {
-        this.setLocalPaginate();
-      }
-    });
-  }
-
-  public created(): void {
-    this.syncLocalPaginate();
-  }
-
   mounted(): void {
-    this.syncDB();
     this.getAllDocs();
   }
 
-  destroyed(): void {
-    this.closeDB().then(() => {
-      console.log("DESTROYED view list, closing DB");
-    });
-  }
   public getSourceCountry(key: string): Record<string, string> {
     const [source, destination] = key.split("_");
     return { source, destination };
