@@ -51,12 +51,12 @@
         </v-row>
       </v-col>
       <v-col>
-        <v-form @submit.prevent="submitForm" v-model="createProjectFormValid">
+        <v-form v-model="createProjectFormValid" @submit.prevent="submitForm">
           <v-card class="mx-auto" max-width="344" outlined>
             <v-card-text>
               <v-text-field
-                tabindex="1"
                 v-model="newName"
+                tabindex="1"
                 :rules="rules"
                 required
                 name="name"

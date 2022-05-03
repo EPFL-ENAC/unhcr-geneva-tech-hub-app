@@ -9,10 +9,11 @@
     >
       <template v-for="(item, idx) in menuItems">
         <v-tooltip
-          bottom
-          :key="idx"
           v-if="item.disabled && !!item.tooltipDisabledText"
+          :key="idx"
+          bottom
         >
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <span v-html="item.tooltipDisabledText"></span>
           <template v-slot:activator="{ on }">
             <a class="v-tab" v-on="on">
@@ -29,7 +30,7 @@
             </a>
           </template>
         </v-tooltip>
-        <v-tab :key="item.to" v-else ripple :to="{ name: item.to }">
+        <v-tab v-else :key="item.to" ripple :to="{ name: item.to }">
           <v-icon left>{{ item.icon }}</v-icon>
           <span>
             {{ item.text }}

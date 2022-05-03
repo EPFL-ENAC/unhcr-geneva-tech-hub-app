@@ -10,7 +10,7 @@
           >{{ form.title }}</component
         >
       </v-col>
-      <v-col cols="1" class="d-flex justify-end align-center" v-if="depth > 0">
+      <v-col v-if="depth > 0" cols="1" class="d-flex justify-end align-center">
         <v-btn icon @click="toggle">
           <v-icon :class="{ 'chevron-rotate': !showSubPanel }"
             >mdi-chevron-down</v-icon
@@ -31,11 +31,11 @@
           <v-col>
             <v-sheet elevation="2" rounded>
               <component
+                :is="child.type"
                 :form="child"
                 :value="value"
-                @input="(v) => update(v)"
-                :is="child.type"
                 :depth="depth + 1"
+                @input="(v) => update(v)"
               ></component>
             </v-sheet>
           </v-col>

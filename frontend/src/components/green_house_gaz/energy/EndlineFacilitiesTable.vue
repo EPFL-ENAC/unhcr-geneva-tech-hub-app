@@ -1,5 +1,5 @@
 <template>
-  <v-sheet elevation="2" rounded v-if="items">
+  <v-sheet v-if="items" elevation="2" rounded>
     <v-data-table
       :headers="headers"
       :items="items"

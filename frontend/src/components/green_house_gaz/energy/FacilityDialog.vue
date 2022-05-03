@@ -2,8 +2,8 @@
   <v-dialog v-model="isOpen" max-width="500px">
     <v-form
       ref="form"
-      :lazy-validation="false"
       v-model="formValid"
+      :lazy-validation="false"
       @submit.prevent="() => submitFn()"
     >
       <v-card>
@@ -16,16 +16,16 @@
             <v-row>
               <v-col>
                 <v-select
+                  v-model="localItem.facilityType"
                   :items="facilityTypes"
                   label="facility type"
-                  v-model="localItem.facilityType"
-                  @input="onItemTypeChange"
                   name="type"
                   type="string"
                   item-text="name"
                   item-value="componentName"
                   required
                   :rules="rules"
+                  @input="onItemTypeChange"
                 />
               </v-col>
             </v-row>
@@ -47,8 +47,8 @@
               </v-col>
               <component
                 :is="localItem.facilityType"
-                :editMode="!isNewMode"
-                :facilitiesName="facilitiesName"
+                :edit-mode="!isNewMode"
+                :facilities-name="facilitiesName"
                 :facility.sync="localItem"
               />
             </v-row>

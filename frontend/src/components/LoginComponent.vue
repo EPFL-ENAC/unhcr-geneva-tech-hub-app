@@ -6,23 +6,23 @@
     <v-form v-model="formValid" @submit.prevent="loginCouchdb">
       <v-card-text>
         <v-text-field
-          outlined
+          id="username"
           v-model="username"
+          outlined
           label="Login"
           prepend-icon="mdi-account"
           placeholder=" "
           persistent-placeholder
           required
           type="text"
-          id="username"
           name="username"
         />
         <v-text-field
-          outlined
+          id="current-password"
           v-model="password"
+          outlined
           name="current-password"
           autocomplete="current-password"
-          id="current-password"
           label="Password"
           placeholder=" "
           persistent-placeholder

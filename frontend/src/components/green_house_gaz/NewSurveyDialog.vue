@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="dialogOpen" max-width="500px">
-    <v-form @submit.prevent="submit" v-model="createProjectFormValid">
+    <v-form v-model="createProjectFormValid" @submit.prevent="submit">
       <v-card>
         <v-card-title>
           <span class="text-h5">New assessment</span>
@@ -17,14 +17,14 @@
               </v-col>
               <v-col cols="5">
                 <v-select
+                  v-model="newCampSite.name"
                   :disabled="existingSites.length === 0 || newName !== ''"
                   tabindex="0"
-                  v-model="newCampSite.name"
-                  @input="onSelectExistingSite"
                   :items="existingSites"
                   item-value="name"
                   item-text="name"
                   label="Select an existing site"
+                  @input="onSelectExistingSite"
                 >
                   <template v-slot:item="slotProps">
                     <div
@@ -43,8 +43,8 @@
 
               <v-col cols="5">
                 <v-text-field
-                  tabindex="1"
                   v-model="newName"
+                  tabindex="1"
                   required
                   name="name"
                   :rules="rulesCreateNewSite"
@@ -58,8 +58,8 @@
               </v-col>
               <v-col cols="12">
                 <v-text-field
-                  tabindex="2"
                   v-model="editedItem.name"
+                  tabindex="2"
                   required
                   name="description"
                   :rules="[ruleAYearIsRequired, ruleSurveyYearAlreadyExist]"

@@ -5,8 +5,8 @@
       :items="localProject.surveys"
       sort-by="created_at"
       hide-default-footer
-      @click:row="handleClick"
       :item-class="rowClasses"
+      @click:row="handleClick"
     >
       <template v-slot:top>
         <v-divider class="mx-4" inset vertical></v-divider>

@@ -2,8 +2,8 @@
   <v-dialog v-model="isOpen" max-width="500px">
     <v-form
       ref="form"
-      :lazy-validation="false"
       v-model="formValid"
+      :lazy-validation="false"
       @submit.prevent="() => submitFn()"
     >
       <v-card>
@@ -16,16 +16,16 @@
             <v-row>
               <v-col>
                 <v-select
+                  v-model="localItem.name"
                   :items="facilities"
                   label="Facility name"
-                  v-model="localItem.name"
-                  @change="selectFacility"
                   name="type"
                   item-value="name"
                   item-text="name"
                   type="string"
                   required
                   :rules="rules"
+                  @change="selectFacility"
                 />
               </v-col>
             </v-row>

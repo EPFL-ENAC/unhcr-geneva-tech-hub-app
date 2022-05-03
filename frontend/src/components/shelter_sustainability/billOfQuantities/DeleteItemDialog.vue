@@ -1,8 +1,8 @@
 <template>
   <v-dialog
     :value="isDeleteDialogOpen"
-    @input="setDeleteDialog"
     max-width="500px"
+    @input="setDeleteDialog"
   >
     <v-form @submit.prevent="() => deleteItem()">
       <v-card>

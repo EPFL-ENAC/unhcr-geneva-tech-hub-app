@@ -3,34 +3,34 @@
     <v-col cols="12" sm="6" md="6">
       <v-text-field
         :value="facility.dieselLiters"
-        @input="changeDieselLiters"
         type="number"
         required
         :rules="rules"
         :min="0"
         label="Total litres of diesel used this year"
+        @input="changeDieselLiters"
       />
     </v-col>
     <v-col cols="12" sm="6" md="6">
       <v-text-field
         :value="facility.gridPower"
-        @input="changeGridPower"
         type="number"
         required
         :rules="rules"
         :min="0"
         label="Total kWh consumed this year from grid"
+        @input="changeGridPower"
       />
     </v-col>
     <v-col cols="12" sm="6" md="6">
       <v-text-field
         :value="facility.renewablePower"
-        @input="changeRenewablePower"
         type="number"
         required
         :rules="rules"
         :min="0"
         label="Total kWh consumed this year via renewable sources"
+        @input="changeRenewablePower"
       />
     </v-col>
   </div>

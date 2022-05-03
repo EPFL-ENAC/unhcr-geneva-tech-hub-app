@@ -2,12 +2,12 @@
   <v-col cols="12" sm="6" md="6">
     <v-text-field
       :value="facility.dieselLiters"
-      @input="changeDieselLiters"
       type="number"
       required
       :rules="rules"
       :min="0"
       label="Litres of diesel used per year"
+      @input="changeDieselLiters"
     />
   </v-col>
 </template>

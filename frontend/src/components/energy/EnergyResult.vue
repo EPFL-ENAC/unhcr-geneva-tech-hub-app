@@ -9,13 +9,13 @@
               <energy-key-indicator
                 name="Total Energy"
                 unit="MJ/household"
-                :baseValue="baselineResult.energy"
+                :base-value="baselineResult.energy"
                 :value="globalResult.energy"
               ></energy-key-indicator>
               <energy-key-indicator
                 name="Global Efficiency"
                 unit="%"
-                :baseValue="baselineResult.energyEfficiency"
+                :base-value="baselineResult.energyEfficiency"
                 :value="globalResult.energyEfficiency"
               ></energy-key-indicator>
               <energy-chart
@@ -28,7 +28,7 @@
               <energy-key-indicator
                 name="Maximum annual wood equivalent area"
                 unit="ha"
-                :baseValue="baselineResult.woodArea"
+                :base-value="baselineResult.woodArea"
                 :value="globalResult.woodArea"
               ></energy-key-indicator>
               <energy-chart
@@ -43,7 +43,7 @@
               <energy-key-indicator
                 name="CO2 Emission"
                 unit="kg/household"
-                :baseValue="baselineResult.emissionCo2"
+                :base-value="baselineResult.emissionCo2"
                 :value="globalResult.emissionCo2"
               ></energy-key-indicator>
               <energy-chart
@@ -68,7 +68,7 @@
               <energy-key-indicator
                 name="Sum Discounted Cost"
                 unit="$"
-                :baseValue="baselineResult.discountedCost"
+                :base-value="baselineResult.discountedCost"
                 :value="globalResult.discountedCost"
               ></energy-key-indicator>
               <energy-chart
@@ -79,7 +79,7 @@
               <energy-key-indicator
                 name="Affordability"
                 unit="%"
-                :baseValue="baselineResult.affordability"
+                :base-value="baselineResult.affordability"
                 :value="globalResult.affordability"
                 greater-better
               ></energy-key-indicator>

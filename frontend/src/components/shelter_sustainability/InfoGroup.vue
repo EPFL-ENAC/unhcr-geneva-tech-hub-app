@@ -25,6 +25,7 @@
       <v-expand-transition>
         <v-row v-show="expandPanel">
           <v-col cols="12">
+            <!-- eslint-disable-next-line vue/no-v-html -->
             <p v-html="info.description"></p>
           </v-col>
         </v-row>

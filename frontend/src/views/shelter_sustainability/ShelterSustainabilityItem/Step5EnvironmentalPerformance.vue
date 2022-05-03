@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid v-if="shelter">
+  <v-container v-if="shelter" fluid>
     <v-row>
       <v-col>
         <h2 class="text-h4 project-shelter__h3 font-weight-medium">
@@ -15,7 +15,7 @@
 
     <v-row>
       <v-col>
-        <v-sheet elevation="2" rounded v-if="shelter">
+        <v-sheet v-if="shelter" elevation="2" rounded>
           <v-container fluid>
             <v-row>
               <v-col class="about-first-column d-flex justify-center" lg="12">
@@ -99,39 +99,35 @@
                         :headers="headersSubItems"
                         :items="item.children"
                       >
-                        <template v-slot:item.formId="{ item }">
+                        <template v-slot:item.formId="{}">
                           <span v-if="materialMap[item.formId]">{{
                             materialMap[item.formId].form
                           }}</span>
                           <span v-else> {{ item.formId }}</span>
                         </template>
                         <!-- beware duplicated code from above -->
-                        <template v-slot:item.weight="{ item }">
+                        <template v-slot:item.weight="{}">
                           <span>{{ item.weight | formatNumber }} </span>
                         </template>
-                        <template
-                          v-slot:item.embodiedCarbonProduction="{ item }"
-                        >
+                        <template v-slot:item.embodiedCarbonProduction="{}">
                           <span
                             >{{ item.embodiedCarbonProduction | formatNumber }}
                           </span>
                         </template>
-                        <template
-                          v-slot:item.embodiedCarbonTransport="{ item }"
-                        >
+                        <template v-slot:item.embodiedCarbonTransport="{}">
                           <span
                             >{{ item.embodiedCarbonTransport | formatNumber }}
                           </span>
                         </template>
-                        <template v-slot:item.embodiedCarbonTotal="{ item }">
+                        <template v-slot:item.embodiedCarbonTotal="{}">
                           <span
                             >{{ item.embodiedCarbonTotal | formatNumber }}
                           </span>
                         </template>
-                        <template v-slot:item.embodiedWater="{ item }">
+                        <template v-slot:item.embodiedWater="{}">
                           <span>{{ item.embodiedWater | formatNumber }} </span>
                         </template>
-                        <template v-slot:item.totalCost="{ item }">
+                        <template v-slot:item.totalCost="{}">
                           <span>{{ item.totalCost | formatNumber }} </span>
                         </template>
                       </v-data-table>
@@ -142,10 +138,10 @@
             </v-row>
             <v-row>
               <v-col
-                :md="12"
-                :lg="4"
                 v-for="(option, $idx) in graphTreeOptions"
                 :key="$idx"
+                :md="12"
+                :lg="4"
               >
                 <graph-tree
                   :selected-field="option.selectedField"

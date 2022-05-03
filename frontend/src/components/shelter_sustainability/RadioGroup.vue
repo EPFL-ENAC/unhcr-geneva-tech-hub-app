@@ -27,17 +27,17 @@
           <v-col cols="12">
             <v-expansion-panels accordion :focusable="false">
               <v-expansion-panel
-                :readonly="!child.description"
                 v-for="(child, $index) in form.children"
                 :key="$index"
+                :readonly="!child.description"
               >
                 <v-expansion-panel-header :hide-actions="!child.description">
                   <v-checkbox
                     :input-value="checkbox[child._id]"
+                    hide-details
                     @mousedown.stop.prevent
                     @click.stop.prevent
                     @change="(v) => updateValue(child._id, v)"
-                    hide-details
                   >
                     <template v-slot:label>
                       {{ child.label }}
@@ -45,6 +45,7 @@
                   </v-checkbox>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content v-if="!!child.description">
+                  <!-- eslint-disable-next-line vue/no-v-html -->
                   <p v-html="child.description"></p>
                 </v-expansion-panel-content>
               </v-expansion-panel>

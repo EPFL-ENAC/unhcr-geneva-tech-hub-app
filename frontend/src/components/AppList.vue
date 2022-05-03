@@ -37,13 +37,13 @@
                 </v-list-item-avatar>
                 <v-card-actions class="app-action">
                   <v-btn
+                    v-if="app.link"
                     outlined
                     rounded
                     text
-                    @click.stop=""
-                    v-if="app.link"
                     :href="app.link"
                     target="_blank"
+                    @click.stop=""
                   >
                     report
                   </v-btn>

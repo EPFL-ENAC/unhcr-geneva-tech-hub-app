@@ -76,13 +76,13 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "AboutView",
+  components: {
+    AppLogo,
+  },
   data() {
     return {
       Apps,
     };
-  },
-  components: {
-    AppLogo,
   },
 });
 </script>

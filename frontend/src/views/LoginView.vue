@@ -15,11 +15,11 @@ import LoginComponent from "../components/LoginComponent.vue";
 
 export default Vue.extend({
   name: "LoginView",
-  computed: {
-    ...mapGetters("UserModule", ["user"]),
-  },
   components: {
     LoginComponent,
+  },
+  computed: {
+    ...mapGetters("UserModule", ["user"]),
   },
 });
 </script>

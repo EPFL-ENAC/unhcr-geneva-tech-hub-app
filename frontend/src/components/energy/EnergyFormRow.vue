@@ -2,10 +2,10 @@
   <v-row v-if="items.length > 0">
     <v-col>
       <v-row v-for="(rowItem, index) in items" :key="index">
-        <template v-for="(item, index) in rowItem">
+        <template v-for="(item, index2) in rowItem">
           <v-col
             v-if="!item.hidden"
-            :key="index"
+            :key="`${index}:${index2}`"
             cols="12"
             sm="6"
             md="4"

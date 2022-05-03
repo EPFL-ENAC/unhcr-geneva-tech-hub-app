@@ -3,7 +3,7 @@
     :readonly="!$can('edit', localProject)"
     @submit.prevent="() => submitForm(localProject)"
   >
-    <v-container fluid v-if="project.users">
+    <v-container v-if="project.users" fluid>
       <v-row>
         <v-col>
           <v-card elevation="2" rounded>
@@ -29,11 +29,11 @@
                         ></form-item-component>
                         <country-select
                           v-else
+                          id="location_country"
                           v-model="localProject.country_code"
                           label="Country"
                           type="text"
                           name="location_country"
-                          id="location_country"
                         />
                       </v-col>
                     </template>

@@ -1,5 +1,5 @@
 <template>
-  <v-form :readonly="!$can('edit', shelter)" v-if="shelter">
+  <v-form v-if="shelter" :readonly="!$can('edit', shelter)">
     <v-container fluid>
       <v-row>
         <v-col>
@@ -14,7 +14,7 @@
 
       <v-row>
         <v-col>
-          <v-sheet elevation="2" rounded v-if="items">
+          <v-sheet v-if="items" elevation="2" rounded>
             <v-data-table
               :headers="headers"
               :items="items"
@@ -30,8 +30,8 @@
                     color="primary"
                     dark
                     class="mb-2"
-                    @click="openNewItemDialog"
                     :disabled="!$can('edit', shelter)"
+                    @click="openNewItemDialog"
                   >
                     New item
                   </v-btn>
@@ -93,8 +93,8 @@
                   icon
                   small
                   class="mr-2"
-                  @click="openEditItemDialog(item)"
                   :disabled="!$can('edit', shelter)"
+                  @click="openEditItemDialog(item)"
                 >
                   <v-icon> mdi-pencil</v-icon>
                 </v-btn>
@@ -103,8 +103,8 @@
                   icon
                   small
                   class="mr-2"
-                  @click="openDeleteDialog(item)"
                   :disabled="!$can('edit', shelter)"
+                  @click="openDeleteDialog(item)"
                 >
                   <v-icon> mdi-delete</v-icon>
                 </v-btn>

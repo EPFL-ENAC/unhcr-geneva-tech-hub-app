@@ -1,11 +1,11 @@
 <template>
-  <v-expansion-panels accordion v-model="panel">
+  <v-expansion-panels v-model="panel" accordion>
     <v-expansion-panel
       v-for="(country, keyIndex) in countries"
       :key="`${country.key}${keyIndex}`"
     >
       <v-expansion-panel-header>
-        <div class="panel-header" v-if="countriesMap[country.key]">
+        <div v-if="countriesMap[country.key]" class="panel-header">
           <span>
             {{ countriesMap[country.key].name }}
           </span>

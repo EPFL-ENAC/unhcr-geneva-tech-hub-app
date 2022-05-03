@@ -5,12 +5,12 @@
         <v-col cols="11">
           <v-select
             :value="value"
-            @input="(v) => $emit('input', v)"
             :items="risks"
             :label="info.id"
             :hint="info.id"
             persistent-hint
             single-line
+            @input="(v) => $emit('input', v)"
           />
         </v-col>
         <v-col cols="1" class="d-flex justify-end align-center">

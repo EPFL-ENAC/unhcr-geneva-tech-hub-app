@@ -1,10 +1,10 @@
 <template>
-  <v-dialog :value="isItemDialogOpen" @input="setEditDialog" max-width="500px">
+  <v-dialog :value="isItemDialogOpen" max-width="500px" @input="setEditDialog">
     <!-- Not necessary     :readonly="!$can('edit', shelter)"  -->
     <v-form
       ref="form"
-      :lazy-validation="false"
       v-model="formValid"
+      :lazy-validation="false"
       @submit.prevent="() => submitFn()"
     >
       <v-card>
@@ -17,23 +17,23 @@
             <v-row>
               <v-col>
                 <v-select
+                  v-model="localItem.itemType"
                   :items="itemTypes"
                   label="Item type"
-                  v-model="localItem.itemType"
-                  @input="onItemTypeChange"
                   name="type"
                   type="string"
                   required
                   :rules="rules"
+                  @input="onItemTypeChange"
                 />
               </v-col>
             </v-row>
             <v-row v-if="localItem.itemType === 'Labour'">
               <v-col cols="12" sm="6" md="6">
                 <v-select
+                  v-model="localItem.workerType"
                   :items="workerTypes"
                   label="Work type"
-                  v-model="localItem.workerType"
                   name="type"
                   type="string"
                   required
@@ -42,9 +42,9 @@
               </v-col>
               <v-col cols="12" sm="6" md="6">
                 <v-select
+                  v-model="localItem.unit"
                   :items="labourUnits"
                   label="Unit"
-                  v-model="localItem.unit"
                   name="type"
                   type="string"
                   required
@@ -92,24 +92,24 @@
               </v-col>
               <v-col cols="12" sm="6" md="6">
                 <v-select
+                  v-model="localItem.materialId"
                   :items="materials"
                   label="Item type"
-                  v-model="localItem.materialId"
-                  @input="resetLocalItemFormId"
                   item-text="text"
                   item-value="value"
                   name="type"
                   type="string"
                   required
                   :rules="rules"
+                  @input="resetLocalItemFormId"
                 />
               </v-col>
               <v-col cols="12" sm="6" md="6">
                 <v-select
+                  v-model="localItem.formId"
                   :disabled="!localItem.materialId"
                   :items="currentMaterialForms"
                   label="Item Form"
-                  v-model="localItem.formId"
                   item-text="form"
                   item-value="_id"
                   name="type"
@@ -118,7 +118,7 @@
                   :rules="rules"
                 />
               </v-col>
-              <v-col cols="12" sm="6" md="4" v-show="false">
+              <v-col v-show="false" cols="12" sm="6" md="4">
                 <v-text-field
                   v-model="localItem.unit"
                   label="Units"

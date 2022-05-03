@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid v-if="localShelter.users">
+  <v-container v-if="localShelter.users" fluid>
     <v-form
       :readonly="!$can('edit', localShelter)"
       @submit.prevent="() => submitForm(localShelter)"
@@ -19,11 +19,11 @@
       <v-row>
         <v-col
           v-for="(geometry, $index) in geometries"
-          :key="$index"
           v-show="
             shelter_geometry_type === geometry._id ||
             shelter_geometry_type === ''
           "
+          :key="$index"
           class="geometry-column"
           :lg="shelter_geometry_type ? 12 : 3"
           :md="shelter_geometry_type ? 12 : 4"
@@ -36,8 +36,8 @@
                 <template v-slot:activator="{ on, attrs }">
                   <v-card-title
                     v-bind="attrs"
-                    v-on="on"
                     class="d-flex justify-center"
+                    v-on="on"
                     @click="() => toggleImage(geometry._id)"
                   >
                     <v-img
@@ -55,8 +55,8 @@
               </v-tooltip>
 
               <v-card-text
-                class="flex-gap-sm d-flex flex-column justify-space-between"
                 v-if="!geometry.hiddenInputs"
+                class="flex-gap-sm d-flex flex-column justify-space-between"
               >
                 <v-expand-transition>
                   <v-row v-show="shelter_geometry_type">
@@ -110,13 +110,13 @@
                       </v-card>
                     </v-col>
                     <v-col
+                      v-for="(window, $windowKey) in localShelter.geometry
+                        .windows_dimensions"
+                      :key="`windowsDimensions${$windowKey}`"
                       :lg="4"
                       :md="6"
                       sm="12"
                       xs="12"
-                      v-for="(window, $windowKey) in localShelter.geometry
-                        .windows_dimensions"
-                      :key="`windowsDimensions${$windowKey}`"
                     >
                       <v-card>
                         <!-- v-for on all windows -->
@@ -152,8 +152,8 @@
                     <v-col :lg="4" :md="6" sm="12" xs="12">
                       <v-btn
                         block
-                        @click="addWindow"
                         :disabled="!$can('edit', localShelter)"
+                        @click="addWindow"
                         >Add window</v-btn
                       >
                     </v-col>
@@ -173,10 +173,10 @@
                       xs="12"
                     >
                       <v-text-field
-                        :disabled="!geometry.hiddenInputs"
                         v-model.number="
                           localShelter.geometry[resultDimension.key]
                         "
+                        :disabled="!geometry.hiddenInputs"
                         :name="resultDimension.label"
                         :label="resultDimension.label"
                         type="number"

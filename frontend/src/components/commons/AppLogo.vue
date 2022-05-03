@@ -1,11 +1,11 @@
 <template>
   <v-footer class="custom-footer-logo" :light="false">
     <v-sheet
+      v-for="(logo, $key) in logos"
+      :key="$key"
       class="mx-auto px-4"
       max-width="170"
       min-width="150"
-      v-for="(logo, $key) in logos"
-      :key="$key"
     >
       <a :href="logo.urlDescription" target="_blank">
         <v-img

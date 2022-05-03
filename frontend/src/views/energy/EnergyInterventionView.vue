@@ -1,6 +1,6 @@
 <template>
   <energy-intervention
-    :initial-module="this.modules.intervention"
+    :initial-module="modules.intervention"
     @save="save"
   ></energy-intervention>
 </template>

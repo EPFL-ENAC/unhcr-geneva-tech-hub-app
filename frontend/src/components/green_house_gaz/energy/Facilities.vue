@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid v-if="project.users">
+  <v-container v-if="project.users" fluid>
     <v-row>
       <v-col>
         <h2 class="text-h4 project-shelter__h3 font-weight-medium">
@@ -21,9 +21,9 @@
           <v-card-text>
             <baseline-facilities-table
               :items.sync="facilityForm.baseline.inputs"
-              @update:items="computeBaselineResults"
               :results="facilityForm.baseline.results"
               :disabled="!baselineMode"
+              @update:items="computeBaselineResults"
             />
           </v-card-text>
           <v-card-actions>
@@ -61,10 +61,10 @@
             <endline-facilities-table
               :facilities="facilityForm.baseline.inputs"
               :items.sync="facilityForm.endline.inputs"
-              @update:items="computeEndlineResults"
               :results="facilityForm.endline.results"
               :balance="facilityForm.endline.resultsBalance"
               :disabled="baselineMode"
+              @update:items="computeEndlineResults"
             />
             <v-container class="d-flex flex-column" fluid>
               <v-row>

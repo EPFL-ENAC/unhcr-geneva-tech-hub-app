@@ -1,6 +1,6 @@
 <template>
   <energy-general
-    :initial-module="this.modules.general"
+    :initial-module="modules.general"
     @save="save"
   ></energy-general>
 </template>

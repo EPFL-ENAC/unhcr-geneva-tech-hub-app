@@ -124,9 +124,9 @@
           <v-data-footer
             :pagination="pagination"
             :options="options"
-            @update:options="updateOptions"
             :items-per-page-options="[5, 10, 20, 100]"
             items-per-page-text="$vuetify.dataTable.itemsPerPageText"
+            @update:options="updateOptions"
           />
         </template>
       </v-data-table>

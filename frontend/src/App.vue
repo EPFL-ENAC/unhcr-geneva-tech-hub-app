@@ -31,7 +31,7 @@
       expand-on-hover
     >
       <v-list>
-        <v-list-item class="px-2" :to="{ name: 'Apps' }" v-if="user.name">
+        <v-list-item v-if="user.name" class="px-2" :to="{ name: 'Apps' }">
           <v-list-item-avatar>
             <v-img v-if="gravatarImageUrl" :src="gravatarImageUrl"></v-img>
           </v-list-item-avatar>
@@ -58,8 +58,8 @@
         >
           <v-list-item-icon @click.stop="mini = true">
             <v-img
-              max-width="24px"
               v-if="app.logoImg"
+              max-width="24px"
               :src="app.logoImg"
               style="color: rgba(0, 0, 0, 0.54)"
             ></v-img>
@@ -78,7 +78,7 @@
             <v-list-item-title>About</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item @click="login" v-if="$user('isLoggedOut')">
+        <v-list-item v-if="$user('isLoggedOut')" @click="login">
           <v-list-item-icon>
             <v-icon>mdi-login</v-icon>
           </v-list-item-icon>
@@ -86,7 +86,7 @@
             <v-list-item-title>Login</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item @click="logout" v-if="$user('isLoggedIn')">
+        <v-list-item v-if="$user('isLoggedIn')" @click="logout">
           <v-list-item-icon>
             <v-icon>mdi-logout</v-icon>
           </v-list-item-icon>
@@ -99,12 +99,12 @@
 
     <v-main v-if="$user('isLoggedOut')">
       <v-layout
+        v-if="$router.currentRoute.name !== 'Login'"
         align-center
         justify-center
         class="login"
         fluid
         fill-height
-        v-if="$router.currentRoute.name !== 'Login'"
       >
         <v-flex xs12 sm8 md4>
           <login-component />

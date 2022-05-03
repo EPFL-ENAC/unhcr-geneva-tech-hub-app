@@ -1,7 +1,7 @@
 <template>
   <v-tooltip bottom :disabled="percentage === 0">
     <template v-slot:activator="{ on, attrs }">
-      <div v-bind="attrs" v-on="on" class="text-overline">
+      <div v-bind="attrs" class="text-overline" v-on="on">
         {{ name }}:
         {{ value | formatNumber }}
         <template v-if="unit">[{{ unit }}]</template>

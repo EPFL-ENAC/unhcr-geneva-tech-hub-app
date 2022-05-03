@@ -18,13 +18,13 @@
       </v-row>
     </header>
     <v-tabs
+      v-model="tabSelected"
       class="fixed-tabs-bar"
       centered
       background-color="white"
       grow
       :show-arrows="true"
       elevation="2"
-      v-model="tabSelected"
       hide-slider
     >
       <template v-for="(item, $itemIndex) in menuItems">
@@ -71,16 +71,16 @@
     <v-row>
       <v-col>
         <component
+          :is="subcategory"
           v-if="subcategory"
           :form.sync="currentSurvey[normedCategory][normedSubcategory]"
           @update:form="updateCurrentSurvey"
-          :is="subcategory"
         />
         <component
+          :is="category"
           v-else
           :survey.sync="currentSurvey"
           @update:survey="updateCurrentSurvey"
-          :is="category"
         />
       </v-col>
     </v-row>

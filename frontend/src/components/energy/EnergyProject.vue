@@ -35,9 +35,9 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-tab
                   v-bind="attrs"
-                  v-on="on"
                   :disabled="!item.toName"
                   :to="{ name: routerPrefix + item.toName }"
+                  v-on="on"
                 >
                   <v-icon left>{{ item.icon }}</v-icon>
                   {{ item.text }}

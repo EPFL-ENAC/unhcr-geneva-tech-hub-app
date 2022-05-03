@@ -7,14 +7,14 @@
     :hide-default-footer="true"
   >
     <template v-slot:top>
-      <v-toolbar flat v-if="!disabled">
+      <v-toolbar v-if="!disabled" flat>
         <v-spacer></v-spacer>
         <v-btn
           color="primary"
           dark
           class="mb-2"
-          @click="() => openItemDialog(newDefaultItem(), -1)"
           :disabled="disabled"
+          @click="() => openItemDialog(newDefaultItem(), -1)"
         >
           New facility
         </v-btn>
@@ -22,7 +22,7 @@
           :dialog-open.sync="dialogs['facility-dialog']"
           :item-index="itemIndex"
           :item="localItem"
-          :facilitiesName="facilitiesName"
+          :facilities-name="facilitiesName"
           @update:item="updateWithItem"
         />
         <duplicate-facility-dialog
@@ -65,8 +65,8 @@
         icon
         small
         class="mr-2"
-        @click="openDuplicateItemDialog(item, item.name)"
         :disabled="disabled"
+        @click="openDuplicateItemDialog(item, item.name)"
       >
         <v-icon> mdi-content-duplicate</v-icon>
       </v-btn>
@@ -75,8 +75,8 @@
         icon
         small
         class="mr-2"
-        @click="openDeleteDialog(item, item.name)"
         :disabled="disabled"
+        @click="openDeleteDialog(item, item.name)"
       >
         <v-icon> mdi-delete</v-icon>
       </v-btn>

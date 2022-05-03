@@ -2,12 +2,12 @@
   <v-col cols="12" sm="6" md="6">
     <v-text-field
       :value="facility.renewablePower"
-      @input="changeRenewablePower"
       type="number"
       required
       :rules="rules"
       :min="0"
       label="Total kWh consumed this year"
+      @input="changeRenewablePower"
     />
   </v-col>
 </template>

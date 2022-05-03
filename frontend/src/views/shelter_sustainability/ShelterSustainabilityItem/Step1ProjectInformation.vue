@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid v-if="localShelter.users">
+  <v-container v-if="localShelter.users" fluid>
     <v-form
       :readonly="!$can('edit', localShelter)"
       @submit.prevent="() => submitForm(localShelter)"
@@ -30,7 +30,7 @@
           <v-card flat>
             <v-row>
               <v-col>
-                <v-sheet elevation="2" rounded v-if="localShelter">
+                <v-sheet v-if="localShelter" elevation="2" rounded>
                   <v-container fluid>
                     <v-row>
                       <v-col
@@ -67,25 +67,25 @@
                           :rules="shelterTotalRules"
                         />
                         <v-select
+                          v-model.number="localShelter.shelter_occupants"
                           :items="occupantsOptions"
                           label="Intended Occupants per shelter"
-                          v-model.number="localShelter.shelter_occupants"
                           name="shelter_occupants"
                           type="number"
                           required
                           :rules="shelterOccupantRules"
                         ></v-select>
                         <v-select
+                          v-model="localShelter.shelter_type"
                           :items="shelterTypes"
                           label="Shelter type"
-                          v-model="localShelter.shelter_type"
                           name="shelter_type"
                           required
                           :rules="shelterTypeRules"
                         ></v-select>
                         <v-select
-                          :items="lifeExpectancy"
                           v-model.number="localShelter.shelter_lifespan"
+                          :items="lifeExpectancy"
                           name="shelter_lifespan"
                           label="Expected average shelter lifespan"
                           item-text="label"
@@ -124,18 +124,18 @@
                           type="text"
                         />
                         <country-select
+                          id="location_country"
                           v-model="localShelter.location_country"
                           required
                           :rules="rules"
                           label="Country"
                           type="text"
                           name="location_country"
-                          id="location_country"
                         />
                         <v-divider />
                         <input-with-info
-                          :info="riskFlood"
                           v-model="localShelter.risk_flood"
+                          :info="riskFlood"
                           :depth="2"
                         />
                         <input-with-info

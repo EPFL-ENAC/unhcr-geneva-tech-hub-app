@@ -1,6 +1,6 @@
 <template>
   <energy-scenario
-    :initial-module="this.modules.scenario"
+    :initial-module="modules.scenario"
     @save="save"
   ></energy-scenario>
 </template>

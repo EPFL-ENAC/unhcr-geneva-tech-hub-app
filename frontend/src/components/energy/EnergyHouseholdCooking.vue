@@ -10,10 +10,10 @@
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             v-bind="attrs"
-            v-on="on"
             color="primary"
             :disabled="addSelectItems.length === 0"
             icon
+            v-on="on"
           >
             <v-icon large>mdi-plus-box</v-icon>
           </v-btn>

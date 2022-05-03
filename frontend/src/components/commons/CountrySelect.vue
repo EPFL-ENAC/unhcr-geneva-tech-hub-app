@@ -2,12 +2,12 @@
   <v-select
     tabindex="0"
     :input="currentValue"
-    @change="(value) => $emit('input', value)"
     :items="countriesRef"
     item-value="code"
     item-text="name"
     label="Select country"
     v-bind="{ ...$attrs, ...$props }"
+    @change="(value) => $emit('input', value)"
   >
     <template v-slot:item="slotProps">
       <div class="d-flex justify-space-between" style="width: 300px">

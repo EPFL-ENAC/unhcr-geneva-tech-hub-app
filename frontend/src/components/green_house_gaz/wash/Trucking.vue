@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid v-if="project.users">
+  <v-container v-if="project.users" fluid>
     <v-form :readonly="!$can('edit', project)">
       <v-row>
         <v-col>
@@ -22,19 +22,19 @@
                 <v-text-field
                   v-if="washInput.type === 'number'"
                   v-model="washForm.baseline.inputs[washInput.code]"
-                  @change="(e) => updateWashForm(e, 'baseline textfield')"
                   :label="washInput.description"
                   hide-spin-buttons
                   type="number"
                   :disabled="washInput.disabled"
+                  @change="(e) => updateWashForm(e, 'baseline textfield')"
                 ></v-text-field>
                 <v-select
                   v-if="washInput.type === 'select'"
                   v-model="washForm.baseline.inputs[washInput.code]"
-                  @change="(e) => updateWashForm(e, 'baseline select')"
                   :items="washInput.items"
                   :label="washInput.description"
                   :disabled="washInput.disabled"
+                  @change="(e) => updateWashForm(e, 'baseline select')"
                 >
                 </v-select>
               </div>
@@ -65,20 +65,20 @@
                 <v-text-field
                   v-if="washInput.type === 'number'"
                   v-model.number="washForm.endline.inputs[washInput.code]"
-                  @change="(e) => updateWashForm(e, 'Endline select')"
                   :label="washInput.description"
                   hide-spin-buttons
                   type="number"
                   :disabled="washInput.disabled"
+                  @change="(e) => updateWashForm(e, 'Endline select')"
                 ></v-text-field>
                 <v-select
                   v-if="washInput.type === 'select'"
                   v-model="washForm.endline.inputs[washInput.code]"
-                  @change="(e) => updateWashForm(e, 'Endline select')"
                   hide-spin-buttons
                   :items="washInput.items"
                   :label="washInput.description"
                   :disabled="washInput.disabled"
+                  @change="(e) => updateWashForm(e, 'Endline select')"
                 >
                 </v-select>
               </div>
