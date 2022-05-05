@@ -249,7 +249,9 @@ export default class App extends Vue {
   @Watch("error")
   onError(): void {
     /** When error has occurred */
-    this.$router.push({ name: "Error" });
+    if (this.currentRouteName !== "Error") {
+      this.$router.push({ name: "Error" });
+    }
   }
 
   login(): void {

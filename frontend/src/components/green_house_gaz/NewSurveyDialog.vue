@@ -271,17 +271,19 @@ export default class ProjectList extends Vue {
     site: string,
     surveyId: string
   ): void {
-    this.$router.push({
-      name: "GreenHouseGazItemSurveyId",
-      params: {
-        country: country_code,
-        site: encodeURIComponent(site),
-        surveyId: encodeURIComponent(surveyId),
-      },
-      query: {
-        category: "Info",
-      },
-    });
+    if (this.$route.name !== "GreenHouseGazItemSurveyId") {
+      this.$router.push({
+        name: "GreenHouseGazItemSurveyId",
+        params: {
+          country: country_code,
+          site: encodeURIComponent(site),
+          surveyId: encodeURIComponent(surveyId),
+        },
+        query: {
+          category: "Info",
+        },
+      });
+    }
   }
 
   public setLocalCampSite(project: GreenHouseGaz): void {

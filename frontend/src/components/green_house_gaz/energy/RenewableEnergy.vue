@@ -6,7 +6,7 @@
       required
       :rules="rules"
       :min="0"
-      label="Power used via renewable sources (kWh)"
+      label="Total kWh used (renewable sources)"
       @input="changeRenewablePower"
     />
   </v-col>

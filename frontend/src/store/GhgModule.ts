@@ -33,13 +33,21 @@ function generateState(): ProjectsState {
   };
 }
 
-function generateNewProject(newGhg: GreenHouseGaz, user: CouchUser) {
-  return {
-    ...newGhg,
-    _id: newGhg.name,
-    users: [user.name],
-    created_by: user.name,
-  };
+function generateNewProject(
+  newGhg: GreenHouseGaz,
+  user: CouchUser
+): GreenHouseGaz {
+  if (!user.name) {
+    // generate error
+    throw new Error("User name does not exist");
+  } else {
+    return {
+      ...newGhg,
+      _id: newGhg.name,
+      users: [user.name],
+      created_by: user.name,
+    };
+  }
 }
 /** Getters */
 const getters: GetterTree<ProjectsState, RootState> = {
@@ -70,9 +78,7 @@ const mutations: MutationTree<ProjectsState> = {
     state.sites = sites[0].value;
   },
   ADD_DOC(state, value) {
-    state.localCouch?.db.put(value).then(() => {
-      state.projects.push(value);
-    });
+    state.projects.push(value);
   },
   REMOVE_DOC(state, value) {
     const indexToRemove = state.projects.findIndex((el) => el._id === value);
@@ -152,9 +158,11 @@ const actions: ActionTree<ProjectsState, RootState> = {
     newGhg: GreenHouseGaz
   ) => {
     const user = context.rootGetters["UserModule/user"] as CouchUser;
-    if (user.name) {
-      context.commit("ADD_DOC", generateNewProject(newGhg, user));
-    }
+    // context.commit("ADD_DOC", generateNewProject(newGhg, user));
+    const value = generateNewProject(newGhg, user);
+    return context.state.localCouch?.db.put(value).then(() => {
+      context.commit("ADD_DOC", value);
+    });
   },
   removeDoc: (context: ActionContext<ProjectsState, RootState>, id) => {
     context.commit("REMOVE_DOC", id);

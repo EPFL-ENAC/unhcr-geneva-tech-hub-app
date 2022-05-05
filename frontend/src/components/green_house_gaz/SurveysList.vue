@@ -201,10 +201,12 @@ export default class ProjectItem extends Vue {
     const createdName = this.editedItem.name;
     await this.submitForm(this.localProject);
     // TODO: should check unicity of name
-    await this.$router.push({
-      name: "GreenHouseGazItemSurveyId",
-      params: { surveyId: encodeURIComponent(createdName) },
-    });
+    if (this.$route.name !== "GreenHouseGazItemSurveyId") {
+      await this.$router.push({
+        name: "GreenHouseGazItemSurveyId",
+        params: { surveyId: encodeURIComponent(createdName) },
+      });
+    }
   }
 
   public get formTitle(): string {
