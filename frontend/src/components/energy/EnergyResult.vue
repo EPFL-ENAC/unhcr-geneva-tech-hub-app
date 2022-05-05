@@ -8,7 +8,7 @@
               <h1>Energy</h1>
               <energy-key-indicator
                 name="Total Energy"
-                unit="MJ/household"
+                unit="MJ/HH"
                 :base-value="baselineResult.energy"
                 :value="globalResult.energy"
               ></energy-key-indicator>
@@ -43,7 +43,7 @@
               <h1>Emissions</h1>
               <energy-key-indicator
                 name="CO2 Emission"
-                unit="kg/household"
+                unit="kg/HH"
                 :base-value="baselineResult.emissionCo2"
                 :value="globalResult.emissionCo2"
               ></energy-key-indicator>
@@ -51,19 +51,19 @@
                 title="CO2"
                 :years="years"
                 :items="emissionCo2"
-                :y-labels="['[kg]']"
+                :y-labels="['CO2 Emission [kg]']"
               ></energy-chart>
               <energy-chart
                 title="CO"
                 :years="years"
                 :items="emissionCo"
-                :y-labels="['[g]']"
+                :y-labels="['CO Emission [g]']"
               ></energy-chart>
               <energy-chart
                 title="PM"
                 :years="years"
                 :items="emissionPm"
-                :y-labels="['[mg]']"
+                :y-labels="['PM Emission [mg]']"
               ></energy-chart>
             </v-col>
             <v-divider vertical></v-divider>
@@ -76,10 +76,17 @@
                 :value="globalResult.discountedCost"
               ></energy-key-indicator>
               <energy-chart
-                title="Income/Cost"
+                title="Income"
                 :years="years"
                 :items="income"
-                :y-labels="['[$]']"
+                :y-labels="['Income [$]']"
+              ></energy-chart>
+              <energy-chart
+                title="Cost"
+                :years="years"
+                :items="cost"
+                :y-labels="['Cost [$]']"
+                y-inverse
               ></energy-chart>
               <energy-key-indicator
                 name="Affordability"
@@ -92,7 +99,7 @@
                 title="Affordability"
                 :years="years"
                 :items="affordability"
-                :y-labels="['[%]']"
+                :y-labels="['Affordability [%]']"
               ></energy-chart>
             </v-col>
           </v-row>
@@ -341,31 +348,6 @@ export default class EnergyResult extends Vue {
     }
   }
 
-  get income(): ChartItem[] {
-    return [
-      ...this.getDetailChartItems("bar", "income", {
-        prefix: "Income",
-        unit: "$",
-      }),
-      ...this.getDetailChartItems("bar", "totalCost", {
-        prefix: "Cost",
-        ratio: -1,
-        unit: "$",
-      }),
-    ];
-  }
-
-  get affordability(): ChartItem[] {
-    return [
-      ...this.getDetailChartItems("line", "costAffordability", {
-        unit: "%",
-      }),
-      this.getTotalChartItem("line", "costAffordability", {
-        unit: "%",
-      }),
-    ];
-  }
-
   get energy(): ChartItem[] {
     return [
       ...this.getDetailChartItems("bar", "finalEnergy", {
@@ -395,6 +377,32 @@ export default class EnergyResult extends Vue {
 
   get emissionPm(): ChartItem[] {
     return this.getDetailChartItems("bar", "emissionPm", { unit: "mg" });
+  }
+
+  get income(): ChartItem[] {
+    return this.getDetailChartItems("bar", "income", {
+      prefix: "Income",
+      unit: "$",
+    });
+  }
+
+  get cost(): ChartItem[] {
+    return this.getDetailChartItems("bar", "totalCost", {
+      prefix: "Cost",
+      unit: "$",
+      keys: ["fixedCost", "variableCost"],
+    });
+  }
+
+  get affordability(): ChartItem[] {
+    return [
+      ...this.getDetailChartItems("line", "costAffordability", {
+        unit: "%",
+      }),
+      this.getTotalChartItem("line", "costAffordability", {
+        unit: "%",
+      }),
+    ];
   }
 
   get siteResults(): SiteResult[] {
@@ -475,9 +483,10 @@ export default class EnergyResult extends Vue {
       const ratio = option?.ratio ?? 1;
       const mapValue = (value: number) => ratio * value;
       const keys = option?.keys;
+      const prefix = option?.prefix ? `${option?.prefix} ` : "";
       return {
         type: type,
-        name: option?.prefix ? `${option?.prefix} ${name}` : name,
+        name: option?.prefix && !keys ? `${option?.prefix} ${name}` : name,
         data: this.siteResults.map((result) => ({
           value: mapValue(result.categories[cat][key]),
           average: mapValue(result.households[cat][key]),
@@ -495,26 +504,29 @@ export default class EnergyResult extends Vue {
         unit: option?.unit,
         tooltips: [
           {
-            name: "Total",
+            name: prefix + "Total",
             key: "value",
           },
+          ...(keys
+            ? keys.map((key) => {
+                const name = this.$t(`energy.${key}`).toString();
+                return {
+                  name: `${name} Total`,
+                  key: `${key}-total`,
+                };
+              })
+            : []),
           {
-            name: "Average",
+            name: prefix + "Average",
             key: "average",
           },
           ...(keys
-            ? keys.flatMap((key) => {
+            ? keys.map((key) => {
                 const name = this.$t(`energy.${key}`).toString();
-                return [
-                  {
-                    name: `${name} Total`,
-                    key: `${key}-total`,
-                  },
-                  {
-                    name: `${name} Average`,
-                    key: `${key}-average`,
-                  },
-                ];
+                return {
+                  name: `${name} Average`,
+                  key: `${key}-average`,
+                };
               })
             : []),
         ],

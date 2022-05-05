@@ -54,6 +54,8 @@ export default class EnergyChart extends Vue {
   readonly yearLabel!: string;
   @Prop({ type: Array as () => string[] })
   readonly yLabels: string[] | undefined;
+  @Prop({ type: Boolean, default: false })
+  readonly yInverse!: boolean;
 
   get option(): EChartsOption {
     return {
@@ -91,15 +93,18 @@ export default class EnergyChart extends Vue {
             type: "value",
             scale: true,
             name: label,
+            nameLocation: this.yInverse ? "start" : "end",
             axisLabel: {
               formatter: (value: number) => formatNumber(value),
             },
+            inverse: this.yInverse,
           };
           return option;
         }
       ),
       series: this.items.flatMap((item) => {
         const tooltips = item.tooltips;
+        const decimal = 0;
         const option: BarSeriesOption | LineSeriesOption = {
           name: item.name,
           stack: item.type === "bar" ? "total" : undefined,
@@ -116,17 +121,21 @@ export default class EnergyChart extends Vue {
                   const text = tooltips
                     .map(
                       (t) =>
-                        `${t.name}: <b>${formatNumber(
-                          p.data[t.key]
-                        )}${unitText}</b>`
+                        `<span>${
+                          t.name
+                        }:&nbsp;</span><span style="float:right"><b>${formatNumber(
+                          p.data[t.key],
+                          decimal
+                        )}${unitText}</b></span>`
                     )
                     .join("<br>");
                   return `${p.seriesName}<br>${text}`;
                 }
               : undefined,
             valueFormatter: item.unit
-              ? (value) => `${formatNumber(value as number)} [${item.unit}]`
-              : (value) => formatNumber(value as number),
+              ? (value) =>
+                  `${formatNumber(value as number, decimal)} [${item.unit}]`
+              : (value) => formatNumber(value as number, decimal),
           },
         };
         return option;
