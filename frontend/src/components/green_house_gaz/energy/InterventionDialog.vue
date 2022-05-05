@@ -47,7 +47,7 @@
                       required
                       :rules="rules"
                       :min="0"
-                      label="Total litres of diesel used this year"
+                      label="Diesel used per year (litres)"
                     />
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
@@ -57,7 +57,7 @@
                       required
                       :rules="rules"
                       :min="0"
-                      label="Total kWh consumed this year from grid"
+                      label="Power used from grid (kWh)"
                     />
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
@@ -67,7 +67,7 @@
                       required
                       :rules="rules"
                       :min="0"
-                      label="Total kWh consumed this year via renewable sources"
+                      label="Power used via renewable sources (kWh)"
                     />
                   </v-col>
                 </v-row>

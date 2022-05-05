@@ -7,7 +7,7 @@
         required
         :rules="rules"
         :min="0"
-        label="Total litres of diesel used this year"
+        label="Diesel used per year (litres)"
         @input="changeDieselLiters"
       />
     </v-col>
@@ -18,7 +18,7 @@
         required
         :rules="rules"
         :min="0"
-        label="Total kWh consumed this year from grid"
+        label="Power used from grid (kWh)"
         @input="changeGridPower"
       />
     </v-col>
@@ -29,7 +29,7 @@
         required
         :rules="rules"
         :min="0"
-        label="Total kWh consumed this year via renewable sources"
+        label="Power used via renewable sources (kWh)"
         @input="changeRenewablePower"
       />
     </v-col>

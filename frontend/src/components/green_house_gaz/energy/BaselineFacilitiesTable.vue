@@ -5,6 +5,7 @@
     sort-by="name"
     class="elevation-1"
     :hide-default-footer="true"
+    :items-per-page="-1"
   >
     <template v-slot:top>
       <v-toolbar v-if="!disabled" flat>

@@ -6,7 +6,7 @@
       required
       :rules="rules"
       :min="0"
-      label="Litres of diesel used per year"
+      label="Total diesel used per year (litres)"
       @input="changeDieselLiters"
     />
   </v-col>

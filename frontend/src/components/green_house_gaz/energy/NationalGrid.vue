@@ -6,7 +6,7 @@
       required
       :rules="rules"
       :min="0"
-      label="Total kWh consumed this year"
+      label="Total grid power used per year (kWh)"
       @input="changeGridPower"
     />
   </v-col>
