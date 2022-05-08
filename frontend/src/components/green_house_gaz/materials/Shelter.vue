@@ -10,6 +10,17 @@
             Material - Shelter
           </h2>
         </v-col>
+        <v-spacer></v-spacer>
+        <v-col class="col-auto d-flex align-center">
+          <info-tooltip>
+            {{ infoTooltipText["Material-Shelter"].text }}
+          </info-tooltip>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          NOTE: This module of the Assessment Tool is under development
+        </v-col>
       </v-row>
       <v-row>
         <v-col>
@@ -84,6 +95,8 @@
 </template>
 
 <script lang="ts">
+import InfoTooltip from "@/components/commons/InfoTooltip.vue";
+import { infoTooltipText } from "@/components/green_house_gaz/infoTooltipText";
 import {
   GreenHouseGaz,
   MaterialShelterSurvey,
@@ -103,10 +116,14 @@ import { mapActions, mapGetters } from "vuex";
   methods: {
     ...mapActions("GhgModule", ["getDoc", "updateDoc"]),
   },
+  components: {
+    InfoTooltip,
+  },
 })
 export default class WASH extends Vue {
   project!: GreenHouseGaz;
   localProject = {} as GreenHouseGaz;
+  infoTooltipText = infoTooltipText;
 
   shelterForm = this.generateNewShelterForm();
   localSurvey = {} as Survey;

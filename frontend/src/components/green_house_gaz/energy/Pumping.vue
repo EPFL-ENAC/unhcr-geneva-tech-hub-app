@@ -10,6 +10,17 @@
             Energy - Pumping
           </h2>
         </v-col>
+        <v-spacer></v-spacer>
+        <v-col class="col-auto d-flex align-center">
+          <info-tooltip>
+            {{ infoTooltipText["Energy-Pumping"].text }}
+          </info-tooltip>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          NOTE: This module of the Assessment Tool is under development
+        </v-col>
       </v-row>
       <v-row>
         <v-col>
@@ -41,6 +52,8 @@
 </template>
 
 <script lang="ts">
+import InfoTooltip from "@/components/commons/InfoTooltip.vue";
+import { infoTooltipText } from "@/components/green_house_gaz/infoTooltipText";
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
@@ -54,10 +67,14 @@ import { mapActions, mapGetters } from "vuex";
   methods: {
     ...mapActions("GhgModule", ["getDoc", "updateDoc"]),
   },
+  components: {
+    InfoTooltip,
+  },
 })
 export default class Pumping extends Vue {
   project!: GreenHouseGaz;
   localProject = {} as GreenHouseGaz;
+  infoTooltipText = infoTooltipText;
 
   configuration = {};
   localSurvey = {} as Survey;

@@ -10,12 +10,19 @@
             Material - HH Waste
           </h2>
         </v-col>
+        <v-spacer></v-spacer>
+        <v-col class="col-auto d-flex align-center">
+          <info-tooltip>
+            {{ infoTooltipText["Material-HHWaste"].text }}
+          </info-tooltip>
+        </v-col>
       </v-row>
       <v-row>
         <v-col>
-          <v-divider></v-divider>
+          NOTE: This module of the Assessment Tool is under development
         </v-col>
       </v-row>
+
       <v-row>
         <v-col :cols="4">
           <v-card flat>
@@ -41,6 +48,8 @@
 </template>
 
 <script lang="ts">
+import InfoTooltip from "@/components/commons/InfoTooltip.vue";
+import { infoTooltipText } from "@/components/green_house_gaz/infoTooltipText";
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
@@ -54,10 +63,14 @@ import { mapActions, mapGetters } from "vuex";
   methods: {
     ...mapActions("GhgModule", ["getDoc", "updateDoc"]),
   },
+  components: {
+    InfoTooltip,
+  },
 })
 export default class HHWaste extends Vue {
   project!: GreenHouseGaz;
   localProject = {} as GreenHouseGaz;
+  infoTooltipText = infoTooltipText;
 
   configuration = {};
   localSurvey = {} as Survey;
