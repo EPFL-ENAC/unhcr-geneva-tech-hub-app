@@ -232,7 +232,11 @@ export default class Step8ScoreCard extends Vue {
     const title: Record<string, string | number>[] = [];
     const singleAxis: Record<
       string,
-      string | number | boolean | Record<string, number>
+      | string
+      | number
+      | boolean
+      | Record<string, number>
+      | ((v: MinMax) => undefined)
     >[] = [];
     const series: Record<
       string,
@@ -340,7 +344,7 @@ interface Config {
   title: string;
   unit: string;
   min?: number;
-  max?: number;
+  max?: number | ((v: MinMax) => undefined);
   colors: {
     primary: string;
     secondary: string;
@@ -360,4 +364,8 @@ type ScoreCardsKey =
   | "techPerf"
   | "affordability"
   | "habitability";
+interface MinMax {
+  min: number;
+  max: number;
+}
 </script>
