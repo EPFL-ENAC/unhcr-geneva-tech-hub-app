@@ -1,9 +1,6 @@
 <template>
   <v-container v-if="localShelter.users" fluid>
-    <v-form
-      :readonly="!$can('edit', localShelter)"
-      @submit.prevent="() => submitForm(localShelter)"
-    >
+    <v-form @submit.prevent="() => submitForm(localShelter)">
       <v-row>
         <v-col>
           <h2 class="text-h4 project-shelter__h3 font-weight-medium">
@@ -149,7 +146,7 @@
                 </v-sheet>
               </v-col>
             </v-row>
-            <v-row v-if="$can('edit', localShelter)">
+            <v-row>
               <v-col class="d-flex justify-end">
                 <v-btn type="submit"> Save changes </v-btn>
               </v-col>
@@ -177,7 +174,7 @@ import { mapActions, mapGetters, mapState } from "vuex";
     ...mapState("UserModule", ["user"]),
   },
   methods: {
-    ...mapActions("ShelterModule", ["updateDoc"]),
+    ...mapActions("ShelterModule", ["updateDoc", "updateLocalDoc"]),
   },
   components: {
     CountrySelect,
@@ -190,6 +187,7 @@ export default class Step1 extends Vue {
   shelter!: Shelter;
   user!: CouchUser;
   updateDoc!: (doc: Shelter) => void;
+  updateLocalDoc!: (doc: Shelter) => void;
 
   tab = 0;
   newUser = "";
@@ -288,10 +286,15 @@ export default class Step1 extends Vue {
   }
 
   public submitForm(value: Shelter = this.localShelter): void {
-    if (value.name !== "") {
-      this.updateDoc(value);
+    if (this.$can("edit", value)) {
+      if (value.name !== "") {
+        this.updateDoc(value);
+      } else {
+        throw new Error("please fill the new Name");
+      }
     } else {
-      console.error("please fill the new Name");
+      this.$store.dispatch("notifyUser", "You're on read only mode");
+      this.updateLocalDoc(value);
     }
   }
 }

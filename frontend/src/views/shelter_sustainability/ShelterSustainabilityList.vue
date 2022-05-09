@@ -145,9 +145,7 @@ export default class ProjectList extends Vue {
   }
 
   destroyed(): void {
-    this.closeDB().then(() => {
-      console.log("DESTROYED view shelter list, closing DB");
-    });
+    this.closeDB();
   }
 }
 </script>

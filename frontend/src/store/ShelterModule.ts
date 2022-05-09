@@ -76,14 +76,7 @@ const mutations: MutationTree<ShelterState> = {
     state.shelter.scorecard_errors = errors;
   },
   ADD_DOC(state, value) {
-    state.localCouch?.remoteDB
-      .put(value)
-      .then(() => {
-        state.shelters.push(value);
-      })
-      .catch((error: Error) => {
-        console.log(error);
-      });
+    state.shelters.push(value);
   },
   REMOVE_DOC(state, value) {
     const indexToRemove = state.shelters.findIndex((el) => el._id === value);
@@ -140,10 +133,10 @@ const actions: ActionTree<ShelterState, RootState> = {
   addDoc: (context: ActionContext<ShelterState, RootState>, name: string) => {
     const user = context.rootGetters["UserModule/user"] as CouchUser;
     if (user.name) {
-      const newShelter = generateNewShelter(name);
-      newShelter.users = [user.name];
-      newShelter.created_by = user.name;
-      context.commit("ADD_DOC", newShelter);
+      const value = generateNewShelter(name);
+      return context.state.localCouch?.db.put(value).then(() => {
+        context.commit("ADD_DOC", value);
+      });
     }
   },
   removeDoc: (context: ActionContext<ShelterState, RootState>, id) => {
@@ -157,6 +150,9 @@ const actions: ActionTree<ShelterState, RootState> = {
     } else {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
+  },
+  updateLocalDoc: (context: ActionContext<ShelterState, RootState>, value) => {
+    context.commit("SET_SHELTER", value);
   },
   getDoc: (context: ActionContext<ShelterState, RootState>, id) => {
     const db = context.state.localCouch?.remoteDB;
