@@ -360,9 +360,4 @@ type ScoreCardsKey =
   | "techPerf"
   | "affordability"
   | "habitability";
-
-interface MinMax {
-  min: number;
-  max: number;
-}
 </script>

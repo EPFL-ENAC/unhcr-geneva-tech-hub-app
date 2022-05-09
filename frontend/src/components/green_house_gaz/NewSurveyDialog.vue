@@ -227,7 +227,8 @@ export default class ProjectList extends Vue {
       const surveys =
         this.newCampSite.surveys?.map((survey) => survey.name) ?? [];
       return (
-        surveys.indexOf(value) === -1 || `An assessment for this year already exist`
+        surveys.indexOf(value) === -1 ||
+        `An assessment for this year already exist`
       );
     }
   }
