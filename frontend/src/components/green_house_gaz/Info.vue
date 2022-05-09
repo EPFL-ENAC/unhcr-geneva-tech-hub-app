@@ -1,8 +1,5 @@
 <template>
-  <v-form
-    :readonly="!$can('edit', localProject)"
-    @submit.prevent="() => submitForm(localProject)"
-  >
+  <v-form @submit.prevent="() => submitForm(localProject)">
     <v-container v-if="project.users" fluid>
       <v-row>
         <v-col>

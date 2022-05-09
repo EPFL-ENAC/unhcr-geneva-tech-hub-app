@@ -1,111 +1,125 @@
 <template>
-  <v-container v-if="project.users" fluid>
-    <v-form :readonly="!$can('edit', project)">
-      <v-row>
-        <v-col>
-          <h2 class="text-h4 project-shelter__h3 font-weight-medium">
-            WASH - TRUCKING
-          </h2>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-divider></v-divider>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col :cols="4">
-          <v-card elevation="2">
-            <v-card-title><h1>Baseline</h1></v-card-title>
+  <v-container fluid>
+    <v-row>
+      <v-col>
+        <h2 class="text-h4 project-shelter__h3 font-weight-medium">
+          WASH - TRUCKING
+        </h2>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-divider></v-divider>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col :cols="4">
+        <v-card elevation="2">
+          <v-card-title><h1>Baseline</h1></v-card-title>
+          <v-card-text>
+            <div v-for="washInput in washInputs" :key="washInput.code">
+              <v-text-field
+                v-if="washInput.type === 'number'"
+                v-model="washForm.baseline.inputs[washInput.code]"
+                :label="washInput.description"
+                hide-spin-buttons
+                type="number"
+                :disabled="washInput.disabled"
+                @change="(e) => updateWashForm(e, 'baseline textfield')"
+              ></v-text-field>
+              <v-select
+                v-if="washInput.type === 'select'"
+                v-model="washForm.baseline.inputs[washInput.code]"
+                :items="washInput.items"
+                :label="washInput.description"
+                :disabled="washInput.disabled"
+                @change="(e) => updateWashForm(e, 'baseline select')"
+              >
+              </v-select>
+            </div>
+          </v-card-text>
+          <v-divider />
+          <v-card flat>
+            <v-card-title><h2>Results</h2></v-card-title>
             <v-card-text>
-              <div v-for="washInput in washInputs" :key="washInput.code">
+              <div v-for="washResult in washResults" :key="washResult.code">
                 <v-text-field
-                  v-if="washInput.type === 'number'"
-                  v-model="washForm.baseline.inputs[washInput.code]"
-                  :label="washInput.description"
                   hide-spin-buttons
-                  type="number"
-                  :disabled="washInput.disabled"
-                  @change="(e) => updateWashForm(e, 'baseline textfield')"
-                ></v-text-field>
-                <v-select
-                  v-if="washInput.type === 'select'"
-                  v-model="washForm.baseline.inputs[washInput.code]"
-                  :items="washInput.items"
-                  :label="washInput.description"
-                  :disabled="washInput.disabled"
-                  @change="(e) => updateWashForm(e, 'baseline select')"
-                >
-                </v-select>
-              </div>
-            </v-card-text>
-            <v-divider />
-            <v-card flat>
-              <v-card-title><h2>Results</h2></v-card-title>
-              <v-card-text>
-                <div v-for="washResult in washResults" :key="washResult.code">
-                  <v-text-field
-                    hide-spin-buttons
-                    :value="
-                      washForm.baseline.results[washResult.code] | formatNumber
-                    "
-                    :label="washResult.description"
-                    :disabled="washResult.disabled"
-                  ></v-text-field>
-                </div>
-              </v-card-text>
-            </v-card>
-          </v-card>
-        </v-col>
-        <v-col :cols="4">
-          <v-card elevation="2">
-            <v-card-title> <h1>Endline</h1></v-card-title>
-            <v-card-text>
-              <div v-for="washInput in washInputs" :key="washInput.code">
-                <v-text-field
-                  v-if="washInput.type === 'number'"
-                  v-model.number="washForm.endline.inputs[washInput.code]"
-                  :label="washInput.description"
-                  hide-spin-buttons
-                  type="number"
-                  :disabled="washInput.disabled"
-                  @change="(e) => updateWashForm(e, 'Endline select')"
-                ></v-text-field>
-                <v-select
-                  v-if="washInput.type === 'select'"
-                  v-model="washForm.endline.inputs[washInput.code]"
-                  hide-spin-buttons
-                  :items="washInput.items"
-                  :label="washInput.description"
-                  :disabled="washInput.disabled"
-                  @change="(e) => updateWashForm(e, 'Endline select')"
-                >
-                </v-select>
-              </div>
-            </v-card-text>
-            <v-divider />
-            <v-card flat>
-              <v-card-title><h2>Results</h2></v-card-title>
-              <v-card-text>
-                <v-text-field
-                  v-for="washResult in washResults"
-                  :key="washResult.code"
                   :value="
-                    washForm.endline.results[washResult.code] | formatNumber
+                    washForm.baseline.results[washResult.code] | formatNumber
                   "
                   :label="washResult.description"
                   :disabled="washResult.disabled"
                 ></v-text-field>
-              </v-card-text>
-            </v-card>
+              </div>
+            </v-card-text>
           </v-card>
-        </v-col>
-        <v-col :cols="4">
-          <v-card elevation="2">
-            <v-card-title><h1>Balance</h1></v-card-title>
+        </v-card>
+      </v-col>
+      <v-col :cols="4">
+        <v-card elevation="2">
+          <v-card-title> <h1>Endline</h1></v-card-title>
+          <v-card-text>
+            <div v-for="washInput in washInputs" :key="washInput.code">
+              <v-text-field
+                v-if="washInput.type === 'number'"
+                v-model.number="washForm.endline.inputs[washInput.code]"
+                :label="washInput.description"
+                hide-spin-buttons
+                type="number"
+                :disabled="washInput.disabled"
+                @change="(e) => updateWashForm(e, 'Endline select')"
+              ></v-text-field>
+              <v-select
+                v-if="washInput.type === 'select'"
+                v-model="washForm.endline.inputs[washInput.code]"
+                hide-spin-buttons
+                :items="washInput.items"
+                :label="washInput.description"
+                :disabled="washInput.disabled"
+                @change="(e) => updateWashForm(e, 'Endline select')"
+              >
+              </v-select>
+            </div>
+          </v-card-text>
+          <v-divider />
+          <v-card flat>
+            <v-card-title><h2>Results</h2></v-card-title>
             <v-card-text>
               <v-text-field
-                v-for="washBalanceResult in washBalanceResultsPart1"
+                v-for="washResult in washResults"
+                :key="washResult.code"
+                :value="
+                  washForm.endline.results[washResult.code] | formatNumber
+                "
+                :label="washResult.description"
+                :disabled="washResult.disabled"
+              ></v-text-field>
+            </v-card-text>
+          </v-card>
+        </v-card>
+      </v-col>
+      <v-col :cols="4">
+        <v-card elevation="2">
+          <v-card-title><h1>Balance</h1></v-card-title>
+          <v-card-text>
+            <v-text-field
+              v-for="washBalanceResult in washBalanceResultsPart1"
+              :key="washBalanceResult.code"
+              :value="
+                washForm.endline.resultsBalance[washBalanceResult.code]
+                  | formatNumber
+              "
+              :label="washBalanceResult.description"
+              :disabled="washBalanceResult.disabled"
+              :suffix="washBalanceResult.suffix"
+            ></v-text-field>
+          </v-card-text>
+          <v-divider />
+          <v-card outlined>
+            <v-card-text>
+              <v-text-field
+                v-for="washBalanceResult in washBalanceResultsPart2"
                 :key="washBalanceResult.code"
                 :value="
                   washForm.endline.resultsBalance[washBalanceResult.code]
@@ -114,38 +128,20 @@
                 :label="washBalanceResult.description"
                 :disabled="washBalanceResult.disabled"
                 :suffix="washBalanceResult.suffix"
+                :class="{
+                  'wash-positive':
+                    washBalanceResult.code === 'CO2_WSH_TRB_PER' &&
+                    washForm.endline.resultsBalance[washBalanceResult.code] > 0,
+                  'wash-negative':
+                    washBalanceResult.code === 'CO2_WSH_TRB_PER' &&
+                    washForm.endline.resultsBalance[washBalanceResult.code] < 0,
+                }"
               ></v-text-field>
             </v-card-text>
-            <v-divider />
-            <v-card outlined>
-              <v-card-text>
-                <v-text-field
-                  v-for="washBalanceResult in washBalanceResultsPart2"
-                  :key="washBalanceResult.code"
-                  :value="
-                    washForm.endline.resultsBalance[washBalanceResult.code]
-                      | formatNumber
-                  "
-                  :label="washBalanceResult.description"
-                  :disabled="washBalanceResult.disabled"
-                  :suffix="washBalanceResult.suffix"
-                  :class="{
-                    'wash-positive':
-                      washBalanceResult.code === 'CO2_WSH_TRB_PER' &&
-                      washForm.endline.resultsBalance[washBalanceResult.code] >
-                        0,
-                    'wash-negative':
-                      washBalanceResult.code === 'CO2_WSH_TRB_PER' &&
-                      washForm.endline.resultsBalance[washBalanceResult.code] <
-                        0,
-                  }"
-                ></v-text-field>
-              </v-card-text>
-            </v-card>
           </v-card>
-        </v-col>
-      </v-row>
-    </v-form>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
