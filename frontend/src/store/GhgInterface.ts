@@ -89,6 +89,29 @@ export interface WashTruckingSurvey {
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
+export interface FormSurvey {
+  baseline: {
+    inputs: FormSurveyInput[];
+    results: FormSurveyResult;
+  };
+  endline: {
+    inputs: FormSurveyInput[];
+    results: FormSurveyResultWithBalance;
+  };
+}
+
+export interface FormSurveyInput {
+  name?: string;
+}
+
+export interface FormSurveyResult {
+  totalCO2Emission: number;
+}
+
+export interface FormSurveyResultWithBalance extends FormSurveyResult {
+  changeInEmission: number;
+}
+
 // start of energy facility survey
 export interface EnergyFacilitySurvey {
   baseline: {

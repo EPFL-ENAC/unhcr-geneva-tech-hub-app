@@ -70,18 +70,23 @@
     </v-tabs>
     <v-row>
       <v-col>
-        <component
-          :is="subcategory"
-          v-if="subcategory"
-          :form.sync="currentSurvey[normedCategory][normedSubcategory]"
-          @update:form="updateCurrentSurvey"
-        />
-        <component
-          :is="category"
-          v-else
-          :survey.sync="currentSurvey"
-          @update:survey="updateCurrentSurvey"
-        />
+        <v-container v-if="project.users" fluid>
+          <v-form :readonly="!$can('edit', project)">
+            <component
+              :is="subcategory"
+              v-if="subcategory"
+              :form.sync="currentSurvey[normedCategory][normedSubcategory]"
+              :title-key="currentKeyTitle"
+              @update:form="updateCurrentSurvey"
+            />
+            <component
+              :is="category"
+              v-else
+              :survey.sync="currentSurvey"
+              @update:survey="updateCurrentSurvey"
+            />
+          </v-form>
+        </v-container>
       </v-col>
     </v-row>
   </div>
@@ -147,16 +152,16 @@ export default class SurveyList extends Vue {
           text: "Facilities",
           to: "Facilities",
         },
-        { icon: "mdi-stove", text: "Cooking", to: "cooking" },
+        { icon: "mdi-stove", text: "Cooking", to: "Cooking" },
         {
           icon: "mdi-lightbulb",
           text: "Lighting",
-          to: "lighting",
+          to: "Lighting",
         },
         {
           icon: "mdi-water-pump",
           text: "Pumping",
-          to: "pumping",
+          to: "Pumping",
         },
       ],
       icon: "mdi-lightning-bolt",
@@ -214,6 +219,11 @@ export default class SurveyList extends Vue {
   public get normedSubcategory(): string {
     return this.subcategory.toLowerCase();
   }
+
+  public get currentKeyTitle(): string {
+    return `${this.category}-${this.subcategory}`;
+  }
+
   public get tabSelected(): string | number {
     const tabIndex = this.menuItems.findIndex((value: MenuItem) => {
       const [category] = value.to.split("-");
