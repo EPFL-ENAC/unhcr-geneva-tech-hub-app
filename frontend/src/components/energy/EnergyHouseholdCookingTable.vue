@@ -1,0 +1,392 @@
+<template>
+  <v-card>
+    <v-card-title>
+      <span>Cooking Technologies</span>
+      <v-dialog v-model="addDialog" max-width="512px">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            v-bind="attrs"
+            color="primary"
+            :disabled="addSelectItems.length === 0"
+            icon
+            v-on="on"
+          >
+            <v-icon large>mdi-plus-box</v-icon>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title>Add Cooking Technology</v-card-title>
+          <v-card-text>
+            <v-select
+              v-model="addSelectedItem"
+              hide-details="auto"
+              :items="addSelectItems"
+              label="Available technologies"
+              append-outer-icon="mdi-plus-box"
+              @click:append-outer="addItem(addSelectedItem)"
+            ></v-select>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </v-card-title>
+    <v-card-text>
+      <v-row>
+        <v-col class="col-auto">
+          <v-tabs v-model="yearTab">
+            <v-tab v-for="(year, index) in years" :key="year">
+              {{ year }}
+              <template v-if="index > 0"
+                >&nbsp;<v-edit-dialog>
+                  <v-icon x-small>mdi-pencil</v-icon>
+                  <template v-slot:input>
+                    <v-text-field
+                      :value="year"
+                      single-line
+                      type="number"
+                      clearable
+                      @change="changeYear(index, $event)"
+                    ></v-text-field>
+                  </template>
+                </v-edit-dialog>
+              </template>
+            </v-tab>
+          </v-tabs>
+        </v-col>
+        <v-col class="col-auto d-flex align-center">
+          <v-btn icon @click="addYear()">
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-data-table
+            :headers="tableHeaders"
+            item-key="id"
+            :items="tableItems"
+            :items-per-page="5"
+            show-expand
+            sort-by="index"
+          >
+            <template v-slot:expanded-item="{ headers, item }">
+              <td class="pa-2" :colspan="headers.length">
+                <v-simple-table dense>
+                  <template v-slot:default>
+                    <tbody>
+                      <tr
+                        v-for="property in tableExpandProperties"
+                        :key="property.key"
+                      >
+                        <td class="font-weight-bold">{{ property.text }}</td>
+                        <td>
+                          <template v-if="property.getDisplayValue">
+                            {{ property.getDisplayValue(item[property.key]) }}
+                          </template>
+                          <template v-else>
+                            {{ item[property.key] }}
+                          </template>
+                          <template v-if="property.unit">
+                            [{{ property.unit }}]
+                          </template>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
+              </td>
+            </template>
+            <template
+              v-for="cat in socioEconomicCategories"
+              v-slot:[`item.${cat}`]="{ item }"
+            >
+              <form-item-component
+                v-for="cellItem in tableCellItems"
+                :key="`${cat}-${cellItem.key}`"
+                v-model="categoryCooking(item).categories[cat][cellItem.key]"
+                v-bind="cellItem"
+              ></form-item-component>
+            </template>
+            <template v-slot:[`item.action`]="{ item }">
+              <v-btn icon @click="deleteItem(item)">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </template>
+          </v-data-table>
+        </v-col>
+      </v-row>
+    </v-card-text>
+  </v-card>
+</template>
+
+<script lang="ts">
+import FormItemComponent, {
+  FormItem,
+} from "@/components/commons/FormItemComponent.vue";
+import EnergyForm from "@/components/energy/EnergyForm.vue";
+import {
+  CategoryCooking,
+  CookingFuel,
+  CookingStove,
+  CookingStoveId,
+  GeneralModule,
+  HouseholdCookingInput,
+  HouseholdCookingModule,
+  socioEconomicCategories,
+  SocioEconomicCategory,
+} from "@/models/energyModel";
+import { getCookingFuel } from "@/utils/energy";
+import { SelectItemObject } from "@/utils/vuetify";
+import { chain, cloneDeep, sortBy } from "lodash";
+import "vue-class-component/hooks";
+import { Component, Prop, VModel, Vue } from "vue-property-decorator";
+import { DataTableHeader } from "vuetify";
+import { mapState } from "vuex";
+
+@Component({
+  components: {
+    EnergyForm,
+    FormItemComponent,
+  },
+  computed: {
+    ...mapState("energy", ["cookingFuels", "cookingStoves"]),
+  },
+})
+export default class EnergyHouseholdCookingTable extends Vue {
+  cookingFuels!: CookingFuel[];
+  cookingStoves!: CookingStove[];
+
+  readonly socioEconomicCategories = socioEconomicCategories;
+  readonly tableHeaders: DataTableHeader[] = [
+    "cookstoveName",
+    "fuelName",
+    ...socioEconomicCategories,
+    "action",
+  ].map((item) => ({
+    text: this.$t(`energy.${item}`).toString(),
+    value: item,
+    sortable: ["cookstoveName", "fuelName"].includes(item),
+  }));
+  readonly tableCellItems: FormItem<keyof HouseholdCookingInput>[] = [
+    {
+      type: "number",
+      key: "countPerHousehold",
+      label: "Count per 10 households",
+      ratio: 10,
+    },
+    {
+      type: "number",
+      key: "useFactor",
+      label: "Use Factor",
+      subtype: "percent",
+    },
+  ];
+  readonly tableExpandProperties: {
+    text: string;
+    key: keyof TableItem;
+    unit?: string;
+    getDisplayValue?: (value: number) => number | string;
+  }[] = [
+    {
+      text: "Technology type",
+      key: "technologyType",
+    },
+    {
+      text: "Energy efficiency",
+      key: "energyEfficiency",
+      unit: "%",
+      getDisplayValue: (value: number): number => value * 100,
+    },
+    {
+      text: "Capacity",
+      key: "capacity",
+      unit: "kW",
+    },
+    {
+      text: "Investment Cost",
+      key: "investmentCost",
+      unit: "USD",
+    },
+    {
+      text: "Lifetime",
+      key: "lifetime",
+      unit: "years",
+    },
+    {
+      text: "Emission factor for CO",
+      key: "emissionFactorCo",
+      unit: "g/MJ delivered",
+    },
+    {
+      text: "Emission factor for PM2.5",
+      key: "emissionFactorPm",
+      unit: "g/MJ delivered",
+    },
+    {
+      text: "IWA efficiency TIER",
+      key: "iwaEfficiencyTier",
+      getDisplayValue: (value: number | [number, number]): string | number => {
+        return typeof value === "number" ? value : `${value[0]}-${value[1]}`;
+      },
+    },
+    {
+      text: "IWA indoor emission TIER",
+      key: "iwaIndoorEmissionTier",
+      getDisplayValue: (value: number | [number, number]): string | number => {
+        return typeof value === "number" ? value : `${value[0]}-${value[1]}`;
+      },
+    },
+    {
+      text: "Fuel energy",
+      key: "energy",
+      unit: "MJ/kg",
+    },
+    {
+      text: "Fuel emission factor for CO2",
+      key: "emissionFactorCo2",
+      unit: "ton/ton of fuel",
+    },
+    {
+      text: "Fuel price",
+      key: "price",
+      unit: "$/kg",
+    },
+  ];
+
+  @VModel({ type: Object as () => HouseholdCookingModule })
+  module!: HouseholdCookingModule;
+  @Prop({ type: Object as () => GeneralModule })
+  generalModule!: GeneralModule;
+
+  addDialog = false;
+  addSelectedItem: CookingStove | null = null;
+  yearTab = 0;
+
+  get yearOffset(): number {
+    return this.generalModule.yearStart;
+  }
+
+  get years(): number[] {
+    return this.module.technologyYears.map(
+      (item) => this.yearOffset + item.yearIndex
+    );
+  }
+
+  get technologies(): CategoryCooking[] {
+    return this.module.technologyYears[this.yearTab].technologies;
+  }
+
+  set technologies(value: CategoryCooking[]) {
+    this.module.technologyYears[this.yearTab].technologies = value;
+  }
+
+  get addSelectItems(): SelectItemObject<string, CookingStove>[] {
+    const existingIds = new Set(this.tableItems.map((item) => item.id));
+    return chain(this.cookingStoves)
+      .filter((stove) => !existingIds.has(stove._id))
+      .map((stove) => ({
+        text: `${stove.name} - ${this.getFuel(stove).name}`,
+        value: stove,
+      }))
+      .value();
+  }
+
+  get tableItems(): TableItem[] {
+    return this.technologies.map((item) => ({
+      ...item.categories,
+      ...item.stove,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...(item.fuel as any),
+      cookstoveName: item.stove.name,
+      fuelName: item.fuel.name,
+      id: item.stove._id,
+      index: item.stove.index,
+    }));
+  }
+
+  private getFuel(stove: CookingStove): CookingFuel {
+    return getCookingFuel(this.cookingFuels, stove);
+  }
+
+  addItem(item: CookingStove): void {
+    if (item) {
+      this.technologies.push(mapCategoryCooking(item, this.cookingFuels));
+      this.addDialog = false;
+    }
+  }
+
+  deleteItem(tableItem: TableItem): void {
+    this.technologies = this.technologies.filter(
+      (item) => item.stove._id !== tableItem.id
+    );
+  }
+
+  categoryCooking(item: TableItem): CategoryCooking {
+    const categoryCooking = this.technologies.find(
+      (cooking) => cooking.stove._id === item.id
+    );
+    if (!categoryCooking) {
+      throw new Error(`id ${item.id} not found`);
+    }
+    return categoryCooking;
+  }
+
+  addYear(): void {
+    const last =
+      this.module.technologyYears[this.module.technologyYears.length - 1];
+    this.module.technologyYears.push({
+      yearIndex: last.yearIndex + 1,
+      technologies: cloneDeep(last.technologies),
+    });
+  }
+
+  changeYear(index: number, newValue: number | null): void {
+    if (newValue === null) {
+      this.module.technologyYears.splice(index, 1);
+      if (this.yearTab === index) {
+        this.yearTab -= 1;
+      }
+    } else {
+      const newYearIndex = newValue - this.yearOffset;
+      if (
+        newYearIndex > 0 &&
+        this.module.technologyYears.every(
+          (item) => item.yearIndex !== newYearIndex
+        )
+      ) {
+        this.module.technologyYears[index].yearIndex = newYearIndex;
+        this.module.technologyYears = sortBy(
+          this.module.technologyYears,
+          (item) => item.yearIndex
+        );
+      }
+    }
+  }
+}
+
+type TableItem = Record<SocioEconomicCategory, HouseholdCookingInput> &
+  CookingStove &
+  CookingFuel & {
+    id: CookingStoveId;
+    cookstoveName: string;
+    fuelName: string;
+  };
+
+export const mapCategoryCooking = function (
+  stove: CookingStove,
+  cookingFuels: CookingFuel[]
+): CategoryCooking {
+  return {
+    categories: Object.fromEntries<HouseholdCookingInput>(
+      socioEconomicCategories.map((cat) => [
+        cat,
+        {
+          countPerHousehold: 0,
+          useFactor: 0.8,
+        },
+      ])
+    ) as Record<SocioEconomicCategory, HouseholdCookingInput>,
+    stove: cloneDeep(stove),
+    fuel: getCookingFuel(cookingFuels, stove),
+  };
+};
+</script>

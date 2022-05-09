@@ -6,7 +6,14 @@ export interface ProjectDocument {
 export interface Modules {
   general?: GeneralModule;
   householdCooking?: HouseholdCookingModule;
+
+  /**
+   * @deprecated for backward compatibility
+   */
   scenario?: ScenarioModule;
+  /**
+   * @deprecated for backward compatibility
+   */
   intervention?: InterventionModule;
 }
 
@@ -102,6 +109,12 @@ export interface HouseholdCookingModule {
     yearIndex: number;
     technologies: CategoryCooking[];
   }[];
+
+  scenarios: Scenario[];
+  scenarioId: string;
+
+  interventions: Intervention[];
+
   /**
    * @deprecated for backward compatibility
    */

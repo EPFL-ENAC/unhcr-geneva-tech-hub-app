@@ -198,11 +198,11 @@
 <script lang="ts">
 import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import UserManager from "@/components/commons/UserManager.vue";
+import EnergyCookingIntervention from "@/components/energy/EnergyCookingIntervention.vue";
+import EnergyCookingResult from "@/components/energy/EnergyCookingResult.vue";
+import EnergyCookingScenario from "@/components/energy/EnergyCookingScenario.vue";
 import EnergyGeneral from "@/components/energy/EnergyGeneral.vue";
 import EnergyHouseholdCooking from "@/components/energy/EnergyHouseholdCooking.vue";
-import EnergyIntervention from "@/components/energy/EnergyIntervention.vue";
-import EnergyResult from "@/components/energy/EnergyResult.vue";
-import EnergyScenario from "@/components/energy/EnergyScenario.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
 import { Modules, ProjectDocument } from "@/models/energyModel";
 import { SyncDatabase } from "@/utils/couchdb";
@@ -215,9 +215,9 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
   components: {
     EnergyGeneral,
     EnergyHouseholdCooking,
-    EnergyScenario,
-    EnergyIntervention,
-    EnergyResult,
+    EnergyCookingScenario,
+    EnergyCookingIntervention,
+    EnergyCookingResult,
     InfoTooltip,
     UserManager,
   },
@@ -285,16 +285,6 @@ export default class EnergyProject extends Vue {
       ],
     },
     {},
-    {
-      text: "Scenario",
-      icon: "mdi-skip-next",
-      toName: "Scenario",
-    },
-    {
-      text: "Intervention",
-      icon: "mdi-gesture-tap",
-      toName: "Intervention",
-    },
     {
       text: "Results",
       icon: "mdi-chart-box",

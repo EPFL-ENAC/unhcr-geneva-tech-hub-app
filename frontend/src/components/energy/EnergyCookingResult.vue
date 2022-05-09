@@ -202,7 +202,7 @@ import {
   GeneralCategory,
   GeneralModule,
   HouseholdCookingInput,
-  Modules,
+  HouseholdCookingModule,
   socioEconomicCategories,
   SocioEconomicCategory,
 } from "@/models/energyModel";
@@ -223,11 +223,13 @@ import { mapState } from "vuex";
     ...mapState("energy", ["cookingFuels"]),
   },
 })
-export default class EnergyResult extends Vue {
+export default class EnergyCookingResult extends Vue {
   readonly categories = socioEconomicCategories;
 
-  @Prop({ type: Object as () => Modules })
-  modules!: Modules;
+  @Prop({ type: Object as () => GeneralModule })
+  general: GeneralModule | undefined;
+  @Prop({ type: Object as () => HouseholdCookingModule })
+  householdCooking!: HouseholdCookingModule | undefined;
 
   tab: string | null = null;
   cookingFuels!: CookingFuel[];
@@ -329,7 +331,7 @@ export default class EnergyResult extends Vue {
       },
     ];
     const stoves: TableRow[] = sortBy(
-      this.modules.householdCooking?.categoryCookings,
+      this.householdCooking?.categoryCookings,
       (item) => item.stove.index
     ).map((cooking) => ({
       text: `${cooking.stove.name} - ${cooking.fuel.name}`,
@@ -340,11 +342,8 @@ export default class EnergyResult extends Vue {
   }
 
   get years(): number[] {
-    if (this.modules.general) {
-      return range(
-        this.modules.general.yearStart,
-        this.modules.general.yearEnd + 1
-      );
+    if (this.general) {
+      return range(this.general.yearStart, this.general.yearEnd + 1);
     } else {
       return [new Date().getFullYear()];
     }
@@ -408,7 +407,7 @@ export default class EnergyResult extends Vue {
 
   get siteResults(): SiteResult[] {
     const actions: Action[] = (
-      this.modules.intervention?.interventions.filter(
+      this.householdCooking?.interventions.filter(
         (intervention) => intervention.selected
       ) ?? []
     ).map((intervention) => {
@@ -558,10 +557,10 @@ export default class EnergyResult extends Vue {
   }
 
   getSites(actions: Action[]): Site[] {
-    const general = this.modules.general;
-    const householdCooking = this.modules.householdCooking;
-    const scenario = this.modules.scenario?.scenarios.find(
-      (scn) => scn.id === this.modules.scenario?.selectedId
+    const general = this.general;
+    const householdCooking = this.householdCooking;
+    const scenario = this.householdCooking?.scenarios.find(
+      (scn) => scn.id === this.householdCooking?.scenarioId
     );
     if (general && householdCooking && scenario) {
       const firstSite: Site = {

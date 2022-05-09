@@ -123,22 +123,6 @@ function projectChildren(prefix: string): RouteConfig[] {
       ],
     },
     {
-      path: "scenario",
-      name: prefix + "Scenario",
-      component: () =>
-        import(
-          /* webpackChunkName: "energy" */ "../views/energy/EnergyScenarioView.vue"
-        ),
-    },
-    {
-      path: "intervention",
-      name: prefix + "Intervention",
-      component: () =>
-        import(
-          /* webpackChunkName: "energy" */ "../views/energy/EnergyInterventionView.vue"
-        ),
-    },
-    {
       path: "result",
       name: prefix + "Result",
       component: () =>
