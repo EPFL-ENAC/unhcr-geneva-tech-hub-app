@@ -2,6 +2,7 @@
   <energy-form
     :module.sync="module"
     :initial-module="initialModule"
+    @after-sync="migrate"
     @save="save"
   >
     <template v-slot:title>
@@ -34,61 +35,90 @@
       </v-dialog>
     </template>
     <template v-slot>
-      <v-tabs>
-        <v-tab>{{ generalModule.yearStart }}</v-tab>
-      </v-tabs>
-      <v-data-table
-        :headers="tableHeaders"
-        item-key="id"
-        :items="tableItems"
-        :items-per-page="5"
-        show-expand
-        sort-by="index"
-      >
-        <template v-slot:expanded-item="{ headers, item }">
-          <td class="pa-2" :colspan="headers.length">
-            <v-simple-table dense>
-              <template v-slot:default>
-                <tbody>
-                  <tr
-                    v-for="property in tableExpandProperties"
-                    :key="property.key"
-                  >
-                    <td class="font-weight-bold">{{ property.text }}</td>
-                    <td>
-                      <template v-if="property.getDisplayValue">
-                        {{ property.getDisplayValue(item[property.key]) }}
-                      </template>
-                      <template v-else>
-                        {{ item[property.key] }}
-                      </template>
-                      <template v-if="property.unit">
-                        [{{ property.unit }}]
-                      </template>
-                    </td>
-                  </tr>
-                </tbody>
+      <v-row>
+        <v-col class="col-auto">
+          <v-tabs v-model="yearTab">
+            <v-tab v-for="(year, index) in years" :key="year">
+              {{ year }}
+              <template v-if="index > 0"
+                >&nbsp;<v-edit-dialog>
+                  <v-icon x-small>mdi-pencil</v-icon>
+                  <template v-slot:input>
+                    <v-text-field
+                      :value="year"
+                      single-line
+                      type="number"
+                      clearable
+                      @change="changeYear(index, $event)"
+                    ></v-text-field>
+                  </template>
+                </v-edit-dialog>
               </template>
-            </v-simple-table>
-          </td>
-        </template>
-        <template
-          v-for="cat in socioEconomicCategories"
-          v-slot:[`item.${cat}`]="{ item }"
-        >
-          <form-item-component
-            v-for="cellItem in tableCellItems"
-            :key="`${cat}-${cellItem.key}`"
-            v-model="categoryCooking(item).categories[cat][cellItem.key]"
-            v-bind="cellItem"
-          ></form-item-component>
-        </template>
-        <template v-slot:[`item.action`]="{ item }">
-          <v-btn icon @click="deleteItem(item)">
-            <v-icon>mdi-close</v-icon>
+            </v-tab>
+          </v-tabs>
+        </v-col>
+        <v-col class="col-auto d-flex align-center">
+          <v-btn icon @click="addYear()">
+            <v-icon>mdi-plus</v-icon>
           </v-btn>
-        </template>
-      </v-data-table>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-data-table
+            :headers="tableHeaders"
+            item-key="id"
+            :items="tableItems"
+            :items-per-page="5"
+            show-expand
+            sort-by="index"
+          >
+            <template v-slot:expanded-item="{ headers, item }">
+              <td class="pa-2" :colspan="headers.length">
+                <v-simple-table dense>
+                  <template v-slot:default>
+                    <tbody>
+                      <tr
+                        v-for="property in tableExpandProperties"
+                        :key="property.key"
+                      >
+                        <td class="font-weight-bold">{{ property.text }}</td>
+                        <td>
+                          <template v-if="property.getDisplayValue">
+                            {{ property.getDisplayValue(item[property.key]) }}
+                          </template>
+                          <template v-else>
+                            {{ item[property.key] }}
+                          </template>
+                          <template v-if="property.unit">
+                            [{{ property.unit }}]
+                          </template>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
+              </td>
+            </template>
+            <template
+              v-for="cat in socioEconomicCategories"
+              v-slot:[`item.${cat}`]="{ item }"
+            >
+              <form-item-component
+                v-for="cellItem in tableCellItems"
+                :key="`${cat}-${cellItem.key}`"
+                v-model="categoryCooking(item).categories[cat][cellItem.key]"
+                v-bind="cellItem"
+              ></form-item-component>
+            </template>
+            <template v-slot:[`item.action`]="{ item }">
+              <v-btn icon @click="deleteItem(item)">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </template>
+          </v-data-table>
+        </v-col>
+      </v-row>
     </template>
   </energy-form>
 </template>
@@ -112,7 +142,7 @@ import {
 } from "@/models/energyModel";
 import { getCookingFuel } from "@/utils/energy";
 import { SelectItemObject } from "@/utils/vuetify";
-import { chain, cloneDeep } from "lodash";
+import { chain, cloneDeep, sortBy } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";
@@ -232,10 +262,30 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   generalModule!: GeneralModule;
 
   module: HouseholdCookingModule = {
+    technologyYears: [],
     categoryCookings: [],
   };
   addDialog = false;
   addSelectedItem: CookingStove | null = null;
+  yearTab = 0;
+
+  get yearOffset(): number {
+    return this.generalModule.yearStart;
+  }
+
+  get years(): number[] {
+    return this.module.technologyYears.map(
+      (item) => this.yearOffset + item.yearIndex
+    );
+  }
+
+  get technologies(): CategoryCooking[] {
+    return this.module.technologyYears[this.yearTab].technologies;
+  }
+
+  set technologies(value: CategoryCooking[]) {
+    this.module.technologyYears[this.yearTab].technologies = value;
+  }
 
   get addSelectItems(): SelectItemObject<string, CookingStove>[] {
     const existingIds = new Set(this.tableItems.map((item) => item.id));
@@ -249,7 +299,7 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   }
 
   get tableItems(): TableItem[] {
-    return this.module.categoryCookings.map((item) => ({
+    return this.technologies.map((item) => ({
       ...item.categories,
       ...item.stove,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -262,12 +312,24 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   }
 
   created(): void {
-    if (this.initialModule) {
-      this.module = cloneDeep(this.initialModule);
-    } else {
-      this.module.categoryCookings = this.cookingStoves.map(
-        this.mapCategoryCooking
-      );
+    if (!this.initialModule) {
+      this.module.technologyYears = [
+        {
+          yearIndex: 0,
+          technologies: this.cookingStoves.map(this.mapCategoryCooking),
+        },
+      ];
+    }
+  }
+
+  migrate(): void {
+    if (!this.module.technologyYears) {
+      this.module.technologyYears = [
+        {
+          yearIndex: 0,
+          technologies: cloneDeep(this.module.categoryCookings),
+        },
+      ];
     }
   }
 
@@ -293,25 +355,57 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
 
   addItem(item: CookingStove): void {
     if (item) {
-      this.module.categoryCookings.push(this.mapCategoryCooking(item));
+      this.technologies.push(this.mapCategoryCooking(item));
       this.addDialog = false;
     }
   }
 
   deleteItem(tableItem: TableItem): void {
-    this.module.categoryCookings = this.module.categoryCookings.filter(
+    this.technologies = this.technologies.filter(
       (item) => item.stove._id !== tableItem.id
     );
   }
 
   categoryCooking(item: TableItem): CategoryCooking {
-    const categoryCooking = this.module.categoryCookings.find(
+    const categoryCooking = this.technologies.find(
       (cooking) => cooking.stove._id === item.id
     );
     if (!categoryCooking) {
       throw new Error(`id ${item.id} not found`);
     }
     return categoryCooking;
+  }
+
+  addYear(): void {
+    const last =
+      this.module.technologyYears[this.module.technologyYears.length - 1];
+    this.module.technologyYears.push({
+      yearIndex: last.yearIndex + 1,
+      technologies: cloneDeep(last.technologies),
+    });
+  }
+
+  changeYear(index: number, newValue: number | null): void {
+    if (newValue === null) {
+      this.module.technologyYears.splice(index, 1);
+      if (this.yearTab === index) {
+        this.yearTab -= 1;
+      }
+    } else {
+      const newYearIndex = newValue - this.yearOffset;
+      if (
+        newYearIndex > 0 &&
+        this.module.technologyYears.every(
+          (item) => item.yearIndex !== newYearIndex
+        )
+      ) {
+        this.module.technologyYears[index].yearIndex = newYearIndex;
+        this.module.technologyYears = sortBy(
+          this.module.technologyYears,
+          (item) => item.yearIndex
+        );
+      }
+    }
   }
 }
 

@@ -194,11 +194,13 @@ import EnergyChart, {
 import EnergyKeyIndicator from "@/components/energy/EnergyKeyIndicator.vue";
 import EnergyLegend from "@/components/energy/EnergyLegend.vue";
 import {
+  CategoryCooking,
   CookingFuel,
   CookingStove,
   CookingStoveId,
   CookingTechnologyIntervention,
   GeneralCategory,
+  GeneralModule,
   HouseholdCookingInput,
   Modules,
   socioEconomicCategories,
@@ -580,45 +582,32 @@ export default class EnergyResult extends Vue {
             general.categories[cat].proportion,
           ])
         ) as Record<SocioEconomicCategory, number>,
-        categories: Object.fromEntries<CategoryInput>(
-          socioEconomicCategories.map((cat) => [
-            cat,
-            {
-              general: general.categories[cat],
-              cookingTechnologies: householdCooking.categoryCookings.map(
-                (cooking) => {
-                  const fuel = this.cookingFuels.find(
-                    (fuel) => fuel._id === cooking.stove.fuel
-                  );
-                  if (!fuel) {
-                    throw new Error(`Fuel ${cooking.stove.fuel} not found`);
-                  }
-                  return {
-                    stove: cooking.stove,
-                    fuel: fuel,
-                    value: cooking.categories[cat],
-                  };
-                }
-              ),
-            } as CategoryInput,
-          ])
-        ) as Record<SocioEconomicCategory, CategoryInput>,
+        categories: this.getCategories(
+          general,
+          householdCooking.technologyYears[0].technologies
+        ),
       };
       const sites: Site[] = [firstSite];
       for (let index = 1; index < this.years.length; index++) {
         const year = this.years[index];
-        const oldSite = sites[index - 1];
-        let newSite = cloneDeep(oldSite);
-        newSite.yearCount = index;
-        newSite.populationCount =
-          oldSite.populationCount * scenario.demographicGrowth;
-        newSite.householdsCount =
-          oldSite.householdsCount * scenario.demographicGrowth;
-        newSite.proportions = this.getNewProportions(oldSite);
-        newSite = actions
+        const previousSite = sites[index - 1];
+        let currentSite = cloneDeep(previousSite);
+        const technologies = householdCooking.technologyYears.find(
+          (item) => item.yearIndex === index
+        )?.technologies;
+        if (technologies) {
+          currentSite.categories = this.getCategories(general, technologies);
+        }
+        currentSite.yearCount = index;
+        currentSite.populationCount =
+          previousSite.populationCount * scenario.demographicGrowth;
+        currentSite.householdsCount =
+          previousSite.householdsCount * scenario.demographicGrowth;
+        currentSite.proportions = this.getNewProportions(previousSite);
+        currentSite = actions
           .filter((action) => action.isActive(year))
-          .reduce((site, action) => action.apply(site), newSite);
-        sites[index] = newSite;
+          .reduce((site, action) => action.apply(site), currentSite);
+        sites[index] = currentSite;
       }
       return sites;
     } else {
@@ -664,6 +653,33 @@ export default class EnergyResult extends Vue {
       }
     }
     return proportions;
+  }
+
+  getCategories(
+    general: GeneralModule,
+    technologies: CategoryCooking[]
+  ): Record<SocioEconomicCategory, CategoryInput> {
+    return Object.fromEntries<CategoryInput>(
+      socioEconomicCategories.map((cat) => [
+        cat,
+        {
+          general: general.categories[cat],
+          cookingTechnologies: technologies.map((cooking) => {
+            const fuel = this.cookingFuels.find(
+              (fuel) => fuel._id === cooking.stove.fuel
+            );
+            if (!fuel) {
+              throw new Error(`Fuel ${cooking.stove.fuel} not found`);
+            }
+            return {
+              stove: cooking.stove,
+              fuel: fuel,
+              value: cooking.categories[cat],
+            };
+          }),
+        } as CategoryInput,
+      ])
+    ) as Record<SocioEconomicCategory, CategoryInput>;
   }
 
   computeSite(site: Site): SiteResult {

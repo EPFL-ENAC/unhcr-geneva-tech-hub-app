@@ -98,6 +98,13 @@ export interface GeneralCategory {
 // Household Cooking
 
 export interface HouseholdCookingModule {
+  technologyYears: {
+    yearIndex: number;
+    technologies: CategoryCooking[];
+  }[];
+  /**
+   * @deprecated for backward compatibility
+   */
   categoryCookings: CategoryCooking[];
 }
 export interface CategoryCooking {

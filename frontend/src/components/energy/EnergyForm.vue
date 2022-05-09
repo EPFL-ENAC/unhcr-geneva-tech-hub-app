@@ -43,7 +43,7 @@ export default class EnergyForm<M> extends Vue {
   syncedModule!: M;
 
   @Ref()
-  readonly form!: VForm;
+  readonly form: VForm | undefined;
 
   formValid = true;
 
@@ -59,16 +59,18 @@ export default class EnergyForm<M> extends Vue {
   onInitialModuleChanged(): void {
     if (this.initialModule) {
       this.syncedModule = cloneDeep(this.initialModule);
+      this.$emit("after-sync");
+      console.debug("module synced from database");
     }
   }
 
   @Watch("syncedModule", { deep: true })
   onSyncedModuleChanged(): void {
-    this.$nextTick().then(() => this.form.validate());
+    this.$nextTick().then(() => this.form?.validate());
   }
 
   save(): void {
-    if (this.form.validate()) {
+    if (this.form?.validate()) {
       this.$emit("save", this.syncedModule);
     }
   }

@@ -36,9 +36,9 @@
                         <template v-slot:activator="{ on, attrs }">
                           <v-btn
                             v-bind="attrs"
-                            v-on="on"
                             color="primary"
                             icon
+                            v-on="on"
                             @click="
                               $event.stopPropagation();
                               createSite(item);
