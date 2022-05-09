@@ -38,7 +38,11 @@
         </v-tab>
       </template>
     </v-tabs>
-    <router-view />
+    <v-container v-if="shelter.users" fluid>
+      <v-form @submit.stop.prevent="">
+        <router-view :shelter="shelter" @update:shelter="submitForm" />
+      </v-form>
+    </v-container>
   </v-container>
 </template>
 
@@ -57,6 +61,7 @@ import { mapActions, mapGetters } from "vuex";
     ...mapActions("ShelterModule", [
       "getDoc",
       "updateDoc",
+      "updateLocalDoc",
       "syncDB",
       "closeDB",
     ]),
@@ -70,6 +75,8 @@ export default class ProjectItem extends Vue {
   $route!: Route;
   db!: SyncDatabase<Shelter> | null;
   shelter!: Shelter;
+  updateDoc!: (doc: Shelter) => void;
+  updateLocalDoc!: (doc: Shelter) => void;
 
   public get menuItems(): MenuItem[] {
     const scorecardErrorText = !this.shelter?.scorecard_errors?.length
@@ -119,6 +126,19 @@ export default class ProjectItem extends Vue {
     ];
   }
 
+  public submitForm(value: Shelter = this.shelter): void {
+    if (this.$can("edit", value)) {
+      if (value.name !== "") {
+        this.updateDoc(value);
+      } else {
+        throw new Error("please fill the new Name");
+      }
+    } else {
+      this.$store.dispatch("notifyUser", "You're on read only mode");
+      this.updateLocalDoc(value);
+    }
+  }
+
   public retrieveData(): void {
     this.getDoc(decodeURIComponent(this.$route.params.id));
   }
@@ -155,14 +175,6 @@ a:active {
 </style>
 
 <style lang="scss">
-// modify all v-slide-group
-// .project {
-//   padding: 0; // cancel padding from container to allow sticky
-//   .v-slide-group__content {
-//     justify-content: center;
-//   }
-// }
-
 .project-shelter__header,
 .project-shelter__h3 {
   color: var(--c-shelter);
