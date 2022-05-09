@@ -1,125 +1,103 @@
 <template>
-  <v-form v-if="shelter" :readonly="!$can('edit', shelter)">
-    <v-container fluid>
-      <v-row>
-        <v-col>
-          <h2 class="text-h4 project-shelter__h3 font-weight-medium">Items</h2>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-divider></v-divider>
-        </v-col>
-      </v-row>
+  <v-container fluid>
+    <v-row>
+      <v-col>
+        <h2 class="text-h4 project-shelter__h3 font-weight-medium">Items</h2>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-divider></v-divider>
+      </v-col>
+    </v-row>
 
-      <v-row>
-        <v-col>
-          <v-sheet v-if="items" elevation="2" rounded>
-            <v-data-table
-              :headers="headers"
-              :items="items"
-              sort-by="name"
-              class="elevation-1"
-            >
-              <template v-slot:top>
-                <v-toolbar flat>
-                  <v-toolbar-title>Items</v-toolbar-title>
-                  <v-divider class="mx-4" inset vertical></v-divider>
-                  <v-spacer></v-spacer>
-                  <v-btn
-                    color="primary"
-                    dark
-                    class="mb-2"
-                    :disabled="!$can('edit', shelter)"
-                    @click="openNewItemDialog"
-                  >
-                    New item
-                  </v-btn>
-                  <item-dialog />
-                  <delete-item-dialog />
-                </v-toolbar>
-              </template>
-              <template v-slot:item.name="{ item }">
-                <span v-if="item.itemType === 'Labour'"
-                  >{{ item.itemType }} ({{ item.workerType }})
-                </span>
-                <span v-else-if="item.itemType === 'Material'">{{
-                  item.name
-                }}</span>
-                <span v-else-if="item.itemType === 'Other'"
-                  >Other ({{ item.name }})</span
-                >
-              </template>
-              <template v-slot:item.source="{ item }">
-                <span v-if="countriesMap[item.source]">
-                  {{ countriesMap[item.source].name }}
-                </span>
-                <span v-else>
-                  {{ item.source }}
-                </span>
-              </template>
-              <template v-slot:item.formId="{ item }">
-                <span
-                  v-if="
-                    item.itemType === 'Material' && materialMap[item.formId]
-                  "
-                >
-                  {{ materialMap[item.formId].form }}
-                </span>
-                <span v-else>--</span>
-              </template>
-
-              <template v-slot:item.materialId="{ item }">
-                <span v-if="item.itemType === 'Material'">{{
-                  item.materialId
-                }}</span>
-                <span v-else>--</span>
-              </template>
-
-              <template v-slot:item.quantity="{ item }">
-                <span>{{ item.quantity | formatNumber }}</span>
-              </template>
-
-              <template v-slot:item.unitCost="{ item }">
-                <span>{{ item.unitCost | formatNumber }}</span>
-              </template>
-
-              <template v-slot:item.totalCost="{ item }">
-                <span>{{ item.totalCost | formatNumber }}</span>
-              </template>
-
-              <template v-slot:item.actions="{ item }">
+    <v-row>
+      <v-col>
+        <v-sheet v-if="items" elevation="2" rounded>
+          <v-data-table
+            :headers="headers"
+            :items="items"
+            sort-by="name"
+            class="elevation-1"
+          >
+            <template v-slot:top>
+              <v-toolbar flat>
+                <v-toolbar-title>Items</v-toolbar-title>
+                <v-divider class="mx-4" inset vertical></v-divider>
+                <v-spacer></v-spacer>
                 <v-btn
-                  icon
-                  small
-                  class="mr-2"
-                  :disabled="!$can('edit', shelter)"
-                  @click="openEditItemDialog(item)"
+                  color="primary"
+                  dark
+                  class="mb-2"
+                  @click="openNewItemDialog"
                 >
-                  <v-icon> mdi-pencil</v-icon>
+                  New item
                 </v-btn>
+                <item-dialog />
+                <delete-item-dialog />
+              </v-toolbar>
+            </template>
+            <template v-slot:[`item.name`]="{ item }">
+              <span v-if="item.itemType === 'Labour'"
+                >{{ item.itemType }} ({{ item.workerType }})
+              </span>
+              <span v-else-if="item.itemType === 'Material'">{{
+                item.name
+              }}</span>
+              <span v-else-if="item.itemType === 'Other'"
+                >Other ({{ item.name }})</span
+              >
+            </template>
+            <template v-slot:[`item.source`]="{ item }">
+              <span v-if="countriesMap[item.source]">
+                {{ countriesMap[item.source].name }}
+              </span>
+              <span v-else>
+                {{ item.source }}
+              </span>
+            </template>
+            <template v-slot:[`item.formId`]="{ item }">
+              <span
+                v-if="item.itemType === 'Material' && materialMap[item.formId]"
+              >
+                {{ materialMap[item.formId].form }}
+              </span>
+              <span v-else>--</span>
+            </template>
 
-                <v-btn
-                  icon
-                  small
-                  class="mr-2"
-                  :disabled="!$can('edit', shelter)"
-                  @click="openDeleteDialog(item)"
-                >
-                  <v-icon> mdi-delete</v-icon>
-                </v-btn>
-              </template>
-            </v-data-table>
-          </v-sheet>
-        </v-col>
-      </v-row>
-      <!-- <v-row v-if="$can('edit', shelter)">
-        <v-col class="d-flex justify-end">
-          <v-btn type="submit"> Save changes </v-btn>
-        </v-col>
-      </v-row> -->
-    </v-container>
-  </v-form>
+            <template v-slot:[`item.materialId`]="{ item }">
+              <span v-if="item.itemType === 'Material'">{{
+                item.materialId
+              }}</span>
+              <span v-else>--</span>
+            </template>
+
+            <template v-slot:[`item.quantity`]="{ item }">
+              <span>{{ item.quantity | formatNumber }}</span>
+            </template>
+
+            <template v-slot:[`item.unitCost`]="{ item }">
+              <span>{{ item.unitCost | formatNumber }}</span>
+            </template>
+
+            <template v-slot:[`item.totalCost`]="{ item }">
+              <span>{{ item.totalCost | formatNumber }}</span>
+            </template>
+
+            <template v-slot:[`item.actions`]="{ item }">
+              <v-btn icon small class="mr-2" @click="openEditItemDialog(item)">
+                <v-icon> mdi-pencil</v-icon>
+              </v-btn>
+
+              <v-btn icon small class="mr-2" @click="openDeleteDialog(item)">
+                <v-icon> mdi-delete</v-icon>
+              </v-btn>
+            </template>
+          </v-data-table>
+        </v-sheet>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -130,12 +108,11 @@ import { Item, Shelter } from "@/store/ShelterInterface";
 import Countries from "@/utils/countriesAsList";
 import flagEmoji from "@/utils/flagEmoji";
 import { cloneDeep } from "lodash";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("ShelterModule", ["shelter"]),
     ...mapGetters("ShelterBillOfQuantitiesModule", [
       "items",
       "isItemDialogOpen",
@@ -143,7 +120,6 @@ import { mapActions, mapGetters } from "vuex";
     ...mapGetters("SheltersMaterialModule", ["materialMap"]),
   },
   methods: {
-    ...mapActions("ShelterModule", ["updateDoc"]),
     ...mapActions("ShelterBillOfQuantitiesModule", [
       "setItems",
       "openNewItemDialog",
@@ -163,7 +139,17 @@ import { mapActions, mapGetters } from "vuex";
 })
 /** Project */
 export default class Step3Materials extends Vue {
+  @Prop({ type: [Object], required: true })
   shelter!: Shelter;
+
+  public get localShelter(): Shelter {
+    return cloneDeep(this.shelter);
+  }
+
+  public set localShelter(newShelter: Shelter) {
+    this.$emit("update:shelter", newShelter);
+  }
+
   items!: Item[];
   isItemDialogOpen!: boolean;
   setItems!: (items: Item[]) => void;
@@ -196,9 +182,8 @@ export default class Step3Materials extends Vue {
   ];
 
   public submitForm(): void {
-    const localShelter = cloneDeep(this.shelter);
-    localShelter.items = this.items;
-    this.updateDoc(localShelter);
+    this.$set(this.localShelter, "items", this.items);
+    this.localShelter = Object.assign({}, this.localShelter);
   }
 
   public autoSubmit(): void {

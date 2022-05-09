@@ -113,11 +113,7 @@
                       <!-- v-for on all windows -->
                       <v-card-title class="d-flex justify-space-between">
                         Window dimensions
-                        <v-btn
-                          :disabled="!$can('edit', localShelter)"
-                          icon
-                          @click="removeWindow($windowKey)"
-                        >
+                        <v-btn icon @click="removeWindow($windowKey)">
                           <v-icon>mdi-close</v-icon>
                         </v-btn>
                       </v-card-title>
@@ -141,12 +137,7 @@
                     </v-card>
                   </v-col>
                   <v-col :lg="4" :md="6" sm="12" xs="12">
-                    <v-btn
-                      block
-                      :disabled="!$can('edit', localShelter)"
-                      @click="addWindow"
-                      >Add window</v-btn
-                    >
+                    <v-btn block @click="addWindow">Add window</v-btn>
                   </v-col>
                 </v-row>
               </v-expand-transition>
