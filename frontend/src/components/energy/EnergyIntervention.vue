@@ -241,7 +241,7 @@ export default class EnergyIntervention extends EnergyFormMixin<InterventionModu
       {
         type: "select",
         key: "categories",
-        label: "Target socio-economic categories",
+        label: "Target quality of life levels",
         options: this.categoryOptions,
         multiple: true,
       } as FormItem<keyof CookingTechnologyIntervention, SocioEconomicCategory>,

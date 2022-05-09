@@ -85,7 +85,7 @@
                 title="Cost"
                 :years="years"
                 :items="cost"
-                :y-labels="['Cost [$]']"
+                :y-labels="['Total Cost [$]']"
                 y-inverse
               ></energy-chart>
               <energy-key-indicator
@@ -353,7 +353,7 @@ export default class EnergyResult extends Vue {
   get energy(): ChartItem[] {
     return [
       ...this.getDetailChartItems("bar", "finalEnergy", {
-        prefix: "Final Energy",
+        itemName: "Final Energy",
         unit: "MJ",
         keys: ["usefulEnergy"],
       }),
@@ -383,14 +383,13 @@ export default class EnergyResult extends Vue {
 
   get income(): ChartItem[] {
     return this.getDetailChartItems("bar", "income", {
-      prefix: "Income",
       unit: "$",
     });
   }
 
   get cost(): ChartItem[] {
     return this.getDetailChartItems("bar", "totalCost", {
-      prefix: "Cost",
+      itemName: "Cost",
       unit: "$",
       keys: ["fixedCost", "variableCost"],
     });
@@ -473,7 +472,7 @@ export default class EnergyResult extends Vue {
     type: ChartItemType,
     key: keyof HouseholdResult,
     option?: {
-      prefix?: string;
+      itemName?: string;
       ratio?: number;
       yAxisIndex?: number;
       unit?: string;
@@ -485,10 +484,10 @@ export default class EnergyResult extends Vue {
       const ratio = option?.ratio ?? 1;
       const mapValue = (value: number) => ratio * value;
       const keys = option?.keys;
-      const prefix = option?.prefix ? `${option?.prefix} ` : "";
+      const itemName = option?.itemName ?? "";
       return {
         type: type,
-        name: option?.prefix && !keys ? `${option?.prefix} ${name}` : name,
+        name: option?.itemName && !keys ? `${name} ${option?.itemName}` : name,
         data: this.siteResults.map((result) => ({
           value: mapValue(result.categories[cat][key]),
           average: mapValue(result.households[cat][key]),
@@ -506,27 +505,27 @@ export default class EnergyResult extends Vue {
         unit: option?.unit,
         tooltips: [
           {
-            name: prefix + "Total",
+            name: `Total ${itemName}`,
             key: "value",
           },
           ...(keys
             ? keys.map((key) => {
                 const name = this.$t(`energy.${key}`).toString();
                 return {
-                  name: `${name} Total`,
+                  name: `Total ${name}`,
                   key: `${key}-total`,
                 };
               })
             : []),
           {
-            name: prefix + "Average",
+            name: `Average ${itemName}`,
             key: "average",
           },
           ...(keys
             ? keys.map((key) => {
                 const name = this.$t(`energy.${key}`).toString();
                 return {
-                  name: `${name} Average`,
+                  name: `Average ${name}`,
                   key: `${key}-average`,
                 };
               })

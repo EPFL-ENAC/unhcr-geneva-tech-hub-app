@@ -66,7 +66,7 @@
           </v-row>
           <v-row>
             <v-col>
-              <h3>Socio-Economic Categories</h3>
+              <h3>Quality of Life Levels</h3>
               <v-simple-table>
                 <template v-slot:default>
                   <thead>
