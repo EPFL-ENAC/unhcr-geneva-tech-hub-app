@@ -106,8 +106,8 @@
  4. Select a year
 
  When submiting form
-  - create new site (project) and add new survey
-  - retrieve (already retrieved project) and add new survey
+  - create new site (project) and add new assessment
+  - retrieve (already retrieved project) and add new assessment
   -> redirect to proper surveyId page edit
 */
 import CountrySelect from "@/components/commons/CountrySelect.vue";
@@ -227,7 +227,7 @@ export default class ProjectList extends Vue {
       const surveys =
         this.newCampSite.surveys?.map((survey) => survey.name) ?? [];
       return (
-        surveys.indexOf(value) === -1 || `A survey for this year already exist`
+        surveys.indexOf(value) === -1 || `An assessment for this year already exist`
       );
     }
   }
@@ -235,7 +235,7 @@ export default class ProjectList extends Vue {
   public ruleSiteAlreadyExist(value: string): boolean | string {
     const sites = this.existingSites?.map((survey) => survey.name) ?? [];
     return (
-      sites.indexOf(value) === -1 || `A survey for this year already exist`
+      sites.indexOf(value) === -1 || `An assessment for this year already exist`
     );
   }
 

@@ -14,7 +14,7 @@
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
             <v-card-title class="text-h5"
-              >Confirm deletion of this survey?</v-card-title
+              >Confirm deletion of this assessment?</v-card-title
             >
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -31,7 +31,7 @@
         <v-dialog v-model="dialogDuplicate" max-width="500px">
           <v-card>
             <v-card-title class="text-h5"
-              >Confirm copy of this survey?</v-card-title
+              >Confirm copy of this assessment?</v-card-title
             >
             <v-card-actions>
               <v-spacer></v-spacer>
