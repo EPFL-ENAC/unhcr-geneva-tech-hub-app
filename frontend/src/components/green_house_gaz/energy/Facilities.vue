@@ -42,10 +42,9 @@
               </v-row>
               <v-row>
                 <v-col class="d-flex justify-end mx-2 mb-2">
-                  <v-btn
-                    @click="toggleBaselineMode"
-                    v-text="baselineSwitchText"
-                  />
+                  <v-btn @click="toggleBaselineMode">
+                    {{ baselineSwitchText }}
+                  </v-btn>
                 </v-col>
               </v-row>
             </v-container>

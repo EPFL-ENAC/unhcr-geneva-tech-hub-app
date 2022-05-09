@@ -35,7 +35,7 @@
                   <v-tooltip right :max-width="300">
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn icon v-bind="attrs" v-on="on">
-                        <v-icon v-text="'mdi-information'"></v-icon>
+                        <v-icon> mdi-information </v-icon>
                       </v-btn>
                     </template>
                     <span>{{ option.config.description }}</span>

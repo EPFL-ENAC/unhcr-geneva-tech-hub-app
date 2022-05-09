@@ -111,9 +111,7 @@ export default class Energy extends Vue {
   }
 
   destroyed(): void {
-    this.closeDB().then(() => {
-      console.log("DESTROYED view reference list, closing DB");
-    });
+    this.closeDB();
   }
 
   public get headers(): HeaderInterface[] {
