@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="project.users" fluid>
+  <v-container fluid>
     <v-row>
       <v-col>
         <h2 class="text-h4 project-shelter__h3 font-weight-medium">
@@ -121,16 +121,11 @@ import {
   EnergyFacilityItem,
   EnergyFacilityItemResult,
   EnergyFacilitySurvey,
-  GreenHouseGaz,
 } from "@/store/GhgInterface";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { mapGetters } from "vuex";
 
 @Component({
-  computed: {
-    ...mapGetters("GhgModule", ["project"]),
-  },
   components: {
     BaselineFacilitiesTable,
     EndlineFacilitiesTable,
@@ -140,7 +135,6 @@ export default class Facilities extends Vue {
   @Prop([Object, Array])
   readonly form: EnergyFacilitySurvey | undefined;
 
-  project!: GreenHouseGaz;
   baselineMode = true;
 
   public get facilityForm(): EnergyFacilitySurvey {
