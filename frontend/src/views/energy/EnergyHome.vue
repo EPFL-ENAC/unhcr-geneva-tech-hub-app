@@ -6,7 +6,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col>
+      <v-col cols="6">
         <v-expansion-panels multiple>
           <v-expansion-panel v-for="group in groups" :key="group.name">
             <v-expansion-panel-header>
@@ -92,6 +92,16 @@
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
+        <br />
+        <v-text-field
+          v-model="newTemplateName"
+          label="Name"
+          append-outer-icon="mdi-plus-box"
+          @click:append-outer="addNewTemplate"
+        ></v-text-field>
+      </v-col>
+      <v-col cols="6">
+        <energy-map aspect-ratio="1" :markers="markers"></energy-map>
       </v-col>
     </v-row>
     <v-snackbar v-model="snackbar">
@@ -109,16 +119,21 @@
 </template>
 
 <script lang="ts">
+import EnergyMap from "@/components/energy/EnergyMap.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
-import { ProjectDocument } from "@/models/energyModel";
+import { GeneralModule, ProjectDocument } from "@/models/energyModel";
 import { energy } from "@/utils/apps";
 import { SyncDatabase } from "@/utils/couchdb";
+import { LatLngExpression } from "leaflet";
 import { chain, cloneDeep, groupBy } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
 import { mapState } from "vuex";
 
 @Component({
+  components: {
+    EnergyMap,
+  },
   computed: {
     ...mapState("energy", [
       "sites",
@@ -135,6 +150,7 @@ export default class EnergyHome extends Vue {
   templatesDatabase!: SyncDatabase<ProjectDocument>;
   title = energy.title;
   loading = false;
+  newTemplateName = "";
   // TODO global snackbar
   snackbar = false;
   snackbarText = "";
@@ -157,6 +173,21 @@ export default class EnergyHome extends Vue {
       templates: groupedTemplates[name] ?? [],
       sites: groupedSites[name] ?? [],
     }));
+  }
+
+  get markers(): LatLngExpression[] {
+    return chain([...this.sites, ...this.templates])
+      .map((site) => site.modules.general)
+      .filter((general): general is GeneralModule => !!general)
+      .map(
+        (general) =>
+          [
+            general.locationLatitude,
+            general.locationLongitude,
+          ] as LatLngExpression
+      )
+      .uniq()
+      .value();
   }
 
   getName(document: ExistingDocument<ProjectDocument>): string {
@@ -210,6 +241,13 @@ export default class EnergyHome extends Vue {
         console.error(reason);
       })
       .finally(() => (this.loading = false));
+  }
+
+  addNewTemplate(): void {
+    if (this.newTemplateName) {
+      this.createTemplate(this.newTemplateName);
+      this.newTemplateName = "";
+    }
   }
 }
 

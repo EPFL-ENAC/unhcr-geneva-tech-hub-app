@@ -15,11 +15,7 @@
         </v-col>
         <v-divider vertical></v-divider>
         <v-col cols="6">
-          <l-map :zoom="zoom" :center="latLng">
-            <l-control-scale :imperial="false" :metric="true"></l-control-scale>
-            <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
-            <l-marker :lat-lng="latLng"></l-marker>
-          </l-map>
+          <energy-map :markers="[latLng]" :zoom="4"></energy-map>
         </v-col>
       </v-row>
       <v-row>
@@ -106,6 +102,7 @@ import FormItemComponent, {
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
 import EnergyFormRow from "@/components/energy/EnergyFormRow.vue";
+import EnergyMap from "@/components/energy/EnergyMap.vue";
 import {
   AreaPerPerson,
   FarApartHouses,
@@ -124,25 +121,17 @@ import { checkSum } from "@/utils/rules";
 import { LatLngExpression } from "leaflet";
 import "vue-class-component/hooks";
 import { Component } from "vue-property-decorator";
-import { LControlScale, LMap, LMarker, LTileLayer } from "vue2-leaflet";
 
 @Component({
   components: {
     EnergyForm,
     EnergyFormRow,
+    EnergyMap,
     FormItemComponent,
-    LControlScale,
-    LMap,
-    LMarker,
-    LTileLayer,
   },
 })
 export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
   readonly socioEconomicCategories = socioEconomicCategories;
-  readonly zoom = 4;
-  readonly url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-  readonly attribution =
-    '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors';
 
   module: GeneralModule = this.emptyModule;
 
