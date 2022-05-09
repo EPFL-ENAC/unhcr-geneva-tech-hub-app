@@ -103,7 +103,7 @@ import CRI from "@/components/green_house_gaz/materials/CRI.vue";
 import HHWaste from "@/components/green_house_gaz/materials/HHWaste.vue";
 import Shelter from "@/components/green_house_gaz/materials/Shelter.vue";
 import Results from "@/components/green_house_gaz/Results.vue";
-import TreePlanting from "@/components/green_house_gaz/TreePlanting.vue";
+import TreePlanting from "@/components/green_house_gaz/offset/TreePlanting.vue";
 import Trucking from "@/components/green_house_gaz/wash/Trucking.vue";
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import getFlagEmoji from "@/utils/flagEmoji";
