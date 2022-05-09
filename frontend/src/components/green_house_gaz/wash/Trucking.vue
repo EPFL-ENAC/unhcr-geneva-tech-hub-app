@@ -353,10 +353,10 @@ export default class Trucking extends Vue {
   color: black;
 }
 ::v-deep .wash-negative.theme--light.v-input--is-disabled input {
-  color: red;
+  color: green;
 }
 ::v-deep .wash-positive.theme--light.v-input--is-disabled input {
-  color: green;
+  color: red;
 }
 
 ::v-deep.theme--light.v-sheet--outlined {

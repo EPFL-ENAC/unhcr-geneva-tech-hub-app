@@ -3,7 +3,7 @@
     <v-row>
       <v-col :cols="4">
         <v-card v-if="currentForm.baseline" flat>
-          <v-card-title><h2>Inputs</h2></v-card-title>
+          <v-card-title><h2>Baseline</h2></v-card-title>
           <v-card-text>
             <v-text-field
               v-model.number="currentForm.baseline.results.totalCO2Emission"
@@ -17,7 +17,7 @@
       </v-col>
       <v-col :cols="4">
         <v-card v-if="currentForm.endline" flat>
-          <v-card-title><h2>Results</h2></v-card-title>
+          <v-card-title><h2>Endline</h2></v-card-title>
           <v-card-text>
             <v-text-field
               v-model.number="currentForm.endline.results.totalCO2Emission"

@@ -253,9 +253,9 @@ export default class Facilities extends Vue {
   get color(): string {
     const change = this.facilityForm.endline.results.changeInEmission;
     if (change > 0) {
-      return "green";
-    } else if (change < 0) {
       return "red";
+    } else if (change < 0) {
+      return "green";
     } else {
       return "black";
     }
@@ -373,9 +373,9 @@ export default class Facilities extends Vue {
 }
 
 ::v-deep .facilities-negative {
-  color: red;
+  color: green;
 }
 ::v-deep .facilities-positive {
-  color: green;
+  color: red;
 }
 </style>

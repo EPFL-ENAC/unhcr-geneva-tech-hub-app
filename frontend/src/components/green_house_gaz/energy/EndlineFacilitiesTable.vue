@@ -248,11 +248,11 @@ export default class EndlineFacilitiesTable extends Vue {
 ::v-deep .facilities-negative {
   font-weight: bold;
   font-size: 0.875rem;
-  color: red;
+  color: green;
 }
 ::v-deep .facilities-positive {
   font-weight: bold;
   font-size: 0.875rem;
-  color: green;
+  color: red;
 }
 </style>
