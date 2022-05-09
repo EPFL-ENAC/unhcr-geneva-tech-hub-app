@@ -5,8 +5,8 @@
         <v-col>
           <h2>
             {{ currentProjectEmoji }} {{ currentProjectCountryName }},
-            {{ project.name }},
-            {{ currentSurvey.name }}
+            {{ project.name }}, {{ currentSurvey.name }}
+            {{ $can("edit", project) ? "" : "(Read only)" }}
           </h2>
         </v-col>
         <v-col class="col-auto">
@@ -71,7 +71,8 @@
     <v-row>
       <v-col>
         <v-container v-if="project.users" fluid>
-          <v-form :readonly="!$can('edit', project)">
+          <!-- add !$can to put readonly mode for guest <v-form :readonly="!$can('edit', project)"> -->
+          <v-form>
             <component
               :is="subcategory"
               v-if="subcategory"
@@ -117,7 +118,7 @@ import { mapActions, mapGetters } from "vuex";
     ...mapGetters("GhgModule", ["project"]),
   },
   methods: {
-    ...mapActions("GhgModule", ["updateDoc"]),
+    ...mapActions("GhgModule", ["updateDoc", "updateLocalStore"]),
   },
   components: {
     Cooking,
@@ -138,6 +139,7 @@ import { mapActions, mapGetters } from "vuex";
 export default class SurveyList extends Vue {
   project!: GreenHouseGaz;
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
+  updateLocalStore!: (doc: GreenHouseGaz) => Promise<void>;
 
   readonly menuItems: MenuItem[] = [
     {
@@ -323,7 +325,8 @@ export default class SurveyList extends Vue {
         throw new Error("please fill the new Name");
       }
     } else {
-      console.log("you don't have the proper rights");
+      this.$store.dispatch("notifyUser", "You're on read only mode");
+      this.updateLocalStore(value);
     }
   }
 }

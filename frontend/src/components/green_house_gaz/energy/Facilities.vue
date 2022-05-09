@@ -42,10 +42,9 @@
               </v-row>
               <v-row>
                 <v-col class="d-flex justify-end mx-2 mb-2">
-                  <v-btn
-                    @click="toggleBaselineMode"
-                    v-text="baselineSwitchText"
-                  />
+                  <v-btn @click="toggleBaselineMode">
+                    {{ baselineSwitchText }}
+                  </v-btn>
                 </v-col>
               </v-row>
             </v-container>
@@ -254,9 +253,9 @@ export default class Facilities extends Vue {
   get color(): string {
     const change = this.facilityForm.endline.results.changeInEmission;
     if (change > 0) {
-      return "green";
-    } else if (change < 0) {
       return "red";
+    } else if (change < 0) {
+      return "green";
     } else {
       return "black";
     }
@@ -374,9 +373,9 @@ export default class Facilities extends Vue {
 }
 
 ::v-deep .facilities-negative {
-  color: red;
+  color: green;
 }
 ::v-deep .facilities-positive {
-  color: green;
+  color: red;
 }
 </style>

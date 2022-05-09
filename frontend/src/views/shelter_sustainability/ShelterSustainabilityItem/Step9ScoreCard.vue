@@ -35,7 +35,7 @@
                   <v-tooltip right :max-width="300">
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn icon v-bind="attrs" v-on="on">
-                        <v-icon v-text="'mdi-information'"></v-icon>
+                        <v-icon> mdi-information </v-icon>
                       </v-btn>
                     </template>
                     <span>{{ option.config.description }}</span>
@@ -134,8 +134,10 @@ export default class Step8ScoreCard extends Vue {
   configs = [
     {
       id: "co2",
-      // min: 0,
-      // max: 100,
+      min: 0,
+      max: function (): undefined {
+        return undefined; // don't know why but it truncates properly at . 2 decimals
+      },
       title: "Embodied CO2",
       unit: "kg-CO2/year/m²",
       subpart: true,
@@ -148,8 +150,10 @@ export default class Step8ScoreCard extends Vue {
     },
     {
       id: "h2o",
-      // min: 0,
-      // max: 10000,
+      min: 0,
+      max: function (): undefined {
+        return undefined; // don't know why but it truncates properly at . 2 decimals
+      },
       title: "Embodied water",
       subpart: true,
       unit: "L/year/m²",
@@ -165,8 +169,10 @@ export default class Step8ScoreCard extends Vue {
       id: "weight",
       title: "Material efficiency",
       subpart: true,
-      // min: 0,
-      // max: 100,
+      min: 0,
+      max: function (): undefined {
+        return undefined; // don't know why but it truncates properly at . 2 decimals
+      },
       unit: "kg/year/m²",
       description:
         "Material efficiency score describes total weight (kg) per year (of intended use) per square meter (of habitable space), enabling comparison across shelters of differing size and durability.",
@@ -179,7 +185,7 @@ export default class Step8ScoreCard extends Vue {
     {
       id: "affordability",
       title: "Affordability",
-      // min: 0,
+      min: 0,
       // max: 100,
       unit: "$/year/m²",
       description:

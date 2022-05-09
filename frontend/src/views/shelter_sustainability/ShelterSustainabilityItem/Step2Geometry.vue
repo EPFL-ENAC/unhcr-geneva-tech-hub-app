@@ -1,209 +1,190 @@
 <template>
-  <v-container v-if="localShelter.users" fluid>
-    <v-form
-      :readonly="!$can('edit', localShelter)"
-      @submit.prevent="() => submitForm(localShelter)"
-    >
-      <v-row>
-        <v-col>
-          <h2 class="text-h4 project-shelter__h3 font-weight-medium">
-            Geometry
-          </h2>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-divider></v-divider>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col
-          v-for="(geometry, $index) in geometries"
-          v-show="
-            shelter_geometry_type === geometry._id ||
-            shelter_geometry_type === ''
-          "
-          :key="$index"
-          class="geometry-column"
-          :lg="shelter_geometry_type ? 12 : 3"
-          :md="shelter_geometry_type ? 12 : 4"
-          sm="12"
-          xs="12"
-        >
-          <v-hover v-slot="{ hover }">
-            <v-card :elevation="hover ? 12 : 2" :class="{ 'on-hover': hover }">
-              <v-tooltip right>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-card-title
-                    v-bind="attrs"
+  <v-container fluid>
+    <v-row>
+      <v-col>
+        <h2 class="text-h4 project-shelter__h3 font-weight-medium">Geometry</h2>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-divider></v-divider>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col
+        v-for="(geometry, $index) in geometries"
+        v-show="
+          shelter_geometry_type === geometry._id || shelter_geometry_type === ''
+        "
+        :key="$index"
+        class="geometry-column"
+        :lg="shelter_geometry_type ? 12 : 3"
+        :md="shelter_geometry_type ? 12 : 4"
+        sm="12"
+        xs="12"
+      >
+        <v-hover v-slot="{ hover }">
+          <v-card :elevation="hover ? 12 : 2" :class="{ 'on-hover': hover }">
+            <v-tooltip right>
+              <template v-slot:activator="{ on, attrs }">
+                <v-card-title
+                  v-bind="attrs"
+                  class="d-flex justify-center"
+                  v-on="on"
+                  @click="() => toggleImage(geometry._id)"
+                >
+                  <v-img
+                    max-width="300px"
                     class="d-flex justify-center"
-                    v-on="on"
-                    @click="() => toggleImage(geometry._id)"
+                    :src="geometry.image_url"
+                    :aria-label="geometry._id"
+                  ></v-img>
+                  <v-btn icon @click.stop="selectedItem = geometry">
+                    <v-icon>mdi-magnify</v-icon>
+                  </v-btn>
+                </v-card-title>
+              </template>
+              <span>{{ geometry._id }}</span>
+            </v-tooltip>
+
+            <v-card-text
+              v-if="!geometry.hiddenInputs"
+              class="flex-gap-sm d-flex flex-column justify-space-between"
+            >
+              <v-expand-transition>
+                <v-row v-show="shelter_geometry_type">
+                  <v-col :lg="4" :md="6" sm="12" xs="12">
+                    <v-card>
+                      <v-card-title>Shelter dimensions</v-card-title>
+                      <v-form class="pa-md-4">
+                        <v-text-field
+                          v-for="(
+                            dimension, $shelterDimensionsKey
+                          ) in geometry.shelter_dimensions"
+                          :key="`shelterDimension${$shelterDimensionsKey}`"
+                          v-model.number="
+                            localShelter.geometry.shelter_dimensions[dimension]
+                          "
+                          :name="dimension"
+                          :label="dimension"
+                          suffix="m"
+                          type="number"
+                        />
+                      </v-form>
+                    </v-card>
+                  </v-col>
+                  <v-col :lg="4" :md="6" sm="12" xs="12">
+                    <v-card
+                      v-for="(door, $doorKey) in localShelter.geometry
+                        .doors_dimensions"
+                      :key="`doorsDimension${$doorKey}`"
+                    >
+                      <!-- v-for on all windows -->
+                      <v-card-title>Door dimensions</v-card-title>
+                      <v-form class="pa-md-4">
+                        <v-text-field
+                          v-for="(
+                            dimension, $doorDimensionsKey
+                          ) in geometry.door_dimensions"
+                          :key="`doorDimension${$doorDimensionsKey}`"
+                          v-model.number="
+                            localShelter.geometry.doors_dimensions[$doorKey][
+                              dimension
+                            ]
+                          "
+                          :name="dimension"
+                          :label="dimension"
+                          suffix="m"
+                          type="number"
+                        />
+                      </v-form>
+                    </v-card>
+                  </v-col>
+                  <v-col
+                    v-for="(window, $windowKey) in localShelter.geometry
+                      .windows_dimensions"
+                    :key="`windowsDimensions${$windowKey}`"
+                    :lg="4"
+                    :md="6"
+                    sm="12"
+                    xs="12"
                   >
-                    <v-img
-                      max-width="300px"
-                      class="d-flex justify-center"
-                      :src="geometry.image_url"
-                      :aria-label="geometry._id"
-                    ></v-img>
-                    <v-btn icon @click.stop="selectedItem = geometry">
-                      <v-icon>mdi-magnify</v-icon>
-                    </v-btn>
-                  </v-card-title>
-                </template>
-                <span>{{ geometry._id }}</span>
-              </v-tooltip>
-
-              <v-card-text
-                v-if="!geometry.hiddenInputs"
-                class="flex-gap-sm d-flex flex-column justify-space-between"
-              >
-                <v-expand-transition>
-                  <v-row v-show="shelter_geometry_type">
-                    <v-col :lg="4" :md="6" sm="12" xs="12">
-                      <v-card>
-                        <v-card-title>Shelter dimensions</v-card-title>
-                        <v-form class="pa-md-4">
-                          <v-text-field
-                            v-for="(
-                              dimension, $shelterDimensionsKey
-                            ) in geometry.shelter_dimensions"
-                            :key="`shelterDimension${$shelterDimensionsKey}`"
-                            v-model.number="
-                              localShelter.geometry.shelter_dimensions[
-                                dimension
-                              ]
-                            "
-                            :name="dimension"
-                            :label="dimension"
-                            suffix="m"
-                            type="number"
-                          />
-                        </v-form>
-                      </v-card>
-                    </v-col>
-                    <v-col :lg="4" :md="6" sm="12" xs="12">
-                      <v-card
-                        v-for="(door, $doorKey) in localShelter.geometry
-                          .doors_dimensions"
-                        :key="`doorsDimension${$doorKey}`"
-                      >
-                        <!-- v-for on all windows -->
-                        <v-card-title>Door dimensions</v-card-title>
-                        <v-form class="pa-md-4">
-                          <v-text-field
-                            v-for="(
-                              dimension, $doorDimensionsKey
-                            ) in geometry.door_dimensions"
-                            :key="`doorDimension${$doorDimensionsKey}`"
-                            v-model.number="
-                              localShelter.geometry.doors_dimensions[$doorKey][
-                                dimension
-                              ]
-                            "
-                            :name="dimension"
-                            :label="dimension"
-                            suffix="m"
-                            type="number"
-                          />
-                        </v-form>
-                      </v-card>
-                    </v-col>
-                    <v-col
-                      v-for="(window, $windowKey) in localShelter.geometry
-                        .windows_dimensions"
-                      :key="`windowsDimensions${$windowKey}`"
-                      :lg="4"
-                      :md="6"
-                      sm="12"
-                      xs="12"
-                    >
-                      <v-card>
-                        <!-- v-for on all windows -->
-                        <v-card-title class="d-flex justify-space-between">
-                          Window dimensions
-                          <v-btn
-                            :disabled="!$can('edit', localShelter)"
-                            icon
-                            @click="removeWindow($windowKey)"
-                          >
-                            <v-icon>mdi-close</v-icon>
-                          </v-btn>
-                        </v-card-title>
-                        <v-form class="pa-md-4">
-                          <v-text-field
-                            v-for="(
-                              dimension, $windowDimensions
-                            ) in geometry.window_dimensions"
-                            :key="`windowDimensions${$windowDimensions}`"
-                            v-model.number="
-                              localShelter.geometry.windows_dimensions[
-                                $windowKey
-                              ][dimension]
-                            "
-                            :name="dimension"
-                            :label="dimension"
-                            suffix="m"
-                            type="number"
-                          />
-                        </v-form>
-                      </v-card>
-                    </v-col>
-                    <v-col :lg="4" :md="6" sm="12" xs="12">
-                      <v-btn
-                        block
-                        :disabled="!$can('edit', localShelter)"
-                        @click="addWindow"
-                        >Add window</v-btn
-                      >
-                    </v-col>
-                  </v-row>
-                </v-expand-transition>
+                    <v-card>
+                      <!-- v-for on all windows -->
+                      <v-card-title class="d-flex justify-space-between">
+                        Window dimensions
+                        <v-btn icon @click="removeWindow($windowKey)">
+                          <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                      </v-card-title>
+                      <v-form class="pa-md-4">
+                        <v-text-field
+                          v-for="(
+                            dimension, $windowDimensions
+                          ) in geometry.window_dimensions"
+                          :key="`windowDimensions${$windowDimensions}`"
+                          v-model.number="
+                            localShelter.geometry.windows_dimensions[
+                              $windowKey
+                            ][dimension]
+                          "
+                          :name="dimension"
+                          :label="dimension"
+                          suffix="m"
+                          type="number"
+                        />
+                      </v-form>
+                    </v-card>
+                  </v-col>
+                  <v-col :lg="4" :md="6" sm="12" xs="12">
+                    <v-btn block @click="addWindow">Add window</v-btn>
+                  </v-col>
+                </v-row>
+              </v-expand-transition>
+            </v-card-text>
+            <v-card v-if="shelter_geometry_type">
+              <v-card-title> Result dimensions </v-card-title>
+              <v-card-text>
+                <v-row>
+                  <v-col
+                    v-for="(resultDimension, $key) in dimensions"
+                    :key="$key"
+                    :lg="4"
+                    :md="6"
+                    sm="12"
+                    xs="12"
+                  >
+                    <v-text-field
+                      v-model.number="
+                        localShelter.geometry[resultDimension.key]
+                      "
+                      :disabled="!geometry.hiddenInputs"
+                      :name="resultDimension.label"
+                      :label="resultDimension.label"
+                      type="number"
+                      :suffix="resultDimension.suffix"
+                    />
+                  </v-col>
+                </v-row>
               </v-card-text>
-              <v-card v-if="shelter_geometry_type">
-                <v-card-title> Result dimensions </v-card-title>
-                <v-card-text>
-                  <v-row>
-                    <v-col
-                      v-for="(resultDimension, $key) in dimensions"
-                      :key="$key"
-                      :lg="4"
-                      :md="6"
-                      sm="12"
-                      xs="12"
-                    >
-                      <v-text-field
-                        v-model.number="
-                          localShelter.geometry[resultDimension.key]
-                        "
-                        :disabled="!geometry.hiddenInputs"
-                        :name="resultDimension.label"
-                        :label="resultDimension.label"
-                        type="number"
-                        :suffix="resultDimension.suffix"
-                      />
-                    </v-col>
-                  </v-row>
-                </v-card-text>
-              </v-card>
             </v-card>
-          </v-hover>
-        </v-col>
-      </v-row>
+          </v-card>
+        </v-hover>
+      </v-col>
+    </v-row>
 
-      <v-row v-if="$can('edit', localShelter)">
-        <v-col class="d-flex justify-end">
-          <v-btn type="submit"> Save changes </v-btn>
-        </v-col>
-      </v-row>
-      <v-overlay v-if="selectedItem" @click="selectedItem = null">
-        <v-img
-          :src="selectedItem ? selectedItem.image_url : ''"
-          contain
-          @click="selectedItem = null"
-        ></v-img>
-      </v-overlay>
-    </v-form>
+    <v-row>
+      <v-col class="d-flex justify-end">
+        <v-btn @click="updateFormInput"> Save changes </v-btn>
+      </v-col>
+    </v-row>
+    <v-overlay v-if="selectedItem" @click="selectedItem = null">
+      <v-img
+        :src="selectedItem ? selectedItem.image_url : ''"
+        contain
+        @click="selectedItem = null"
+      ></v-img>
+    </v-overlay>
   </v-container>
 </template>
 
@@ -222,8 +203,7 @@ import {
 } from "@/store/ShelterInterface";
 import { getNewGeometry } from "@/store/ShelterModuleUtils";
 import { cloneDeep } from "lodash";
-import { Component, Vue, Watch } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 /* two ways to have a store copy locally
 1. having a watcher on the store that cloneDeep to data() locally
@@ -231,56 +211,24 @@ import { mapActions, mapGetters } from "vuex";
 cf: https://forum.vuejs.org/t/best-way-to-use-forms-with-local-state-using-v-model-and-sync-to-vuex-store-on-save/24739
 for the original discussion
 */
-@Component({
-  computed: {
-    ...mapGetters("ShelterModule", ["shelter"]),
-  },
-  methods: {
-    ...mapActions("ShelterModule", ["updateDoc"]),
-  },
-})
+@Component({})
 /** Project */
 export default class Step2Geometry extends Vue {
+  @Prop({ type: [Object], required: true })
   shelter!: Shelter;
-  updateDoc!: (doc: Shelter) => void;
 
-  localShelter = {} as Shelter;
+  public get localShelter(): Shelter {
+    return cloneDeep(this.shelter);
+  }
+
+  public set localShelter(newShelter: Shelter) {
+    this.$emit("update:shelter", newShelter);
+  }
+
+  public updateFormInput(): void {
+    this.localShelter = Object.assign({}, this.localShelter);
+  }
   selectedItem = null;
-
-  public setLocalShelter(): void {
-    if (!this.shelter) {
-      return;
-    }
-    const localClone = cloneDeep(this.shelter);
-    if (!localClone.geometry) {
-      localClone.geometry = getNewGeometry();
-    }
-    this.localShelter = localClone;
-  }
-
-  public syncLocalShelter(): void {
-    // init function
-    this.setLocalShelter();
-
-    this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["ShelterModule/SET_SHELTER"];
-      if (shouldUpdate.includes(mutation.type)) {
-        this.setLocalShelter();
-      }
-    });
-  }
-
-  public created(): void {
-    this.syncLocalShelter();
-  }
-
-  public submitForm(value: Shelter): void {
-    if (value.name !== "") {
-      this.updateDoc(value);
-    } else {
-      console.error("please fill the new Name");
-    }
-  }
 
   public toggleImage(_id: string): void {
     if (this.localShelter.geometry.shelter_geometry_type === "") {

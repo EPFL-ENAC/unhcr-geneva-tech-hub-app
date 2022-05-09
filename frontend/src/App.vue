@@ -9,11 +9,8 @@
       </v-tabs>
       <v-spacer />
       <v-btn icon @click.stop="toggleReferenceData">
-        <v-icon v-text="'mdi-database-arrow-right'"></v-icon>
+        <v-icon> mdi-database-arrow-right </v-icon>
       </v-btn>
-      <!-- <v-btn icon @click="$store.dispatch('ConfigModule/toggleTheme')">
-        <v-icon v-text="'mdi-invert-colors'" />
-      </v-btn> -->
       <v-progress-linear
         :active="loading"
         :indeterminate="progress === null"
@@ -67,7 +64,9 @@
               {{ app.logoIcon }}
             </v-icon>
           </v-list-item-icon>
-          <v-list-item-title v-text="app.title"></v-list-item-title>
+          <v-list-item-title>
+            {{ app.title }}
+          </v-list-item-title>
         </v-list-item>
 
         <v-list-item link :to="{ name: 'About' }">
@@ -268,13 +267,12 @@ export default class App extends Vue {
         }
       })
       .catch((error: AxiosError) => {
-        console.log("error login", error);
         switch (error.response?.status) {
           case 401:
-            this.$store.dispatch("setError", "Invalid credentials");
+            this.$store.dispatch("setGlobalError", "Invalid credentials");
             break;
           default:
-            this.$store.dispatch("setError", error.message);
+            this.$store.dispatch("setGlobalError", error.message);
         }
       });
   }

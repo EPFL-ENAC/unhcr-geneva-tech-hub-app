@@ -1,163 +1,158 @@
 <template>
-  <v-container v-if="localShelter.users" fluid>
-    <v-form
-      :readonly="!$can('edit', localShelter)"
-      @submit.prevent="() => submitForm(localShelter)"
-    >
-      <v-row>
-        <v-col>
-          <h2 class="text-h4 project-shelter__h3 font-weight-medium">
-            Project information
-          </h2>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-divider></v-divider>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-spacer></v-spacer>
-        <v-col class="col-auto">
-          <user-manager
-            v-model="localShelter.users"
-            @change="submitForm"
-          ></user-manager>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-card flat>
-            <v-row>
-              <v-col>
-                <v-sheet v-if="localShelter" elevation="2" rounded>
-                  <v-container fluid>
-                    <v-row>
-                      <v-col
-                        class="about-first-column"
-                        lg="6"
-                        md="6"
-                        sm="12"
-                        xs="12"
-                      >
-                        <v-text-field
-                          v-model="localShelter.name"
-                          name="name"
-                          label="Project name"
-                          type="text"
-                          required
-                          :rules="textRules"
-                        />
-                        <v-text-field
-                          id="organisation"
-                          v-model="localShelter.organisation"
-                          name="organisation"
-                          label="Organisation"
-                          type="text"
-                          required
-                          :rules="textRules"
-                        />
-                        <v-divider />
-                        <v-text-field
-                          v-model.number="localShelter.shelter_total"
-                          name="shelter_total"
-                          label="Number of shelters"
-                          type="number"
-                          required
-                          :rules="shelterTotalRules"
-                        />
-                        <v-select
-                          v-model.number="localShelter.shelter_occupants"
-                          :items="occupantsOptions"
-                          label="Intended Occupants per shelter"
-                          name="shelter_occupants"
-                          type="number"
-                          required
-                          :rules="shelterOccupantRules"
-                        ></v-select>
-                        <v-select
-                          v-model="localShelter.shelter_type"
-                          :items="shelterTypes"
-                          label="Shelter type"
-                          name="shelter_type"
-                          required
-                          :rules="shelterTypeRules"
-                        ></v-select>
-                        <v-select
-                          v-model.number="localShelter.shelter_lifespan"
-                          :items="lifeExpectancy"
-                          name="shelter_lifespan"
-                          label="Expected average shelter lifespan"
-                          item-text="label"
-                          item-value="value"
-                          type="number"
-                          required
-                          :rules="shelterLifespanRules"
-                        ></v-select>
+  <v-container fluid>
+    <v-row>
+      <v-col>
+        <h2 class="text-h4 project-shelter__h3 font-weight-medium">
+          Project information
+        </h2>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-divider></v-divider>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-spacer></v-spacer>
+      <v-col class="col-auto">
+        <user-manager
+          v-model="localShelter.users"
+          @change="updateFormInput"
+        ></user-manager>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-card flat>
+          <v-row>
+            <v-col>
+              <v-sheet v-if="localShelter" elevation="2" rounded>
+                <v-container fluid>
+                  <v-row>
+                    <v-col
+                      class="about-first-column"
+                      lg="6"
+                      md="6"
+                      sm="12"
+                      xs="12"
+                    >
+                      <v-text-field
+                        v-model="localShelter.name"
+                        name="name"
+                        label="Project name"
+                        type="text"
+                        required
+                        :rules="textRules"
+                      />
+                      <v-text-field
+                        id="organisation"
+                        v-model="localShelter.organisation"
+                        name="organisation"
+                        label="Organisation"
+                        type="text"
+                        required
+                        :rules="textRules"
+                      />
+                      <v-divider />
+                      <v-text-field
+                        v-model.number="localShelter.shelter_total"
+                        name="shelter_total"
+                        label="Number of shelters"
+                        type="number"
+                        required
+                        :rules="shelterTotalRules"
+                      />
+                      <v-select
+                        v-model.number="localShelter.shelter_occupants"
+                        :items="occupantsOptions"
+                        label="Intended Occupants per shelter"
+                        name="shelter_occupants"
+                        type="number"
+                        required
+                        :rules="shelterOccupantRules"
+                      ></v-select>
+                      <v-select
+                        v-model="localShelter.shelter_type"
+                        :items="shelterTypes"
+                        label="Shelter type"
+                        name="shelter_type"
+                        required
+                        :rules="shelterTypeRules"
+                      ></v-select>
+                      <v-select
+                        v-model.number="localShelter.shelter_lifespan"
+                        :items="lifeExpectancy"
+                        name="shelter_lifespan"
+                        label="Expected average shelter lifespan"
+                        item-text="label"
+                        item-value="value"
+                        type="number"
+                        required
+                        :rules="shelterLifespanRules"
+                      ></v-select>
 
-                        <v-divider />
-                        <v-text-field
-                          v-model="localShelter.setup_people"
-                          name="setup_people"
-                          label="Number of people for setup"
-                          type="text"
-                        />
-                        <v-text-field
-                          v-model="localShelter.setup_time"
-                          name="setup_time"
-                          label="Time for setup"
-                          type="text"
-                        />
-                      </v-col>
-                      <v-col
-                        class="about-second-column"
-                        lg="6"
-                        md="6"
-                        sm="12"
-                        xs="12"
-                      >
-                        <v-text-field
-                          id="location_name"
-                          v-model="localShelter.location_name"
-                          name="location_name"
-                          label="Site name"
-                          type="text"
-                        />
-                        <country-select
-                          id="location_country"
-                          v-model="localShelter.location_country"
-                          required
-                          :rules="rules"
-                          label="Country"
-                          type="text"
-                          name="location_country"
-                        />
-                        <v-divider />
-                        <input-with-info
-                          v-model="localShelter.risk_flood"
-                          :info="riskFlood"
-                          :depth="2"
-                        />
-                        <input-with-info
-                          v-model="localShelter.risk_seismic"
-                          :info="riskSeismic"
-                          :depth="2"
-                        />
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-sheet>
-              </v-col>
-            </v-row>
-            <v-row v-if="$can('edit', localShelter)">
-              <v-col class="d-flex justify-end">
-                <v-btn type="submit"> Save changes </v-btn>
-              </v-col>
-            </v-row>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-form>
+                      <v-divider />
+                      <v-text-field
+                        v-model="localShelter.setup_people"
+                        name="setup_people"
+                        label="Number of people for setup"
+                        type="text"
+                      />
+                      <v-text-field
+                        v-model="localShelter.setup_time"
+                        name="setup_time"
+                        label="Time for setup"
+                        type="text"
+                      />
+                    </v-col>
+                    <v-col
+                      class="about-second-column"
+                      lg="6"
+                      md="6"
+                      sm="12"
+                      xs="12"
+                    >
+                      <v-text-field
+                        id="location_name"
+                        v-model="localShelter.location_name"
+                        name="location_name"
+                        label="Site name"
+                        type="text"
+                      />
+                      <country-select
+                        id="location_country"
+                        v-model="localShelter.location_country"
+                        required
+                        :rules="rules"
+                        label="Country"
+                        type="text"
+                        name="location_country"
+                      />
+                      <v-divider />
+                      <input-with-info
+                        v-model="localShelter.risk_flood"
+                        :info="riskFlood"
+                        :depth="2"
+                      />
+                      <input-with-info
+                        v-model="localShelter.risk_seismic"
+                        :info="riskSeismic"
+                        :depth="2"
+                      />
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-sheet>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col class="d-flex justify-end">
+              <v-btn @click="updateFormInput"> Save changes </v-btn>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -166,19 +161,10 @@ import CountrySelect from "@/components/commons/CountrySelect.vue";
 import UserManager from "@/components/commons/UserManager.vue";
 import InputWithInfo from "@/components/shelter_sustainability/InputWithInfo.vue";
 import { Shelter } from "@/store/ShelterInterface";
-import { CouchUser } from "@/store/UserModule";
 import { cloneDeep } from "lodash";
-import { Component, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters, mapState } from "vuex";
+import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({
-  computed: {
-    ...mapGetters("ShelterModule", ["shelter"]),
-    ...mapState("UserModule", ["user"]),
-  },
-  methods: {
-    ...mapActions("ShelterModule", ["updateDoc"]),
-  },
   components: {
     CountrySelect,
     InputWithInfo,
@@ -187,12 +173,21 @@ import { mapActions, mapGetters, mapState } from "vuex";
 })
 /** Project */
 export default class Step1 extends Vue {
+  @Prop({ type: [Object], required: true })
   shelter!: Shelter;
-  user!: CouchUser;
-  updateDoc!: (doc: Shelter) => void;
 
-  tab = 0;
-  newUser = "";
+  public get localShelter(): Shelter {
+    return cloneDeep(this.shelter);
+  }
+
+  public set localShelter(newShelter: Shelter) {
+    this.$emit("update:shelter", newShelter);
+  }
+
+  public updateFormInput(): void {
+    this.localShelter = Object.assign({}, this.localShelter);
+  }
+
   occupantsOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   shelterTypes = ["Emergency", "Transitional", "Durable"];
   lifeExpectancy = [
@@ -245,8 +240,6 @@ export default class Step1 extends Vue {
   ];
   risks: string[] = ["low", "medium", "high"];
 
-  localShelter = {} as Shelter;
-
   rules = [
     (v: string): boolean | string => !!v || `A name is required`,
     (v: string): boolean | string =>
@@ -263,36 +256,5 @@ export default class Step1 extends Vue {
     description:
       "Local seismic risk depends on numerous factors incuding: general area seismic risk (taking into account geological conditions), local soil type, density of shelter and other building construction, shelter and surrounding building heights, shelter and surrounding building construction techniques, etc. In defining shelter-specific seismic risk, refer to broader settlement seismic risk assessments and take into account immediate conditions around shelter sites.",
   };
-  public setLocalShelter(): void {
-    if (!this.shelter) {
-      this.localShelter = {} as Shelter;
-    } else {
-      this.localShelter = cloneDeep(this.shelter);
-    }
-  }
-
-  public syncLocalShelter(): void {
-    // init function
-    this.setLocalShelter();
-
-    this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["ShelterModule/SET_SHELTER"];
-      if (shouldUpdate.includes(mutation.type)) {
-        this.setLocalShelter();
-      }
-    });
-  }
-
-  public created(): void {
-    this.syncLocalShelter();
-  }
-
-  public submitForm(value: Shelter = this.localShelter): void {
-    if (value.name !== "") {
-      this.updateDoc(value);
-    } else {
-      console.error("please fill the new Name");
-    }
-  }
 }
 </script>

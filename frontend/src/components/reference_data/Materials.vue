@@ -7,34 +7,34 @@
         :items-per-page="-1"
         hide-default-footer
       >
-        <template v-slot:item.density="props">
+        <template v-slot:[`item.density`]="props">
           <v-tooltip right>
             <template v-slot:activator="{ on, attrs }">
               {{ props.item.density }} {{ props.item.density_unit }}
               <v-btn icon v-bind="attrs" v-on="on">
-                <v-icon v-text="'mdi-information'"></v-icon>
+                <v-icon>mdi-information</v-icon>
               </v-btn>
             </template>
             <span>{{ props.item.density_ref }}</span>
           </v-tooltip>
         </template>
-        <template v-slot:item.embodied_water="props">
+        <template v-slot:[`item.embodied_water`]="props">
           <v-tooltip right>
             <template v-slot:activator="{ on, attrs }">
               {{ props.item.embodied_water }} L/kg
               <v-btn icon v-bind="attrs" v-on="on">
-                <v-icon v-text="'mdi-information'"></v-icon>
+                <v-icon>mdi-information</v-icon>
               </v-btn>
             </template>
             <span>{{ props.item.embodied_water_ref }}</span>
           </v-tooltip>
         </template>
-        <template v-slot:item.embodied_carbon="props">
+        <template v-slot:[`item.embodied_carbon`]="props">
           <v-tooltip right>
             <template v-slot:activator="{ on, attrs }">
               {{ props.item.embodied_carbon }}kgCO2e/kg
               <v-btn icon v-bind="attrs" v-on="on">
-                <v-icon v-text="'mdi-information'"></v-icon>
+                <v-icon>mdi-information</v-icon>
               </v-btn>
             </template>
             <span>{{ props.item.embodied_carbon_ref }}</span>

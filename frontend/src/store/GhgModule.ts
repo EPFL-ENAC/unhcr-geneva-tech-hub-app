@@ -203,6 +203,12 @@ const actions: ActionTree<ProjectsState, RootState> = {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
   },
+  updateLocalStore: async (
+    context: ActionContext<ProjectsState, RootState>,
+    value
+  ) => {
+    context.commit("SET_PROJECT", value);
+  },
   hasDB: async (context: ActionContext<ProjectsState, RootState>) => {
     return context.state.localCouch?.remoteDB;
   },
