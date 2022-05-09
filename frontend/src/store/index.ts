@@ -130,7 +130,7 @@ const actions: ActionTree<RootState, RootState> = {
    * @param context - Vuex Context
    * @param message - Message text
    */
-  setMessage(
+  notifyUser(
     context: ActionContext<RootState, RootState>,
     message: string | undefined = undefined
   ) {
@@ -142,7 +142,7 @@ const actions: ActionTree<RootState, RootState> = {
    * @param context - Vuex Context
    * @param error - Error message etc.
    */
-  setError(context: ActionContext<RootState, RootState>, error = null) {
+  setGlobalError(context: ActionContext<RootState, RootState>, error = null) {
     context.commit("storeError", error);
   },
 

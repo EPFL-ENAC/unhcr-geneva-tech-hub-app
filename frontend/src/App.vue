@@ -267,13 +267,12 @@ export default class App extends Vue {
         }
       })
       .catch((error: AxiosError) => {
-        console.log("error login", error);
         switch (error.response?.status) {
           case 401:
-            this.$store.dispatch("setError", "Invalid credentials");
+            this.$store.dispatch("setGlobalError", "Invalid credentials");
             break;
           default:
-            this.$store.dispatch("setError", error.message);
+            this.$store.dispatch("setGlobalError", error.message);
         }
       });
   }
