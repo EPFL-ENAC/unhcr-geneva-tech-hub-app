@@ -6,8 +6,9 @@
     item-value="code"
     item-text="name"
     label="Select country"
+    :return-object="true"
     v-bind="{ ...$attrs, ...$props }"
-    @change="(value) => $emit('input', value)"
+    @change="(e) => updateCountry(e)"
   >
     <template v-slot:item="slotProps">
       <div class="d-flex justify-space-between" style="width: 300px">
@@ -20,7 +21,7 @@
 
 <script lang="ts">
 import { CountryInfo } from "@/store/GhgInterface";
-import Countries from "@/utils/countriesAsList";
+import { countries as Countries } from "@/utils/countriesAsList";
 import flagEmoji from "@/utils/flagEmoji";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
@@ -46,6 +47,7 @@ export default class CountrySelect extends Vue {
   public get currentValue(): string {
     return this.value;
   }
+
   public get countriesRef(): CountryInfo[] {
     const countriesCloned = cloneDeep(this.countries);
     if (countriesCloned && countriesCloned.length) {
@@ -54,6 +56,8 @@ export default class CountrySelect extends Vue {
           emoji: flagEmoji(v),
           name: v,
           code: v,
+          lat: 0, // not used
+          lon: 0, // not used
         })
       ) as CountryInfo[];
       return this.countriesSorted(result);
@@ -80,6 +84,14 @@ export default class CountrySelect extends Vue {
       return -1;
     });
     return result;
+  }
+
+  public updateCountry(country: CountryInfo): void {
+    this.$emit("input", country.code);
+    this.$emit("update", country.code);
+    // if country change.. force latitude
+    this.$emit("update:latitude", country.lat);
+    this.$emit("update:longitude", country.lon);
   }
 }
 </script>

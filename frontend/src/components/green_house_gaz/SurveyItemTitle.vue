@@ -13,9 +13,14 @@
         </info-tooltip>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="!infoTooltipText[titleKey].ready">
       <v-col>
-        NOTE: This module of the Assessment Tool is under development
+        <v-alert type="warning">
+          <i
+            ><v-icon>mdi-wrench</v-icon> This module of the Assessment Tool is
+            under development</i
+          >
+        </v-alert>
       </v-col>
     </v-row>
     <v-row>

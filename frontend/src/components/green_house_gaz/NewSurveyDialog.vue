@@ -62,7 +62,10 @@
                   tabindex="2"
                   required
                   name="description"
-                  :rules="[ruleAYearIsRequired, ruleSurveyYearAlreadyExist]"
+                  :rules="[
+                    ruleADescriptionIsRequired,
+                    ruleSurveyDescriptionAlreadyExist,
+                  ]"
                   label="Assessment description"
                   type="text"
                 />
@@ -112,7 +115,7 @@
 */
 import CountrySelect from "@/components/commons/CountrySelect.vue";
 import { Country, GreenHouseGaz, Sites, Survey } from "@/store/GhgInterface.js";
-import Countries from "@/utils/countriesAsList";
+import { countries as Countries } from "@/utils/countriesAsList";
 import flagEmoji from "@/utils/flagEmoji";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
@@ -216,11 +219,11 @@ export default class ProjectList extends Vue {
     );
   }
 
-  public ruleAYearIsRequired(value: string): boolean | string {
-    return !!value || `A year is required`;
+  public ruleADescriptionIsRequired(value: string): boolean | string {
+    return !!value || `A name is required`;
   }
 
-  public ruleSurveyYearAlreadyExist(value: string): boolean | string {
+  public ruleSurveyDescriptionAlreadyExist(value: string): boolean | string {
     if (this.newName) {
       return true;
     } else {
@@ -228,7 +231,7 @@ export default class ProjectList extends Vue {
         this.newCampSite.surveys?.map((survey) => survey.name) ?? [];
       return (
         surveys.indexOf(value) === -1 ||
-        `An assessment for this year already exist`
+        `An assessment with this name already exist`
       );
     }
   }
@@ -236,7 +239,8 @@ export default class ProjectList extends Vue {
   public ruleSiteAlreadyExist(value: string): boolean | string {
     const sites = this.existingSites?.map((survey) => survey.name) ?? [];
     return (
-      sites.indexOf(value) === -1 || `An assessment for this year already exist`
+      sites.indexOf(value) === -1 ||
+      `An assessment with this site already exist`
     );
   }
 

@@ -73,7 +73,7 @@ import FormItemComponent, {
 } from "@/components/commons/FormItemComponent.vue";
 import { GreenHouseGaz } from "@/store/GhgInterface";
 import { CouchUser } from "@/store/UserModule";
-import Countries from "@/utils/countriesAsList";
+import { countries as Countries } from "@/utils/countriesAsList";
 import getFlagEmoji from "@/utils/flagEmoji";
 import {
   attributionMap,

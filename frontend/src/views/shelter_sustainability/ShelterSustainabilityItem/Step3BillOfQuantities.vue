@@ -105,7 +105,10 @@ import DeleteItemDialog from "@/components/shelter_sustainability/billOfQuantiti
 import ItemDialog from "@/components/shelter_sustainability/billOfQuantities/ItemDialog.vue";
 import { CountriesInfoMap } from "@/store/GhgInterface";
 import { Item, Shelter } from "@/store/ShelterInterface";
-import Countries from "@/utils/countriesAsList";
+import {
+  countries as Countries,
+  Country as CountryWithLat,
+} from "@/utils/countriesAsList";
 import flagEmoji from "@/utils/flagEmoji";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -159,10 +162,13 @@ export default class Step3Materials extends Vue {
   closeDB!: () => Promise<null>;
   getAllDocs!: () => Promise<null>;
 
-  countriesMap = Countries.reduce((acc, country) => {
-    acc[country.code] = { ...country, emoji: flagEmoji(country.code) };
-    return acc;
-  }, {} as CountriesInfoMap);
+  countriesMap = Countries.reduce(
+    (acc: CountriesInfoMap, country: CountryWithLat) => {
+      acc[country.code] = { ...country, emoji: flagEmoji(country.code) };
+      return acc;
+    },
+    {} as CountriesInfoMap
+  );
 
   headers = [
     {

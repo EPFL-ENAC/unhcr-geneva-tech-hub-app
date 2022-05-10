@@ -5,17 +5,31 @@ export interface ShelterState {
   scorecards: Array<ScoreCard>;
   localCouch: SyncDatabase<Shelter> | null;
 }
+
+export const listOfShelterType: ShelterType[] = [
+  "Emergency",
+  "Transitional",
+  "Durable",
+];
+
+export type ShelterType = "Emergency" | "Transitional" | "Durable";
 export interface Shelter {
   _id: string;
+  _rev?: string;
   name: string;
   organisation: string;
   shelter_total: number | undefined;
   shelter_occupants: number | undefined;
   shelter_lifespan: number | undefined;
+  shelter_type: ShelterType;
   setup_people: number | undefined;
   setup_time: number | undefined;
   location_name: string;
   location_country: string;
+  latitude: number;
+  longitude: number;
+  img_url: string;
+
   risk_flood: string;
   risk_seismic: string;
 
@@ -34,6 +48,9 @@ export interface Shelter {
 
   users: string[];
   created_by: string;
+  created_at: string;
+  updated_at: string;
+  updated_by: string;
 }
 
 export interface ScoreCard {

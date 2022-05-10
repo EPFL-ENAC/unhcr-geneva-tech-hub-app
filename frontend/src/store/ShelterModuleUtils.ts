@@ -1,6 +1,7 @@
 import {
   Geometry,
   Item,
+  listOfShelterType,
   Material,
   MaterialTree,
   MaterialTreeRecord,
@@ -9,6 +10,7 @@ import {
   Shelter,
   ShelterState,
 } from "@/store/ShelterInterface";
+import { CouchUser } from "./UserModule";
 
 export function generateState(): ShelterState {
   return {
@@ -89,16 +91,21 @@ export function getTotalEnvPerf(
   // filter out labour and others and add to unitCost and totalCost
   return total;
 }
-
-export function getScoreCard(value: Shelter): ScoreCardWithErrors {
-  const scorecard = {
+export function getDefaultScoreCard(): ScoreCard {
+  return {
     weight: 0, // l kg/m2/year
     co2: 0,
     h2o: 0,
-    techPerf: value.technical_performance_score ?? 0,
-    habitability: value.habitability_score ?? 0,
+    techPerf: 0,
+    habitability: 0,
     affordability: 0,
-  } as ScoreCard;
+  };
+}
+
+export function getScoreCard(value: Shelter): ScoreCardWithErrors {
+  const scorecard = getDefaultScoreCard();
+  scorecard.techPerf = value.technical_performance_score ?? 0;
+  scorecard.habitability = value.habitability_score ?? 0;
   const errors: string[] = [];
   const { totalEnvPerf, shelter_lifespan, geometry } = value;
   if (!shelter_lifespan) {
@@ -144,28 +151,76 @@ export function getScoreCard(value: Shelter): ScoreCardWithErrors {
   return { scorecard, errors };
 }
 
-export function generateNewShelter(name: string): Shelter {
+export function generateNewShelter(name: string, user: CouchUser): Shelter {
+  if (!user.name) {
+    // generate error
+    throw new Error("User name does not exist");
+  } else {
+    const currentDate = new Date().toISOString();
+    return {
+      _id: name,
+      name,
+      organisation: "",
+      shelter_type: listOfShelterType[0],
+      shelter_total: undefined, // number of shelters
+      shelter_occupants: undefined, // people
+      shelter_lifespan: undefined, // years
+      setup_people: undefined, // 2 people necessary for setup
+      setup_time: undefined, // days,
+      location_name: "",
+      location_country: "", // iso code ?
+      latitude: 0,
+      longitude: 0,
+      img_url: "",
+      risk_flood: "",
+      risk_seismic: "",
+      habitability: {},
+      habitability_score: 0,
+      technical_performance_score: 0,
+      technical_performance: {},
+      geometry: getNewGeometry(),
+      items: [],
+      envPerfItems: [],
+      totalEnvPerf: getTotalEnvPerf([], []),
+      scorecard: getDefaultScoreCard(),
+      scorecard_errors: [],
+      users: [user.name],
+      created_by: user.name,
+      created_at: currentDate,
+      updated_at: currentDate,
+      updated_by: user.name,
+    };
+  }
+}
+
+export function completeMissingFields(shelter: Shelter): Shelter {
   return {
-    _id: name,
-    name,
-    organisation: "",
-    shelter_total: undefined, // number of shelters
-    shelter_occupants: undefined, // people
-    shelter_lifespan: undefined, // years
-    setup_people: undefined, // 2 people necessary for setup
-    setup_time: undefined, // days,
-    location_name: "",
-    location_country: "", // iso code ?
-    risk_flood: "",
-    risk_seismic: "",
-    habitability: {},
-    habitability_score: 0,
-    technical_performance_score: 0,
-    technical_performance: {},
-    geometry: getNewGeometry(),
-    users: [""],
-    created_by: "",
-  } as Shelter;
+    ...shelter, // set _rev, _id, name,created_by, users by doing so
+    // real overide
+    organisation: shelter.organisation ?? "",
+    shelter_total: shelter.shelter_total ?? undefined, // number of shelters
+    shelter_occupants: shelter.shelter_occupants ?? undefined, // people
+    shelter_lifespan: shelter.shelter_lifespan ?? undefined, // years
+    setup_people: shelter.setup_people ?? undefined, // 2 people necessary for setup
+    setup_time: shelter.setup_time ?? undefined, // days,
+    location_name: shelter.location_name ?? "",
+    location_country: shelter.location_country ?? "", // iso code ?
+    latitude: shelter.latitude ?? 0,
+    longitude: shelter.longitude ?? 0,
+    img_url: shelter.img_url ?? "",
+    risk_flood: shelter.risk_flood ?? "",
+    risk_seismic: shelter.risk_seismic ?? "",
+    habitability: shelter.habitability ?? {},
+    habitability_score: shelter.habitability_score ?? 0,
+    technical_performance_score: shelter.technical_performance_score ?? 0,
+    technical_performance: shelter.technical_performance ?? {},
+    geometry: shelter.geometry ?? getNewGeometry(),
+    items: shelter.items ?? [],
+    envPerfItems: shelter.envPerfItems ?? [],
+    totalEnvPerf: shelter.totalEnvPerf ?? getTotalEnvPerf([], []),
+    scorecard: shelter.scorecard ?? getDefaultScoreCard(),
+    scorecard_errors: shelter.scorecard_errors ?? [],
+  };
 }
 
 export function getNewGeometry(): Geometry {

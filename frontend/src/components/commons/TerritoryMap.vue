@@ -10,17 +10,14 @@
 </template>
 
 <script lang="ts">
-import { Site } from "@/store/GhgInterface";
 import {
   attributionMap,
   defaultCoordinates,
   defaultZoom,
   urlMap,
 } from "@/utils/mapWorld";
-import Vue from "vue";
-import Component from "vue-class-component";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import { LIcon, LMap, LMarker, LTileLayer } from "vue2-leaflet";
-import { mapGetters } from "vuex";
 
 @Component({
   components: {
@@ -29,24 +26,14 @@ import { mapGetters } from "vuex";
     LMarker,
     LIcon,
   },
-  computed: {
-    ...mapGetters("GhgModule", ["sites"]),
-  },
 })
 export default class TerritoryMap extends Vue {
+  @Prop({ type: Array, required: true, default: () => [] })
+  readonly coordinates!: number[][];
+
   readonly url = urlMap;
   readonly attribution = attributionMap;
   readonly zoom = defaultZoom;
   readonly defaultCoordinates = defaultCoordinates;
-
-  readonly otherCoordinates = [43, 2];
-
-  sites!: [];
-
-  public get coordinates(): number[][] {
-    return this.sites
-      .filter((site: Site) => site.lat !== undefined)
-      .map((site: Site): number[] => [site.lat ?? 0, site.lon ?? 0]);
-  }
 }
 </script>

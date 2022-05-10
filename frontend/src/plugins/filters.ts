@@ -5,6 +5,9 @@ export default {
     Vue.filter("formatNumber", formatNumber);
 
     Vue.filter("formatDate", (date: string): string => {
+      if (date === undefined) {
+        return "---";
+      }
       return Intl.DateTimeFormat("fr").format(new Date(date));
     });
   },

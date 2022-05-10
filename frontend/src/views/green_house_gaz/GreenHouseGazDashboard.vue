@@ -19,19 +19,23 @@
     </v-sheet>
     <div class="separator"></div>
     <div class="map-countries">
-      <territory-map />
+      <territory-map :coordinates="coordinates" />
     </div>
     <new-survey-dialog :open.sync="siteDialog" />
   </main>
 </template>
 
 <script lang="ts">
+import TerritoryMap from "@/components/commons/TerritoryMap.vue";
 import NewSurveyDialog from "@/components/green_house_gaz/NewSurveyDialog.vue";
-import TerritoryMap from "@/components/green_house_gaz/TerritoryMap.vue";
+import { Site } from "@/store/GhgInterface";
 import { Component, Vue } from "vue-property-decorator";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 @Component({
+  computed: {
+    ...mapGetters("GhgModule", ["sites"]),
+  },
   methods: {
     ...mapActions("GhgModule", [
       "syncDB",
@@ -54,6 +58,14 @@ export default class ProjectList extends Vue {
   getSites!: () => Promise<null>;
 
   siteDialog = false;
+
+  sites!: [];
+
+  public get coordinates(): number[][] {
+    return this.sites
+      .filter((site: Site) => site.lat !== undefined)
+      .map((site: Site): number[] => [site.lat ?? 0, site.lon ?? 0]);
+  }
 
   mounted(): void {
     this.syncDB();

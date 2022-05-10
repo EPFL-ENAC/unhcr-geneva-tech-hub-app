@@ -1,91 +1,106 @@
 <template>
-  <v-container class="project-list">
-    <v-row>
-      <v-col>
-        <h1 style="display: flex; justify-content: center">Shelters</h1>
-      </v-col>
-      <v-col>
-        <h1 style="display: flex; justify-content: center">New Shelter</h1>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-row v-for="project in projects" :key="project._id">
-          <v-col>
-            <v-card
-              :to="{
-                name: 'ShelterSustainabilityEdit',
-                params: { id: encodeURIComponent(project._id) },
-              }"
-              class="mx-auto project"
-              max-width="344"
-              hover
-              outlined
-              :class="{
-                'project--editable': $can('edit', project),
-                'project--readonly': !$can('edit', project),
-              }"
-            >
-              <v-card-title>
-                {{ project.name }}
-              </v-card-title>
-              <v-card-text>
-                <span>{{ project.location_name }}</span>
-              </v-card-text>
-              <v-card-actions class="d-flex flex-row justify-end">
-                <v-btn
-                  v-if="$can('delete', project)"
-                  outlined
-                  rounded
-                  @click.once.prevent.stop="() => removeDoc(project._id)"
-                >
-                  Delete project
-                </v-btn>
-                <div v-else class="project__hidden-child">
-                  <span v-if="$can('edit', project)">edit</span>
-                  <span v-else>read</span>
-                </div>
-              </v-card-actions>
-            </v-card>
+  <main class="shelter__list" :style="computedGridTemplate">
+    <v-sheet class="country-list overflow-y-auto">
+      <v-container fluid>
+        <v-row>
+          <v-col class="country-list__actions d-flex justify-end align-center">
+            <v-btn text :disabled="!$can('create')" @click="addProject">
+              <v-icon>mdi-plus-thick</v-icon>
+              New project
+            </v-btn>
           </v-col>
         </v-row>
-      </v-col>
-      <v-col>
-        <v-form v-model="createProjectFormValid" @submit.prevent="submitForm">
-          <v-card class="mx-auto" max-width="344" outlined>
-            <v-card-text>
-              <v-text-field
-                v-model="newName"
-                tabindex="1"
-                :rules="rules"
-                required
-                name="name"
-                label="Name"
-                type="text"
-              />
-            </v-card-text>
-            <v-card-actions class="justify-end">
-              <v-btn
-                outlined
-                rounded
-                text
-                type="submit"
-                tabindex="2"
-                :disabled="!createProjectFormValid || !$can('create')"
-              >
-                New shelter
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-form>
-      </v-col>
-    </v-row>
-  </v-container>
+        <v-row>
+          <v-col justify="center">
+            <v-row>
+              <v-col v-for="project in projects" :key="project._id" cols="6">
+                <v-card
+                  :to="{
+                    name: 'ShelterSustainabilityEdit',
+                    params: { id: encodeURIComponent(project._id) },
+                  }"
+                  class="project"
+                  max-width="400"
+                  min-height="200"
+                  hover
+                  outlined
+                  :class="{
+                    'project--editable': $can('edit', project),
+                    'project--readonly': !$can('edit', project),
+                  }"
+                >
+                  <v-card-subtitle class="pb-0">
+                    {{ project.shelter_type }}
+                  </v-card-subtitle>
+                  <v-card-title>
+                    {{ project.name }}
+                  </v-card-title>
+                  <v-card-subtitle class="pb-0">
+                    <span v-if="project.location_name">
+                      {{ project.location_name }}
+                    </span>
+                    <span
+                      v-if="project.location_name && project.location_country"
+                      >,</span
+                    >
+                    <span v-if="project.location_country">
+                      {{ countriesMap[project.location_country].name }}
+                    </span>
+                  </v-card-subtitle>
+                  <v-card-actions
+                    v-if="$can('delete', project)"
+                    class="d-flex flex-row justify-end"
+                  >
+                    <v-btn
+                      outlined
+                      rounded
+                      @click.once.prevent.stop="() => removeDoc(project._id)"
+                    >
+                      Delete project
+                    </v-btn>
+                  </v-card-actions>
+                  <v-card-subtitle class="pb-0">
+                    <v-row>
+                      <v-col>
+                        Created at: {{ project.created_at | formatDate }}
+                      </v-col>
+                      <v-col>
+                        Last modified: {{ project.updated_at | formatDate }}
+                      </v-col>
+                      <v-col>
+                        <div class="project__hidden-child">
+                          <span v-if="$can('edit', project)">edit</span>
+                          <span v-else>read</span>
+                        </div>
+                      </v-col>
+                    </v-row>
+                  </v-card-subtitle>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-sheet>
+    <div class="separator"></div>
+    <div class="map-countries">
+      <territory-map :coordinates="coordinates" />
+    </div>
+    <new-shelter-dialog :open.sync="shelterDialog" />
+  </main>
 </template>
 
 <script lang="ts">
+import TerritoryMap from "@/components/commons/TerritoryMap.vue";
+import NewShelterDialog from "@/components/shelter_sustainability/NewShelterDialog.vue";
+import { CountriesInfoMap } from "@/store/GhgInterface";
 import { Shelter } from "@/store/ShelterInterface";
 import { SyncDatabase } from "@/utils/couchdb";
+import {
+  countries as Countries,
+  Country as CountryWithLat,
+} from "@/utils/countriesAsList";
+import flagEmoji from "@/utils/flagEmoji";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
 
@@ -96,19 +111,22 @@ import { mapActions, mapState } from "vuex";
 
   methods: {
     ...mapActions("ShelterModule", [
-      "addDoc",
       "removeDoc",
       "syncDB",
       "getShelters",
       "closeDB",
     ]),
   },
+  components: {
+    NewShelterDialog,
+    TerritoryMap,
+  },
 })
 /** ProjectList */
 export default class ProjectList extends Vue {
   newName = "";
   shelters!: [];
-  addDoc!: (name: string) => Promise<null>;
+  shelterDialog = false;
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
   getShelters!: () => Promise<null>;
@@ -121,20 +139,30 @@ export default class ProjectList extends Vue {
       v?.length > 1 || `Name should have a length >= 1`,
   ];
 
+  countriesMap = Countries.reduce(
+    (acc: CountriesInfoMap, country: CountryWithLat) => {
+      acc[country.code] = { ...country, emoji: flagEmoji(country.code) };
+      return acc;
+    },
+    {} as CountriesInfoMap
+  );
+
+  public get coordinates(): number[][] {
+    return this.shelters
+      .filter((x: Shelter) => !!x.latitude)
+      .map((x: Shelter) => [x.latitude, x.longitude]);
+  }
+
   public get projects(): Record<string, string | number>[] {
     return this.shelters;
   }
-  public submitForm(): void {
-    if (this.newName !== "") {
-      this.addDoc(this.newName).then(() => {
-        this.$router.push({
-          name: "ShelterSustainabilityEdit",
-          params: { id: encodeURIComponent(this.newName) },
-        });
-      });
-    } else {
-      console.error("please fill the new Name");
-    }
+
+  get computedGridTemplate(): string {
+    return "{ grid-template-columns: 50% 25px 50%; }";
+  }
+
+  public addProject(): void {
+    this.shelterDialog = true;
   }
 
   mounted(): void {
@@ -151,8 +179,54 @@ export default class ProjectList extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.shelter__list {
+  $header_height: 64px;
+  display: grid;
+  grid-template-rows: calc(100vh - #{$header_height});
+  grid-template-columns: 50% 25px 50%;
+  grid-template-areas: "a b c";
+
+  flex: 1 1 auto;
+}
+
+.country-list {
+  grid-area: a;
+}
+
+.country-list__actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.country-list-header__title {
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.country-list-header__tools {
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.separator {
+  grid-area: b;
+  background-color: #e9ebec;
+  cursor: col-resize;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.map-countries {
+  grid-area: c;
+  z-index: 1;
+}
+
 // https://css-tricks.com/using-sass-control-scope-bem-naming/
 .project {
+  height: 100%;
   $self: &;
   // background-color: blue;
 
