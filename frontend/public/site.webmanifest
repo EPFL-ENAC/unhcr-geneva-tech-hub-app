@@ -1,6 +1,6 @@
 {
-    "name": "",
-    "short_name": "",
+    "name": "unhcr-tss",
+    "short_name": "unhcr-tss",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
