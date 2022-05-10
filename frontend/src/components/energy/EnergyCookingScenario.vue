@@ -32,11 +32,7 @@ import FormItemComponent, {
   SelectOption,
 } from "@/components/commons/FormItemComponent.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
-import {
-  HouseholdCookingModule,
-  Scenario,
-  ScenarioTrend,
-} from "@/models/energyModel";
+import { Scenario, ScenarioModule, ScenarioTrend } from "@/models/energyModel";
 import "vue-class-component/hooks";
 import { Component, VModel, Vue } from "vue-property-decorator";
 
@@ -100,17 +96,17 @@ export default class EnergyCookingScenario extends Vue {
     },
   ];
 
-  @VModel({ type: Object as () => HouseholdCookingModule })
-  module!: HouseholdCookingModule;
+  @VModel({ type: Object as () => ScenarioModule })
+  module!: ScenarioModule;
 
   get selectedIndex(): number | undefined {
     return this.module.scenarios.findIndex(
-      (item) => item.id === this.module.scenarioId
+      (item) => item.id === this.module.selectedId
     );
   }
 
   set selectedIndex(value: number | undefined) {
-    this.module.scenarioId =
+    this.module.selectedId =
       value !== undefined ? this.module.scenarios[value].id : "";
   }
 }

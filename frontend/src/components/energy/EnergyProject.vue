@@ -233,6 +233,11 @@ export default class EnergyProject extends Vue {
       toName: "General",
     },
     {
+      text: "Scenario",
+      icon: "mdi-skip-next",
+      toName: "Scenario",
+    },
+    {
       text: "Household",
       icon: "mdi-home",
       toName: "Household",

@@ -19,10 +19,6 @@
                   v-model="module"
                   :general-module="generalModule"
                 ></energy-household-cooking-table>
-                <br />
-                <energy-cooking-scenario
-                  v-model="module"
-                ></energy-cooking-scenario>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -46,8 +42,9 @@
       <v-row>
         <v-col>
           <energy-cooking-result
-            :general="generalModule"
-            :household-cooking="module"
+            :general-module="generalModule"
+            :scenario-module="scenarioModule"
+            :household-cooking-module="module"
           ></energy-cooking-result>
         </v-col>
       </v-row>
@@ -59,7 +56,6 @@
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import EnergyCookingIntervention from "@/components/energy/EnergyCookingIntervention.vue";
 import EnergyCookingResult from "@/components/energy/EnergyCookingResult.vue";
-import EnergyCookingScenario from "@/components/energy/EnergyCookingScenario.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
 import EnergyHouseholdCookingTable, {
@@ -72,7 +68,6 @@ import {
   HouseholdCookingModule,
   Intervention,
   InterventionModule,
-  Scenario,
   ScenarioModule,
 } from "@/models/energyModel";
 import { cloneDeep } from "lodash";
@@ -85,7 +80,6 @@ import { mapState } from "vuex";
     EnergyForm,
     EnergyCookingIntervention,
     EnergyCookingResult,
-    EnergyCookingScenario,
     EnergyHouseholdCookingTable,
     FormItemComponent,
   },
@@ -97,39 +91,6 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   cookingFuels!: CookingFuel[];
   cookingStoves!: CookingStove[];
 
-  readonly defaultScenarios: Scenario[] = [
-    {
-      id: "usual",
-      name: "Business as Usual",
-      energyPriceTrend: "stable",
-      investmentCostTrend: "stable",
-      discountRate: 1,
-      incomeRate: 1,
-      demographicGrowth: 1,
-      fuelPriceRate: 1,
-    },
-    {
-      id: "optimistic",
-      name: "Optimistic Scenario",
-      energyPriceTrend: "stable",
-      investmentCostTrend: "decrease",
-      discountRate: 1,
-      incomeRate: 1,
-      demographicGrowth: 1,
-      fuelPriceRate: 1,
-    },
-    {
-      id: "pessimistic",
-      name: "Pessimistic Scenario",
-      energyPriceTrend: "increase",
-      investmentCostTrend: "increase",
-      discountRate: 1,
-      incomeRate: 1,
-      demographicGrowth: 1,
-      fuelPriceRate: 1,
-    },
-  ];
-
   @Prop({ type: Object as () => GeneralModule })
   generalModule!: GeneralModule;
   @Prop({ type: Object as () => ScenarioModule })
@@ -140,14 +101,12 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   module: HouseholdCookingModule = {
     technologyYears: [],
     categoryCookings: [],
-    scenarios: cloneDeep(this.defaultScenarios),
-    scenarioId: "",
     interventions: [],
   };
 
   get scenarioName(): string | undefined {
-    return this.module.scenarios.find(
-      (scenario) => scenario.id === this.module.scenarioId
+    return this.scenarioModule?.scenarios.find(
+      (scenario) => scenario.id === this.scenarioModule?.selectedId
     )?.name;
   }
 
@@ -178,16 +137,6 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
           technologies: cloneDeep(this.module.categoryCookings),
         },
       ];
-    }
-    if (!this.module.scenarios) {
-      this.module.scenarios = this.scenarioModule
-        ? this.scenarioModule.scenarios
-        : cloneDeep(this.defaultScenarios);
-    }
-    if (!this.module.scenarioId) {
-      this.module.scenarioId = this.scenarioModule
-        ? this.scenarioModule.selectedId
-        : "";
     }
     if (!this.module.interventions) {
       this.module.interventions = this.interventionModule
