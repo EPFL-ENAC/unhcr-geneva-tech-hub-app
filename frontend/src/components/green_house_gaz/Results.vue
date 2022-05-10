@@ -11,147 +11,342 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col v-if="survey.energy" :cols="6">
-        <v-card flat>
-          <v-card-title><h2>Energy</h2></v-card-title>
-          <v-card-text>
-            <v-card flat>
-              <v-card-title><h4>Facilities</h4></v-card-title>
-              <v-card-text v-if="survey.energy.facilities">
-                {{ survey.energy.facilities.endline.results.totalCO2Emission }}
-                tCO2/year
-              </v-card-text>
-              <v-card-text v-else>
-                0 tCO2/year (module not filled in)
-              </v-card-text>
-            </v-card>
-            <v-card flat>
-              <v-card-title><h4>Cooking</h4></v-card-title>
-              <v-card-text v-if="survey.energy.cooking">
-                {{ survey.energy.cooking.endline.results.totalCO2Emission }}
-                tCO2/year
-              </v-card-text>
-              <v-card-text v-else>
-                0 tCO2/year (module not filled in)
-              </v-card-text>
-            </v-card>
-            <v-card flat>
-              <v-card-title><h4>Lighting</h4></v-card-title>
-              <v-card-text v-if="survey.energy.lighting">
-                {{ survey.energy.lighting.endline.results.totalCO2Emission }}
-                tCO2/year
-              </v-card-text>
-              <v-card-text v-else>
-                0 tCO2/year (module not filled in)
-              </v-card-text>
-            </v-card>
-            <v-card flat>
-              <v-card-title><h4>Pumping</h4></v-card-title>
-              <v-card-text v-if="survey.energy.pumping">
-                {{ survey.energy.pumping.endline.results.totalCO2Emission }}
-                tCO2/year
-              </v-card-text>
-              <v-card-text v-else>
-                0 tCO2/year (module not filled in)
-              </v-card-text>
-            </v-card>
-          </v-card-text>
-        </v-card>
+      <v-col class="about-first-column d-flex justify-center" :cols="12">
+        <v-responsive aspect-ratio="4" min-height="200" max-height="100%">
+          <v-chart autoresize :option="option"></v-chart>
+        </v-responsive>
       </v-col>
-      <v-col :cols="6">
-        <v-card flat>
-          <v-card-title><h2>WASH</h2></v-card-title>
-          <v-card-text>
-            <v-card flat>
-              <v-card-title><h4>Trucking</h4></v-card-title>
-              <v-card-text v-if="survey.wash.trucking">
-                <!-- // CO2_WSH_TRB old way of doing totalCO2Emission -->
-                {{ survey.wash.trucking.endline.results.CO2_WSH_TRB }}
-                tCO2/year
-              </v-card-text>
-              <v-card-text v-else>
-                0 tCO2/year (module not filled in)
-              </v-card-text>
-            </v-card>
-          </v-card-text>
-        </v-card>
+    </v-row>
+    <v-row>
+      <v-col :cols="6" class="d-flex justify-center">
+        <h3>
+          Total Baseline CO2 Emissions:
+          {{ totalBaseline | formatNumber }} tCO2/year
+        </h3>
       </v-col>
-      <v-col :cols="6">
-        <v-card flat>
-          <v-card-title><h2>Materials</h2></v-card-title>
-          <v-card-text>
-            <v-card flat>
-              <v-card-title><h4>CRI</h4></v-card-title>
-              <v-card-text v-if="survey.material.cri">
-                {{ survey.material.cri.endline.results.totalCO2Emission }}
-                tCO2/year
-              </v-card-text>
-              <v-card-text v-else>
-                0 tCO2/year (module not filled in)
-              </v-card-text>
-            </v-card>
+      <v-col :cols="6" class="d-flex justify-center">
+        <h3>
+          Total Endline CO2 Emissions:
+          {{ totalEndline | formatNumber }} tCO2/year
 
-            <v-card flat>
-              <v-card-title><h4>HH Waste</h4></v-card-title>
-              <v-card-text v-if="survey.material.hhwaste">
-                {{ survey.material.hhwaste.endline.results.totalCO2Emission }}
-                tCO2/year
-              </v-card-text>
-              <v-card-text v-else>
-                0 tCO2/year (module not filled in)
-              </v-card-text>
-            </v-card>
-            <v-card flat>
-              <v-card-title><h4>Shelter</h4></v-card-title>
-              <v-card-text v-if="survey.material.shelter">
-                {{ survey.material.shelter.endline.results.totalCO2Emission }}
-                tCO2/year
-              </v-card-text>
-              <v-card-text v-else>
-                0 tCO2/year (module not filled in)
-              </v-card-text>
-            </v-card>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col :cols="6">
-        <v-card flat>
-          <v-card-title><h2>Offset</h2></v-card-title>
-          <v-card-text>
-            <v-card flat>
-              <v-card-title><h4>Tree planting</h4></v-card-title>
-              <v-card-text v-if="survey.offset.treeplanting">
-                {{
-                  survey.offset.treeplanting.endline.results.totalCO2Emission
-                }}
-                tCO2/year
-              </v-card-text>
-              <v-card-text v-else>
-                0 tCO2/year (module not filled in)
-              </v-card-text>
-            </v-card>
-          </v-card-text>
-        </v-card>
+          <v-icon :color="color">
+            {{ icon }}
+          </v-icon>
+          <span
+            :class="{
+              'result-positive': totalChange > 0,
+              'result-negative': totalChange < 0,
+            }"
+          >
+            {{ totalChange > 0 ? "+" : "" }}
+            {{ totalChange | formatNumber }}%
+          </span>
+        </h3>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Survey } from "@/store/GhgInterface";
+import {
+  EnergySurvey,
+  FormSurvey,
+  MaterialSurvey,
+  OffsetSurvey,
+  Survey,
+  WashSurvey,
+} from "@/store/GhgInterface";
+import { BarChart } from "echarts/charts";
+import {
+  GridComponent,
+  LegendComponent,
+  MarkPointComponent,
+  SingleAxisComponent,
+  TitleComponent,
+  TooltipComponent,
+} from "echarts/components";
+import { use } from "echarts/core";
+import { CanvasRenderer } from "echarts/renderers";
+import { BarSeriesOption, EChartsOption } from "echarts/types/dist/shared";
 import "vue-class-component/hooks";
+import VChart from "vue-echarts";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
+
+use([
+  CanvasRenderer,
+  SingleAxisComponent,
+  BarChart,
+  GridComponent,
+  LegendComponent,
+  TitleComponent,
+  TooltipComponent,
+  MarkPointComponent,
+]);
 
 @Component({
   computed: {
     ...mapGetters("GhgModule", ["project"]),
   },
+  components: {
+    VChart,
+  },
 })
 export default class Results extends Vue {
   @Prop([Object, Array])
   readonly survey: Survey | undefined;
+
+  public get totalChange(): number {
+    let changeInEmission = 0;
+    const localCO2 = this.totalEndline;
+    let refCO2 = this.totalBaseline;
+    if (refCO2 !== 0) {
+      // if refCO2 is 0 it's not valid
+      if (localCO2 === 0) {
+        return 0;
+      }
+      changeInEmission = ((localCO2 - refCO2) / refCO2) * 100;
+    } else {
+      changeInEmission = ((localCO2 - refCO2) / 1) * 100;
+    }
+    return changeInEmission;
+  }
+
+  public totalResult(key: keyof FormSurvey): number {
+    if (this.survey) {
+      const survey = this.survey;
+      return this.items
+        .map((item) => {
+          const surveyCategory = survey[item.category] ?? {};
+          const subcat: FormSurvey =
+            surveyCategory[item.subcategory as keyof typeof surveyCategory] ??
+            {};
+          const results = subcat[key]?.results ?? {};
+          const resultValue =
+            (item.resultKey
+              ? results?.[item.resultKey as keyof typeof results]
+              : results?.totalCO2Emission) ?? 0;
+
+          return resultValue * (item.sign === "neg" ? -1 : 1);
+        })
+        .reduce((acc: number, el: number) => acc + el, 0);
+    }
+    return 0;
+  }
+
+  public get totalBaseline(): number {
+    return this.totalResult("baseline");
+  }
+
+  public get totalEndline(): number {
+    return this.totalResult("endline");
+  }
+
+  get icon(): string {
+    if (this.totalChange > 0) {
+      return "mdi-triangle";
+    } else if (this.totalChange < 0) {
+      return "mdi-triangle mdi-rotate-180";
+    } else {
+      return "mdi-triangle mdi-rotate-90";
+    }
+  }
+
+  get color(): string {
+    if (this.totalChange > 0) {
+      return "red";
+    } else if (this.totalChange < 0) {
+      return "green";
+    } else {
+      return "black";
+    }
+  }
+
+  alpha = 0.4;
+  beta = 0.6;
+  delta = 0.8;
+  omega = 1;
+
+  public get items(): Config[] {
+    return [
+      {
+        color: `rgba(157,72,56,${this.alpha})`,
+        name: "Energy - Facilities",
+        category: "energy",
+        subcategory: "facilities",
+        stack: "co2",
+      },
+      {
+        color: `rgba(157,72,56,${this.beta})`,
+        name: "Energy - Cooking",
+        category: "energy",
+        subcategory: "cooking",
+        stack: "co2",
+      },
+      {
+        color: `rgba(157,72,56,${this.delta})`,
+        name: "Energy - Lighting",
+        category: "energy",
+        subcategory: "lighting",
+        stack: "co2",
+      },
+      {
+        color: `rgba(157,72,56,${this.omega})`,
+        name: "Energy - Pumping",
+        category: "energy",
+        subcategory: "pumping",
+        stack: "co2",
+      },
+      {
+        color: `rgba(32,135,200,${this.omega})`,
+        name: "Wash - Trucking",
+        resultKey: "CO2_WSH_TRB",
+        category: "wash",
+        subcategory: "trucking",
+        stack: "co2",
+      },
+      /*
+      248, 237, 98
+      218,182,0
+      169,134,0
+      */
+      {
+        color: `rgba(218,182,0, ${this.alpha})`,
+        name: "Material - Shelter",
+        category: "material",
+        subcategory: "shelter",
+        stack: "co2",
+      },
+      {
+        color: `rgba(218,182,0,${this.beta})`,
+        name: "Material - CRI",
+        category: "material",
+        subcategory: "cri",
+        stack: "co2",
+      },
+      {
+        color: `rgba(1218,182,0,${this.delta})`,
+        name: "Material - HH Waste",
+        category: "material",
+        subcategory: "hhwaste",
+        stack: "co2",
+      },
+      // https://unhcr-web.github.io/unhcRstyle/docs/reference/unhcr_green.html
+      {
+        sign: "neg",
+        color: `rgba(1,178,152,${this.omega})`,
+        name: "Offset - Tree planting",
+        category: "offset",
+        subcategory: "treeplanting",
+        stack: "offset",
+      },
+    ];
+  }
+
+  public get option(): EChartsOption {
+    const result: EChartsOption = {
+      tooltip: {
+        trigger: "axis",
+        axisPointer: {
+          type: "shadow",
+        },
+      },
+      legend: {},
+      grid: {
+        left: "3%",
+        right: "4%",
+        bottom: "3%",
+        containLabel: true,
+      },
+      xAxis: [
+        {
+          type: "category",
+          axisLabel: {
+            fontSize: "1.5rem",
+            fontWeight: "normal",
+          },
+          data: ["Baseline", "Endline"],
+        },
+      ],
+      yAxis: [
+        {
+          type: "value",
+        },
+      ],
+      series: this.items.map((item: Config): BarSeriesOption => {
+        let baseline = 0;
+        let endline = 0;
+        if (this.survey) {
+          const surveyCategory = this.survey[item.category] ?? {};
+          const subcat: FormSurvey =
+            surveyCategory[item.subcategory as keyof typeof surveyCategory] ??
+            {};
+          const baseRes = subcat?.baseline?.results ?? {};
+          const endRes = subcat?.endline?.results ?? {};
+          baseline =
+            (item.resultKey
+              ? baseRes?.[item.resultKey as keyof typeof baseRes]
+              : baseRes?.totalCO2Emission) ?? 0;
+          endline =
+            (item.resultKey
+              ? endRes?.[item.resultKey as keyof typeof endRes]
+              : endRes?.totalCO2Emission) ?? 0;
+        }
+
+        return {
+          data: [baseline, endline],
+          emphasis: {
+            focus: "series",
+          },
+          tooltip: {
+            valueFormatter: (value): string => {
+              return `${this.$options.filters?.formatNumber(value)} tCO2/year`;
+            },
+          },
+          type: "bar",
+          color: item.color,
+          name: item.name,
+          stack: item.stack,
+        };
+      }),
+    };
+    return result;
+  }
+}
+
+type Config = EnergyConfig | WashConfig | MaterialConfig | OffsetConfig;
+
+interface ConfigBase {
+  sign?: string;
+  color: string;
+  name: string;
+  stack: string;
+  resultKey?: string;
+}
+
+interface EnergyConfig extends ConfigBase {
+  category: "energy";
+  subcategory: keyof EnergySurvey;
+}
+interface WashConfig extends ConfigBase {
+  category: "wash";
+  subcategory: keyof WashSurvey;
+}
+interface MaterialConfig extends ConfigBase {
+  category: "material";
+  subcategory: keyof MaterialSurvey;
+}
+interface OffsetConfig extends ConfigBase {
+  category: "offset";
+  subcategory: keyof OffsetSurvey;
 }
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+::v-deep .result-negative {
+  color: green;
+}
+::v-deep .result-positive {
+  color: red;
+}
+</style>
