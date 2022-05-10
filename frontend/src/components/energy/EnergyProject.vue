@@ -184,14 +184,6 @@
         <router-view v-model="modules"></router-view>
       </v-col>
     </v-row>
-    <v-snackbar v-model="snackbar">
-      {{ snackbarText }}
-      <template v-slot:action="{ attrs }">
-        <v-btn color="primary" icon v-bind="attrs" @click="snackbar = false">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </template>
-    </v-snackbar>
   </v-container>
 </template>
 
@@ -294,9 +286,6 @@ export default class EnergyProject extends Vue {
 
   document: ExistingDocument<ProjectDocument> | null = null;
   tab: string | null = null;
-  // TODO global snackbar
-  snackbar = false;
-  snackbarText = "";
 
   get name(): string {
     return this.document?.name ?? "";
@@ -363,8 +352,7 @@ export default class EnergyProject extends Vue {
         console.debug(`document ${this.document?._id} updated`);
       })
       .catch((reason) => {
-        this.snackbarText = reason.message ?? reason;
-        this.snackbar = true;
+        this.$store.dispatch("notifyUser", reason.message ?? reason);
         console.error(reason);
         this.resetDocument();
       });

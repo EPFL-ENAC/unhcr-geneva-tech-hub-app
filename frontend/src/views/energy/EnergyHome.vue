@@ -104,14 +104,6 @@
         <energy-map aspect-ratio="1" :markers="markers"></energy-map>
       </v-col>
     </v-row>
-    <v-snackbar v-model="snackbar">
-      {{ snackbarText }}
-      <template v-slot:action="{ attrs }">
-        <v-btn color="primary" icon v-bind="attrs" @click="snackbar = false">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </template>
-    </v-snackbar>
     <v-overlay :value="loading">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
@@ -151,9 +143,6 @@ export default class EnergyHome extends Vue {
   title = energy.title;
   loading = false;
   newTemplateName = "";
-  // TODO global snackbar
-  snackbar = false;
-  snackbarText = "";
 
   get groups(): Group[] {
     const groupedTemplates = groupBy(
@@ -236,8 +225,7 @@ export default class EnergyHome extends Vue {
     this.loading = true;
     promise
       .catch((reason) => {
-        this.snackbarText = reason.message ?? reason;
-        this.snackbar = true;
+        this.$store.dispatch("notifyUser", reason.message ?? reason);
         console.error(reason);
       })
       .finally(() => (this.loading = false));
