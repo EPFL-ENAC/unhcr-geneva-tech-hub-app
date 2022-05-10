@@ -34,21 +34,25 @@ export interface GreenHouseGaz {
   created_by: string;
   created_at: string;
 }
-export interface Survey {
-  created_at: string;
-  created_by: string;
-  name: string; // name is year
+
+export interface SurveyForms {
   energy: EnergySurvey;
   wash: WashSurvey;
   material: MaterialSurvey;
   offset: OffsetSurvey;
 }
 
+export interface Survey extends SurveyForms {
+  created_at: string;
+  created_by: string;
+  name: string; // name is year
+}
+
 export interface EnergySurvey {
   facilities: EnergyFacilitySurvey;
-  cooking: Record<string, number>;
-  lighting: Record<string, number>;
-  pumping: Record<string, number>;
+  cooking: FormSurvey;
+  lighting: FormSurvey;
+  pumping: FormSurvey;
 }
 
 export interface WashSurvey {
@@ -167,7 +171,13 @@ export type EnergyFacilityInterventionItemResult = Omit<
 // start of material survey
 export interface MaterialSurvey {
   shelter: MaterialShelterSurvey;
+  cri: MaterialCRISurvey;
+  hhwaste: MaterialHHwasteSurvey;
 }
+
+export type MaterialCRISurvey = FormSurvey;
+
+export type MaterialHHwasteSurvey = FormSurvey;
 
 export interface OffsetSurvey {
   treeplanting: OffsetTreePlantingSurvey;
