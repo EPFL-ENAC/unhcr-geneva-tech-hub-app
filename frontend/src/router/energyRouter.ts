@@ -16,7 +16,7 @@ export default {
       name: "energyHome",
       component: () =>
         import(
-          /* webpackChunkName: "energy" */ "../views/energy/EnergyHome.vue"
+          /* webpackChunkName: "energy-home" */ "../views/energy/EnergyHome.vue"
         ),
     },
     {
@@ -25,7 +25,7 @@ export default {
       redirect: { name: "energySiteGeneral" },
       component: () =>
         import(
-          /* webpackChunkName: "energy" */ "../views/energy/EnergySite.vue"
+          /* webpackChunkName: "energy-site" */ "../views/energy/EnergySite.vue"
         ),
       children: projectChildren("energySite"),
     },
@@ -35,7 +35,7 @@ export default {
       redirect: { name: "energyTemplateGeneral" },
       component: () =>
         import(
-          /* webpackChunkName: "energy" */ "../views/energy/EnergyTemplate.vue"
+          /* webpackChunkName: "energy-template" */ "../views/energy/EnergyTemplate.vue"
         ),
       children: projectChildren("energyTemplate"),
     },
@@ -49,7 +49,7 @@ function projectChildren(prefix: string): RouteConfig[] {
       name: prefix + "General",
       component: () =>
         import(
-          /* webpackChunkName: "energy" */ "../views/energy/EnergyGeneralView.vue"
+          /* webpackChunkName: "energy-general" */ "../views/energy/EnergyGeneralView.vue"
         ),
     },
     {
@@ -58,7 +58,7 @@ function projectChildren(prefix: string): RouteConfig[] {
       redirect: { name: prefix + "HouseholdCooking" },
       component: () =>
         import(
-          /* webpackChunkName: "energy" */ "../views/energy/EnergyHouseholdView.vue"
+          /* webpackChunkName: "energy-household" */ "../views/energy/EnergyHouseholdView.vue"
         ),
       children: [
         {
@@ -66,7 +66,7 @@ function projectChildren(prefix: string): RouteConfig[] {
           name: prefix + "HouseholdCooking",
           component: () =>
             import(
-              /* webpackChunkName: "energy" */ "../views/energy/EnergyHouseholdCookingView.vue"
+              /* webpackChunkName: "energy-household-cooking" */ "../views/energy/EnergyHouseholdCookingView.vue"
             ),
         },
         {
@@ -74,7 +74,7 @@ function projectChildren(prefix: string): RouteConfig[] {
           name: prefix + "HouseholdLighting",
           component: () =>
             import(
-              /* webpackChunkName: "energy" */ "../views/energy/EnergyHouseholdLightingView.vue"
+              /* webpackChunkName: "energy-household-lighting" */ "../views/energy/EnergyHouseholdLightingView.vue"
             ),
         },
         {
@@ -82,7 +82,7 @@ function projectChildren(prefix: string): RouteConfig[] {
           name: prefix + "HouseholdHeating",
           component: () =>
             import(
-              /* webpackChunkName: "energy" */ "../views/energy/EnergyHouseholdHeatingView.vue"
+              /* webpackChunkName: "energy-household-heating" */ "../views/energy/EnergyHouseholdHeatingView.vue"
             ),
         },
       ],
@@ -93,7 +93,7 @@ function projectChildren(prefix: string): RouteConfig[] {
       redirect: { name: prefix + "CommunityLighting" },
       component: () =>
         import(
-          /* webpackChunkName: "energy" */ "../views/energy/EnergyCommunityView.vue"
+          /* webpackChunkName: "energy-community" */ "../views/energy/EnergyCommunityView.vue"
         ),
       children: [
         {
@@ -101,7 +101,7 @@ function projectChildren(prefix: string): RouteConfig[] {
           name: prefix + "CommunityLighting",
           component: () =>
             import(
-              /* webpackChunkName: "energy" */ "../views/energy/EnergyCommunityLightingView.vue"
+              /* webpackChunkName: "energy-community-lighting" */ "../views/energy/EnergyCommunityLightingView.vue"
             ),
         },
         {
@@ -109,7 +109,7 @@ function projectChildren(prefix: string): RouteConfig[] {
           name: prefix + "CommunityHeating",
           component: () =>
             import(
-              /* webpackChunkName: "energy" */ "../views/energy/EnergyCommunityHeatingView.vue"
+              /* webpackChunkName: "energy-community-heating" */ "../views/energy/EnergyCommunityHeatingView.vue"
             ),
         },
         {
@@ -117,7 +117,7 @@ function projectChildren(prefix: string): RouteConfig[] {
           name: prefix + "CommunityServices",
           component: () =>
             import(
-              /* webpackChunkName: "energy" */ "../views/energy/EnergyCommunityServicesView.vue"
+              /* webpackChunkName: "energy-community-services" */ "../views/energy/EnergyCommunityServicesView.vue"
             ),
         },
       ],
@@ -127,7 +127,7 @@ function projectChildren(prefix: string): RouteConfig[] {
       name: prefix + "Scenario",
       component: () =>
         import(
-          /* webpackChunkName: "energy" */ "../views/energy/EnergyScenarioView.vue"
+          /* webpackChunkName: "energy-scenario" */ "../views/energy/EnergyScenarioView.vue"
         ),
     },
     {
@@ -135,7 +135,7 @@ function projectChildren(prefix: string): RouteConfig[] {
       name: prefix + "Result",
       component: () =>
         import(
-          /* webpackChunkName: "energy" */ "../views/energy/EnergyResultView.vue"
+          /* webpackChunkName: "energy-result" */ "../views/energy/EnergyResultView.vue"
         ),
     },
   ];
