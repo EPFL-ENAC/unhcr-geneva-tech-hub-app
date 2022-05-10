@@ -10,30 +10,38 @@
           </v-btn>
         </v-card-title>
         <v-card-text>
-          <v-expansion-panels v-model="selectedIndexes" multiple>
+          <v-expansion-panels multiple>
             <v-expansion-panel
               v-for="(interventionItem, index) in module.interventions"
               :key="index"
             >
               <v-expansion-panel-header>
-                <template v-slot:default="{ open }">
-                  <v-row>
-                    <v-col class="col-auto">
-                      <v-checkbox
-                        hide-details="auto"
-                        :input-value="open"
-                        :label="interventionItem.name"
-                        readonly
-                      ></v-checkbox>
-                    </v-col>
-                    <v-spacer></v-spacer>
-                    <v-col class="col-auto d-flex align-center">
-                      <v-btn icon @click="deleteDuffusion(index)">
-                        <v-icon>mdi-close</v-icon>
-                      </v-btn>
-                    </v-col>
-                  </v-row>
-                </template>
+                <span>
+                  <v-btn
+                    icon
+                    @click="
+                      $event.stopPropagation();
+                      interventionItem.selected = !interventionItem.selected;
+                    "
+                  >
+                    <v-icon v-if="interventionItem.selected" color="primary">
+                      mdi-checkbox-marked
+                    </v-icon>
+                    <v-icon v-else>mdi-checkbox-blank-outline</v-icon>
+                  </v-btn>
+                </span>
+                <span>{{ interventionItem.name }}</span>
+                <span>
+                  <v-btn
+                    icon
+                    @click="
+                      $event.stopPropagation();
+                      deleteDuffusion(index);
+                    "
+                  >
+                    <v-icon>mdi-close</v-icon>
+                  </v-btn>
+                </span>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <form-item-component
@@ -242,19 +250,6 @@ export default class EnergyCookingIntervention extends Vue {
       text: this.$t("energy." + cat).toString(),
       value: cat,
     }));
-  }
-
-  get selectedIndexes(): number[] {
-    return this.module.interventions.flatMap((intervention, index) =>
-      intervention.selected ? [index] : []
-    );
-  }
-
-  set selectedIndexes(value: number[]) {
-    const indexes = new Set(value);
-    this.module.interventions.forEach(
-      (intervention, index) => (intervention.selected = indexes.has(index))
-    );
   }
 
   addDiffusion(): void {

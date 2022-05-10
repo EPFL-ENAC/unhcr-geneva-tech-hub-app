@@ -12,6 +12,7 @@
             <v-expansion-panel>
               <v-expansion-panel-header>
                 <h2>Scenario</h2>
+                {{ scenarioName }}
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <energy-household-cooking-table
@@ -31,6 +32,7 @@
             <v-expansion-panel>
               <v-expansion-panel-header>
                 <h2>Interventions</h2>
+                {{ interventions.length }} selected
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <energy-cooking-intervention
@@ -68,6 +70,7 @@ import {
   CookingStove,
   GeneralModule,
   HouseholdCookingModule,
+  Intervention,
   InterventionModule,
   Scenario,
   ScenarioModule,
@@ -141,6 +144,18 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
     scenarioId: "",
     interventions: [],
   };
+
+  get scenarioName(): string | undefined {
+    return this.module.scenarios.find(
+      (scenario) => scenario.id === this.module.scenarioId
+    )?.name;
+  }
+
+  get interventions(): Intervention[] {
+    return this.module.interventions.filter(
+      (intervention) => intervention.selected
+    );
+  }
 
   created(): void {
     if (!this.initialModule) {
