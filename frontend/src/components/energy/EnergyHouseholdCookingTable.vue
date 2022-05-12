@@ -2,118 +2,163 @@
   <v-card>
     <v-card-title>
       <span>Cooking Technologies</span>
-      <v-dialog v-model="addDialog" max-width="512px">
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            v-bind="attrs"
-            color="primary"
-            :disabled="addSelectItems.length === 0"
-            icon
-            v-on="on"
-          >
-            <v-icon large>mdi-plus-box</v-icon>
-          </v-btn>
-        </template>
-        <v-card>
-          <v-card-title>Add Cooking Technology</v-card-title>
-          <v-card-text>
-            <v-select
-              v-model="addSelectedItem"
-              hide-details="auto"
-              :items="addSelectItems"
-              label="Available technologies"
-              append-outer-icon="mdi-plus-box"
-              @click:append-outer="addItem(addSelectedItem)"
-            ></v-select>
-          </v-card-text>
-        </v-card>
-      </v-dialog>
+      <div class="flex-grow-1 d-flex justify-end">
+        <v-dialog v-model="detailDialog">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn v-bind="attrs" icon v-on="on">
+              <v-icon>mdi-account-hard-hat</v-icon>
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span>Cooking Technologies</span>
+              <v-dialog v-model="addDialog" max-width="512px">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    color="primary"
+                    :disabled="addSelectItems.length === 0"
+                    icon
+                    v-on="on"
+                  >
+                    <v-icon large>mdi-plus-box</v-icon>
+                  </v-btn>
+                </template>
+                <v-card>
+                  <v-card-title>Add Cooking Technology</v-card-title>
+                  <v-card-text>
+                    <v-select
+                      v-model="addSelectedItem"
+                      hide-details="auto"
+                      :items="addSelectItems"
+                      label="Available technologies"
+                      append-outer-icon="mdi-plus-box"
+                      @click:append-outer="addItem(addSelectedItem)"
+                    ></v-select>
+                  </v-card-text>
+                </v-card>
+              </v-dialog>
+            </v-card-title>
+            <v-card-text>
+              <v-row>
+                <v-col class="col-auto">
+                  <v-tabs v-model="yearTab">
+                    <v-tab v-for="(year, index) in years" :key="year">
+                      {{ year }}
+                      <template v-if="index > 0"
+                        >&nbsp;<v-edit-dialog>
+                          <v-icon x-small>mdi-pencil</v-icon>
+                          <template v-slot:input>
+                            <v-text-field
+                              :value="year"
+                              single-line
+                              type="number"
+                              clearable
+                              @change="changeYear(index, $event)"
+                            ></v-text-field>
+                          </template>
+                        </v-edit-dialog>
+                      </template>
+                    </v-tab>
+                  </v-tabs>
+                </v-col>
+                <v-col class="col-auto d-flex align-center">
+                  <v-btn icon @click="addYear()">
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-data-table
+                    :headers="tableHeaders"
+                    item-key="id"
+                    :items="tableItems"
+                    :items-per-page="5"
+                    show-expand
+                    sort-by="index"
+                  >
+                    <template v-slot:expanded-item="{ headers, item }">
+                      <td class="pa-2" :colspan="headers.length">
+                        <v-simple-table dense>
+                          <template v-slot:default>
+                            <tbody>
+                              <tr
+                                v-for="property in tableExpandProperties"
+                                :key="property.key"
+                              >
+                                <td class="font-weight-bold">
+                                  {{ property.text }}
+                                </td>
+                                <td>
+                                  <template v-if="property.getDisplayValue">
+                                    {{
+                                      property.getDisplayValue(
+                                        item[property.key]
+                                      )
+                                    }}
+                                  </template>
+                                  <template v-else>
+                                    {{ item[property.key] }}
+                                  </template>
+                                  <template v-if="property.unit">
+                                    [{{ property.unit }}]
+                                  </template>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </template>
+                        </v-simple-table>
+                      </td>
+                    </template>
+                    <template
+                      v-for="cat in socioEconomicCategories"
+                      v-slot:[`item.${cat}`]="{ item }"
+                    >
+                      <form-item-component
+                        v-for="cellItem in tableCellItems"
+                        :key="`${cat}-${cellItem.key}`"
+                        v-model="
+                          categoryCooking(item).categories[cat][cellItem.key]
+                        "
+                        v-bind="cellItem"
+                      ></form-item-component>
+                    </template>
+                    <template v-slot:[`item.action`]="{ item }">
+                      <v-btn icon @click="deleteItem(item)">
+                        <v-icon>mdi-close</v-icon>
+                      </v-btn>
+                    </template>
+                  </v-data-table>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+      </div>
     </v-card-title>
     <v-card-text>
-      <v-row>
-        <v-col class="col-auto">
-          <v-tabs v-model="yearTab">
-            <v-tab v-for="(year, index) in years" :key="year">
-              {{ year }}
-              <template v-if="index > 0"
-                >&nbsp;<v-edit-dialog>
-                  <v-icon x-small>mdi-pencil</v-icon>
-                  <template v-slot:input>
-                    <v-text-field
-                      :value="year"
-                      single-line
-                      type="number"
-                      clearable
-                      @change="changeYear(index, $event)"
-                    ></v-text-field>
-                  </template>
-                </v-edit-dialog>
-              </template>
-            </v-tab>
-          </v-tabs>
-        </v-col>
-        <v-col class="col-auto d-flex align-center">
-          <v-btn icon @click="addYear()">
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-data-table
-            :headers="tableHeaders"
-            item-key="id"
-            :items="tableItems"
-            :items-per-page="5"
-            show-expand
-            sort-by="index"
-          >
-            <template v-slot:expanded-item="{ headers, item }">
-              <td class="pa-2" :colspan="headers.length">
-                <v-simple-table dense>
-                  <template v-slot:default>
-                    <tbody>
-                      <tr
-                        v-for="property in tableExpandProperties"
-                        :key="property.key"
-                      >
-                        <td class="font-weight-bold">{{ property.text }}</td>
-                        <td>
-                          <template v-if="property.getDisplayValue">
-                            {{ property.getDisplayValue(item[property.key]) }}
-                          </template>
-                          <template v-else>
-                            {{ item[property.key] }}
-                          </template>
-                          <template v-if="property.unit">
-                            [{{ property.unit }}]
-                          </template>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </template>
-                </v-simple-table>
-              </td>
-            </template>
-            <template
-              v-for="cat in socioEconomicCategories"
-              v-slot:[`item.${cat}`]="{ item }"
-            >
-              <form-item-component
-                v-for="cellItem in tableCellItems"
-                :key="`${cat}-${cellItem.key}`"
-                v-model="categoryCooking(item).categories[cat][cellItem.key]"
-                v-bind="cellItem"
-              ></form-item-component>
-            </template>
-            <template v-slot:[`item.action`]="{ item }">
-              <v-btn icon @click="deleteItem(item)">
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-            </template>
-          </v-data-table>
-        </v-col>
-      </v-row>
+      <v-tabs v-model="yearTab">
+        <v-tab v-for="year in years" :key="year">
+          {{ year }}
+        </v-tab>
+      </v-tabs>
+      <v-data-table
+        :headers="simpleTableHeaders"
+        item-key="id"
+        :items="tableItems"
+        :items-per-page="5"
+        sort-by="index"
+      >
+        <template v-slot:[`item.image`]="{ item }">
+          <v-img
+            :src="`${publicPath}images/energy/cookstoves/${item.id}.png`"
+            contain
+            width="32px"
+            aspect-ratio="1"
+          ></v-img>
+        </template>
+      </v-data-table>
     </v-card-text>
   </v-card>
 </template>
@@ -136,7 +181,7 @@ import {
 } from "@/models/energyModel";
 import { getCookingFuel } from "@/utils/energy";
 import { SelectItemObject } from "@/utils/vuetify";
-import { chain, cloneDeep, sortBy } from "lodash";
+import { chain, cloneDeep, round, sortBy, sumBy } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";
@@ -156,6 +201,16 @@ export default class EnergyHouseholdCookingTable extends Vue {
   cookingStoves!: CookingStove[];
 
   readonly socioEconomicCategories = socioEconomicCategories;
+  readonly simpleTableHeaders: DataTableHeader[] = [
+    "image",
+    "cookstoveName",
+    "fuelName",
+    "countPer10Households",
+  ].map((item) => ({
+    text: this.$t(`energy.${item}`).toString(),
+    value: item,
+    sortable: true,
+  }));
   readonly tableHeaders: DataTableHeader[] = [
     "cookstoveName",
     "fuelName",
@@ -260,6 +315,11 @@ export default class EnergyHouseholdCookingTable extends Vue {
   addDialog = false;
   addSelectedItem: CookingStove | null = null;
   yearTab = 0;
+  detailDialog = false;
+
+  get publicPath(): string {
+    return process.env.BASE_URL;
+  }
 
   get yearOffset(): number {
     return this.generalModule.yearStart;
@@ -298,6 +358,12 @@ export default class EnergyHouseholdCookingTable extends Vue {
       ...(item.fuel as any),
       cookstoveName: item.stove.name,
       fuelName: item.fuel.name,
+      countPer10Households: round(
+        sumBy(
+          Object.values(item.categories),
+          (input) => input.countPerHousehold
+        ) * 10
+      ),
       id: item.stove._id,
       index: item.stove.index,
     }));
@@ -369,6 +435,7 @@ type TableItem = Record<SocioEconomicCategory, HouseholdCookingInput> &
     id: CookingStoveId;
     cookstoveName: string;
     fuelName: string;
+    countPerHousehold: number;
   };
 
 export const mapCategoryCooking = function (

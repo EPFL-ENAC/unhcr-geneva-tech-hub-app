@@ -6,6 +6,8 @@
     "fixedCost": "Fixed Cost",
     "usefulEnergy": "Useful Energy",
     "variableCost": "Variable Cost",
+    "countPer10Households": "Count per 10 households",
+    "image": "Image",
     "veryLow": "Quality of Life Level 1",
     "low": "Quality of Life Level 2",
     "middle": "Quality of Life Level 3",
