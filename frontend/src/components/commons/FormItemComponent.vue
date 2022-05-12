@@ -7,6 +7,7 @@
       hide-details="auto"
       required
       :rules="actualRules"
+      :readonly="readonly"
     >
       <template v-slot:label>
         <v-tooltip top>
@@ -25,6 +26,7 @@
       hide-spin-buttons
       required
       :rules="actualRules"
+      :readonly="readonly"
       type="number"
     >
       <template v-slot:label>
@@ -36,6 +38,9 @@
         </v-tooltip>
       </template>
       <template v-if="actualUnit" v-slot:append>{{ actualUnit }}</template>
+      <template v-slot:append-outer>
+        <slot name="append-outer"></slot>
+      </template>
     </v-text-field>
     <v-select
       v-if="type === 'boolean' || type === 'select'"
@@ -48,6 +53,7 @@
       :multiple="multiple"
       required
       :rules="actualRules"
+      :readonly="readonly"
     >
       <template v-slot:label>
         <v-tooltip top>
@@ -59,10 +65,62 @@
       </template>
       <template v-if="actualUnit" v-slot:append>{{ actualUnit }}</template>
     </v-select>
+    <form-item-component
+      v-if="type === 'range'"
+      v-model="model.val"
+      type="number"
+      :subtype="subtype"
+      :label="label"
+      :unit="unit"
+      :rules="rules"
+      :ratio="ratio"
+      :precision="precision"
+      :min="model.min"
+      :max="model.max"
+      :readonly="readonly"
+    >
+      <template v-if="!readonly" v-slot:append-outer>
+        <v-dialog max-width="256">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn v-bind="attrs" icon v-on="on">
+              <v-icon>mdi-account-hard-hat</v-icon>
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title>{{ label }}</v-card-title>
+            <v-card-text>
+              <form-item-component
+                v-model="model.min"
+                type="number"
+                :subtype="subtype"
+                label="Minimum"
+                :unit="unit"
+                :rules="rules"
+                :ratio="ratio"
+                :precision="precision"
+                optional
+              ></form-item-component>
+              <form-item-component
+                v-model="model.max"
+                type="number"
+                :subtype="subtype"
+                label="Maximum"
+                :unit="unit"
+                :rules="rules"
+                :ratio="ratio"
+                :precision="precision"
+                optional
+              ></form-item-component>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+      </template>
+    </form-item-component>
   </div>
 </template>
 
 <script lang="ts">
+import { RangeModel } from "@/models/energyModel";
 import { checkMax, checkMin, checkRequired, Rule } from "@/utils/rules";
 import { SelectItemObject } from "@/utils/vuetify";
 import { round } from "lodash";
@@ -71,10 +129,10 @@ import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 
 @Component
 export default class FormItemComponent extends Vue {
-  @VModel({ type: [String, Number, Boolean, Array] })
-  model!: string | number | boolean | string[];
-  @Prop({ type: String as () => "text" | "number" | "boolean" | "select" })
-  readonly type!: "text" | "number" | "boolean" | "select";
+  @VModel({ type: [String, Number, Boolean, Array, Object] })
+  model!: string | number | boolean | string[] | RangeModel | undefined;
+  @Prop({ type: String as () => TypeType })
+  readonly type!: TypeType;
   @Prop({ type: String as () => "percent" })
   readonly subtype: "percent" | "rate" | undefined;
   @Prop(String)
@@ -97,6 +155,8 @@ export default class FormItemComponent extends Vue {
   readonly multiple: boolean | undefined;
   @Prop(Number)
   readonly precision: number | undefined;
+  @Prop({ type: Boolean, default: false })
+  readonly readonly!: boolean;
 
   get items(): SelectItemObject<string, SelectValue>[] {
     switch (this.type) {
@@ -126,11 +186,13 @@ export default class FormItemComponent extends Vue {
     if (!this.optional) {
       rules.push(checkRequired);
     }
-    if (this.actualMin !== undefined) {
-      rules.push(checkMin(this.actualMin));
+    const mappedMin = this.mapValue(this.actualMin);
+    if (mappedMin != undefined) {
+      rules.push(checkMin(mappedMin));
     }
-    if (this.actualMax !== undefined) {
-      rules.push(checkMax(this.actualMax));
+    const mappedMax = this.mapValue(this.actualMax);
+    if (mappedMax != undefined) {
+      rules.push(checkMax(mappedMax));
     }
     if (this.rules) {
       rules.push(...this.rules);
@@ -177,23 +239,37 @@ export default class FormItemComponent extends Vue {
     return this.precision ?? 8;
   }
 
-  get numberModel(): number {
+  get numberModel(): number | string {
+    return this.mapValue(this.model as number) ?? "";
+  }
+
+  set numberModel(value: number | string) {
+    if (typeof value === "string") {
+      this.model = undefined;
+    } else {
+      this.model = (value as number) / this.actualRatio + this.actualOffset;
+    }
+  }
+
+  mapValue(value: number | undefined): number | undefined {
+    if (value === undefined) {
+      return undefined;
+    }
     return round(
-      ((this.model as number) - this.actualOffset) * this.actualRatio,
+      ((value as number) - this.actualOffset) * this.actualRatio,
       this.actualPrecision
     );
   }
-
-  set numberModel(value: number) {
-    this.model = (value as number) / this.actualRatio + this.actualOffset;
-  }
 }
+
+type TypeType = "text" | "number" | "boolean" | "select" | "range";
 
 export type FormItem<K = string, V = string> =
   | TextFormItem<K>
   | NumberFormItem<K>
   | BooleanFormItem<K>
-  | SelectFormItem<K, V>;
+  | SelectFormItem<K, V>
+  | RangeFormItem<K>;
 
 interface AbstractFormItem<K> {
   key: K;
@@ -201,6 +277,7 @@ interface AbstractFormItem<K> {
   hidden?: boolean;
   rules?: Rule[];
   optional?: boolean;
+  readonly?: boolean;
 }
 
 interface TextFormItem<K> extends AbstractFormItem<K> {
@@ -227,6 +304,11 @@ interface SelectFormItem<K, V> extends AbstractFormItem<K> {
   options: SelectOption<V>[];
   unit?: string;
   multiple?: boolean;
+}
+
+interface RangeFormItem<K> extends AbstractFormItem<K> {
+  type: "range";
+  subtype?: "rate";
 }
 
 interface BooleanOptions {

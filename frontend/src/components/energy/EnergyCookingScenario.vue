@@ -1,29 +1,33 @@
 <template>
-  <v-expansion-panels v-model="selectedIndex" mandatory>
-    <v-expansion-panel
-      v-for="scenarioItem in module.scenarios"
-      :key="scenarioItem.id"
-    >
-      <v-expansion-panel-header>
-        <template v-slot:default="{ open }">
-          <v-checkbox
-            hide-details="auto"
-            :input-value="open"
-            :label="scenarioItem.name"
-            readonly
-          ></v-checkbox>
-        </template>
-      </v-expansion-panel-header>
-      <v-expansion-panel-content>
-        <form-item-component
-          v-for="item in formItems"
-          :key="item.key"
-          v-model="scenarioItem[item.key]"
-          v-bind="item"
-        ></form-item-component>
-      </v-expansion-panel-content>
-    </v-expansion-panel>
-  </v-expansion-panels>
+  <v-row justify="center">
+    <v-col cols="auto">
+      <v-expansion-panels v-model="selectedIndex" mandatory>
+        <v-expansion-panel
+          v-for="scenarioItem in module.scenarios"
+          :key="scenarioItem.id"
+        >
+          <v-expansion-panel-header>
+            <template v-slot:default="{ open }">
+              <v-checkbox
+                hide-details="auto"
+                :input-value="open"
+                :label="scenarioItem.name"
+                readonly
+              ></v-checkbox>
+            </template>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <form-item-component
+              v-for="item in formItems"
+              :key="item.key"
+              v-model="scenarioItem[item.key]"
+              v-bind="item"
+            ></form-item-component>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">
@@ -63,33 +67,35 @@ export default class EnergyCookingScenario extends Vue {
       key: "energyPriceTrend",
       label: "Energy Price",
       options: this.trendOptions,
+      readonly: true,
     } as FormItem<keyof Scenario, ScenarioTrend>,
     {
       type: "select",
       key: "investmentCostTrend",
       label: "Investment Cost",
       options: this.trendOptions,
+      readonly: true,
     } as FormItem<keyof Scenario, ScenarioTrend>,
     {
-      type: "number",
+      type: "range",
       key: "discountRate",
       label: "Discount Rate",
       subtype: "rate",
     },
     {
-      type: "number",
+      type: "range",
       key: "incomeRate",
       label: "Average Income Rate per household",
       subtype: "rate",
     },
     {
-      type: "number",
+      type: "range",
       key: "demographicGrowth",
-      label: "Demographic Increase Rate",
+      label: "Growth rate of the population",
       subtype: "rate",
     },
     {
-      type: "number",
+      type: "range",
       key: "fuelPriceRate",
       label: "Fuel Price Increase Rate",
       subtype: "rate",

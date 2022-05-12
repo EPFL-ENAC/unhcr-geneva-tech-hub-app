@@ -29,6 +29,12 @@ export const socioEconomicCategories: SocioEconomicCategory[] = [
   "veryHigh",
 ];
 
+export interface RangeModel {
+  val: number;
+  min?: number;
+  max?: number;
+}
+
 // General
 
 export interface GeneralModule {
@@ -143,16 +149,16 @@ export interface Scenario {
   /**
    * d1
    */
-  discountRate: number;
+  discountRate: RangeModel;
   /**
    * r1
    */
-  incomeRate: number;
+  incomeRate: RangeModel;
   /**
    * a1
    */
-  demographicGrowth: number;
-  fuelPriceRate: number;
+  demographicGrowth: RangeModel;
+  fuelPriceRate: RangeModel;
 }
 export type ScenarioTrend = "stable" | "increase" | "decrease";
 

@@ -12,3 +12,7 @@ $body-font-family: "Proxima Nova", "Lato", "Arial";
     padding: 0;
   }
 }
+
+.v-card__title {
+  word-break: break-word;
+}

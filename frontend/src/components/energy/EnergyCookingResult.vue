@@ -576,9 +576,9 @@ export default class EnergyCookingResult extends Vue {
         woodCarbonation: general.woodCarbonation,
         woodDensity: general.woodDensity,
 
-        incomeRate: scenario.incomeRate,
-        discountRate: scenario.discountRate,
-        fuelPriceRate: scenario.fuelPriceRate,
+        incomeRate: scenario.incomeRate.val,
+        discountRate: scenario.discountRate.val,
+        fuelPriceRate: scenario.fuelPriceRate.val,
 
         proportions: Object.fromEntries<number>(
           socioEconomicCategories.map((cat) => [
@@ -604,9 +604,10 @@ export default class EnergyCookingResult extends Vue {
         }
         currentSite.yearCount = index;
         currentSite.populationCount =
-          previousSite.populationCount * scenario.demographicGrowth;
+          previousSite.populationCount * scenario.demographicGrowth.val;
+        // TODO householdSize
         currentSite.householdsCount =
-          previousSite.householdsCount * scenario.demographicGrowth;
+          previousSite.householdsCount * scenario.demographicGrowth.val;
         currentSite.proportions = this.getNewProportions(previousSite);
         currentSite = actions
           .filter((action) => action.isActive(year))

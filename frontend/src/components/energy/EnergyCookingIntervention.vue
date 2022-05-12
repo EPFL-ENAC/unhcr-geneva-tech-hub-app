@@ -294,9 +294,3 @@ export default class EnergyCookingIntervention extends Vue {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.v-card__title {
-  word-break: normal;
-}
-</style>

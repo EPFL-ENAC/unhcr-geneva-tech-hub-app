@@ -2,6 +2,7 @@
   <energy-form
     :module.sync="module"
     :initial-module="initialModule"
+    @after-sync="migrate"
     @save="save"
   >
     <template v-slot>
@@ -17,6 +18,7 @@ import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
 import { ScenarioModule } from "@/models/energyModel";
 import "vue-class-component/hooks";
 import { Component } from "vue-property-decorator";
+
 @Component({
   components: {
     EnergyCookingScenario,
@@ -32,32 +34,81 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
         name: "Business as Usual",
         energyPriceTrend: "stable",
         investmentCostTrend: "stable",
-        discountRate: 1,
-        incomeRate: 1,
-        demographicGrowth: 1,
-        fuelPriceRate: 1,
+        discountRate: {
+          val: 1,
+        },
+        incomeRate: {
+          val: 1,
+        },
+        demographicGrowth: {
+          val: 1,
+        },
+        fuelPriceRate: {
+          val: 1,
+        },
       },
       {
         id: "optimistic",
         name: "Optimistic Scenario",
         energyPriceTrend: "stable",
         investmentCostTrend: "decrease",
-        discountRate: 1,
-        incomeRate: 1,
-        demographicGrowth: 1,
-        fuelPriceRate: 1,
+        discountRate: {
+          val: 1,
+        },
+        incomeRate: {
+          val: 1,
+        },
+        demographicGrowth: {
+          val: 1,
+        },
+        fuelPriceRate: {
+          val: 1,
+        },
       },
       {
         id: "pessimistic",
         name: "Pessimistic Scenario",
         energyPriceTrend: "increase",
         investmentCostTrend: "increase",
-        discountRate: 1,
-        incomeRate: 1,
-        demographicGrowth: 1,
-        fuelPriceRate: 1,
+        discountRate: {
+          val: 1,
+        },
+        incomeRate: {
+          val: 1,
+        },
+        demographicGrowth: {
+          val: 1,
+        },
+        fuelPriceRate: {
+          val: 1,
+        },
       },
     ],
   };
+
+  migrate(): void {
+    this.module.scenarios.forEach((scenario) => {
+      if (typeof scenario.discountRate === "number") {
+        scenario.discountRate = {
+          val: scenario.discountRate,
+        };
+      }
+      if (typeof scenario.incomeRate === "number") {
+        scenario.incomeRate = {
+          val: scenario.incomeRate,
+        };
+      }
+      if (typeof scenario.demographicGrowth === "number") {
+        scenario.demographicGrowth = {
+          val: scenario.demographicGrowth,
+        };
+      }
+      if (typeof scenario.fuelPriceRate === "number") {
+        scenario.fuelPriceRate = {
+          val: scenario.fuelPriceRate,
+        };
+      }
+    });
+  }
 }
 </script>
