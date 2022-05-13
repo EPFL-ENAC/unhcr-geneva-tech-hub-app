@@ -127,7 +127,9 @@ import { round } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 
-@Component
+@Component({
+  name: "FormItemComponent",
+})
 export default class FormItemComponent extends Vue {
   @VModel({ type: [String, Number, Boolean, Array, Object] })
   model!: string | number | boolean | string[] | RangeModel | undefined;
