@@ -3,8 +3,62 @@
     <v-sheet class="country-list overflow-y-auto">
       <v-container fluid>
         <v-row>
-          <v-col> filtre un </v-col>
-          <v-col class="country-list__actions d-flex justify-end align-center">
+          <v-col cols="10" class="d-flex align-center justify-left">
+            <v-text-field
+              v-model="searchName"
+              tabindex="2"
+              name="search name"
+              label="Search by shelter name"
+              type="text"
+              max-width="50px"
+            />
+            <v-radio-group v-model="shelterType" row>
+              <v-radio label="Emergency" value="Emergency">
+                <template v-slot:label>
+                  <div class="d-flex align-end">
+                    <v-icon :class="`c-${shelterColors['Emergency'].name}`">
+                      mdi-{{ shelterIcons["Emergency"] }}
+                    </v-icon>
+                    Emergency
+                  </div>
+                </template>
+              </v-radio>
+              <v-radio label="Transitional" value="Transitional">
+                <template v-slot:label>
+                  <div class="d-flex align-end">
+                    <v-icon :class="`c-${shelterColors['Transitional'].name}`">
+                      mdi-{{ shelterIcons["Transitional"] }}
+                    </v-icon>
+                    Transitional
+                  </div>
+                </template>
+              </v-radio>
+              <v-radio label="Durable" value="Durable">
+                <template v-slot:label>
+                  <div class="d-flex align-end">
+                    <v-icon :class="`c-${shelterColors['Durable'].name}`">
+                      mdi-{{ shelterIcons["Durable"] }}
+                    </v-icon>
+                    Durable
+                  </div>
+                </template>
+              </v-radio>
+            </v-radio-group>
+            <v-btn
+              icon
+              rounded
+              title="reset filters"
+              bottom
+              right
+              @click="resetFilters"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-col>
+          <v-col
+            cols="2"
+            class="country-list__actions d-flex justify-end align-center"
+          >
             <v-btn text :disabled="!$can('create')" @click="addProject">
               <v-icon>mdi-plus-thick</v-icon>
               New project
@@ -31,7 +85,7 @@
                   }"
                 >
                   <v-row>
-                    <v-col cols="8">
+                    <v-col cols="9">
                       <v-card-subtitle class="pb-0">
                         {{ project.shelter_type }}
                       </v-card-subtitle>
@@ -71,10 +125,10 @@
                       </v-card-actions>
                       <v-card-subtitle class="pb-0">
                         <v-row>
-                          <v-col>
+                          <v-col cols="5">
                             Created at: {{ project.created_at | formatDate }}
                           </v-col>
-                          <v-col>
+                          <v-col cols="5">
                             Last modified: {{ project.updated_at | formatDate }}
                           </v-col>
                           <v-col>
@@ -86,7 +140,7 @@
                         </v-row>
                       </v-card-subtitle>
                     </v-col>
-                    <v-col cols="4">
+                    <v-col cols="3">
                       <v-row>
                         <v-img></v-img>
                       </v-row>
@@ -126,13 +180,14 @@
 import TerritoryMap from "@/components/commons/TerritoryMap.vue";
 import NewShelterDialog from "@/components/shelter_sustainability/NewShelterDialog.vue";
 import { CountriesInfoMap } from "@/store/GhgInterface";
-import { Shelter } from "@/store/ShelterInterface";
+import { listOfShelterType, Shelter } from "@/store/ShelterInterface";
 import { SyncDatabase } from "@/utils/couchdb";
 import {
   countries as Countries,
   Country as CountryWithLat,
 } from "@/utils/countriesAsList";
 import flagEmoji from "@/utils/flagEmoji";
+import { shelterColors } from "@/views/shelter_sustainability/shelterTypeColors";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
 
@@ -164,6 +219,8 @@ export default class ProjectList extends Vue {
    */
 
   newName = "";
+  searchName = "";
+  shelterType = "";
   shelters!: [];
   shelterDialog = false;
   duplicateDoc!: (shelter: Shelter) => Promise<null>;
@@ -172,6 +229,8 @@ export default class ProjectList extends Vue {
   getShelters!: () => Promise<null>;
   db!: SyncDatabase<Shelter> | null;
 
+  listOfShelterType = listOfShelterType;
+  shelterColors = shelterColors;
   createProjectFormValid = true;
   rules = [
     (v: string): boolean | string => !!v || `A name is required`,
@@ -193,6 +252,11 @@ export default class ProjectList extends Vue {
     Durable: "home",
   };
 
+  public resetFilters(): void {
+    this.searchName = "";
+    this.shelterType = "";
+  }
+
   public get coordinates(): (number | string)[][] {
     return this.shelters
       .filter((x: Shelter) => !!x.latitude)
@@ -200,7 +264,16 @@ export default class ProjectList extends Vue {
   }
 
   public get projects(): Record<string, string | number>[] {
-    return this.shelters;
+    return this.shelters
+      .filter(
+        (shelter: Shelter) => shelter.name.indexOf(this.searchName) !== -1
+      )
+      .filter((shelter: Shelter) => {
+        if (this.shelterType) {
+          return shelter.shelter_type === this.shelterType;
+        }
+        return true;
+      });
   }
 
   get computedGridTemplate(): string {
@@ -225,6 +298,9 @@ export default class ProjectList extends Vue {
 </script>
 
 <style lang="scss" scoped>
+::v-deep .v-text-field {
+  max-width: 200px;
+}
 .shelter__list {
   $header_height: 64px;
   display: grid;
@@ -304,5 +380,19 @@ export default class ProjectList extends Vue {
       visibility: visible;
     }
   }
+}
+</style>
+
+<style scoped>
+>>> .c-blue {
+  color: var(--c-blue);
+}
+
+>>> .c-brown {
+  color: var(--c-brown);
+}
+
+>>> .c-grey {
+  color: var(--c-grey);
 }
 </style>

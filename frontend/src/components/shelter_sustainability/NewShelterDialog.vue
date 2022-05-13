@@ -84,7 +84,9 @@ export default class NewShelterDialog extends Vue {
   }
 
   get existingNames(): string[] {
-    return this.shelters.map((shelter: Shelter) => shelter._id) ?? [];
+    return this.shelters
+      .filter((shelter: Shelter) => shelter._id != undefined)
+      .map((shelter: Shelter) => shelter?._id ?? "");
   }
   public closeSiteDialog(): void {
     this.dialogOpen = false;
