@@ -14,6 +14,7 @@
                   type="number"
                   clearable
                   @change="changeYear(index, $event)"
+                  @click:clear="removeYear(index)"
                 ></v-text-field>
               </template>
             </v-edit-dialog>
@@ -56,10 +57,7 @@ export default class EnergyYearTabs<T extends YearItem> extends Vue {
 
   changeYear(index: number, newValue: number | null): void {
     if (newValue === null) {
-      this.syncedItems.splice(index, 1);
-      if (this.yearTab === index) {
-        this.yearTab -= 1;
-      }
+      this.removeYear(index);
     } else {
       const newYearIndex = newValue - this.yearOffset;
       if (
@@ -69,6 +67,13 @@ export default class EnergyYearTabs<T extends YearItem> extends Vue {
         this.syncedItems[index].yearIndex = newYearIndex;
         this.syncedItems = sortBy(this.syncedItems, (item) => item.yearIndex);
       }
+    }
+  }
+
+  removeYear(index: number): void {
+    this.syncedItems.splice(index, 1);
+    if (this.yearTab === index) {
+      this.yearTab -= 1;
     }
   }
 }
