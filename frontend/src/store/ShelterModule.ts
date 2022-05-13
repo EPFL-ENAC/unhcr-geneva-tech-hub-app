@@ -9,6 +9,7 @@ import {
   getTotalEnvPerf,
 } from "@/store/ShelterModuleUtils";
 import { SyncDatabase } from "@/utils/couchdb";
+import { cloneDeep } from "lodash";
 import {
   ActionContext,
   ActionTree,
@@ -140,6 +141,31 @@ const actions: ActionTree<ShelterState, RootState> = {
       return context.state.localCouch?.remoteDB.post(value).then(() => {
         context.commit("ADD_DOC", value);
       });
+    }
+  },
+  duplicateDoc: (
+    context: ActionContext<ShelterState, RootState>,
+    value: Shelter
+  ) => {
+    const user = context.rootGetters["UserModule/user"] as CouchUser;
+    if (user.name) {
+      let newValue = cloneDeep(value);
+      newValue.updated_at = new Date().toISOString();
+      newValue.updated_by = user.name;
+      delete newValue._rev; // to avoid conflict
+      newValue.name = `${newValue.name} (copy)`;
+      delete newValue._id; // = value.name; // hopefully it does not already exist
+
+      context.commit("SET_SHELTER", newValue);
+      newValue = context.state.shelter;
+      return context.state.localCouch?.remoteDB
+        .post(context.state.shelter)
+        .then((response) => {
+          newValue._id = response.id;
+          newValue._rev = response.rev;
+          context.commit("SET_SHELTER", newValue);
+          context.commit("ADD_DOC", context.state.shelter);
+        });
     }
   },
   removeDoc: (context: ActionContext<ShelterState, RootState>, id) => {

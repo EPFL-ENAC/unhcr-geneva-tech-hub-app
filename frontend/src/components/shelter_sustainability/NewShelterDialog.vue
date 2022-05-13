@@ -28,7 +28,14 @@
           >
             Cancel
           </v-btn>
-          <v-btn color="blue darken-1" tabindex="3" submit type="submit" text>
+          <v-btn
+            color="blue darken-1"
+            tabindex="3"
+            :disabled="!createProjectFormValid"
+            submit
+            type="submit"
+            text
+          >
             Create
           </v-btn>
         </v-card-actions>
@@ -39,6 +46,7 @@
 
 <script lang="ts">
 import CountrySelect from "@/components/commons/CountrySelect.vue";
+import { Shelter } from "@/store/ShelterInterface";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
@@ -75,15 +83,27 @@ export default class NewShelterDialog extends Vue {
     this.$emit("update:open", v);
   }
 
+  get existingNames(): string[] {
+    return this.shelters.map((shelter: Shelter) => shelter._id) ?? [];
+  }
   public closeSiteDialog(): void {
     this.dialogOpen = false;
   }
 
   createProjectFormValid = true;
+
+  public ruleShelterAlreadyExist(value: string): boolean | string {
+    return (
+      this.existingNames.indexOf(value) === -1 ||
+      `A shelter with this _id (name) already exist`
+    );
+  }
+
   rules = [
     (v: string): boolean | string => !!v || `A name is required`,
     (v: string): boolean | string =>
       v?.length > 1 || `Name should have a length >= 1`,
+    this.ruleShelterAlreadyExist,
   ];
 
   public submitForm(): void {

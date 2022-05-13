@@ -58,6 +58,11 @@
 <script lang="ts">
 import { ScoreCard, Shelter } from "@/store/ShelterInterface";
 import { SyncDatabase } from "@/utils/couchdb";
+import {
+  alpha,
+  alphaSecondary,
+  shelterColors,
+} from "@/views/shelter_sustainability/shelterTypeColors";
 import { ScatterChart } from "echarts/charts";
 import {
   GridComponent,
@@ -73,6 +78,7 @@ import { CallbackDataParams, EChartsOption } from "echarts/types/dist/shared";
 import VChart from "vue-echarts";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
+
 use([
   CanvasRenderer,
   SingleAxisComponent,
@@ -107,29 +113,9 @@ export default class Step8ScoreCard extends Vue {
   db!: SyncDatabase<Shelter> | null;
   scorecards!: ScoreCard[];
 
-  alpha = 0.2;
-  alphaSecondary = 0.6;
-
-  ///Blue = emergency shelter; Brown = transitional shelter; Grey = Durable shelter
-  colors = {
-    Emergency: {
-      primary: `rgba(32,135,200,1)`, // blue unhcr cccm
-      secondary: `rgba(32,135,200,${this.alphaSecondary})`,
-    },
-    Transitional: {
-      primary: `rgba(157,72,56,1)`, // brown unhcr cccm
-      secondary: `rgba(157,72,56,${this.alphaSecondary})`,
-    },
-    Durable: {
-      primary: `rgba(84,84,86,1)`, // grey unhcr
-      secondary: `rgba(84,84,86,${this.alphaSecondary})`,
-    },
-    "": {
-      // default
-      primary: `rgba(248, 228, 210,1)`, // secondary colour 1
-      secondary: `rgba(248, 228, 210,${this.alphaSecondary})`,
-    },
-  };
+  alpha = alpha;
+  alphaSecondary = alphaSecondary;
+  colors = shelterColors;
 
   configs = [
     {

@@ -14,7 +14,7 @@ export const listOfShelterType: ShelterType[] = [
 
 export type ShelterType = "Emergency" | "Transitional" | "Durable";
 export interface Shelter {
-  _id: string;
+  _id?: string;
   _rev?: string;
   name: string;
   organisation: string;

@@ -5,17 +5,26 @@
       v-for="(coordinate, key) in coordinates"
       :key="key"
       :lat-lng="coordinate"
-    ></l-marker>
+      :icon="getIcon('pin', coordinate[2])"
+    >
+    </l-marker>
   </l-map>
 </template>
 
 <script lang="ts">
+import { ShelterType } from "@/store/ShelterInterface";
 import {
   attributionMap,
   defaultCoordinates,
   defaultZoom,
   urlMap,
 } from "@/utils/mapWorld";
+import {
+  alpha,
+  alphaSecondary,
+  shelterColors,
+} from "@/views/shelter_sustainability/shelterTypeColors";
+import L from "leaflet";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { LIcon, LMap, LMarker, LTileLayer } from "vue2-leaflet";
 
@@ -29,11 +38,51 @@ import { LIcon, LMap, LMarker, LTileLayer } from "vue2-leaflet";
 })
 export default class TerritoryMap extends Vue {
   @Prop({ type: Array, required: true, default: () => [] })
-  readonly coordinates!: number[][];
+  readonly coordinates!: (number | string)[][];
+  @Prop({ type: Boolean, default: false })
+  readonly customIcon!: boolean;
 
   readonly url = urlMap;
   readonly attribution = attributionMap;
   readonly zoom = defaultZoom;
   readonly defaultCoordinates = defaultCoordinates;
+
+  alpha = alpha;
+  alphaSecondary = alphaSecondary;
+  shelterColors = shelterColors;
+
+  shelterIcons = {
+    Emergency: "home-variant-outline",
+    Transitional: "home-outline",
+    Durable: "home",
+  };
+
+  public getIcon(defaultIcon: string, shelterType: ShelterType): L.DivIcon {
+    return L.divIcon({
+      html: "<i></i>",
+      iconSize: [16, 16],
+      className: `mdi mdi-${this.shelterIcons[shelterType] || defaultIcon} c-${
+        this.shelterColors[shelterType].name
+      } customIcon`,
+    });
+  }
 }
 </script>
+
+<style scoped>
+>>> .customIcon {
+  font-size: 16px;
+}
+
+>>> .c-blue {
+  color: var(--c-blue);
+}
+
+>>> .c-brown {
+  color: var(--c-brown);
+}
+
+>>> .c-grey {
+  color: var(--c-grey);
+}
+</style>

@@ -3,6 +3,7 @@
     <v-sheet class="country-list overflow-y-auto">
       <v-container fluid>
         <v-row>
+          <v-col> filtre un </v-col>
           <v-col class="country-list__actions d-flex justify-end align-center">
             <v-btn text :disabled="!$can('create')" @click="addProject">
               <v-icon>mdi-plus-thick</v-icon>
@@ -29,52 +30,83 @@
                     'project--readonly': !$can('edit', project),
                   }"
                 >
-                  <v-card-subtitle class="pb-0">
-                    {{ project.shelter_type }}
-                  </v-card-subtitle>
-                  <v-card-title>
-                    {{ project.name }}
-                  </v-card-title>
-                  <v-card-subtitle class="pb-0">
-                    <span v-if="project.location_name">
-                      {{ project.location_name }}
-                    </span>
-                    <span
-                      v-if="project.location_name && project.location_country"
-                      >,</span
-                    >
-                    <span v-if="project.location_country">
-                      {{ countriesMap[project.location_country].name }}
-                    </span>
-                  </v-card-subtitle>
-                  <v-card-actions
-                    v-if="$can('delete', project)"
-                    class="d-flex flex-row justify-end"
-                  >
-                    <v-btn
-                      outlined
-                      rounded
-                      @click.once.prevent.stop="() => removeDoc(project._id)"
-                    >
-                      Delete project
-                    </v-btn>
-                  </v-card-actions>
-                  <v-card-subtitle class="pb-0">
-                    <v-row>
-                      <v-col>
-                        Created at: {{ project.created_at | formatDate }}
-                      </v-col>
-                      <v-col>
-                        Last modified: {{ project.updated_at | formatDate }}
-                      </v-col>
-                      <v-col>
-                        <div class="project__hidden-child">
-                          <span v-if="$can('edit', project)">edit</span>
-                          <span v-else>read</span>
-                        </div>
-                      </v-col>
-                    </v-row>
-                  </v-card-subtitle>
+                  <v-row>
+                    <v-col cols="8">
+                      <v-card-subtitle class="pb-0">
+                        {{ project.shelter_type }}
+                      </v-card-subtitle>
+                      <v-card-title>
+                        <v-icon>
+                          mdi-{{ shelterIcons[project.shelter_type] }}
+                        </v-icon>
+                        {{ project.name }}
+                      </v-card-title>
+                      <v-card-subtitle class="pb-0">
+                        <span v-if="project.location_name">
+                          {{ project.location_name }}
+                        </span>
+                        <span
+                          v-if="
+                            project.location_name && project.location_country
+                          "
+                          >,</span
+                        >
+                        <span v-if="project.location_country">
+                          {{ countriesMap[project.location_country].name }}
+                        </span>
+                      </v-card-subtitle>
+                      <v-card-actions
+                        v-if="$can('delete', project)"
+                        class="d-flex flex-row justify-end"
+                      >
+                        <v-btn
+                          outlined
+                          rounded
+                          @click.once.prevent.stop="
+                            () => removeDoc(project._id)
+                          "
+                        >
+                          Delete project
+                        </v-btn>
+                      </v-card-actions>
+                      <v-card-subtitle class="pb-0">
+                        <v-row>
+                          <v-col>
+                            Created at: {{ project.created_at | formatDate }}
+                          </v-col>
+                          <v-col>
+                            Last modified: {{ project.updated_at | formatDate }}
+                          </v-col>
+                          <v-col>
+                            <div class="project__hidden-child">
+                              <span v-if="$can('edit', project)">edit</span>
+                              <span v-else>read</span>
+                            </div>
+                          </v-col>
+                        </v-row>
+                      </v-card-subtitle>
+                    </v-col>
+                    <v-col cols="4">
+                      <v-row>
+                        <v-img></v-img>
+                      </v-row>
+                      <v-row>
+                        <v-col>
+                          <!-- bottom copy/delete -->
+                          <v-btn
+                            title="duplicate"
+                            rounded
+                            absolute
+                            bottom
+                            right
+                            @click.stop.prevent="duplicateDoc(project)"
+                          >
+                            <v-icon>mdi-content-duplicate</v-icon>
+                          </v-btn>
+                        </v-col>
+                      </v-row>
+                    </v-col>
+                  </v-row>
                 </v-card>
               </v-col>
             </v-row>
@@ -111,6 +143,7 @@ import { mapActions, mapState } from "vuex";
 
   methods: {
     ...mapActions("ShelterModule", [
+      "duplicateDoc",
       "removeDoc",
       "syncDB",
       "getShelters",
@@ -124,9 +157,16 @@ import { mapActions, mapState } from "vuex";
 })
 /** ProjectList */
 export default class ProjectList extends Vue {
+  /**
+   * TODO: add colors for Territory Map [done]
+   * Add filters for list of shelters
+   * Add duplicate button // remove button in place
+   */
+
   newName = "";
   shelters!: [];
   shelterDialog = false;
+  duplicateDoc!: (shelter: Shelter) => Promise<null>;
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
   getShelters!: () => Promise<null>;
@@ -147,10 +187,16 @@ export default class ProjectList extends Vue {
     {} as CountriesInfoMap
   );
 
-  public get coordinates(): number[][] {
+  shelterIcons = {
+    Emergency: "home-variant-outline",
+    Transitional: "home-outline",
+    Durable: "home",
+  };
+
+  public get coordinates(): (number | string)[][] {
     return this.shelters
       .filter((x: Shelter) => !!x.latitude)
-      .map((x: Shelter) => [x.latitude, x.longitude]);
+      .map((x: Shelter) => [x.latitude, x.longitude, x.shelter_type]);
   }
 
   public get projects(): Record<string, string | number>[] {
