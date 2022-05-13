@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import Energy from "@/components/reference_data/Energy.vue";
+import GHG from "@/components/reference_data/GHG.vue";
 import IgesGrid2021 from "@/components/reference_data/IgesGrid2021.vue";
 import Materials from "@/components/reference_data/Materials.vue";
 import MaterialsTransport from "@/components/reference_data/MaterialsTransport.vue";
@@ -46,7 +46,7 @@ import { mapActions, mapGetters } from "vuex";
   },
   components: {
     MaterialsTransport,
-    Energy,
+    GHG,
     Materials,
     IgesGrid2021,
   },
@@ -70,7 +70,7 @@ export default class App extends Vue {
       content: "iges_grid_2021",
       componentName: "IgesGrid2021",
     },
-    { tab: "Energy", content: "energy", componentName: "Energy" },
+    { tab: "GHG", content: "GHG", componentName: "GHG" },
     { tab: "Materials", content: "materials", componentName: "Materials" },
     {
       tab: "Materials transport",

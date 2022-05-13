@@ -92,11 +92,11 @@ import HybridMix from "@/components/green_house_gaz/energy/HybridMix.vue";
 import NationalGrid from "@/components/green_house_gaz/energy/NationalGrid.vue";
 import RenewableEnergy from "@/components/green_house_gaz/energy/RenewableEnergy.vue";
 import { GreenHouseGaz } from "@/store/GhgInterface";
-import {
-  EnergyReferences,
-  ReferenceItemInterface,
-} from "@/store/GhgReferenceEnergyModule";
 import { IgesItemInterface } from "@/store/GhgReferenceIgesGridModule";
+import {
+  ItemReferencesMap,
+  ReferenceItemInterface,
+} from "@/store/GhgReferenceModule";
 import { VForm } from "@/utils/vuetify";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
@@ -104,15 +104,15 @@ import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("GhgReferenceEnergyModule", ["energy"]),
+    ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
     ...mapGetters("GhgReferenceIgesGridModule", ["iges_grid_2021"]),
     ...mapGetters("GhgModule", ["project"]),
   },
   methods: {
-    ...mapActions("GhgReferenceEnergyModule", {
-      syncDBGhgEnergy: "syncDB",
-      closeDBGhgEnergy: "closeDB",
-      getAllDocsGhgEnergy: "getAllDocs",
+    ...mapActions("GhgReferenceModule", {
+      syncDBGhg: "syncDB",
+      closeDBGhg: "closeDB",
+      getAllDocsGhg: "getAllDocs",
     }),
     ...mapActions("GhgReferenceIgesGridModule", {
       syncDBGhgIgesGrid: "syncDB",
@@ -141,15 +141,16 @@ export default class FacilityDialog extends Vue {
     form: VForm;
   };
   project!: GreenHouseGaz;
-  syncDBGhgEnergy!: () => null;
-  closeDBGhgEnergy!: () => Promise<null>;
-  getAllDocsGhgEnergy!: () => Promise<EnergyReferences>;
+  ghgMapRef!: ItemReferencesMap;
+  syncDBGhg!: () => null;
+  closeDBGhg!: () => Promise<null>;
+  getAllDocsGhg!: () => Promise<ReferenceItemInterface[]>;
 
   syncDBGhgIgesGrid!: () => null;
   closeDBGhgIgesGrid!: () => Promise<null>;
   getAllDocsGhgIgesGrid!: () => Promise<IgesItemInterface[]>;
 
-  energy!: ReferenceItemInterface[];
+  references!: ReferenceItemInterface[];
   iges_grid_2021!: IgesItemInterface[];
 
   formValid = false;
@@ -204,31 +205,13 @@ export default class FacilityDialog extends Vue {
     this.isOpen = false;
   }
 
-  private get energyMap(): EnergyReferences | undefined {
-    if (!this.energy) {
-      return undefined;
-    }
-    return this.energy.reduce(
-      (acc: EnergyReferences, item: ReferenceItemInterface) => {
-        acc[item._id] = item;
-        return acc;
-      },
-      {} as EnergyReferences
-    );
-  }
-
   public async computeCost(): Promise<number> {
     let result = 0;
-    if (
-      !this.energy ||
-      !this.iges_grid_2021 ||
-      !this.energyMap ||
-      !this.project.country_code
-    ) {
+    if (!this.iges_grid_2021 || !this.ghgMapRef || !this.project.country_code) {
       // energy and iges not retrieved yet.
       return Promise.resolve(result);
     }
-    const { REF_DIES, REF_GRD, REF_CONF_EFF } = this.energyMap;
+    const { REF_DIES, REF_GRD, REF_EFF_DIES } = this.ghgMapRef;
 
     const iges_grid_2021 = this.iges_grid_2021.find(
       (el) => el._id === this.project.country_code
@@ -238,7 +221,7 @@ export default class FacilityDialog extends Vue {
     const { dieselLiters, gridPower } = this.localItem || {};
 
     if (dieselLiters) {
-      result += ((dieselLiters / REF_CONF_EFF.value) * REF_DIES.value) / 1000;
+      result += ((dieselLiters / REF_EFF_DIES.value) * REF_DIES.value) / 1000;
     }
     if (gridPower) {
       result += (gridPower * REF_GRD.value) / 1000;
@@ -268,15 +251,15 @@ export default class FacilityDialog extends Vue {
   }
 
   public mounted(): void {
-    this.syncDBGhgEnergy();
-    this.getAllDocsGhgEnergy();
+    this.syncDBGhg();
+    this.getAllDocsGhg();
 
     this.syncDBGhgIgesGrid();
     this.getAllDocsGhgIgesGrid();
   }
 
   public destroyed(): void {
-    this.closeDBGhgEnergy();
+    this.closeDBGhg();
     this.closeDBGhgIgesGrid();
   }
 }

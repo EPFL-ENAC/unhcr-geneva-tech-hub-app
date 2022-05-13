@@ -1,5 +1,5 @@
 <template>
-  <l-map :center="defaultCoordinates" :zoom="2" :min-zoom="2">
+  <l-map :center="defaultCoordinates" :zoom="2" :min-zoom="2" :max-zoom="4">
     <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
     <l-marker
       v-for="(coordinate, key) in coordinates"

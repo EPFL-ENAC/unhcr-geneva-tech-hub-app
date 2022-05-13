@@ -151,14 +151,26 @@ import {
   WashTruckingItemResults,
   WashTruckingSurvey,
 } from "@/store/GhgInterface";
+import {
+  ItemReferencesMap,
+  ReferenceItemInterface,
+} from "@/store/GhgReferenceModule";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import { computeChangeInEmission } from "../changeInEmission";
 
 @Component({
   computed: {
     ...mapGetters("GhgModule", ["project"]),
+    ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
+  },
+  methods: {
+    ...mapActions("GhgReferenceModule", {
+      syncDBGhg: "syncDB",
+      closeDBGhg: "closeDB",
+      getAllDocsGhg: "getAllDocs",
+    }),
   },
   components: {
     SurveyItemTitle,
@@ -170,6 +182,12 @@ export default class Trucking extends Vue {
 
   @Prop([Object, Array])
   readonly form: WashTruckingSurvey | undefined;
+
+  syncDBGhg!: () => null;
+  closeDBGhg!: () => Promise<null>;
+  getAllDocsGhg!: () => Promise<ReferenceItemInterface[]>;
+
+  ghgMapRef!: ItemReferencesMap;
 
   project!: GreenHouseGaz;
 
@@ -236,11 +254,17 @@ export default class Trucking extends Vue {
   private computeResults(
     washInput: WashTruckingItemInputs
   ): WashTruckingItemResults {
-    const REF_WSH_D = 0.25213; //	Need reference cf with cara@epfl.ch
+    // use GHG_REFERENCE table
+    if (!this.ghgMapRef) {
+      // energy and iges not retrieved yet.
+      throw new Error("ghg reference not loaded");
+    }
+    const { REF_WSH_D } = this.ghgMapRef;
+
     const res = {} as WashTruckingItemResults;
     res.TR_NUM = Math.ceil(washInput.WACL / washInput.TR_VOL);
     res.TR_DIST = res.TR_NUM * washInput.TOT_WS * 2;
-    res.CO2_WSH_TRB = (REF_WSH_D * res.TR_DIST) / 1000;
+    res.CO2_WSH_TRB = (REF_WSH_D.value * res.TR_DIST) / 1000;
     return res;
   }
 
@@ -346,6 +370,15 @@ export default class Trucking extends Vue {
       disabled: true,
     },
   ];
+
+  public mounted(): void {
+    this.syncDBGhg();
+    this.getAllDocsGhg();
+  }
+
+  public destroyed(): void {
+    this.closeDBGhg();
+  }
 }
 </script>
 

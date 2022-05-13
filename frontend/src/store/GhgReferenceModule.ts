@@ -8,7 +8,7 @@ import {
 } from "vuex";
 import { RootState } from ".";
 
-export type EnergyReferences = Record<string, ReferenceItemInterface>;
+export type ItemReferencesMap = Record<string, ReferenceItemInterface>;
 export type referenceType = "number" | "percentage";
 export interface ReferenceItemInterface {
   description: string;
@@ -18,17 +18,17 @@ export interface ReferenceItemInterface {
   _id: string;
 }
 
-interface GhgReferenceEnergyState {
+interface GhgReferenceState {
   items: ReferenceItemInterface[] | null;
   itemsLength: number;
-  localCouch: SyncDatabase<EnergyReferences> | null;
+  localCouch: SyncDatabase<ReferenceItemInterface> | null;
 }
 
-const DB_NAME = "ghg_reference_energy";
+const DB_NAME = "ghg_reference";
 const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 
 /** Default Configure state value */
-function generateState(): GhgReferenceEnergyState {
+function generateState(): GhgReferenceState {
   return {
     items: null,
     itemsLength: 0,
@@ -37,12 +37,24 @@ function generateState(): GhgReferenceEnergyState {
 }
 
 /** Getters */
-const getters: GetterTree<GhgReferenceEnergyState, RootState> = {
-  energy: (s): ReferenceItemInterface[] | null => s.items,
+const getters: GetterTree<GhgReferenceState, RootState> = {
+  items: (s): ReferenceItemInterface[] | null => s.items,
+  ghgMapRef: (s): ItemReferencesMap | undefined => {
+    if (!s.items) {
+      return undefined;
+    }
+    return s.items.reduce(
+      (acc: ItemReferencesMap, item: ReferenceItemInterface) => {
+        acc[item._id] = item;
+        return acc;
+      },
+      {} as ItemReferencesMap
+    );
+  },
 };
 
 /** Mutations */
-const mutations: MutationTree<GhgReferenceEnergyState> = {
+const mutations: MutationTree<GhgReferenceState> = {
   INIT_DB(state) {
     state.localCouch = new SyncDatabase(DB_NAME);
   },
@@ -58,8 +70,8 @@ const mutations: MutationTree<GhgReferenceEnergyState> = {
 };
 
 /** Action */
-const actions: ActionTree<GhgReferenceEnergyState, RootState> = {
-  syncDB: (context: ActionContext<GhgReferenceEnergyState, RootState>) => {
+const actions: ActionTree<GhgReferenceState, RootState> = {
+  syncDB: (context: ActionContext<GhgReferenceState, RootState>) => {
     context.commit("INIT_DB");
     const localCouch = context.state.localCouch;
 
@@ -67,10 +79,10 @@ const actions: ActionTree<GhgReferenceEnergyState, RootState> = {
       context.dispatch("getAllDocs");
     });
   },
-  closeDB: (context: ActionContext<GhgReferenceEnergyState, RootState>) => {
+  closeDB: (context: ActionContext<GhgReferenceState, RootState>) => {
     context.commit("CLOSE_DB");
   },
-  getAllDocs: (context: ActionContext<GhgReferenceEnergyState, RootState>) => {
+  getAllDocs: (context: ActionContext<GhgReferenceState, RootState>) => {
     const db = context.state.localCouch?.db;
     if (db) {
       db.query("configuration/list")
@@ -88,10 +100,7 @@ const actions: ActionTree<GhgReferenceEnergyState, RootState> = {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
   },
-  updateDoc: (
-    context: ActionContext<GhgReferenceEnergyState, RootState>,
-    value
-  ) => {
+  updateDoc: (context: ActionContext<GhgReferenceState, RootState>, value) => {
     context.commit("SET_ITEMS", value);
     const db = context.state.localCouch?.db;
     if (db) {
@@ -103,7 +112,7 @@ const actions: ActionTree<GhgReferenceEnergyState, RootState> = {
 };
 
 /** VuexStore */
-const GhgReferenceModule: Module<GhgReferenceEnergyState, RootState> = {
+const GhgReferenceModule: Module<GhgReferenceState, RootState> = {
   namespaced: true,
   state: generateState(),
   getters,

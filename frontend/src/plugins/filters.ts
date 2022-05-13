@@ -17,7 +17,7 @@ export function formatNumber(
   n: number,
   decimal = 2,
   sign = false,
-  style: "decimal"
+  style?: "decimal"
 ): string {
   if (n === null || isNaN(n)) {
     return "—";
@@ -25,6 +25,7 @@ export function formatNumber(
   return Intl.NumberFormat("fr-mathmono", {
     minimumFractionDigits: 0,
     maximumFractionDigits: decimal,
+    maximumSignificantDigits: 3,
     signDisplay: sign ? "exceptZero" : undefined,
     style,
   }).format(n);
