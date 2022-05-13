@@ -8,7 +8,7 @@
               v-model="searchName"
               tabindex="2"
               name="search name"
-              label="Search by shelter name"
+              label="Search"
               type="text"
               max-width="50px"
             />
@@ -148,7 +148,7 @@
                         <v-col>
                           <!-- bottom copy/delete -->
                           <v-btn
-                            title="duplicate"
+                            title="Duplicate projects"
                             rounded
                             absolute
                             bottom
