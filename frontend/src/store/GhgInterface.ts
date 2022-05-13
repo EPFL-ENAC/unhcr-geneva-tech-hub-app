@@ -8,6 +8,8 @@ export interface Country {
 export interface CountryInfo {
   name: string;
   code: string;
+  lat: number;
+  lon: number;
   emoji: string;
 }
 export interface Site {

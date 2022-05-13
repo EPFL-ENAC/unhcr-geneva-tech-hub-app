@@ -1,17 +1,6 @@
 <template>
   <v-container fluid>
-    <v-row>
-      <v-col>
-        <h2 class="text-h4 project-shelter__h3 font-weight-medium">
-          WASH - TRUCKING
-        </h2>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-divider></v-divider>
-      </v-col>
-    </v-row>
+    <survey-item-title :title-key="title" />
     <v-row>
       <v-col :cols="4">
         <v-card elevation="2">
@@ -146,6 +135,7 @@
 </template>
 
 <script lang="ts">
+import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import {
   GreenHouseGaz,
   WashTruckingItemBalance,
@@ -161,13 +151,22 @@ import { mapGetters } from "vuex";
   computed: {
     ...mapGetters("GhgModule", ["project"]),
   },
+  components: {
+    SurveyItemTitle,
+  },
 })
 export default class Trucking extends Vue {
+  @Prop({ type: String, required: true, default: "" })
+  readonly titleKey!: string;
+
   @Prop([Object, Array])
   readonly form: WashTruckingSurvey | undefined;
 
   project!: GreenHouseGaz;
 
+  public get title(): string {
+    return this.titleKey;
+  }
   public get washForm(): WashTruckingSurvey {
     return this.form || this.generateNewWashForm();
   }

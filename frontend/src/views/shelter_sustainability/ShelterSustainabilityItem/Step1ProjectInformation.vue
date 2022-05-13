@@ -121,13 +121,38 @@
                       />
                       <country-select
                         id="location_country"
-                        v-model="localShelter.location_country"
+                        v-model.number="localShelter['location_country']"
                         required
-                        :rules="rules"
                         label="Country"
                         type="text"
                         name="location_country"
+                        @update:latitude="updateLatitude"
+                        @update:longitude="updateLongitude"
                       />
+                      <v-text-field
+                        id="latitude"
+                        v-model.number="localShelter.latitude"
+                        name="latitude"
+                        label="latitude"
+                        :rules="latitudeRules"
+                        min="-90"
+                        max="90"
+                        type="number"
+                      />
+                      <v-text-field
+                        id="longitude"
+                        v-model.number="localShelter.longitude"
+                        name="longitude"
+                        label="longitude"
+                        min="-180"
+                        :rules="longitudeRules"
+                        max="180"
+                        type="number"
+                      />
+                      <form-item-component
+                        v-model="localShelter.img_url"
+                        v-bind="img_url"
+                      ></form-item-component>
                       <v-divider />
                       <input-with-info
                         v-model="localShelter.risk_flood"
@@ -158,38 +183,41 @@
 
 <script lang="ts">
 import CountrySelect from "@/components/commons/CountrySelect.vue";
+import FormItemComponent, {
+  FormItem,
+} from "@/components/commons/FormItemComponent.vue";
 import UserManager from "@/components/commons/UserManager.vue";
 import InputWithInfo from "@/components/shelter_sustainability/InputWithInfo.vue";
-import { Shelter } from "@/store/ShelterInterface";
+import { listOfShelterType, Shelter } from "@/store/ShelterInterface";
 import { cloneDeep } from "lodash";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 @Component({
   components: {
     CountrySelect,
     InputWithInfo,
     UserManager,
+    FormItemComponent,
   },
 })
 /** Project */
 export default class Step1 extends Vue {
   @Prop({ type: [Object], required: true })
   shelter!: Shelter;
+  localShelter = cloneDeep(this.shelter);
 
-  public get localShelter(): Shelter {
-    return cloneDeep(this.shelter);
-  }
-
-  public set localShelter(newShelter: Shelter) {
-    this.$emit("update:shelter", newShelter);
+  @Watch("shelter", { immediate: true, deep: true })
+  onShelterChange(newShelter: Shelter): void {
+    this.localShelter = cloneDeep(newShelter);
   }
 
   public updateFormInput(): void {
-    this.localShelter = Object.assign({}, this.localShelter);
+    const newShelter = Object.assign({}, this.localShelter);
+    this.$emit("update:shelter", newShelter);
   }
 
   occupantsOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  shelterTypes = ["Emergency", "Transitional", "Durable"];
+  shelterTypes = listOfShelterType;
   lifeExpectancy = [
     { label: "6 months or less", value: 0.5 },
     { label: "1 year", value: 1 },
@@ -242,9 +270,25 @@ export default class Step1 extends Vue {
 
   rules = [
     (v: string): boolean | string => !!v || `A name is required`,
-    (v: string): boolean | string =>
-      v?.length > 1 || `Name should have a length >= 1`,
+    (v: string): boolean | string => {
+      return v?.length > 1 || `Name should have a length >= 1`;
+    },
   ];
+
+  urlRules = [
+    (value: string): boolean | string =>
+      !value || this.isURL(value) || "URL is not valid",
+  ];
+
+  public isURL(value = ""): boolean {
+    let url!: URL;
+    try {
+      url = new URL(value);
+    } catch {
+      return false;
+    }
+    return url.protocol === "http:" || url.protocol === "https:";
+  }
 
   riskFlood = {
     id: "Local flood risk",
@@ -255,6 +299,39 @@ export default class Step1 extends Vue {
     id: "Local seismic risk",
     description:
       "Local seismic risk depends on numerous factors incuding: general area seismic risk (taking into account geological conditions), local soil type, density of shelter and other building construction, shelter and surrounding building heights, shelter and surrounding building construction techniques, etc. In defining shelter-specific seismic risk, refer to broader settlement seismic risk assessments and take into account immediate conditions around shelter sites.",
+  };
+
+  latitude: FormItem = {
+    type: "number",
+    key: "latitude",
+    label: "Latitude of the site",
+    unit: "Decimal Degrees",
+    min: -90,
+    max: 90,
+  };
+  longitude: FormItem = {
+    type: "number",
+    key: "longitude",
+    label: "Longitude of the site",
+    unit: "Decimal Degrees",
+    min: -180,
+    max: 180,
+  };
+
+  public updateLatitude(lat: number): void {
+    this.$set(this.localShelter, "latitude", lat);
+  }
+
+  public updateLongitude(lon: number): void {
+    this.$set(this.localShelter, "longitude", lon);
+  }
+
+  public img_url = {
+    type: "text",
+    key: "img_url",
+    label: "Shelter image url",
+    rules: this.urlRules,
+    optional: true,
   };
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <v-sheet elevation="2" rounded>
-    <v-container fluid>
+    <v-container fluid class="my-4">
       <v-row>
         <v-col cols="11">
           <v-select
