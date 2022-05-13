@@ -92,20 +92,36 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
         scenario.discountRate = {
           val: scenario.discountRate,
         };
+      } else if (scenario.discountRate === undefined) {
+        scenario.discountRate = {
+          val: 1,
+        };
       }
       if (typeof scenario.incomeRate === "number") {
         scenario.incomeRate = {
           val: scenario.incomeRate,
+        };
+      } else if (scenario.incomeRate === undefined) {
+        scenario.incomeRate = {
+          val: 1,
         };
       }
       if (typeof scenario.demographicGrowth === "number") {
         scenario.demographicGrowth = {
           val: scenario.demographicGrowth,
         };
+      } else if (scenario.demographicGrowth === undefined) {
+        scenario.demographicGrowth = {
+          val: 1,
+        };
       }
       if (typeof scenario.fuelPriceRate === "number") {
         scenario.fuelPriceRate = {
           val: scenario.fuelPriceRate,
+        };
+      } else if (scenario.fuelPriceRate === undefined) {
+        scenario.fuelPriceRate = {
+          val: 1,
         };
       }
     });
