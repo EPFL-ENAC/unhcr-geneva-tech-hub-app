@@ -1,17 +1,7 @@
 <template>
   <v-container fluid>
-    <v-row>
-      <v-col>
-        <h2 class="text-h4 project-shelter__h3 font-weight-medium">
-          Energy - Facilities
-        </h2>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-divider></v-divider>
-      </v-col>
-    </v-row>
+    <survey-item-title :title-key="title" />
+
     <v-row>
       <v-col>
         <v-card elevation="2" rounded>
@@ -36,7 +26,7 @@
                       facilityForm.baseline.results.totalCO2Emission
                         | formatNumber
                     }}
-                    tCO2/year
+                    tCO2e/year
                   </h3>
                 </v-col>
               </v-row>
@@ -62,7 +52,6 @@
                 :facilities="facilityForm.baseline.inputs"
                 :items.sync="facilityForm.endline.inputs"
                 :results="facilityForm.endline.results"
-                :balance="facilityForm.endline.resultsBalance"
                 :disabled="baselineMode"
                 @update:items="computeEndlineResults"
               />
@@ -76,7 +65,7 @@
                       facilityForm.endline.results.totalCO2Emission
                         | formatNumber
                     }}
-                    tCO2/year
+                    tCO2e/year
                     <span
                       :class="{
                         'facilities-positive': changeInEmissionPositive,
@@ -86,11 +75,10 @@
                       <v-icon :color="color">
                         {{ icon }}
                       </v-icon>
-                      {{ changeInEmissionSign }}
                       {{
                         facilityForm.endline.results.changeInEmission
-                          | formatNumber
-                      }}%
+                          | formatNumber(0, true, "percent")
+                      }}
                     </span>
                   </h3>
                 </v-col>
@@ -112,8 +100,10 @@
 </template>
 
 <script lang="ts">
+import { computeChangeInEmission } from "@/components/green_house_gaz/changeInEmission";
 import BaselineFacilitiesTable from "@/components/green_house_gaz/energy/BaselineFacilitiesTable.vue";
 import EndlineFacilitiesTable from "@/components/green_house_gaz/energy/EndlineFacilitiesTable.vue";
+import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import {
   EnergyFacilityInterventionItem,
   EnergyFacilityInterventionItemResult,
@@ -128,13 +118,20 @@ import { Component, Prop, Vue } from "vue-property-decorator";
   components: {
     BaselineFacilitiesTable,
     EndlineFacilitiesTable,
+    SurveyItemTitle,
   },
 })
 export default class Facilities extends Vue {
   @Prop([Object, Array])
   readonly form: EnergyFacilitySurvey | undefined;
+  @Prop({ type: String, required: true, default: "" })
+  readonly titleKey!: string;
 
   baselineMode = true;
+
+  public get title(): string {
+    return this.titleKey;
+  }
 
   public get facilityForm(): EnergyFacilitySurvey {
     return this.form || this.generateNewFacilitiesForm();
@@ -180,17 +177,11 @@ export default class Facilities extends Vue {
               (baselineInput: EnergyFacilityItem) =>
                 baselineInput.name === endlineInput.name
             ) ?? null;
-          let changeInEmission = 0;
+          let changeInEmission: number | null = null;
           if (baselineInput) {
-            const localCO2 = endlineInput.totalCO2Emission;
-            let refCO2 = baselineInput.totalCO2Emission;
-            if (refCO2 !== 0) {
-              // if refCO2 is 0 it's not valid
-              changeInEmission = ((localCO2 - refCO2) / refCO2) * 100;
-            } else {
-              refCO2 = 0.001;
-              changeInEmission = ((localCO2 - refCO2) / refCO2) * 100;
-            }
+            const endline = endlineInput.totalCO2Emission;
+            const baseline = baselineInput.totalCO2Emission;
+            changeInEmission = computeChangeInEmission(baseline, endline);
           }
           return {
             ...endlineInput,
@@ -219,7 +210,7 @@ export default class Facilities extends Vue {
         0
       ),
       changeInEmission: inputs.reduce(
-        (acc, el) => acc + el.changeInEmission,
+        (acc, el) => acc + (el?.changeInEmission ?? 0),
         0
       ),
     };
@@ -228,11 +219,15 @@ export default class Facilities extends Vue {
   }
 
   public get changeInEmissionPositive(): boolean {
-    return this.facilityForm.endline.results.changeInEmission > 0;
+    if (this.facilityForm.endline.results.changeInEmission)
+      return this.facilityForm.endline.results.changeInEmission > 0;
+    return false;
   }
 
   public get changeInEmissionNegative(): boolean {
-    return this.facilityForm.endline.results.changeInEmission < 0;
+    if (this.facilityForm.endline.results.changeInEmission)
+      return this.facilityForm.endline.results.changeInEmission < 0;
+    return false;
   }
   public get changeInEmissionSign(): string {
     // minus sign is already shown
@@ -241,6 +236,9 @@ export default class Facilities extends Vue {
 
   get icon(): string {
     const change = this.facilityForm.endline.results.changeInEmission;
+    if (change == null) {
+      return "mdi-triangle mdi-rotate-90";
+    }
     if (change > 0) {
       return "mdi-triangle";
     } else if (change < 0) {
@@ -252,6 +250,9 @@ export default class Facilities extends Vue {
 
   get color(): string {
     const change = this.facilityForm.endline.results.changeInEmission;
+    if (change == null) {
+      return "black";
+    }
     if (change > 0) {
       return "red";
     } else if (change < 0) {
@@ -351,12 +352,6 @@ export default class Facilities extends Vue {
           renewablePower: 0,
           totalCO2Emission: 0,
           changeInEmission: 0,
-        },
-        resultsBalance: {
-          TR_NUM_DIFF: 0,
-          TR_DIST_DIFF: 0,
-          CO2_WSH_TRB_DIFF: 0,
-          CO2_WSH_TRB_PER: 0,
         },
       },
     };

@@ -104,6 +104,7 @@
 </template>
 
 <script lang="ts">
+import { computeChangeInEmission } from "@/components/green_house_gaz/changeInEmission";
 import {
   EnergyFacilityInterventionItem,
   EnergyFacilityItem,
@@ -212,9 +213,12 @@ export default class InterventionDialog extends Vue {
     // it's all done in parent component Facilities
     this.selectFacility(this.localItem.name);
     if (this.selectedFacility) {
-      const localCO2 = this.localItem.totalCO2Emission;
-      const refCO2 = this.selectedFacility.totalCO2Emission;
-      this.localItem.changeInEmission = ((refCO2 - localCO2) / refCO2) * 100;
+      const endlineCO2 = this.localItem.totalCO2Emission;
+      const baselineCO2 = this.selectedFacility.totalCO2Emission;
+      this.localItem.changeInEmission = computeChangeInEmission(
+        baselineCO2,
+        endlineCO2
+      );
     }
     this.$emit("update:item", this.localItem);
     this.isOpen = false;

@@ -18,7 +18,7 @@
                 <v-select
                   v-model="localItem.facilityType"
                   :items="facilityTypes"
-                  label="facility type"
+                  label="Facility type"
                   name="type"
                   type="string"
                   item-text="name"
@@ -163,7 +163,7 @@ export default class FacilityDialog extends Vue {
   notPoweredName = notPoweredName;
   facilityTypes = facilityTypes;
 
-  rules = [(v: string): boolean | string => !!v || `field is required`];
+  rules = [(v: string): boolean | string => !!v || `Required`];
 
   public alreadyExist(name: string): boolean | string {
     return (
@@ -171,9 +171,7 @@ export default class FacilityDialog extends Vue {
     );
   }
   public get rulesName(): Rule[] {
-    const results = [
-      (v: string): boolean | string => !!v || `field is required`,
-    ];
+    const results = [(v: string): boolean | string => !!v || `Required`];
     if (this.isNewMode) {
       // check unicity only if not in edit mode
       results.push(this.alreadyExist);

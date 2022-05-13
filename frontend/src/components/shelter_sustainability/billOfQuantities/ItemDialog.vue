@@ -272,7 +272,7 @@ export default class DeleteItemDialog extends Vue {
   labourUnits = ["Hour", "Day", "Lump sum"];
   workerTypes = ["Skilled", "Unskilled"];
 
-  rules = [(v: string): boolean | string => !!v || `field is required`];
+  rules = [(v: string): boolean | string => !!v || `Required`];
 
   public get title(): string {
     return this.editedIndex === -1 ? "New item" : "Edit item";

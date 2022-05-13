@@ -105,24 +105,32 @@
             ></v-text-field>
           </v-card-text>
           <v-divider />
-          <v-card outlined>
+          <v-card
+            outlined
+            :class="{
+              'wash-positive':
+                washForm.endline.resultsBalance.changeInEmission > 0,
+              'wash-negative':
+                washForm.endline.resultsBalance.changeInEmission < 0,
+            }"
+          >
             <v-card-text>
               <v-text-field
                 v-for="washBalanceResult in washBalanceResultsPart2"
                 :key="washBalanceResult.code"
                 :value="
                   washForm.endline.resultsBalance[washBalanceResult.code]
-                    | formatNumber
+                    | formatNumber(2, true, washBalanceResult.formatType)
                 "
                 :label="washBalanceResult.description"
                 :disabled="washBalanceResult.disabled"
                 :suffix="washBalanceResult.suffix"
                 :class="{
                   'wash-positive':
-                    washBalanceResult.code === 'CO2_WSH_TRB_PER' &&
+                    washBalanceResult.code === 'changeInEmission' &&
                     washForm.endline.resultsBalance[washBalanceResult.code] > 0,
                   'wash-negative':
-                    washBalanceResult.code === 'CO2_WSH_TRB_PER' &&
+                    washBalanceResult.code === 'changeInEmission' &&
                     washForm.endline.resultsBalance[washBalanceResult.code] < 0,
                 }"
               ></v-text-field>
@@ -146,6 +154,7 @@ import {
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
+import { computeChangeInEmission } from "../changeInEmission";
 
 @Component({
   computed: {
@@ -217,8 +226,8 @@ export default class Trucking extends Vue {
         resultsBalance: {
           TR_NUM_DIFF: 0,
           TR_DIST_DIFF: 0,
-          CO2_WSH_TRB_DIFF: 0,
-          CO2_WSH_TRB_PER: 0,
+          totalCO2Emission: 0,
+          changeInEmission: 0,
         },
       },
     };
@@ -239,22 +248,15 @@ export default class Trucking extends Vue {
     const res = {} as WashTruckingItemBalance;
     const baselineRes = this.washForm.baseline.results;
     const endlineRes = this.washForm.endline.results;
-    // ABSOLUTE (TR_NUM_B - TR_NUM_D) / TR_NUM_B
-    // res.TR_NUM_DIFF = endlineRes.TR_NUM - baselineRes.TR_NUM;
     res.TR_NUM_DIFF =
-      (Math.abs(baselineRes.TR_NUM - endlineRes.TR_NUM) / baselineRes.TR_NUM) *
-      100;
-    // ABSOLUTE (TR_DIST_B - TR_DIST_D) / TR_DIST_B
-    // res.TR_DIST_DIFF = endlineRes.TR_DIST - baselineRes.TR_DIST;
+      Math.abs(baselineRes.TR_NUM - endlineRes.TR_NUM) / baselineRes.TR_NUM;
     res.TR_DIST_DIFF =
-      (Math.abs(baselineRes.TR_DIST - endlineRes.TR_DIST) /
-        baselineRes.TR_DIST) *
-      100;
-    res.CO2_WSH_TRB_DIFF = endlineRes.CO2_WSH_TRB - baselineRes.CO2_WSH_TRB;
-    res.CO2_WSH_TRB_PER =
-      ((baselineRes.CO2_WSH_TRB - endlineRes.CO2_WSH_TRB) /
-        baselineRes.CO2_WSH_TRB) *
-      100;
+      Math.abs(baselineRes.TR_DIST - endlineRes.TR_DIST) / baselineRes.TR_DIST;
+    res.totalCO2Emission = endlineRes.CO2_WSH_TRB - baselineRes.CO2_WSH_TRB;
+    res.changeInEmission = computeChangeInEmission(
+      baselineRes.CO2_WSH_TRB,
+      endlineRes.CO2_WSH_TRB
+    );
     return res;
   }
 
@@ -330,17 +332,17 @@ export default class Trucking extends Vue {
 
   readonly washBalanceResultsPart2 = [
     {
-      description:
-        "Total CO2 Produced(+) or Saved (-) (kg CO2eq per year / kg)",
-      code: "CO2_WSH_TRB_DIFF",
+      description: "Total change in CO2 emissions (in tCO2e/year)",
+      code: "totalCO2Emission",
       type: "number",
+      formatType: "decimal",
       disabled: true,
     },
     {
-      description: "Percentage change (positive is increase)",
-      code: "CO2_WSH_TRB_PER",
+      description: "Percentage change in emissions",
+      code: "changeInEmission",
       type: "percentage",
-      suffix: "%",
+      formatType: "percent",
       disabled: true,
     },
   ];
@@ -358,8 +360,13 @@ export default class Trucking extends Vue {
   color: red;
 }
 
-::v-deep.theme--light.v-sheet--outlined {
-  border: 2px solid rgba(255, 0, 0, 0.9);
+::v-deep .theme--light.v-sheet--outlined {
+  &.wash-negative {
+    border: 2px solid green;
+  }
+  &.wash-positive {
+    border: 2px solid red;
+  }
   .v-label {
     color: black;
     font-weight: 700;

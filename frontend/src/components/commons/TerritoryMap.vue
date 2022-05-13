@@ -58,12 +58,14 @@ export default class TerritoryMap extends Vue {
   };
 
   public getIcon(defaultIcon: string, shelterType: ShelterType): L.DivIcon {
+    let className = `mdi mdi-${defaultIcon}`;
+    if (shelterType) {
+      className = `mdi mdi-${this.shelterIcons[shelterType]} c-${this.shelterColors[shelterType].name} customIcon`;
+    }
     return L.divIcon({
       html: "<i></i>",
       iconSize: [16, 16],
-      className: `mdi mdi-${this.shelterIcons[shelterType] || defaultIcon} c-${
-        this.shelterColors[shelterType].name
-      } customIcon`,
+      className: className,
     });
   }
 }

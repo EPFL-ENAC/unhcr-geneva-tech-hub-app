@@ -51,7 +51,7 @@
     </template>
     <template v-slot:item.totalCO2Emission="{ item }">
       <span class="bold-table-cell-content">
-        {{ item.totalCO2Emission | formatNumber }}
+        {{ item.totalCO2Emission | formatNumber(2) }}
       </span>
     </template>
     <template v-slot:item.actions="{ item }">
@@ -94,7 +94,7 @@
           class="facilities-footer-like-vuetify"
         >
           <span v-if="!header.hideFooterContent">
-            {{ results[header.value] | formatNumber }}
+            {{ results[header.value] | formatNumber(0, true) }}
           </span>
         </td>
       </tr>
@@ -142,7 +142,7 @@ export default class BaselineFacilitiesTable extends Vue {
       value: "name",
     },
     { text: "Powered by", value: "facilityType", hideFooterContent: true },
-    { text: "Diesel (in litres)", value: "dieselLiters" },
+    { text: "Diesel (litres)", value: "dieselLiters" },
     { text: "Grid power (kWh)", value: "gridPower" },
     { text: "Renewable (kWh)", value: "renewablePower" },
     { text: "CO2 Emissions", value: "totalCO2Emission" },

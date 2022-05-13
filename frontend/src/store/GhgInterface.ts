@@ -82,8 +82,8 @@ export interface WashTruckingItem {
 export interface WashTruckingItemBalance {
   TR_NUM_DIFF: number;
   TR_DIST_DIFF: number;
-  CO2_WSH_TRB_DIFF: number;
-  CO2_WSH_TRB_PER: number;
+  totalCO2Emission: number;
+  changeInEmission: number;
 }
 export interface WashTruckingItemWithBalance extends WashTruckingItem {
   resultsBalance: WashTruckingItemBalance;
@@ -115,7 +115,7 @@ export interface FormSurveyResult {
 }
 
 export interface FormSurveyResultWithBalance extends FormSurveyResult {
-  changeInEmission: number;
+  changeInEmission: number | null;
 }
 
 // start of energy facility survey
@@ -127,15 +127,7 @@ export interface EnergyFacilitySurvey {
   endline: {
     inputs: EnergyFacilityInterventionItem[];
     results: EnergyFacilityInterventionItemResult;
-    resultsBalance: EnergyFacilityInterventionBalance;
   };
-}
-
-export interface EnergyFacilityInterventionBalance {
-  TR_NUM_DIFF: number;
-  TR_DIST_DIFF: number;
-  CO2_WSH_TRB_PER: number;
-  CO2_WSH_TRB_DIFF: number;
 }
 
 type FacilityType =
@@ -162,7 +154,7 @@ export type EnergyFacilityItemResult = Omit<
 export interface EnergyFacilityInterventionItem
   extends Omit<EnergyFacilityItem, "facilityType"> {
   description: string;
-  changeInEmission: number;
+  changeInEmission: number | null;
 }
 
 export type EnergyFacilityInterventionItemResult = Omit<

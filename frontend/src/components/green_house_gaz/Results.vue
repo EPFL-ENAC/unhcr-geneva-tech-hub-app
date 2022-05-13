@@ -21,13 +21,13 @@
       <v-col :cols="6" class="d-flex justify-center">
         <h3>
           Total Baseline CO2 Emissions:
-          {{ totalBaseline | formatNumber }} tCO2/year
+          {{ totalBaseline | formatNumber }} tCO2e/year
         </h3>
       </v-col>
       <v-col :cols="6" class="d-flex justify-center">
         <h3>
           Total Endline CO2 Emissions:
-          {{ totalEndline | formatNumber }} tCO2/year
+          {{ totalEndline | formatNumber }} tCO2e/year
 
           <v-icon :color="color">
             {{ icon }}
@@ -48,6 +48,7 @@
 </template>
 
 <script lang="ts">
+import { computeChangeInEmission } from "@/components/green_house_gaz/changeInEmission";
 import {
   EnergySurvey,
   FormSurvey,
@@ -97,19 +98,7 @@ export default class Results extends Vue {
   readonly survey: Survey | undefined;
 
   public get totalChange(): number {
-    let changeInEmission = 0;
-    const localCO2 = this.totalEndline;
-    let refCO2 = this.totalBaseline;
-    if (refCO2 !== 0) {
-      // if refCO2 is 0 it's not valid
-      if (localCO2 === 0) {
-        return 0;
-      }
-      changeInEmission = ((localCO2 - refCO2) / refCO2) * 100;
-    } else {
-      changeInEmission = ((localCO2 - refCO2) / 1) * 100;
-    }
-    return changeInEmission;
+    return computeChangeInEmission(this.totalBaseline, this.totalEndline);
   }
 
   public totalResult(key: keyof FormSurvey): number {
@@ -300,7 +289,7 @@ export default class Results extends Vue {
           },
           tooltip: {
             valueFormatter: (value): string => {
-              return `${this.$options.filters?.formatNumber(value)} tCO2/year`;
+              return `${this.$options.filters?.formatNumber(value)} tCO2e/year`;
             },
           },
           type: "bar",

@@ -7,7 +7,7 @@
           <v-card-text>
             <v-text-field
               v-model.number="currentForm.baseline.results.totalCO2Emission"
-              label="Total baseline CO2 emissions (tCO2e/yr)"
+              label="Total baseline CO2 emissions (tCO2e/year)"
               hide-spin-buttons
               type="number"
               @change="(e) => updateFormInput(e, 'baseline textfield')"
@@ -21,7 +21,7 @@
           <v-card-text>
             <v-text-field
               v-model.number="currentForm.endline.results.totalCO2Emission"
-              label="Total endline CO2 emissions (tCO2e/yr)"
+              label="Total endline CO2 emissions (tCO2e/year)"
               hide-spin-buttons
               type="number"
               @change="(e) => updateFormInput(e, 'baseline textfield')"
@@ -35,6 +35,7 @@
 </template>
 
 <script lang="ts">
+import { computeChangeInEmission } from "@/components/green_house_gaz/changeInEmission";
 import { FormSurvey } from "@/store/GhgInterface";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -52,12 +53,13 @@ export default class SurveyItemDefaultForm extends Vue {
     this.$emit("update:form", newForm);
   }
   public updateFormInput(): void {
-    this.currentForm.endline.results.changeInEmission = this.computeBalance();
+    const baseline = this.currentForm.baseline.results.totalCO2Emission;
+    const endline = this.currentForm.endline.results.totalCO2Emission;
+    this.currentForm.endline.results.changeInEmission = computeChangeInEmission(
+      baseline,
+      endline
+    );
     this.currentForm = Object.assign({}, this.currentForm);
-  }
-
-  public computeBalance(): number {
-    return 0;
   }
 
   private generateNewDefaultForm(): FormSurvey {
@@ -72,7 +74,7 @@ export default class SurveyItemDefaultForm extends Vue {
         inputs: [],
         results: {
           totalCO2Emission: 0,
-          changeInEmission: 0,
+          changeInEmission: null,
         },
       },
     };

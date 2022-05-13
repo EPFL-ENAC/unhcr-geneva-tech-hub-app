@@ -73,7 +73,7 @@ export default class App extends Vue {
     { tab: "Energy", content: "energy", componentName: "Energy" },
     { tab: "Materials", content: "materials", componentName: "Materials" },
     {
-      tab: "Materials tranport",
+      tab: "Materials transport",
       content: "shelters_transport",
       componentName: "MaterialsTransport",
     },
