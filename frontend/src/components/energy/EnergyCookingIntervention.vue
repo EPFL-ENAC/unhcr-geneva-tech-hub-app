@@ -74,7 +74,7 @@
               <v-expansion-panel-header>
                 <template v-slot:default="{ open }">
                   <v-row>
-                    <v-col class="col-auto">
+                    <v-col cols="auto">
                       <v-checkbox
                         hide-details="auto"
                         :input-value="open"
@@ -83,7 +83,7 @@
                       ></v-checkbox>
                     </v-col>
                     <v-spacer></v-spacer>
-                    <v-col class="col-auto d-flex align-center">
+                    <v-col cols="auto" class="d-flex align-center">
                       <v-btn icon @click="deleteEfficiency(index)">
                         <v-icon>mdi-close</v-icon>
                       </v-btn>
@@ -114,7 +114,7 @@
               <v-expansion-panel-header>
                 <template v-slot:default="{ open }">
                   <v-row>
-                    <v-col class="col-auto">
+                    <v-col cols="auto">
                       <v-checkbox
                         hide-details="auto"
                         :input-value="open"
@@ -123,7 +123,7 @@
                       ></v-checkbox>
                     </v-col>
                     <v-spacer></v-spacer>
-                    <v-col class="col-auto d-flex align-center">
+                    <v-col cols="auto" class="d-flex align-center">
                       <v-btn icon @click="deleteCash(index)">
                         <v-icon>mdi-close</v-icon>
                       </v-btn>

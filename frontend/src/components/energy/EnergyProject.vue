@@ -12,7 +12,7 @@
           @change="changeDocument"
         ></v-text-field>
       </v-col>
-      <v-col class="col-auto d-flex align-center">
+      <v-col cols="auto" class="d-flex align-center">
         <user-manager v-model="users" @change="changeDocument"></user-manager>
       </v-col>
     </v-row>
@@ -75,7 +75,7 @@
         </v-tabs>
       </v-col>
       <v-spacer></v-spacer>
-      <v-col class="col-auto d-flex align-center">
+      <v-col cols="auto" class="d-flex align-center">
         <info-tooltip v-if="$route.name.endsWith('General')">
           The inputs in the “General” section include data related to the
           context of the camp such as the name, the geographic location, its

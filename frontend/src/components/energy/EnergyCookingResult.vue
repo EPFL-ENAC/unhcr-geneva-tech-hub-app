@@ -105,7 +105,7 @@
           </v-row>
           <v-row>
             <v-spacer></v-spacer>
-            <v-col class="col-auto">
+            <v-col cols="auto">
               <energy-legend></energy-legend>
             </v-col>
           </v-row>
@@ -569,6 +569,8 @@ export default class EnergyCookingResult extends Vue {
       (scn) => scn.id === this.scenarioModule?.selectedId
     );
     if (general && householdCooking && scenario) {
+      const firstScenario = scenario.years[0];
+      const firstTechnologies = householdCooking.technologyYears[0];
       const firstSite: Site = {
         yearCount: 0,
         householdsCount: general.familiesCount,
@@ -576,9 +578,11 @@ export default class EnergyCookingResult extends Vue {
         woodCarbonation: general.woodCarbonation,
         woodDensity: general.woodDensity,
 
-        incomeRate: scenario.incomeRate.val,
-        discountRate: scenario.discountRate.val,
-        fuelPriceRate: scenario.fuelPriceRate.val,
+        householdSize: firstScenario.householdSize,
+        incomeRate: firstScenario.incomeRate.val,
+        discountRate: firstScenario.discountRate.val,
+        demographicGrowth: firstScenario.demographicGrowth.val,
+        fuelPriceRate: firstScenario.fuelPriceRate.val,
 
         proportions: Object.fromEntries<number>(
           socioEconomicCategories.map((cat) => [
@@ -586,16 +590,23 @@ export default class EnergyCookingResult extends Vue {
             general.categories[cat].proportion,
           ])
         ) as Record<SocioEconomicCategory, number>,
-        categories: this.getCategories(
-          general,
-          householdCooking.technologyYears[0].technologies
-        ),
+        categories: this.getCategories(general, firstTechnologies.technologies),
       };
       const sites: Site[] = [firstSite];
       for (let index = 1; index < this.years.length; index++) {
         const year = this.years[index];
         const previousSite = sites[index - 1];
         let currentSite = cloneDeep(previousSite);
+        const currentScenario = scenario.years.find(
+          (item) => item.yearIndex === index
+        );
+        if (currentScenario) {
+          currentSite.householdSize = currentScenario.householdSize;
+          currentSite.incomeRate = currentScenario.incomeRate.val;
+          currentSite.discountRate = currentScenario.discountRate.val;
+          currentSite.demographicGrowth = currentScenario.demographicGrowth.val;
+          currentSite.fuelPriceRate = currentScenario.fuelPriceRate.val;
+        }
         const technologies = householdCooking.technologyYears.find(
           (item) => item.yearIndex === index
         )?.technologies;
@@ -604,10 +615,9 @@ export default class EnergyCookingResult extends Vue {
         }
         currentSite.yearCount = index;
         currentSite.populationCount =
-          previousSite.populationCount * scenario.demographicGrowth.val;
-        // TODO householdSize
+          previousSite.populationCount * currentSite.demographicGrowth;
         currentSite.householdsCount =
-          previousSite.householdsCount * scenario.demographicGrowth.val;
+          currentSite.populationCount / currentSite.householdSize;
         currentSite.proportions = this.getNewProportions(previousSite);
         currentSite = actions
           .filter((action) => action.isActive(year))
@@ -861,8 +871,10 @@ interface Site {
   woodCarbonation: number;
   woodDensity: number;
 
+  householdSize: number;
   incomeRate: number;
   discountRate: number;
+  demographicGrowth: number;
   fuelPriceRate: number;
 
   proportions: Record<SocioEconomicCategory, number>;

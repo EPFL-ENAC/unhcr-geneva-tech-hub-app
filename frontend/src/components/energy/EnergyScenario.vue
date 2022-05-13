@@ -6,7 +6,10 @@
     @save="save"
   >
     <template v-slot>
-      <energy-cooking-scenario v-model="module"></energy-cooking-scenario>
+      <energy-cooking-scenario
+        v-model="module"
+        :general-module="generalModule"
+      ></energy-cooking-scenario>
     </template>
   </energy-form>
 </template>
@@ -15,9 +18,9 @@
 import EnergyCookingScenario from "@/components/energy/EnergyCookingScenario.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
-import { ScenarioModule } from "@/models/energyModel";
+import { GeneralModule, ScenarioModule } from "@/models/energyModel";
 import "vue-class-component/hooks";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 
 @Component({
   components: {
@@ -26,105 +29,157 @@ import { Component } from "vue-property-decorator";
   },
 })
 export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
+  @Prop({ type: Object as () => GeneralModule })
+  generalModule!: GeneralModule;
+
   module: ScenarioModule = {
     selectedId: "",
-    scenarios: [
-      {
-        id: "usual",
-        name: "Business as Usual",
-        energyPriceTrend: "stable",
-        investmentCostTrend: "stable",
-        discountRate: {
-          val: 1,
-        },
-        incomeRate: {
-          val: 1,
-        },
-        demographicGrowth: {
-          val: 1,
-        },
-        fuelPriceRate: {
-          val: 1,
-        },
-      },
-      {
-        id: "optimistic",
-        name: "Optimistic Scenario",
-        energyPriceTrend: "stable",
-        investmentCostTrend: "decrease",
-        discountRate: {
-          val: 1,
-        },
-        incomeRate: {
-          val: 1,
-        },
-        demographicGrowth: {
-          val: 1,
-        },
-        fuelPriceRate: {
-          val: 1,
-        },
-      },
-      {
-        id: "pessimistic",
-        name: "Pessimistic Scenario",
-        energyPriceTrend: "increase",
-        investmentCostTrend: "increase",
-        discountRate: {
-          val: 1,
-        },
-        incomeRate: {
-          val: 1,
-        },
-        demographicGrowth: {
-          val: 1,
-        },
-        fuelPriceRate: {
-          val: 1,
-        },
-      },
-    ],
+    scenarios: [],
   };
 
+  get householdSize(): number {
+    return (
+      this.generalModule.totalPopulation / this.generalModule.familiesCount
+    );
+  }
+
+  created(): void {
+    if (!this.initialModule) {
+      this.module.scenarios = [
+        {
+          id: "usual",
+          name: "Business as Usual",
+          energyPriceTrend: "stable",
+          investmentCostTrend: "stable",
+          years: [
+            {
+              yearIndex: 0,
+              householdSize: this.householdSize,
+              discountRate: {
+                val: 1,
+              },
+              incomeRate: {
+                val: 1,
+              },
+              demographicGrowth: {
+                val: 1,
+              },
+              fuelPriceRate: {
+                val: 1,
+              },
+            },
+          ],
+        },
+        {
+          id: "optimistic",
+          name: "Optimistic Scenario",
+          energyPriceTrend: "stable",
+          investmentCostTrend: "decrease",
+          years: [
+            {
+              yearIndex: 0,
+              householdSize: this.householdSize,
+              discountRate: {
+                val: 1,
+              },
+              incomeRate: {
+                val: 1,
+              },
+              demographicGrowth: {
+                val: 1,
+              },
+              fuelPriceRate: {
+                val: 1,
+              },
+            },
+          ],
+        },
+        {
+          id: "pessimistic",
+          name: "Pessimistic Scenario",
+          energyPriceTrend: "increase",
+          investmentCostTrend: "increase",
+          years: [
+            {
+              yearIndex: 0,
+              householdSize: this.householdSize,
+              discountRate: {
+                val: 1,
+              },
+              incomeRate: {
+                val: 1,
+              },
+              demographicGrowth: {
+                val: 1,
+              },
+              fuelPriceRate: {
+                val: 1,
+              },
+            },
+          ],
+        },
+      ];
+    }
+  }
+
   migrate(): void {
-    this.module.scenarios.forEach((scenario) => {
-      if (typeof scenario.discountRate === "number") {
-        scenario.discountRate = {
-          val: scenario.discountRate,
-        };
-      } else if (scenario.discountRate === undefined) {
-        scenario.discountRate = {
-          val: 1,
-        };
-      }
-      if (typeof scenario.incomeRate === "number") {
-        scenario.incomeRate = {
-          val: scenario.incomeRate,
-        };
-      } else if (scenario.incomeRate === undefined) {
-        scenario.incomeRate = {
-          val: 1,
-        };
-      }
-      if (typeof scenario.demographicGrowth === "number") {
-        scenario.demographicGrowth = {
-          val: scenario.demographicGrowth,
-        };
-      } else if (scenario.demographicGrowth === undefined) {
-        scenario.demographicGrowth = {
-          val: 1,
-        };
-      }
-      if (typeof scenario.fuelPriceRate === "number") {
-        scenario.fuelPriceRate = {
-          val: scenario.fuelPriceRate,
-        };
-      } else if (scenario.fuelPriceRate === undefined) {
-        scenario.fuelPriceRate = {
-          val: 1,
-        };
-      }
-    });
+    this.module.scenarios
+      .flatMap((scenario) => {
+        if (!scenario.years) {
+          scenario.years = [
+            {
+              yearIndex: 0,
+              householdSize: this.householdSize,
+              discountRate: scenario.discountRate ?? { val: 1 },
+              incomeRate: scenario.incomeRate ?? { val: 1 },
+              demographicGrowth: scenario.demographicGrowth ?? { val: 1 },
+              fuelPriceRate: scenario.fuelPriceRate ?? { val: 1 },
+            },
+          ];
+        }
+        return scenario.years;
+      })
+      .forEach((scenario) => {
+        if (scenario.householdSize === undefined) {
+          scenario.householdSize = this.householdSize;
+        }
+        if (typeof scenario.discountRate === "number") {
+          scenario.discountRate = {
+            val: scenario.discountRate,
+          };
+        } else if (scenario.discountRate === undefined) {
+          scenario.discountRate = {
+            val: 1,
+          };
+        }
+        if (typeof scenario.incomeRate === "number") {
+          scenario.incomeRate = {
+            val: scenario.incomeRate,
+          };
+        } else if (scenario.incomeRate === undefined) {
+          scenario.incomeRate = {
+            val: 1,
+          };
+        }
+        if (typeof scenario.demographicGrowth === "number") {
+          scenario.demographicGrowth = {
+            val: scenario.demographicGrowth,
+          };
+        } else if (scenario.demographicGrowth === undefined) {
+          scenario.demographicGrowth = {
+            val: 1,
+          };
+        }
+        if (typeof scenario.fuelPriceRate === "number") {
+          scenario.fuelPriceRate = {
+            val: scenario.fuelPriceRate,
+          };
+        } else if (scenario.fuelPriceRate === undefined) {
+          scenario.fuelPriceRate = {
+            val: 1,
+          };
+        }
+      });
   }
 }
 </script>

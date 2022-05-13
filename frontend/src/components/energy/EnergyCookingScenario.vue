@@ -17,12 +17,31 @@
             </template>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <form-item-component
-              v-for="item in formItems"
-              :key="item.key"
-              v-model="scenarioItem[item.key]"
-              v-bind="item"
-            ></form-item-component>
+            <v-row>
+              <v-col>
+                <form-item-component
+                  v-for="item in formItems"
+                  :key="item.key"
+                  v-model="scenarioItem[item.key]"
+                  v-bind="item"
+                ></form-item-component>
+              </v-col>
+            </v-row>
+            <energy-year-tabs
+              v-model="yearTab"
+              :year-offset="yearOffset"
+              :items.sync="scenarioItem.years"
+            ></energy-year-tabs>
+            <v-row v-if="scenarioItem.years[yearTab]">
+              <v-col>
+                <form-item-component
+                  v-for="item in yearFormItems"
+                  :key="item.key"
+                  v-model="scenarioItem.years[yearTab][item.key]"
+                  v-bind="item"
+                ></form-item-component>
+              </v-col>
+            </v-row>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -36,14 +55,22 @@ import FormItemComponent, {
   SelectOption,
 } from "@/components/commons/FormItemComponent.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
-import { Scenario, ScenarioModule, ScenarioTrend } from "@/models/energyModel";
+import EnergyYearTabs from "@/components/energy/EnergyYearTabs.vue";
+import {
+  GeneralModule,
+  Scenario,
+  ScenarioModule,
+  ScenarioTrend,
+  ScenarioYear,
+} from "@/models/energyModel";
 import "vue-class-component/hooks";
-import { Component, VModel, Vue } from "vue-property-decorator";
+import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 
 @Component({
   components: {
-    FormItemComponent,
     EnergyForm,
+    EnergyYearTabs,
+    FormItemComponent,
   },
 })
 export default class EnergyCookingScenario extends Vue {
@@ -76,6 +103,13 @@ export default class EnergyCookingScenario extends Vue {
       options: this.trendOptions,
       readonly: true,
     } as FormItem<keyof Scenario, ScenarioTrend>,
+  ];
+  readonly yearFormItems: FormItem<keyof ScenarioYear>[] = [
+    {
+      type: "number",
+      key: "householdSize",
+      label: "Household Size",
+    },
     {
       type: "range",
       key: "discountRate",
@@ -104,6 +138,10 @@ export default class EnergyCookingScenario extends Vue {
 
   @VModel({ type: Object as () => ScenarioModule })
   module!: ScenarioModule;
+  @Prop({ type: Object as () => GeneralModule })
+  generalModule!: GeneralModule;
+
+  yearTab = 0;
 
   get selectedIndex(): number | undefined {
     return this.module.scenarios.findIndex(
@@ -114,6 +152,10 @@ export default class EnergyCookingScenario extends Vue {
   set selectedIndex(value: number | undefined) {
     this.module.selectedId =
       value !== undefined ? this.module.scenarios[value].id : "";
+  }
+
+  get yearOffset(): number {
+    return this.generalModule.yearStart;
   }
 }
 </script>

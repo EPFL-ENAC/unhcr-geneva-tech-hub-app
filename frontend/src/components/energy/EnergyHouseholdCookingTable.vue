@@ -40,34 +40,11 @@
               </v-dialog>
             </v-card-title>
             <v-card-text>
-              <v-row>
-                <v-col class="col-auto">
-                  <v-tabs v-model="yearTab">
-                    <v-tab v-for="(year, index) in years" :key="year">
-                      {{ year }}
-                      <template v-if="index > 0"
-                        >&nbsp;<v-edit-dialog>
-                          <v-icon x-small>mdi-pencil</v-icon>
-                          <template v-slot:input>
-                            <v-text-field
-                              :value="year"
-                              single-line
-                              type="number"
-                              clearable
-                              @change="changeYear(index, $event)"
-                            ></v-text-field>
-                          </template>
-                        </v-edit-dialog>
-                      </template>
-                    </v-tab>
-                  </v-tabs>
-                </v-col>
-                <v-col class="col-auto d-flex align-center">
-                  <v-btn icon @click="addYear()">
-                    <v-icon>mdi-plus</v-icon>
-                  </v-btn>
-                </v-col>
-              </v-row>
+              <energy-year-tabs
+                v-model="yearTab"
+                :year-offset="yearOffset"
+                :items.sync="module.technologyYears"
+              ></energy-year-tabs>
               <v-row>
                 <v-col>
                   <v-data-table
@@ -168,6 +145,7 @@ import FormItemComponent, {
   FormItem,
 } from "@/components/commons/FormItemComponent.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
+import EnergyYearTabs from "@/components/energy/EnergyYearTabs.vue";
 import {
   CategoryCooking,
   CookingFuel,
@@ -181,7 +159,7 @@ import {
 } from "@/models/energyModel";
 import { getCookingFuel } from "@/utils/energy";
 import { SelectItemObject } from "@/utils/vuetify";
-import { chain, cloneDeep, round, sortBy, sumBy } from "lodash";
+import { chain, cloneDeep, round, sumBy } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";
@@ -191,6 +169,7 @@ import { mapState } from "vuex";
   components: {
     EnergyForm,
     FormItemComponent,
+    EnergyYearTabs,
   },
   computed: {
     ...mapState("energy", ["cookingFuels", "cookingStoves"]),
@@ -394,38 +373,6 @@ export default class EnergyHouseholdCookingTable extends Vue {
       throw new Error(`id ${item.id} not found`);
     }
     return categoryCooking;
-  }
-
-  addYear(): void {
-    const last =
-      this.module.technologyYears[this.module.technologyYears.length - 1];
-    this.module.technologyYears.push({
-      yearIndex: last.yearIndex + 1,
-      technologies: cloneDeep(last.technologies),
-    });
-  }
-
-  changeYear(index: number, newValue: number | null): void {
-    if (newValue === null) {
-      this.module.technologyYears.splice(index, 1);
-      if (this.yearTab === index) {
-        this.yearTab -= 1;
-      }
-    } else {
-      const newYearIndex = newValue - this.yearOffset;
-      if (
-        newYearIndex > 0 &&
-        this.module.technologyYears.every(
-          (item) => item.yearIndex !== newYearIndex
-        )
-      ) {
-        this.module.technologyYears[index].yearIndex = newYearIndex;
-        this.module.technologyYears = sortBy(
-          this.module.technologyYears,
-          (item) => item.yearIndex
-        );
-      }
-    }
   }
 }
 

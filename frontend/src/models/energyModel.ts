@@ -107,10 +107,7 @@ export interface GeneralCategory {
 // Household Cooking
 
 export interface HouseholdCookingModule {
-  technologyYears: {
-    yearIndex: number;
-    technologies: CategoryCooking[];
-  }[];
+  technologyYears: TechnologyYear[];
 
   interventions: Intervention[];
 
@@ -118,6 +115,10 @@ export interface HouseholdCookingModule {
    * @deprecated for backward compatibility
    */
   categoryCookings: CategoryCooking[];
+}
+export interface TechnologyYear {
+  yearIndex: number;
+  technologies: CategoryCooking[];
 }
 export interface CategoryCooking {
   categories: Record<SocioEconomicCategory, HouseholdCookingInput>;
@@ -146,6 +147,29 @@ export interface Scenario {
   name: string;
   energyPriceTrend: ScenarioTrend;
   investmentCostTrend: ScenarioTrend;
+
+  years: ScenarioYear[];
+
+  /**
+   * @deprecated
+   */
+  discountRate?: RangeModel;
+  /**
+   * @deprecated
+   */
+  incomeRate?: RangeModel;
+  /**
+   * @deprecated
+   */
+  demographicGrowth?: RangeModel;
+  /**
+   * @deprecated
+   */
+  fuelPriceRate?: RangeModel;
+}
+export interface ScenarioYear {
+  yearIndex: number;
+  householdSize: number;
   /**
    * d1
    */
