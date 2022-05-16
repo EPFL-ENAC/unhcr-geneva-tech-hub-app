@@ -26,23 +26,25 @@
               </v-col>
             </v-row>
             <energy-year-tabs
-              v-model="yearTab"
+              v-model="yearTabs[index]"
               :year-offset="yearOffset"
               :items.sync="scenarioItem.years"
             ></energy-year-tabs>
-            <v-row v-if="scenarioItem.years[yearTab]">
+            <v-row v-if="scenarioItem.years[yearTabs[index]]">
               <v-col>
                 <form-item-component
                   v-for="item in yearFormItems"
                   :key="item.key"
-                  v-model="scenarioItem.years[yearTab][item.key]"
+                  v-model="scenarioItem.years[yearTabs[index]][item.key]"
                   v-bind="item"
                 ></form-item-component>
                 <h3>Fuels</h3>
                 <form-item-component
                   v-for="item in fuelFormItems"
                   :key="item.key"
-                  v-model="scenarioItem.years[yearTab].fuelPriceRates[item.key]"
+                  v-model="
+                    scenarioItem.years[yearTabs[index]].fuelPriceRates[item.key]
+                  "
                   v-bind="item"
                 ></form-item-component>
               </v-col>
@@ -72,7 +74,7 @@ import {
   ScenarioYear,
 } from "@/models/energyModel";
 import "vue-class-component/hooks";
-import { Component, Prop, VModel, Vue } from "vue-property-decorator";
+import { Component, Prop, VModel, Vue, Watch } from "vue-property-decorator";
 import { mapState } from "vuex";
 
 @Component({
@@ -148,7 +150,11 @@ export default class EnergyCookingScenario extends Vue {
   @Prop({ type: Object as () => GeneralModule })
   generalModule!: GeneralModule;
 
-  yearTab = 0;
+  yearTabs: number[] = [];
+
+  get scenarios(): Scenario[] {
+    return this.module.scenarios;
+  }
 
   get fuelFormItems(): FormItem<CookingFuelId>[] {
     return cookingFuelIds.map((id) => {
@@ -164,18 +170,27 @@ export default class EnergyCookingScenario extends Vue {
   }
 
   get selectedIndex(): number | undefined {
-    return this.module.scenarios.findIndex(
+    return this.scenarios.findIndex(
       (item) => item.id === this.module.selectedId
     );
   }
 
   set selectedIndex(value: number | undefined) {
     this.module.selectedId =
-      value !== undefined ? this.module.scenarios[value].id : "";
+      value !== undefined ? this.scenarios[value].id : "";
   }
 
   get yearOffset(): number {
     return this.generalModule.yearStart;
+  }
+
+  created(): void {
+    this.onScenarioChanged();
+  }
+
+  @Watch("scenarios")
+  onScenarioChanged(): void {
+    this.yearTabs = new Array(this.scenarios.length).fill(0);
   }
 }
 </script>
