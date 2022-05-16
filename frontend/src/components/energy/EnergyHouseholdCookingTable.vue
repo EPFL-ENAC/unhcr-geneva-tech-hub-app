@@ -57,35 +57,26 @@
                   >
                     <template v-slot:expanded-item="{ headers, item }">
                       <td class="pa-2" :colspan="headers.length">
-                        <v-simple-table dense>
-                          <template v-slot:default>
-                            <tbody>
-                              <tr
-                                v-for="property in tableExpandProperties"
-                                :key="property.key"
-                              >
-                                <td class="font-weight-bold">
-                                  {{ property.text }}
-                                </td>
-                                <td>
-                                  <template v-if="property.getDisplayValue">
-                                    {{
-                                      property.getDisplayValue(
-                                        item[property.key]
-                                      )
-                                    }}
-                                  </template>
-                                  <template v-else>
-                                    {{ item[property.key] }}
-                                  </template>
-                                  <template v-if="property.unit">
-                                    [{{ property.unit }}]
-                                  </template>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </template>
-                        </v-simple-table>
+                        <v-row justify="center">
+                          <v-col cols="3">
+                            <h3>Stove</h3>
+                            <form-item-component
+                              v-for="formItem in tableExpandStoveItems"
+                              :key="formItem.key"
+                              v-model="item.stove[formItem.key]"
+                              v-bind="formItem"
+                            ></form-item-component>
+                          </v-col>
+                          <v-col cols="3">
+                            <h3>Fuel</h3>
+                            <form-item-component
+                              v-for="formItem in tableExpandFuelItems"
+                              :key="formItem.key"
+                              v-model="item.fuel[formItem.key]"
+                              v-bind="formItem"
+                            ></form-item-component>
+                          </v-col>
+                        </v-row>
                       </td>
                     </template>
                     <template
@@ -214,74 +205,61 @@ export default class EnergyHouseholdCookingTable extends Vue {
       subtype: "percent",
     },
   ];
-  readonly tableExpandProperties: {
-    text: string;
-    key: keyof TableItem;
-    unit?: string;
-    getDisplayValue?: (value: number) => number | string;
-  }[] = [
+  readonly tableExpandStoveItems: FormItem<keyof CookingStove>[] = [
     {
-      text: "Technology type",
-      key: "technologyType",
-    },
-    {
-      text: "Energy efficiency",
+      type: "number",
       key: "energyEfficiency",
-      unit: "%",
-      getDisplayValue: (value: number): number => value * 100,
+      label: "Energy Efficiency",
+      subtype: "percent",
     },
     {
-      text: "Capacity",
+      type: "number",
       key: "capacity",
+      label: "Capacity",
       unit: "kW",
     },
     {
-      text: "Investment Cost",
+      type: "number",
       key: "investmentCost",
+      label: "Investment Cost",
       unit: "USD",
     },
     {
-      text: "Lifetime",
+      type: "number",
       key: "lifetime",
+      label: "Lifetime",
       unit: "years",
     },
     {
-      text: "Emission factor for CO",
+      type: "number",
       key: "emissionFactorCo",
+      label: "Emission factor for CO",
       unit: "g/MJ delivered",
     },
     {
-      text: "Emission factor for PM2.5",
+      type: "number",
       key: "emissionFactorPm",
+      label: "Emission factor for PM2.5",
       unit: "g/MJ delivered",
     },
+  ];
+  readonly tableExpandFuelItems: FormItem<keyof CookingFuel>[] = [
     {
-      text: "IWA efficiency TIER",
-      key: "iwaEfficiencyTier",
-      getDisplayValue: (value: number | [number, number]): string | number => {
-        return typeof value === "number" ? value : `${value[0]}-${value[1]}`;
-      },
-    },
-    {
-      text: "IWA indoor emission TIER",
-      key: "iwaIndoorEmissionTier",
-      getDisplayValue: (value: number | [number, number]): string | number => {
-        return typeof value === "number" ? value : `${value[0]}-${value[1]}`;
-      },
-    },
-    {
-      text: "Fuel energy",
+      type: "number",
       key: "energy",
+      label: "Fuel energy",
       unit: "MJ/kg",
     },
     {
-      text: "Fuel emission factor for CO2",
+      type: "number",
       key: "emissionFactorCo2",
+      label: "Fuel emission factor for CO2",
       unit: "ton/ton of fuel",
     },
     {
-      text: "Fuel price",
+      type: "number",
       key: "price",
+      label: "Fuel price",
       unit: "$/kg",
     },
   ];
@@ -330,22 +308,24 @@ export default class EnergyHouseholdCookingTable extends Vue {
   }
 
   get tableItems(): TableItem[] {
-    return this.technologies.map((item) => ({
-      ...item.categories,
-      ...item.stove,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ...(item.fuel as any),
-      cookstoveName: item.stove.name,
-      fuelName: item.fuel.name,
-      countPer10Households: round(
-        sumBy(
-          Object.values(item.categories),
-          (input) => input.countPerHousehold
-        ) * 10
-      ),
-      id: item.stove._id,
-      index: item.stove.index,
-    }));
+    return this.technologies.map((item) => {
+      const tableItem: TableItem = {
+        ...item.categories,
+        cookstoveName: item.stove.name,
+        fuelName: item.fuel.name,
+        countPer10Households: round(
+          sumBy(
+            Object.values(item.categories),
+            (input) => input.countPerHousehold
+          ) * 10
+        ),
+        id: item.stove._id,
+        index: item.stove.index,
+        stove: item.stove,
+        fuel: item.fuel,
+      };
+      return tableItem;
+    });
   }
 
   private getFuel(stove: CookingStove): CookingFuel {
@@ -376,14 +356,15 @@ export default class EnergyHouseholdCookingTable extends Vue {
   }
 }
 
-type TableItem = Record<SocioEconomicCategory, HouseholdCookingInput> &
-  CookingStove &
-  CookingFuel & {
-    id: CookingStoveId;
-    cookstoveName: string;
-    fuelName: string;
-    countPerHousehold: number;
-  };
+type TableItem = Record<SocioEconomicCategory, HouseholdCookingInput> & {
+  id: CookingStoveId;
+  index: number;
+  cookstoveName: string;
+  fuelName: string;
+  countPer10Households: number;
+  stove: CookingStove;
+  fuel: CookingFuel;
+};
 
 export const mapCategoryCooking = function (
   stove: CookingStove,
