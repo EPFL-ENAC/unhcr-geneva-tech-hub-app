@@ -5,7 +5,7 @@
         <v-text-field
           v-model="name"
           hide-details="auto"
-          :label="idName + ' Name'"
+          label="Project Name"
           outlined
           required
           :rules="rules"

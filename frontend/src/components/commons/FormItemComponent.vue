@@ -3,7 +3,6 @@
     <v-text-field
       v-if="type === 'text'"
       v-model="model"
-      clearable
       hide-details="auto"
       required
       :rules="actualRules"
@@ -21,7 +20,6 @@
     <v-text-field
       v-if="type === 'number'"
       v-model.number="numberModel"
-      :clearable="!actualUnit"
       hide-details="auto"
       hide-spin-buttons
       required
