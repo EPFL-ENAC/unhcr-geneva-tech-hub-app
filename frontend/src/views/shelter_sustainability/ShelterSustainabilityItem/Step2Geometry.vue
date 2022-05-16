@@ -236,6 +236,7 @@ export default class Step2Geometry extends Vue {
     } else {
       this.localShelter.geometry.shelter_geometry_type = "";
     }
+    this.updateFormInput();
   }
   get shelter_geometry_type(): string {
     return this.localShelter?.geometry?.shelter_geometry_type;
@@ -243,9 +244,11 @@ export default class Step2Geometry extends Vue {
 
   public addWindow(): void {
     this.localShelter.geometry.windows_dimensions.push({ Ww: 0, Hw: 0, Hs: 0 });
+    this.updateFormInput();
   }
   public removeWindow(index: number): void {
     this.localShelter.geometry.windows_dimensions.splice(index, 1);
+    this.updateFormInput();
   }
 
   public get hasComputedFloorAndVolume(): boolean {
