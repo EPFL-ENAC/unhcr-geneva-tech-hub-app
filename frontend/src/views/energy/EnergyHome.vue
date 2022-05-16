@@ -52,7 +52,7 @@
           </v-expansion-panel>
         </v-expansion-panels>
         <br />
-        <v-card>
+        <v-card v-if="username != 'guest'">
           <v-form v-model="formValid" @submit.prevent="createSite">
             <v-card-text>
               <form-item-component
