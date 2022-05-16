@@ -18,7 +18,10 @@ def convert(filename: str, output: str):
             item["index"] = index
             with open(os.path.join(folder, f"{id}.json"), "w") as jsonFile:
                 json.dump(item, jsonFile, indent=2)
+    print()
     print(" | ".join([f'"{id}"' for id in ids]))
+    print()
+    print("[" + ", ".join([f'"{id}"' for id in ids]) + "]")
     print()
 
 

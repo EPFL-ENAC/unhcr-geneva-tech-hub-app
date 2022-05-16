@@ -183,7 +183,7 @@ export interface ScenarioYear {
    * a1
    */
   demographicGrowth: RangeModel;
-  fuelPriceRate: RangeModel;
+  fuelPriceRates: Record<CookingFuelId, RangeModel>;
 }
 export type ScenarioTrend = "stable" | "increase" | "decrease";
 
@@ -243,6 +243,17 @@ export type CookingFuelId =
   | "biogas"
   | "electricity"
   | "solar";
+export const cookingFuelIds: CookingFuelId[] = [
+  "wood",
+  "charcoal",
+  "pellets",
+  "ethanol",
+  "kerosene",
+  "lpg",
+  "biogas",
+  "electricity",
+  "solar",
+];
 
 export interface CookingStove {
   _id: CookingStoveId;

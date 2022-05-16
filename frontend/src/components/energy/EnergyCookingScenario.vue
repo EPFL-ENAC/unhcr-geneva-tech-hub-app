@@ -38,6 +38,13 @@
                   v-model="scenarioItem.years[yearTab][item.key]"
                   v-bind="item"
                 ></form-item-component>
+                <h3>Fuels</h3>
+                <form-item-component
+                  v-for="item in fuelFormItems"
+                  :key="item.key"
+                  v-model="scenarioItem.years[yearTab].fuelPriceRates[item.key]"
+                  v-bind="item"
+                ></form-item-component>
               </v-col>
             </v-row>
           </v-card-text>
@@ -55,6 +62,9 @@ import FormItemComponent, {
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyYearTabs from "@/components/energy/EnergyYearTabs.vue";
 import {
+  CookingFuel,
+  CookingFuelId,
+  cookingFuelIds,
   GeneralModule,
   Scenario,
   ScenarioModule,
@@ -63,6 +73,7 @@ import {
 } from "@/models/energyModel";
 import "vue-class-component/hooks";
 import { Component, Prop, VModel, Vue } from "vue-property-decorator";
+import { mapState } from "vuex";
 
 @Component({
   components: {
@@ -70,8 +81,12 @@ import { Component, Prop, VModel, Vue } from "vue-property-decorator";
     EnergyYearTabs,
     FormItemComponent,
   },
+  computed: {
+    ...mapState("energy", ["cookingFuels"]),
+  },
 })
 export default class EnergyCookingScenario extends Vue {
+  cookingFuels!: CookingFuel[];
   readonly trendOptions: SelectOption<ScenarioTrend>[] = [
     {
       text: "Stable",
@@ -126,12 +141,6 @@ export default class EnergyCookingScenario extends Vue {
       label: "Growth rate of the population",
       subtype: "rate",
     },
-    {
-      type: "range",
-      key: "fuelPriceRate",
-      label: "Fuel Price Increase Rate",
-      subtype: "rate",
-    },
   ];
 
   @VModel({ type: Object as () => ScenarioModule })
@@ -140,6 +149,19 @@ export default class EnergyCookingScenario extends Vue {
   generalModule!: GeneralModule;
 
   yearTab = 0;
+
+  get fuelFormItems(): FormItem<CookingFuelId>[] {
+    return cookingFuelIds.map((id) => {
+      const fuelName =
+        this.cookingFuels.find((item) => item._id === id)?.name ?? id;
+      return {
+        type: "range",
+        key: id,
+        label: `${fuelName} Price Increase Rate`,
+        subtype: "rate",
+      };
+    });
+  }
 
   get selectedIndex(): number | undefined {
     return this.module.scenarios.findIndex(

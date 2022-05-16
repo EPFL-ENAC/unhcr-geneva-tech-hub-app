@@ -18,7 +18,13 @@
 import EnergyCookingScenario from "@/components/energy/EnergyCookingScenario.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyFormMixin from "@/components/energy/EnergyFormMixin.vue";
-import { GeneralModule, ScenarioModule } from "@/models/energyModel";
+import {
+  CookingFuelId,
+  cookingFuelIds,
+  GeneralModule,
+  RangeModel,
+  ScenarioModule,
+} from "@/models/energyModel";
 import "vue-class-component/hooks";
 import { Component, Prop } from "vue-property-decorator";
 
@@ -64,9 +70,9 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
               demographicGrowth: {
                 val: 1,
               },
-              fuelPriceRate: {
-                val: 1,
-              },
+              fuelPriceRates: Object.fromEntries(
+                cookingFuelIds.map((id) => [id, { val: 1 }])
+              ) as Record<CookingFuelId, RangeModel>,
             },
           ],
         },
@@ -88,9 +94,9 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
               demographicGrowth: {
                 val: 1,
               },
-              fuelPriceRate: {
-                val: 1,
-              },
+              fuelPriceRates: Object.fromEntries(
+                cookingFuelIds.map((id) => [id, { val: 1 }])
+              ) as Record<CookingFuelId, RangeModel>,
             },
           ],
         },
@@ -112,9 +118,9 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
               demographicGrowth: {
                 val: 1,
               },
-              fuelPriceRate: {
-                val: 1,
-              },
+              fuelPriceRates: Object.fromEntries(
+                cookingFuelIds.map((id) => [id, { val: 1 }])
+              ) as Record<CookingFuelId, RangeModel>,
             },
           ],
         },
@@ -133,7 +139,12 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
               discountRate: scenario.discountRate ?? { val: 1 },
               incomeRate: scenario.incomeRate ?? { val: 1 },
               demographicGrowth: scenario.demographicGrowth ?? { val: 1 },
-              fuelPriceRate: scenario.fuelPriceRate ?? { val: 1 },
+              fuelPriceRates: Object.fromEntries(
+                cookingFuelIds.map((id) => [
+                  id,
+                  scenario.fuelPriceRate ?? { val: 1 },
+                ])
+              ) as Record<CookingFuelId, RangeModel>,
             },
           ];
         }
@@ -170,14 +181,10 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
             val: 1,
           };
         }
-        if (typeof scenario.fuelPriceRate === "number") {
-          scenario.fuelPriceRate = {
-            val: scenario.fuelPriceRate,
-          };
-        } else if (scenario.fuelPriceRate === undefined) {
-          scenario.fuelPriceRate = {
-            val: 1,
-          };
+        if (scenario.fuelPriceRates === undefined) {
+          scenario.fuelPriceRates = Object.fromEntries(
+            cookingFuelIds.map((id) => [id, { val: 1 }])
+          ) as Record<CookingFuelId, RangeModel>;
         }
       });
   }

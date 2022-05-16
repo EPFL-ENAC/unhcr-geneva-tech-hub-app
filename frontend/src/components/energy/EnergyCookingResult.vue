@@ -196,6 +196,8 @@ import EnergyLegend from "@/components/energy/EnergyLegend.vue";
 import {
   CategoryCooking,
   CookingFuel,
+  CookingFuelId,
+  cookingFuelIds,
   CookingStove,
   CookingStoveId,
   CookingTechnologyIntervention,
@@ -582,7 +584,9 @@ export default class EnergyCookingResult extends Vue {
         incomeRate: firstScenario.incomeRate.val,
         discountRate: firstScenario.discountRate.val,
         demographicGrowth: firstScenario.demographicGrowth.val,
-        fuelPriceRate: firstScenario.fuelPriceRate.val,
+        fuelPriceRates: Object.fromEntries(
+          cookingFuelIds.map((id) => [id, firstScenario.fuelPriceRates[id].val])
+        ) as Record<CookingFuelId, number>,
 
         proportions: Object.fromEntries<number>(
           socioEconomicCategories.map((cat) => [
@@ -605,7 +609,12 @@ export default class EnergyCookingResult extends Vue {
           currentSite.incomeRate = currentScenario.incomeRate.val;
           currentSite.discountRate = currentScenario.discountRate.val;
           currentSite.demographicGrowth = currentScenario.demographicGrowth.val;
-          currentSite.fuelPriceRate = currentScenario.fuelPriceRate.val;
+          currentSite.fuelPriceRates = Object.fromEntries(
+            cookingFuelIds.map((id) => [
+              id,
+              currentScenario.fuelPriceRates[id].val,
+            ])
+          ) as Record<CookingFuelId, number>;
         }
         const technologies = householdCooking.technologyYears.find(
           (item) => item.yearIndex === index
@@ -780,7 +789,7 @@ export default class EnergyCookingResult extends Vue {
       const variableCost =
         fuelWeight *
         technology.fuel.price *
-        Math.pow(site.fuelPriceRate, site.yearCount);
+        Math.pow(site.fuelPriceRates[technology.fuel._id], site.yearCount);
       // CCI
       const totalCost = fixedCost + variableCost;
       const result = applyMap(
@@ -875,7 +884,7 @@ interface Site {
   incomeRate: number;
   discountRate: number;
   demographicGrowth: number;
-  fuelPriceRate: number;
+  fuelPriceRates: Record<CookingFuelId, number>;
 
   proportions: Record<SocioEconomicCategory, number>;
   categories: Record<SocioEconomicCategory, CategoryInput>;
