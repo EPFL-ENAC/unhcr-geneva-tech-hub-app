@@ -1,22 +1,20 @@
 <template>
-  <v-row justify="center">
-    <v-col cols="auto">
-      <v-expansion-panels v-model="selectedIndex" mandatory>
-        <v-expansion-panel
-          v-for="scenarioItem in module.scenarios"
-          :key="scenarioItem.id"
-        >
-          <v-expansion-panel-header>
-            <template v-slot:default="{ open }">
-              <v-checkbox
-                hide-details="auto"
-                :input-value="open"
-                :label="scenarioItem.name"
-                readonly
-              ></v-checkbox>
-            </template>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
+  <v-radio-group v-model="selectedIndex">
+    <v-row>
+      <v-col
+        v-for="(scenarioItem, index) in module.scenarios"
+        :key="scenarioItem.id"
+        cols="4"
+      >
+        <v-card>
+          <v-card-title>
+            <v-radio hide-details="auto" :value="index">
+              <template v-slot:label>
+                <h3>{{ scenarioItem.name }}</h3>
+              </template>
+            </v-radio>
+          </v-card-title>
+          <v-card-text>
             <v-row>
               <v-col>
                 <form-item-component
@@ -42,11 +40,11 @@
                 ></form-item-component>
               </v-col>
             </v-row>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </v-col>
-  </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-radio-group>
 </template>
 
 <script lang="ts">

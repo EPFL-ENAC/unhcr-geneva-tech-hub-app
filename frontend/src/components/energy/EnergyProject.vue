@@ -283,7 +283,7 @@ export default class EnergyProject extends Vue {
     },
     {},
     {
-      text: "Results",
+      text: "Summary",
       icon: "mdi-chart-box",
       toName: "Result",
     },
