@@ -148,9 +148,8 @@
 </template>
 
 <script lang="ts">
-import FormItemComponent, {
-  FormItem,
-} from "@/components/commons/FormItemComponent.vue";
+import { FormItem } from "@/components/commons/FormItem";
+import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyYearTabs from "@/components/energy/EnergyYearTabs.vue";
 import {

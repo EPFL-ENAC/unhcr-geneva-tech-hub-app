@@ -24,9 +24,8 @@
 </template>
 
 <script lang="ts">
-import FormItemComponent, {
-  FormItem,
-} from "@/components/commons/FormItemComponent.vue";
+import { FormItem } from "@/components/commons/FormItem";
+import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import "vue-class-component/hooks";
 import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 

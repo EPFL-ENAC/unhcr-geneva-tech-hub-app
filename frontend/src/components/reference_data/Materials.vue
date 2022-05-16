@@ -85,10 +85,12 @@ export default class Materials extends Vue {
     return [
       { text: "Material", value: "material" },
       { text: "Form", value: "form" },
-      { text: "local", value: "local" },
+      // { text: "local", value: "local" },
       { text: "density", value: "density" },
       { text: "embodied_carbon", value: "embodied_carbon" },
       { text: "embodied_water", value: "embodied_water" },
+      // { text: "shape", value: "shape" },
+      // { text: "units", value: "units" },
     ];
   }
 }

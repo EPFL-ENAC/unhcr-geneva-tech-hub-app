@@ -23,6 +23,7 @@
       hide-details="auto"
       hide-spin-buttons
       required
+      :suffix="suffix"
       :rules="actualRules"
       :readonly="readonly"
       type="number"
@@ -128,6 +129,12 @@
 
 <script lang="ts">
 import CountrySelect from "@/components/commons/CountrySelect.vue";
+import {
+  BooleanOptions,
+  SelectOption,
+  SelectValue,
+  TypeType,
+} from "@/components/commons/FormItem";
 import { RangeModel } from "@/models/energyModel";
 import { checkMax, checkMin, checkRequired, Rule } from "@/utils/rules";
 import { SelectItemObject } from "@/utils/vuetify";
@@ -154,6 +161,8 @@ export default class FormItemComponent extends Vue {
   readonly options: BooleanOptions | SelectOption<SelectValue>[] | undefined;
   @Prop(String)
   readonly unit: string | undefined;
+  @Prop(String)
+  readonly suffix: string | undefined;
   @Prop(Number)
   readonly min: number | undefined;
   @Prop(Number)
@@ -274,70 +283,4 @@ export default class FormItemComponent extends Vue {
     );
   }
 }
-
-type TypeType = "text" | "number" | "boolean" | "select" | "range" | "country";
-
-export type FormItem<K = string, V = string> =
-  | TextFormItem<K>
-  | NumberFormItem<K>
-  | BooleanFormItem<K>
-  | SelectFormItem<K, V>
-  | RangeFormItem<K>
-  | CountryFormItem<K>;
-
-interface AbstractFormItem<K> {
-  key: K;
-  label?: string;
-  hidden?: boolean;
-  rules?: Rule[];
-  optional?: boolean;
-  readonly?: boolean;
-}
-
-interface TextFormItem<K> extends AbstractFormItem<K> {
-  type: "text";
-}
-
-interface NumberFormItem<K> extends AbstractFormItem<K> {
-  type: "number";
-  subtype?: "percent" | "rate";
-  unit?: string;
-  min?: number;
-  max?: number;
-  ratio?: number;
-  precision?: number;
-}
-
-interface BooleanFormItem<K> extends AbstractFormItem<K> {
-  type: "boolean";
-  options?: BooleanOptions;
-}
-
-interface SelectFormItem<K, V> extends AbstractFormItem<K> {
-  type: "select";
-  options: SelectOption<V>[];
-  unit?: string;
-  multiple?: boolean;
-}
-
-interface RangeFormItem<K> extends AbstractFormItem<K> {
-  type: "range";
-  subtype?: "rate";
-}
-
-interface CountryFormItem<K> extends AbstractFormItem<K> {
-  type: "country";
-}
-
-interface BooleanOptions {
-  true: string;
-  false: string;
-}
-
-export interface SelectOption<V> {
-  text: string;
-  value: V;
-}
-
-type SelectValue = boolean | string;
 </script>

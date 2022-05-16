@@ -1,10 +1,4 @@
-import {
-  Item,
-  Material,
-  MaterialDimensions,
-  Other,
-  Units,
-} from "@/store/ShelterInterface";
+import { Item, Material, Other } from "@/store/ShelterInterface";
 import { v4 as uuidv4 } from "uuid";
 import {
   ActionContext,
@@ -33,9 +27,6 @@ function getDefaultMaterialItem(): Item {
   return {
     _id: uuidv4(),
     itemType: "Material",
-    unit: Units.KG,
-    quantity: 1,
-    dimensions: {} as MaterialDimensions,
   } as Material;
 }
 
@@ -50,7 +41,7 @@ function getDefaultOther(): Item {
   return {
     _id: uuidv4(),
     itemType: "Other",
-    unit: Units.PCE,
+    unit: "PCE",
   } as Other;
 }
 
