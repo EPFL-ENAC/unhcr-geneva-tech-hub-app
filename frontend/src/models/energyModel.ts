@@ -39,6 +39,7 @@ export interface RangeModel {
 
 export interface GeneralModule {
   name: string;
+  countryCode?: string;
   yearStart: number;
   yearEnd: number;
   locationLatitude: number;

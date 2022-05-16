@@ -245,6 +245,11 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
           label: "Name of the site",
         },
         {
+          type: "country",
+          key: "countryCode",
+          label: "Country",
+        },
+        {
           type: "number",
           key: "locationLatitude",
           label: "Latitude of the site",

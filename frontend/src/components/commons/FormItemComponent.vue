@@ -116,10 +116,20 @@
         </v-dialog>
       </template>
     </form-item-component>
+    <country-select
+      v-if="type === 'country'"
+      v-model="model"
+      hide-details="auto"
+      :label="label"
+      :readonly="readonly"
+      required
+      :rules="rules"
+    ></country-select>
   </div>
 </template>
 
 <script lang="ts">
+import CountrySelect from "@/components/commons/CountrySelect.vue";
 import { RangeModel } from "@/models/energyModel";
 import { checkMax, checkMin, checkRequired, Rule } from "@/utils/rules";
 import { SelectItemObject } from "@/utils/vuetify";
@@ -129,6 +139,9 @@ import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 
 @Component({
   name: "FormItemComponent",
+  components: {
+    CountrySelect,
+  },
 })
 export default class FormItemComponent extends Vue {
   @VModel({ type: [String, Number, Boolean, Array, Object] })
@@ -264,14 +277,15 @@ export default class FormItemComponent extends Vue {
   }
 }
 
-type TypeType = "text" | "number" | "boolean" | "select" | "range";
+type TypeType = "text" | "number" | "boolean" | "select" | "range" | "country";
 
 export type FormItem<K = string, V = string> =
   | TextFormItem<K>
   | NumberFormItem<K>
   | BooleanFormItem<K>
   | SelectFormItem<K, V>
-  | RangeFormItem<K>;
+  | RangeFormItem<K>
+  | CountryFormItem<K>;
 
 interface AbstractFormItem<K> {
   key: K;
@@ -311,6 +325,10 @@ interface SelectFormItem<K, V> extends AbstractFormItem<K> {
 interface RangeFormItem<K> extends AbstractFormItem<K> {
   type: "range";
   subtype?: "rate";
+}
+
+interface CountryFormItem<K> extends AbstractFormItem<K> {
+  type: "country";
 }
 
 interface BooleanOptions {
