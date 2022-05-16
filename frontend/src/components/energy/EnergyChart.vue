@@ -1,6 +1,6 @@
 <template>
   <v-responsive aspect-ratio="2">
-    <v-chart autoresize :option="option" />
+    <v-chart autoresize :option="option"></v-chart>
   </v-responsive>
 </template>
 

@@ -126,6 +126,22 @@
             aspect-ratio="1"
           ></v-img>
         </template>
+        <template v-slot:[`item.countPer10Households`]="{ item }">
+          <v-tooltip
+            bottom
+            color="white"
+            :disabled="item.countPer10Households === 0"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <span v-bind="attrs" v-on="on">
+                {{ item.countPer10Households }}
+              </span>
+            </template>
+            <v-responsive height="256px" width="256px">
+              <v-chart autoresize :option="getChartOption(item)"></v-chart>
+            </v-responsive>
+          </v-tooltip>
+        </template>
       </v-data-table>
     </v-card-text>
   </v-card>
@@ -148,19 +164,27 @@ import {
   socioEconomicCategories,
   SocioEconomicCategory,
 } from "@/models/energyModel";
-import { getCookingFuel } from "@/utils/energy";
+import { getColor, getCookingFuel } from "@/utils/energy";
 import { SelectItemObject } from "@/utils/vuetify";
+import { PieChart } from "echarts/charts";
+import { use } from "echarts/core";
+import { CanvasRenderer } from "echarts/renderers";
+import { EChartsOption } from "echarts/types/dist/shared";
 import { chain, cloneDeep, round, sumBy } from "lodash";
 import "vue-class-component/hooks";
+import VChart from "vue-echarts";
 import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";
 import { mapState } from "vuex";
+
+use([CanvasRenderer, PieChart]);
 
 @Component({
   components: {
     EnergyForm,
     FormItemComponent,
     EnergyYearTabs,
+    VChart,
   },
   computed: {
     ...mapState("energy", ["cookingFuels", "cookingStoves"]),
@@ -353,6 +377,29 @@ export default class EnergyHouseholdCookingTable extends Vue {
       throw new Error(`id ${item.id} not found`);
     }
     return categoryCooking;
+  }
+
+  getChartOption(item: TableItem): EChartsOption {
+    const data = socioEconomicCategories
+      .map((cat) => ({
+        id: cat,
+        name: this.$t(`energy.${cat}`).toString(),
+        value: item[cat].countPerHousehold,
+      }))
+      .filter((item) => item.value > 0);
+    return {
+      series: [
+        {
+          type: "pie",
+          radius: "25%",
+          label: {
+            overflow: "break",
+          },
+          data: data,
+        },
+      ],
+      color: data.map((item) => getColor(item.id)),
+    };
   }
 }
 
