@@ -83,9 +83,8 @@
 
 <script lang="ts">
 import ConfirmDialog from "@/components/commons/ConfirmDialog.vue";
-import FormItemComponent, {
-  FormItem,
-} from "@/components/commons/FormItemComponent.vue";
+import { FormItem } from "@/components/commons/FormItem";
+import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import EnergyMap from "@/components/energy/EnergyMap.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
 import { GeneralModule, ProjectDocument } from "@/models/energyModel";

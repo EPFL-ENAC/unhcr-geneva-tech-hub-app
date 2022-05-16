@@ -183,9 +183,8 @@
 
 <script lang="ts">
 import CountrySelect from "@/components/commons/CountrySelect.vue";
-import FormItemComponent, {
-  FormItem,
-} from "@/components/commons/FormItemComponent.vue";
+import { FormItem } from "@/components/commons/FormItem";
+import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import UserManager from "@/components/commons/UserManager.vue";
 import InputWithInfo from "@/components/shelter_sustainability/InputWithInfo.vue";
 import { listOfShelterType, Shelter } from "@/store/ShelterInterface";

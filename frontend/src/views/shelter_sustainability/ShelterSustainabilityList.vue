@@ -126,10 +126,10 @@
                       <v-card-subtitle class="pb-0">
                         <v-row>
                           <v-col cols="5">
-                            Created at: {{ project.created_at | formatDate }}
+                            Created: {{ project.created_at | formatDate }}
                           </v-col>
                           <v-col cols="5">
-                            Last modified: {{ project.updated_at | formatDate }}
+                            Updated: {{ project.updated_at | formatDate }}
                           </v-col>
                           <v-col>
                             <div class="project__hidden-child">

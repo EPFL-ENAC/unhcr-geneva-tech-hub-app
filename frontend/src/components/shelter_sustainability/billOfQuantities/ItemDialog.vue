@@ -29,7 +29,7 @@
               </v-col>
             </v-row>
             <v-row v-if="localItem.itemType === 'Labour'">
-              <v-col cols="12" sm="6" md="6">
+              <v-col cols="12">
                 <v-select
                   v-model="localItem.workerType"
                   :items="workerTypes"
@@ -39,37 +39,6 @@
                   required
                   :rules="rules"
                 />
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <v-select
-                  v-model="localItem.unit"
-                  :items="labourUnits"
-                  label="Unit"
-                  name="type"
-                  type="string"
-                  required
-                  :rules="rules"
-                />
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <!-- If Lump Sum then quantity is disabled for the user and default is 1 -->
-                <v-text-field
-                  v-model.number="localItem.quantity"
-                  type="number"
-                  label="Quantity"
-                  required
-                  :rules="rules"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                  v-model.number="localItem.unitCost"
-                  type="number"
-                  suffix="$"
-                  label="Unit cost"
-                  required
-                  :rules="rules"
-                ></v-text-field>
               </v-col>
             </v-row>
             <!-- material form -->
@@ -94,7 +63,7 @@
                 <v-select
                   v-model="localItem.materialId"
                   :items="materials"
-                  label="Item type"
+                  label="Material"
                   item-text="text"
                   item-value="value"
                   name="type"
@@ -109,46 +78,16 @@
                   v-model="localItem.formId"
                   :disabled="!localItem.materialId"
                   :items="currentMaterialForms"
-                  label="Item Form"
+                  label="Form"
                   item-text="form"
                   item-value="_id"
                   name="type"
                   type="string"
                   required
                   :rules="rules"
+                  @change="resetUnitAndQuantity"
                 />
               </v-col>
-              <v-col v-show="false" cols="12" sm="6" md="4">
-                <v-text-field
-                  v-model="localItem.unit"
-                  label="Units"
-                  required
-                  :rules="rules"
-                  :disabled="true"
-                ></v-text-field>
-                <!-- temporary disabled of units -->
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                  v-model.number="localItem.quantity"
-                  type="number"
-                  label="Quantity"
-                  required
-                  suffix="Kg"
-                  :rules="rules"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                  v-model.number="localItem.unitCost"
-                  type="number"
-                  suffix="$"
-                  label="Unit cost"
-                  required
-                  :rules="rules"
-                ></v-text-field>
-              </v-col>
-              <!-- Spec will be below with rebar length width diameter etc  -->
             </v-row>
 
             <v-row v-else-if="localItem.itemType === 'Other'">
@@ -160,22 +99,100 @@
                   :rules="rules"
                 ></v-text-field>
               </v-col>
-              <v-col cols="12" sm="6" md="6">
+            </v-row>
+            <!-- Unit and Quantity for Labour/Material/Other-->
+            <v-row v-if="localItem.itemType">
+              <v-col
+                v-if="localItem.itemType !== 'Other' && !itemUnitsDisabled"
+                cols="12"
+                sm="6"
+                md="6"
+              >
+                <v-select
+                  v-model="localItem.unit"
+                  :disabled="itemUnitsDisabled"
+                  :items="itemUnits"
+                  label="Unit"
+                  name="type"
+                  type="string"
+                  required
+                  :rules="rules"
+                  @change="onUnitChange"
+                />
+              </v-col>
+              <v-col
+                v-if="!itemUnitsDisabled && localItem.itemType !== 'Material'"
+                cols="12"
+                sm="6"
+                md="6"
+              >
+                <!-- If Lump sum then quantity is disabled for the user and default is 1 -->
                 <v-text-field
                   v-model.number="localItem.quantity"
                   type="number"
                   label="Quantity"
                   required
-                  suffix="Pce"
+                  :disabled="itemQuantityDisabled"
+                  :suffix="quantitySuffix"
                   :rules="rules"
+                  @change="computeCost"
                 ></v-text-field>
               </v-col>
-              <v-col cols="12" sm="6" md="6">
+
+              <!-- dynamic component for Material depending on currentFormula unit + shape -->
+              <!-- <div v-if="localItem.itemType === 'Material' && shapeItems"> -->
+
+              <v-col
+                v-for="(shapeItem, $index) in shapeItems"
+                v-else
+                :key="$index"
+                cols="6"
+                xs="12"
+              >
+                <form-item-component
+                  v-if="shapeItem.key === 'specification'"
+                  v-model="localItem[shapeItem.key]"
+                  v-bind="shapeItem"
+                  :options="currentParameters"
+                  @input="computeCost"
+                />
+                <form-item-component
+                  v-else
+                  v-model="localItem[shapeItem.key]"
+                  v-bind="shapeItem"
+                  :suffix="
+                    shapeItem.key === 'quantity'
+                      ? quantitySuffix
+                      : shapeItem.suffix
+                  "
+                  @input="computeCost"
+                />
+              </v-col>
+              <!-- </v-row> -->
+              <!-- end of dynamic component -->
+            </v-row>
+
+            <!-- Unit cost and Item cost -->
+            <v-row v-if="localItem.itemType && localItem.quantity">
+              <v-col cols="6">
                 <v-text-field
                   v-model.number="localItem.unitCost"
                   type="number"
                   suffix="$"
-                  label="Unit cost"
+                  :label="`Unit cost per ${quantityUnitSuffix}`"
+                  required
+                  :rules="rules"
+                  @change="computeCost"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="6">
+                <!-- for show only should not be changed depends on unitCost * quantity -->
+                <v-text-field
+                  v-model.number="localItem.totalCost"
+                  type="number"
+                  suffix="$"
+                  :disabled="true"
+                  label="Item cost"
                   required
                   :rules="rules"
                 ></v-text-field>
@@ -205,7 +222,23 @@
 
 <script lang="ts">
 import CountrySelect from "@/components/commons/CountrySelect.vue";
-import { Item, Material, Shelter, Units } from "@/store/ShelterInterface";
+import {
+  FormItem,
+  SelectOption,
+  SelectValue,
+} from "@/components/commons/FormItem";
+import FormItemComponent from "@/components/commons/FormItemComponent.vue";
+import {
+  FormTypeMaterial,
+  Item,
+  Labour,
+  Material,
+  materialFunctions,
+  materialsInputs,
+  Shelter,
+  UnitsMaterial,
+  UnitsRef,
+} from "@/store/ShelterInterface";
 import { ShelterMaterial } from "@/store/SheltersMaterialModule";
 import { ShelterTransport } from "@/store/SheltersTransportModule";
 import iso3166 from "@/utils/iso3166";
@@ -244,6 +277,7 @@ import { mapActions, mapGetters } from "vuex";
   },
   components: {
     CountrySelect,
+    FormItemComponent,
   },
 })
 export default class DeleteItemDialog extends Vue {
@@ -277,6 +311,122 @@ export default class DeleteItemDialog extends Vue {
   public get title(): string {
     return this.editedIndex === -1 ? "New item" : "Edit item";
   }
+
+  readonly pluralRules = new Intl.PluralRules("en-US");
+
+  private pluralize(count: number, singular: string, plural: string) {
+    const grammaticalNumber = this.pluralRules.select(count);
+    switch (grammaticalNumber) {
+      case "one":
+        return singular;
+      case "other":
+        return plural;
+      default:
+        throw new Error("Unknown: " + grammaticalNumber);
+    }
+  }
+
+  public get quantitySuffix(): string {
+    if (this.localItem.itemType === "Labour") {
+      const item = this.localItem as Labour;
+      if (item.unit) {
+        return this.pluralize(
+          this.localItem.quantity ?? 0,
+          item.unit,
+          item.unit + "s"
+        );
+      }
+    }
+    if (this.localItem.itemType === "Other") {
+      return this.pluralize(
+        this.localItem.quantity ?? 0,
+        UnitsRef["PCE"],
+        UnitsRef["PCE"] + "s"
+      );
+    }
+    if (this.localItem.itemType === "Material") {
+      const item = this.localItem as Material;
+      const unitName = UnitsRef[item.unit as UnitsMaterial];
+      if (item.unit === "PCE") {
+        return this.pluralize(
+          this.localItem.quantity ?? 0,
+          unitName,
+          unitName + "s"
+        );
+      }
+      return unitName;
+    }
+    return "";
+  }
+
+  public get quantityUnitSuffix(): string {
+    if (this.localItem.itemType === "Labour") {
+      const item = this.localItem as Labour;
+      if (item.unit) {
+        return item.unit.toLowerCase();
+      }
+    }
+    if (this.localItem.itemType === "Other") {
+      return UnitsRef["PCE"].toLowerCase();
+    }
+    if (this.localItem.itemType === "Material") {
+      const item = this.localItem as Material;
+      return UnitsRef[item.unit as UnitsMaterial].toLowerCase();
+    }
+    return "";
+  }
+
+  public get itemUnits(): string[] {
+    if (this.localItem.itemType === "Labour") {
+      return this.labourUnits;
+    }
+
+    if (this.localItem.itemType === "Material") {
+      return this.currentItem?.units ?? [];
+    }
+    return [];
+  }
+  public get itemUnitsDisabled(): boolean {
+    if (this.localItem.itemType === "Material") {
+      const item = this.localItem as Material;
+      return !item.formId;
+    }
+    return false;
+  }
+
+  public get itemQuantityDisabled(): boolean {
+    if (this.localItem.itemType === "Labour") {
+      const item = this.localItem as Labour;
+      return item.unit === "Lump sum";
+    }
+    if (this.localItem.itemType === "Material") {
+      const item = this.localItem as Material;
+      return !item.unit;
+    }
+    return false;
+  }
+
+  public get shapeItems(): FormItem[] {
+    // depends on currentFormula
+    if (this.currentFormula) {
+      return materialsInputs[this.currentFormula] ?? [];
+    }
+    return [];
+  }
+
+  public onUnitChange(unit: string): void {
+    if (unit === "Lump sum") {
+      this.localItem.quantity = 1;
+      this.$set(this.localItem, "quantity", 1);
+    }
+    this.computeCost();
+  }
+
+  public resetUnitAndQuantity(): void {
+    delete this.localItem.quantity;
+    delete this.localItem.unit;
+  }
+
   public async submitFn(): Promise<void> {
     await this.computeCost();
     await this.saveItem(this.localItem);
@@ -289,6 +439,49 @@ export default class DeleteItemDialog extends Vue {
     const shelter = await this.getDoc(id);
     return local ? shelter.t : shelter.o;
   }
+  public get currentItem(): ShelterMaterial | undefined {
+    if (this.localItem.itemType === "Material") {
+      const item = this.localItem as Material;
+      if (item.formId) {
+        return this.materialMap[item.formId];
+      }
+    }
+
+    return undefined;
+  }
+
+  public get currentParameters(): SelectOption<SelectValue>[] {
+    if (this.currentItem && this.currentItem.parameters) {
+      const params = this.currentItem.parameters;
+      return Object.keys(this.currentItem.parameters).reduce(
+        (acc, key: string) => {
+          acc.push({
+            text: key,
+            value: params[key],
+          });
+          return acc;
+        },
+        [] as SelectOption<SelectValue>[]
+      );
+    }
+    return [];
+  }
+
+  public get currentFormula(): FormTypeMaterial | undefined {
+    const special = ["M", "M2", "PCE"];
+    if (this.localItem.itemType === "Material") {
+      const item = this.localItem as Material;
+      const { shape } = this.currentItem ?? { shape: "UNDEFINED" };
+      if (item.formId && shape) {
+        if (item.unit && special.indexOf(item.unit) !== -1) {
+          return `${item.unit}_${shape}` as FormTypeMaterial;
+        }
+        return item.unit as FormTypeMaterial;
+      }
+    }
+
+    return undefined;
+  }
 
   public async computeCost(): Promise<void> {
     // side effect function: TODO: transform to pure function and move to utils
@@ -298,13 +491,15 @@ export default class DeleteItemDialog extends Vue {
       const { embodied_carbon, embodied_water, density, local } =
         this.materialMap[formId];
 
-      // maybe use dimensions instead of quantity... but later
+      // compute real weight below
       let weight = 0;
-      if (unit === Units.KG) {
-        weight = quantity;
-      } else {
-        const volume = 0; // TODO : use form function to compute volume based on predefined format
-        weight = density * volume;
+      if (this.currentFormula) {
+        const item = this.localItem as Material;
+        let finalDensity = density;
+        if (item.specification) {
+          finalDensity = item.specification;
+        }
+        weight = materialFunctions[this.currentFormula](item, finalDensity);
       }
       newValue.weight = weight;
 

@@ -1,3 +1,4 @@
+import { MaterialShape } from "@/store/ShelterInterface";
 import { SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
@@ -38,6 +39,8 @@ export interface ShelterMaterial {
   form: string; // "Composite panel"
   material: string; //"Aluminium"
   units: string[]; //['KG', 'M2', 'PCE']
+  shape: MaterialShape;
+  parameters?: Record<string, number>;
   _id: string; // "ALU-CPA_"
 }
 

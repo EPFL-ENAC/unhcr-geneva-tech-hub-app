@@ -140,10 +140,8 @@
 </template>
 
 <script lang="ts">
-import FormItemComponent, {
-  FormItem,
-  SelectOption,
-} from "@/components/commons/FormItemComponent.vue";
+import { FormItem, SelectOption } from "@/components/commons/FormItem";
+import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import {
   CookingFuel,

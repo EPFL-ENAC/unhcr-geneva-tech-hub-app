@@ -1,4 +1,6 @@
+import { FormItem } from "@/components/commons/FormItem";
 import { SyncDatabase } from "@/utils/couchdb";
+
 export interface ShelterState {
   shelter: Shelter;
   shelters: Array<Shelter>;
@@ -81,161 +83,469 @@ export interface Score {
   [property: string]: number | Score;
 }
 
-export enum Units {
-  KG = "kg",
-  M = "m",
-  M2 = "m2",
-  M3 = "m3",
-  L = "l",
-  PCE = "pce",
-}
+export type Units = UnitsMaterial | UnitsLabour | UnitsOther;
+export type UnitsOther = "PCE";
+export type UnitsMaterial = "KG" | "M" | "M2" | "M3" | "L" | "PCE";
+export type UnitsLabour = "Hour" | "Day" | "Lump sum";
+
+export const UnitsRef = {
+  KG: "kg",
+  mm: "mm",
+  M: "m",
+  M2: "m²",
+  M3: "m³",
+  L: "L",
+  PCE: "Piece", // use plural letter
+};
 
 export enum ItemTypes {
   Material = "material",
   Labour = "labour",
 }
 
+export type MaterialShape =
+  | "COMPLEX-SECTION"
+  | "COMPLEX-SHEET"
+  | "CYLINDRICAL"
+  | "FIXTURE"
+  | "RECTANGULAR"
+  | "ROPE"
+  | "SHEET"
+  | "UNDEFINED";
+
+// Units
+// KG; //
+// L; // --> liter
+// M; // concat SHAPE
+// M2; // concat SHAPE
+// M3; // --> cube
+// PCE; // concat SHAPE
+
 export type FormTypeMaterial =
-  | "Cube"
-  | "UProfile"
-  | "Sandwitch"
-  | "Pipe"
-  | "Rope"
-  | "Sheet"
-  | "Cylinder"
-  | "Kilogram"
-  | "Liter";
+  | "KG"
+  | "L"
+  | "M3"
+  | "M2_RECTANGULAR"
+  | "M_RECTANGULAR"
+  | "M_CYLINDRICAL"
+  | "M_ROPE"
+  | "M_COMPLEX-SECTION"
+  | "PCE_RECTANGULAR"
+  | "PCE_CYLINDRICAL"
+  | "PCE_SHEET"
+  | "PCE_FIXTURE"
+  | "PCE_UNDEFINED"
+  | "PCE_COMPLEX-SECTION"
+  | "PCE_COMPLEX-SHEET";
+
+export const materialsInputs: MaterialsInputs = {
+  KG: [
+    {
+      type: "number",
+      key: "quantity",
+      label: "quantity",
+      suffix: UnitsRef.KG,
+    },
+  ], // we use quantity a dimension
+  L: [
+    {
+      type: "number",
+      key: "quantity",
+      label: "quantity",
+      suffix: UnitsRef.L,
+    },
+  ], // we use quantity a dimension
+  M3: [
+    {
+      type: "number",
+      key: "quantity",
+      label: "Volume",
+      suffix: UnitsRef.M3,
+    },
+  ], // we use quantity a dimension
+  M2_RECTANGULAR: [
+    {
+      type: "number",
+      key: "quantity",
+      label: "area",
+      suffix: UnitsRef.M2,
+    },
+    {
+      type: "number",
+      key: "height",
+      label: "Height/thickness",
+      suffix: UnitsRef.mm,
+    },
+  ],
+  M_RECTANGULAR: [
+    {
+      type: "number",
+      key: "quantity",
+      label: "Length",
+      suffix: UnitsRef.mm,
+    },
+    {
+      type: "number",
+      key: "width",
+      label: "Width",
+      suffix: UnitsRef.mm,
+    },
+    {
+      type: "number",
+      key: "height",
+      label: "Height/thickness",
+      suffix: UnitsRef.mm,
+    },
+  ],
+  M_CYLINDRICAL: [
+    {
+      type: "number",
+      key: "diameter",
+      label: "Diameter",
+      suffix: UnitsRef.mm,
+    },
+    {
+      type: "number",
+      key: "quantity",
+      label: "Length",
+      suffix: UnitsRef.M,
+    },
+  ],
+  M_ROPE: [
+    {
+      type: "number",
+      key: "quantity",
+      label: "Length",
+      suffix: UnitsRef.M,
+    },
+  ], // we use quantity as number of meter
+  "M_COMPLEX-SECTION": [
+    {
+      type: "number",
+      key: "quantity",
+      label: "Length",
+      suffix: UnitsRef.M,
+    },
+    {
+      type: "select",
+      key: "specification",
+      label: "Specification",
+      options: [], // to be dynamically overided by ShelterMaterial
+    },
+  ],
+  PCE_RECTANGULAR: [
+    {
+      type: "number",
+      key: "quantity",
+      label: "quantity",
+      suffix: UnitsRef.PCE,
+    },
+    {
+      type: "number",
+      key: "length",
+      label: "Length",
+      suffix: UnitsRef.mm,
+    },
+    {
+      type: "number",
+      key: "width",
+      label: "Width",
+      suffix: UnitsRef.mm,
+    },
+    {
+      type: "number",
+      key: "height",
+      label: "Height/thickness",
+      suffix: UnitsRef.mm,
+    },
+  ],
+  PCE_CYLINDRICAL: [
+    {
+      type: "number",
+      key: "quantity",
+      label: "quantity",
+      suffix: UnitsRef.PCE,
+    },
+    {
+      type: "number",
+      key: "diameter",
+      label: "Diameter",
+      suffix: UnitsRef.mm,
+    },
+    {
+      type: "number",
+      key: "length",
+      label: "Length",
+      suffix: UnitsRef.M,
+    },
+  ],
+  PCE_SHEET: [
+    {
+      type: "number",
+      key: "quantity",
+      label: "quantity",
+      suffix: UnitsRef.PCE,
+    },
+    {
+      type: "number",
+      key: "length",
+      label: "Length",
+      suffix: UnitsRef.M,
+    },
+    {
+      type: "number",
+      key: "width",
+      label: "Width",
+      suffix: UnitsRef.M,
+    },
+  ],
+  PCE_FIXTURE: [
+    {
+      type: "number",
+      key: "quantity",
+      label: "quantity",
+      suffix: UnitsRef.PCE,
+    },
+  ], // okay we use quantity
+  PCE_UNDEFINED: [
+    {
+      type: "number",
+      key: "quantity",
+      label: "quantity",
+      suffix: UnitsRef.PCE,
+    },
+    {
+      type: "number",
+      key: "volume",
+      label: "Volume",
+      suffix: UnitsRef.M3,
+    },
+  ],
+  "PCE_COMPLEX-SECTION": [
+    {
+      type: "number",
+      key: "quantity",
+      label: "quantity",
+      suffix: UnitsRef.PCE,
+    },
+    {
+      type: "number",
+      key: "length",
+      label: "Length",
+      suffix: UnitsRef.M,
+    },
+    {
+      type: "select",
+      key: "specification",
+      label: "Specification",
+      options: [], // to be dynamically overided by ShelterMaterial
+    },
+  ],
+  "PCE_COMPLEX-SHEET": [
+    {
+      type: "number",
+      key: "quantity",
+      label: "quantity",
+      suffix: UnitsRef.PCE,
+    },
+    {
+      type: "number",
+      key: "length",
+      label: "Length",
+      suffix: UnitsRef.M,
+    },
+    {
+      type: "number",
+      key: "width",
+      label: "Width",
+      suffix: UnitsRef.M,
+    },
+    {
+      type: "select",
+      key: "specification",
+      label: "Specification",
+      options: [], // to be dynamically overided by ShelterMaterial
+    },
+  ],
+};
 
 type Weight = number;
-type Meter = number;
-type Milimeter = number;
-type Liter = number;
-type Kilogram = number;
 type Density = number;
 type MaterialsFunction = Record<FormTypeMaterial, densityFunction>;
+type MaterialsInputs = Record<FormTypeMaterial, FormItem[]>;
 
-type densityCube = (L: Meter, W: Meter, H: Meter, density: Density) => Weight;
-
-type densitySheet = (
-  L: Meter,
-  W: Meter,
-  Thickness: Milimeter,
-  density: Density
-) => Weight;
-
-type densityUProfile = (
-  L: Meter,
-  W: Milimeter,
-  H: Milimeter,
-  Thickness: Milimeter,
-  density: Density
-) => Weight;
-
-type densityCylinder = (
-  L: Meter,
-  diameter: Milimeter,
-  density: Density
-) => Weight;
-
-type densityFunction =
-  | densityCube
-  | densityCylinder
-  | densitySheet
-  | densityUProfile;
+type densityFunction = (item: Material, density: Density) => Weight;
 
 // use to convert liter in m3 and milimeter in meter;
 const ONE_THOUSANDTH = 1e-3;
 
-export const materialFunction = {
-  Cube: (
-    length: Meter,
-    width: Meter,
-    height: Meter,
-    density: Density
-  ): Weight => {
-    return length * width * height * density;
-  },
-  Sheet: (
-    length: Meter,
-    width: Meter,
-    thickness: Milimeter,
-    density: Density
-  ) => {
-    // 1milimeter == 0.001 meter
-    return length * width * thickness * ONE_THOUSANDTH * density;
-  },
-  Pipe: (
-    length: Meter,
-    diameter: Milimeter,
-    thickness: Milimeter,
-    density: Density
-  ) => {
-    // 1milimeter == 0.001 meter
-    // cylinder A minus Cylinder B
-    // cylinder A has diameter == diameter
-    // Cylinder B as diameter  == diameter - 2* thickness
-
-    const half_diameter_a = (diameter / 2) * ONE_THOUSANDTH;
-    const half_diameter_b = ((diameter - 2 * thickness) / 2) * ONE_THOUSANDTH;
-    // const cylinder_a_weight = L * Math.pow(half_diameter_a, 2) * Math.PI * density;
-    // const cylinder_b_weight = L * Math.pow(half_diameter_b, 2) * Math.PI * density;
-    // a * x - b * x = x* (a - b)
-    // a == A^2 AND b == B^2
-    // A^2 - B^2 === (A - B)(A + B)
-    //
-    return (
-      (half_diameter_a - half_diameter_b) *
-      (half_diameter_a + half_diameter_b) *
-      length *
-      Math.PI *
-      density
-    );
-  },
-
-  Cylinder: (L: Meter, diameter: Milimeter, density: Density) => {
-    // 1milimeter == 0.001 meter
-    const half_diameter = (diameter / 2) * ONE_THOUSANDTH;
-    return L * Math.pow(half_diameter, 2) * Math.PI * density;
-  },
-  Kilogram: (n: Kilogram) => n,
-  Liter: (n: Liter, density: Density) => {
-    // n is in liter hence (0.001 * n) m3 because 1000L = 1m3
+export const materialFunctions: MaterialsFunction = {
+  // return kg
+  KG: (item: Material) => item.quantity ?? 0, // quantity in kg,
+  L: (item: Material, density: Density) => {
+    // n is item.quantity in liter hence (0.001 * n) m3 because 1000L = 1m3
     // density is kg per m3 or per 1000L
     // to keep dimensions consistent
-    return n * density * ONE_THOUSANDTH;
+    return (item.quantity ?? 0) * density * ONE_THOUSANDTH;
   },
-  UProfile: (
-    length: Meter,
-    width: Milimeter,
-    height: Milimeter,
-    thickness: Milimeter,
-    density: Density
-  ) => {
-    // Total surface * thickness * density === weight
-    const heightInMeter = height * ONE_THOUSANDTH;
-    const widthInMeter = width * ONE_THOUSANDTH;
-    const thicknessInMeter = thickness * ONE_THOUSANDTH;
-    const side = widthInMeter + 2 * heightInMeter; // width + two times the height => |_|
-    const surface = length * side;
-    const volume = surface * thicknessInMeter; // in meter
-    return volume * density;
+  M3: (item: Material, density: Density) => (item.quantity ?? 0) * density, // volume in M3
+  M2_RECTANGULAR: (item: Material, density: Density) => {
+    /* {THK}*<ARE>*[DEN]
+     ** height in MM is THK a.k.a thickness
+     ** quantity in squared meters
+     */
+    const { height, quantity } = item;
+    if (height && quantity) {
+      // return 0;//
+      return height * ONE_THOUSANDTH * (quantity ?? 0) * density;
+    }
+    return 0;
   },
-  Sandwitch: (length: Meter, width: Meter, height: Meter, density: Density) => {
-    const volume = length * width * height;
-    return volume * density;
+  M_RECTANGULAR: (item: Material, density: Density) => {
+    /* {WID}*{HEI}*<LEN>*[DEN] // LEN is quantity in mm
+    WID: number, HEI: number, LEN: number, DEN: number
+    */
+    const { quantity, width, height } = item;
+    if (quantity && width && height) {
+      return (
+        width *
+        quantity *
+        height *
+        Math.pow(ONE_THOUSANDTH, 3) * // width, length, height in mm
+        density
+      );
+    }
+    return 0;
   },
-  Rope: (length: Meter, density: Density) => {
-    // for Rope density is kg/m and not kg/m³
-    return length * density;
+  M_CYLINDRICAL: (item: Material, density: Density) => {
+    /*
+     ** (DIA: number, LEN: number, density: number) =>
+     **  Math.PI * Math.pow(DIA / 2, 2) * LEN * density, // PI*(<DIA>/2)^2*<LEN>*[DEN]
+     ** quantity is length
+     */
+    const { quantity, diameter } = item;
+    if (quantity && diameter) {
+      // TODO: need to multiply by proper factor to convert milimeter in mˆ2 dimension
+      return (
+        Math.PI *
+        Math.pow((diameter * ONE_THOUSANDTH) / 2, 2) *
+        quantity *
+        density
+      );
+    }
+    return 0;
   },
-} as MaterialsFunction;
+  M_ROPE: (item: Material, density: Density) => {
+    /*
+     ** (lengthInMeter: number, density: Density) => lengthInMeter * density, // <LEN>*[DEN]
+     */
+    const { quantity } = item;
+    if (quantity) {
+      // the density here is in kg/m and not kg/mˆ3
+      return quantity * density;
+    }
+    return 0;
+  },
+  "M_COMPLEX-SECTION": (item: Material, alpha: Density) => {
+    /*
+     **   : (lengthInMeter: number, alpha: number) => // <LEN>*[ALPHA]
+     */
+    const { quantity } = item;
+    if (quantity) {
+      // the density here is in kg/m and not kg/mˆ3
+      return quantity * alpha;
+    }
+    return 0;
+  },
+  PCE_RECTANGULAR: (item: Material, density: Density) => {
+    /* {WID}*{HEI}*<LEN>*[DEN] // LEN is quantity in mm
+    WID: number, HEI: number, LEN: number, DEN: number
+    */
+    const { quantity, length, width, height } = item;
+    if (quantity && length && width && height) {
+      return (
+        width *
+        quantity *
+        length *
+        height *
+        Math.pow(ONE_THOUSANDTH, 3) * // width, length, height in mm
+        density
+      );
+    }
+    return 0;
+  },
+
+  PCE_CYLINDRICAL: (item: Material, density: Density) => {
+    const { quantity, diameter, length } = item;
+    if (quantity && diameter && length) {
+      // TODO: need to multiply by proper factor to convert milimeter in mˆ2 dimension
+      return (
+        Math.PI *
+        Math.pow((diameter * ONE_THOUSANDTH) / 2, 2) *
+        length *
+        quantity *
+        density
+      );
+    }
+    return 0;
+  },
+  PCE_SHEET: (item: Material, density: Density) => {
+    // length: number, width: number, n: number, density: Density
+    // length * width * n * density, // {LEN}*{WID}*<NUM>*[DEN]
+    const { length, width, quantity } = item;
+    if (length && width && quantity) {
+      return length * width * quantity * density;
+    }
+    return 0;
+  },
+  PCE_FIXTURE: (item: Material, density: Density) => {
+    if (item.quantity) {
+      return item.quantity * density;
+    }
+    return 0;
+  }, // <NUM>*[DEN]
+
+  PCE_UNDEFINED: (item: Material, density: Density) => {
+    // vol * n * density, // {VOL}*<NUM>*[DEN]
+    const { volume, quantity } = item;
+    if (volume && quantity) {
+      return volume * quantity * density;
+    }
+    return 0;
+  },
+  "PCE_COMPLEX-SECTION": (item: Material, alpha: Density) => {
+    /** /// {LEN}*{WID}*<NUM>*[ALPHA]
+     * length: number,
+        witdh: number,
+        n: number,
+        alpha: number
+     */
+    const { length, width, quantity } = item;
+    if (length && width && quantity) {
+      return length * width * quantity * alpha;
+    }
+    return 0;
+  },
+  "PCE_COMPLEX-SHEET": (item: Material, alpha: Density) => {
+    /*
+     **   length * n * alpha, // {LEN}*<NUM>*[ALPHA]
+     */
+    const { length, quantity } = item;
+    if (length && quantity) {
+      // the density here is a special constant retrieved from materials table reference
+      return length * quantity * alpha;
+    }
+    return 0;
+  },
+};
 
 export type itemTypes = "Labour" | "Material" | "Other";
 export interface Item {
+  unit?: Units;
   _id: string; // as uuid4
   itemType: itemTypes;
   source: string | undefined; // country
-  quantity: number;
+  quantity?: number;
   unitCost: number; // in USD
   totalCost: number;
 }
@@ -243,13 +553,19 @@ export interface Material extends Item {
   name: string;
   materialId: string;
   formId: string;
-  unit: Units;
-  dimensions: MaterialDimensions;
+  unit?: UnitsMaterial;
   embodiedCarbonProduction: number;
   embodiedCarbonTransport: number;
   embodiedCarbonTotal: number;
   embodiedWater: number;
   weight: number;
+  width?: number;
+  height?: number;
+  length?: number;
+  diameter?: number;
+  volume?: number;
+  area?: number;
+  specification?: number; // alpha from ShelterMaterial.parameters
 }
 export type MaterialKeys = keyof Material;
 export interface MaterialTree {
@@ -265,11 +581,6 @@ export interface MaterialTree {
   children?: Material[];
 }
 
-// TODO this afternoon
-// rewrite embodiedCarbon by embodedCarbonProduction
-// add embodiedCarbonTotal
-// compute items at save (store instead of component scope)
-
 export type MaterialTreeKey = keyof MaterialTree;
 export type MaterialTreeRecord = Record<string, MaterialTree>;
 
@@ -277,36 +588,16 @@ export interface Labour extends Item {
   // 2 skilled worker for 2 day : 3USD per person
   // 1 unskilled worker for 1 day: 1 USD per person
   workerType: WorkerType;
-  unit: WorkLabourTimeUnit; // number of day/hours necessary for construction
+  unit?: UnitsLabour; // number of day/hours necessary for construction
 }
 export interface Other extends Item {
   name: string | undefined;
-  unit: Units | undefined;
+  unit?: UnitsOther;
 }
 
 export enum WorkerType {
   Skilled = "skilled",
   Unskilled = "unskilled",
-}
-
-export enum WorkLabourTimeUnit {
-  Hour = "Hour",
-  Day = "Day",
-  LumpSum = "Lump sum",
-}
-
-// export type Item = Material | Labour;
-
-// TODO change. MaterialDimension should be argument of MaterialsFunction
-export interface MaterialDimensions {
-  /// TODO: add Kg ? Liter, etc..
-  kilogram?: Kilogram;
-  liter?: Liter;
-  length?: Meter;
-  LEN?: number; // =length
-  WID?: number; // =width
-  THK?: number; // =thickness
-  DIA?: number; // =diameter
 }
 
 export interface ShelterDimensions {

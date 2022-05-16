@@ -68,9 +68,8 @@
 
 <script lang="ts">
 import CountrySelect from "@/components/commons/CountrySelect.vue";
-import FormItemComponent, {
-  FormItem,
-} from "@/components/commons/FormItemComponent.vue";
+import { FormItem } from "@/components/commons/FormItem";
+import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import { GreenHouseGaz } from "@/store/GhgInterface";
 import { CouchUser } from "@/store/UserModule";
 import { countries as Countries } from "@/utils/countriesAsList";
