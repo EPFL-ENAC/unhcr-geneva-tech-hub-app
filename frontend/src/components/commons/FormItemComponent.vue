@@ -27,6 +27,7 @@
       :rules="actualRules"
       :readonly="readonly"
       type="number"
+      @change="$emit('change', $event)"
     >
       <template v-slot:label>
         <v-tooltip top>
@@ -98,6 +99,7 @@
                 :ratio="ratio"
                 :precision="precision"
                 optional
+                @change="onRangeChanged"
               ></form-item-component>
               <form-item-component
                 v-model="model.max"
@@ -109,6 +111,7 @@
                 :ratio="ratio"
                 :precision="precision"
                 optional
+                @change="onRangeChanged"
               ></form-item-component>
             </v-card-text>
           </v-card>
@@ -281,6 +284,15 @@ export default class FormItemComponent extends Vue {
       ((value as number) - this.actualOffset) * this.actualRatio,
       this.actualPrecision
     );
+  }
+
+  onRangeChanged(): void {
+    if (typeof this.model === "object") {
+      const rangeModel = this.model as RangeModel;
+      if (rangeModel.min !== undefined && rangeModel.max !== undefined) {
+        rangeModel.val = (rangeModel.min + rangeModel.max) / 2;
+      }
+    }
   }
 }
 </script>
