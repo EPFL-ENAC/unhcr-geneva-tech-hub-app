@@ -29,13 +29,13 @@
               <v-sheet v-if="localShelter" elevation="2" rounded>
                 <v-container fluid>
                   <v-row>
-                    <v-col
-                      class="about-first-column"
-                      lg="6"
-                      md="6"
-                      sm="12"
-                      xs="12"
-                    >
+                    <v-col cols="4">
+                      <territory-map
+                        :value="[localShelter.latitude, localShelter.longitude]"
+                        @update:value="updateLatLng"
+                      />
+                    </v-col>
+                    <v-col class="about-first-column" cols="4">
                       <v-text-field
                         v-model="localShelter.name"
                         name="name"
@@ -48,7 +48,7 @@
                         id="organisation"
                         v-model="localShelter.organisation"
                         name="organisation"
-                        label="Organisation"
+                        label="Implementing organisation"
                         type="text"
                         required
                         :rules="textRules"
@@ -105,13 +105,7 @@
                         type="text"
                       />
                     </v-col>
-                    <v-col
-                      class="about-second-column"
-                      lg="6"
-                      md="6"
-                      sm="12"
-                      xs="12"
-                    >
+                    <v-col class="about-second-column" cols="4">
                       <v-text-field
                         id="location_name"
                         v-model="localShelter.location_name"
@@ -126,15 +120,16 @@
                         label="Country"
                         type="text"
                         name="location_country"
-                        @update:latitude="updateLatitude"
-                        @update:longitude="updateLongitude"
                       />
+                      <!-- @update:latitude="updateLatitude"
+                        @update:longitude="updateLongitude" -->
                       <v-text-field
                         id="latitude"
                         v-model.number="localShelter.latitude"
                         name="latitude"
                         label="latitude"
                         :rules="latitudeRules"
+                        suffix="Decimal Degrees"
                         min="-90"
                         max="90"
                         type="number"
@@ -144,6 +139,7 @@
                         v-model.number="localShelter.longitude"
                         name="longitude"
                         label="longitude"
+                        suffix="Decimal Degrees"
                         min="-180"
                         :rules="longitudeRules"
                         max="180"
@@ -154,16 +150,22 @@
                         v-bind="img_url"
                       ></form-item-component>
                       <v-divider />
-                      <input-with-info
-                        v-model="localShelter.risk_flood"
-                        :info="riskFlood"
-                        :depth="2"
-                      />
-                      <input-with-info
-                        v-model="localShelter.risk_seismic"
-                        :info="riskSeismic"
-                        :depth="2"
-                      />
+                      <v-row>
+                        <v-col cols="6">
+                          <input-with-info
+                            v-model="localShelter.risk_flood"
+                            :info="riskFlood"
+                            :depth="2"
+                          />
+                        </v-col>
+                        <v-col cols="6">
+                          <input-with-info
+                            v-model="localShelter.risk_seismic"
+                            :info="riskSeismic"
+                            :depth="2"
+                          />
+                        </v-col>
+                      </v-row>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -185,6 +187,7 @@
 import CountrySelect from "@/components/commons/CountrySelect.vue";
 import { FormItem } from "@/components/commons/FormItem";
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
+import TerritoryMap from "@/components/commons/TerritoryMap.vue";
 import UserManager from "@/components/commons/UserManager.vue";
 import InputWithInfo from "@/components/shelter_sustainability/InputWithInfo.vue";
 import { listOfShelterType, Shelter } from "@/store/ShelterInterface";
@@ -197,6 +200,7 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
     InputWithInfo,
     UserManager,
     FormItemComponent,
+    TerritoryMap,
   },
 })
 /** Project */
@@ -325,6 +329,11 @@ export default class Step1 extends Vue {
     this.$set(this.localShelter, "longitude", lon);
   }
 
+  public updateLatLng(latLng: number[]): void {
+    this.updateLatitude(latLng[0]);
+    this.updateLongitude(latLng[1]);
+  }
+
   public img_url = {
     type: "text",
     key: "img_url",
@@ -334,3 +343,18 @@ export default class Step1 extends Vue {
   };
 }
 </script>
+
+<style scoped lang="scss">
+// RATIONAL: André ask to removed the arrows for number inputs
+/* Chrome, Safari, Edge, Opera */
+::v-deep input::-webkit-outer-spin-button,
+::v-deep input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+::v-deep input[type="number"] {
+  -moz-appearance: textfield;
+}
+</style>

@@ -3,16 +3,16 @@
     <template v-slot:activator="{ on, attrs }">
       <div v-bind="attrs" class="text-subtitle-1" v-on="on">
         {{ name }}:
-        <span class="font-weight-bold">{{ value | formatNumber(0) }}</span>
+        <span class="font-weight-bold">{{ value | formatNumber(0, 0) }}</span>
         <template v-if="unit"> [{{ unit }}]</template>
         <span v-if="percentage !== 0" :style="{ color: color }"
           >&nbsp;<v-icon :color="color" small>{{ icon }}</v-icon>
-          <span>{{ percentage | formatNumber(0, true) }} %</span>
+          <span>{{ percentage | formatNumber(0, 0, true) }} %</span>
         </span>
       </div>
     </template>
     <div class="text-subtitle-1">
-      Baseline: {{ baseValue | formatNumber(0) }}
+      Baseline: {{ baseValue | formatNumber(0, 0) }}
       <template v-if="unit">[{{ unit }}]</template>
     </div>
   </v-tooltip>

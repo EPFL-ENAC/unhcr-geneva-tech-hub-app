@@ -284,8 +284,6 @@ export default class Step3Materials extends Vue {
         value: "embodiedWater",
         sortable: false,
       },
-      // { text: "Unit cost in $", value: "unit_cost", sortable: false },
-      // { text: "Total cost in $", value: "totalCost", sortable: false },
     ].map((x) => ({ ...x, class: "test", cellClass: "class-test" }));
   }
 

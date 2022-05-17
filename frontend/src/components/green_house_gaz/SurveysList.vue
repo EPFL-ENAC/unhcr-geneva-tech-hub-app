@@ -69,7 +69,7 @@
             <v-icon small class="mr-2"> mdi-pencil </v-icon>
           </router-link>
           <v-icon class="better-click" small @click.stop="duplicateItem(item)">
-            mdi-content-duplicate
+            mdi-content-copy
           </v-icon>
           <v-icon class="better-click" small @click.stop="deleteItem(item)">
             mdi-delete

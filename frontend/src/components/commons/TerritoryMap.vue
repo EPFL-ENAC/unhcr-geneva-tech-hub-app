@@ -1,11 +1,20 @@
 <template>
-  <l-map :center="defaultCoordinates" :zoom="2" :min-zoom="2" :max-zoom="4">
+  <l-map
+    :center="defaultCoordinates"
+    :class="{
+      'crosshair-cursor-enabled': value.length > 0,
+    }"
+    :zoom="defaultZoom"
+    :min-zoom="2"
+    :max-zoom="8"
+    @click="addMarker"
+  >
     <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
     <l-marker
-      v-for="(coordinate, key) in coordinates"
+      v-for="(markerCoordinate, key) in internalCoordinates"
       :key="key"
-      :lat-lng="coordinate"
-      :icon="getIcon('pin', coordinate[2])"
+      :lat-lng="markerCoordinate"
+      :icon="getIcon('pin', markerCoordinate[2])"
     >
     </l-marker>
   </l-map>
@@ -24,7 +33,7 @@ import {
   alphaSecondary,
   shelterColors,
 } from "@/views/shelter_sustainability/shelterTypeColors";
-import L from "leaflet";
+import L, { LatLng, LeafletMouseEvent } from "leaflet";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { LIcon, LMap, LMarker, LTileLayer } from "vue2-leaflet";
 
@@ -37,15 +46,15 @@ import { LIcon, LMap, LMarker, LTileLayer } from "vue2-leaflet";
   },
 })
 export default class TerritoryMap extends Vue {
-  @Prop({ type: Array, required: true, default: () => [] })
+  @Prop({ type: Array, required: false, default: () => [] })
   readonly coordinates!: (number | string)[][];
-  @Prop({ type: Boolean, default: false })
-  readonly customIcon!: boolean;
+  @Prop({ type: Array, required: false, default: () => [] })
+  readonly value!: (number | string)[];
+  @Prop({ type: Number, required: false, default: defaultZoom })
+  readonly defaultZoom!: number;
 
   readonly url = urlMap;
   readonly attribution = attributionMap;
-  readonly zoom = defaultZoom;
-  readonly defaultCoordinates = defaultCoordinates;
 
   alpha = alpha;
   alphaSecondary = alphaSecondary;
@@ -58,33 +67,69 @@ export default class TerritoryMap extends Vue {
   };
 
   public getIcon(defaultIcon: string, shelterType: ShelterType): L.DivIcon {
-    let className = `mdi mdi-${defaultIcon}`;
+    let className = `mdi mdi-${defaultIcon} customIcon`;
     if (shelterType) {
       className = `mdi mdi-${this.shelterIcons[shelterType]} c-${this.shelterColors[shelterType].name} customIcon`;
     }
     return L.divIcon({
       html: "<i></i>",
-      iconSize: [16, 16],
+      iconSize: [26, 26],
       className: className,
     });
+  }
+
+  public get defaultCoordinates(): (number | string)[] {
+    if (this.value.length > 0) {
+      return this.value;
+    }
+    return defaultCoordinates;
+  }
+  public get internalCoordinates(): (number | string)[][] {
+    if (this.value.length > 0) {
+      return this.coordinates.concat([this.value]);
+    }
+    return this.coordinates;
+  }
+
+  public addMarker(event: LeafletMouseEvent): void {
+    if (this.value.length > 0) {
+      const latLng: LatLng = event.latlng;
+      this.$emit("update:value", [
+        latLng.lat.toFixed(3),
+        latLng.lng.toFixed(3),
+      ]);
+    }
   }
 }
 </script>
 
-<style scoped>
->>> .customIcon {
-  font-size: 16px;
+<style scoped lang="scss">
+::v-deep.leaflet-container.crosshair-cursor-enabled {
+  cursor: crosshair;
+}
+// /* Change cursor when mousing over clickable layer */
+// ::v-deep.leaflet-clickable {
+//   cursor: pointer !important;
+// }
+// /* Change cursor when over entire map */
+// ::v-deep.leaflet-container {
+//   cursor: crosshair !important;
+// }
+::v-deep .customIcon {
+  &::before {
+    font-size: 24px;
+  }
 }
 
->>> .c-blue {
+::v-deep .c-blue {
   color: var(--c-blue);
 }
 
->>> .c-brown {
+::v-deep .c-brown {
   color: var(--c-brown);
 }
 
->>> .c-grey {
+::v-deep .c-grey {
   color: var(--c-grey);
 }
 </style>

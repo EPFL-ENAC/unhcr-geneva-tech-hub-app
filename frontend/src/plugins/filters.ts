@@ -15,17 +15,19 @@ export default {
 
 export function formatNumber(
   n: number,
-  decimal = 2,
+  minimumFractionDigits = 0,
+  maximumFractionDigits = 2,
   sign = false,
-  style?: "decimal"
+  style?: string,
+  maximumSignificantDigits?: number
 ): string {
   if (n === null || isNaN(n)) {
     return "—";
   }
   return Intl.NumberFormat("fr-mathmono", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: decimal,
-    maximumSignificantDigits: 3,
+    minimumFractionDigits,
+    maximumFractionDigits,
+    maximumSignificantDigits,
     signDisplay: sign ? "exceptZero" : undefined,
     style,
   }).format(n);

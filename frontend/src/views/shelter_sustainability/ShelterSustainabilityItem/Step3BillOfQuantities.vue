@@ -19,6 +19,7 @@
             :items="items"
             sort-by="name"
             class="elevation-1"
+            hide-default-footer
           >
             <template v-slot:top>
               <v-toolbar flat>
@@ -77,11 +78,11 @@
             </template>
 
             <template v-slot:[`item.unitCost`]="{ item }">
-              <span>{{ item.unitCost | formatNumber }}</span>
+              <span>{{ item.unitCost | formatNumber(2, 2) }}</span>
             </template>
 
             <template v-slot:[`item.totalCost`]="{ item }">
-              <span>{{ item.totalCost | formatNumber }}</span>
+              <span>{{ item.totalCost | formatNumber(2, 2) }}</span>
             </template>
 
             <template v-slot:[`item.actions`]="{ item }">
@@ -180,10 +181,10 @@ export default class Step3Materials extends Vue {
     { text: "Origin", value: "source" },
     { text: "Material", value: "materialId" },
     { text: "Form", value: "formId" },
-    { text: "Quantity", value: "quantity" },
     { text: "Unit", value: "unit" },
-    { text: "Unit cost in $", value: "unitCost" },
-    { text: "Total cost in $", value: "totalCost" },
+    { text: "Quantity", value: "quantity" },
+    { text: "Unit cost (USD)", value: "unitCost" },
+    { text: "Total cost (USD)", value: "totalCost" },
     { text: "", value: "actions", sortable: false },
   ];
 

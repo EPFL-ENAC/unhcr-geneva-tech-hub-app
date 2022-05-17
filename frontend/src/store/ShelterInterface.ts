@@ -78,6 +78,7 @@ export interface Geometry {
   floorArea: number;
   volume: number;
 }
+export type GeometryKeys = "windowArea" | "floorArea" | "volume";
 
 export interface Score {
   [property: string]: number | Score;
@@ -244,7 +245,7 @@ export const materialsInputs: MaterialsInputs = {
       type: "number",
       key: "length",
       label: "Length",
-      suffix: UnitsRef.mm,
+      suffix: UnitsRef.M,
     },
     {
       type: "number",
@@ -402,7 +403,7 @@ export const materialFunctions: MaterialsFunction = {
     return 0;
   },
   M_RECTANGULAR: (item: Material, density: Density) => {
-    /* {WID}*{HEI}*<LEN>*[DEN] // LEN is quantity in mm
+    /* {WID}*{HEI}*<LEN>*[DEN] // LEN is quantity in m
     WID: number, HEI: number, LEN: number, DEN: number
     */
     const { quantity, width, height } = item;
@@ -411,7 +412,7 @@ export const materialFunctions: MaterialsFunction = {
         width *
         quantity *
         height *
-        Math.pow(ONE_THOUSANDTH, 3) * // width, length, height in mm
+        Math.pow(ONE_THOUSANDTH, 2) * // width, length, height in mm
         density
       );
     }
@@ -468,7 +469,7 @@ export const materialFunctions: MaterialsFunction = {
         quantity *
         length *
         height *
-        Math.pow(ONE_THOUSANDTH, 3) * // width, length, height in mm
+        Math.pow(ONE_THOUSANDTH, 2) * // width, length, height in mm
         density
       );
     }
