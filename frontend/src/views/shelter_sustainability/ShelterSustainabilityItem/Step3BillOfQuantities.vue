@@ -94,6 +94,16 @@
                 <v-icon> mdi-delete</v-icon>
               </v-btn>
             </template>
+            <template v-slot:foot>
+              <tfoot>
+                <tr>
+                  <td colspan="1">Total</td>
+                  <td colspan="6"></td>
+                  <td colspan="1">{{ totalCost | formatNumber }}</td>
+                  <td colspan="1"></td>
+                </tr>
+              </tfoot>
+            </template>
           </v-data-table>
         </v-sheet>
       </v-col>
@@ -204,6 +214,12 @@ export default class Step3Materials extends Vue {
         this.submitForm();
       }
     });
+  }
+
+  public get totalCost(): number {
+    return this.items.reduce((acc: number, item: Item) => {
+      return acc + item.totalCost;
+    }, 0);
   }
 
   created(): void {

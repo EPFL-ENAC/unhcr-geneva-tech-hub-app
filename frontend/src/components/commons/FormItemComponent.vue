@@ -7,6 +7,7 @@
       required
       :rules="actualRules"
       :readonly="readonly"
+      @change="$emit('change', $event)"
     >
       <template v-slot:label>
         <v-tooltip top>

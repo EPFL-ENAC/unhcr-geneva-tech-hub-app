@@ -5,39 +5,7 @@
         <!-- Move to component, ShelterSustaibalityListHeader Search + create tooltip logic -->
 
         <v-row>
-          <v-col>
-            <v-checkbox
-              v-for="(shelterType, $index) in listOfShelterType"
-              :key="$index"
-              v-model="selectedShelters"
-              :label="shelterType"
-              :value="shelterType"
-              dense
-            >
-              <template v-slot:label>
-                <div class="d-flex align-end">
-                  <v-icon :class="`c-${shelterColors[shelterType].name}`">
-                    mdi-{{ shelterIcons[shelterType] }}
-                  </v-icon>
-                  {{ shelterType }}
-                </div>
-              </template>
-            </v-checkbox>
-          </v-col>
-          <v-col>
-            <v-row>
-              <v-col class="d-flex align-center justify-end">
-                <v-btn
-                  text
-                  outlined
-                  :disabled="!$can('create')"
-                  @click="addProject"
-                >
-                  <v-icon>mdi-plus-thick</v-icon>
-                  New shelter
-                </v-btn>
-              </v-col>
-            </v-row>
+          <v-col cols="9">
             <v-row>
               <v-col>
                 <v-text-field
@@ -45,9 +13,40 @@
                   tabindex="2"
                   name="search name"
                   :clearable="true"
-                  label="Search Shelter"
+                  label="Search by Shelter Name"
                   type="text"
                 />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="custom-checkboxes">
+                <v-checkbox
+                  v-for="(shelterType, $index) in listOfShelterType"
+                  :key="$index"
+                  v-model="selectedShelters"
+                  :label="shelterType"
+                  :value="shelterType"
+                  dense
+                >
+                  <template v-slot:label>
+                    <div class="d-flex align-end">
+                      <v-icon :class="`c-${shelterColors[shelterType].name}`">
+                        mdi-{{ shelterIcons[shelterType] }}
+                      </v-icon>
+                      {{ shelterType }}
+                    </div>
+                  </template>
+                </v-checkbox>
+              </v-col>
+            </v-row>
+          </v-col>
+          <v-col>
+            <v-row>
+              <v-col class="d-flex align-center justify-end">
+                <v-btn text :disabled="!$can('create')" @click="addProject">
+                  <v-icon>mdi-plus-thick</v-icon>
+                  New shelter
+                </v-btn>
               </v-col>
             </v-row>
           </v-col>
@@ -374,5 +373,10 @@ export default class ProjectList extends Vue {
 
 ::v-deep .c-grey {
   color: var(--c-grey);
+}
+.custom-checkboxes {
+  gap: 12px;
+  flex-direction: row;
+  display: flex;
 }
 </style>

@@ -1,12 +1,12 @@
 {
-  "_id": "org.couchdb.user:andre",
+  "_id": "org.couchdb.user:andre.ullal@epfl.ch",
   "type": "user",
   "roles": [
     "user",
     "specialist",
     "admin"
   ],
-  "name": "andre",
+  "name": "andre.ullal@epfl.ch",
   "password_scheme": "pbkdf2",
   "iterations": 10,
   "derived_key": "d9e923656d9adae2e7218c1c80bfb9621ad5eb87",

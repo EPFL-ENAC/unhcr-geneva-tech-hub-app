@@ -1,6 +1,7 @@
 <template>
   <l-map
     :center="defaultCoordinates"
+    class="territory"
     :class="{
       'crosshair-cursor-enabled': value.length > 0,
     }"
@@ -131,5 +132,8 @@ export default class TerritoryMap extends Vue {
 
 ::v-deep .c-grey {
   color: var(--c-grey);
+}
+::v-deep.leaflet-container.territory {
+  z-index: 1;
 }
 </style>

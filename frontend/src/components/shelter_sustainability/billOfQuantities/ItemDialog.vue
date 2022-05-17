@@ -118,7 +118,14 @@
                   required
                   :rules="rules"
                   @change="onUnitChange"
-                />
+                >
+                  <template v-slot:item="{ item }">
+                    {{ UnitsRef[item] }}
+                  </template>
+                  <template v-slot:selection="{ item }">
+                    {{ UnitsRef[item] }}
+                  </template>
+                </v-select>
               </v-col>
               <v-col
                 v-if="!itemUnitsDisabled && localItem.itemType !== 'Material'"
@@ -312,7 +319,7 @@ export default class DeleteItemDialog extends Vue {
   }
 
   readonly pluralRules = new Intl.PluralRules("en-US");
-
+  readonly UnitsRef = UnitsRef;
   private pluralize(count: number, singular: string, plural: string) {
     const grammaticalNumber = this.pluralRules.select(count);
     switch (grammaticalNumber) {

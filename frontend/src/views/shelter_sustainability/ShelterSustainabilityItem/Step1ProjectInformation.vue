@@ -6,19 +6,17 @@
           Project information
         </h2>
       </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-divider></v-divider>
-      </v-col>
-    </v-row>
-    <v-row>
       <v-spacer></v-spacer>
       <v-col class="col-auto">
         <user-manager
           v-model="localShelter.users"
           @change="updateFormInput"
         ></user-manager>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-divider></v-divider>
       </v-col>
     </v-row>
     <v-row>
@@ -43,7 +41,27 @@
                         type="text"
                         required
                         :rules="textRules"
+                        @change="updateFormInput"
                       />
+
+                      <v-text-field
+                        id="location_name"
+                        v-model="localShelter.location_name"
+                        name="location_name"
+                        label="Site name"
+                        type="text"
+                        @change="updateFormInput"
+                      />
+                      <country-select
+                        id="location_country"
+                        v-model.number="localShelter['location_country']"
+                        required
+                        label="Country"
+                        type="text"
+                        name="location_country"
+                        @change="updateFormInput"
+                      />
+
                       <v-text-field
                         id="organisation"
                         v-model="localShelter.organisation"
@@ -52,8 +70,20 @@
                         type="text"
                         required
                         :rules="textRules"
+                        @change="updateFormInput"
                       />
-                      <v-divider />
+
+                      <form-item-component
+                        v-model="localShelter.img_url"
+                        v-bind="img_url"
+                        @change="updateFormInput"
+                      ></form-item-component>
+                      <v-img
+                        v-if="localShelter.img_url"
+                        :src="localShelter.img_url"
+                      ></v-img>
+                    </v-col>
+                    <v-col class="about-second-column" cols="4">
                       <v-text-field
                         v-model.number="localShelter.shelter_total"
                         name="shelter_total"
@@ -61,6 +91,7 @@
                         type="number"
                         required
                         :rules="shelterTotalRules"
+                        @change="updateFormInput"
                       />
                       <v-select
                         v-model.number="localShelter.shelter_occupants"
@@ -70,6 +101,7 @@
                         type="number"
                         required
                         :rules="shelterOccupantRules"
+                        @change="updateFormInput"
                       ></v-select>
                       <v-select
                         v-model="localShelter.shelter_type"
@@ -78,6 +110,7 @@
                         name="shelter_type"
                         required
                         :rules="shelterTypeRules"
+                        @change="updateFormInput"
                       ></v-select>
                       <v-select
                         v-model.number="localShelter.shelter_lifespan"
@@ -89,6 +122,7 @@
                         type="number"
                         required
                         :rules="shelterLifespanRules"
+                        @change="updateFormInput"
                       ></v-select>
 
                       <v-divider />
@@ -97,84 +131,32 @@
                         name="setup_people"
                         label="Number of people for setup"
                         type="text"
+                        @change="updateFormInput"
                       />
                       <v-text-field
                         v-model="localShelter.setup_time"
                         name="setup_time"
                         label="Time for setup"
                         type="text"
+                        @change="updateFormInput"
                       />
-                    </v-col>
-                    <v-col class="about-second-column" cols="4">
-                      <v-text-field
-                        id="location_name"
-                        v-model="localShelter.location_name"
-                        name="location_name"
-                        label="Site name"
-                        type="text"
-                      />
-                      <country-select
-                        id="location_country"
-                        v-model.number="localShelter['location_country']"
-                        required
-                        label="Country"
-                        type="text"
-                        name="location_country"
-                      />
-                      <!-- @update:latitude="updateLatitude"
-                        @update:longitude="updateLongitude" -->
-                      <v-text-field
-                        id="latitude"
-                        v-model.number="localShelter.latitude"
-                        name="latitude"
-                        label="latitude"
-                        :rules="latitudeRules"
-                        suffix="Decimal Degrees"
-                        min="-90"
-                        max="90"
-                        type="number"
-                      />
-                      <v-text-field
-                        id="longitude"
-                        v-model.number="localShelter.longitude"
-                        name="longitude"
-                        label="longitude"
-                        suffix="Decimal Degrees"
-                        min="-180"
-                        :rules="longitudeRules"
-                        max="180"
-                        type="number"
-                      />
-                      <form-item-component
-                        v-model="localShelter.img_url"
-                        v-bind="img_url"
-                      ></form-item-component>
                       <v-divider />
-                      <v-row>
-                        <v-col cols="6">
-                          <input-with-info
-                            v-model="localShelter.risk_flood"
-                            :info="riskFlood"
-                            :depth="2"
-                          />
-                        </v-col>
-                        <v-col cols="6">
-                          <input-with-info
-                            v-model="localShelter.risk_seismic"
-                            :info="riskSeismic"
-                            :depth="2"
-                          />
-                        </v-col>
-                      </v-row>
+                      <input-with-info
+                        v-model="localShelter.risk_flood"
+                        :info="riskFlood"
+                        :depth="2"
+                        @change="updateFormInput"
+                      />
+                      <input-with-info
+                        v-model="localShelter.risk_seismic"
+                        :info="riskSeismic"
+                        :depth="2"
+                        @change="updateFormInput"
+                      />
                     </v-col>
                   </v-row>
                 </v-container>
               </v-sheet>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col class="d-flex justify-end">
-              <v-btn @click="updateFormInput"> Save changes </v-btn>
             </v-col>
           </v-row>
         </v-card>

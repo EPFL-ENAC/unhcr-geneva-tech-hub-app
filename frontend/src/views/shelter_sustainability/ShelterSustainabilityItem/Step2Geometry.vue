@@ -75,6 +75,9 @@
                           v-model.number="
                             localShelter.geometry.shelter_dimensions[dimension]
                           "
+                          :value="
+                            localShelter.geometry.shelter_dimensions[dimension]
+                          "
                           :name="dimension"
                           :label="dimension"
                           suffix="m"
@@ -201,11 +204,6 @@
       </v-col>
     </v-row>
 
-    <v-row>
-      <v-col class="d-flex justify-end">
-        <v-btn @click="updateFormInput"> Save changes </v-btn>
-      </v-col>
-    </v-row>
     <v-overlay v-if="selectedItem" @click="selectedItem = null">
       <v-img
         :src="selectedItem ? selectedItem.image_url : ''"
@@ -237,7 +235,7 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 /* two ways to have a store copy locally
 1. having a watcher on the store that cloneDeep to data() locally
 2. having a subscriber to mutation that's initialized at created
-cf: https://forum.vuejs.org/t/best-way-to-use-forms-with-local-state-using-v-model-and-sync-to-vuex-store-on-save/24739
+cf: https://forum.vuejs.org/t/best-way-to-use-forms-with-local-state-using-v-model-and-sync-to-vuex-store-on- /24739
 for the original discussion
 */
 @Component({})
