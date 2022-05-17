@@ -166,6 +166,7 @@ import {
 import { getColor, getCookingFuel } from "@/utils/energy";
 import { SelectItemObject } from "@/utils/vuetify";
 import { PieChart } from "echarts/charts";
+import { TitleComponent } from "echarts/components";
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
 import { EChartsOption } from "echarts/types/dist/shared";
@@ -176,7 +177,7 @@ import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";
 import { mapState } from "vuex";
 
-use([CanvasRenderer, PieChart]);
+use([CanvasRenderer, PieChart, TitleComponent]);
 
 @Component({
   components: {
@@ -387,6 +388,12 @@ export default class EnergyHouseholdCookingTable extends Vue {
       }))
       .filter((item) => item.value > 0);
     return {
+      title: {
+        text: "Distribution of cookstoves per households",
+        textStyle: {
+          fontSize: 12,
+        },
+      },
       series: [
         {
           type: "pie",
