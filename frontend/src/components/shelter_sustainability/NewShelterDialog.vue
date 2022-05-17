@@ -13,7 +13,7 @@
             :rules="rules"
             required
             name="name"
-            label="Name"
+            label="Shelter name"
             type="text"
           />
         </v-card-text>

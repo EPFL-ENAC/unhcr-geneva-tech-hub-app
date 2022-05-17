@@ -77,7 +77,7 @@
                       </v-icon>
                       {{
                         facilityForm.endline.results.changeInEmission
-                          | formatNumber(0, true, "percent")
+                          | formatNumber(0, 0, true, "percent")
                       }}
                     </span>
                   </h3>

@@ -120,7 +120,7 @@
                 :key="washBalanceResult.code"
                 :value="
                   washForm.endline.resultsBalance[washBalanceResult.code]
-                    | formatNumber(2, true, washBalanceResult.formatType)
+                    | formatNumber(0, 2, true, washBalanceResult.formatType)
                 "
                 :label="washBalanceResult.description"
                 :disabled="washBalanceResult.disabled"

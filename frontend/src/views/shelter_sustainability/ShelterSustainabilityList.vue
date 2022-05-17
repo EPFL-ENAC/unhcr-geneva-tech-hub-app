@@ -2,69 +2,57 @@
   <main class="shelter__list" :style="computedGridTemplate">
     <v-sheet class="country-list overflow-y-auto">
       <v-container fluid>
+        <!-- Move to component, ShelterSustaibalityListHeader Search + create tooltip logic -->
+
         <v-row>
-          <v-col cols="10" class="d-flex align-center justify-left">
-            <v-text-field
-              v-model="searchName"
-              tabindex="2"
-              name="search name"
-              label="Search"
-              type="text"
-              max-width="50px"
-            />
-            <v-radio-group v-model="shelterType" row>
-              <v-radio label="Emergency" value="Emergency">
-                <template v-slot:label>
-                  <div class="d-flex align-end">
-                    <v-icon :class="`c-${shelterColors['Emergency'].name}`">
-                      mdi-{{ shelterIcons["Emergency"] }}
-                    </v-icon>
-                    Emergency
-                  </div>
-                </template>
-              </v-radio>
-              <v-radio label="Transitional" value="Transitional">
-                <template v-slot:label>
-                  <div class="d-flex align-end">
-                    <v-icon :class="`c-${shelterColors['Transitional'].name}`">
-                      mdi-{{ shelterIcons["Transitional"] }}
-                    </v-icon>
-                    Transitional
-                  </div>
-                </template>
-              </v-radio>
-              <v-radio label="Durable" value="Durable">
-                <template v-slot:label>
-                  <div class="d-flex align-end">
-                    <v-icon :class="`c-${shelterColors['Durable'].name}`">
-                      mdi-{{ shelterIcons["Durable"] }}
-                    </v-icon>
-                    Durable
-                  </div>
-                </template>
-              </v-radio>
-            </v-radio-group>
-            <v-btn
-              icon
-              rounded
-              title="reset filters"
-              bottom
-              right
-              @click="resetFilters"
+          <v-col>
+            <v-checkbox
+              v-for="(shelterType, $index) in listOfShelterType"
+              :key="$index"
+              v-model="selectedShelters"
+              :label="shelterType"
+              :value="shelterType"
+              dense
             >
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
+              <template v-slot:label>
+                <div class="d-flex align-end">
+                  <v-icon :class="`c-${shelterColors[shelterType].name}`">
+                    mdi-{{ shelterIcons[shelterType] }}
+                  </v-icon>
+                  {{ shelterType }}
+                </div>
+              </template>
+            </v-checkbox>
           </v-col>
-          <v-col
-            cols="2"
-            class="country-list__actions d-flex justify-end align-center"
-          >
-            <v-btn text :disabled="!$can('create')" @click="addProject">
-              <v-icon>mdi-plus-thick</v-icon>
-              New project
-            </v-btn>
+          <v-col>
+            <v-row>
+              <v-col class="d-flex align-center justify-end">
+                <v-btn
+                  text
+                  outlined
+                  :disabled="!$can('create')"
+                  @click="addProject"
+                >
+                  <v-icon>mdi-plus-thick</v-icon>
+                  New shelter
+                </v-btn>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-text-field
+                  v-model="searchName"
+                  tabindex="2"
+                  name="search name"
+                  :clearable="true"
+                  label="Search Shelter"
+                  type="text"
+                />
+              </v-col>
+            </v-row>
           </v-col>
         </v-row>
+
         <v-row>
           <v-col justify="center">
             <v-row>
@@ -85,14 +73,23 @@
                   }"
                 >
                   <v-row>
-                    <v-col cols="9">
+                    <v-col cols="12">
                       <v-card-subtitle class="pb-0">
-                        {{ project.shelter_type }}
-                      </v-card-subtitle>
-                      <v-card-title>
-                        <v-icon>
+                        <v-icon
+                          :class="`c-${
+                            shelterColors[project.shelter_type].name
+                          }`"
+                        >
                           mdi-{{ shelterIcons[project.shelter_type] }}
                         </v-icon>
+                        <div class="project__hidden-child float-right">
+                          <span v-if="$can('edit', project)"
+                            >Read and write</span
+                          >
+                          <span v-else>Read only</span>
+                        </div>
+                      </v-card-subtitle>
+                      <v-card-title>
                         {{ project.name }}
                       </v-card-title>
                       <v-card-subtitle class="pb-0">
@@ -124,41 +121,25 @@
                         </v-btn>
                       </v-card-actions>
                       <v-card-subtitle class="pb-0">
-                        <v-row>
-                          <v-col cols="5">
+                        <v-row class="align-center d-flex">
+                          <v-col cols="5" class="text-caption">
                             Created: {{ project.created_at | formatDate }}
                           </v-col>
-                          <v-col cols="5">
+                          <v-col cols="5" class="text-caption">
                             Updated: {{ project.updated_at | formatDate }}
                           </v-col>
-                          <v-col>
-                            <div class="project__hidden-child">
-                              <span v-if="$can('edit', project)">edit</span>
-                              <span v-else>read</span>
-                            </div>
+                          <v-col cols="2">
+                            <v-btn
+                              title="Duplicate projects"
+                              icon
+                              small
+                              @click.stop.prevent="duplicateDoc(project)"
+                            >
+                              <v-icon small>mdi-content-copy</v-icon>
+                            </v-btn>
                           </v-col>
                         </v-row>
                       </v-card-subtitle>
-                    </v-col>
-                    <v-col cols="3">
-                      <v-row>
-                        <v-img></v-img>
-                      </v-row>
-                      <v-row>
-                        <v-col>
-                          <!-- bottom copy/delete -->
-                          <v-btn
-                            title="Duplicate projects"
-                            rounded
-                            absolute
-                            bottom
-                            right
-                            @click.stop.prevent="duplicateDoc(project)"
-                          >
-                            <v-icon>mdi-content-duplicate</v-icon>
-                          </v-btn>
-                        </v-col>
-                      </v-row>
                     </v-col>
                   </v-row>
                 </v-card>
@@ -170,7 +151,7 @@
     </v-sheet>
     <div class="separator"></div>
     <div class="map-countries">
-      <territory-map :coordinates="coordinates" />
+      <territory-map :coordinates="coordinates" :default-zoom="2" />
     </div>
     <new-shelter-dialog :open.sync="shelterDialog" />
   </main>
@@ -180,7 +161,11 @@
 import TerritoryMap from "@/components/commons/TerritoryMap.vue";
 import NewShelterDialog from "@/components/shelter_sustainability/NewShelterDialog.vue";
 import { CountriesInfoMap } from "@/store/GhgInterface";
-import { listOfShelterType, Shelter } from "@/store/ShelterInterface";
+import {
+  listOfShelterType,
+  Shelter,
+  ShelterType,
+} from "@/store/ShelterInterface";
 import { SyncDatabase } from "@/utils/couchdb";
 import {
   countries as Countries,
@@ -219,8 +204,8 @@ export default class ProjectList extends Vue {
    */
 
   newName = "";
-  searchName = "";
-  shelterType = "";
+  searchName: string | null = "";
+  selectedShelters: ShelterType[] = [];
   shelters!: [];
   shelterDialog = false;
   duplicateDoc!: (shelter: Shelter) => Promise<null>;
@@ -252,11 +237,6 @@ export default class ProjectList extends Vue {
     Durable: "home",
   };
 
-  public resetFilters(): void {
-    this.searchName = "";
-    this.shelterType = "";
-  }
-
   public get coordinates(): (number | string)[][] {
     return this.shelters
       .filter((x: Shelter) => !!x.latitude)
@@ -265,12 +245,15 @@ export default class ProjectList extends Vue {
 
   public get projects(): Record<string, string | number>[] {
     return this.shelters
-      .filter(
-        (shelter: Shelter) => shelter.name.indexOf(this.searchName) !== -1
-      )
       .filter((shelter: Shelter) => {
-        if (this.shelterType) {
-          return shelter.shelter_type === this.shelterType;
+        if (this.searchName) {
+          return shelter.name.indexOf(this.searchName) !== -1;
+        }
+        return true;
+      })
+      .filter((shelter: Shelter) => {
+        if (this.selectedShelters.length > 0) {
+          return this.selectedShelters.indexOf(shelter.shelter_type) !== -1;
         }
         return true;
       });
@@ -298,9 +281,6 @@ export default class ProjectList extends Vue {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .v-text-field {
-  max-width: 200px;
-}
 .shelter__list {
   $header_height: 64px;
   display: grid;
@@ -383,16 +363,16 @@ export default class ProjectList extends Vue {
 }
 </style>
 
-<style scoped>
->>> .c-blue {
+<style scoped lang="scss">
+::v-deep .c-blue {
   color: var(--c-blue);
 }
 
->>> .c-brown {
+::v-deep .c-brown {
   color: var(--c-brown);
 }
 
->>> .c-grey {
+::v-deep .c-grey {
   color: var(--c-grey);
 }
 </style>

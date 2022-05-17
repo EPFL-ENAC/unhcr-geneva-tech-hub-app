@@ -56,7 +56,7 @@
                   v-model="localItem.source"
                   required
                   :rules="rules"
-                  label="Source (country)"
+                  label="Source country"
                 />
               </v-col>
               <v-col cols="12" sm="6" md="6">
@@ -182,14 +182,13 @@
                   :label="`Unit cost per ${quantityUnitSuffix}`"
                   required
                   :rules="rules"
-                  @change="computeCost"
+                  @input="computeCost"
                 ></v-text-field>
               </v-col>
               <v-col cols="6">
                 <!-- for show only should not be changed depends on unitCost * quantity -->
                 <v-text-field
-                  v-model.number="localItem.totalCost"
-                  type="number"
+                  :value="localItem.totalCost | formatNumber"
                   suffix="$"
                   :disabled="true"
                   label="Item cost"
@@ -522,6 +521,8 @@ export default class DeleteItemDialog extends Vue {
     if (quantity && unitCost) {
       // compute totalCost
       newValue.totalCost = quantity * unitCost;
+    } else {
+      newValue.totalCost = 0;
     }
     this.localItem = newValue;
   }
@@ -535,7 +536,9 @@ export default class DeleteItemDialog extends Vue {
 
   public get currentMaterialForms(): ShelterMaterial[] {
     if (this.isMaterial(this.localItem) && this.localItem.materialId) {
-      return this.materialForms[this.localItem.materialId];
+      const result = cloneDeep(this.materialForms[this.localItem.materialId]);
+      result.sort((a, b) => a.form.localeCompare(b.form));
+      return result;
     }
     return [] as ShelterMaterial[];
   }

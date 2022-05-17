@@ -51,7 +51,7 @@
     </template>
     <template v-slot:item.totalCO2Emission="{ item }">
       <span class="bold-table-cell-content">
-        {{ item.totalCO2Emission | formatNumber(2) }}
+        {{ item.totalCO2Emission | formatNumber(0, 2) }}
       </span>
     </template>
     <template v-slot:item.actions="{ item }">
@@ -72,7 +72,7 @@
         :disabled="disabled"
         @click="openDuplicateItemDialog(item, item.name)"
       >
-        <v-icon> mdi-content-duplicate</v-icon>
+        <v-icon> mdi-content-copy</v-icon>
       </v-btn>
 
       <v-btn
@@ -94,7 +94,7 @@
           class="facilities-footer-like-vuetify"
         >
           <span v-if="!header.hideFooterContent">
-            {{ results[header.value] | formatNumber(0, true) }}
+            {{ results[header.value] | formatNumber(0, 0, true) }}
           </span>
         </td>
       </tr>

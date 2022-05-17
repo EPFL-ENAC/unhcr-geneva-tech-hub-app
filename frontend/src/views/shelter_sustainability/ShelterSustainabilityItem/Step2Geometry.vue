@@ -33,6 +33,16 @@
                   v-on="on"
                   @click="() => toggleImage(geometry._id)"
                 >
+                  <v-btn
+                    v-if="shelter_geometry_type"
+                    float
+                    absolute
+                    left
+                    top
+                    @click.stop="unsetImage"
+                  >
+                    Other geometries
+                  </v-btn>
                   <v-img
                     max-width="300px"
                     class="d-flex justify-center"
@@ -69,6 +79,7 @@
                           :label="dimension"
                           suffix="m"
                           type="number"
+                          @change="updateFormInput"
                         />
                       </v-form>
                     </v-card>
@@ -96,6 +107,7 @@
                           :label="dimension"
                           suffix="m"
                           type="number"
+                          @change="updateFormInput"
                         />
                       </v-form>
                     </v-card>
@@ -132,6 +144,7 @@
                           :label="dimension"
                           suffix="m"
                           type="number"
+                          @change="updateFormInput"
                         />
                       </v-form>
                     </v-card>
@@ -155,15 +168,30 @@
                     xs="12"
                   >
                     <v-text-field
-                      v-model.number="
+                      v-if="!geometry.hiddenInputs"
+                      :value="
                         localShelter.geometry[resultDimension.key]
+                          | formatNumber
                       "
                       :disabled="!geometry.hiddenInputs"
                       :name="resultDimension.label"
                       :label="resultDimension.label"
+                      type="string"
+                      :suffix="resultDimension.suffix"
+                      @change="updateResultDimension"
+                    >
+                    </v-text-field>
+                    <v-text-field
+                      v-else
+                      v-model.number="
+                        localShelter.geometry[resultDimension.key]
+                      "
+                      :name="resultDimension.label"
+                      :label="resultDimension.label"
                       type="number"
                       :suffix="resultDimension.suffix"
-                    />
+                    >
+                    </v-text-field>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -197,6 +225,7 @@
 <script lang="ts">
 import {
   DoorDimensions,
+  GeometryKeys,
   Shelter,
   ShelterDimensions,
   WindowDimensions,
@@ -238,6 +267,15 @@ export default class Step2Geometry extends Vue {
     }
     this.updateFormInput();
   }
+  public unsetImage(): void {
+    this.localShelter.geometry.shelter_geometry_type = "";
+    this.updateFormInput();
+  }
+
+  public updateResultDimension(value: string, field: GeometryKeys): void {
+    this.localShelter.geometry[field] = parseFloat(value);
+    this.updateFormInput();
+  }
   get shelter_geometry_type(): string {
     return this.localShelter?.geometry?.shelter_geometry_type;
   }
@@ -259,10 +297,11 @@ export default class Step2Geometry extends Vue {
     );
   }
 
-  @Watch("localShelter.geometry.shelter_dimensions", { deep: true })
-  public onShelterDimensionsChange(
-    newShelterDimensions: ShelterDimensions
-  ): void {
+  @Watch("localShelter.geometry.shelter_dimensions", {
+    deep: true,
+    immediate: true,
+  })
+  onShelterDimensionsChange(newShelterDimensions: ShelterDimensions): void {
     if (newShelterDimensions && this.hasComputedFloorAndVolume) {
       // we need at least L && W for floor Area and Volume
       // works for other since L & W will always be zero for 'Others' type of geometry
@@ -273,7 +312,10 @@ export default class Step2Geometry extends Vue {
     }
   }
 
-  @Watch("localShelter.geometry.windows_dimensions", { deep: true })
+  @Watch("localShelter.geometry.windows_dimensions", {
+    deep: true,
+    immediate: true,
+  })
   public onWindowsDimensionsChange(
     newWindowDimensions: WindowDimensions[]
   ): void {
@@ -284,7 +326,10 @@ export default class Step2Geometry extends Vue {
     }
   }
 
-  @Watch("localShelter.geometry.doors_dimensions", { deep: true })
+  @Watch("localShelter.geometry.doors_dimensions", {
+    deep: true,
+    immediate: true,
+  })
   public onDoorsDimensionsChange(newDoorDimensions: DoorDimensions[]): void {
     if (newDoorDimensions && this.hasComputedFloorAndVolume) {
       this.localShelter.geometry.windowArea =

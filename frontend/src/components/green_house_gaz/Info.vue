@@ -38,17 +38,7 @@
                 </v-col>
                 <v-divider vertical></v-divider>
                 <v-col cols="6" class="map-countries">
-                  <l-map :zoom="zoom" :center="latLng">
-                    <l-control-scale
-                      :imperial="false"
-                      :metric="true"
-                    ></l-control-scale>
-                    <l-tile-layer
-                      :url="url"
-                      :attribution="attribution"
-                    ></l-tile-layer>
-                    <l-marker :lat-lng="latLng"></l-marker>
-                  </l-map>
+                  <territory-map :value="latLng" @update:value="updateLatLng" />
                 </v-col>
               </v-row>
             </v-card-text>
@@ -70,6 +60,7 @@
 import CountrySelect from "@/components/commons/CountrySelect.vue";
 import { FormItem } from "@/components/commons/FormItem";
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
+import TerritoryMap from "@/components/commons/TerritoryMap.vue";
 import { GreenHouseGaz } from "@/store/GhgInterface";
 import { CouchUser } from "@/store/UserModule";
 import { countries as Countries } from "@/utils/countriesAsList";
@@ -102,6 +93,7 @@ import { mapActions, mapGetters } from "vuex";
     LMap,
     LMarker,
     LTileLayer,
+    TerritoryMap,
   },
 })
 /** ProjectItem */
@@ -172,6 +164,11 @@ export default class GhgInfo extends Vue {
     } else {
       throw new Error("please fill the new Name");
     }
+  }
+
+  public updateLatLng(latLng: number[]): void {
+    this.localProject.latitude = latLng[0];
+    this.localProject.longitude = latLng[1];
   }
 
   public setLocalShelter(project: GreenHouseGaz): void {
