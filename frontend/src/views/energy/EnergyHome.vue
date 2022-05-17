@@ -39,9 +39,17 @@
                         <v-list-item-content>
                           <v-list-item-title>
                             {{ item.name }}
+                            <v-tooltip v-if="item.isTemplate" bottom>
+                              <template v-slot:activator="{ on, attrs }">
+                                <v-icon v-bind="attrs" v-on="on" class="ma-1">
+                                  mdi-account-hard-hat
+                                </v-icon>
+                              </template>
+                              <span>Template</span>
+                            </v-tooltip>
                           </v-list-item-title>
                         </v-list-item-content>
-                        <v-list-item-action class="flex-row">
+                        <v-list-item-action class="flex-row align-center">
                           <v-tooltip bottom>
                             <template v-slot:activator="{ on, attrs }">
                               <v-btn

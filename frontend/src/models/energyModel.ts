@@ -1,6 +1,7 @@
 export interface ProjectDocument {
   name: string;
   siteName: string;
+  isTemplate?: boolean;
   users: string[];
   modules: Modules;
 }

@@ -23,6 +23,14 @@
           @change="changeDocument"
         ></v-text-field>
       </v-col>
+      <v-col cols="auto">
+        <v-checkbox
+          v-model="isTemplate"
+          hide-details="auto"
+          label="Template"
+          @change="changeDocument"
+        ></v-checkbox>
+      </v-col>
       <v-col cols="auto" class="d-flex align-center">
         <user-manager v-model="users" @change="changeDocument"></user-manager>
       </v-col>
@@ -320,6 +328,16 @@ export default class EnergyProject extends Vue {
   set name(value: string) {
     if (this.document) {
       this.document.name = value;
+    }
+  }
+
+  get isTemplate(): boolean {
+    return this.document?.isTemplate ?? false;
+  }
+
+  set isTemplate(value: boolean) {
+    if (this.document) {
+      this.document.isTemplate = value;
     }
   }
 
