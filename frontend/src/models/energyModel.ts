@@ -174,7 +174,7 @@ export interface Scenario {
 }
 export interface ScenarioYear {
   yearIndex: number;
-  householdSize: number;
+  householdSize: RangeModel;
   /**
    * d1
    */

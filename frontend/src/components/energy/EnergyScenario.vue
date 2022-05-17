@@ -60,7 +60,9 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
           years: [
             {
               yearIndex: 0,
-              householdSize: this.householdSize,
+              householdSize: {
+                val: this.householdSize,
+              },
               discountRate: {
                 val: 1,
               },
@@ -84,7 +86,9 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
           years: [
             {
               yearIndex: 0,
-              householdSize: this.householdSize,
+              householdSize: {
+                val: this.householdSize,
+              },
               discountRate: {
                 val: 1,
               },
@@ -108,7 +112,9 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
           years: [
             {
               yearIndex: 0,
-              householdSize: this.householdSize,
+              householdSize: {
+                val: this.householdSize,
+              },
               discountRate: {
                 val: 1,
               },
@@ -135,7 +141,9 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
           scenario.years = [
             {
               yearIndex: 0,
-              householdSize: this.householdSize,
+              householdSize: {
+                val: this.householdSize,
+              },
               discountRate: scenario.discountRate ?? { val: 1 },
               incomeRate: scenario.incomeRate ?? { val: 1 },
               demographicGrowth: scenario.demographicGrowth ?? { val: 1 },
@@ -151,8 +159,14 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
         return scenario.years;
       })
       .forEach((scenario) => {
-        if (scenario.householdSize === undefined) {
-          scenario.householdSize = this.householdSize;
+        if (typeof scenario.householdSize === "number") {
+          scenario.householdSize = {
+            val: scenario.householdSize,
+          };
+        } else if (scenario.householdSize === undefined) {
+          scenario.householdSize = {
+            val: this.householdSize,
+          };
         }
         if (typeof scenario.discountRate === "number") {
           scenario.discountRate = {

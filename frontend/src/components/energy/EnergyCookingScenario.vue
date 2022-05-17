@@ -119,7 +119,7 @@ export default class EnergyCookingScenario extends Vue {
   ];
   readonly yearFormItems: FormItem<keyof ScenarioYear>[] = [
     {
-      type: "number",
+      type: "range",
       key: "householdSize",
       label: "Household Size",
     },

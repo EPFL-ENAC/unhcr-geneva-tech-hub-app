@@ -580,7 +580,7 @@ export default class EnergyCookingResult extends Vue {
         woodCarbonation: general.woodCarbonation,
         woodDensity: general.woodDensity,
 
-        householdSize: firstScenario.householdSize,
+        householdSize: firstScenario.householdSize.val,
         incomeRate: firstScenario.incomeRate.val,
         discountRate: firstScenario.discountRate.val,
         demographicGrowth: firstScenario.demographicGrowth.val,
@@ -605,7 +605,7 @@ export default class EnergyCookingResult extends Vue {
           (item) => item.yearIndex === index
         );
         if (currentScenario) {
-          currentSite.householdSize = currentScenario.householdSize;
+          currentSite.householdSize = currentScenario.householdSize.val;
           currentSite.incomeRate = currentScenario.incomeRate.val;
           currentSite.discountRate = currentScenario.discountRate.val;
           currentSite.demographicGrowth = currentScenario.demographicGrowth.val;
