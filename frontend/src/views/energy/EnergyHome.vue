@@ -41,7 +41,7 @@
                             {{ item.name }}
                             <v-tooltip v-if="item.isTemplate" bottom>
                               <template v-slot:activator="{ on, attrs }">
-                                <v-icon v-bind="attrs" v-on="on" class="ma-1">
+                                <v-icon v-bind="attrs" class="ma-1" v-on="on">
                                   mdi-account-hard-hat
                                 </v-icon>
                               </template>

@@ -3,11 +3,10 @@
     <v-col cols="4">
       <v-card height="100%">
         <v-card-title>
-          Efficient and clean technologies diffusion
-          <v-spacer></v-spacer>
           <v-btn color="primary" icon @click="addDiffusion">
             <v-icon large>mdi-plus-box</v-icon>
           </v-btn>
+          Energy substitution
         </v-card-title>
         <v-card-text>
           <v-expansion-panels multiple>
@@ -50,6 +49,12 @@
                   v-model="interventionItem[item.key]"
                   v-bind="item"
                 ></form-item-component>
+                <form-item-component
+                  v-for="item in subsidiesFormItems"
+                  :key="item.key"
+                  v-model="interventionItem.subsidies[item.key]"
+                  v-bind="item"
+                ></form-item-component>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -59,11 +64,10 @@
     <v-col cols="4">
       <v-card height="100%">
         <v-card-title>
-          Energy efficiency improvement
-          <v-spacer></v-spacer>
           <v-btn color="primary" icon @click="addEfficiency">
             <v-icon large>mdi-plus-box</v-icon>
           </v-btn>
+          Energy efficiency improvement
         </v-card-title>
         <v-card-text>
           <v-expansion-panels multiple>
@@ -99,11 +103,10 @@
     <v-col cols="4">
       <v-card height="100%">
         <v-card-title>
-          Cash-based interventions
-          <v-spacer></v-spacer>
           <v-btn color="primary" icon @click="addCash">
             <v-icon large>mdi-plus-box</v-icon>
           </v-btn>
+          Cash-based interventions
         </v-card-title>
         <v-card-text>
           <v-expansion-panels multiple>
@@ -227,13 +230,17 @@ export default class EnergyCookingIntervention extends Vue {
         type: "number",
         key: "cost",
         label: "Total cost per year",
-      },
-      {
-        type: "number",
-        key: "donnorSubsidy",
-        label: "Share of subsidies by the donnor",
+        unit: "$",
       },
     ];
+  }
+
+  get subsidiesFormItems(): FormItem<SocioEconomicCategory>[] {
+    return socioEconomicCategories.map((cat) => ({
+      type: "number",
+      key: cat,
+      label: `Share of subsidies by the donor for ${this.$t(`energy.${cat}`)}`,
+    }));
   }
 
   get stoveIdOptions(): SelectOption<CookingStoveId>[] {
@@ -263,7 +270,9 @@ export default class EnergyCookingIntervention extends Vue {
       count: 0,
       categories: [],
       cost: 0,
-      donnorSubsidy: 0,
+      subsidies: Object.fromEntries(
+        socioEconomicCategories.map((cat) => [cat, 0])
+      ) as Record<SocioEconomicCategory, number>,
     });
   }
 

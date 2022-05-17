@@ -212,7 +212,7 @@ export interface CookingTechnologyIntervention extends ParentIntervention {
   count: number;
   categories: SocioEconomicCategory[];
   cost: number;
-  donnorSubsidy: number;
+  subsidies: Record<SocioEconomicCategory, number>;
 }
 
 // CouchDB Models

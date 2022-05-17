@@ -69,6 +69,8 @@ import {
   Intervention,
   InterventionModule,
   ScenarioModule,
+  socioEconomicCategories,
+  SocioEconomicCategory,
 } from "@/models/energyModel";
 import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
@@ -143,6 +145,13 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
         ? this.interventionModule.interventions
         : [];
     }
+    this.module.interventions.forEach((intervention) => {
+      if (!intervention.subsidies) {
+        intervention.subsidies = Object.fromEntries(
+          socioEconomicCategories.map((cat) => [cat, 0])
+        ) as Record<SocioEconomicCategory, number>;
+      }
+    });
   }
 }
 </script>
