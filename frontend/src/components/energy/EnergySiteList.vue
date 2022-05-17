@@ -84,6 +84,7 @@ class EnergySiteList extends Vue {
       this.sitesDatabase.remoteDB
         .post({
           name: this.name,
+          siteName: this.name,
           users: [username],
           modules: cloneDeep(this.templateDocument.modules),
         })

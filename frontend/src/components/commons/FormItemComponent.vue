@@ -65,6 +65,22 @@
       </template>
       <template v-if="actualUnit" v-slot:append>{{ actualUnit }}</template>
     </v-select>
+    <v-combobox
+      v-if="type === 'combobox'"
+      v-model="model"
+      :items="options"
+      hide-details="auto"
+    >
+      <template v-slot:label>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <span v-bind="attrs" v-on="on">{{ label }}</span>
+          </template>
+          <span>{{ label }}</span>
+        </v-tooltip>
+      </template>
+      <template v-if="actualUnit" v-slot:append>{{ actualUnit }}</template>
+    </v-combobox>
     <form-item-component
       v-if="type === 'range'"
       v-model="model.val"
@@ -161,7 +177,11 @@ export default class FormItemComponent extends Vue {
   @Prop(String)
   readonly label: string | undefined;
   @Prop([Object, Array])
-  readonly options: BooleanOptions | SelectOption<SelectValue>[] | undefined;
+  readonly options:
+    | BooleanOptions
+    | SelectOption<SelectValue>[]
+    | string[]
+    | undefined;
   @Prop(String)
   readonly unit: string | undefined;
   @Prop(String)

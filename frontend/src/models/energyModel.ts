@@ -1,5 +1,6 @@
 export interface ProjectDocument {
   name: string;
+  siteName: string;
   users: string[];
   modules: Modules;
 }
@@ -38,7 +39,10 @@ export interface RangeModel {
 // General
 
 export interface GeneralModule {
-  name: string;
+  /**
+   * @deprecated
+   */
+  name?: string;
   countryCode?: string;
   yearStart: number;
   yearEnd: number;

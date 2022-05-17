@@ -239,11 +239,6 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
     return [
       [
         {
-          type: "text",
-          key: "name",
-          label: "Name of the site",
-        },
-        {
           type: "country",
           key: "countryCode",
           label: "Country",

@@ -65,6 +65,7 @@ export default class EnergyTemplateList extends Vue {
     this.templatesDatabase.remoteDB
       .post({
         name: this.name,
+        siteName: this.name,
         users: [username],
         modules: {},
       })

@@ -5,6 +5,7 @@ export type TypeType =
   | "number"
   | "boolean"
   | "select"
+  | "combobox"
   | "range"
   | "country";
 
@@ -13,6 +14,7 @@ export type FormItem<K = string, V = string> =
   | NumberFormItem<K>
   | BooleanFormItem<K>
   | SelectFormItem<K, V>
+  | ComboboxFormItem<K>
   | RangeFormItem<K>
   | CountryFormItem<K>;
 
@@ -52,9 +54,18 @@ interface SelectFormItem<K, V> extends AbstractFormItem<K> {
   multiple?: boolean;
 }
 
+interface ComboboxFormItem<K> extends AbstractFormItem<K> {
+  type: "combobox";
+  options: string[];
+}
+
 interface RangeFormItem<K> extends AbstractFormItem<K> {
   type: "range";
   subtype?: "rate";
+}
+
+interface CountryFormItem<K> extends AbstractFormItem<K> {
+  type: "country";
 }
 
 export interface BooleanOptions {
@@ -68,7 +79,3 @@ export interface SelectOption<V> {
 }
 
 export type SelectValue = boolean | string | number;
-
-interface CountryFormItem<K> extends AbstractFormItem<K> {
-  type: "country";
-}

@@ -7,73 +7,113 @@
     </v-row>
     <v-row>
       <v-col cols="6">
-        <v-expansion-panels mandatory multiple>
-          <v-expansion-panel v-for="group in groups" :key="group.name">
-            <v-expansion-panel-header>
-              <h3>{{ group.name }} {{ group.emoji }}</h3>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <v-list nav>
-                <v-list-item-group>
-                  <v-list-item
-                    v-for="item in group.sites"
-                    :key="item._id"
-                    @click="openSite(item._id)"
-                  >
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        {{ item.name }}
-                      </v-list-item-title>
-                    </v-list-item-content>
-                    <v-list-item-action class="flex-row">
-                      <v-btn
-                        icon
-                        @click="
-                          $event.stopPropagation();
-                          copySite(item);
-                        "
+        <v-row>
+          <v-col>
+            <v-btn
+              class="float-right"
+              color="primary"
+              :disabled="username === 'guest'"
+              text
+              @click="createDialog = true"
+            >
+              <v-icon left>mdi-plus-box</v-icon>
+              Add Project
+            </v-btn>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-expansion-panels v-model="expandedIndexes" multiple>
+              <v-expansion-panel v-for="group in groups" :key="group.name">
+                <v-expansion-panel-header>
+                  <h3>{{ group.name }} {{ group.emoji }}</h3>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-list nav>
+                    <v-list-item-group>
+                      <v-list-item
+                        v-for="item in group.sites"
+                        :key="item._id"
+                        @click="openSite(item._id)"
                       >
-                        <v-icon>mdi-content-copy</v-icon>
-                      </v-btn>
-                      <v-btn
-                        icon
-                        @click="
-                          $event.stopPropagation();
-                          deleteSite(item);
-                        "
-                      >
-                        <v-icon>mdi-close</v-icon>
-                      </v-btn>
-                    </v-list-item-action>
-                  </v-list-item>
-                </v-list-item-group>
-              </v-list>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
-        <br />
-        <v-card v-if="username != 'guest'">
-          <v-form v-model="formValid" @submit.prevent="createSite">
-            <v-card-text>
-              <form-item-component
-                v-for="item in formItems"
-                :key="item.key"
-                v-model="newSiteProp[item.key]"
-                v-bind="item"
-              ></form-item-component>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn color="primary" :disabled="!formValid" icon type="submit">
-                <v-icon>mdi-plus-box</v-icon>
-              </v-btn>
-            </v-card-actions>
-          </v-form>
-        </v-card>
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            {{ item.name }}
+                          </v-list-item-title>
+                        </v-list-item-content>
+                        <v-list-item-action class="flex-row">
+                          <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-btn
+                                v-bind="attrs"
+                                icon
+                                v-on="on"
+                                @click="
+                                  $event.stopPropagation();
+                                  copySite(item);
+                                "
+                              >
+                                <v-icon>mdi-content-copy</v-icon>
+                              </v-btn>
+                            </template>
+                            <span>Copy</span>
+                          </v-tooltip>
+                          <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-btn
+                                v-bind="attrs"
+                                icon
+                                v-on="on"
+                                @click="
+                                  $event.stopPropagation();
+                                  deleteSite(item);
+                                "
+                              >
+                                <v-icon>mdi-close</v-icon>
+                              </v-btn>
+                            </template>
+                            <span>Delete</span>
+                          </v-tooltip>
+                        </v-list-item-action>
+                      </v-list-item>
+                    </v-list-item-group>
+                  </v-list>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </v-col>
+        </v-row>
       </v-col>
       <v-col cols="6">
         <energy-map aspect-ratio="1" :markers="markers"></energy-map>
       </v-col>
     </v-row>
+    <v-dialog v-model="createDialog" max-width="256">
+      <v-card>
+        <v-form
+          v-model="formValid"
+          @submit.prevent="
+            createDialog = false;
+            createSite();
+          "
+        >
+          <v-card-text>
+            <form-item-component
+              v-for="item in formItems"
+              :key="item.key"
+              v-model="newSiteProp[item.key]"
+              v-bind="item"
+            ></form-item-component>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="primary" :disabled="!formValid" type="submit" text>
+              <v-icon left>mdi-plus-box</v-icon>
+              Create
+            </v-btn>
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-dialog>
     <v-overlay :value="loading">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
@@ -112,11 +152,19 @@ export default class EnergyHome extends Vue {
   sitesDatabase!: SyncDatabase<ProjectDocument>;
   title = energy.title;
   loading = false;
+  createDialog = false;
   formValid = false;
   newSiteProp: NewSiteProp = {};
+  expandedIndexes: number[] = [0];
 
   get formItems(): FormItem<keyof NewSiteProp>[] {
     return [
+      {
+        type: "combobox",
+        key: "siteName",
+        label: "Site Name",
+        options: this.groups.map((group) => group.name).sort(),
+      },
       {
         type: "text",
         key: "projectName",
@@ -130,16 +178,19 @@ export default class EnergyHome extends Vue {
   }
 
   get groups(): Group[] {
-    return chain(
-      groupBy(this.sites, (site) => site.modules.general?.name ?? "No Site")
-    )
+    return chain(groupBy(this.sites, (site) => site.siteName ?? "No Site"))
       .entries()
       .sortBy(([key]) => key)
       .map(([key, value]) => {
-        const countryCode = value[0].modules.general?.countryCode ?? "";
+        const countryCode = chain(value)
+          .map((doc) => doc.modules.general?.countryCode)
+          .countBy()
+          .entries()
+          .maxBy(([, count]) => count)
+          .value()[0] as string;
         return {
           name: key,
-          emoji: getFlagEmoji(countryCode),
+          emoji: getFlagEmoji(countryCode === "undefined" ? "" : countryCode),
           sites: value,
         };
       })
@@ -173,11 +224,18 @@ export default class EnergyHome extends Vue {
       this.sitesDatabase.remoteDB
         .post({
           name: this.newSiteProp.projectName ?? "",
+          siteName: this.newSiteProp.siteName ?? "",
           users: [this.username],
           modules: {},
         })
-        .then((response) => {
-          this.openSite(response.id);
+        .then(() => {
+          const index = this.groups.findIndex(
+            (group) => group.name === this.newSiteProp.siteName
+          );
+          if (index >= 0) {
+            this.expandedIndexes = [index];
+          }
+          this.newSiteProp = {};
         })
     );
   }
@@ -186,6 +244,7 @@ export default class EnergyHome extends Vue {
     this.applyAsync(
       this.sitesDatabase.remoteDB.post({
         name: `${document.name} - copy`,
+        siteName: document.siteName ?? document.modules.general?.name,
         users: [this.username],
         modules: cloneDeep(document.modules),
       })
@@ -220,6 +279,7 @@ interface Group {
 }
 
 interface NewSiteProp {
+  siteName?: string;
   projectName?: string;
 }
 </script>

@@ -3,6 +3,17 @@
     <v-row>
       <v-col>
         <v-text-field
+          v-model="siteName"
+          hide-details="auto"
+          label="Site Name"
+          outlined
+          required
+          :rules="rules"
+          @change="changeDocument"
+        ></v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field
           v-model="name"
           hide-details="auto"
           label="Project Name"
@@ -291,6 +302,16 @@ export default class EnergyProject extends Vue {
 
   document: ExistingDocument<ProjectDocument> | null = null;
   tab: string | null = null;
+
+  get siteName(): string {
+    return this.document?.siteName ?? "";
+  }
+
+  set siteName(value: string) {
+    if (this.document) {
+      this.document.siteName = value;
+    }
+  }
 
   get name(): string {
     return this.document?.name ?? "";
