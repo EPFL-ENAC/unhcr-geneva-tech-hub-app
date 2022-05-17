@@ -314,6 +314,7 @@ export default class Step1 extends Vue {
   public updateLatLng(latLng: number[]): void {
     this.updateLatitude(latLng[0]);
     this.updateLongitude(latLng[1]);
+    this.updateFormInput();
   }
 
   public img_url = {
