@@ -22,7 +22,6 @@ export enum DatabaseName {
   EnergyCookingFuels = "energy_cooking_fuels",
   EnergyCookingStoves = "energy_cooking_stoves",
   EnergySites = "energy_sites",
-  EnergyTemplates = "energy_templates",
 }
 
 function getUrl(path: string): string {

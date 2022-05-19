@@ -29,16 +29,6 @@ export default {
         ),
       children: projectChildren("energySite"),
     },
-    {
-      path: "templates/:id",
-      name: "energyTemplate",
-      redirect: { name: "energyTemplateGeneral" },
-      component: () =>
-        import(
-          /* webpackChunkName: "energy-template" */ "../views/energy/EnergyTemplate.vue"
-        ),
-      children: projectChildren("energyTemplate"),
-    },
   ],
 } as RouteConfig;
 

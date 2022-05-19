@@ -16,8 +16,6 @@ interface State {
   cookingStoves: CookingStove[];
   sitesDatabase?: SyncDatabase<ProjectDocument>;
   sites: ExistingDocument<ProjectDocument>[];
-  templatesDatabase?: SyncDatabase<ProjectDocument>;
-  templates: ExistingDocument<ProjectDocument>[];
 }
 
 enum MutationTypes {
@@ -27,8 +25,6 @@ enum MutationTypes {
   SetCookingStoves = "SetCookingStoves",
   SetSitesDatabase = "SetSitesDatabase",
   SetSites = "SetSites",
-  SetTemplatesDatabase = "SetTemplatesDatabase",
-  SetTemplates = "SetTemplates",
 }
 
 export enum ActionTypes {
@@ -37,7 +33,6 @@ export enum ActionTypes {
   UpdateCookingFuels = "UpdateCookingFuels",
   UpdateCookingStoves = "UpdateCookingStoves",
   UpdateSites = "UpdateSites",
-  UpdateTemplates = "UpdateTemplates",
 }
 
 function createDatabase<T>(
@@ -58,7 +53,6 @@ const energyModule: Module<State, RootState> = {
     cookingFuels: [],
     cookingStoves: [],
     sites: [],
-    templates: [],
   },
   mutations: {
     [MutationTypes.SetCookingFuelsDatabase](
@@ -91,18 +85,6 @@ const energyModule: Module<State, RootState> = {
     ) {
       state.sites = value;
     },
-    [MutationTypes.SetTemplatesDatabase](
-      state,
-      value: SyncDatabase<ProjectDocument>
-    ) {
-      state.templatesDatabase = value;
-    },
-    [MutationTypes.SetTemplates](
-      state,
-      value: ExistingDocument<ProjectDocument>[]
-    ) {
-      state.templates = value;
-    },
   },
   actions: {
     [ActionTypes.Created](context) {
@@ -126,19 +108,11 @@ const energyModule: Module<State, RootState> = {
         MutationTypes.SetSitesDatabase,
         ActionTypes.UpdateSites
       );
-
-      createDatabase(
-        context,
-        DatabaseName.EnergyTemplates,
-        MutationTypes.SetTemplatesDatabase,
-        ActionTypes.UpdateTemplates
-      );
     },
     [ActionTypes.Destroyed](context) {
       context.state.cookingFuelsDatabase?.cancel();
       context.state.cookingStovesDatabase?.cancel();
       context.state.sitesDatabase?.cancel();
-      context.state.templatesDatabase?.cancel();
     },
     [ActionTypes.UpdateCookingFuels](context) {
       context.state.cookingFuelsDatabase
@@ -158,13 +132,6 @@ const energyModule: Module<State, RootState> = {
       context.state.sitesDatabase
         ?.getDocuments()
         .then((documents) => context.commit(MutationTypes.SetSites, documents));
-    },
-    [ActionTypes.UpdateTemplates](context) {
-      context.state.templatesDatabase
-        ?.getDocuments()
-        .then((documents) =>
-          context.commit(MutationTypes.SetTemplates, documents)
-        );
     },
   },
 };
