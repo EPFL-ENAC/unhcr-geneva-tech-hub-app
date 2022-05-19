@@ -107,14 +107,14 @@ export default class EnergyCookingScenario extends Vue {
       key: "energyPriceTrend",
       label: "Energy Price",
       options: this.trendOptions,
-      readonly: true,
+      disabled: true,
     } as FormItem<keyof Scenario, ScenarioTrend>,
     {
       type: "select",
       key: "investmentCostTrend",
       label: "Investment Cost",
       options: this.trendOptions,
-      readonly: true,
+      disabled: true,
     } as FormItem<keyof Scenario, ScenarioTrend>,
   ];
   readonly yearFormItems: FormItem<keyof ScenarioYear>[] = [

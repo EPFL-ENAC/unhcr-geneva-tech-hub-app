@@ -7,6 +7,7 @@
       required
       :rules="actualRules"
       :readonly="readonly"
+      :disabled="disabled"
       @change="$emit('change', $event)"
     >
       <template v-slot:label>
@@ -27,6 +28,7 @@
       :suffix="suffix"
       :rules="actualRules"
       :readonly="readonly"
+      :disabled="disabled"
       type="number"
       @change="$emit('change', $event)"
     >
@@ -55,6 +57,7 @@
       required
       :rules="actualRules"
       :readonly="readonly"
+      :disabled="disabled"
     >
       <template v-slot:label>
         <v-tooltip top>
@@ -95,8 +98,9 @@
       :min="model.min"
       :max="model.max"
       :readonly="readonly"
+      :disabled="disabled"
     >
-      <template v-if="!readonly" v-slot:append-outer>
+      <template v-if="!readonly && !disabled" v-slot:append-outer>
         <v-dialog max-width="256">
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" icon v-on="on">
@@ -203,6 +207,8 @@ export default class FormItemComponent extends Vue {
   readonly precision: number | undefined;
   @Prop({ type: Boolean, default: false })
   readonly readonly!: boolean;
+  @Prop({ type: Boolean, default: false })
+  readonly disabled!: boolean;
 
   get items(): SelectItemObject<string, SelectValue>[] {
     switch (this.type) {

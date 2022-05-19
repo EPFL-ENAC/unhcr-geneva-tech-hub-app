@@ -26,6 +26,7 @@ interface AbstractFormItem<K> {
   suffix?: string;
   optional?: boolean;
   readonly?: boolean;
+  disabled?: boolean;
 }
 
 interface TextFormItem<K> extends AbstractFormItem<K> {
