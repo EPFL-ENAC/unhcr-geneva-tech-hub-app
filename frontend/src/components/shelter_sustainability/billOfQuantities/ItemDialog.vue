@@ -120,10 +120,10 @@
                   @change="onUnitChange"
                 >
                   <template v-slot:item="{ item }">
-                    {{ UnitsRef[item] }}
+                    {{ UnitsRef[item] || item }}
                   </template>
                   <template v-slot:selection="{ item }">
-                    {{ UnitsRef[item] }}
+                    {{ UnitsRef[item] || item }}
                   </template>
                 </v-select>
               </v-col>

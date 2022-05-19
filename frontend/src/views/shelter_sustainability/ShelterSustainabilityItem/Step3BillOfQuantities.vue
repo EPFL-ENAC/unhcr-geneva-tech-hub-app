@@ -20,6 +20,7 @@
             sort-by="name"
             class="elevation-1"
             hide-default-footer
+            :items-per-page="-1"
           >
             <template v-slot:top>
               <v-toolbar flat>
@@ -89,7 +90,9 @@
               <v-btn icon small class="mr-2" @click="openEditItemDialog(item)">
                 <v-icon> mdi-pencil</v-icon>
               </v-btn>
-
+              <!-- <v-btn icon small class="mr-2" @click="duplicate(item)">
+                <v-icon> mdi-content-copy</v-icon>
+              </v-btn> -->
               <v-btn icon small class="mr-2" @click="openDeleteDialog(item)">
                 <v-icon> mdi-delete</v-icon>
               </v-btn>
@@ -189,6 +192,13 @@ export default class Step3Materials extends Vue {
 
   public submitForm(): void {
     this.$set(this.localShelter, "items", this.items);
+    this.localShelter = Object.assign({}, this.localShelter);
+  }
+
+  public duplicate(item: Item): void {
+    const newItems = this.items;
+    newItems.push(cloneDeep(item));
+    this.$set(this.localShelter, "items", newItems);
     this.localShelter = Object.assign({}, this.localShelter);
   }
 
