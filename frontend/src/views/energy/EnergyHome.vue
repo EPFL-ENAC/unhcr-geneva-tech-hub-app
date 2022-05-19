@@ -1,11 +1,6 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col>
-        <h1>{{ title }}</h1>
-      </v-col>
-    </v-row>
-    <v-row>
+  <v-container class="fill-height" fluid>
+    <v-row class="fill-height">
       <v-col cols="6">
         <v-row>
           <v-col>
@@ -92,8 +87,9 @@
           </v-col>
         </v-row>
       </v-col>
+      <v-divider vertical></v-divider>
       <v-col cols="6">
-        <energy-map aspect-ratio="1" :markers="markers"></energy-map>
+        <energy-map :markers="markers"></energy-map>
       </v-col>
     </v-row>
     <v-dialog v-model="createDialog" max-width="256">
