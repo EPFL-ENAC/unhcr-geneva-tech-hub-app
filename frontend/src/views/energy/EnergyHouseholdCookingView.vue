@@ -1,14 +1,11 @@
 <template>
-  <div>
-    <h1>Cooking</h1>
-    <energy-household-cooking
-      :initial-module="modules.householdCooking"
-      :general-module="modules.general"
-      :scenario-module="modules.scenario"
-      :intervention-module="modules.intervention"
-      @save="save"
-    ></energy-household-cooking>
-  </div>
+  <energy-household-cooking
+    :initial-module="modules.householdCooking"
+    :general-module="modules.general"
+    :scenario-module="modules.scenario"
+    :intervention-module="modules.intervention"
+    @save="save"
+  ></energy-household-cooking>
 </template>
 
 <script lang="ts">

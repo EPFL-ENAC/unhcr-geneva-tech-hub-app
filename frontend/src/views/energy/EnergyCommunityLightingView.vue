@@ -1,13 +1,10 @@
 <template>
-  <div>
-    <h1>Lighting</h1>
-    <p>
-      The community lighting characterizes for the base year, the street
-      lighting demand and supply. The supply may consist in solar lighting or
-      public / mini-grid connected street lighting. The evolution of the
-      sub-system is assumed in the scenario section.
-    </p>
-  </div>
+  <p>
+    The community lighting characterizes for the base year, the street lighting
+    demand and supply. The supply may consist in solar lighting or public /
+    mini-grid connected street lighting. The evolution of the sub-system is
+    assumed in the scenario section.
+  </p>
 </template>
 
 <script lang="ts">

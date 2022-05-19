@@ -1,13 +1,10 @@
 <template>
-  <div>
-    <h1>Goods & Services</h1>
-    <p>
-      This sector includes units such as: shops, small restaurants, and water
-      pumping and distribution. For each sub-units, the productive energy use is
-      assessed for the base year, and assumed for the future in the scenario
-      section.
-    </p>
-  </div>
+  <p>
+    This sector includes units such as: shops, small restaurants, and water
+    pumping and distribution. For each sub-units, the productive energy use is
+    assessed for the base year, and assumed for the future in the scenario
+    section.
+  </p>
 </template>
 
 <script lang="ts">

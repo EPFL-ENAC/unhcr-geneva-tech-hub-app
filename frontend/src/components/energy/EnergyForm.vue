@@ -1,5 +1,5 @@
 <template>
-  <v-card flat>
+  <v-card>
     <v-card-title v-if="$slots.title">
       <slot name="title"></slot>
     </v-card-title>
