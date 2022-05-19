@@ -45,6 +45,7 @@ export interface SurveyForms {
 }
 
 export interface Survey extends SurveyForms {
+  _id?: string; // uuid4
   created_at: string;
   created_by: string;
   name: string; // name is year

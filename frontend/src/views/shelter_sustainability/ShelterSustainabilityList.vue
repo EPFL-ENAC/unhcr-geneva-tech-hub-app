@@ -55,7 +55,15 @@
         <v-row>
           <v-col justify="center">
             <v-row>
-              <v-col v-for="project in projects" :key="project._id" cols="6">
+              <v-col
+                v-for="project in projects"
+                :key="project._id"
+                cols="12"
+                sm="12"
+                md="6"
+                lg="6"
+                xl="3"
+              >
                 <v-card
                   :to="{
                     name: 'ShelterSustainabilityEdit',
@@ -105,36 +113,31 @@
                           {{ countriesMap[project.location_country].name }}
                         </span>
                       </v-card-subtitle>
-                      <v-card-actions
-                        v-if="$can('delete', project)"
-                        class="d-flex flex-row justify-end"
-                      >
-                        <v-btn
-                          outlined
-                          rounded
-                          @click.once.prevent.stop="
-                            () => removeDoc(project._id)
-                          "
-                        >
-                          Delete project
-                        </v-btn>
-                      </v-card-actions>
                       <v-card-subtitle class="pb-0">
                         <v-row class="align-center d-flex">
-                          <v-col cols="5" class="text-caption">
+                          <v-col cols="4" class="text-caption">
                             Created: {{ project.created_at | formatDate }}
                           </v-col>
-                          <v-col cols="5" class="text-caption">
+                          <v-col cols="4" class="text-caption">
                             Updated: {{ project.updated_at | formatDate }}
                           </v-col>
-                          <v-col cols="2">
+                          <v-col cols="4" class="d-flex justify-end">
                             <v-btn
-                              title="Duplicate projects"
+                              title="Duplicate shelters"
                               icon
                               small
-                              @click.stop.prevent="duplicateDoc(project)"
+                              @click.stop.prevent="() => duplicateDoc(project)"
                             >
                               <v-icon small>mdi-content-copy</v-icon>
+                            </v-btn>
+                            <v-btn
+                              v-if="$can('delete', project)"
+                              title="Delete shelters"
+                              icon
+                              small
+                              @click.stop.prevent="() => removeDoc(project._id)"
+                            >
+                              <v-icon>mdi-delete</v-icon>
                             </v-btn>
                           </v-col>
                         </v-row>

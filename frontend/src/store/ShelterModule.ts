@@ -1,3 +1,4 @@
+import { getNewName, updateMetaFields } from "@/store/documentUtils";
 import { RootState } from "@/store/index";
 import { ScoreCard, Shelter, ShelterState } from "@/store/ShelterInterface";
 import {
@@ -9,7 +10,6 @@ import {
   getTotalEnvPerf,
 } from "@/store/ShelterModuleUtils";
 import { SyncDatabase } from "@/utils/couchdb";
-import { cloneDeep } from "lodash";
 import {
   ActionContext,
   ActionTree,
@@ -143,18 +143,18 @@ const actions: ActionTree<ShelterState, RootState> = {
       });
     }
   },
-  duplicateDoc: (
+  duplicateDoc: async (
     context: ActionContext<ShelterState, RootState>,
     value: Shelter
   ) => {
     const user = context.rootGetters["UserModule/user"] as CouchUser;
     if (user.name) {
-      let newValue = cloneDeep(value);
-      newValue.updated_at = new Date().toISOString();
-      newValue.updated_by = user.name;
+      // retrieve real document first
+      let newValue = await context.dispatch("getDoc", value._id);
       delete newValue._rev; // to avoid conflict
-      newValue.name = `${newValue.name} (copy)`;
-      delete newValue._id; // = value.name; // hopefully it does not already exist
+      delete newValue._id; // set by remote database (uuid v4)
+      newValue = updateMetaFields(newValue, user);
+      newValue.name = getNewName(newValue.name);
 
       context.commit("SET_SHELTER", newValue);
       newValue = context.state.shelter;
@@ -165,6 +165,7 @@ const actions: ActionTree<ShelterState, RootState> = {
           newValue._rev = response.rev;
           context.commit("SET_SHELTER", newValue);
           context.commit("ADD_DOC", context.state.shelter);
+          return context.state.shelter;
         });
     }
   },
@@ -192,13 +193,14 @@ const actions: ActionTree<ShelterState, RootState> = {
   getDoc: (context: ActionContext<ShelterState, RootState>, id) => {
     const remoteDB = context.state.localCouch?.remoteDB;
     if (remoteDB) {
-      remoteDB.get(id).then(function (result: Shelter) {
+      return remoteDB.get(id).then(function (result: Shelter) {
         context.commit("SET_SHELTER", result);
         context.dispatch(
           "ShelterBillOfQuantitiesModule/setItems",
           context.state.shelter.items,
           { root: true }
         );
+        return context.state.shelter;
       });
     } else {
       throw new Error(MSG_DB_DOES_NOT_EXIST);

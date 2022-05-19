@@ -33,10 +33,9 @@ export default new (class User {
         //   const isUserAdmin = user.roles.indexOf(USER_ADMIN) >= 0;
         //   const isSpecialist = user.roles.indexOf(SPECIALIST) >= 0;
         //   const isLoggedIn = user.name.length > 0;
-        const isDBAdmin = user.roles.indexOf(DB_ADMIN) >= 0;
-        if (actionName === "delete") {
-          return isDBAdmin;
-        }
+        // if (actionName === "delete") {
+        //   return isDBAdmin; // was isDBAdmin
+        // }
         const isUser = user.roles.indexOf(USER) >= 0;
         if (actionName === "create") {
           return isUser;
@@ -44,6 +43,11 @@ export default new (class User {
         const isAuthor = obj.users.indexOf(user.name) >= 0 ?? false;
         if (actionName === "edit" && obj?.users) {
           return isAuthor;
+        }
+
+        const isDBAdmin = user.roles.indexOf(DB_ADMIN) >= 0;
+        if (actionName === "delete" && obj?.users) {
+          return isAuthor || isDBAdmin;
         }
       }
 

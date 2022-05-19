@@ -1,5 +1,35 @@
 <template>
   <div>
+    <v-dialog v-model="dialogDelete" max-width="500px">
+      <v-card>
+        <v-card-title class="text-h5"
+          >Confirm deletion of this assessment?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="closeDialog">Cancel</v-btn>
+          <v-btn color="blue darken-1" text @click="deleteItemConfirm"
+            >OK</v-btn
+          >
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogDuplicate" max-width="500px">
+      <v-card>
+        <v-card-title class="text-h5"
+          >Confirm copy of this assessment?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="closeDialog">Cancel</v-btn>
+          <v-btn color="blue darken-1" text @click="duplicateItemConfirm"
+            >OK</v-btn
+          >
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-data-table
       :headers="headersSurvey"
       :items="localProject.surveys"
@@ -8,45 +38,6 @@
       :item-class="rowClasses"
       @click:row="handleClick"
     >
-      <template v-slot:top>
-        <v-divider class="mx-4" inset vertical></v-divider>
-        <v-spacer></v-spacer>
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="text-h5"
-              >Confirm deletion of this assessment?</v-card-title
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDialog"
-                >Cancel</v-btn
-              >
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm"
-                >OK</v-btn
-              >
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-dialog v-model="dialogDuplicate" max-width="500px">
-          <v-card>
-            <v-card-title class="text-h5"
-              >Confirm copy of this assessment?</v-card-title
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDialog"
-                >Cancel</v-btn
-              >
-              <v-btn color="blue darken-1" text @click="duplicateItemConfirm"
-                >OK</v-btn
-              >
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </template>
-
       <template v-slot:[`item.created_at`]="{ item }">
         {{ item.created_at | formatDate }}
       </template>
@@ -68,10 +59,18 @@
           >
             <v-icon small class="mr-2"> mdi-pencil </v-icon>
           </router-link>
-          <v-icon class="better-click" small @click.stop="duplicateItem(item)">
+          <v-icon
+            class="better-click"
+            small
+            @click.stop="() => duplicateItem(item)"
+          >
             mdi-content-copy
           </v-icon>
-          <v-icon class="better-click" small @click.stop="deleteItem(item)">
+          <v-icon
+            class="better-click"
+            small
+            @click.stop="() => deleteItem(item)"
+          >
             mdi-delete
           </v-icon>
         </div>
@@ -81,12 +80,14 @@
 </template>
 
 <script lang="ts">
+import { getNewName, updateMetaFields } from "@/store/documentUtils";
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import { CouchUser } from "@/store/UserModule";
 import { SyncDatabase } from "@/utils/couchdb";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
+
 @Component({
   computed: {
     ...mapGetters("GhgModule", ["project"]),
@@ -157,12 +158,16 @@ export default class ProjectItem extends Vue {
 
   duplicateItem(item: Survey): void {
     this.editedIndex = this.localProject.surveys.indexOf(item);
+    // get doc from database!
+    // retrieve real document first (it's okay it's a survey)
     this.editedItem = cloneDeep(item) as Survey;
     this.dialogDuplicate = true;
   }
 
   async duplicateItemConfirm(): Promise<void> {
-    this.editedItem.name = `${this.editedItem.name} (copy)`;
+    this.editedItem = updateMetaFields(this.editedItem, this.user);
+    this.editedItem.name = getNewName(this.editedItem.name);
+
     this.localProject.surveys.push(this.editedItem);
     await this.submitForm(this.localProject);
     await this.closeDialog();

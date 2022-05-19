@@ -94,12 +94,12 @@
                 <v-icon> mdi-delete</v-icon>
               </v-btn>
             </template>
-            <template v-slot:foot>
+            <template v-if="totalCost != 0" v-slot:foot>
               <tfoot>
                 <tr>
                   <td colspan="1">Total</td>
                   <td colspan="6"></td>
-                  <td colspan="1">{{ totalCost | formatNumber }}</td>
+                  <td colspan="1">{{ totalCost | formatNumber(2, 2) }}</td>
                   <td colspan="1"></td>
                 </tr>
               </tfoot>
