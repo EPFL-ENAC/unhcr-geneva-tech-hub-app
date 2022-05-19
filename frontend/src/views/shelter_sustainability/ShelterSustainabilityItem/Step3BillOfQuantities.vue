@@ -90,10 +90,10 @@
               <v-btn icon small class="mr-2" @click="openEditItemDialog(item)">
                 <v-icon> mdi-pencil</v-icon>
               </v-btn>
-              <!-- <v-btn icon small class="mr-2" @click="duplicate(item)">
+              <v-btn icon small class="mr-2" @click="duplicate(item)">
                 <v-icon> mdi-content-copy</v-icon>
-              </v-btn> -->
-              <v-btn icon small class="mr-2" @click="openDeleteDialog(item)">
+              </v-btn>
+              <v-btn icon small class="mr-2" @click="deleteItem(item)">
                 <v-icon> mdi-delete</v-icon>
               </v-btn>
             </template>
@@ -134,9 +134,10 @@ import { mapActions, mapGetters } from "vuex";
   methods: {
     ...mapActions("ShelterBillOfQuantitiesModule", [
       "setItems",
+      "duplicate",
       "openNewItemDialog",
       "openEditItemDialog",
-      "openDeleteDialog",
+      "deleteItem",
     ]),
     ...mapActions("SheltersMaterialModule", [
       "syncDB",
@@ -166,7 +167,7 @@ export default class Step3Materials extends Vue {
   isItemDialogOpen!: boolean;
   setItems!: (items: Item[]) => void;
   updateDoc!: (doc: Shelter) => void;
-
+  duplicate!: (item: Item) => void;
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
   getAllDocs!: () => Promise<null>;
@@ -195,18 +196,12 @@ export default class Step3Materials extends Vue {
     this.localShelter = Object.assign({}, this.localShelter);
   }
 
-  public duplicate(item: Item): void {
-    const newItems = this.items;
-    newItems.push(cloneDeep(item));
-    this.$set(this.localShelter, "items", newItems);
-    this.localShelter = Object.assign({}, this.localShelter);
-  }
-
   public autoSubmit(): void {
     this.$store.subscribe((mutation) => {
       const shouldUpdate = [
         "ShelterBillOfQuantitiesModule/ADD_ITEM",
         "ShelterBillOfQuantitiesModule/DELETE_ITEM",
+        "ShelterBillOfQuantitiesModule/DUPLICATE_ITEM",
         "ShelterBillOfQuantitiesModule/UPDATE_ITEM",
       ];
       if (shouldUpdate.includes(mutation.type)) {

@@ -26,6 +26,7 @@ const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 const getters: GetterTree<ShelterState, RootState> = {
   shelters: (s): Array<Shelter> => s.shelters,
   shelter: (s): Shelter | null => s.shelter,
+  shelterLoading: (s): boolean => s.shelterLoading,
   db: (s): SyncDatabase<Shelter> | null => s.localCouch,
   scorecards: (s): ScoreCard[] => s.scorecards,
 };
@@ -44,6 +45,12 @@ const mutations: MutationTree<ShelterState> = {
   },
   SET_SCORECARDS(state, value) {
     state.scorecards = value;
+  },
+  SET_SHELTER_LOADING(state) {
+    state.shelterLoading = true;
+  },
+  UNSET_SHELTER_LOADING(state) {
+    state.shelterLoading = false;
   },
   SET_SHELTER(state, newShelter) {
     const resultShelter = completeMissingFields(newShelter);
@@ -172,18 +179,34 @@ const actions: ActionTree<ShelterState, RootState> = {
   removeDoc: (context: ActionContext<ShelterState, RootState>, id) => {
     context.commit("REMOVE_DOC", id);
   },
-  updateDoc: (context: ActionContext<ShelterState, RootState>, value) => {
+  updateDoc: async (context: ActionContext<ShelterState, RootState>, value) => {
     const user = context.rootGetters["UserModule/user"] as CouchUser;
     if (user.name) {
       value.updated_at = new Date().toISOString();
       value.updated_by = user.name;
       context.commit("SET_SHELTER", value);
       const remoteDB = context.state.localCouch?.remoteDB;
-      if (remoteDB) {
-        // updated by commit above
-        remoteDB.put(context.state.shelter);
-      } else {
+      if (!remoteDB) {
         throw new Error(MSG_DB_DOES_NOT_EXIST);
+      }
+      if (!context.getters["shelterLoading"]) {
+        context.commit("SET_SHELTER_LOADING");
+        const currentValue = context.state.shelter;
+        let newValue = await context.dispatch("getDoc", currentValue._id);
+        currentValue._rev = newValue._rev;
+        try {
+          const response = await remoteDB.put(currentValue);
+          newValue = await context.dispatch("getDoc", response.id);
+          context.commit("SET_SHELTER", newValue);
+          context.commit("UNSET_SHELTER_LOADING");
+          /* eslint-disable-next-line */
+        } catch (e: any) {
+          if (e.error === "conflict") {
+            // rerun dispatch updateDoc but only once
+            console.log("conflict error");
+          }
+          context.commit("UNSET_SHELTER_LOADING");
+        }
       }
     }
   },

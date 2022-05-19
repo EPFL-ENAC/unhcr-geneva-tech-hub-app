@@ -3,6 +3,7 @@ import { SyncDatabase } from "@/utils/couchdb";
 
 export interface ShelterState {
   shelter: Shelter;
+  shelterLoading: boolean;
   shelters: Array<Shelter>;
   scorecards: Array<ScoreCard>;
   localCouch: SyncDatabase<Shelter> | null;

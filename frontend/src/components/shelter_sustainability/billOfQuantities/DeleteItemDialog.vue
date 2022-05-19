@@ -35,14 +35,14 @@ import { mapActions, mapGetters } from "vuex";
     ...mapActions("ShelterBillOfQuantitiesModule", [
       "setDeleteDialog",
       "openDeleteDialog",
-      "deleteItem",
+      "deleteItemConfirmed",
       "closeDeleteDialog",
     ]),
   },
 })
 export default class DeleteItemDialog extends Vue {
   openDeleteDialog!: (item: Item) => void;
-  deleteItem!: () => void;
+  deleteItemConfirmed!: () => void;
   closeDeleteDialog!: () => void;
   setDeleteDialog!: (value: boolean) => void;
   isDeleteDialogOpen!: boolean;
