@@ -639,6 +639,10 @@ export default class EnergyCookingResult extends Vue {
     }
   }
 
+  /**
+   * Compute new proportions for the next year.
+   * Upgrade the categories by moving from a category to a better next one (from lowest to highest) until the target income is reached or everyone is in the best category.
+   */
   getNewProportions(site: Site): Record<SocioEconomicCategory, number> {
     const proportions = cloneDeep(site.proportions);
     const incomes = Object.fromEntries(
@@ -873,6 +877,9 @@ interface TableRow {
   decimal?: number;
 }
 
+/**
+ * Site's input for SiteResult computation (for a given year)
+ */
 interface Site {
   yearCount: number;
   householdsCount: number;

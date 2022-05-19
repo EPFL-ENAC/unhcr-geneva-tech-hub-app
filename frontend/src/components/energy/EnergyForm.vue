@@ -1,20 +1,22 @@
 <template>
-  <v-card>
-    <v-card-title v-if="$slots.title">
-      <slot name="title"></slot>
-    </v-card-title>
-    <v-card-text>
-      <v-form ref="form" v-model="formValid" lazy-validation>
-        <slot></slot>
-      </v-form>
-    </v-card-text>
-    <v-card-actions>
-      <v-btn color="primary" :disabled="saveDisabled" @click="save">
-        <v-icon left>mdi-content-save</v-icon>
-        Save
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+  <div>
+    <v-row>
+      <v-spacer></v-spacer>
+      <v-col cols="auto">
+        <v-btn color="primary" :disabled="saveDisabled" @click="save">
+          <v-icon left>mdi-content-save</v-icon>
+          Save
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-form ref="form" v-model="formValid" lazy-validation>
+          <slot></slot>
+        </v-form>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script lang="ts">

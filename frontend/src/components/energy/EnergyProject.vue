@@ -2,41 +2,6 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-text-field
-          v-model="siteName"
-          hide-details="auto"
-          label="Site Name"
-          outlined
-          required
-          :rules="rules"
-          @change="changeDocument"
-        ></v-text-field>
-      </v-col>
-      <v-col>
-        <v-text-field
-          v-model="name"
-          hide-details="auto"
-          label="Project Name"
-          outlined
-          required
-          :rules="rules"
-          @change="changeDocument"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="auto">
-        <v-checkbox
-          v-model="isTemplate"
-          hide-details="auto"
-          label="Template"
-          @change="changeDocument"
-        ></v-checkbox>
-      </v-col>
-      <v-col cols="auto" class="d-flex align-center">
-        <user-manager v-model="users" @change="changeDocument"></user-manager>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
         <v-tabs v-model="tab" center-active hide-slider show-arrows>
           <template v-for="(item, index) in tabItems">
             <v-divider
@@ -231,6 +196,41 @@
             <p>The results are provided in tables or/and graphs.</p>
           </info-tooltip>
         </template>
+      </v-col>
+      <v-col cols="auto" class="d-flex align-center">
+        <user-manager v-model="users" @change="changeDocument"></user-manager>
+      </v-col>
+    </v-row>
+    <v-row v-if="$route.name.endsWith('General')">
+      <v-col>
+        <v-text-field
+          v-model="siteName"
+          hide-details="auto"
+          label="Site Name"
+          outlined
+          required
+          :rules="rules"
+          @change="changeDocument"
+        ></v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field
+          v-model="name"
+          hide-details="auto"
+          label="Project Name"
+          outlined
+          required
+          :rules="rules"
+          @change="changeDocument"
+        ></v-text-field>
+      </v-col>
+      <v-col cols="auto">
+        <v-checkbox
+          v-model="isTemplate"
+          hide-details="auto"
+          label="Template"
+          @change="changeDocument"
+        ></v-checkbox>
       </v-col>
     </v-row>
     <v-row v-if="modules">
