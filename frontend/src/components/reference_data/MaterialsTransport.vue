@@ -109,10 +109,17 @@
       </v-row>
       <v-data-table :headers="headers" :items="items">
         <template v-slot:[`item.source`]="{ item }">
-          {{ item._id.split("_")[0] }}
+          {{ getText(item._id.split("_")[0]) }}
         </template>
         <template v-slot:[`item.destination`]="{ item }">
-          {{ item._id.split("_")[1] }}
+          {{ getText(item._id.split("_")[1]) }}
+        </template>
+
+        <template v-slot:[`item.t`]="props">
+          <span>{{ props.item.t | formatNumber }}</span>
+        </template>
+        <template v-slot:[`item.o`]="props">
+          <span>{{ props.item.o | formatNumber }}</span>
         </template>
       </v-data-table>
     </v-card-text>
@@ -120,6 +127,8 @@
 </template>
 
 <script lang="ts">
+import { countriesMap } from "@/utils/countriesAsList";
+import { iso3166_3_to_2 } from "@/utils/iso3166";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
@@ -133,6 +142,8 @@ import { mapActions, mapGetters } from "vuex";
 })
 export default class MaterialsTransport extends Vue {
   getAllDocs!: () => Promise<null>;
+  iso3166_3_to_2 = iso3166_3_to_2;
+  countriesMap = countriesMap;
   mounted(): void {
     this.getAllDocs();
   }
@@ -140,6 +151,13 @@ export default class MaterialsTransport extends Vue {
   public getSourceCountry(key: string): Record<string, string> {
     const [source, destination] = key.split("_");
     return { source, destination };
+  }
+  public getText(isoCode3: keyof typeof iso3166_3_to_2): string {
+    if (iso3166_3_to_2[isoCode3] && countriesMap[iso3166_3_to_2[isoCode3]]) {
+      const local = countriesMap[iso3166_3_to_2[isoCode3]];
+      return `${local.name} ${local.emoji}`;
+    }
+    return isoCode3;
   }
 
   public get headers(): HeaderInterface[] {

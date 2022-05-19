@@ -41,11 +41,8 @@
 
 <script lang="ts">
 import SurveyList from "@/components/green_house_gaz/SurveysList.vue";
-import { CountriesInfoMap, Country, Site } from "@/store/GhgInterface";
-import {
-  countries as Countries,
-  Country as CountryWithLat,
-} from "@/utils/countriesAsList";
+import { Country, Site } from "@/store/GhgInterface";
+import { countries as Countries, countriesMap } from "@/utils/countriesAsList";
 import flagEmoji from "@/utils/flagEmoji";
 import { Component, Vue } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";
@@ -71,13 +68,7 @@ export default class ProjectList extends Vue {
     { text: "", value: "data-table-expand", align: "end", sortable: false },
   ];
 
-  countriesMap = Countries.reduce(
-    (acc: CountriesInfoMap, country: CountryWithLat) => {
-      acc[country.code] = { ...country, emoji: flagEmoji(country.code) };
-      return acc;
-    },
-    {} as CountriesInfoMap
-  );
+  countriesMap = countriesMap;
 
   countriesList = Countries;
 

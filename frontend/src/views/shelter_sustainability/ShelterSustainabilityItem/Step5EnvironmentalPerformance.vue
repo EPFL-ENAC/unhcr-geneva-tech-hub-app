@@ -2,7 +2,7 @@
   <v-container v-if="shelter" fluid>
     <v-row>
       <v-col>
-        <h2 class="text-h4 project-shelter__h3 font-weight-medium">
+        <h2 class="text-h4 project__h3 font-weight-medium">
           Environmental Performance
         </h2>
       </v-col>

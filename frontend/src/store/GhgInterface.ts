@@ -10,7 +10,7 @@ export interface CountryInfo {
   code: string;
   lat: number;
   lon: number;
-  emoji: string;
+  emoji?: string;
 }
 export interface Site {
   id: string; // site unique identitier (name as first)

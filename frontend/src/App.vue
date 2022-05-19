@@ -293,7 +293,12 @@ export default class App extends Vue {
 
 <style lang="scss">
 :root {
-  --c-shelter: #3fa1ed;
-  --c-unhcr: #3fa1ed;
+  --c-shelter: var(--v-primary-base);
+  --c-unhcr: var(--v-primary-base);
+}
+
+.project__header,
+.project__h3 {
+  color: var(--c-shelter);
 }
 </style>

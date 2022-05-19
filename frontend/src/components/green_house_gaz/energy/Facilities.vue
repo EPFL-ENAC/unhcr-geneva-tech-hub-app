@@ -6,7 +6,7 @@
       <v-col>
         <v-card elevation="2" rounded>
           <v-card-title>
-            <h3 class="baseline-title">Baseline</h3>
+            <h3 class="baseline-title font-weight-medium">Baseline</h3>
           </v-card-title>
           <v-card-text>
             <baseline-facilities-table
@@ -45,7 +45,9 @@
     <v-row>
       <v-col>
         <v-card elevation="2" rounded>
-          <v-card-title> <h3 class="endline-title">Endline</h3> </v-card-title>
+          <v-card-title>
+            <h3 class="endline-title font-weight-medium">Endline</h3>
+          </v-card-title>
           <div v-if="showEndLines">
             <v-card-text>
               <endline-facilities-table

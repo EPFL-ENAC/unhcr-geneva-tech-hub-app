@@ -247,7 +247,7 @@ import {
 } from "@/store/ShelterInterface";
 import { ShelterMaterial } from "@/store/SheltersMaterialModule";
 import { ShelterTransport } from "@/store/SheltersTransportModule";
-import iso3166 from "@/utils/iso3166";
+import { iso3166_2_to_3 } from "@/utils/iso3166";
 import { VForm } from "@/utils/vuetify";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
@@ -512,8 +512,12 @@ export default class DeleteItemDialog extends Vue {
       newValue.embodiedCarbonProduction = weight * embodied_carbon;
       newValue.embodiedWater = weight * embodied_water;
       if (newValue.source && this.shelter.location_country) {
-        const src = iso3166[newValue.source as string];
-        const dst = iso3166[this.shelter.location_country];
+        const src =
+          iso3166_2_to_3[newValue.source as keyof typeof iso3166_2_to_3];
+        const dst =
+          iso3166_2_to_3[
+            this.shelter.location_country as keyof typeof iso3166_2_to_3
+          ];
         const request_id = `${src}_${dst}`;
         const country_src_dst_embodied_carbon =
           await this.getTransportFactorForMaterial(request_id, local);

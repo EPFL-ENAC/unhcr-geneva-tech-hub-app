@@ -15,13 +15,13 @@
                 <v-icon>mdi-information</v-icon>
               </v-btn>
             </template>
-            <span>{{ props.item.density_ref }}</span>
+            <span>{{ props.item.density_ref | formatNumber }}</span>
           </v-tooltip>
         </template>
         <template v-slot:[`item.embodied_water`]="props">
           <v-tooltip right>
             <template v-slot:activator="{ on, attrs }">
-              {{ props.item.embodied_water }} L/kg
+              {{ props.item.embodied_water | formatNumber }} L/kg
               <v-btn icon v-bind="attrs" v-on="on">
                 <v-icon>mdi-information</v-icon>
               </v-btn>
@@ -32,7 +32,7 @@
         <template v-slot:[`item.embodied_carbon`]="props">
           <v-tooltip right>
             <template v-slot:activator="{ on, attrs }">
-              {{ props.item.embodied_carbon }}kgCO2e/kg
+              {{ props.item.embodied_carbon | formatNumber }} kgCO2e/kg
               <v-btn icon v-bind="attrs" v-on="on">
                 <v-icon>mdi-information</v-icon>
               </v-btn>
@@ -85,12 +85,9 @@ export default class Materials extends Vue {
     return [
       { text: "Material", value: "material" },
       { text: "Form", value: "form" },
-      // { text: "local", value: "local" },
       { text: "density", value: "density" },
       { text: "embodied_carbon", value: "embodied_carbon" },
       { text: "embodied_water", value: "embodied_water" },
-      // { text: "shape", value: "shape" },
-      // { text: "units", value: "units" },
     ];
   }
 }

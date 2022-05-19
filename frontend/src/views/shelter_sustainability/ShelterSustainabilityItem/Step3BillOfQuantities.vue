@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <h2 class="text-h4 project-shelter__h3 font-weight-medium">Items</h2>
+        <h2 class="text-h4 project__h3 font-weight-medium">Items</h2>
       </v-col>
     </v-row>
     <v-row>
@@ -114,13 +114,8 @@
 <script lang="ts">
 import DeleteItemDialog from "@/components/shelter_sustainability/billOfQuantities/DeleteItemDialog.vue";
 import ItemDialog from "@/components/shelter_sustainability/billOfQuantities/ItemDialog.vue";
-import { CountriesInfoMap } from "@/store/GhgInterface";
 import { Item, Shelter } from "@/store/ShelterInterface";
-import {
-  countries as Countries,
-  Country as CountryWithLat,
-} from "@/utils/countriesAsList";
-import flagEmoji from "@/utils/flagEmoji";
+import { countriesMap } from "@/utils/countriesAsList";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
@@ -173,13 +168,7 @@ export default class Step3Materials extends Vue {
   closeDB!: () => Promise<null>;
   getAllDocs!: () => Promise<null>;
 
-  countriesMap = Countries.reduce(
-    (acc: CountriesInfoMap, country: CountryWithLat) => {
-      acc[country.code] = { ...country, emoji: flagEmoji(country.code) };
-      return acc;
-    },
-    {} as CountriesInfoMap
-  );
+  countriesMap = countriesMap;
 
   headers = [
     {

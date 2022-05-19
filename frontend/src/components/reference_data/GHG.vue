@@ -7,6 +7,9 @@
         hide-default-footer
         :items-per-page="-1"
       >
+        <template v-slot:[`item.value`]="props">
+          <span>{{ props.item.value | formatNumber }}</span>
+        </template>
       </v-data-table>
     </v-card-text>
   </v-card>

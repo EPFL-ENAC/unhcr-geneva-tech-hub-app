@@ -3,9 +3,7 @@
     <v-list-item>
       <v-list-item-content>
         <v-list-item-title class="d-flex justify-space-between">
-          <h2 class="text-h4 project-shelter__h3 font-weight-medium">
-            Reference Data
-          </h2>
+          <h2 class="text-h4 project__h3 font-weight-medium">Reference Data</h2>
           <v-btn icon @click="toggleReferenceData">
             <v-icon>mdi-close</v-icon>
           </v-btn>

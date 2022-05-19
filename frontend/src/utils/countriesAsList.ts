@@ -1,11 +1,7 @@
-export interface Country {
-  code: string;
-  name: string;
-  lat: number;
-  lon: number;
-}
+import { CountriesInfoMap, CountryInfo } from "@/store/GhgInterface";
+import flagEmoji from "@/utils/flagEmoji";
 
-export const countries: Country[] = [
+export const countries: CountryInfo[] = [
   { code: "AC", name: "Ascension Island", lat: 0, lon: 0 },
   { code: "AD", name: "Andorra", lat: 42.546245, lon: 1.601554 },
   { code: "AE", name: "United Arab Emirates", lat: 23.424076, lon: 53.847818 },
@@ -320,3 +316,11 @@ export const countries: Country[] = [
   { code: "ZM", name: "Zambia", lat: -13.133897, lon: 27.849332 },
   { code: "ZW", name: "Zimbabwe", lat: -19.015438, lon: 29.154857 },
 ];
+
+export const countriesMap = countries.reduce(
+  (acc: CountriesInfoMap, country: CountryInfo) => {
+    acc[country.code] = { ...country, emoji: flagEmoji(country.code) };
+    return acc;
+  },
+  {} as CountriesInfoMap
+);

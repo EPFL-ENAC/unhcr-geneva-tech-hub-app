@@ -166,18 +166,13 @@
 <script lang="ts">
 import TerritoryMap from "@/components/commons/TerritoryMap.vue";
 import NewShelterDialog from "@/components/shelter_sustainability/NewShelterDialog.vue";
-import { CountriesInfoMap } from "@/store/GhgInterface";
 import {
   listOfShelterType,
   Shelter,
   ShelterType,
 } from "@/store/ShelterInterface";
 import { SyncDatabase } from "@/utils/couchdb";
-import {
-  countries as Countries,
-  Country as CountryWithLat,
-} from "@/utils/countriesAsList";
-import flagEmoji from "@/utils/flagEmoji";
+import { countriesMap } from "@/utils/countriesAsList";
 import { shelterColors } from "@/views/shelter_sustainability/shelterTypeColors";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
@@ -229,13 +224,7 @@ export default class ProjectList extends Vue {
       v?.length > 1 || `Name should have a length >= 1`,
   ];
 
-  countriesMap = Countries.reduce(
-    (acc: CountriesInfoMap, country: CountryWithLat) => {
-      acc[country.code] = { ...country, emoji: flagEmoji(country.code) };
-      return acc;
-    },
-    {} as CountriesInfoMap
-  );
+  countriesMap = countriesMap;
 
   shelterIcons = {
     Emergency: "home-variant-outline",

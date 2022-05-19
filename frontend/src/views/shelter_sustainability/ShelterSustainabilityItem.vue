@@ -175,11 +175,6 @@ a:active {
 </style>
 
 <style lang="scss">
-.project-shelter__header,
-.project-shelter__h3 {
-  color: var(--c-shelter);
-}
-
 .fixed-tabs-bar {
   position: -webkit-sticky;
   position: sticky;
