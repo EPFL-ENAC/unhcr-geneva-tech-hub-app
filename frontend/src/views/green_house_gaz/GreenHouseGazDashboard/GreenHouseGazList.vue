@@ -24,6 +24,7 @@
           item-key="name"
           show-expand
           hide-default-footer
+          :items-per-page="-1"
           hide-default-header
           :item-class="rowClasses"
           @click:row="(item, event) => clickSite(item, keyIndex, event)"

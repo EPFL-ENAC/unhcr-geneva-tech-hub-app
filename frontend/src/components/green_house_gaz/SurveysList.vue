@@ -35,6 +35,7 @@
       :items="localProject.surveys"
       sort-by="created_at"
       hide-default-footer
+      :items-per-page="-1"
       :item-class="rowClasses"
       @click:row="handleClick"
     >

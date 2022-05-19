@@ -25,6 +25,7 @@
                   :items="items"
                   hide-default-header
                   hide-default-footer
+                  :items-per-page="-1"
                   :single-expand="singleExpand"
                   :expanded.sync="expanded"
                   item-key="materialId"
@@ -96,6 +97,7 @@
                       <v-data-table
                         hide-default-footer
                         hide-default-header
+                        :items-per-page="-1"
                         :headers="headersSubItems"
                         :items="item.children"
                       >
