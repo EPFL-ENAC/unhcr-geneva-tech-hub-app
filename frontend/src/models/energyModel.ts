@@ -287,13 +287,12 @@ export interface CookingStove {
   /**
    * CTE
    */
-  iwaEfficiencyTier?: Tier;
+  iwaEfficiencyTier?: string;
   /**
    * CTP
    */
-  iwaIndoorEmissionTier?: Tier;
+  iwaIndoorEmissionTier?: string;
 }
-type Tier = number | [number, number];
 
 export interface CookingFuel {
   _id: CookingFuelId;

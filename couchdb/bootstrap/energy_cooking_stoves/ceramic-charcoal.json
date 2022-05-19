@@ -9,10 +9,7 @@
   "lifetime": 5,
   "emissionFactorCo": 9,
   "emissionFactorPm": 350,
-  "iwaEfficiencyTier": 2,
-  "iwaIndoorEmissionTier": [
-    0,
-    1
-  ],
+  "iwaEfficiencyTier": "Tier 2",
+  "iwaIndoorEmissionTier": "Tier 0-1",
   "index": 5
 }

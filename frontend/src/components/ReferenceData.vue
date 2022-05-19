@@ -28,6 +28,7 @@
 </template>
 
 <script lang="ts">
+import EnergyCooking from "@/components/reference_data/EnergyCooking.vue";
 import GHG from "@/components/reference_data/GHG.vue";
 import IgesGrid2021 from "@/components/reference_data/IgesGrid2021.vue";
 import Materials from "@/components/reference_data/Materials.vue";
@@ -47,6 +48,7 @@ import { mapActions, mapGetters } from "vuex";
     GHG,
     Materials,
     IgesGrid2021,
+    EnergyCooking,
   },
 })
 /** ProjectList */
@@ -65,15 +67,17 @@ export default class App extends Vue {
   readonly menuItems: MenuSurveyItem[] = [
     {
       tab: "iges_grid_2021",
-      content: "iges_grid_2021",
       componentName: "IgesGrid2021",
     },
-    { tab: "GHG", content: "GHG", componentName: "GHG" },
-    { tab: "Materials", content: "materials", componentName: "Materials" },
+    { tab: "GHG", componentName: "GHG" },
+    { tab: "Materials", componentName: "Materials" },
     {
       tab: "Materials transport",
-      content: "shelters_transport",
       componentName: "MaterialsTransport",
+    },
+    {
+      tab: "Energy Cooking",
+      componentName: "EnergyCooking",
     },
   ];
   tab = 1;
@@ -81,7 +85,6 @@ export default class App extends Vue {
 
 interface MenuSurveyItem {
   tab: string;
-  content: string;
   componentName: string;
 }
 </script>
