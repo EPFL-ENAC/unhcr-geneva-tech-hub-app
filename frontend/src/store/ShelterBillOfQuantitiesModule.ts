@@ -1,4 +1,5 @@
 import { Item, Material, Other } from "@/store/ShelterInterface";
+import { cloneDeep } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import {
   ActionContext,
@@ -73,6 +74,11 @@ const mutations: MutationTree<BoqState> = {
   ADD_ITEM(state: BoqState, item: Item): void {
     state.items.push(item);
   },
+  DUPLICATE_ITEM(state: BoqState, item: Item): void {
+    const newItem = cloneDeep(item);
+    newItem._id = uuidv4();
+    state.items.splice(state.editedIndex + 1, 0, newItem);
+  },
   DELETE_ITEM(state: BoqState): void {
     state.items.splice(state.editedIndex, 1);
   },
@@ -139,6 +145,12 @@ const actions: ActionTree<BoqState, RootState> = {
     }
     context.dispatch("closeEditDialog");
   },
+  duplicate: (context: ActionContext<BoqState, RootState>, item: Item) => {
+    context.commit("SET_EDITED_INDEX_FOR_ITEM", item);
+    context.commit("DUPLICATE_ITEM", item);
+    // end
+    context.commit("RESET_EDITED_ITEM");
+  },
   closeEditDialog: (context: ActionContext<BoqState, RootState>) => {
     context.commit("SET_EDIT_ITEM_DIALOG", false);
   },
@@ -148,6 +160,11 @@ const actions: ActionTree<BoqState, RootState> = {
   ) => {
     context.commit("SET_EDIT_ITEM_DIALOG", value);
   },
+  deleteItem: (context: ActionContext<BoqState, RootState>, item: Item) => {
+    context.commit("SET_EDITED_INDEX_FOR_ITEM", item);
+    context.commit("DELETE_ITEM");
+    context.commit("RESET_EDITED_ITEM");
+  },
   openDeleteDialog: (
     context: ActionContext<BoqState, RootState>,
     item: Item
@@ -155,7 +172,7 @@ const actions: ActionTree<BoqState, RootState> = {
     context.commit("SET_DELETE_ITEM_DIALOG", true);
     context.commit("SET_EDITED_INDEX_FOR_ITEM", item);
   },
-  deleteItem: (context: ActionContext<BoqState, RootState>) => {
+  deleteItemConfirmed: (context: ActionContext<BoqState, RootState>) => {
     context.commit("DELETE_ITEM");
     context.commit("RESET_EDITED_ITEM");
     return context.dispatch("closeDeleteDialog");

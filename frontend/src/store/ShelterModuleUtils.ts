@@ -15,6 +15,7 @@ import { CouchUser } from "./UserModule";
 export function generateState(): ShelterState {
   return {
     shelter: {} as Shelter,
+    shelterLoading: false,
     shelters: [],
     scorecards: [],
     localCouch: null,
