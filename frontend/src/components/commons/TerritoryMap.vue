@@ -14,9 +14,13 @@
     <l-marker
       v-for="(markerCoordinate, key) in internalCoordinates"
       :key="key"
-      :lat-lng="markerCoordinate"
+      :lat-lng="getLatLng(markerCoordinate)"
       :icon="getIcon('pin', markerCoordinate[2])"
+      @click="() => goToMarker(markerCoordinate[3])"
     >
+      <l-tooltip v-if="markerCoordinate[3]">
+        {{ markerCoordinate[3].name }}
+      </l-tooltip>
     </l-marker>
   </l-map>
 </template>
@@ -36,13 +40,14 @@ import {
 } from "@/views/shelter_sustainability/shelterTypeColors";
 import L, { LatLng, LeafletMouseEvent } from "leaflet";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { LIcon, LMap, LMarker, LTileLayer } from "vue2-leaflet";
+import { LIcon, LMap, LMarker, LTileLayer, LTooltip } from "vue2-leaflet";
 
 @Component({
   components: {
     LMap,
     LTileLayer,
     LMarker,
+    LTooltip,
     LIcon,
   },
 })
@@ -78,7 +83,14 @@ export default class TerritoryMap extends Vue {
       className: className,
     });
   }
+  public goToMarker(item: unknown): void {
+    this.$emit("click:item", item);
+  }
 
+  public getLatLng(coordinate: (number | string)[]): LatLng {
+    const [lat, lng] = coordinate as number[];
+    return new LatLng(lat, lng);
+  }
   public get defaultCoordinates(): (number | string)[] {
     if (this.value.length > 0) {
       return this.value;
@@ -96,8 +108,8 @@ export default class TerritoryMap extends Vue {
     if (this.value.length > 0) {
       const latLng: LatLng = event.latlng;
       this.$emit("update:value", [
-        latLng.lat.toFixed(3),
-        latLng.lng.toFixed(3),
+        parseFloat(latLng.lat.toFixed(3)),
+        parseFloat(latLng.lng.toFixed(3)),
       ]);
     }
   }

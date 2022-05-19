@@ -153,7 +153,11 @@
     </v-sheet>
     <div class="separator"></div>
     <div class="map-countries">
-      <territory-map :coordinates="coordinates" :default-zoom="2" />
+      <territory-map
+        :coordinates="coordinates"
+        :default-zoom="2"
+        @click:item="goToShelter"
+      />
     </div>
     <new-shelter-dialog :open.sync="shelterDialog" />
   </main>
@@ -239,10 +243,19 @@ export default class ProjectList extends Vue {
     Durable: "home",
   };
 
-  public get coordinates(): (number | string)[][] {
+  public goToShelter(item: Shelter): void {
+    if (item?._id) {
+      this.$router.push({
+        name: "ShelterSustainabilityEdit",
+        params: { id: encodeURIComponent(item?._id) },
+      });
+    }
+  }
+
+  public get coordinates(): (string | number | string | Shelter)[][] {
     return this.shelters
       .filter((x: Shelter) => !!x.latitude)
-      .map((x: Shelter) => [x.latitude, x.longitude, x.shelter_type]);
+      .map((x: Shelter) => [x.latitude, x.longitude, x.shelter_type, x]);
   }
 
   public get projects(): Record<string, string | number>[] {
