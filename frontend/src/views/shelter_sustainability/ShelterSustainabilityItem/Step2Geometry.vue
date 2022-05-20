@@ -1,8 +1,13 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col>
-        <h2 class="text-h4 project__h3 font-weight-medium">Geometry</h2>
+      <v-col class="d-flex">
+        <h2 class="text-h4 project__h3 font-weight-medium">
+          {{ infoTooltipText[$route.name].title }}
+        </h2>
+        <info-tooltip>
+          {{ infoTooltipText[$route.name].text }}
+        </info-tooltip>
       </v-col>
     </v-row>
     <v-row>
@@ -221,6 +226,8 @@
 </style>
 
 <script lang="ts">
+import InfoTooltip from "@/components/commons/InfoTooltip.vue";
+import { infoTooltipText } from "@/components/shelter_sustainability/infoTooltipText";
 import {
   DoorDimensions,
   GeometryKeys,
@@ -238,7 +245,11 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 cf: https://forum.vuejs.org/t/best-way-to-use-forms-with-local-state-using-v-model-and-sync-to-vuex-store-on- /24739
 for the original discussion
 */
-@Component({})
+@Component({
+  components: {
+    InfoTooltip,
+  },
+})
 /** Project */
 export default class Step2Geometry extends Vue {
   @Prop({ type: [Object], required: true })
@@ -256,7 +267,7 @@ export default class Step2Geometry extends Vue {
     this.localShelter = Object.assign({}, this.localShelter);
   }
   selectedItem = null;
-
+  infoTooltipText = infoTooltipText;
   public toggleImage(_id: string): void {
     if (this.localShelter.geometry.shelter_geometry_type === "") {
       this.localShelter.geometry.shelter_geometry_type = _id;

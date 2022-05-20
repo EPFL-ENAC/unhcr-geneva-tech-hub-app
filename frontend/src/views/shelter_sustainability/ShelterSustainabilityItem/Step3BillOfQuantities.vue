@@ -1,8 +1,13 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col>
-        <h2 class="text-h4 project__h3 font-weight-medium">Items</h2>
+      <v-col class="d-flex">
+        <h2 class="text-h4 project__h3 font-weight-medium">
+          {{ infoTooltipText[$route.name].title }}
+        </h2>
+        <info-tooltip>
+          {{ infoTooltipText[$route.name].text }}
+        </info-tooltip>
       </v-col>
     </v-row>
     <v-row>
@@ -115,8 +120,10 @@
 </template>
 
 <script lang="ts">
+import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import DeleteItemDialog from "@/components/shelter_sustainability/billOfQuantities/DeleteItemDialog.vue";
 import ItemDialog from "@/components/shelter_sustainability/billOfQuantities/ItemDialog.vue";
+import { infoTooltipText } from "@/components/shelter_sustainability/infoTooltipText";
 import { Item, Shelter } from "@/store/ShelterInterface";
 import { countriesMap } from "@/utils/countriesAsList";
 import { cloneDeep } from "lodash";
@@ -148,6 +155,7 @@ import { mapActions, mapGetters } from "vuex";
   components: {
     DeleteItemDialog,
     ItemDialog,
+    InfoTooltip,
   },
 })
 /** Project */
@@ -173,7 +181,7 @@ export default class Step3Materials extends Vue {
   getAllDocs!: () => Promise<null>;
 
   countriesMap = countriesMap;
-
+  infoTooltipText = infoTooltipText;
   headers = [
     {
       text: "Name",

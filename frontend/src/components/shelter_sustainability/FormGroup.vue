@@ -1,14 +1,17 @@
 <template>
   <v-container fluid>
     <v-row v-if="form.title">
-      <v-col :cols="depth > 0 ? 11 : 12">
+      <v-col :cols="depth > 0 ? 11 : 12" class="d-flex">
         <component
           :is="`h${depth + 2}`"
-          :class="`text-h${depth + 4} project-shelter__h${
+          :class="`text-h${depth + 4} project__h${
             depth + 3
           }  font-weight-medium`"
           >{{ form.title }}</component
         >
+        <info-tooltip v-if="infoTooltipText[$route.name] && depth === 0">
+          {{ infoTooltipText[$route.name].text }}
+        </info-tooltip>
       </v-col>
       <v-col v-if="depth > 0" cols="1" class="d-flex justify-end align-center">
         <v-btn icon @click="toggle">
@@ -46,7 +49,9 @@
 </template>
 
 <script lang="ts">
+import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import CheckboxGroup from "@/components/shelter_sustainability/CheckboxGroup.vue";
+import { infoTooltipText } from "@/components/shelter_sustainability/infoTooltipText";
 import RadioGroup from "@/components/shelter_sustainability/RadioGroup.vue";
 import { ShelterForm } from "@/components/shelter_sustainability/ShelterForm";
 import { Score } from "@/store/ShelterInterface";
@@ -57,6 +62,7 @@ import { Component, Vue } from "vue-property-decorator";
   components: {
     RadioGroup,
     CheckboxGroup,
+    InfoTooltip,
   },
   props: {
     form: {
@@ -78,6 +84,7 @@ export default class FormGroup extends Vue {
   form!: ShelterForm;
 
   showSubPanel = true;
+  infoTooltipText = infoTooltipText;
   public toggle(): void {
     this.showSubPanel = !this.showSubPanel;
   }

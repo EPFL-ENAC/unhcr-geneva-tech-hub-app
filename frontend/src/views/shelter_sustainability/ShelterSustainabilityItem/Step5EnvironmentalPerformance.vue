@@ -1,10 +1,13 @@
 <template>
   <v-container v-if="shelter" fluid>
     <v-row>
-      <v-col>
+      <v-col class="d-flex">
         <h2 class="text-h4 project__h3 font-weight-medium">
-          Environmental Performance
+          {{ infoTooltipText[$route.name].title }}
         </h2>
+        <info-tooltip>
+          {{ infoTooltipText[$route.name].text }}
+        </info-tooltip>
       </v-col>
     </v-row>
     <v-row>
@@ -199,8 +202,10 @@
 </template>
 
 <script lang="ts">
+import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import GraphTree from "@/components/shelter_sustainability/billOfQuantities/graphTree.vue";
 import InfoGroup from "@/components/shelter_sustainability/InfoGroup.vue";
+import { infoTooltipText } from "@/components/shelter_sustainability/infoTooltipText";
 import { MaterialTree, Shelter } from "@/store/ShelterInterface";
 import { getFormIdItems } from "@/store/ShelterModuleUtils";
 import { ShelterMaterial } from "@/store/SheltersMaterialModule";
@@ -226,6 +231,7 @@ import { mapActions, mapGetters } from "vuex";
   components: {
     InfoGroup,
     GraphTree,
+    InfoTooltip,
   },
 })
 /** Project */
@@ -239,6 +245,7 @@ export default class Step3Materials extends Vue {
   materialMap!: Record<string, ShelterMaterial>;
 
   singleExpand = true;
+  infoTooltipText = infoTooltipText;
   expanded = [];
 
   showSubPanel = {} as Record<string, boolean>;

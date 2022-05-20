@@ -62,7 +62,7 @@
     <v-row>
       <v-col class="d-flex align-center">
         <template v-if="$route.name.endsWith('General')">
-          <h1>Information</h1>
+          <h1 class="project__h3">Information</h1>
           <info-tooltip>
             The inputs in the “General” section include data related to the
             context of the camp such as the name, the geographic location, its
@@ -75,7 +75,7 @@
           </info-tooltip>
         </template>
         <template v-if="$route.name.endsWith('HouseholdCooking')">
-          <h1>Household Cooking</h1>
+          <h1 class="project__h3">Household Cooking</h1>
           <info-tooltip>
             The data on the cookstoves are the number of devices per
             ten-household, and their utilization factor. The user gives these
@@ -84,7 +84,7 @@
           </info-tooltip>
         </template>
         <template v-if="$route.name.endsWith('HouseholdLighting')">
-          <h1>Household Lighting</h1>
+          <h1 class="project__h3">Household Lighting</h1>
           <info-tooltip>
             The user provides the information related to the lighting devices
             for the base year. The number of devices is provided per
@@ -94,7 +94,7 @@
           </info-tooltip>
         </template>
         <template v-if="$route.name.endsWith('HouseholdHeating')">
-          <h1>Household Heating</h1>
+          <h1 class="project__h3">Household Heating</h1>
           <info-tooltip>
             The inputs of the base year include the number of heating & cooling
             degree days, and the thermal characteristics of the dwelling. In the
@@ -105,7 +105,7 @@
           </info-tooltip>
         </template>
         <template v-if="$route.name.endsWith('CommunityLighting')">
-          <h1>Community Lighting</h1>
+          <h1 class="project__h3">Community Lighting</h1>
           <info-tooltip>
             The community lighting characterizes for the base year, the street
             lighting demand and supply. The supply may consist in solar lighting
@@ -114,7 +114,7 @@
           </info-tooltip>
         </template>
         <template v-if="$route.name.endsWith('CommunityHeating')">
-          <h1>Community Heating</h1>
+          <h1 class="project__h3">Community Heating</h1>
           <info-tooltip>
             The community is divided in different units such as: camp
             management, schools, medical centers, and administrative facilities.
@@ -126,7 +126,7 @@
           </info-tooltip>
         </template>
         <template v-if="$route.name.endsWith('CommunityServices')">
-          <h1>Community Services</h1>
+          <h1 class="project__h3">Community Services</h1>
           <info-tooltip>
             This sector includes units such as: shops, small restaurants, and
             water pumping and distribution. For each sub-units, the productive
@@ -135,7 +135,7 @@
           </info-tooltip>
         </template>
         <template v-if="$route.name.endsWith('Scenario')">
-          <h1>Scenario</h1>
+          <h1 class="project__h3">Scenario</h1>
           <info-tooltip>
             The scenario section allows the user to build consistent evolutions
             of the system which are independent to the interventions. These
@@ -154,7 +154,7 @@
           </info-tooltip>
         </template>
         <template v-if="$route.name.endsWith('Intervention')">
-          <h1>Intervention</h1>
+          <h1 class="project__h3">Intervention</h1>
           <info-tooltip>
             The logic of this tool consists in defining and assessing
             interventions that will improve the system and its evolutions which
@@ -171,7 +171,7 @@
           </info-tooltip>
         </template>
         <template v-if="$route.name.endsWith('Result')">
-          <h1>Summary</h1>
+          <h1 class="project__h3">Summary</h1>
           <info-tooltip>
             <p>
               The results comprise the following: energy needs and demand,

@@ -1,10 +1,13 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col>
+      <v-col class="d-flex">
         <h2 class="text-h4 project__h3 font-weight-medium">
-          Project information
+          {{ infoTooltipText[$route.name].title }}
         </h2>
+        <info-tooltip>
+          {{ infoTooltipText[$route.name].text }}
+        </info-tooltip>
       </v-col>
       <v-spacer></v-spacer>
       <v-col class="col-auto">
@@ -169,8 +172,10 @@
 import CountrySelect from "@/components/commons/CountrySelect.vue";
 import { FormItem } from "@/components/commons/FormItem";
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
+import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import TerritoryMap from "@/components/commons/TerritoryMap.vue";
 import UserManager from "@/components/commons/UserManager.vue";
+import { infoTooltipText } from "@/components/shelter_sustainability/infoTooltipText";
 import InputWithInfo from "@/components/shelter_sustainability/InputWithInfo.vue";
 import { listOfShelterType, Shelter } from "@/store/ShelterInterface";
 import { cloneDeep } from "lodash";
@@ -183,6 +188,7 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
     UserManager,
     FormItemComponent,
     TerritoryMap,
+    InfoTooltip,
   },
 })
 /** Project */
@@ -201,6 +207,7 @@ export default class Step1 extends Vue {
     this.$emit("update:shelter", newShelter);
   }
 
+  infoTooltipText = infoTooltipText;
   occupantsOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   shelterTypes = listOfShelterType;
   lifeExpectancy = [

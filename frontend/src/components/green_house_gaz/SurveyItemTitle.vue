@@ -1,13 +1,10 @@
 <template>
   <v-container v-if="titleKey" fluid>
     <v-row>
-      <v-col>
+      <v-col class="d-flex">
         <h2 class="text-h4 project__h3 font-weight-medium">
           {{ infoTooltipText[titleKey].title }}
         </h2>
-      </v-col>
-      <v-spacer></v-spacer>
-      <v-col class="col-auto d-flex align-center">
         <info-tooltip>
           {{ infoTooltipText[titleKey].text }}
         </info-tooltip>
