@@ -1,16 +1,16 @@
 <template>
   <v-container fluid class="project">
     <v-tabs
-      class="fixed-tabs-bar"
+      class="fixed-tabs-bar d-flex"
       centered
       grow
       :show-arrows="true"
       elevation="2"
     >
-      <template v-for="(item, idx) in menuItems">
+      <div v-for="(item, idx) in menuItems" :key="idx">
         <v-tooltip
-          v-if="item.disabled && !!item.tooltipDisabledText"
-          :key="idx"
+          v-if="item.tooltipDisabledText && item.disabled"
+          :key="item.to"
           bottom
         >
           <!-- eslint-disable-next-line vue/no-v-html -->
@@ -21,7 +21,12 @@
               ----  when v-tab disabled, tooltip does not work: wrap inside <a> element
               ----    cf issue: https://github.com/vuetifyjs/vuetify/issues/7077
               --->
-              <v-tab ripple :to="{ name: item.to }" :disabled="item.disabled">
+              <v-tab
+                :key="item.to"
+                ripple
+                :to="{ name: item.to }"
+                :disabled="item.disabled"
+              >
                 <v-icon left>{{ item.icon }}</v-icon>
                 <span>
                   {{ item.text }}
@@ -36,7 +41,7 @@
             {{ item.text }}
           </span>
         </v-tab>
-      </template>
+      </div>
     </v-tabs>
     <v-container v-if="shelter.users" fluid>
       <v-form @submit.stop.prevent="">
@@ -94,7 +99,7 @@ export default class ProjectItem extends Vue {
       {
         icon: "mdi-clipboard-text-multiple",
         text: "Bill of Quantities",
-        disabled: !this.shelter.location_country,
+        disabled: !this.shelter?.location_country,
         tooltipDisabledText: "Site country is not reference in the about page",
         to: "ShelterSustainabilityStep3",
       },
