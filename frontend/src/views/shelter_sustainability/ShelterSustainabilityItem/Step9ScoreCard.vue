@@ -16,7 +16,7 @@
           <v-container fluid>
             <v-row>
               <v-col>
-                <h2>Embodied carbon</h2>
+                <h2>Environmental performance</h2>
               </v-col>
             </v-row>
             <v-row v-for="(option, idx) in options" :key="idx">
@@ -249,7 +249,13 @@ export default class Step8ScoreCard extends Vue {
             const shelter_type = scor.shelter_type as colorType;
             const colors = this.colors[shelter_type];
             return {
-              value: [scor[key], scor.selected ? 4 : 2, key, scor, config],
+              value: [
+                parseFloat(scor[key].toFixed(3)),
+                scor.selected ? 4 : 2,
+                key,
+                scor,
+                config,
+              ],
               itemStyle: {
                 color: scor.selected ? colors.primary : colors.secondary, //config.colors.secondary,
               },
@@ -284,8 +290,8 @@ export default class Step8ScoreCard extends Vue {
             acc = acc ? `${acc}<br/>` : "";
             const key = param.value[2] as ScoreCardsKey;
             const scorecard = param.value[3] as ScoreCardScatter;
-            const id = scorecard.id;
-            return `${acc}</div>${id}: ${formatNumber(scorecard[key])} ${
+            const name = scorecard.name;
+            return `${acc}</div>${name}: ${formatNumber(scorecard[key])} ${
               config.unit
             }</div>`;
           }, "");
@@ -321,6 +327,7 @@ interface ScoreCardScatter extends ScoreCard {
   selected: boolean;
   shelter_type: string;
   id: string;
+  name: string;
 }
 
 interface Config {

@@ -181,7 +181,6 @@
                       :label="resultDimension.label"
                       type="string"
                       :suffix="resultDimension.suffix"
-                      @change="updateResultDimension"
                     >
                     </v-text-field>
                     <v-text-field
@@ -193,6 +192,7 @@
                       :label="resultDimension.label"
                       type="number"
                       :suffix="resultDimension.suffix"
+                      @change="updateResultDimension"
                     >
                     </v-text-field>
                   </v-col>
