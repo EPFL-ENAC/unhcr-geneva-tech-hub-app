@@ -35,6 +35,24 @@
                       </v-col>
                     </template>
                   </v-row>
+                  <v-row v-if="false">
+                    <template v-for="(item, index) in surveyItems">
+                      <v-col
+                        v-if="!item.hidden"
+                        :key="index"
+                        cols="12"
+                        sm="6"
+                        md="4"
+                        lg="3"
+                        xl="4"
+                      >
+                        <form-item-component
+                          v-model="currentSurveyName"
+                          v-bind="item"
+                        ></form-item-component>
+                      </v-col>
+                    </template>
+                  </v-row>
                 </v-col>
                 <v-divider vertical></v-divider>
                 <v-col cols="6" class="map-countries">
@@ -61,7 +79,7 @@ import CountrySelect from "@/components/commons/CountrySelect.vue";
 import { FormItem } from "@/components/commons/FormItem";
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import TerritoryMap from "@/components/commons/TerritoryMap.vue";
-import { GreenHouseGaz } from "@/store/GhgInterface";
+import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import { CouchUser } from "@/store/UserModule";
 import { countries as Countries } from "@/utils/countriesAsList";
 import getFlagEmoji from "@/utils/flagEmoji";
@@ -74,7 +92,7 @@ import {
 import { LatLngExpression } from "leaflet";
 import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import { LControlScale, LMap, LMarker, LTileLayer } from "vue2-leaflet";
 import { mapActions, mapGetters } from "vuex";
 
@@ -98,6 +116,9 @@ import { mapActions, mapGetters } from "vuex";
 })
 /** ProjectItem */
 export default class GhgInfo extends Vue {
+  @Prop([Object, Array])
+  readonly survey: Survey | undefined;
+
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
   project!: GreenHouseGaz;
   user!: CouchUser;
@@ -125,6 +146,16 @@ export default class GhgInfo extends Vue {
       return [latitude ?? 0, longitude ?? 0];
     }
     return defaultCoordinates as LatLngExpression;
+  }
+
+  get surveyItems(): FormItem[] {
+    return [
+      {
+        type: "text",
+        key: "name",
+        label: "Assessment description",
+      },
+    ];
   }
 
   get generalItems(): FormItem[] {
@@ -158,9 +189,22 @@ export default class GhgInfo extends Vue {
     ];
   }
 
+  newNameValue = "";
+  get currentSurveyName(): string {
+    return this.newNameValue || (this.survey?.name ?? "");
+  }
+  set currentSurveyName(v: string) {
+    this.newNameValue = v;
+  }
+
   public async submitForm(value: GreenHouseGaz): Promise<void> {
     if (value.name !== "") {
       await this.updateDoc(value);
+      const newValue: Survey | undefined = this.survey;
+      if (newValue) {
+        newValue.name = this.newNameValue ?? newValue.name;
+        this.$emit("update:survey", newValue);
+      }
     } else {
       throw new Error("please fill the new Name");
     }
@@ -169,6 +213,7 @@ export default class GhgInfo extends Vue {
   public updateLatLng(latLng: number[]): void {
     this.localProject.latitude = latLng[0];
     this.localProject.longitude = latLng[1];
+    this.localProject = Object.assign({}, this.localProject);
   }
 
   public setLocalShelter(project: GreenHouseGaz): void {

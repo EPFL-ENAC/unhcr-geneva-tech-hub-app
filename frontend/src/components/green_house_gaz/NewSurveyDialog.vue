@@ -10,7 +10,11 @@
           <v-container>
             <v-row>
               <v-col cols="12">
-                <country-select v-model="newCampSite.country_code" />
+                <country-select
+                  v-model="newCampSite.country_code"
+                  :rules="rulesCountry"
+                  required
+                />
               </v-col>
               <v-col cols="12">
                 <v-divider />
@@ -90,7 +94,7 @@
             submit
             type="submit"
             text
-            @click="submit"
+            :disabled="!createProjectFormValid"
           >
             Create
           </v-btn>
@@ -208,6 +212,8 @@ export default class ProjectList extends Vue {
     this.ruleANameShouldHaveLength,
     this.ruleSiteAlreadyExist,
   ];
+
+  rulesCountry = [(v: string): boolean | string => !!v || `is required`];
   public ruleANameIsRequired(v: string): boolean | string {
     return !!v || !this.newCampSite.name || `A name is required`;
   }

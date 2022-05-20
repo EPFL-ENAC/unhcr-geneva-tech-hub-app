@@ -9,9 +9,11 @@ import {
   MutationTree,
 } from "vuex";
 import { RootState } from ".";
+import { updateMetaFields } from "./documentUtils";
 import { CouchUser } from "./UserModule";
 
 const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
+const MSG_USER_NOT_PRESENT = "Could not find user information";
 
 interface ProjectsState {
   projects: Array<GreenHouseGaz>;
@@ -160,9 +162,13 @@ const actions: ActionTree<ProjectsState, RootState> = {
     const user = context.rootGetters["UserModule/user"] as CouchUser;
     // context.commit("ADD_DOC", generateNewProject(newGhg, user));
     const value = generateNewProject(newGhg, user);
-    return context.state.localCouch?.db.put(value).then(() => {
-      context.commit("ADD_DOC", value);
-    });
+    const remoteDB = context.state.localCouch?.remoteDB;
+    if (remoteDB) {
+      return context.state.localCouch?.remoteDB.put(value).then((response) => {
+        // set new rev
+        return context.dispatch("getDoc", response.id);
+      });
+    }
   },
   removeDoc: (context: ActionContext<ProjectsState, RootState>, id) => {
     context.commit("REMOVE_DOC", id);
@@ -185,18 +191,23 @@ const actions: ActionTree<ProjectsState, RootState> = {
     context: ActionContext<ProjectsState, RootState>,
     value
   ) => {
-    context.commit("SET_PROJECT", value);
+    const user = context.rootGetters["UserModule/user"] as CouchUser;
+    if (!user) {
+      throw new Error(MSG_USER_NOT_PRESENT);
+    }
+    const newValue = updateMetaFields(value, user);
+    context.commit("SET_PROJECT", newValue);
     const db = context.state.localCouch?.remoteDB;
     if (db) {
-      await db
-        .put(value, { force: true })
+      return await db
+        .put(newValue, { force: true })
         .then((response) => {
           // set new rev
           return context.dispatch("getDoc", response.id);
         })
         .catch((response) => {
           // because error, we need to dispatch doc again
-          context.dispatch("getDoc", value._id);
+          context.dispatch("getDoc", response.id);
           console.log("error", response);
         });
     } else {

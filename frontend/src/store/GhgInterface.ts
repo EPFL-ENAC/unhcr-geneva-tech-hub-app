@@ -48,8 +48,12 @@ export interface Survey extends SurveyForms {
   _id?: string; // uuid4
   created_at: string;
   created_by: string;
+  updated_by?: string;
+  updated_at?: string;
   name: string; // name is year
 }
+
+export type SurveyKey = keyof Survey;
 
 export interface EnergySurvey {
   facilities: EnergyFacilitySurvey;

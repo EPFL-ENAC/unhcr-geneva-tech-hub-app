@@ -39,7 +39,6 @@ import { mapActions, mapGetters } from "vuex";
   methods: {
     ...mapActions("GhgModule", [
       "syncDB",
-      "addDoc",
       "closeDB",
       "getCountries",
       "getSites",
