@@ -2,12 +2,9 @@ import { getNewName, updateMetaFields } from "@/store/documentUtils";
 import { RootState } from "@/store/index";
 import { ScoreCard, Shelter, ShelterState } from "@/store/ShelterInterface";
 import {
-  completeMissingFields,
+  computeShelter,
   generateNewShelter,
   generateState,
-  getEnvPerfItems,
-  getScoreCard,
-  getTotalEnvPerf,
 } from "@/store/ShelterModuleUtils";
 import { SyncDatabase } from "@/utils/couchdb";
 import {
@@ -53,38 +50,7 @@ const mutations: MutationTree<ShelterState> = {
     state.shelterLoading = false;
   },
   SET_SHELTER(state, newShelter) {
-    const resultShelter = completeMissingFields(newShelter);
-    resultShelter.envPerfItems = getEnvPerfItems(newShelter?.items);
-    resultShelter.totalEnvPerf = getTotalEnvPerf(
-      resultShelter.envPerfItems,
-      newShelter?.items
-    );
-
-    const valuesTech = Object.values(
-      resultShelter.technical_performance
-    ) as number[];
-
-    if (valuesTech.length) {
-      resultShelter.technical_performance_score = valuesTech.reduce(
-        (acc, el) => acc + el
-      );
-    } else {
-      resultShelter.technical_performance_score = 0;
-    }
-
-    const valuesHab = Object.values(resultShelter.habitability) as number[];
-    if (valuesHab.length) {
-      resultShelter.habitability_score = valuesHab.reduce(
-        (acc, el) => acc + el
-      );
-    } else {
-      resultShelter.habitability_score = 0;
-    }
-    const { scorecard, errors } = getScoreCard(newShelter);
-    resultShelter.scorecard = scorecard;
-    resultShelter.scorecard_errors = errors;
-    state.shelter = resultShelter;
-    return state.shelter;
+    state.shelter = newShelter;
   },
   ADD_DOC(state, value) {
     state.shelters.push(value);
@@ -145,7 +111,11 @@ const actions: ActionTree<ShelterState, RootState> = {
     const user = context.rootGetters["UserModule/user"] as CouchUser;
     if (user.name) {
       const value = generateNewShelter(name, user);
-      return context.state.localCouch?.remoteDB.post(value).then(() => {
+      const remoteDB = context.state.localCouch?.remoteDB;
+      if (!remoteDB) {
+        throw new Error(MSG_DB_DOES_NOT_EXIST);
+      }
+      return remoteDB.post(value).then(() => {
         context.commit("ADD_DOC", value);
       });
     }
@@ -162,18 +132,18 @@ const actions: ActionTree<ShelterState, RootState> = {
       delete newValue._id; // set by remote database (uuid v4)
       newValue = updateMetaFields(newValue, user);
       newValue.name = getNewName(newValue.name);
-
-      context.commit("SET_SHELTER", newValue);
-      newValue = context.state.shelter;
-      return context.state.localCouch?.remoteDB
-        .post(context.state.shelter)
-        .then((response) => {
-          newValue._id = response.id;
-          newValue._rev = response.rev;
-          context.commit("SET_SHELTER", newValue);
-          context.commit("ADD_DOC", context.state.shelter);
-          return context.state.shelter;
-        });
+      newValue = computeShelter(newValue);
+      const remoteDB = context.state.localCouch?.remoteDB;
+      if (!remoteDB) {
+        throw new Error(MSG_DB_DOES_NOT_EXIST);
+      }
+      return remoteDB.post(newValue).then((response) => {
+        newValue._id = response.id;
+        newValue._rev = response.rev;
+        context.commit("SET_SHELTER", newValue);
+        context.commit("ADD_DOC", context.state.shelter);
+        return context.state.shelter;
+      });
     }
   },
   removeDoc: (context: ActionContext<ShelterState, RootState>, id) => {
@@ -184,39 +154,45 @@ const actions: ActionTree<ShelterState, RootState> = {
     if (user.name) {
       value.updated_at = new Date().toISOString();
       value.updated_by = user.name;
-      context.commit("SET_SHELTER", value);
+      const computedShelter = computeShelter(value);
       const remoteDB = context.state.localCouch?.remoteDB;
       if (!remoteDB) {
         throw new Error(MSG_DB_DOES_NOT_EXIST);
       }
       if (!context.getters["shelterLoading"]) {
         context.commit("SET_SHELTER_LOADING");
-        const currentValue = context.state.shelter;
-        let newValue = await context.dispatch("getDoc", currentValue._id);
-        currentValue._rev = newValue._rev;
         try {
-          const response = await remoteDB.put(currentValue);
-          newValue = await context.dispatch("getDoc", response.id);
+          const response = await remoteDB.put(computedShelter);
+          const newValue = await context.dispatch("getDoc", response.id);
           context.commit("SET_SHELTER", newValue);
           context.commit("UNSET_SHELTER_LOADING");
           /* eslint-disable-next-line */
         } catch (e: any) {
           if (e.error === "conflict") {
-            // rerun dispatch updateDoc but only once
             console.log("conflict error");
+
+            // TODO: rerun dispatch updateDoc but only once
+            // let newValue = await context.dispatch("getDoc", computedShelter._id);
+            // computedShelter._rev = newValue._rev;
+            // try again with latest revision
           }
           context.commit("UNSET_SHELTER_LOADING");
         }
       }
     }
   },
-  updateLocalDoc: (context: ActionContext<ShelterState, RootState>, value) => {
-    context.commit("SET_SHELTER", value);
+  updateLocalDoc: (
+    context: ActionContext<ShelterState, RootState>,
+    value: Shelter
+  ) => {
+    const result = computeShelter(value);
+    context.commit("SET_SHELTER", result);
   },
   getDoc: (context: ActionContext<ShelterState, RootState>, id) => {
     const remoteDB = context.state.localCouch?.remoteDB;
     if (remoteDB) {
       return remoteDB.get(id).then(function (result: Shelter) {
+        result = computeShelter(result);
         context.commit("SET_SHELTER", result);
         context.dispatch(
           "ShelterBillOfQuantitiesModule/setItems",

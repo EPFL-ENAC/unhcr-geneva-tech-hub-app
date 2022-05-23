@@ -10,6 +10,7 @@ import {
   Shelter,
   ShelterState,
 } from "@/store/ShelterInterface";
+import { cloneDeep } from "lodash";
 import { CouchUser } from "./UserModule";
 
 export function generateState(): ShelterState {
@@ -21,6 +22,40 @@ export function generateState(): ShelterState {
     localCouch: null,
   };
 }
+
+export function computeShelter(value: Shelter): Shelter {
+  const newShelter = cloneDeep(value);
+  const resultShelter = completeMissingFields(newShelter);
+  resultShelter.envPerfItems = getEnvPerfItems(newShelter?.items);
+  resultShelter.totalEnvPerf = getTotalEnvPerf(
+    resultShelter.envPerfItems,
+    newShelter?.items
+  );
+
+  const valuesTech = Object.values(
+    resultShelter.technical_performance
+  ) as number[];
+
+  if (valuesTech.length) {
+    resultShelter.technical_performance_score = valuesTech.reduce(
+      (acc, el) => acc + el
+    );
+  } else {
+    resultShelter.technical_performance_score = 0;
+  }
+
+  const valuesHab = Object.values(resultShelter.habitability) as number[];
+  if (valuesHab.length) {
+    resultShelter.habitability_score = valuesHab.reduce((acc, el) => acc + el);
+  } else {
+    resultShelter.habitability_score = 0;
+  }
+  const { scorecard, errors } = getScoreCard(newShelter);
+  resultShelter.scorecard = scorecard;
+  resultShelter.scorecard_errors = errors;
+  return resultShelter;
+}
+
 export function isMaterial(object: unknown): object is Material {
   return (
     Object.prototype.hasOwnProperty.call(object, "materialId") &&
