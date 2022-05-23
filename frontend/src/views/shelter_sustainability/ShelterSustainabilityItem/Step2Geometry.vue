@@ -92,14 +92,23 @@
                       </v-form>
                     </v-card>
                   </v-col>
-                  <v-col :lg="4" :md="6" sm="12" xs="12">
-                    <v-card
-                      v-for="(door, $doorKey) in localShelter.geometry
-                        .doors_dimensions"
-                      :key="`doorsDimension${$doorKey}`"
-                    >
+                  <v-col
+                    v-for="(door, $doorKey) in localShelter.geometry
+                      .doors_dimensions"
+                    :key="`doorsDimension${$doorKey}`"
+                    :lg="4"
+                    :md="6"
+                    sm="12"
+                    xs="12"
+                  >
+                    <v-card>
                       <!-- v-for on all windows -->
-                      <v-card-title>Door dimensions</v-card-title>
+                      <v-card-title>
+                        Door dimensions
+                        <v-btn icon @click="removeDoor($doorKey)">
+                          <v-icon>mdi-delete</v-icon>
+                        </v-btn>
+                      </v-card-title>
                       <v-form class="pa-md-4">
                         <v-text-field
                           v-for="(
@@ -158,7 +167,12 @@
                     </v-card>
                   </v-col>
                   <v-col :lg="4" :md="6" sm="12" xs="12">
-                    <v-btn block @click="addWindow">Add window</v-btn>
+                    <v-btn block class="my-4" @click="addDoor">
+                      <v-icon left>mdi-plus-box</v-icon> Add door</v-btn
+                    >
+                    <v-btn block @click="addWindow"
+                      ><v-icon left>mdi-plus-box</v-icon> Add window</v-btn
+                    >
                   </v-col>
                 </v-row>
               </v-expand-transition>
@@ -274,6 +288,15 @@ export default class Step2Geometry extends Vue {
   }
   get shelter_geometry_type(): string {
     return this.localShelter?.geometry?.shelter_geometry_type;
+  }
+
+  public addDoor(): void {
+    this.localShelter.geometry.doors_dimensions.push({ Wd: 0, Hd: 0 });
+    this.updateFormInput();
+  }
+  public removeDoor(index: number): void {
+    this.localShelter.geometry.doors_dimensions.splice(index, 1);
+    this.updateFormInput();
   }
 
   public addWindow(): void {
