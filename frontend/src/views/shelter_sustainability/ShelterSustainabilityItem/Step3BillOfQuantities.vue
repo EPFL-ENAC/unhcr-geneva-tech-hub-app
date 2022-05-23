@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="shelter__boq">
     <v-row>
       <v-col class="d-flex">
         <h2 class="text-h4 project__h3 font-weight-medium">
@@ -237,3 +237,9 @@ export default class Step3Materials extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.shelter__boq tfoot {
+  font-weight: bold;
+}
+</style>
