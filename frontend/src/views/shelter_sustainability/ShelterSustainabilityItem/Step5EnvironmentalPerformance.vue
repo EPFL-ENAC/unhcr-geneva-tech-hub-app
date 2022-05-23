@@ -40,41 +40,31 @@
                         <th colspan="1"></th>
                         <th rowspan="3">Material</th>
                         <th style="vertical-align: middle; text-align: center">
-                          Material efficiency (weight)
+                          Material weight (kg)
                         </th>
                         <th
                           colspan="3"
                           style="vertical-align: middle; text-align: center"
                         >
-                          Embodied carbon
+                          Embodied carbon (kgCO2e/kg)
                         </th>
-                        <th>
-                          Embodied water
-                          <info-tooltip>
-                            Embodied potable/tap water, excludes water from
-                            natural irrigation
-                          </info-tooltip>
-                        </th>
-                      </tr>
-                      <tr>
-                        <th></th>
                         <th style="vertical-align: middle; text-align: center">
-                          kg
+                          <span>
+
+                            Embodied water (L)
+                            <info-tooltip>
+                              Embodied potable/tap water, excludes water from
+                              natural irrigation
+                            </info-tooltip>
+                          </span>
                         </th>
-                        <th
-                          colspan="3"
-                          style="vertical-align: middle; text-align: center"
-                        >
-                          kgCO2e/kg
-                        </th>
-                        <th style="text-align: center">L</th>
                       </tr>
                       <tr>
                         <th></th>
                         <th></th>
-                        <th>Production</th>
-                        <th>Transportation</th>
-                        <th>Total</th>
+                        <th style="vertical-align: middle; text-align: center">Production</th>
+                        <th style="vertical-align: middle; text-align: center">Transportation</th>
+                        <th style="vertical-align: middle; text-align: center">Total</th>
                         <th colspan="3"></th>
                       </tr>
                     </thead>
@@ -102,7 +92,7 @@
                     <span>{{ item.totalCost | formatNumber }} </span>
                   </template>
                   <template v-slot:expanded-item="{ headers, item }">
-                    <td :colspan="headers.length">
+                    <td :colspan="headers.length" style="padding: 0 0 0 0">
                       <v-data-table
                         hide-default-footer
                         hide-default-header
@@ -110,35 +100,41 @@
                         :headers="headersSubItems"
                         :items="item.children"
                       >
-                        <template v-slot:[`item.formId`]="{}">
+                        <template v-slot:[`item.formId`]="{ item }">
                           <span v-if="materialMap[item.formId]">{{
                             materialMap[item.formId].form
                           }}</span>
                           <span v-else> {{ item.formId }}</span>
                         </template>
                         <!-- beware duplicated code from above -->
-                        <template v-slot:[`item.weight`]="{}">
+                        <template v-slot:[`item.weight`]="{ item }">
                           <span>{{ item.weight | formatNumber }} </span>
                         </template>
-                        <template v-slot:[`item.embodiedCarbonProduction`]="{}">
+                        <template
+                          v-slot:[`item.embodiedCarbonProduction`]="{ item }"
+                        >
                           <span
                             >{{ item.embodiedCarbonProduction | formatNumber }}
                           </span>
                         </template>
-                        <template v-slot:[`item.embodiedCarbonTransport`]="{}">
+                        <template
+                          v-slot:[`item.embodiedCarbonTransport`]="{ item }"
+                        >
                           <span
                             >{{ item.embodiedCarbonTransport | formatNumber }}
                           </span>
                         </template>
-                        <template v-slot:[`item.embodiedCarbonTotal`]="{}">
+                        <template
+                          v-slot:[`item.embodiedCarbonTotal`]="{ item }"
+                        >
                           <span
                             >{{ item.embodiedCarbonTotal | formatNumber }}
                           </span>
                         </template>
-                        <template v-slot:[`item.embodiedWater`]="{}">
+                        <template v-slot:[`item.embodiedWater`]="{ item }">
                           <span>{{ item.embodiedWater | formatNumber }} </span>
                         </template>
-                        <template v-slot:[`item.totalCost`]="{}">
+                        <template v-slot:[`item.totalCost`]="{ item }">
                           <span>{{ item.totalCost | formatNumber }} </span>
                         </template>
                       </v-data-table>
@@ -273,28 +269,38 @@ export default class Step3Materials extends Vue {
   public get headers(): DataTableHeader[] {
     return [
       {
+        align: "left",
         text: "Material",
         value: "materialId",
         sortable: false,
         width: "100px",
       },
-      { text: "Weight in kg", value: "weight", sortable: false },
       {
+        align: "center",
+        text: "Weight in kg",
+        value: "weight",
+        sortable: false,
+      },
+      {
+        align: "center",
         text: "Production",
         value: "embodiedCarbonProduction",
         sortable: false,
       },
       {
+        align: "center",
         text: "Transport",
         value: "embodiedCarbonTransport",
         sortable: false,
       },
       {
+        align: "center",
         text: "Total",
         value: "embodiedCarbonTotal",
         sortable: false,
       },
       {
+        align: "center",
         text: "Embodied water in L/kg",
         value: "embodiedWater",
         sortable: false,
@@ -306,23 +312,31 @@ export default class Step3Materials extends Vue {
     return [
       { text: "", value: "data-null" },
       { text: "Form", value: "formId", sortable: false, width: "100px" },
-      { text: "Weight", value: "weight", sortable: false },
+      { align: "center", text: "Weight", value: "weight", sortable: false },
       {
+        align: "center",
         text: "Embodied carbon production",
         value: "embodiedCarbonProduction",
         sortable: false,
       },
       {
+        align: "center",
         text: "Embodied carbon transport",
         value: "embodiedCarbonTransport",
         sortable: false,
       },
       {
+        align: "center",
         text: "Embodied carbon total",
         value: "embodiedCarbonTotal",
         sortable: false,
       },
-      { text: "Embodied water", value: "embodiedWater", sortable: false },
+      {
+        align: "center",
+        text: "Embodied water",
+        value: "embodiedWater",
+        sortable: false,
+      },
       // { text: "Unit cost", value: "unitCost", sortable: false },
       // { text: "Total cost", value: "totalCost", sortable: false },
     ];
