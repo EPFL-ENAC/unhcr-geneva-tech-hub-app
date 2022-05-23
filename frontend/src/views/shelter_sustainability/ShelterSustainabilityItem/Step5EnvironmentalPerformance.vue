@@ -48,9 +48,11 @@
                         >
                           Embodied carbon
                         </th>
-                        <th>Embodied water
+                        <th>
+                          Embodied water
                           <info-tooltip>
-                            Embodied potable/tap water, excludes water from natural irrigation
+                            Embodied potable/tap water, excludes water from
+                            natural irrigation
                           </info-tooltip>
                         </th>
                       </tr>
