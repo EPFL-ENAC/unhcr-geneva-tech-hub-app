@@ -19,7 +19,7 @@
           EssentialTech, FAR and BPE aim to develop web application building on
           various data sources (mostly Excel sheets and web source) and user
           inputs, to improve sustainability practices, through GHG emmissions
-          estimates, shleter sustainability scores and improved energy planning
+          estimates, shelter sustainability scores and improved energy planning
           in refugee camps. The overaching project is composed of 3 different
           tools, each with distinct specifications and functionalities - but
           developed jointly to foster synergies and integration wherever
