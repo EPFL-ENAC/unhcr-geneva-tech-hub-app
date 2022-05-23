@@ -80,15 +80,6 @@ export default class GraphTree extends Vue {
           if (!formatNumber) {
             return "error: format number undefined";
           }
-          // const name = params.treeAncestors.reduce(
-          //   (acc: string, node: nodeInterface) => {
-          //     if (acc.indexOf(node.name) === -1) {
-          //       return `${acc}${acc === "" ? "" : "—"}${node.name}`;
-          //     }
-          //     return acc;
-          //   },
-          //   ""
-          // );
           const name =
             params.treeAncestors[params.treeAncestors.length - 1].name;
           const v = params.data.value[0];
@@ -120,9 +111,6 @@ interface datatree {
   name: string;
   value: number[];
   children?: datatree[];
-}
-interface nodeInterface {
-  name: string;
 }
 </script>
 
