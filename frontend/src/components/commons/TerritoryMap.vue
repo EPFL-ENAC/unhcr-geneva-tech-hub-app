@@ -7,7 +7,7 @@
     }"
     :zoom="defaultZoom"
     :min-zoom="2"
-    :max-zoom="8"
+    :max-zoom="16"
     @click="addMarker"
   >
     <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
