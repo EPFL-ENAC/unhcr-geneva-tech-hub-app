@@ -31,10 +31,20 @@
                 <v-container fluid>
                   <v-row>
                     <v-col cols="4">
-                      <territory-map
-                        :value="[localShelter.latitude, localShelter.longitude]"
-                        @update:value="updateLatLng"
-                      />
+                      <v-row>
+                        <v-col class=""> Select location </v-col>
+                      </v-row>
+                      <v-row class="d-flex" style="height: 100%; width: 100%">
+                        <v-col class="d-flex">
+                          <territory-map
+                            :value="[
+                              localShelter.latitude,
+                              localShelter.longitude,
+                            ]"
+                            @update:value="updateLatLng"
+                          />
+                        </v-col>
+                      </v-row>
                     </v-col>
                     <v-col class="about-first-column" cols="4">
                       <v-text-field
@@ -137,10 +147,10 @@
                         @change="updateFormInput"
                       />
                       <v-text-field
-                        v-model="localShelter.setup_time"
+                        v-model.number="localShelter.setup_time"
                         name="setup_time"
-                        label="Time for setup"
-                        type="text"
+                        label="Time for setup (days)"
+                        type="number"
                         @change="updateFormInput"
                       />
                       <v-divider />
@@ -235,18 +245,18 @@ export default class Step1 extends Vue {
     (v: number): boolean | string => !!v || `is required`,
     (v: number): boolean | string => v > 1 || `should have a length >= 1`,
     (v: number): boolean | string =>
-      v < 1000000 || `should not be more than 1 000 000 shelters`,
+      v <= 10000000 || `should not be more than 10 000 000 shelters`,
   ];
   shelterOccupantRules = [
     (v: number): boolean | string => !!v || `is required`,
     (v: number): boolean | string =>
-      v < 10 || `should not be more than 10 occupants`,
+      v <= 10 || `should not be more than 10 occupants`,
     (v: number): boolean | string => v > 0 || `should be more than 0 occupant`,
   ];
   shelterLifespanRules = [
     (v: number): boolean | string => !!v || `is required`,
     (v: number): boolean | string =>
-      v < 10 || `should not be more than ten years`,
+      v <= 10 || `should not be more than ten years`,
     (v: number): boolean | string => v > 0 || `should be more than 0 years`,
   ];
 

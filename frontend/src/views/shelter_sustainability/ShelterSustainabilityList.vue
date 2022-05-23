@@ -1,5 +1,20 @@
 <template>
   <main class="shelter__list" :style="computedGridTemplate">
+    <v-dialog v-model="dialogDelete" max-width="500px">
+      <v-card>
+        <v-card-title class="text-h5"
+          >Confirm deletion of this shelter?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="closeDialog">Cancel</v-btn>
+          <v-btn color="blue darken-1" text @click="deleteItemConfirm"
+            >OK</v-btn
+          >
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-sheet class="country-list overflow-y-auto">
       <v-container fluid>
         <!-- Move to component, ShelterSustaibalityListHeader Search + create tooltip logic -->
@@ -66,9 +81,9 @@
                 :key="project._id"
                 cols="12"
                 sm="12"
-                md="6"
+                md="12"
                 lg="6"
-                xl="3"
+                xl="4"
               >
                 <v-card
                   :to="{
@@ -77,6 +92,7 @@
                   }"
                   class="project"
                   max-width="400"
+                  min-width="290"
                   min-height="200"
                   hover
                   outlined
@@ -121,13 +137,13 @@
                       </v-card-subtitle>
                       <v-card-subtitle class="pb-0">
                         <v-row class="align-center d-flex">
-                          <v-col cols="4" class="text-caption">
+                          <v-col :xs="12" :sm="4" class="text-caption">
                             Created: {{ project.created_at | formatDate }}
                           </v-col>
-                          <v-col cols="4" class="text-caption">
+                          <v-col :xs="12" :sm="4" class="text-caption">
                             Updated: {{ project.updated_at | formatDate }}
                           </v-col>
-                          <v-col cols="4" class="d-flex justify-end">
+                          <v-col :xs="12" :sm="4" class="d-flex justify-end">
                             <v-btn
                               title="Duplicate shelters"
                               icon
@@ -141,7 +157,9 @@
                               title="Delete shelters"
                               icon
                               small
-                              @click.stop.prevent="() => removeDoc(project._id)"
+                              @click.stop.prevent="
+                                () => deleteItem(project._id)
+                              "
                             >
                               <v-icon>mdi-delete</v-icon>
                             </v-btn>
@@ -216,6 +234,7 @@ export default class ProjectList extends Vue {
   shelters!: [];
   shelterDialog = false;
   duplicateDoc!: (shelter: Shelter) => Promise<null>;
+  removeDoc!: (id: string) => void;
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
   getShelters!: () => Promise<null>;
@@ -237,6 +256,27 @@ export default class ProjectList extends Vue {
     Transitional: "home-outline",
     Durable: "home",
   };
+
+  dialogDelete = false;
+  deleteId = "";
+  deleteItem(id: string): void {
+    this.deleteId = id;
+    this.dialogDelete = true;
+  }
+
+  async deleteItemConfirm(): Promise<void> {
+    if (this.deleteId) {
+      await this.removeDoc(this.deleteId);
+      await this.closeDialog();
+    }
+  }
+
+  closeDialog(): void {
+    this.dialogDelete = false;
+    this.$nextTick().then(() => {
+      this.deleteId = "";
+    });
+  }
 
   public goToShelter(item: Shelter): void {
     if (item?._id) {

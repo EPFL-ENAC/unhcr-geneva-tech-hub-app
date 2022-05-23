@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="shelter__boq">
     <v-row>
       <v-col class="d-flex">
         <h2 class="text-h4 project__h3 font-weight-medium">
@@ -107,7 +107,9 @@
                 <tr>
                   <td colspan="1">Total</td>
                   <td colspan="6"></td>
-                  <td colspan="1">{{ totalCost | formatNumber(2, 2) }}</td>
+                  <td colspan="1" class="text-right">
+                    {{ totalCost | formatNumber(2, 2) }}
+                  </td>
                   <td colspan="1"></td>
                 </tr>
               </tfoot>
@@ -193,9 +195,9 @@ export default class Step3Materials extends Vue {
     { text: "Material", value: "materialId" },
     { text: "Form", value: "formId" },
     { text: "Unit", value: "unit" },
-    { text: "Quantity", value: "quantity" },
-    { text: "Unit cost (USD)", value: "unitCost" },
-    { text: "Total cost (USD)", value: "totalCost" },
+    { text: "Quantity", value: "quantity", align: "right" },
+    { text: "Unit cost (USD)", value: "unitCost", align: "right" },
+    { text: "Total cost (USD)", value: "totalCost", align: "right" },
     { text: "", value: "actions", sortable: false },
   ];
 
@@ -237,3 +239,9 @@ export default class Step3Materials extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.shelter__boq tfoot {
+  font-weight: bold;
+}
+</style>

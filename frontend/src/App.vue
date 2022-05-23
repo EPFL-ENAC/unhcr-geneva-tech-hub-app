@@ -21,12 +21,7 @@
       />
     </v-app-bar>
 
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-      :mini-variant.sync="mini"
-      expand-on-hover
-    >
+    <v-navigation-drawer v-model="drawer" app :mini-variant.sync="mini">
       <v-list>
         <v-list-item v-if="user.name" class="px-2" :to="{ name: 'Apps' }">
           <v-list-item-avatar>
@@ -179,8 +174,8 @@ export default class App extends Vue {
   md5Function: (v: string) => string = md5;
   title = "UNHCR-TSS"; // use env variable,
   /** Drawer menu visibility */
-  drawer = false;
-  mini: boolean | null = null;
+  drawer = true;
+  mini = true;
   /** Snackbar visibility */
   snackbar = false;
   // TODO: use meta.title for apps name

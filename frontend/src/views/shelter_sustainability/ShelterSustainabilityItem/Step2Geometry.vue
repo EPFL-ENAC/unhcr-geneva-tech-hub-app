@@ -92,14 +92,23 @@
                       </v-form>
                     </v-card>
                   </v-col>
-                  <v-col :lg="4" :md="6" sm="12" xs="12">
-                    <v-card
-                      v-for="(door, $doorKey) in localShelter.geometry
-                        .doors_dimensions"
-                      :key="`doorsDimension${$doorKey}`"
-                    >
+                  <v-col
+                    v-for="(door, $doorKey) in localShelter.geometry
+                      .doors_dimensions"
+                    :key="`doorsDimension${$doorKey}`"
+                    :lg="4"
+                    :md="6"
+                    sm="12"
+                    xs="12"
+                  >
+                    <v-card>
                       <!-- v-for on all windows -->
-                      <v-card-title>Door dimensions</v-card-title>
+                      <v-card-title>
+                        Door dimensions
+                        <v-btn icon @click="removeDoor($doorKey)">
+                          <v-icon>mdi-delete</v-icon>
+                        </v-btn>
+                      </v-card-title>
                       <v-form class="pa-md-4">
                         <v-text-field
                           v-for="(
@@ -134,7 +143,7 @@
                       <v-card-title class="d-flex justify-space-between">
                         Window dimensions
                         <v-btn icon @click="removeWindow($windowKey)">
-                          <v-icon>mdi-close</v-icon>
+                          <v-icon>mdi-delete</v-icon>
                         </v-btn>
                       </v-card-title>
                       <v-form class="pa-md-4">
@@ -158,7 +167,12 @@
                     </v-card>
                   </v-col>
                   <v-col :lg="4" :md="6" sm="12" xs="12">
-                    <v-btn block @click="addWindow">Add window</v-btn>
+                    <v-btn block class="my-4" @click="addDoor">
+                      <v-icon left>mdi-plus-box</v-icon> Add door</v-btn
+                    >
+                    <v-btn block @click="addWindow"
+                      ><v-icon left>mdi-plus-box</v-icon> Add window</v-btn
+                    >
                   </v-col>
                 </v-row>
               </v-expand-transition>
@@ -176,26 +190,13 @@
                     xs="12"
                   >
                     <v-text-field
-                      v-if="!geometry.hiddenInputs"
-                      :value="
-                        localShelter.geometry[resultDimension.key]
-                          | formatNumber
-                      "
-                      :disabled="!geometry.hiddenInputs"
-                      :name="resultDimension.label"
-                      :label="resultDimension.label"
-                      type="string"
-                      :suffix="resultDimension.suffix"
-                    >
-                    </v-text-field>
-                    <v-text-field
-                      v-else
                       v-model.number="
                         localShelter.geometry[resultDimension.key]
                       "
                       :name="resultDimension.label"
                       :label="resultDimension.label"
                       type="number"
+                      :disabled="!geometry.hiddenInputs"
                       :suffix="resultDimension.suffix"
                       @change="updateResultDimension"
                     >
@@ -287,6 +288,15 @@ export default class Step2Geometry extends Vue {
   }
   get shelter_geometry_type(): string {
     return this.localShelter?.geometry?.shelter_geometry_type;
+  }
+
+  public addDoor(): void {
+    this.localShelter.geometry.doors_dimensions.push({ Wd: 0, Hd: 0 });
+    this.updateFormInput();
+  }
+  public removeDoor(index: number): void {
+    this.localShelter.geometry.doors_dimensions.splice(index, 1);
+    this.updateFormInput();
   }
 
   public addWindow(): void {
@@ -388,15 +398,18 @@ export default class Step2Geometry extends Vue {
 
   private floorArea(shelterDimension: ShelterDimensions): number {
     const { L, W } = shelterDimension || {};
+    let res = 0;
     if (!L || !W) {
-      return 0; // Length or Width not defined
+      return res; // Length or Width not defined
     }
     if (this.shelter_geometry_type === "dome") {
       const surfaceAreaEllipse = Math.PI * (L / 2) * (W / 2);
       // better to use toPrecision(3)
-      return Math.floor(surfaceAreaEllipse * 100) / 100;
+      res = Math.floor(surfaceAreaEllipse * 100) / 100;
+    } else {
+      res = L * W;
     }
-    return L * W;
+    return parseFloat(res.toFixed(2));
   }
 
   private computeVolume(shelterDimension: ShelterDimensions): number {
@@ -404,7 +417,8 @@ export default class Step2Geometry extends Vue {
       (g) => g._id === this.shelter_geometry_type
     );
     if (geometry?.volumeFunction) {
-      return geometry.volumeFunction(shelterDimension);
+      const res = geometry.volumeFunction(shelterDimension);
+      return parseFloat(res.toFixed(2));
     }
     throw new Error("should not have a volume");
   }

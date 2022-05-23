@@ -19,7 +19,7 @@
             </v-list-item-content>
             <v-list-item-action v-if="isMember && item !== username">
               <v-btn icon @click="removeUser(index)">
-                <v-icon>mdi-close</v-icon>
+                <v-icon>mdi-delete</v-icon>
               </v-btn>
             </v-list-item-action>
           </v-list-item>

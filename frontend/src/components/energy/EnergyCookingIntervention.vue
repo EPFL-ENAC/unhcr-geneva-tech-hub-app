@@ -38,7 +38,7 @@
                       deleteDuffusion(index);
                     "
                   >
-                    <v-icon>mdi-close</v-icon>
+                    <v-icon>mdi-delete</v-icon>
                   </v-btn>
                 </span>
               </v-expansion-panel-header>
@@ -89,7 +89,7 @@
                     <v-spacer></v-spacer>
                     <v-col cols="auto" class="d-flex align-center">
                       <v-btn icon @click="deleteEfficiency(index)">
-                        <v-icon>mdi-close</v-icon>
+                        <v-icon>mdi-delete</v-icon>
                       </v-btn>
                     </v-col>
                   </v-row>
@@ -128,7 +128,7 @@
                     <v-spacer></v-spacer>
                     <v-col cols="auto" class="d-flex align-center">
                       <v-btn icon @click="deleteCash(index)">
-                        <v-icon>mdi-close</v-icon>
+                        <v-icon>mdi-delete</v-icon>
                       </v-btn>
                     </v-col>
                   </v-row>

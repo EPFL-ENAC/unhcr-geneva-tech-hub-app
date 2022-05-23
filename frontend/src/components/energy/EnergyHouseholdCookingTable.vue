@@ -94,7 +94,7 @@
                     </template>
                     <template v-slot:[`item.action`]="{ item }">
                       <v-btn icon @click="deleteItem(item)">
-                        <v-icon>mdi-close</v-icon>
+                        <v-icon>mdi-delete</v-icon>
                       </v-btn>
                     </template>
                   </v-data-table>

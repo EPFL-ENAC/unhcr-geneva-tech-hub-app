@@ -89,7 +89,7 @@ export default {
               description:
                 "Flash floods create significant lateral forces that can have catastrophic consequences for buildings. Shelter structural designs should take into account local flood risks, including site topography and proximity to rivers or other water courses.",
               label:
-                "Walls structure designed to suit lateral forces of surface adn flash flooding",
+                "Walls structure designed to suit lateral forces of surface and flash flooding",
             },
           ],
         },

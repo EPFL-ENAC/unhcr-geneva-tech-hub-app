@@ -46,7 +46,7 @@
                 </v-layout>
               </v-col>
               <v-col class="about-first-column d-flex justify-center" :cols="9">
-                <v-responsive aspect-ratio="5" min-height="20" max-height="90">
+                <v-responsive aspect-ratio="5" min-height="20" max-height="120">
                   <v-chart autoresize :option="options[idx]"></v-chart>
                 </v-responsive>
               </v-col>
@@ -268,6 +268,7 @@ export default class Step8ScoreCard extends Vue {
                 color: scor.selected ? colors.primary : colors.secondary, //config.colors.secondary,
               },
               symbol: scor.selected ? "diamond" : "circle",
+              symbolSize: scor.selected ? 24 : 8,
             };
           }) ?? [],
         symbolSize: (dataItem: number[]) => dataItem[1] * 4,

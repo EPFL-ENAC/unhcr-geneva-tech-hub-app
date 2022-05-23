@@ -72,7 +72,7 @@
                                   deleteSite(item);
                                 "
                               >
-                                <v-icon>mdi-close</v-icon>
+                                <v-icon>mdi-delete</v-icon>
                               </v-btn>
                             </template>
                             <span>Delete</span>
