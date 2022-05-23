@@ -50,7 +50,6 @@
                         </th>
                         <th style="vertical-align: middle; text-align: center">
                           <span>
-
                             Embodied water (L)
                             <info-tooltip>
                               Embodied potable/tap water, excludes water from
@@ -62,9 +61,15 @@
                       <tr>
                         <th></th>
                         <th></th>
-                        <th style="vertical-align: middle; text-align: center">Production</th>
-                        <th style="vertical-align: middle; text-align: center">Transportation</th>
-                        <th style="vertical-align: middle; text-align: center">Total</th>
+                        <th style="vertical-align: middle; text-align: center">
+                          Production
+                        </th>
+                        <th style="vertical-align: middle; text-align: center">
+                          Transportation
+                        </th>
+                        <th style="vertical-align: middle; text-align: center">
+                          Total
+                        </th>
                         <th colspan="3"></th>
                       </tr>
                     </thead>
@@ -100,42 +105,56 @@
                         :headers="headersSubItems"
                         :items="item.children"
                       >
-                        <template v-slot:[`item.formId`]="{ item }">
-                          <span v-if="materialMap[item.formId]">{{
-                            materialMap[item.formId].form
+                        <template v-slot:[`item.formId`]="slotProps">
+                          <span v-if="materialMap[slotProps.item.formId]">{{
+                            materialMap[slotProps.item.formId].form
                           }}</span>
-                          <span v-else> {{ item.formId }}</span>
+                          <span v-else> {{ slotProps.item.formId }}</span>
                         </template>
                         <!-- beware duplicated code from above -->
-                        <template v-slot:[`item.weight`]="{ item }">
-                          <span>{{ item.weight | formatNumber }} </span>
-                        </template>
-                        <template
-                          v-slot:[`item.embodiedCarbonProduction`]="{ item }"
-                        >
+                        <template v-slot:[`item.weight`]="slotProps">
                           <span
-                            >{{ item.embodiedCarbonProduction | formatNumber }}
+                            >{{ slotProps.item.weight | formatNumber }}
                           </span>
                         </template>
                         <template
-                          v-slot:[`item.embodiedCarbonTransport`]="{ item }"
+                          v-slot:[`item.embodiedCarbonProduction`]="slotProps"
                         >
                           <span
-                            >{{ item.embodiedCarbonTransport | formatNumber }}
+                            >{{
+                              slotProps.item.embodiedCarbonProduction
+                                | formatNumber
+                            }}
                           </span>
                         </template>
                         <template
-                          v-slot:[`item.embodiedCarbonTotal`]="{ item }"
+                          v-slot:[`item.embodiedCarbonTransport`]="slotProps"
                         >
                           <span
-                            >{{ item.embodiedCarbonTotal | formatNumber }}
+                            >{{
+                              slotProps.item.embodiedCarbonTransport
+                                | formatNumber
+                            }}
                           </span>
                         </template>
-                        <template v-slot:[`item.embodiedWater`]="{ item }">
-                          <span>{{ item.embodiedWater | formatNumber }} </span>
+                        <template
+                          v-slot:[`item.embodiedCarbonTotal`]="slotProps"
+                        >
+                          <span
+                            >{{
+                              slotProps.item.embodiedCarbonTotal | formatNumber
+                            }}
+                          </span>
                         </template>
-                        <template v-slot:[`item.totalCost`]="{ item }">
-                          <span>{{ item.totalCost | formatNumber }} </span>
+                        <template v-slot:[`item.embodiedWater`]="slotProps">
+                          <span
+                            >{{ slotProps.item.embodiedWater | formatNumber }}
+                          </span>
+                        </template>
+                        <template v-slot:[`item.totalCost`]="slotProps">
+                          <span
+                            >{{ slotProps.item.totalCost | formatNumber }}
+                          </span>
                         </template>
                       </v-data-table>
                     </td>
@@ -269,38 +288,38 @@ export default class Step3Materials extends Vue {
   public get headers(): DataTableHeader[] {
     return [
       {
-        align: "left",
+        align: "left" as DataTableHeader["align"],
         text: "Material",
         value: "materialId",
         sortable: false,
         width: "100px",
       },
       {
-        align: "center",
+        align: "center" as DataTableHeader["align"],
         text: "Weight in kg",
         value: "weight",
         sortable: false,
       },
       {
-        align: "center",
+        align: "center" as DataTableHeader["align"],
         text: "Production",
         value: "embodiedCarbonProduction",
         sortable: false,
       },
       {
-        align: "center",
+        align: "center" as DataTableHeader["align"],
         text: "Transport",
         value: "embodiedCarbonTransport",
         sortable: false,
       },
       {
-        align: "center",
+        align: "center" as DataTableHeader["align"],
         text: "Total",
         value: "embodiedCarbonTotal",
         sortable: false,
       },
       {
-        align: "center",
+        align: "center" as DataTableHeader["align"],
         text: "Embodied water in L/kg",
         value: "embodiedWater",
         sortable: false,
