@@ -102,12 +102,7 @@
             </v-row>
             <!-- Unit and Quantity for Labour/Material/Other-->
             <v-row v-if="localItem.itemType">
-              <v-col
-                v-if="localItem.itemType !== 'Other' && !itemUnitsDisabled"
-                cols="12"
-                sm="6"
-                md="6"
-              >
+              <v-col v-if="!itemUnitsDisabled" cols="12" sm="6" md="6">
                 <v-select
                   v-model="localItem.unit"
                   :disabled="itemUnitsDisabled"
@@ -241,6 +236,7 @@ import {
   Material,
   materialFunctions,
   materialsInputs,
+  otherUnits,
   Shelter,
   UnitsMaterial,
   UnitsRef,
@@ -310,6 +306,7 @@ export default class DeleteItemDialog extends Vue {
   formValid = false;
   itemTypes = ["Material", "Labour", "Other"];
   labourUnits = ["Hour", "Day", "Lump sum"];
+  otherUnits = otherUnits;
   workerTypes = ["Skilled", "Unskilled"];
 
   rules = [(v: string): boolean | string => !!v || `Required`];
@@ -343,14 +340,10 @@ export default class DeleteItemDialog extends Vue {
         );
       }
     }
-    if (this.localItem.itemType === "Other") {
-      return this.pluralize(
-        this.localItem.quantity ?? 0,
-        UnitsRef["PCE"],
-        UnitsRef["PCE"] + "s"
-      );
-    }
-    if (this.localItem.itemType === "Material") {
+    if (
+      this.localItem.itemType === "Material" ||
+      this.localItem.itemType === "Other"
+    ) {
       const item = this.localItem as Material;
       const unitName = UnitsRef[item.unit as UnitsMaterial];
       if (item.unit === "PCE") {
@@ -372,14 +365,8 @@ export default class DeleteItemDialog extends Vue {
         return item.unit.toLowerCase();
       }
     }
-    if (this.localItem.itemType === "Other") {
-      return UnitsRef["PCE"].toLowerCase();
-    }
-    if (this.localItem.itemType === "Material") {
-      const item = this.localItem as Material;
-      return UnitsRef[item.unit as UnitsMaterial].toLowerCase();
-    }
-    return "";
+    const item = this.localItem as Material;
+    return UnitsRef[item.unit as UnitsMaterial].toLowerCase();
   }
 
   public get itemUnits(): string[] {
@@ -389,6 +376,9 @@ export default class DeleteItemDialog extends Vue {
 
     if (this.localItem.itemType === "Material") {
       return this.currentItem?.units ?? [];
+    }
+    if (this.localItem.itemType === "Other") {
+      return this.otherUnits;
     }
     return [];
   }

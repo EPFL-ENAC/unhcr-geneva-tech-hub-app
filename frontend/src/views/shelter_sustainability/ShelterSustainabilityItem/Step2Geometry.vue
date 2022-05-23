@@ -335,9 +335,10 @@ export default class Step2Geometry extends Vue {
     newWindowDimensions: WindowDimensions[]
   ): void {
     if (newWindowDimensions && this.hasComputedFloorAndVolume) {
-      this.localShelter.geometry.windowArea =
+      const res =
         this.windowDimensions(newWindowDimensions) +
         this.doorDimensions(this.localShelter.geometry.doors_dimensions);
+      this.localShelter.geometry.windowArea = parseFloat(res.toFixed(2));
     }
   }
 
@@ -347,9 +348,10 @@ export default class Step2Geometry extends Vue {
   })
   public onDoorsDimensionsChange(newDoorDimensions: DoorDimensions[]): void {
     if (newDoorDimensions && this.hasComputedFloorAndVolume) {
-      this.localShelter.geometry.windowArea =
+      const res =
         this.windowDimensions(this.localShelter.geometry.windows_dimensions) +
         this.doorDimensions(newDoorDimensions);
+      this.localShelter.geometry.windowArea = parseFloat(res.toFixed(2));
     }
   }
 
