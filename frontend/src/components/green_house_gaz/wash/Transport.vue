@@ -31,11 +31,6 @@
         </v-col>
         <v-col :cols="4"></v-col>
       </v-row>
-      <v-row v-if="$can('edit', localProject)">
-        <v-col class="d-flex justify-end">
-          <v-btn type="submit"> Save changes </v-btn>
-        </v-col>
-      </v-row>
     </v-form>
   </v-container>
 </template>

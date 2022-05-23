@@ -1,6 +1,7 @@
 <template>
   <v-container v-if="localProject.users" fluid>
     <v-form
+      v-model="formValid"
       :readonly="!$can('edit', localProject)"
       @submit.prevent="() => submitForm(localProject)"
     >
@@ -31,11 +32,6 @@
         </v-col>
         <v-col :cols="4"></v-col>
       </v-row>
-      <v-row v-if="$can('edit', localProject)">
-        <v-col class="d-flex justify-end">
-          <v-btn type="submit"> Save changes </v-btn>
-        </v-col>
-      </v-row>
     </v-form>
   </v-container>
 </template>
@@ -63,6 +59,7 @@ export default class WasteWater extends Vue {
   configuration = {};
   localSurvey = {} as Survey;
   localSurveyIndex = -1;
+  formValid = false;
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
 
   public setLocalProject(): void {

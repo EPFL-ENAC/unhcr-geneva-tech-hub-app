@@ -4,8 +4,14 @@
       <v-container fluid>
         <v-row>
           <v-col class="country-list__actions d-flex justify-end align-center">
-            <v-btn text :disabled="!$can('create')" @click="addSurvey">
-              <v-icon>mdi-plus-thick</v-icon>
+            <v-btn
+              class="float-right"
+              color="primary"
+              :disabled="!$can('create')"
+              text
+              @click="addSurvey"
+            >
+              <v-icon left>mdi-plus-box</v-icon>
               New assessment
             </v-btn>
           </v-col>

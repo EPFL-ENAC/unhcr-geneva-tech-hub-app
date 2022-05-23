@@ -44,22 +44,7 @@
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <div v-if="$can('edit', localProject)" class="survey-list__actions">
-          <router-link
-            class="better-click"
-            :to="{
-              name: 'GreenHouseGazItemSurveyId',
-              params: {
-                country: encodeURIComponent(localProject.country_code),
-                site: encodeURIComponent(localProject._id),
-                surveyId: encodeURIComponent(item.name),
-              },
-              query: {
-                category: 'Info',
-              },
-            }"
-          >
-            <v-icon small class="mr-2"> mdi-pencil </v-icon>
-          </router-link>
+          <!-- maybe everyone should be able to duplicate -->
           <v-icon
             class="better-click"
             small

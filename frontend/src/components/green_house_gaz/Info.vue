@@ -1,6 +1,14 @@
 <template>
-  <v-form @submit.prevent="() => submitForm(localProject)">
+  <v-form v-model="formValid" @submit.prevent="() => submitForm(localProject)">
     <v-container v-if="project.users" fluid>
+      <v-row>
+        <v-col class="d-flex justify-end">
+          <v-btn color="primary" :disabled="!formValid" type="submit">
+            <v-icon left>mdi-content-save</v-icon>
+            Save
+          </v-btn>
+        </v-col>
+      </v-row>
       <v-row>
         <v-col>
           <v-card elevation="2" rounded>
@@ -31,6 +39,8 @@
                           label="Country"
                           type="text"
                           name="location_country"
+                          @update:latitude="updateLatitude"
+                          @update:longitude="updateLongitude"
                         />
                       </v-col>
                     </template>
@@ -60,13 +70,6 @@
                 </v-col>
               </v-row>
             </v-card-text>
-            <v-card-actions>
-              <v-row v-if="$can('edit', localProject)">
-                <v-col class="d-flex justify-end">
-                  <v-btn type="submit"> Save changes </v-btn>
-                </v-col>
-              </v-row>
-            </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
@@ -139,6 +142,7 @@ export default class GhgInfo extends Vue {
   readonly defaultCoordinates = defaultCoordinates;
   readonly url = urlMap;
   readonly attribution = attributionMap;
+  formValid = false;
 
   get latLng(): LatLngExpression {
     const { latitude, longitude } = this.localProject;
@@ -208,6 +212,14 @@ export default class GhgInfo extends Vue {
     } else {
       throw new Error("please fill the new Name");
     }
+  }
+
+  public updateLatitude(lat: number): void {
+    this.$set(this.localProject, "latitude", parseFloat(lat.toFixed(3)));
+  }
+
+  public updateLongitude(lon: number): void {
+    this.$set(this.localProject, "longitude", parseFloat(lon.toFixed(3)));
   }
 
   public updateLatLng(latLng: number[]): void {
