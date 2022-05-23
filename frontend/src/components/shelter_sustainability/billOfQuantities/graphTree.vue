@@ -56,11 +56,9 @@ export default class GraphTree extends Vue {
           value: [item[key], unitName],
           children: item?.children?.map((value: MaterialTree) => {
             const matched = localMaterialMap[value.formId as string] ?? {};
-            const name = `${matched?.material}—${matched?.form}`;
-            const realName = `${matched?.material}—${matched?.form}`;
+            const name = `${matched?.material} — ${matched?.form}`;
             return {
               name,
-              realName,
               value: [value[key], unitName],
             } as datatree;
           }),
@@ -82,12 +80,17 @@ export default class GraphTree extends Vue {
           if (!formatNumber) {
             return "error: format number undefined";
           }
-          const name = params.treeAncestors.reduce(
-            (acc: string, node: nodeInterface) => {
-              return `${acc}${acc === "" ? "" : "—"}${node.name}`;
-            },
-            ""
-          );
+          // const name = params.treeAncestors.reduce(
+          //   (acc: string, node: nodeInterface) => {
+          //     if (acc.indexOf(node.name) === -1) {
+          //       return `${acc}${acc === "" ? "" : "—"}${node.name}`;
+          //     }
+          //     return acc;
+          //   },
+          //   ""
+          // );
+          const name =
+            params.treeAncestors[params.treeAncestors.length - 1].name;
           const v = params.data.value[0];
           const unit = params.data.value[1];
           return `</div>${name}: ${formatNumber(v)} ${unit}</div>`;
