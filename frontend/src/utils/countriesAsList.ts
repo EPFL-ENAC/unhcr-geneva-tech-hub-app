@@ -47,7 +47,12 @@ export const countries: CountryInfo[] = [
     lat: -12.164165,
     lon: 96.870956,
   },
-  { code: "CD", name: "Congo (the Democratic Republic of the)", lat: -4.038333, lon: 21.758664 },
+  {
+    code: "CD",
+    name: "Congo (the Democratic Republic of the)",
+    lat: -4.038333,
+    lon: 21.758664,
+  },
   {
     code: "CF",
     name: "Central African Republic",

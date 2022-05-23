@@ -1,6 +1,18 @@
 <template>
   <v-card flat>
     <v-card-text>
+      <v-card-text>
+        <v-row>
+          <v-col class="d-flex">
+            <h2 class="text-h4 project__h3 font-weight-medium">
+              {{ infoTooltipText.Materials.title }}
+            </h2>
+            <info-tooltip>
+              {{ infoTooltipText.Materials.text }}
+            </info-tooltip>
+          </v-col>
+        </v-row>
+      </v-card-text>
       <v-data-table
         :headers="headers"
         :items="items"
@@ -46,6 +58,8 @@
 </template>
 
 <script lang="ts">
+import InfoTooltip from "@/components/commons/InfoTooltip.vue";
+import { infoTooltipText } from "@/components/shelter_sustainability/infoTooltipText";
 import { ShelterMaterial } from "@/store/SheltersMaterialModule";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
@@ -61,6 +75,9 @@ import { mapActions, mapGetters } from "vuex";
       "closeDB",
     ]),
   },
+  components: {
+    InfoTooltip,
+  },
 })
 export default class Materials extends Vue {
   syncDB!: () => null;
@@ -69,6 +86,7 @@ export default class Materials extends Vue {
 
   items!: ShelterMaterial[];
   pagination = {};
+  infoTooltipText = infoTooltipText;
 
   mounted(): void {
     this.syncDB();
