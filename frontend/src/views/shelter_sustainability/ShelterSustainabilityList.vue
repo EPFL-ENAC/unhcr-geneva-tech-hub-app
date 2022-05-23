@@ -81,9 +81,9 @@
                 :key="project._id"
                 cols="12"
                 sm="12"
-                md="6"
+                md="12"
                 lg="6"
-                xl="3"
+                xl="4"
               >
                 <v-card
                   :to="{
@@ -92,6 +92,7 @@
                   }"
                   class="project"
                   max-width="400"
+                  min-width="290"
                   min-height="200"
                   hover
                   outlined
@@ -136,13 +137,13 @@
                       </v-card-subtitle>
                       <v-card-subtitle class="pb-0">
                         <v-row class="align-center d-flex">
-                          <v-col cols="4" class="text-caption">
+                          <v-col :xs="12" :sm="4" class="text-caption">
                             Created: {{ project.created_at | formatDate }}
                           </v-col>
-                          <v-col cols="4" class="text-caption">
+                          <v-col :xs="12" :sm="4" class="text-caption">
                             Updated: {{ project.updated_at | formatDate }}
                           </v-col>
-                          <v-col cols="4" class="d-flex justify-end">
+                          <v-col :xs="12" :sm="4" class="d-flex justify-end">
                             <v-btn
                               title="Duplicate shelters"
                               icon
