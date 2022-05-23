@@ -134,7 +134,7 @@
                       <v-card-title class="d-flex justify-space-between">
                         Window dimensions
                         <v-btn icon @click="removeWindow($windowKey)">
-                          <v-icon>mdi-close</v-icon>
+                          <v-icon>mdi-delete</v-icon>
                         </v-btn>
                       </v-card-title>
                       <v-form class="pa-md-4">
