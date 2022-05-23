@@ -32,14 +32,15 @@
                   <v-row>
                     <v-col cols="4">
                       <v-row>
-                        <v-col class="">
-                          Select location
-                        </v-col>
+                        <v-col class=""> Select location </v-col>
                       </v-row>
                       <v-row class="d-flex" style="height: 100%; width: 100%">
                         <v-col class="d-flex">
                           <territory-map
-                            :value="[localShelter.latitude, localShelter.longitude]"
+                            :value="[
+                              localShelter.latitude,
+                              localShelter.longitude,
+                            ]"
                             @update:value="updateLatLng"
                           />
                         </v-col>

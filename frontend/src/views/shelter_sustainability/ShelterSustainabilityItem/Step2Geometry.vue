@@ -176,26 +176,13 @@
                     xs="12"
                   >
                     <v-text-field
-                      v-if="!geometry.hiddenInputs"
-                      :value="
-                        localShelter.geometry[resultDimension.key]
-                          | formatNumber
-                      "
-                      :disabled="!geometry.hiddenInputs"
-                      :name="resultDimension.label"
-                      :label="resultDimension.label"
-                      type="string"
-                      :suffix="resultDimension.suffix"
-                    >
-                    </v-text-field>
-                    <v-text-field
-                      v-else
                       v-model.number="
                         localShelter.geometry[resultDimension.key]
                       "
                       :name="resultDimension.label"
                       :label="resultDimension.label"
                       type="number"
+                      :disabled="!geometry.hiddenInputs"
                       :suffix="resultDimension.suffix"
                       @change="updateResultDimension"
                     >
@@ -388,15 +375,18 @@ export default class Step2Geometry extends Vue {
 
   private floorArea(shelterDimension: ShelterDimensions): number {
     const { L, W } = shelterDimension || {};
+    let res = 0;
     if (!L || !W) {
-      return 0; // Length or Width not defined
+      return res; // Length or Width not defined
     }
     if (this.shelter_geometry_type === "dome") {
       const surfaceAreaEllipse = Math.PI * (L / 2) * (W / 2);
       // better to use toPrecision(3)
-      return Math.floor(surfaceAreaEllipse * 100) / 100;
+      res = Math.floor(surfaceAreaEllipse * 100) / 100;
+    } else {
+      res = L * W;
     }
-    return L * W;
+    return parseFloat(res.toFixed(2));
   }
 
   private computeVolume(shelterDimension: ShelterDimensions): number {
@@ -404,7 +394,8 @@ export default class Step2Geometry extends Vue {
       (g) => g._id === this.shelter_geometry_type
     );
     if (geometry?.volumeFunction) {
-      return geometry.volumeFunction(shelterDimension);
+      const res = geometry.volumeFunction(shelterDimension);
+      return parseFloat(res.toFixed(2));
     }
     throw new Error("should not have a volume");
   }
