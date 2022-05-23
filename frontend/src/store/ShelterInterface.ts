@@ -82,7 +82,7 @@ export interface Geometry {
 export type GeometryKeys = "windowArea" | "floorArea" | "volume";
 
 export interface Score {
-  [property: string]: number | Score;
+  [property: string]: number | undefined | Score;
 }
 
 export type Units = UnitsMaterial | UnitsLabour | UnitsOther;

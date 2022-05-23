@@ -96,12 +96,13 @@ export default class RadioGroup extends Vue {
     const oldValue = this.value ?? ({} as Score);
     // reset all previous values
     if (this.form.children) {
-      return this.form.children
+      const res = this.form.children
         .map((child) => child._id)
         .reduce((acc, _id) => {
-          acc[_id] = !!oldValue[_id];
+          acc[_id] = oldValue[_id] !== undefined;
           return acc;
         }, {} as ScoreBoolean);
+      return res;
     }
     return {} as ScoreBoolean;
   }
@@ -115,7 +116,7 @@ export default class RadioGroup extends Vue {
           const lookup = this.form.children.find(
             (el: ShelterFormChild): boolean => el._id === key
           ) as ShelterFormInput;
-          acc[key] = isChecked ? lookup.score ?? 0 : 0;
+          acc[key] = isChecked ? lookup.score ?? 0 : undefined;
         }
         return acc;
       },
