@@ -105,7 +105,7 @@ export default class ProjectItem extends Vue {
       },
       {
         icon: "mdi-leaf",
-        text: "Environmental Perf",
+        text: "Environmental Performance",
         disabled: !this.shelter?.envPerfItems?.length,
         tooltipDisabledText:
           "Bill of quantities needed to assess environmental performance",
@@ -113,7 +113,7 @@ export default class ProjectItem extends Vue {
       },
       {
         icon: "mdi-poll",
-        text: "Technical Perf",
+        text: "Technical Performance",
         to: "ShelterSustainabilityStep6",
       },
       {
