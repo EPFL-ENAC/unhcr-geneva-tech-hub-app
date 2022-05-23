@@ -2,7 +2,12 @@ module.exports = {
   configureWebpack: {
     devtool: "source-map",
   },
-
+  pwa: {
+    workboxPluginMode: "GenerateSW",
+    workboxOptions: {
+      skipWaiting: true,
+    },
+  },
   transpileDependencies: ["vuetify"],
 
   devServer: {
