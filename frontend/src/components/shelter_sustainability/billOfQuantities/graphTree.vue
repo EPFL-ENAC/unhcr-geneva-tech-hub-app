@@ -57,8 +57,10 @@ export default class GraphTree extends Vue {
           children: item?.children?.map((value: MaterialTree) => {
             const matched = localMaterialMap[value.formId as string] ?? {};
             const name = `${matched?.material}—${matched?.form}`;
+            const realName = `${matched?.material}—${matched?.form}`;
             return {
               name,
+              realName,
               value: [value[key], unitName],
             } as datatree;
           }),

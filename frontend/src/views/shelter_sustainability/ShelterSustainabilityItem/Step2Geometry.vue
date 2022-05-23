@@ -30,38 +30,33 @@
       >
         <v-hover v-slot="{ hover }">
           <v-card :elevation="hover ? 12 : 2" :class="{ 'on-hover': hover }">
-            <v-tooltip right>
-              <template v-slot:activator="{ on, attrs }">
-                <v-card-title
-                  v-bind="attrs"
-                  class="d-flex justify-center"
-                  v-on="on"
-                  @click="() => toggleImage(geometry._id)"
-                >
-                  <v-btn
-                    v-if="shelter_geometry_type"
-                    float
-                    absolute
-                    left
-                    top
-                    @click.stop="unsetImage"
-                  >
-                    Other geometries
-                  </v-btn>
-                  <v-img
-                    max-width="300px"
-                    class="d-flex justify-center"
-                    :src="geometry.image_url"
-                    :aria-label="geometry._id"
-                  ></v-img>
-                  <v-btn icon @click.stop="selectedItem = geometry">
-                    <v-icon>mdi-magnify</v-icon>
-                  </v-btn>
-                </v-card-title>
-              </template>
-              <span>{{ geometry._id }}</span>
-            </v-tooltip>
-
+            <v-card-title
+              v-bind="attrs"
+              class="d-flex justify-center"
+              v-on="on"
+              @click="() => toggleImage(geometry._id)"
+            >
+              <v-btn
+                v-if="shelter_geometry_type"
+                float
+                absolute
+                left
+                top
+                @click.stop="unsetImage"
+              >
+                Other geometries
+              </v-btn>
+              <v-img
+                max-width="300px"
+                class="d-flex justify-center white-background"
+                :src="geometry.image_url"
+                :aria-label="geometry._id"
+              ></v-img>
+              <v-btn icon @click.stop="selectedItem = geometry">
+                <v-icon>mdi-magnify</v-icon>
+              </v-btn>
+              <!-- <span>{{ geometry._id }}</span> -->
+            </v-card-title>
             <v-card-text
               v-if="!geometry.hiddenInputs"
               class="flex-gap-sm d-flex flex-column justify-space-between"
@@ -214,6 +209,7 @@
       <v-img
         :src="selectedItem ? selectedItem.image_url : ''"
         contain
+        class="d-flex justify-center white-background"
         @click="selectedItem = null"
       ></v-img>
     </v-overlay>
@@ -491,5 +487,9 @@ export default class Step2Geometry extends Vue {
 .v-card {
   transition: opacity 0.2s ease-in-out;
   cursor: pointer;
+}
+
+.white-background {
+  background-color: white;
 }
 </style>

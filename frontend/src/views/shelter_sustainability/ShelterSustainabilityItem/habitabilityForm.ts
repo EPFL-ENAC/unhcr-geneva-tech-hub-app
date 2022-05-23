@@ -10,7 +10,8 @@ export default {
       children: [
         {
           _id: "input1",
-          label: "Floor area is >=3.5m2 per person (in hot climate - Sphere Standard)",
+          label:
+            "Floor area is >=3.5m2 per person (in hot climate - Sphere Standard)",
           score: 1,
           image: "/shelter/habitability/floor_area.png",
           description:

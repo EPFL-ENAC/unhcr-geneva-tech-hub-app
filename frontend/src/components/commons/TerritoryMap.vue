@@ -7,7 +7,7 @@
     }"
     :zoom="defaultZoom"
     :min-zoom="2"
-    :max-zoom="8"
+    :max-zoom="16"
     @click="addMarker"
   >
     <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
@@ -65,6 +65,7 @@ export default class TerritoryMap extends Vue {
   alpha = alpha;
   alphaSecondary = alphaSecondary;
   shelterColors = shelterColors;
+  selectedZoomFactor = 5;
 
   shelterIcons = {
     Emergency: "home-variant-outline",
@@ -93,10 +94,25 @@ export default class TerritoryMap extends Vue {
   }
   public get defaultCoordinates(): (number | string)[] {
     if (this.value.length > 0) {
+      const [lat, lng] = this.value as number[];
+      if (lat === 0 && lng === 0) {
+        return defaultCoordinates;
+      }
       return this.value;
     }
     return defaultCoordinates;
   }
+
+  // public get currentZoom(): number {
+  //   if (this.value.length > 0) {
+  //     const [lat, lng] = this.value as number[];
+  //     if (lat === 0 && lng === 0) {
+  //       return defaultZoom;
+  //     }
+  //     return this.selectedZoomFactor;
+  //   }
+  //   return defaultZoom;
+  // }
   public get internalCoordinates(): (number | string)[][] {
     if (this.value.length > 0) {
       return this.coordinates.concat([this.value]);

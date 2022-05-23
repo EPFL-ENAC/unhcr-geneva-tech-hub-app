@@ -14,7 +14,7 @@ export default [
   {
     id: "Bamboo",
     description:
-      "Bamboo is widely associated with less harmful environmental impacts in comparison with other structural framing materials such as timber or steel. However, total quantities of bamboo use should be taken into account with regard to numbers of shelters to be provided. Poorly managed bamboo extraction can contribute to erosion (WWF, 2016 [Building Material Selection - An environmental guide]. Bamboo has relatively short harvest cycles of around 4-6 years. Bamboo growth is associated with extensive irrigation, however bamboo plantations typically rely on rainfall in tropical climates.",
+      "Bamboo is widely associated with less harmful environmental impacts in comparison with other structural framing materials such as timber or steel. However, total quantities of bamboo use should be taken into account with regard to numbers of shelters to be provided. Poorly managed bamboo extraction can contribute to erosion (<a href='https://www.worldwildlife.org/publications/an-environmental-guide-to-building-material-selection-and-use' target='_blank'>WWF, 2016 [Building Material Selection - An environmental guide]</a>). Bamboo has relatively short harvest cycles of around 4-6 years. Bamboo growth is associated with extensive irrigation, however bamboo plantations typically rely on rainfall in tropical climates.",
   },
   {
     id: "Bitumen",
@@ -34,17 +34,17 @@ export default [
   {
     id: "Clay",
     description:
-      "Clay is a specific type of fine-grained soil. Sourcing of clay in large quantities from suitable sites can contribute to erosion and alter local hydrological conditions (WWF, 2016 [Building Material Selection - An environmental guide]). Fired clay brick and tile production involves baking filns that may use wood or waste such as discarded car tires that contributes to deforestation and air pollution. In some countries (inc., Afghanistan, Burma, China, India, Nepal and Pakistan), clay brick production is associated with indentured labour (<a href='https://www.dol.gov/agencies/ilab/reports/child-labor/list-of-products-print' target='_blank'>US Dept of Labour, 2022</a>)",
+      "Clay is a specific type of fine-grained soil. Sourcing of clay in large quantities from suitable sites can contribute to erosion and alter local hydrological conditions (<a href='https://www.worldwildlife.org/publications/an-environmental-guide-to-building-material-selection-and-use' target='_blank'>WWF, 2016 [Building Material Selection - An environmental guide]</a>). Fired clay brick and tile production involves baking filns that may use wood or waste such as discarded car tires that contributes to deforestation and air pollution. In some countries (inc., Afghanistan, Burma, China, India, Nepal and Pakistan), clay brick production is associated with indentured labour (<a href='https://www.dol.gov/agencies/ilab/reports/child-labor/list-of-products-print' target='_blank'>US Dept of Labour, 2022</a>)",
   },
   {
     id: "Concrete",
     description:
-      "Concrete production typically involves cement, sand, stone aggregate and water. Cement production involves production of clinker, which is energy intensive, involving around 3.5GJ of energy per tonne of clinker ((<a href='https://www.iea.org/reports/cement' target='_blank'>IEA, 2022</a>). Poorly managed quarrying of sand and stone aggregates can contribute to erosion and loss of agricultural land (WWF, 2016 [Building Material Selection - An environmental guide]). Movement of bulk materials for concrete entails transportation-related envrionmental impacts. Concrete production, including mixing and curing, involves significant water use. Casting yards for concrete blocks and other precast concrete can cause daust, noise and silt problems (WWF, 2016 [Building Material Selection - An environmental guide]).",
+      "Concrete production typically involves cement, sand, stone aggregate and water. Cement production involves production of clinker, which is energy intensive, involving around 3.5GJ of energy per tonne of clinker ((<a href='https://www.iea.org/reports/cement' target='_blank'>IEA, 2022</a>). Poorly managed quarrying of sand and stone aggregates can contribute to erosion and loss of agricultural land (<a href='https://www.worldwildlife.org/publications/an-environmental-guide-to-building-material-selection-and-use' target='_blank'>WWF, 2016 [Building Material Selection - An environmental guide]</a>). Movement of bulk materials for concrete entails transportation-related envrionmental impacts. Concrete production, including mixing and curing, involves significant water use. Casting yards for concrete blocks and other precast concrete can cause daust, noise and silt problems (<a href='https://www.worldwildlife.org/publications/an-environmental-guide-to-building-material-selection-and-use' target='_blank'>WWF, 2016 [Building Material Selection - An environmental guide]</a>).",
   },
   {
     id: "Earth, soil, mud",
     description:
-      "Soil for construction purposes includes clay and other classes of soil. Soil quarrying in general can contribute to erosion and loss of agricultural land (WWF, 2016 [Building Material Selection - An environmental guide]). Clay is a specific type of fine-grained soil. Sourcing of clay in large quantities from suitable sites can contribute to erosion and alter local hydrological conditions (WWF, 2016 [Building Material Selection - An environmental guide]). Fired clay brick and tile production involves baking filns that may use wood or waste such as discarded car tires that contributes to deforestation and air pollution. In some countries (inc., Afghanistan, Burma, China, India, Nepal and Pakistan), clay brick production is associated with indentured labour (<a href='https://www.dol.gov/agencies/ilab/reports/child-labor/list-of-products-print' target='_blank'>US Dept of Labour, 2022</a>)",
+      "Soil for construction purposes includes clay and other classes of soil. Soil quarrying in general can contribute to erosion and loss of agricultural land (<a href='https://www.worldwildlife.org/publications/an-environmental-guide-to-building-material-selection-and-use' target='_blank'>WWF, 2016 [Building Material Selection - An environmental guide]</a>). Clay is a specific type of fine-grained soil. Sourcing of clay in large quantities from suitable sites can contribute to erosion and alter local hydrological conditions (<a href='https://www.worldwildlife.org/publications/an-environmental-guide-to-building-material-selection-and-use' target='_blank'>WWF, 2016 [Building Material Selection - An environmental guide]</a>). Fired clay brick and tile production involves baking filns that may use wood or waste such as discarded car tires that contributes to deforestation and air pollution. In some countries (inc., Afghanistan, Burma, China, India, Nepal and Pakistan), clay brick production is associated with indentured labour (<a href='https://www.dol.gov/agencies/ilab/reports/child-labor/list-of-products-print' target='_blank'>US Dept of Labour, 2022</a>)",
   },
   {
     id: "Glass",
@@ -59,7 +59,7 @@ export default [
   {
     id: "Sand",
     description:
-      "Sand sourced through poorly managed quarrying can contribute to erosion and loss of agricultural land (WWF, 2016 [Building Material Selection - An environmental guide])",
+      "Sand sourced through poorly managed quarrying can contribute to erosion and loss of agricultural land (<a href='https://www.worldwildlife.org/publications/an-environmental-guide-to-building-material-selection-and-use' target='_blank'>WWF, 2016 [Building Material Selection - An environmental guide]</a>)",
   },
   {
     id: "Steel",
@@ -69,11 +69,11 @@ export default [
   {
     id: "Stone",
     description:
-      "Stone quarrying, including stone aggregates, can contribute to erosion and loss of agricultural land (WWF, 2016 [Building Material Selection - An environmental guide]). Movement of bulk materials such as stone and aggregates entails transportation-related envrionmental impacts.",
+      "Stone quarrying, including stone aggregates, can contribute to erosion and loss of agricultural land (<a href='https://www.worldwildlife.org/publications/an-environmental-guide-to-building-material-selection-and-use' target='_blank'>WWF, 2016 [Building Material Selection - An environmental guide]</a>). Movement of bulk materials such as stone and aggregates entails transportation-related envrionmental impacts.",
   },
   {
     id: "Timber",
     description:
-      "Timber use in construction can contribute to deforestation and associated erosion and loss of natural habitats. Poorly managed timber plantations can cause land degradation and loss of biodiversity (WWF, 2016 [Building Material Selection - An environmental guide]).",
+      "Timber use in construction can contribute to deforestation and associated erosion and loss of natural habitats. Poorly managed timber plantations can cause land degradation and loss of biodiversity (<a href='https://www.worldwildlife.org/publications/an-environmental-guide-to-building-material-selection-and-use' target='_blank'>WWF, 2016 [Building Material Selection - An environmental guide]</a>).",
   },
 ];

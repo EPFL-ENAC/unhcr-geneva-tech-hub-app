@@ -438,7 +438,7 @@ export default {
         {
           _id: "input_4c",
           label:
-            "Training and resources are provided to enable shleter maintenance and repairs",
+            "Training and resources are provided to enable shelter maintenance and repairs",
           description:
             "Increase community capacity by contributing to training and awareness-raising among the affected populations, local building professionals, skilled and unskilled labour. <a href='https://handbook.spherestandards.org/en/sphere/#ch008' target='_blank'>spherestandards</a>",
           score: 1,
