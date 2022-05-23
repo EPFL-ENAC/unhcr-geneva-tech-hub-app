@@ -100,6 +100,8 @@ export const UnitsRef = {
   PCE: "Piece", // use plural letter
 };
 
+export const otherUnits = ["KG", "M", "M2", "M3", "L", "PCE"];
+
 export enum ItemTypes {
   Material = "material",
   Labour = "labour",
