@@ -43,8 +43,14 @@
           <v-col>
             <v-row>
               <v-col class="d-flex align-center justify-end">
-                <v-btn text :disabled="!$can('create')" @click="addProject">
-                  <v-icon>mdi-plus-thick</v-icon>
+                <v-btn
+                  class="float-right"
+                  color="primary"
+                  :disabled="!$can('create')"
+                  text
+                  @click="addProject"
+                >
+                  <v-icon left>mdi-plus-box</v-icon>
                   New shelter
                 </v-btn>
               </v-col>
