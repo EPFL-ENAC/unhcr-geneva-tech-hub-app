@@ -23,15 +23,33 @@
 
     <v-navigation-drawer v-model="drawer" app :mini-variant.sync="mini">
       <v-list>
-        <v-list-item v-if="user.name" class="px-2" :to="{ name: 'Apps' }">
+        <v-list-item
+          v-if="user.name"
+          class="px-2"
+          @click.stop.prevent="() => toggleMini()"
+        >
           <v-list-item-avatar>
             <v-img v-if="gravatarImageUrl" :src="gravatarImageUrl"></v-img>
           </v-list-item-avatar>
 
           <v-list-item-title>{{ user.name }}</v-list-item-title>
 
-          <v-btn icon @click.stop="toggleMini">
+          <v-btn icon @click.stop.prevent="() => toggleMini()">
             <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+        </v-list-item>
+        <v-list-item
+          v-else
+          class="px-2"
+          @click.stop.prevent="() => toggleMini()"
+        >
+          <v-btn icon @click.stop.prevent="() => toggleMini()">
+            <v-icon
+              :class="{
+                'mdi-rotate-180': mini,
+              }"
+              >mdi-chevron-left</v-icon
+            >
           </v-btn>
         </v-list-item>
         <v-list-item link :to="{ name: 'Apps' }">
@@ -48,7 +66,7 @@
           link
           :to="{ name: app.to }"
         >
-          <v-list-item-icon @click.stop="mini = true">
+          <v-list-item-icon @click.stop>
             <v-img
               v-if="app.logoImg"
               max-width="24px"
