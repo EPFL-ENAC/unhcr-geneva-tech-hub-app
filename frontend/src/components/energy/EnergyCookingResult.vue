@@ -4,8 +4,9 @@
       <v-card v-if="siteResults" flat>
         <v-card-text>
           <v-row>
+            <!-- Energy -->
             <v-col cols="4">
-              <h1>Energy</h1>
+              <h1 class="pa-4">Energy</h1>
               <energy-key-indicator
                 name="Total Energy"
                 unit="MJ/HH"
@@ -17,6 +18,7 @@
                 unit="%"
                 :base-value="baselineResult.energyEfficiency"
                 :value="globalResult.energyEfficiency"
+                greater-better
               ></energy-key-indicator>
               <energy-chart
                 title="Energy"
@@ -37,10 +39,17 @@
                 :items="wood"
                 :y-labels="['[ha]']"
               ></energy-chart>
+              <v-row>
+                <v-spacer></v-spacer>
+                <v-col cols="auto">
+                  <energy-legend></energy-legend>
+                </v-col>
+              </v-row>
             </v-col>
             <v-divider vertical></v-divider>
+            <!-- Emissions -->
             <v-col cols="4">
-              <h1>Emissions</h1>
+              <h1 class="pa-4">Emissions</h1>
               <energy-key-indicator
                 name="CO2 Emission"
                 unit="kg/HH"
@@ -67,8 +76,9 @@
               ></energy-chart>
             </v-col>
             <v-divider vertical></v-divider>
+            <!-- Economy -->
             <v-col cols="4">
-              <h1>Economy</h1>
+              <h1 class="pa-4">Economy</h1>
               <energy-key-indicator
                 name="Sum Discounted Cost"
                 unit="$"
@@ -103,12 +113,7 @@
               ></energy-chart>
             </v-col>
           </v-row>
-          <v-row>
-            <v-spacer></v-spacer>
-            <v-col cols="auto">
-              <energy-legend></energy-legend>
-            </v-col>
-          </v-row>
+
           <v-row>
             <v-col>
               <v-expansion-panels>
