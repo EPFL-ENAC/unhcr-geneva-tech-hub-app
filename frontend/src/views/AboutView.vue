@@ -63,6 +63,12 @@
             </tbody>
           </template>
         </v-simple-table>
+        <v-divider></v-divider>
+        <v-card-text>
+          <h2 class="mx-8">Map attributions</h2>
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <p class="mx-10" v-html="attributionMapFull"></p>
+        </v-card-text>
       </v-card-text>
     </v-card>
     <app-logo />
@@ -72,6 +78,7 @@
 <script lang="ts">
 import AppLogo from "@/components/commons/AppLogo.vue";
 import Apps from "@/utils/apps";
+import { attributionMapFull } from "@/utils/mapWorld";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -82,6 +89,7 @@ export default Vue.extend({
   data() {
     return {
       Apps,
+      attributionMapFull,
     };
   },
 });
