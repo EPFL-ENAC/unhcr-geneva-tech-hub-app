@@ -83,6 +83,7 @@
             <component
               :is="category"
               v-else
+              :survey-index="currentSurveyIndex"
               :survey.sync="currentSurvey"
               @update:survey="updateCurrentSurvey"
             />

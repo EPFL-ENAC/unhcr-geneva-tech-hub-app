@@ -45,7 +45,7 @@
                       </v-col>
                     </template>
                   </v-row>
-                  <v-row v-if="false">
+                  <v-row v-if="surveyIndex >= 0">
                     <template v-for="(item, index) in surveyItems">
                       <v-col
                         v-if="!item.hidden"
@@ -57,7 +57,7 @@
                         xl="4"
                       >
                         <form-item-component
-                          v-model="currentSurveyName"
+                          v-model="localProject.surveys[surveyIndex][item.key]"
                           v-bind="item"
                         ></form-item-component>
                       </v-col>
@@ -121,6 +121,9 @@ import { mapActions, mapGetters } from "vuex";
 export default class GhgInfo extends Vue {
   @Prop([Object, Array])
   readonly survey: Survey | undefined;
+
+  @Prop([Number])
+  readonly surveyIndex: number | undefined;
 
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
   project!: GreenHouseGaz;
@@ -193,21 +196,23 @@ export default class GhgInfo extends Vue {
     ];
   }
 
-  newNameValue = "";
-  get currentSurveyName(): string {
-    return this.newNameValue || (this.survey?.name ?? "");
-  }
-  set currentSurveyName(v: string) {
-    this.newNameValue = v;
-  }
-
   public async submitForm(value: GreenHouseGaz): Promise<void> {
-    if (value.name !== "") {
+    if (
+      value.name !== "" &&
+      this.survey &&
+      this.surveyIndex &&
+      this.surveyIndex >= 0
+    ) {
+      const previousName = this.survey.name;
+      const nextName = this.localProject.surveys[this.surveyIndex].name;
+
       await this.updateDoc(value);
-      const newValue: Survey | undefined = this.survey;
-      if (newValue) {
-        newValue.name = this.newNameValue ?? newValue.name;
-        this.$emit("update:survey", newValue);
+      // check current survey name and change route in case of change
+      if (previousName !== nextName) {
+        await this.$router.push({
+          name: "GreenHouseGazItemSurveyId",
+          params: { surveyId: encodeURIComponent(nextName) },
+        });
       }
     } else {
       throw new Error("please fill the new Name");

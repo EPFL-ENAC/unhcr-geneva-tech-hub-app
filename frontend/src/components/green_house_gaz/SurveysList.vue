@@ -193,7 +193,6 @@ export default class ProjectItem extends Vue {
     if (this.localProject.surveys.length === 0 && this.localProject._id) {
       await this.removeDoc(this.localProject._id).then((response) => {
         console.log(response);
-        debugger;
       });
     } else {
       await this.submitForm(this.localProject);
