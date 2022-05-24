@@ -86,7 +86,7 @@ import { mapState } from "vuex";
     FormItemComponent,
   },
   computed: {
-    ...mapState("energy", ["cookingFuels", "cookingStoves"]),
+    ...mapState("energy", ["sites", "cookingFuels", "cookingStoves"]),
   },
 })
 export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCookingModule> {

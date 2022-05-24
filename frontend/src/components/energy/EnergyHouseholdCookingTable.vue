@@ -11,7 +11,7 @@
           </template>
           <v-card>
             <v-card-title>
-              <span>Cooking Technologies</span>
+              <span>Cooking Technologies (full view)</span>
               <v-dialog v-model="addDialog" max-width="512px">
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
@@ -40,66 +40,71 @@
               </v-dialog>
             </v-card-title>
             <v-card-text>
-              <energy-year-tabs
-                v-model="yearTab"
-                :year-offset="yearOffset"
-                :items.sync="module.technologyYears"
-              ></energy-year-tabs>
-              <v-row>
-                <v-col>
-                  <v-data-table
-                    :headers="tableHeaders"
-                    item-key="id"
-                    :items="tableItems"
-                    :items-per-page="5"
-                    show-expand
-                    sort-by="index"
-                  >
-                    <template v-slot:expanded-item="{ headers, item }">
-                      <td class="pa-2" :colspan="headers.length">
-                        <v-row justify="center">
-                          <v-col cols="3">
-                            <h3>Stove</h3>
-                            <form-item-component
-                              v-for="formItem in tableExpandStoveItems"
-                              :key="formItem.key"
-                              v-model="item.stove[formItem.key]"
-                              v-bind="formItem"
-                            ></form-item-component>
-                          </v-col>
-                          <v-col cols="3">
-                            <h3>Fuel</h3>
-                            <form-item-component
-                              v-for="formItem in tableExpandFuelItems"
-                              :key="formItem.key"
-                              v-model="item.fuel[formItem.key]"
-                              v-bind="formItem"
-                            ></form-item-component>
-                          </v-col>
-                        </v-row>
-                      </td>
-                    </template>
-                    <template
-                      v-for="cat in socioEconomicCategories"
-                      v-slot:[`item.${cat}`]="{ item }"
+              <v-form :disabled="!isTemplate">
+                <energy-year-tabs
+                  v-model="yearTab"
+                  :year-offset="yearOffset"
+                  :items.sync="module.technologyYears"
+                ></energy-year-tabs>
+                <v-row>
+                  <v-col>
+                    <v-data-table
+                      :headers="tableHeaders"
+                      item-key="id"
+                      :items="tableItems"
+                      :items-per-page="5"
+                      show-expand
+                      sort-by="index"
                     >
-                      <form-item-component
-                        v-for="cellItem in tableCellItems"
-                        :key="`${cat}-${cellItem.key}`"
-                        v-model="
-                          categoryCooking(item).categories[cat][cellItem.key]
-                        "
-                        v-bind="cellItem"
-                      ></form-item-component>
-                    </template>
-                    <template v-slot:[`item.action`]="{ item }">
-                      <v-btn icon @click="deleteItem(item)">
-                        <v-icon>mdi-delete</v-icon>
-                      </v-btn>
-                    </template>
-                  </v-data-table>
-                </v-col>
-              </v-row>
+                      <template v-slot:expanded-item="{ headers, item }">
+                        <td class="pa-2" :colspan="headers.length">
+                          <v-row justify="center">
+                            <v-col cols="3">
+                              <h3>Stove</h3>
+                              <form-item-component
+                                v-for="formItem in tableExpandStoveItems"
+                                :key="formItem.key"
+                                v-model="item.stove[formItem.key]"
+                                v-bind="formItem"
+                              ></form-item-component>
+                            </v-col>
+                            <v-col cols="3">
+                              <h3>Fuel</h3>
+                              <form-item-component
+                                v-for="formItem in tableExpandFuelItems"
+                                :key="formItem.key"
+                                v-model="item.fuel[formItem.key]"
+                                v-bind="formItem"
+                              ></form-item-component>
+                            </v-col>
+                          </v-row>
+                        </td>
+                      </template>
+                      <template
+                        v-for="cat in socioEconomicCategories"
+                        v-slot:[`item.${cat}`]="{ item }"
+                      >
+                        <form-item-component
+                          v-for="cellItem in tableCellItems"
+                          :key="`${cat}-${cellItem.key}`"
+                          v-model="
+                            categoryCooking(item).categories[cat][cellItem.key]
+                          "
+                          v-bind="cellItem"
+                        ></form-item-component>
+                      </template>
+                      <template
+                        v-if="isTemplate"
+                        v-slot:[`item.action`]="{ item }"
+                      >
+                        <v-btn icon @click="deleteItem(item)">
+                          <v-icon>mdi-delete</v-icon>
+                        </v-btn>
+                      </template>
+                    </v-data-table>
+                  </v-col>
+                </v-row>
+              </v-form>
             </v-card-text>
           </v-card>
         </v-dialog>
@@ -152,6 +157,7 @@ import { FormItem } from "@/components/commons/FormItem";
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyYearTabs from "@/components/energy/EnergyYearTabs.vue";
+import { ExistingDocument } from "@/models/couchdbModel";
 import {
   CategoryCooking,
   CookingFuel,
@@ -160,6 +166,7 @@ import {
   GeneralModule,
   HouseholdCookingInput,
   HouseholdCookingModule,
+  ProjectDocument,
   socioEconomicCategories,
   SocioEconomicCategory,
 } from "@/models/energyModel";
@@ -187,7 +194,7 @@ use([CanvasRenderer, PieChart, TitleComponent]);
     VChart,
   },
   computed: {
-    ...mapState("energy", ["cookingFuels", "cookingStoves"]),
+    ...mapState("energy", ["sites", "cookingFuels", "cookingStoves"]),
   },
 })
 export default class EnergyHouseholdCookingTable extends Vue {
@@ -293,6 +300,7 @@ export default class EnergyHouseholdCookingTable extends Vue {
   @Prop({ type: Object as () => GeneralModule })
   generalModule!: GeneralModule;
 
+  sites!: ExistingDocument<ProjectDocument>[];
   addDialog = false;
   addSelectedItem: CookingStove | null = null;
   yearTab = 0;
@@ -310,6 +318,25 @@ export default class EnergyHouseholdCookingTable extends Vue {
     return this.module.technologyYears.map(
       (item) => this.yearOffset + item.yearIndex
     );
+  }
+  get isTemplate(): boolean {
+    return this.site?.isTemplate ?? false;
+  }
+
+  get documentId(): string {
+    return this.$route.params.id;
+  }
+
+  get site(): ProjectDocument | null {
+    if (this.sites) {
+      return (
+        this.sites.find(
+          (doc: ExistingDocument<ProjectDocument>) =>
+            doc._id === this.documentId
+        ) ?? null
+      );
+    }
+    return null;
   }
 
   get technologies(): CategoryCooking[] {

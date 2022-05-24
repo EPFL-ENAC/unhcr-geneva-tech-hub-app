@@ -64,6 +64,7 @@
                           <v-tooltip bottom>
                             <template v-slot:activator="{ on, attrs }">
                               <v-btn
+                                v-if="$can('delete', item)"
                                 v-bind="attrs"
                                 icon
                                 v-on="on"
@@ -75,7 +76,7 @@
                                 <v-icon>mdi-delete</v-icon>
                               </v-btn>
                             </template>
-                            <span>Delete</span>
+                            <span>Delete {{ item }} </span>
                           </v-tooltip>
                         </v-list-item-action>
                       </v-list-item>
