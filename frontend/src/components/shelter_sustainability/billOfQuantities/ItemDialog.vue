@@ -480,52 +480,58 @@ export default class DeleteItemDialog extends Vue {
   }
 
   public async computeCost(): Promise<void> {
-    // side effect function: TODO: transform to pure function and move to utils
-    const { quantity, formId, unit, unitCost } = this.localItem as Material;
-    const newValue = cloneDeep(this.localItem) as Material;
-    if (formId && quantity && unit) {
-      const { embodied_carbon, embodied_water, density, local } =
-        this.materialMap[formId];
-
-      // compute real weight below
-      let weight = 0;
-      if (this.currentFormula) {
-        const item = this.localItem as Material;
-        let finalDensity = density;
-        if (item.specification) {
-          finalDensity = item.specification;
+    try {
+      // side effect function: TODO: transform to pure function and move to utils
+      const { quantity, formId, unit, unitCost } = this.localItem as Material;
+      const newValue = cloneDeep(this.localItem) as Material;
+      if (formId && quantity && unit) {
+        const { embodied_carbon, embodied_water, density, local } =
+          this.materialMap[formId];
+        // compute real weight below
+        let weight = 0;
+        if (this.currentFormula) {
+          const item = this.localItem as Material;
+          let finalDensity = density;
+          if (item.specification) {
+            finalDensity = item.specification;
+          }
+          weight = materialFunctions[this.currentFormula](item, finalDensity);
         }
-        weight = materialFunctions[this.currentFormula](item, finalDensity);
-      }
-      newValue.weight = weight;
+        newValue.weight = weight;
 
-      newValue.embodiedCarbonProduction = weight * embodied_carbon;
-      newValue.embodiedWater = weight * embodied_water;
-      if (newValue.source && this.shelter.location_country) {
-        const src =
-          iso3166_2_to_3[newValue.source as keyof typeof iso3166_2_to_3];
-        const dst =
-          iso3166_2_to_3[
-            this.shelter.location_country as keyof typeof iso3166_2_to_3
-          ];
-        const request_id = `${src}_${dst}`;
-        const country_src_dst_embodied_carbon =
-          await this.getTransportFactorForMaterial(request_id, local);
-        newValue.embodiedCarbonTransport =
-          weight * country_src_dst_embodied_carbon;
-      } else {
-        newValue.embodiedCarbonTransport = -1; // should have a src and dst
+        newValue.embodiedCarbonProduction = weight * embodied_carbon;
+        newValue.embodiedWater = weight * embodied_water;
+        newValue.embodiedCarbonTransport = 0;
+        try {
+          if (newValue.source && this.shelter.location_country) {
+            const src =
+              iso3166_2_to_3[newValue.source as keyof typeof iso3166_2_to_3];
+            const dst =
+              iso3166_2_to_3[
+                this.shelter.location_country as keyof typeof iso3166_2_to_3
+              ];
+            const request_id = `${src}_${dst}`;
+            const country_src_dst_embodied_carbon =
+              await this.getTransportFactorForMaterial(request_id, local);
+            newValue.embodiedCarbonTransport =
+              weight * country_src_dst_embodied_carbon;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+        newValue.embodiedCarbonTotal =
+          newValue.embodiedCarbonProduction + newValue.embodiedCarbonTransport;
       }
-      newValue.embodiedCarbonTotal =
-        newValue.embodiedCarbonProduction + newValue.embodiedCarbonTransport;
+      if (quantity && unitCost) {
+        // compute totalCost
+        newValue.totalCost = quantity * unitCost;
+      } else {
+        newValue.totalCost = 0;
+      }
+      this.localItem = newValue;
+    } catch (e) {
+      console.error(e);
     }
-    if (quantity && unitCost) {
-      // compute totalCost
-      newValue.totalCost = quantity * unitCost;
-    } else {
-      newValue.totalCost = 0;
-    }
-    this.localItem = newValue;
   }
 
   private isMaterial(object: unknown): object is Material {

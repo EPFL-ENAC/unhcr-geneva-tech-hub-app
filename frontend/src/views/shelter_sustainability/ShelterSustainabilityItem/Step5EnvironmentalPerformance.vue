@@ -105,11 +105,14 @@
                         :headers="headersSubItems"
                         :items="item.children"
                       >
-                        <template v-slot:[`item.formId`]="slotProps">
+                        <!-- <template v-slot:[`item.formId`]="slotProps">
                           <span v-if="materialMap[slotProps.item.formId]">{{
                             materialMap[slotProps.item.formId].form
                           }}</span>
                           <span v-else> {{ slotProps.item.formId }}</span>
+                        </template> -->
+                        <template v-slot:[`item.name`]="slotProps">
+                          <span> {{ slotProps.item.name }}</span>
                         </template>
                         <!-- beware duplicated code from above -->
                         <template v-slot:[`item.weight`]="slotProps">
@@ -330,7 +333,8 @@ export default class Step3Materials extends Vue {
   public get headersSubItems(): DataTableHeader[] {
     return [
       { text: "", value: "data-null" },
-      { text: "Form", value: "formId", sortable: false, width: "100px" },
+      // { text: "Form", value: "formId", sortable: false, width: "100px" },
+      { text: "Name", value: "name", sortable: false, width: "100px" },
       { align: "center", text: "Weight", value: "weight", sortable: false },
       {
         align: "center",

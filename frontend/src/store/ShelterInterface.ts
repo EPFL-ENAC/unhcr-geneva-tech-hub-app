@@ -528,6 +528,9 @@ export const materialFunctions: MaterialsFunction = {
     if (length && width && quantity) {
       return length * width * quantity * alpha;
     }
+    if (length && quantity) {
+      return length * quantity * alpha;
+    }
     return 0;
   },
   "PCE_COMPLEX-SHEET": (item: Material, alpha: Density) => {
