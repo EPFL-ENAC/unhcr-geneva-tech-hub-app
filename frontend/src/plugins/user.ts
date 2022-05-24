@@ -30,7 +30,9 @@ export default new (class User {
       // return false or true
       const user = store.getters["UserModule/user"];
       if (user.loaded) {
-        //   const isUserAdmin = user.roles.indexOf(USER_ADMIN) >= 0;
+        const isAdmin =
+          user.roles.indexOf(USER_ADMIN) >= 0 ||
+          user.roles.indexOf(DB_ADMIN) >= 0;
         //   const isSpecialist = user.roles.indexOf(SPECIALIST) >= 0;
         //   const isLoggedIn = user.name.length > 0;
         // if (actionName === "delete") {
@@ -45,9 +47,8 @@ export default new (class User {
           return isAuthor;
         }
 
-        const isDBAdmin = user.roles.indexOf(DB_ADMIN) >= 0;
         if (actionName === "delete" && obj?.users) {
-          return isAuthor || isDBAdmin;
+          return isAuthor || isAdmin;
         }
       }
 

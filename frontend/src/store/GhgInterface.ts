@@ -26,7 +26,7 @@ type Email = string;
 export type Sites = Site[];
 
 export interface GreenHouseGaz {
-  _id: string;
+  _id?: string | undefined;
   name: string;
   country_code: string;
   latitude: number;

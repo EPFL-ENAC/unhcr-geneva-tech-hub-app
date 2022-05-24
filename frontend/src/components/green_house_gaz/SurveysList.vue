@@ -43,7 +43,7 @@
         {{ item.created_at | formatDate }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <div v-if="$can('edit', localProject)" class="survey-list__actions">
+        <div class="survey-list__actions">
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -62,6 +62,7 @@
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
+                v-if="$can('delete', localProject)"
                 v-bind="attrs"
                 icon
                 class="better-click"
@@ -146,17 +147,21 @@ export default class ProjectItem extends Vue {
   }
 
   handleClick(item: Survey): void {
-    this.$router.push({
-      name: "GreenHouseGazItemSurveyId",
-      params: {
-        country: encodeURIComponent(this.localProject.country_code),
-        site: encodeURIComponent(this.localProject._id),
-        surveyId: encodeURIComponent(item.name),
-      },
-      query: {
-        category: "Info",
-      },
-    });
+    if (this.localProject._id && this.localProject.country_code) {
+      this.$router.push({
+        name: "GreenHouseGazItemSurveyId",
+        params: {
+          country: encodeURIComponent(this.localProject.country_code),
+          site: encodeURIComponent(this.localProject._id),
+          surveyId: encodeURIComponent(item.name),
+        },
+        query: {
+          category: "Info",
+        },
+      });
+    } else {
+      throw new Error("site id or Country_code non existing");
+    }
   }
 
   duplicateItem(item: Survey): void {
@@ -185,9 +190,11 @@ export default class ProjectItem extends Vue {
   async deleteItemConfirm(): Promise<void> {
     this.localProject.surveys.splice(this.editedIndex, 1);
     // if surveys === [] empty we want to delete the project!
-    if (this.localProject.surveys.length === 0) {
-      // delete
-      await this.removeDoc(this.localProject._id);
+    if (this.localProject.surveys.length === 0 && this.localProject._id) {
+      await this.removeDoc(this.localProject._id).then((response) => {
+        console.log(response);
+        debugger;
+      });
     } else {
       await this.submitForm(this.localProject);
     }

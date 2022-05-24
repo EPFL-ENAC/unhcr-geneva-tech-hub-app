@@ -25,7 +25,7 @@
     </v-sheet>
     <div class="separator"></div>
     <div class="map-countries">
-      <territory-map :coordinates="coordinates" />
+      <territory-map :coordinates="coordinates" @click:item="openSite" />
     </div>
     <new-survey-dialog :open.sync="siteDialog" />
   </main>
@@ -64,12 +64,17 @@ export default class ProjectList extends Vue {
 
   siteDialog = false;
 
-  sites!: [];
+  sites!: Site[];
 
-  public get coordinates(): number[][] {
+  public get coordinates(): (number | undefined | Site)[][] {
     return this.sites
       .filter((site: Site) => site.lat !== undefined)
-      .map((site: Site): number[] => [site.lat ?? 0, site.lon ?? 0]);
+      .map((site: Site): (number | undefined | Site)[] => [
+        site.lat ?? 0,
+        site.lon ?? 0,
+        undefined,
+        site,
+      ]);
   }
 
   mounted(): void {
@@ -84,6 +89,16 @@ export default class ProjectList extends Vue {
 
   get computedGridTemplate(): string {
     return "{ grid-template-columns: 50% 25px 50%; }";
+  }
+
+  public openSite(item: Site): void {
+    if (item?.country_code) {
+      let hash = "";
+      if (this.$route.hash !== `#${item?.country_code}`) {
+        hash = item?.country_code;
+      }
+      this.$router.push({ hash });
+    }
   }
 
   public addSurvey(): void {

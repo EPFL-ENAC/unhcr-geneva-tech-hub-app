@@ -16,7 +16,7 @@ const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 const MSG_USER_NOT_PRESENT = "Could not find user information";
 
 interface ProjectsState {
-  projects: Array<GreenHouseGaz>;
+  projects: GreenHouseGaz[];
   project: GreenHouseGaz;
   countries: Array<Country>;
   sites: Site[];
@@ -77,7 +77,11 @@ const mutations: MutationTree<ProjectsState> = {
     state.countries = countries;
   },
   SET_SITES(state, sites) {
-    state.sites = sites[0].value;
+    if (sites && sites[0] && sites[0].value) {
+      state.sites = sites[0].value;
+    } else {
+      state.sites = [];
+    }
   },
   ADD_DOC(state, value) {
     state.projects.push(value);
@@ -161,9 +165,9 @@ const actions: ActionTree<ProjectsState, RootState> = {
     const value = generateNewProject(newGhg, user);
     const remoteDB = context.state.localCouch?.remoteDB;
     if (remoteDB) {
-      return context.state.localCouch?.remoteDB.put(value).then((response) => {
+      return remoteDB.post(value).then(() => {
         // set new rev
-        return context.dispatch("getDoc", response.id);
+        return context.dispatch("getDoc", value._id);
       });
     }
   },
@@ -172,11 +176,14 @@ const actions: ActionTree<ProjectsState, RootState> = {
     if (!remoteDB) {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
-    return remoteDB.get(id).then(function (doc) {
-      return remoteDB.remove(doc).then(() => {
-        context.commit("REMOVE_DOC", id);
+    return remoteDB
+      .get(id)
+      .then(function (doc: PouchDB.Core.ExistingDocument<GreenHouseGaz>) {
+        return remoteDB.put({ ...doc, _deleted: true });
+      })
+      .catch(function (err) {
+        console.log(err);
       });
-    });
   },
   getDoc: (context: ActionContext<ProjectsState, RootState>, id) => {
     const db = context.state.localCouch?.remoteDB;
