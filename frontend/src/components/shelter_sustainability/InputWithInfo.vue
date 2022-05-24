@@ -11,6 +11,7 @@
             persistent-hint
             single-line
             @input="(v) => $emit('input', v)"
+            @change="(v) => $emit('change', v)"
           />
         </v-col>
         <v-col cols="1" class="d-flex justify-end align-center">

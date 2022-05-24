@@ -140,10 +140,10 @@
 
                       <v-divider />
                       <v-text-field
-                        v-model="localShelter.setup_people"
+                        v-model.number="localShelter.setup_people"
                         name="setup_people"
                         label="Number of people for setup"
-                        type="text"
+                        type="number"
                         @change="updateFormInput"
                       />
                       <v-text-field
