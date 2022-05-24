@@ -61,11 +61,13 @@ import { FormItem, SelectOption } from "@/components/commons/FormItem";
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import EnergyYearTabs from "@/components/energy/EnergyYearTabs.vue";
+import { ExistingDocument } from "@/models/couchdbModel";
 import {
   CookingFuel,
   CookingFuelId,
   cookingFuelIds,
   GeneralModule,
+  ProjectDocument,
   Scenario,
   ScenarioModule,
   ScenarioTrend,
@@ -82,11 +84,13 @@ import { mapState } from "vuex";
     FormItemComponent,
   },
   computed: {
-    ...mapState("energy", ["cookingFuels"]),
+    ...mapState("energy", ["sites", "cookingFuels"]),
   },
 })
 export default class EnergyCookingScenario extends Vue {
   cookingFuels!: CookingFuel[];
+  sites!: ExistingDocument<ProjectDocument>[];
+
   readonly trendOptions: SelectOption<ScenarioTrend>[] = [
     {
       text: "Stable",
@@ -117,31 +121,37 @@ export default class EnergyCookingScenario extends Vue {
       disabled: true,
     } as FormItem<keyof Scenario, ScenarioTrend>,
   ];
-  readonly yearFormItems: FormItem<keyof ScenarioYear>[] = [
-    {
-      type: "range",
-      key: "householdSize",
-      label: "Household Size",
-    },
-    {
-      type: "range",
-      key: "discountRate",
-      label: "Discount Rate",
-      subtype: "rate",
-    },
-    {
-      type: "range",
-      key: "incomeRate",
-      label: "Average Income Rate per household",
-      subtype: "rate",
-    },
-    {
-      type: "range",
-      key: "demographicGrowth",
-      label: "Growth rate of the population",
-      subtype: "rate",
-    },
-  ];
+  get yearFormItems(): FormItem<keyof ScenarioYear>[] {
+    return [
+      {
+        type: "range",
+        key: "householdSize",
+        label: "Household Size",
+        isTemplate: this.isTemplate,
+      },
+      {
+        type: "range",
+        key: "discountRate",
+        label: "Discount Rate",
+        subtype: "rate",
+        isTemplate: this.isTemplate,
+      },
+      {
+        type: "range",
+        key: "incomeRate",
+        label: "Average Income Rate per household",
+        subtype: "rate",
+        isTemplate: this.isTemplate,
+      },
+      {
+        type: "range",
+        key: "demographicGrowth",
+        label: "Growth rate of the population",
+        subtype: "rate",
+        isTemplate: this.isTemplate,
+      },
+    ];
+  }
 
   @VModel({ type: Object as () => ScenarioModule })
   module!: ScenarioModule;
@@ -154,6 +164,26 @@ export default class EnergyCookingScenario extends Vue {
     return this.module.scenarios;
   }
 
+  get isTemplate(): boolean {
+    return this.site?.isTemplate ?? false;
+  }
+
+  get documentId(): string {
+    return this.$route.params.id;
+  }
+
+  get site(): ProjectDocument | null {
+    if (this.sites) {
+      return (
+        this.sites.find(
+          (doc: ExistingDocument<ProjectDocument>) =>
+            doc._id === this.documentId
+        ) ?? null
+      );
+    }
+    return null;
+  }
+
   get fuelFormItems(): FormItem<CookingFuelId>[] {
     return cookingFuelIds.map((id) => {
       const fuelName =
@@ -163,6 +193,7 @@ export default class EnergyCookingScenario extends Vue {
         key: id,
         label: `${fuelName} Price Increase Rate`,
         subtype: "rate",
+        isTemplate: this.isTemplate,
       };
     });
   }

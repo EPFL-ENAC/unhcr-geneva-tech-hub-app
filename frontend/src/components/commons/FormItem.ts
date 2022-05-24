@@ -62,6 +62,7 @@ interface ComboboxFormItem<K> extends AbstractFormItem<K> {
 
 interface RangeFormItem<K> extends AbstractFormItem<K> {
   type: "range";
+  isTemplate?: boolean;
   subtype?: "rate";
 }
 

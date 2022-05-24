@@ -110,30 +110,32 @@
           <v-card>
             <v-card-title>{{ label }}</v-card-title>
             <v-card-text>
-              <form-item-component
-                v-model="model.min"
-                type="number"
-                :subtype="subtype"
-                label="Minimum"
-                :unit="unit"
-                :rules="rules"
-                :ratio="ratio"
-                :precision="precision"
-                optional
-                @change="onRangeChanged"
-              ></form-item-component>
-              <form-item-component
-                v-model="model.max"
-                type="number"
-                :subtype="subtype"
-                label="Maximum"
-                :unit="unit"
-                :rules="rules"
-                :ratio="ratio"
-                :precision="precision"
-                optional
-                @change="onRangeChanged"
-              ></form-item-component>
+              <v-form :disabled="!isTemplate">
+                <form-item-component
+                  v-model="model.min"
+                  type="number"
+                  :subtype="subtype"
+                  label="Minimum"
+                  :unit="unit"
+                  :rules="rules"
+                  :ratio="ratio"
+                  :precision="precision"
+                  optional
+                  @change="onRangeChanged"
+                ></form-item-component>
+                <form-item-component
+                  v-model="model.max"
+                  type="number"
+                  :subtype="subtype"
+                  label="Maximum"
+                  :unit="unit"
+                  :rules="rules"
+                  :ratio="ratio"
+                  :precision="precision"
+                  optional
+                  @change="onRangeChanged"
+                ></form-item-component>
+              </v-form>
             </v-card-text>
           </v-card>
         </v-dialog>
@@ -209,6 +211,8 @@ export default class FormItemComponent extends Vue {
   readonly readonly!: boolean;
   @Prop({ type: Boolean, default: false })
   readonly disabled!: boolean;
+  @Prop({ type: Boolean, default: false })
+  readonly isTemplate!: boolean;
 
   get items(): SelectItemObject<string, SelectValue>[] {
     switch (this.type) {
