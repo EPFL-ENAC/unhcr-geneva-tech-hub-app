@@ -1,5 +1,106 @@
 <template>
   <v-container class="fill-height" fluid>
+    <v-dialog v-model="workflowDialog" max-width="900">
+      <v-card>
+        <v-card-title>
+          <h2>Welcome to the UNHCR TSS Energy Planning Tool</h2>
+        </v-card-title>
+        <v-form v-model="workflowForm">
+          <v-card-text>
+            <v-row>
+              <v-col :cols="6">
+                <v-row>
+                  <v-col>
+                    <v-icon>mdi-account-hard-hat</v-icon>
+                    <b>Specialists</b> should create template projects, with
+                    necessary details and range to facilitate future assessments
+                    at a given site.
+                  </v-col>
+                </v-row>
+              </v-col>
+              <v-col :cols="6">
+                <v-row>
+                  <v-col>
+                    <b>General users</b> should start from a pre-filled
+                    template.
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col :cols="6">
+                <v-row>
+                  <v-col class="d-flex justify-center">
+                    <v-btn dark color="primary" @click="continueAsSpecalist">
+                      Continue as specialist
+                      <v-icon>mdi-account-hard-hat</v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-col>
+              <v-col :cols="6">
+                <v-row>
+                  <v-col class="d-flex justify-center">
+                    <v-btn color="primary" dark @click="continueAsUser">
+                      Continue as general user
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-form>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogAsUser" max-width="900">
+      <v-card>
+        <v-card-title>
+          <h2>General user</h2>
+        </v-card-title>
+        <v-card-text>
+          The simplest way to create a new project is to Duplicate
+          (<v-icon>mdi-content-copy</v-icon>) an existing Template.
+
+          <p class="c-primary">
+            The templates created by specialists appear in Blue.
+          </p>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn dark color="primary" @click="dialogAsUser = false"
+            >Get started</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogAsSpecalist" max-width="900">
+      <v-card>
+        <v-card-title>
+          <h2>Specialist</h2>
+        </v-card-title>
+        <v-card-text>
+          <div>
+            Add project by clicking on
+            <v-btn color="primary" text>
+              <v-icon left>mdi-plus-box</v-icon>
+              Add Project
+            </v-btn>
+          </div>
+
+          <p>
+            Make sure to check the “Template” when creating assessment
+            pre-filled for general users
+            <v-checkbox hide-details="auto" label="Template"></v-checkbox>
+          </p>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn dark color="primary" @click="dialogAsSpecalist = false"
+            >Get started</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-row class="fill-height">
       <v-col cols="6">
         <v-row>
@@ -32,11 +133,22 @@
                         @click="openSite(item._id)"
                       >
                         <v-list-item-content>
-                          <v-list-item-title>
+                          <v-list-item-title
+                            :class="{
+                              'c-primary': item.isTemplate,
+                            }"
+                          >
                             {{ item.name }}
                             <v-tooltip v-if="item.isTemplate" bottom>
                               <template v-slot:activator="{ on, attrs }">
-                                <v-icon v-bind="attrs" class="ma-1" v-on="on">
+                                <v-icon
+                                  :class="{
+                                    'c-primary': item.isTemplate,
+                                  }"
+                                  v-bind="attrs"
+                                  class="ma-1"
+                                  v-on="on"
+                                >
                                   mdi-account-hard-hat
                                 </v-icon>
                               </template>
@@ -76,7 +188,7 @@
                                 <v-icon>mdi-delete</v-icon>
                               </v-btn>
                             </template>
-                            <span>Delete {{ item }} </span>
+                            <span>Delete</span>
                           </v-tooltip>
                         </v-list-item-action>
                       </v-list-item>
@@ -161,6 +273,19 @@ export default class EnergyHome extends Vue {
   newSiteProp: NewSiteProp = {};
   expandedIndexes: number[] = [0];
 
+  workflowDialog = true;
+  workflowForm = false;
+  dialogAsSpecalist = false;
+  dialogAsUser = false;
+
+  public continueAsSpecalist(): void {
+    this.dialogAsSpecalist = true;
+    this.workflowDialog = false;
+  }
+  public continueAsUser(): void {
+    this.dialogAsUser = true;
+    this.workflowDialog = false;
+  }
   get formItems(): FormItem<keyof NewSiteProp>[] {
     return [
       {
@@ -287,3 +412,9 @@ interface NewSiteProp {
   projectName?: string;
 }
 </script>
+
+<style scoped lang="scss">
+.c-primary {
+  color: var(--c-unhcr);
+}
+</style>
