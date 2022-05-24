@@ -308,12 +308,12 @@ export default class ProjectList extends Vue {
   }
 
   public get coordinates(): (string | number | string | Shelter)[][] {
-    return this.shelters
+    return this.projects
       .filter((x: Shelter) => !!x.latitude)
       .map((x: Shelter) => [x.latitude, x.longitude, x.shelter_type, x]);
   }
 
-  public get projects(): Record<string, string | number>[] {
+  public get projects(): Shelter[] {
     return this.shelters
       .filter((shelter: Shelter) => {
         if (this.searchName) {
