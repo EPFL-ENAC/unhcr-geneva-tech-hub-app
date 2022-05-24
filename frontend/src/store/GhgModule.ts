@@ -85,9 +85,6 @@ const mutations: MutationTree<ProjectsState> = {
   REMOVE_DOC(state, value) {
     const indexToRemove = state.projects.findIndex((el) => el._id === value);
     state.projects.splice(indexToRemove, 1);
-    state.localCouch?.db.get(value).then(function (doc) {
-      return state.localCouch?.db.remove(doc);
-    });
   },
 };
 
@@ -171,7 +168,15 @@ const actions: ActionTree<ProjectsState, RootState> = {
     }
   },
   removeDoc: (context: ActionContext<ProjectsState, RootState>, id) => {
-    context.commit("REMOVE_DOC", id);
+    const remoteDB = context.state.localCouch?.remoteDB;
+    if (!remoteDB) {
+      throw new Error(MSG_DB_DOES_NOT_EXIST);
+    }
+    return remoteDB.get(id).then(function (doc) {
+      return remoteDB.remove(doc).then(() => {
+        context.commit("REMOVE_DOC", id);
+      });
+    });
   },
   getDoc: (context: ActionContext<ProjectsState, RootState>, id) => {
     const db = context.state.localCouch?.remoteDB;

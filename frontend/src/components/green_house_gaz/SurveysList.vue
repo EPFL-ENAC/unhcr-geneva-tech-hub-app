@@ -98,6 +98,7 @@ import { mapActions, mapGetters } from "vuex";
     ...mapActions("GhgModule", [
       "updateDoc",
       "getDoc",
+      "removeDoc",
       "syncDB",
       "hasDB",
       "closeDB",
@@ -114,6 +115,7 @@ export default class ProjectItem extends Vue {
   syncDB!: () => null;
   hasDB!: () => Promise<SyncDatabase<GreenHouseGaz> | null>;
   getDoc!: (id: string) => null;
+  removeDoc!: (id: string) => Promise<void>;
   closeDB!: () => null;
   project!: GreenHouseGaz;
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
@@ -182,7 +184,13 @@ export default class ProjectItem extends Vue {
 
   async deleteItemConfirm(): Promise<void> {
     this.localProject.surveys.splice(this.editedIndex, 1);
-    await this.submitForm(this.localProject);
+    // if surveys === [] empty we want to delete the project!
+    if (this.localProject.surveys.length === 0) {
+      // delete
+      await this.removeDoc(this.localProject._id);
+    } else {
+      await this.submitForm(this.localProject);
+    }
     await this.closeDialog();
   }
 
