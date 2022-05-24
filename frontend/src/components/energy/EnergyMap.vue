@@ -1,30 +1,22 @@
 <template>
-  <v-responsive :aspect-ratio="aspectRatio" min-height="100%">
-    <l-map :zoom="zoom" :center="center">
-      <l-control-scale :imperial="false" :metric="true"></l-control-scale>
-      <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
-      <l-marker
-        v-for="(marker, index) in markers"
-        :key="index"
-        :lat-lng="marker"
-      ></l-marker>
-    </l-map>
-  </v-responsive>
+  <territory-map
+    :coordinates="markers"
+    :default-zoom="zoom"
+    :value="center"
+    :aspect-ratio="aspectRatio"
+    @update:value="updateLatLng"
+  />
 </template>
 
 <script lang="ts">
+import TerritoryMap from "@/components/commons/TerritoryMap.vue";
 import { attributionMap, urlMap } from "@/utils/mapWorld";
-import { LatLngExpression } from "leaflet";
+import { LatLngExpression, LatLngTuple } from "leaflet";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { LControlScale, LMap, LMarker, LTileLayer } from "vue2-leaflet";
-
 @Component({
   components: {
-    LControlScale,
-    LMap,
-    LMarker,
-    LTileLayer,
+    TerritoryMap,
   },
 })
 export default class EnergyMap extends Vue {
@@ -42,7 +34,11 @@ export default class EnergyMap extends Vue {
     if (this.markers.length === 1) {
       return this.markers[0];
     }
-    return undefined;
+    return [0, 0] as LatLngTuple;
+  }
+
+  public updateLatLng(latLng: number[]): void {
+    this.$emit("update:value", latLng);
   }
 }
 </script>

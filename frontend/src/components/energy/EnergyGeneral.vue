@@ -15,7 +15,11 @@
         </v-col>
         <v-divider vertical></v-divider>
         <v-col cols="6">
-          <energy-map :markers="[latLng]" :zoom="4"></energy-map>
+          <energy-map
+            :markers="[latLng]"
+            :zoom="4"
+            @update:value="updateLatLng"
+          ></energy-map>
         </v-col>
       </v-row>
       <v-row>
@@ -233,6 +237,12 @@ export default class EnergyGeneral extends EnergyFormMixin<GeneralModule> {
 
   get latLng(): LatLngExpression {
     return [this.module.locationLatitude, this.module.locationLongitude];
+  }
+
+  public updateLatLng(latLng: number[]): void {
+    this.module.locationLatitude = latLng[0];
+    this.module.locationLongitude = latLng[1];
+    this.module = Object.assign({}, this.module);
   }
 
   get generalItems(): FormItem<keyof GeneralModule>[][] {

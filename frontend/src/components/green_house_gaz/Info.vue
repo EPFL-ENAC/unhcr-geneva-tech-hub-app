@@ -200,7 +200,7 @@ export default class GhgInfo extends Vue {
     if (
       value.name !== "" &&
       this.survey &&
-      this.surveyIndex &&
+      this.surveyIndex !== undefined &&
       this.surveyIndex >= 0
     ) {
       const previousName = this.survey.name;

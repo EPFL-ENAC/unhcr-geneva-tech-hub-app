@@ -135,7 +135,6 @@ import { GeneralModule, ProjectDocument } from "@/models/energyModel";
 import { energy } from "@/utils/apps";
 import { SyncDatabase } from "@/utils/couchdb";
 import getFlagEmoji from "@/utils/flagEmoji";
-import { LatLngExpression } from "leaflet";
 import { chain, cloneDeep, groupBy } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Ref, Vue } from "vue-property-decorator";
@@ -201,16 +200,16 @@ export default class EnergyHome extends Vue {
       .value();
   }
 
-  get markers(): LatLngExpression[] {
+  get markers(): (number | undefined | GeneralModule)[][] {
     return chain(this.sites)
       .map((site) => site.modules.general)
       .filter((general): general is GeneralModule => !!general)
       .map(
         (general) =>
-          [
-            general.locationLatitude,
-            general.locationLongitude,
-          ] as LatLngExpression
+          [general.locationLatitude, general.locationLongitude] as [
+            number,
+            number
+          ]
       )
       .uniq()
       .value();

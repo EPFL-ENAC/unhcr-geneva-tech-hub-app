@@ -1,28 +1,31 @@
 <template>
-  <l-map
-    :center="defaultCoordinates"
-    class="territory"
-    :class="{
-      'crosshair-cursor-enabled': value.length > 0,
-    }"
-    :zoom="defaultZoom"
-    :min-zoom="2"
-    :max-zoom="16"
-    @click="addMarker"
-  >
-    <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
-    <l-marker
-      v-for="(markerCoordinate, key) in internalCoordinates"
-      :key="key"
-      :lat-lng="getLatLng(markerCoordinate)"
-      :icon="getIcon('pin', markerCoordinate[2])"
-      @click="() => goToMarker(markerCoordinate[3])"
+  <v-responsive :aspect-ratio="aspectRatio" min-height="100%">
+    <l-map
+      :center="defaultCoordinates"
+      class="territory"
+      :class="{
+        'crosshair-cursor-enabled': value.length > 0,
+      }"
+      :zoom="defaultZoom"
+      :min-zoom="2"
+      :max-zoom="16"
+      @click="addMarker"
     >
-      <l-tooltip v-if="markerCoordinate[3]">
-        {{ markerCoordinate[3].name }}
-      </l-tooltip>
-    </l-marker>
-  </l-map>
+      <l-control-scale :imperial="false" :metric="true"></l-control-scale>
+      <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
+      <l-marker
+        v-for="(markerCoordinate, key) in internalCoordinates"
+        :key="key"
+        :lat-lng="getLatLng(markerCoordinate)"
+        :icon="getIcon('pin', markerCoordinate[2])"
+        @click="() => goToMarker(markerCoordinate[3])"
+      >
+        <l-tooltip v-if="markerCoordinate[3]">
+          {{ markerCoordinate[3].name }}
+        </l-tooltip>
+      </l-marker>
+    </l-map>
+  </v-responsive>
 </template>
 
 <script lang="ts">
@@ -40,11 +43,19 @@ import {
 } from "@/views/shelter_sustainability/shelterTypeColors";
 import L, { LatLng, LeafletMouseEvent } from "leaflet";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { LIcon, LMap, LMarker, LTileLayer, LTooltip } from "vue2-leaflet";
+import {
+  LControlScale,
+  LIcon,
+  LMap,
+  LMarker,
+  LTileLayer,
+  LTooltip,
+} from "vue2-leaflet";
 
 @Component({
   components: {
     LMap,
+    LControlScale,
     LTileLayer,
     LMarker,
     LTooltip,
@@ -54,10 +65,14 @@ import { LIcon, LMap, LMarker, LTileLayer, LTooltip } from "vue2-leaflet";
 export default class TerritoryMap extends Vue {
   @Prop({ type: Array, required: false, default: () => [] })
   readonly coordinates!: (number | string)[][];
+  @Prop({ type: [Number, String], default: 1 })
+  readonly aspectRatio: number | string | undefined;
   @Prop({ type: Array, required: false, default: () => [] })
   readonly value!: (number | string)[];
   @Prop({ type: Number, required: false, default: defaultZoom })
   readonly defaultZoom!: number;
+  @Prop({ type: Number, default: 2 })
+  readonly zoom!: number;
 
   readonly url = urlMap;
   readonly attribution = attributionMap;
