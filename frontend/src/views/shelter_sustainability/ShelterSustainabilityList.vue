@@ -144,25 +144,45 @@
                             Updated: {{ project.updated_at | formatDate }}
                           </v-col>
                           <v-col :xs="12" :sm="4" class="d-flex justify-end">
-                            <v-btn
-                              title="Duplicate shelters"
-                              icon
-                              small
-                              @click.stop.prevent="() => duplicateDoc(project)"
-                            >
-                              <v-icon small>mdi-content-copy</v-icon>
-                            </v-btn>
-                            <v-btn
-                              v-if="$can('delete', project)"
-                              title="Delete shelters"
-                              icon
-                              small
-                              @click.stop.prevent="
-                                () => deleteItem(project._id)
-                              "
-                            >
-                              <v-icon>mdi-delete</v-icon>
-                            </v-btn>
+                            <v-tooltip bottom>
+                              <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                  v-bind="attrs"
+                                  icon
+                                  class="better-click mr-2"
+                                  small
+                                  v-on="on"
+                                  @click.stop.prevent="
+                                    () => duplicateDoc(project)
+                                  "
+                                >
+                                  <v-icon small class="better-click">
+                                    mdi-content-copy
+                                  </v-icon>
+                                </v-btn>
+                              </template>
+                              <span>Duplicate shelter</span>
+                            </v-tooltip>
+                            <v-tooltip bottom>
+                              <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                  v-if="$can('delete', project)"
+                                  v-bind="attrs"
+                                  icon
+                                  class="better-click mr-2"
+                                  small
+                                  v-on="on"
+                                  @click.stop.prevent="
+                                    () => deleteItem(project._id)
+                                  "
+                                >
+                                  <v-icon small class="better-click">
+                                    mdi-delete
+                                  </v-icon>
+                                </v-btn>
+                              </template>
+                              <span>Delete shelter</span>
+                            </v-tooltip>
                           </v-col>
                         </v-row>
                       </v-card-subtitle>

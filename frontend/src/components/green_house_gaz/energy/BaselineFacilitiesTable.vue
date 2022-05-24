@@ -55,35 +55,54 @@
       </span>
     </template>
     <template v-slot:item.actions="{ item }">
-      <v-btn
-        icon
-        small
-        class="mr-2"
-        :disabled="disabled"
-        @click="openItemDialog(item, item.name)"
-      >
-        <v-icon> mdi-pencil</v-icon>
-      </v-btn>
-
-      <v-btn
-        icon
-        small
-        class="mr-2"
-        :disabled="disabled"
-        @click="openDuplicateItemDialog(item, item.name)"
-      >
-        <v-icon> mdi-content-copy</v-icon>
-      </v-btn>
-
-      <v-btn
-        icon
-        small
-        class="mr-2"
-        :disabled="disabled"
-        @click="openDeleteDialog(item, item.name)"
-      >
-        <v-icon> mdi-delete</v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            v-bind="attrs"
+            icon
+            small
+            class="mr-2"
+            :disabled="disabled"
+            v-on="on"
+            @click.stop="() => openItemDialog(item, item.name)"
+          >
+            <v-icon small class="better-click"> mdi-pencil </v-icon>
+          </v-btn>
+        </template>
+        <span>Edit</span>
+      </v-tooltip>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            v-bind="attrs"
+            icon
+            small
+            class="mr-2"
+            :disabled="disabled"
+            v-on="on"
+            @click.stop="() => openDuplicateItemDialog(item, item.name)"
+          >
+            <v-icon small class="better-click"> mdi-content-copy </v-icon>
+          </v-btn>
+        </template>
+        <span>Duplicate</span>
+      </v-tooltip>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            v-bind="attrs"
+            icon
+            small
+            class="mr-2"
+            :disabled="disabled"
+            v-on="on"
+            @click.stop="() => openDeleteDialog(item, item.name)"
+          >
+            <v-icon small class="better-click"> mdi-delete </v-icon>
+          </v-btn>
+        </template>
+        <span>Delete</span>
+      </v-tooltip>
     </template>
 
     <template v-slot:foot="{}">

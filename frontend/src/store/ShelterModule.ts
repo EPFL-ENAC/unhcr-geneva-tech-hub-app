@@ -137,12 +137,8 @@ const actions: ActionTree<ShelterState, RootState> = {
       if (!remoteDB) {
         throw new Error(MSG_DB_DOES_NOT_EXIST);
       }
-      return remoteDB.post(newValue).then((response) => {
-        newValue._id = response.id;
-        newValue._rev = response.rev;
-        context.commit("SET_SHELTER", newValue);
-        context.commit("ADD_DOC", context.state.shelter);
-        return context.state.shelter;
+      return remoteDB.post(newValue).then(() => {
+        return context.dispatch("getShelters");
       });
     }
   },

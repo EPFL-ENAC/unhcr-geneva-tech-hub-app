@@ -92,15 +92,54 @@
             </template>
 
             <template v-slot:[`item.actions`]="{ item }">
-              <v-btn icon small class="mr-2" @click="openEditItemDialog(item)">
-                <v-icon> mdi-pencil</v-icon>
-              </v-btn>
-              <v-btn icon small class="mr-2" @click="duplicate(item)">
-                <v-icon> mdi-content-copy</v-icon>
-              </v-btn>
-              <v-btn icon small class="mr-2" @click="deleteItem(item)">
-                <v-icon> mdi-delete</v-icon>
-              </v-btn>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    icon
+                    class="better-click mr-2"
+                    small
+                    v-on="on"
+                    @click.stop="() => openEditItemDialog(item)"
+                  >
+                    <v-icon small class="better-click"> mdi-pencil </v-icon>
+                  </v-btn>
+                </template>
+                <span>Edit</span>
+              </v-tooltip>
+
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    icon
+                    class="better-click mr-2"
+                    small
+                    v-on="on"
+                    @click.stop="() => duplicate(item)"
+                  >
+                    <v-icon small class="better-click">
+                      mdi-content-copy
+                    </v-icon>
+                  </v-btn>
+                </template>
+                <span>Duplicate</span>
+              </v-tooltip>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    icon
+                    class="better-click mr-2"
+                    small
+                    v-on="on"
+                    @click.stop="() => deleteItem(item)"
+                  >
+                    <v-icon small class="better-click"> mdi-delete </v-icon>
+                  </v-btn>
+                </template>
+                <span>Delete</span>
+              </v-tooltip>
             </template>
             <template v-if="totalCost != 0" v-slot:foot>
               <tfoot>

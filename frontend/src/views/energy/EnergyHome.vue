@@ -59,7 +59,7 @@
                                 <v-icon>mdi-content-copy</v-icon>
                               </v-btn>
                             </template>
-                            <span>Copy</span>
+                            <span>Duplicate</span>
                           </v-tooltip>
                           <v-tooltip bottom>
                             <template v-slot:activator="{ on, attrs }">

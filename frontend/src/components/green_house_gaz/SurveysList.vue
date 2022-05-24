@@ -18,7 +18,7 @@
     <v-dialog v-model="dialogDuplicate" max-width="500px">
       <v-card>
         <v-card-title class="text-h5"
-          >Confirm copy of this assessment?</v-card-title
+          >Confirm duplication of this assessment?</v-card-title
         >
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -44,21 +44,36 @@
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <div v-if="$can('edit', localProject)" class="survey-list__actions">
-          <!-- maybe everyone should be able to duplicate -->
-          <v-icon
-            class="better-click"
-            small
-            @click.stop="() => duplicateItem(item)"
-          >
-            mdi-content-copy
-          </v-icon>
-          <v-icon
-            class="better-click"
-            small
-            @click.stop="() => deleteItem(item)"
-          >
-            mdi-delete
-          </v-icon>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                v-bind="attrs"
+                icon
+                class="better-click"
+                small
+                v-on="on"
+                @click.stop="() => duplicateItem(item)"
+              >
+                <v-icon small class="better-click"> mdi-content-copy </v-icon>
+              </v-btn>
+            </template>
+            <span>Duplicate</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                v-bind="attrs"
+                icon
+                class="better-click"
+                small
+                v-on="on"
+                @click.stop="() => deleteItem(item)"
+              >
+                <v-icon small class="better-click"> mdi-delete </v-icon>
+              </v-btn>
+            </template>
+            <span>Delete</span>
+          </v-tooltip>
         </div>
       </template>
     </v-data-table>
