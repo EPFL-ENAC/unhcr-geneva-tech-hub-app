@@ -1,12 +1,14 @@
 <template>
   <v-row>
-    <v-col cols="4">
+    <v-col cols="12">
       <v-card height="100%">
         <v-card-title>
-          <v-btn color="primary" icon @click="addDiffusion">
-            <v-icon large>mdi-plus-box</v-icon>
-          </v-btn>
           Energy substitution
+          <v-spacer></v-spacer>
+          <v-btn class="float-right" color="primary" text @click="addDiffusion">
+            <v-icon left>mdi-plus-box</v-icon>
+            New intervention
+          </v-btn>
         </v-card-title>
         <v-card-text>
           <v-expansion-panels multiple>
@@ -61,13 +63,20 @@
         </v-card-text>
       </v-card>
     </v-col>
-    <v-col cols="4">
+    <v-col cols="12">
       <v-card height="100%">
         <v-card-title>
-          <v-btn color="primary" icon @click="addEfficiency">
-            <v-icon large>mdi-plus-box</v-icon>
-          </v-btn>
           Energy efficiency improvement
+          <v-spacer></v-spacer>
+          <v-btn
+            class="float-right"
+            color="primary"
+            text
+            @click="addEfficiency"
+          >
+            <v-icon left>mdi-plus-box</v-icon>
+            New intervention
+          </v-btn>
         </v-card-title>
         <v-card-text>
           <v-expansion-panels multiple>
@@ -79,11 +88,15 @@
                 <template v-slot:default="{ open }">
                   <v-row>
                     <v-col cols="auto">
+                      <!-- todo: remove disabled when implemented -->
                       <v-checkbox
                         hide-details="auto"
                         :input-value="open"
                         :label="interventionItem.name"
-                        readonly
+                        :readonly="true"
+                        :disabled="true"
+                        :value="false"
+                        @click.stop.prevent
                       ></v-checkbox>
                     </v-col>
                     <v-spacer></v-spacer>
@@ -100,13 +113,15 @@
         </v-card-text>
       </v-card>
     </v-col>
-    <v-col cols="4">
+    <v-col cols="12">
       <v-card height="100%">
         <v-card-title>
-          <v-btn color="primary" icon @click="addCash">
-            <v-icon large>mdi-plus-box</v-icon>
-          </v-btn>
           Cash-based interventions
+          <v-spacer></v-spacer>
+          <v-btn class="float-right" color="primary" text @click="addCash">
+            <v-icon left>mdi-plus-box</v-icon>
+            New intervention
+          </v-btn>
         </v-card-title>
         <v-card-text>
           <v-expansion-panels multiple>
@@ -118,12 +133,17 @@
                 <template v-slot:default="{ open }">
                   <v-row>
                     <v-col cols="auto">
-                      <v-checkbox
-                        hide-details="auto"
-                        :input-value="open"
-                        :label="interventionItem.name"
-                        readonly
-                      ></v-checkbox>
+                      <v-form :disabled="true">
+                        <v-checkbox
+                          hide-details="auto"
+                          :input-value="open"
+                          :label="interventionItem.name"
+                          :readonly="true"
+                          :disabled="true"
+                          :value="false"
+                          @click.stop.prevent
+                        ></v-checkbox>
+                      </v-form>
                     </v-col>
                     <v-spacer></v-spacer>
                     <v-col cols="auto" class="d-flex align-center">
