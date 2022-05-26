@@ -181,8 +181,11 @@ export default class Facilities extends Vue {
             ) ?? null;
           let changeInEmission: number | null = null;
           if (baselineInput) {
+            // FAC_TCOT_E
             const endline = endlineInput.totalCO2Emission;
+            // FAC_TCOT_B
             const baseline = baselineInput.totalCO2Emission;
+            //
             changeInEmission = computeChangeInEmission(baseline, endline);
           }
           return {

@@ -211,7 +211,7 @@ export default class FacilityDialog extends Vue {
       // energy and iges not retrieved yet.
       return Promise.resolve(result);
     }
-    const { REF_DIES, REF_GRD, REF_EFF_DIES } = this.ghgMapRef;
+    const { REF_DIES, REF_GRD } = this.ghgMapRef;
 
     const iges_grid_2021 = this.iges_grid_2021.find(
       (el) => el._id === this.project.country_code
@@ -221,7 +221,7 @@ export default class FacilityDialog extends Vue {
     const { dieselLiters, gridPower } = this.localItem || {};
 
     if (dieselLiters) {
-      result += ((dieselLiters / REF_EFF_DIES.value) * REF_DIES.value) / 1000;
+      result += (dieselLiters * REF_DIES.value) / 1000;
     }
     if (gridPower) {
       result += (gridPower * REF_GRD.value) / 1000;
