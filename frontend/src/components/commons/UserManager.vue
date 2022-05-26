@@ -24,7 +24,7 @@
             </v-list-item-action>
           </v-list-item>
         </v-list>
-        <v-form v-if="isMember" ref="form" @submit="submit">
+        <v-form v-if="$can('edit', { users })" ref="form" @submit="submit">
           <v-text-field
             v-model="user"
             append-outer-icon="mdi-plus"
