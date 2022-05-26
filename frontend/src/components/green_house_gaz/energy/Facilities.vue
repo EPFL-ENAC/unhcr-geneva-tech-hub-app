@@ -205,8 +205,10 @@ export default class Facilities extends Vue {
     const inputs: EnergyFacilityInterventionItem[] =
       this.facilityForm.endline.inputs;
 
+    const baselineResults: EnergyFacilityItemResult =
+      this.facilityForm.baseline.results;
     // sum all rows into one object
-    const results: EnergyFacilityInterventionItemResult = {
+    const endlineResults: EnergyFacilityInterventionItemResult = {
       gridPower: inputs.reduce((acc, el) => acc + el.gridPower, 0),
       dieselLiters: inputs.reduce((acc, el) => acc + el.dieselLiters, 0),
       renewablePower: inputs.reduce((acc, el) => acc + el.renewablePower, 0),
@@ -214,12 +216,14 @@ export default class Facilities extends Vue {
         (acc, el) => acc + el.totalCO2Emission,
         0
       ),
-      changeInEmission: inputs.reduce(
-        (acc, el) => acc + (el?.changeInEmission ?? 0),
-        0
-      ),
+      changeInEmission: 0, // need to compute totalCO2 first
     };
-    this.facilityForm.endline.results = results;
+    const changeInEmission = computeChangeInEmission(
+      baselineResults.totalCO2Emission,
+      endlineResults.totalCO2Emission
+    );
+    endlineResults.changeInEmission = changeInEmission;
+    this.facilityForm.endline.results = endlineResults;
     this.facilityForm = Object.assign({}, this.facilityForm);
   }
 
