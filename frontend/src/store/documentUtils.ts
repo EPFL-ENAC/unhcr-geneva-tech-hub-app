@@ -25,3 +25,11 @@ export function updateMetaFields(doc: any, user: CouchUser): any {
   doc.updated_by = user.name;
   return doc;
 }
+
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */ /* eslint-disable-next-line  @typescript-eslint/explicit-module-boundary-types */
+export function updateMetaFieldsForUpdate(doc: any, user: CouchUser): any {
+  const currentDate = new Date().toISOString();
+  doc.updated_at = currentDate;
+  doc.updated_by = user.name;
+  return doc;
+}

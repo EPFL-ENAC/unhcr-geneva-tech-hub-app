@@ -9,7 +9,7 @@ import {
   MutationTree,
 } from "vuex";
 import { RootState } from ".";
-import { updateMetaFields } from "./documentUtils";
+import { updateMetaFieldsForUpdate } from "./documentUtils";
 import { CouchUser } from "./UserModule";
 
 const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
@@ -207,7 +207,7 @@ const actions: ActionTree<ProjectsState, RootState> = {
     if (!user) {
       throw new Error(MSG_USER_NOT_PRESENT);
     }
-    const newValue = updateMetaFields(value, user);
+    const newValue = updateMetaFieldsForUpdate(value, user);
     context.commit("SET_PROJECT", newValue);
     const db = context.state.localCouch?.remoteDB;
     if (db) {
