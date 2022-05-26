@@ -26,7 +26,7 @@
                       facilityForm.baseline.results.totalCO2Emission
                         | formatNumber
                     }}
-                    tCO2e/year
+                    (tCO2e/year)
                   </h3>
                 </v-col>
               </v-row>
@@ -67,7 +67,7 @@
                       facilityForm.endline.results.totalCO2Emission
                         | formatNumber
                     }}
-                    tCO2e/year
+                    (tCO2e/year)
                     <span
                       :class="{
                         'facilities-positive': changeInEmissionPositive,

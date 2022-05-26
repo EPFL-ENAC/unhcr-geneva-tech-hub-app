@@ -21,13 +21,13 @@
       <v-col :cols="6" class="d-flex justify-center">
         <h3>
           Total Baseline CO2 Emissions:
-          {{ totalBaseline | formatNumber }} tCO2e/year
+          {{ totalBaseline | formatNumber }} (tCO2e/year)
         </h3>
       </v-col>
       <v-col :cols="6" class="d-flex justify-center">
         <h3>
           Total Endline CO2 Emissions:
-          {{ totalEndline | formatNumber }} tCO2e/year
+          {{ totalEndline | formatNumber }} (tCO2e/year)
 
           <v-icon :color="color">
             {{ icon }}
@@ -289,7 +289,9 @@ export default class Results extends Vue {
           },
           tooltip: {
             valueFormatter: (value): string => {
-              return `${this.$options.filters?.formatNumber(value)} tCO2e/year`;
+              return `${this.$options.filters?.formatNumber(
+                value
+              )} (tCO2e/year)`;
             },
           },
           type: "bar",
