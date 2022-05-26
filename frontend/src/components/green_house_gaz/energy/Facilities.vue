@@ -19,6 +19,9 @@
           <v-card-actions>
             <v-container class="d-flex flex-column" fluid>
               <v-row>
+                <!-- <v-col cols="8">
+                  <facilities-pie-chart :option="getChartOption()" />
+                </v-col> -->
                 <v-col class="d-flex justify-end mx-2 mb-2">
                   <h3>
                     Total CO2 Emissions:
@@ -105,6 +108,7 @@
 import { computeChangeInEmission } from "@/components/green_house_gaz/changeInEmission";
 import BaselineFacilitiesTable from "@/components/green_house_gaz/energy/BaselineFacilitiesTable.vue";
 import EndlineFacilitiesTable from "@/components/green_house_gaz/energy/EndlineFacilitiesTable.vue";
+import FacilitiesPieChart from "@/components/green_house_gaz/energy/FacilitiesPieChart.vue";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import {
   EnergyFacilityInterventionItem,
@@ -113,6 +117,7 @@ import {
   EnergyFacilityItemResult,
   EnergyFacilitySurvey,
 } from "@/store/GhgInterface";
+import { EChartsOption } from "echarts/types/dist/shared";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
@@ -121,6 +126,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
     BaselineFacilitiesTable,
     EndlineFacilitiesTable,
     SurveyItemTitle,
+    FacilitiesPieChart,
   },
 })
 export default class Facilities extends Vue {
@@ -363,6 +369,35 @@ export default class Facilities extends Vue {
           changeInEmission: 0,
         },
       },
+    };
+  }
+
+  getChartOption(): EChartsOption {
+    // const data = socioEconomicCategories
+    //   .map((cat) => ({
+    //     id: cat,
+    //     name: this.$t(`energy.${cat}`).toString(),
+    //     value: item[cat].countPerHousehold,
+    //   }))
+    //   .filter((item) => item.value > 0);
+    return {
+      title: {
+        text: "Distribution of cookstoves per households",
+        textStyle: {
+          fontSize: 12,
+        },
+      },
+      series: [
+        {
+          type: "pie",
+          radius: "25%",
+          label: {
+            overflow: "break",
+          },
+          data: [], //data,
+        },
+      ],
+      color: [], //data.map((item) => getColor(item.id)),
     };
   }
 }
