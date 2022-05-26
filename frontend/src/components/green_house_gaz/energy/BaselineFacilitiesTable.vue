@@ -113,7 +113,12 @@
           class="facilities-footer-like-vuetify"
         >
           <span v-if="!header.hideFooterContent">
-            {{ results[header.value] | formatNumber(0, 0, true) }}
+            <span v-if="header.value === 'totalCO2Emission'">
+              {{ results[header.value] | formatNumber(0, 0, true) }}
+            </span>
+            <span v-else>
+              {{ results[header.value] | formatNumber(0, 0) }}
+            </span>
           </span>
         </td>
       </tr>
