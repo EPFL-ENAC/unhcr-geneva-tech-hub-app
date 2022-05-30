@@ -142,12 +142,15 @@ type FacilityType =
   | "HybridMix"
   | "NotPowered";
 
-export interface EnergyFacilityItem {
-  name: string;
-  facilityType: FacilityType;
+export interface EnergyItem {
   gridPower: number;
   dieselLiters: number;
   renewablePower: number;
+}
+
+export interface EnergyFacilityItem extends EnergyItem {
+  name: string;
+  facilityType: FacilityType;
   totalCO2Emission: number;
 }
 

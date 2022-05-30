@@ -40,6 +40,7 @@ export default new Vuetify({
 
 /**
  * https://data2.unhcr.org/en/documents/download/60115
+ * // https://unhcr-web.github.io/unhcRstyle/docs/reference/unhcr_green.html
  */
 export const cccmColors = {
   primary: "#2A87C8",
@@ -48,6 +49,7 @@ export const cccmColors = {
   secondary3: "#d48c74",
   secondary4: "#f0b89e",
   secondary5: "#f8e4d2",
+  green: "rgba(1,178,152)",
 };
 
 export const indicatorColors = {
