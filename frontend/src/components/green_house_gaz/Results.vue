@@ -236,6 +236,9 @@ export default class Results extends Vue {
     const result: EChartsOption = {
       tooltip: {
         trigger: "axis",
+        renderMode: "html",
+        confine: false,
+        appendToBody: true,
         axisPointer: {
           type: "shadow",
         },
