@@ -39,7 +39,7 @@
             }"
           >
             {{ totalChange > 0 ? "+" : "" }}
-            {{ totalChange | formatNumber }}%
+            {{ totalChange | formatNumber(0, 0, true, "percent") }}
           </span>
         </h3>
       </v-col>
