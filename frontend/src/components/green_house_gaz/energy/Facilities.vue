@@ -19,25 +19,31 @@
           <v-card-actions>
             <v-container class="d-flex flex-column" fluid>
               <v-row>
-                <!-- <v-col cols="8">
-                  <facilities-pie-chart :option="getChartOption()" />
-                </v-col> -->
-                <v-col class="d-flex justify-end mx-2 mb-2">
-                  <h3>
-                    Total CO2 Emissions:
-                    {{
-                      facilityForm.baseline.results.totalCO2Emission
-                        | formatNumber
-                    }}
-                    (tCO2e/year)
-                  </h3>
+                <v-col cols="8" class="d-flex justify-end">
+                  <facilities-pie-chart
+                    :option="getChartOption(facilityForm.baseline.results)"
+                  />
                 </v-col>
-              </v-row>
-              <v-row>
-                <v-col class="d-flex justify-end mx-2 mb-2">
-                  <v-btn @click="toggleBaselineMode">
-                    {{ baselineSwitchText }}
-                  </v-btn>
+                <v-col cols="4">
+                  <v-row>
+                    <v-col class="d-flex justify-end mx-2 mb-2">
+                      <h3>
+                        Total CO2 Emissions:
+                        {{
+                          facilityForm.baseline.results.totalCO2Emission
+                            | formatNumber
+                        }}
+                        (tCO2e/year)
+                      </h3>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="d-flex justify-end mx-2 mb-2">
+                      <v-btn @click="toggleBaselineMode">
+                        {{ baselineSwitchText }}
+                      </v-btn>
+                    </v-col>
+                  </v-row>
                 </v-col>
               </v-row>
             </v-container>
@@ -63,29 +69,38 @@
             </v-card-text>
             <v-container class="d-flex flex-column" fluid>
               <v-row>
-                <v-col class="d-flex justify-end mx-2 mb-2">
-                  <h3>
-                    Total CO2 Emissions:
-                    {{
-                      facilityForm.endline.results.totalCO2Emission
-                        | formatNumber
-                    }}
-                    (tCO2e/year)
-                    <span
-                      :class="{
-                        'facilities-positive': changeInEmissionPositive,
-                        'facilities-negative': changeInEmissionNegative,
-                      }"
-                    >
-                      <v-icon :color="color">
-                        {{ icon }}
-                      </v-icon>
-                      {{
-                        facilityForm.endline.results.changeInEmission
-                          | formatNumber(0, 0, true, "percent")
-                      }}
-                    </span>
-                  </h3>
+                <v-col cols="8" class="d-flex justify-end">
+                  <facilities-pie-chart
+                    :option="getChartOption(facilityForm.endline.results)"
+                  />
+                </v-col>
+                <v-col cols="4">
+                  <v-row>
+                    <v-col class="d-flex justify-end">
+                      <h3>
+                        Total CO2 Emissions:
+                        {{
+                          facilityForm.endline.results.totalCO2Emission
+                            | formatNumber
+                        }}
+                        (tCO2e/year)
+                        <span
+                          :class="{
+                            'facilities-positive': changeInEmissionPositive,
+                            'facilities-negative': changeInEmissionNegative,
+                          }"
+                        >
+                          <v-icon :color="color">
+                            {{ icon }}
+                          </v-icon>
+                          {{
+                            facilityForm.endline.results.changeInEmission
+                              | formatNumber(0, 0, true, "percent")
+                          }}
+                        </span>
+                      </h3>
+                    </v-col>
+                  </v-row>
                 </v-col>
               </v-row>
             </v-container>
@@ -110,6 +125,7 @@ import BaselineFacilitiesTable from "@/components/green_house_gaz/energy/Baselin
 import EndlineFacilitiesTable from "@/components/green_house_gaz/energy/EndlineFacilitiesTable.vue";
 import FacilitiesPieChart from "@/components/green_house_gaz/energy/FacilitiesPieChart.vue";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
+import { cccmColors } from "@/plugins/vuetify";
 import {
   EnergyFacilityInterventionItem,
   EnergyFacilityInterventionItemResult,
@@ -117,11 +133,15 @@ import {
   EnergyFacilityItemResult,
   EnergyFacilitySurvey,
 } from "@/store/GhgInterface";
+import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { EChartsOption } from "echarts/types/dist/shared";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
-
+import { mapGetters } from "vuex";
 @Component({
+  computed: {
+    ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
+  },
   components: {
     BaselineFacilitiesTable,
     EndlineFacilitiesTable,
@@ -135,6 +155,7 @@ export default class Facilities extends Vue {
   @Prop({ type: String, required: true, default: "" })
   readonly titleKey!: string;
 
+  ghgMapRef!: ItemReferencesMap;
   baselineMode = true;
 
   public get title(): string {
@@ -372,32 +393,64 @@ export default class Facilities extends Vue {
     };
   }
 
-  getChartOption(): EChartsOption {
-    // const data = socioEconomicCategories
-    //   .map((cat) => ({
-    //     id: cat,
-    //     name: this.$t(`energy.${cat}`).toString(),
-    //     value: item[cat].countPerHousehold,
+  public getChartOption(
+    // items: EnergyFacilityInterventionItem[] | EnergyFacilityItem[]
+    item: EnergyFacilityItemResult | EnergyFacilityInterventionItemResult
+  ): EChartsOption {
+    // "Distribution of tCO2e/year per facilities"
+    // const data = items
+    //   .map((item: EnergyFacilityItem | EnergyFacilityInterventionItem) => ({
+    //     id: item.name,
+    //     name: item.name,
+    //     value: item.totalCO2Emission,
     //   }))
     //   .filter((item) => item.value > 0);
+    // energy mix
+
     return {
       title: {
-        text: "Distribution of cookstoves per households",
+        text: "Energy Mix (kWh)", //"Distribution of tCO2e/year per facilities",
         textStyle: {
           fontSize: 12,
+          width: "500px",
         },
+        left: "center",
+      },
+
+      tooltip: {
+        trigger: "item",
       },
       series: [
         {
           type: "pie",
           radius: "25%",
+          tooltip: {
+            valueFormatter: (value) =>
+              this.$options.filters?.formatNumber(value) + " (kWh)",
+          },
           label: {
             overflow: "break",
           },
-          data: [], //data,
+          data: [
+            {
+              id: "gridPower",
+              name: "Grid",
+              value: item.gridPower,
+            },
+            {
+              id: "dieselLiters",
+              name: "Diesel",
+              value: item.dieselLiters * this.ghgMapRef?.REF_EFF_DIES.value,
+            },
+            {
+              id: "renewablePower",
+              name: "Renewable",
+              value: item.renewablePower,
+            },
+          ],
         },
       ],
-      color: [], //data.map((item) => getColor(item.id)),
+      color: [cccmColors.primary, cccmColors.secondary1, cccmColors.green], //data.map((item) => getColor(item.id)),
     };
   }
 }

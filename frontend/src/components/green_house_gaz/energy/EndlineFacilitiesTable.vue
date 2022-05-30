@@ -87,7 +87,7 @@
             </span>
             <span v-else-if="!header.hideFooterContent">
               <span v-if="header.value === 'totalCO2Emission'">
-                {{ results[header.value] | formatNumber(0, 0, true) }}
+                {{ results[header.value] | formatNumber(0, 0) }}
               </span>
               <span v-else>
                 {{ results[header.value] | formatNumber(0, 0) }}

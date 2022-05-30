@@ -82,6 +82,7 @@
 </template>
 
 <script lang="ts">
+import { computeCO2Cost } from "@/components/green_house_gaz/energy/computeCO2cost";
 import DieselGenerators from "@/components/green_house_gaz/energy/DieselGenerators.vue";
 import {
   Facility,
@@ -105,8 +106,7 @@ import { mapActions, mapGetters } from "vuex";
 @Component({
   computed: {
     ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
-    ...mapGetters("GhgReferenceIgesGridModule", ["iges_grid_2021"]),
-    ...mapGetters("GhgModule", ["project"]),
+    ...mapGetters("GhgModule", ["project", "project_REF_GRD"]),
   },
   methods: {
     ...mapActions("GhgReferenceModule", {
@@ -141,6 +141,8 @@ export default class FacilityDialog extends Vue {
     form: VForm;
   };
   project!: GreenHouseGaz;
+  project_REF_GRD!: ReferenceItemInterface;
+
   ghgMapRef!: ItemReferencesMap;
   syncDBGhg!: () => null;
   closeDBGhg!: () => Promise<null>;
@@ -151,7 +153,6 @@ export default class FacilityDialog extends Vue {
   getAllDocsGhgIgesGrid!: () => Promise<IgesItemInterface[]>;
 
   references!: ReferenceItemInterface[];
-  iges_grid_2021!: IgesItemInterface[];
 
   formValid = false;
   localItem: Facility | null = null;
@@ -200,33 +201,13 @@ export default class FacilityDialog extends Vue {
       return Promise.resolve();
     }
 
-    this.localItem.totalCO2Emission = await this.computeCost();
+    this.localItem.totalCO2Emission = computeCO2Cost(
+      this.localItem,
+      this.ghgMapRef?.REF_DIES,
+      this.project_REF_GRD
+    );
     this.$emit("update:item", this.localItem);
     this.isOpen = false;
-  }
-
-  public async computeCost(): Promise<number> {
-    let result = 0;
-    if (!this.iges_grid_2021 || !this.ghgMapRef || !this.project.country_code) {
-      // energy and iges not retrieved yet.
-      return Promise.resolve(result);
-    }
-    const { REF_DIES, REF_GRD } = this.ghgMapRef;
-
-    const iges_grid_2021 = this.iges_grid_2021.find(
-      (el) => el._id === this.project.country_code
-    );
-    REF_GRD.value = iges_grid_2021?.value || REF_GRD.value; // find REF_GRD per country
-
-    const { dieselLiters, gridPower } = this.localItem || {};
-
-    if (dieselLiters) {
-      result += (dieselLiters * REF_DIES.value) / 1000;
-    }
-    if (gridPower) {
-      result += (gridPower * REF_GRD.value) / 1000;
-    }
-    return Promise.resolve(result);
   }
 
   public validate(): void {
