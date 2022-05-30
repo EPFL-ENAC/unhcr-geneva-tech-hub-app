@@ -5,7 +5,7 @@
         <h2 class="mx-8">Disclaimer</h2>
         <p class="mx-10">
           This Web Application is under active development. The current version
-          is only available as a prouf of concept. Please report any bugs
+          is only available as a proof of concept. Please report any bugs
           <a
             href="https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues"
             >here</a
