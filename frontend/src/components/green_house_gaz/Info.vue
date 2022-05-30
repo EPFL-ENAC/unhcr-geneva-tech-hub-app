@@ -84,8 +84,6 @@ import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import TerritoryMap from "@/components/commons/TerritoryMap.vue";
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import { CouchUser } from "@/store/UserModule";
-import { countries as Countries } from "@/utils/countriesAsList";
-import getFlagEmoji from "@/utils/flagEmoji";
 import {
   attributionMap,
   defaultCoordinates,
@@ -129,11 +127,6 @@ export default class GhgInfo extends Vue {
   project!: GreenHouseGaz;
   user!: CouchUser;
   localProject = {} as GreenHouseGaz;
-
-  countriesRef = Countries.map((country) => ({
-    ...country,
-    emoji: getFlagEmoji(country.code),
-  }));
 
   textRules = [
     (v: string): boolean | string => !!v || `is required`,

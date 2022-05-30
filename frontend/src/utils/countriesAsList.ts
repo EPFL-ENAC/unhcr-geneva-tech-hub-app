@@ -1,5 +1,4 @@
 import { CountriesInfoMap, CountryInfo } from "@/store/GhgInterface";
-import flagEmoji from "@/utils/flagEmoji";
 
 export const countries: CountryInfo[] = [
   { code: "AC", name: "Ascension Island", lat: 0, lon: 0 },
@@ -324,7 +323,7 @@ export const countries: CountryInfo[] = [
 
 export const countriesMap = countries.reduce(
   (acc: CountriesInfoMap, country: CountryInfo) => {
-    acc[country.code] = { ...country, emoji: flagEmoji(country.code) };
+    acc[country.code] = { ...country };
     return acc;
   },
   {} as CountriesInfoMap

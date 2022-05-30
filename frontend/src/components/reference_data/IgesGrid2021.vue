@@ -19,7 +19,6 @@
 
 <script lang="ts">
 import { IgesItemInterface } from "@/store/GhgReferenceIgesGridModule";
-import flagEmoji from "@/utils/flagEmoji";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
@@ -45,7 +44,6 @@ export default class IgesGrid2021 extends Vue {
   updateDoc!: (obj: IgesItemInterface) => PromiseLike<IgesItemInterface>;
 
   iges_grid_2021!: IgesItemInterface[];
-  flagEmoji = flagEmoji;
   snack = false;
   snackColor = "";
   snackText = "";

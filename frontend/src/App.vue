@@ -314,4 +314,7 @@ export default class App extends Vue {
 .project__h3 {
   color: var(--c-shelter);
 }
+.flag {
+  border: 1px solid grey;
+}
 </style>

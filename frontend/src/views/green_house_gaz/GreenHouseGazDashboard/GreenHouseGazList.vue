@@ -10,7 +10,7 @@
             {{ countriesMap[country.key].name }}
           </span>
           <span>
-            {{ countriesMap[country.key].emoji }}
+            <country-flag :country="country.key" size="small" />
           </span>
         </div>
       </v-expansion-panel-header>
@@ -44,7 +44,6 @@
 import SurveyList from "@/components/green_house_gaz/SurveysList.vue";
 import { Country, Site } from "@/store/GhgInterface";
 import { countries as Countries, countriesMap } from "@/utils/countriesAsList";
-import flagEmoji from "@/utils/flagEmoji";
 import { Component, Vue } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";
 import { mapGetters } from "vuex";
@@ -77,7 +76,6 @@ export default class ProjectList extends Vue {
     return "site-row-pointer";
   }
 
-  public getFlagEmoji = flagEmoji;
   private setCountry(country: Country): void {
     let hash = "";
     if (this.$route.hash !== `#${country.key}`) {

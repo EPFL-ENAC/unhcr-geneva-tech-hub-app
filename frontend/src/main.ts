@@ -5,6 +5,7 @@ import "@fontsource/lato";
 import "font-proxima-nova-css/fonts.min.css";
 import "leaflet/dist/leaflet.css";
 import Vue from "vue";
+import CountryFlag from "vue-country-flag";
 import App from "./App.vue";
 import i18n from "./i18n";
 import vuetify from "./plugins/vuetify";
@@ -17,6 +18,7 @@ Vue.config.productionTip = false;
 
 Vue.use(User, { store });
 Vue.use(filters);
+Vue.component("country-flag", CountryFlag);
 
 export default new Vue({
   router,

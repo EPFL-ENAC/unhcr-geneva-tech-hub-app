@@ -3,10 +3,15 @@
     <header class="ma-5">
       <v-row>
         <v-col>
-          <h2>
-            {{ currentProjectEmoji }} {{ currentProjectCountryName }},
-            {{ project.name }}, {{ currentSurvey.name }}
-            {{ $can("edit", project) ? "" : "(Read only)" }}
+          <h2 class="d-flex">
+            <span class="mx-4 mt-n1">
+              <country-flag :country="project && project.country_code" />
+            </span>
+            <span>
+              {{ currentProjectCountryName }}, {{ project.name }},
+              {{ currentSurvey.name }}
+              {{ $can("edit", project) ? "" : "(Read only)" }}
+            </span>
           </h2>
         </v-col>
         <v-col class="col-auto">
@@ -108,7 +113,6 @@ import TreePlanting from "@/components/green_house_gaz/offset/TreePlanting.vue";
 import Results from "@/components/green_house_gaz/Results.vue";
 import Trucking from "@/components/green_house_gaz/wash/Trucking.vue";
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
-import getFlagEmoji from "@/utils/flagEmoji";
 import getCountryName from "@/utils/getCountryName";
 import { cloneDeep, isEqual } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
@@ -258,13 +262,6 @@ export default class SurveyList extends Vue {
     if (!isEqual(currentRouteQuery, query)) {
       this.$router.push({ query });
     }
-  }
-
-  public get currentProjectEmoji(): string {
-    if (this.project?.country_code) {
-      return getFlagEmoji(this.project.country_code);
-    }
-    return "";
   }
 
   public get currentProjectCountryName(): string {

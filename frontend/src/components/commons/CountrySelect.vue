@@ -12,7 +12,7 @@
   >
     <template v-slot:item="slotProps">
       <div class="d-flex justify-space-between" style="width: 300px">
-        <span> {{ slotProps.item.emoji }} </span>
+        <country-flag :country="slotProps.item.code" size="small" />
         {{ slotProps.item.name }}
       </div>
     </template>
@@ -22,7 +22,6 @@
 <script lang="ts">
 import { CountryInfo } from "@/store/GhgInterface";
 import { countries as Countries } from "@/utils/countriesAsList";
-import flagEmoji from "@/utils/flagEmoji";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
@@ -56,7 +55,6 @@ export default class CountrySelect extends Vue {
     if (countriesCloned && countriesCloned.length) {
       const result = countriesCloned.map(
         (v: string): CountryInfo => ({
-          emoji: flagEmoji(v),
           name: v,
           code: v,
           lat: 0, // not used
@@ -67,7 +65,6 @@ export default class CountrySelect extends Vue {
     } else {
       const result = Countries.map((country) => ({
         ...country,
-        emoji: flagEmoji(country.code),
       })) as CountryInfo[];
       return this.countriesSorted(result);
     }

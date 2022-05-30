@@ -108,11 +108,16 @@
         </v-col>
       </v-row>
       <v-data-table :headers="headers" :items="items">
-        <template v-slot:[`item.source`]="{ item }">
-          {{ getText(item._id.split("_")[0]) }}
+        <template v-slot:[`item.source`]="slotProps">
+          {{ getText(slotProps.item._id.split("_")[0]) }}
+          <country-flag
+            :country="slotProps.item._id.split('_')[0]"
+            size="small"
+          />
         </template>
         <template v-slot:[`item.destination`]="{ item }">
           {{ getText(item._id.split("_")[1]) }}
+          <country-flag :country="item._id.split('_')[1]" size="small" />
         </template>
 
         <template v-slot:[`item.t`]="props">
@@ -155,7 +160,7 @@ export default class MaterialsTransport extends Vue {
   public getText(isoCode3: keyof typeof iso3166_3_to_2): string {
     if (iso3166_3_to_2[isoCode3] && countriesMap[iso3166_3_to_2[isoCode3]]) {
       const local = countriesMap[iso3166_3_to_2[isoCode3]];
-      return `${local.name} ${local.emoji}`;
+      return `${local.name}`;
     }
     return isoCode3;
   }

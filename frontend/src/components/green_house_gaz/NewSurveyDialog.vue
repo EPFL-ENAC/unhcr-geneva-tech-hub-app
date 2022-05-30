@@ -35,7 +35,10 @@
                       class="d-flex justify-space-between"
                       style="width: 300px"
                     >
-                      <span> {{ slotProps.item.emoji }} </span>
+                      <country-flag
+                        :country="slotProps.item.country_code"
+                        size="small"
+                      />
                       {{ slotProps.item.name }}
                     </div>
                   </template>
@@ -119,8 +122,6 @@
 */
 import CountrySelect from "@/components/commons/CountrySelect.vue";
 import { Country, GreenHouseGaz, Sites, Survey } from "@/store/GhgInterface.js";
-import { countries as Countries } from "@/utils/countriesAsList";
-import flagEmoji from "@/utils/flagEmoji";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
@@ -157,11 +158,6 @@ export default class ProjectList extends Vue {
   set dialogOpen(v: boolean) {
     this.$emit("update:open", v);
   }
-
-  countriesRef = Countries.map((country) => ({
-    ...country,
-    emoji: flagEmoji(country.code),
-  }));
 
   public onSelectExistingSite(site: string): void {
     this.getDoc(site);

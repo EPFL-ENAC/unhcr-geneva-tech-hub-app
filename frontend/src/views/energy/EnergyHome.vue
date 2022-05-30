@@ -122,7 +122,10 @@
             <v-expansion-panels v-model="expandedIndexes" multiple>
               <v-expansion-panel v-for="group in groups" :key="group.name">
                 <v-expansion-panel-header>
-                  <h3>{{ group.name }} {{ group.emoji }}</h3>
+                  <h3>
+                    {{ group.name }}
+                    <country-flag :country="group.countryCode" size="small" />
+                  </h3>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <v-list nav>
@@ -247,7 +250,6 @@ import { ExistingDocument } from "@/models/couchdbModel";
 import { GeneralModule, ProjectDocument } from "@/models/energyModel";
 import { energy } from "@/utils/apps";
 import { SyncDatabase } from "@/utils/couchdb";
-import getFlagEmoji from "@/utils/flagEmoji";
 import { chain, cloneDeep, groupBy } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Ref, Vue } from "vue-property-decorator";
@@ -319,7 +321,7 @@ export default class EnergyHome extends Vue {
           .value()[0] as string;
         return {
           name: key,
-          emoji: getFlagEmoji(countryCode === "undefined" ? "" : countryCode),
+          countryCode: countryCode === "undefined" ? "" : countryCode,
           sites: value,
         };
       })
@@ -403,7 +405,7 @@ export default class EnergyHome extends Vue {
 
 interface Group {
   name: string;
-  emoji: string;
+  countryCode: string;
   sites: ExistingDocument<ProjectDocument>[];
 }
 
