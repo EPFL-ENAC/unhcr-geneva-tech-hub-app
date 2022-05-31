@@ -21,7 +21,12 @@
       />
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" app :mini-variant.sync="mini">
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      :mini-variant.sync="mini"
+      permanent
+    >
       <v-list>
         <v-list-item
           v-if="user.name"
@@ -110,19 +115,11 @@
     </v-navigation-drawer>
 
     <v-main v-if="$user('isLoggedOut')">
-      <v-layout
-        v-if="$router.currentRoute.name !== 'Login'"
-        align-center
-        justify-center
-        class="login"
-        fluid
-        fill-height
-      >
+      <v-layout align-center justify-center class="login" fluid fill-height>
         <v-flex xs12 sm8 md4>
           <login-component />
         </v-flex>
       </v-layout>
-      <router-view name="Login" />
     </v-main>
 
     <v-main v-else>
