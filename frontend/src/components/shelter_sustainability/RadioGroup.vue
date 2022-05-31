@@ -34,6 +34,7 @@
                 <v-expansion-panel-header :hide-actions="!child.description">
                   <v-checkbox
                     :input-value="checkbox[child._id]"
+                    :disabled="child.disabled || checkbox[child._id + 'na']"
                     hide-details
                     @mousedown.stop.prevent
                     @click.stop.prevent
@@ -47,6 +48,16 @@
                 <v-expansion-panel-content v-if="!!child.description">
                   <!-- eslint-disable-next-line vue/no-v-html -->
                   <p v-html="child.description"></p>
+                  <p class="d-flex justify-between align-center">
+                    <v-checkbox
+                      :input-value="checkbox[child._id + 'na']"
+                      hide-details
+                      @mousedown.stop.prevent
+                      @click.stop.prevent
+                      @change="(v) => updateValue(child._id + 'na', v)"
+                    />
+                    <span class="mt-4 pt-1"> Non Applicable </span>
+                  </p>
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
@@ -100,23 +111,30 @@ export default class RadioGroup extends Vue {
         .map((child) => child._id)
         .reduce((acc, _id) => {
           acc[_id] = oldValue[_id] !== undefined;
+          acc[_id + "na"] = oldValue[_id + "na"] !== undefined;
           return acc;
         }, {} as ScoreBoolean);
+      const formId = this.form._id;
+      res[formId] = oldValue[formId] !== undefined;
+      res[formId + "na"] = oldValue[formId + "na"] !== undefined;
       return res;
     }
     return {} as ScoreBoolean;
   }
 
-  updateValue(updatedKey: string, updatedValue: boolean): void {
+  updateValue(updatedKey: string, updatedValue: boolean, extended = ""): void {
     const newValue = Object.entries(this.checkbox).reduce(
-      (acc: Score, [key]) => {
+      (acc: Score, [currentKey]) => {
         // we reset old values also
-        const isChecked = key === updatedKey ? updatedValue : 0;
+        const isChecked = currentKey === updatedKey ? updatedValue : 0;
         if (this.form.children) {
           const lookup = this.form.children.find(
-            (el: ShelterFormChild): boolean => el._id === key
+            (el: ShelterFormChild): boolean => el._id === currentKey
           ) as ShelterFormInput;
-          acc[key] = isChecked ? lookup.score ?? 0 : undefined;
+          acc[currentKey] = isChecked ? lookup?.score ?? 0 : undefined;
+          if (currentKey === extended) {
+            acc[currentKey] = undefined;
+          }
         }
         return acc;
       },

@@ -34,7 +34,7 @@
                 <v-expansion-panel-header :hide-actions="!child.description">
                   <v-checkbox
                     :input-value="checkbox[child._id]"
-                    :disabled="child.disabled"
+                    :disabled="child.disabled || checkbox[child._id + 'na']"
                     hide-details
                     @mousedown.stop.prevent
                     @click.stop.prevent
@@ -48,6 +48,24 @@
                 <v-expansion-panel-content v-if="!!child.description">
                   <!-- eslint-disable-next-line vue/no-v-html -->
                   <p v-html="child.description"></p>
+                  <p
+                    v-if="!child.disabled"
+                    class="d-flex justify-between align-center"
+                  >
+                    <v-checkbox
+                      :input-value="checkbox[child._id + 'na']"
+                      :disabled="child.disabled"
+                      hide-details
+                      @mousedown.stop.prevent
+                      @click.stop.prevent
+                      @change="
+                        (v) => {
+                          updateValue(child._id + 'na', v, child._id);
+                        }
+                      "
+                    />
+                    <span class="mt-4 pt-1"> Non Applicable </span>
+                  </p>
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
@@ -97,23 +115,27 @@ export default class CheckboxGroup extends Vue {
     const oldValue = this.value ?? {};
     // reset all previous values
     this.form.children?.forEach((input) => {
-      newValue[input._id] = !!oldValue[input._id];
+      newValue[input._id] = oldValue[input._id] !== undefined;
+      newValue[input._id + "na"] = oldValue[input._id + "na"] !== undefined;
     });
     return newValue;
   }
 
-  updateValue(updatedKey: string, updatedValue: boolean): void {
-    // this.form.inputs.forEach((input: ShelterFormInput) => {
-    //   const isChecked = input._id === updatedKey ? updatedValue : this.value[];
-    //   newValue[input._id] = isChecked ? input.score ?? 0;
-    // })
+  updateValue(updatedKey: string, updatedValue: boolean, extended = ""): void {
     const newValue = Object.entries(this.checkbox).reduce(
-      (acc, [key, value]) => {
-        const isChecked = key === updatedKey ? updatedValue : value;
+      (acc, [currentKey, previousValue]) => {
+        // if updatedKey match current key, we need to update with updatedValue
+        // else we keep the previous value
         const child = this.form.children?.find(
-          (el: ShelterFormChild) => el._id === key
+          (el: ShelterFormChild) => el._id === currentKey
         ) as ShelterFormInput;
-        acc[key] = isChecked ? child.score ?? 0 : 0;
+        // no extended!
+        const isCheckedValue =
+          currentKey === updatedKey ? updatedValue : previousValue;
+        acc[currentKey] = isCheckedValue ? child?.score ?? 0 : undefined;
+        if (currentKey === extended) {
+          acc[currentKey] = undefined;
+        }
         return acc;
       },
       {} as Score

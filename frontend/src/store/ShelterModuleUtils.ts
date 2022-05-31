@@ -13,6 +13,8 @@ import {
 import { cloneDeep } from "lodash";
 import { CouchUser } from "./UserModule";
 
+const TOTAL_HAB = 14;
+const TOTAL_TECH_PERF = 42;
 export function generateState(): ShelterState {
   return {
     shelter: {} as Shelter,
@@ -32,25 +34,40 @@ export function computeShelter(value: Shelter): Shelter {
     newShelter?.items
   );
 
-  const valuesTech = Object.values(
-    resultShelter.technical_performance
+  // change because of non-applicable
+  const tech = resultShelter.technical_performance;
+  const nonApplicableTech = Object.keys(tech)
+    .filter((x) => x.match("na$"))
+    .map((x) => tech[x])
+    .filter((x) => x !== undefined).length;
+  const valuesTech = Object.values(resultShelter.technical_performance).filter(
+    (x) => x !== undefined
   ) as number[];
-
   if (valuesTech.length) {
-    resultShelter.technical_performance_score = valuesTech.reduce(
-      (acc, el) => acc + el
-    );
+    debugger;
+    const score = valuesTech.reduce((acc, el) => acc + el);
+    resultShelter.technical_performance_score =
+      score / (TOTAL_TECH_PERF - nonApplicableTech);
   } else {
     resultShelter.technical_performance_score = 0;
   }
 
-  const valuesHab = Object.values(resultShelter.habitability) as number[];
+  // change because of non-applicable
+  const hab = resultShelter.habitability;
+  const nonApplicableHab = Object.keys(hab)
+    .filter((x) => x.match("na$"))
+    .map((x) => hab[x])
+    .filter((x) => x !== undefined).length;
+  const valuesHab = Object.values(resultShelter.habitability).filter(
+    (x) => x !== undefined
+  ) as number[];
   if (valuesHab.length) {
-    resultShelter.habitability_score = valuesHab.reduce((acc, el) => acc + el);
+    const score = valuesHab.reduce((acc, el) => acc + el);
+    resultShelter.habitability_score = score / (TOTAL_HAB - nonApplicableHab);
   } else {
     resultShelter.habitability_score = 0;
   }
-  const { scorecard, errors } = getScoreCard(newShelter);
+  const { scorecard, errors } = getScoreCard(resultShelter);
   resultShelter.scorecard = scorecard;
   resultShelter.scorecard_errors = errors;
   return resultShelter;

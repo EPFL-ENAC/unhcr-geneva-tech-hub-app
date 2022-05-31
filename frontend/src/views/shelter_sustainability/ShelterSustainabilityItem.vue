@@ -54,6 +54,7 @@
 <script lang="ts">
 import { Shelter } from "@/store/ShelterInterface";
 import { SyncDatabase } from "@/utils/couchdb";
+import PouchDB from "pouchdb";
 import { Component, Vue } from "vue-property-decorator";
 import { Route } from "vue-router";
 import { mapActions, mapGetters } from "vuex";
@@ -147,14 +148,16 @@ export default class ProjectItem extends Vue {
   public retrieveData(): void {
     this.getDoc(decodeURIComponent(this.$route.params.id));
   }
+  changes!: PouchDB.Core.Changes<Shelter> | undefined;
   mounted(): void {
     this.syncDB();
     this.retrieveData();
 
-    this.db?.onChange(this.retrieveData);
+    this.changes = this.db?.onChange(this.retrieveData);
   }
   destroyed(): void {
     this.closeDB();
+    this.changes?.cancel();
   }
 }
 

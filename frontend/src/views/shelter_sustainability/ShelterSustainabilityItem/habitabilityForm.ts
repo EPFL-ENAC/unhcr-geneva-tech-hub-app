@@ -16,11 +16,6 @@ export default {
           description:
             "Provide a minimum 3.5 square metres of living space per person (excluding cooking space, bathing area and sanitation facility) or 4.5–5.5 square metres of living space per person in cold climates or urban settings where internal cooking space and bathing and/or sanitation facilities are included.<br/><br/>Consider living space for household members to gather, and for the care of infants, children and  persons who are ill or injured. Pay attention to changing use of space  during day and night, and plan the locations of windows, doors and  partitions to maximise the use of internal space and any adjacent  external areas such as kitchens or play areas. To accommodate these  activities in dignity, shelters need an enclosed space (walls, windows,  doors and roof) with adequate floor area. Overcrowding or exposure to  the elements increases the risk of disease outbreak or illness. Reduced space may lead to protection risks, reduced security and privacy.",
         },
-        // {
-        //   _id: "input2",
-        //   label: "Floor area is >=4.5m2 (in cold climate - Sphere Standard)",
-        //   score: 1,
-        // },
         {
           _id: "input3",
           label:
@@ -80,12 +75,6 @@ export default {
             "The need for internal subdivisions of a shelter should be assessed based on existing practices and customs. Where appropriate for gender, age or cultural reasons, non-transparent partitions (e.g., curtains, walls) should be installed or allowance should be made for installation where required. ",
           score: 1,
         },
-        // {
-        //   _id: "input9",
-        //   label:
-        //     "The design accomodates addition of an internal partition to provide visual privacy",
-        //   score: 1,
-        // },
         {
           _id: "input10",
           label:

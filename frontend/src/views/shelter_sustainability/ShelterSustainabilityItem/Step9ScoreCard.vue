@@ -32,8 +32,16 @@
                   >
                   <h2 v-else>{{ option.config.title }}:</h2>
                   <span class="ml-4">
-                    {{ scorecard[option.config.id] | formatNumber }}
-                    {{ option.config.unit }}
+                    <span v-if="option.config.unit === '%'">
+                      {{
+                        scorecard[option.config.id]
+                          | formatNumber(0, 0, false, "percent")
+                      }}
+                    </span>
+                    <span v-else>
+                      {{ scorecard[option.config.id] | formatNumber() }}
+                      {{ option.config.unit }}
+                    </span>
                   </span>
                   <v-tooltip right :max-width="300">
                     <template v-slot:activator="{ on, attrs }">
@@ -80,10 +88,10 @@ import {
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
 import { CallbackDataParams, EChartsOption } from "echarts/types/dist/shared";
+import PouchDB from "pouchdb";
 import VChart from "vue-echarts";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-
 use([
   CanvasRenderer,
   SingleAxisComponent,
@@ -190,9 +198,9 @@ export default class Step8ScoreCard extends Vue {
     {
       id: "techPerf",
       min: 0,
-      max: 42,
+      max: 100,
       title: "Technical performance",
-      unit: " out of 42",
+      unit: "%",
       description:
         "Technical performance score is calculated from shelter characteristics identified in relation to: hazard-related structural performance, internal comfort, safety and security, and construction techniques.",
       colors: {
@@ -203,8 +211,8 @@ export default class Step8ScoreCard extends Vue {
     {
       id: "habitability",
       min: 0,
-      max: 17,
-      unit: "out of 17",
+      max: 100,
+      unit: "%",
       title: "Habitability",
       description:
         "Habitability score is calculated from shelter characteristics identified in relation to: floor area, accessibility, privacy, artificial lighting, and complimentary facilities.",
@@ -256,14 +264,14 @@ export default class Step8ScoreCard extends Vue {
             const key = config.id as ScoreCardsKey;
             const shelter_type = scor.shelter_type as colorType;
             const colors = this.colors[shelter_type];
+            let firstValue = parseFloat(scor[key].toFixed(3));
+            if (key === "habitability" || key === "techPerf") {
+              debugger;
+              firstValue = firstValue * 100;
+            }
+            scor[key] = firstValue;
             return {
-              value: [
-                parseFloat(scor[key].toFixed(3)),
-                scor.selected ? 4 : 2,
-                key,
-                scor,
-                config,
-              ],
+              value: [firstValue, scor.selected ? 4 : 2, key, scor, config],
               itemStyle: {
                 color: scor.selected ? colors.primary : colors.secondary, //config.colors.secondary,
               },
@@ -313,13 +321,14 @@ export default class Step8ScoreCard extends Vue {
     console.log(params);
   }
 
+  changes!: PouchDB.Core.Changes<Shelter> | undefined;
   mounted(): void {
     // we don't init/close the db, it's handled by parent route component
     // frontend/src/views/shelter_sustainability/ShelterSustainabilityItem.vue
     const id = decodeURIComponent(this.$route.params.id);
 
     this.getScorecards(id);
-    this.db?.onChange(() => {
+    this.changes = this.db?.onChange(() => {
       this.getScorecards(id);
     });
     this.$store.subscribe((mutation) => {
@@ -329,6 +338,10 @@ export default class Step8ScoreCard extends Vue {
         this.getScorecards(id);
       }
     });
+  }
+
+  destroyed(): void {
+    this.changes?.cancel();
   }
 }
 
