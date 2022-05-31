@@ -1,7 +1,7 @@
 <template>
   <v-card class="elevation-12">
     <v-toolbar dark color="primary">
-      <v-toolbar-title>Welcome!</v-toolbar-title>
+      <v-toolbar-title data-cy="loginWelcome">Welcome!</v-toolbar-title>
     </v-toolbar>
     <v-form v-model="formValid" @submit.prevent="loginCouchdb">
       <v-card-text v-show="showForm">
@@ -22,7 +22,7 @@
           id="current-password"
           v-model="password"
           outlined
-          name="current-password"
+          name="password"
           autocomplete="current-password"
           label="Password"
           placeholder=" "
