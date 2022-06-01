@@ -26,7 +26,7 @@
           </p>
 
           <ul>
-            <li>Distance = 51.37 x log(Land area) - 448.36___<b>(1)</b></li>
+            <li>Distance = 51.37 x log(Land area) - 448.36___<b>(1)(Zea Escamilla, 2015)</b></li>
           </ul>
 
           <br />
@@ -35,7 +35,7 @@
           same, transport distance is calculated as a function of country land
           area:
           <ul>
-            <li>Distance = 61.05 x log(Land area) - 500.04 ___<b>(2)</b></li>
+            <li>Distance = 61.05 x log(Land area) - 500.04 ___<b>(2)(Zea Escamilla, 2015)</b></li>
           </ul>
 
           <p>
@@ -96,8 +96,8 @@
           <ol>
             <li>
               For road transport, Heavy Duty Vehicle (HDV) -Medium: low value =
-              0.17 kgCO2/tonne-km, high value = 0.25 kgCO2/tonne-km, mid value =
-              0.21 kgCO2/tonne-km;
+              0.17 kgCO2/tonne-km, high value = 0.51 kgCO2/tonne-km, mid value =
+              0.34 kgCO2/tonne-km;
             </li>
             <li>
               For sea transport, Container Ship - Ocean: low value = 0.01
