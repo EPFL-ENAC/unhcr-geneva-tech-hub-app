@@ -6,6 +6,7 @@
   "devDependencies": {
     "@commitlint/cli": "^16.1.0",
     "@commitlint/config-conventional": "^16.0.0",
+    "commitlint-config-gitmoji": "^2.2.5",
     "husky": "^7.0.4",
     "prettier": "^2.5.1",
     "standard-version": "^9.3.2"
