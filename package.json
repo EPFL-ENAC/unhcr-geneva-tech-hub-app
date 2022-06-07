@@ -16,11 +16,6 @@
       "gitmoji"
     ]
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "make lint"
-    }
-  },
   "name": "unhcr-geneva-tech-hub-app",
   "version": "0.1.0",
   "repository": "https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app",
