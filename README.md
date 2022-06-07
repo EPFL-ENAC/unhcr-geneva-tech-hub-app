@@ -5,7 +5,7 @@ UNHCR Geneva Technical Hub App
 Regroup three projects: 
     -  project 1 (GHG emission calculator)
     -  project 2 (Shelter sutainability calculator)
-    -  project 3 ( ? )
+    -  project 3 (Energy )
 
 ## Project page
 
