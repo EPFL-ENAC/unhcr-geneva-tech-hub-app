@@ -1,72 +1,60 @@
----
-name: Bug report
-about: Create a report to help us improve
-title: "[Bug]: "
-labels: bug
+name: 🐞 Bug
+description: File a bug/issue
+title: "[BUG] <title>"
+labels: [Bug, Needs Triage]
 assignees: guilbep
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for taking the time to fill out this bug report!
-  - type: input
-    id: contact
-    attributes:
-      label: Contact Details
-      description: How can we get in touch with you if we need more info?
-      placeholder: ex. email@example.com
-    validations:
-      required: false
-  - type: textarea
-    id: what-happened
-    attributes:
-      label: What happened?
-      description: Also tell us, what did you expect to happen?
-      placeholder: A clear and concise description of what the bug is.
-      value: "A bug happened!"
-    validations:
+- type: checkboxes
+  attributes:
+    label: Is there an existing issue for this?
+    description: Please search to see if an issue already exists for the bug you encountered.
+    options:
+    - label: I have searched the existing issues
       required: true
-  - type: textarea
-    id: how-to-reproduce
-    attributes:
-      label: How To Reproduce The Bug
-      description: "Steps to reproduce the behavior:"
-      placeholder: "step1: .. step2: .. et c
-      value: "1. Go to '...'
-                2. Click on '....'
-                3. Scroll down to '....'
-                4. See error"
-    validations:
-      required: true
-  - type: textarea
-    id: what-to-expect
-    attributes:
-      label: What to expect?
-      description: Also tell us, what did you expect to happen?
-      placeholder: Description of the expected behavior
-      value: "A clear and concise description of what you expected to happen."
-    validations:
-      required: true
-  - type: dropdown
-    id: browsers
-    attributes:
-      label: What browsers are you seeing the problem on?
-      multiple: true
-      options:
-        - Firefox
-        - Chrome
-        - Safari
-        - Microsoft Edge
-  - type: textarea
-    id: logs
-    attributes:
-      label: Relevant log output
-      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
-      render: shell
----
+- type: textarea
+  attributes:
+    label: Current Behavior
+    description: A concise description of what you're experiencing.
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Expected Behavior
+    description: A concise description of what you expected to happen.
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Steps To Reproduce
+    description: Steps to reproduce the behavior.
+    placeholder: |
+      1. In this environment...
+      2. With this config...
+      3. Run '...'
+      4. See error...
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Environment
+    description: |
+      examples:
+        - **OS**: Ubuntu 20.04
+        - **Node**: 13.14.0
+        - **npm**: 7.6.3
+    value: |
+        - OS:
+        - Node:
+        - npm:
+    render: markdown
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Anything else?
+    description: |
+      Links? References? Anything that will give us more context about the issue you are encountering!
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
-**Additional context**
-Add any other context about the problem here. (e.g URL / or way of authenticate to the app / location / vpn ?)
+      Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
+  validations:
+    required: false
