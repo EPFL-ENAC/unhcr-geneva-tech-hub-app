@@ -13,12 +13,12 @@
   },
   "commitlint": {
     "extends": [
-      "@commitlint/config-conventional"
+      "gitmoji"
     ]
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "make lint"
     }
   },
   "name": "unhcr-geneva-tech-hub-app",
