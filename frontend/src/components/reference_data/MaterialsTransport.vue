@@ -26,7 +26,11 @@
           </p>
 
           <ul>
-            <li>Distance = 51.37 x log(Land area) - 448.36___<b>(1)(Zea Escamilla, 2015)</b></li>
+            <li>
+              Distance = 51.37 x log(Land area) - 448.36___<b
+                >(1)(Zea Escamilla, 2015)</b
+              >
+            </li>
           </ul>
 
           <br />
@@ -35,7 +39,11 @@
           same, transport distance is calculated as a function of country land
           area:
           <ul>
-            <li>Distance = 61.05 x log(Land area) - 500.04 ___<b>(2)(Zea Escamilla, 2015)</b></li>
+            <li>
+              Distance = 61.05 x log(Land area) - 500.04 ___<b
+                >(2)(Zea Escamilla, 2015)</b
+              >
+            </li>
           </ul>
 
           <p>
