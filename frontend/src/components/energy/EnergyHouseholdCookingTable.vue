@@ -366,8 +366,10 @@ export default class EnergyHouseholdCookingTable extends Vue {
         fuelName: item.fuel.name,
         countPer10Households: round(
           sumBy(
-            Object.values(item.categories),
-            (input) => input.countPerHousehold
+            Object.entries(item.categories),
+            ([cat, input]) =>
+              input.countPerHousehold *
+              this.getProportion(cat as SocioEconomicCategory)
           ) * 10
         ),
         id: item.stove._id,
@@ -381,6 +383,10 @@ export default class EnergyHouseholdCookingTable extends Vue {
 
   private getFuel(stove: CookingStove): CookingFuel {
     return getCookingFuel(this.cookingFuels, stove);
+  }
+
+  getProportion(cat: SocioEconomicCategory): number {
+    return this.generalModule.categories[cat].proportion;
   }
 
   addItem(item: CookingStove): void {
@@ -411,7 +417,9 @@ export default class EnergyHouseholdCookingTable extends Vue {
       .map((cat) => ({
         id: cat,
         name: this.$t(`energy.${cat}`).toString(),
-        value: item[cat].countPerHousehold,
+        value:
+          item[cat].countPerHousehold *
+          this.getProportion(cat as SocioEconomicCategory),
       }))
       .filter((item) => item.value > 0);
     return {
