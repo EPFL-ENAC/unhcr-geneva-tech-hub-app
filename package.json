@@ -13,7 +13,7 @@
   },
   "commitlint": {
     "extends": [
-      "gitmoji"
+      "@commitlint/config-conventional"
     ]
   },
   "name": "unhcr-geneva-tech-hub-app",
