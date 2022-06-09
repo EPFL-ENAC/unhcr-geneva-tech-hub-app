@@ -75,3 +75,4 @@ Host enacvm0084.xaas.epfl.ch
     - deploy-os
     - deploy-app
 5. Your Makefile should contain a 'run' command
+test
