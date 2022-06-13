@@ -1,8 +1,6 @@
 import filters from "@/plugins/filters";
 import "@/plugins/leaflet";
 import User from "@/plugins/user";
-import "@fontsource/lato";
-import "font-proxima-nova-css/fonts.min.css";
 import "leaflet/dist/leaflet.css";
 import Vue from "vue";
 import CountryFlag from "vue-country-flag";
