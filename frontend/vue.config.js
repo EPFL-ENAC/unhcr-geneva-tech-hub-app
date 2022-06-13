@@ -6,6 +6,7 @@ module.exports = {
     workboxPluginMode: "GenerateSW",
     workboxOptions: {
       skipWaiting: true,
+      clientsClaim: true,
     },
   },
   transpileDependencies: ["vuetify"],
