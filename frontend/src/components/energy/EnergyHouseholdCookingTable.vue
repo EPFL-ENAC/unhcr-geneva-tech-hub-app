@@ -6,7 +6,7 @@
         <v-dialog v-model="detailDialog">
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" icon v-on="on">
-              <v-icon>mdi-account-hard-hat</v-icon>
+              <v-icon>$mdiAccountHardHat</v-icon>
             </v-btn>
           </template>
           <v-card>
@@ -21,7 +21,7 @@
                     icon
                     v-on="on"
                   >
-                    <v-icon large>mdi-plus-box</v-icon>
+                    <v-icon large>$mdiPlusBox</v-icon>
                   </v-btn>
                 </template>
                 <v-card>
@@ -32,7 +32,7 @@
                       hide-details="auto"
                       :items="addSelectItems"
                       label="Available technologies"
-                      append-outer-icon="mdi-plus-box"
+                      append-outer-icon="$mdiPlusBox"
                       @click:append-outer="addItem(addSelectedItem)"
                     ></v-select>
                   </v-card-text>
@@ -98,7 +98,7 @@
                         v-slot:[`item.action`]="{ item }"
                       >
                         <v-btn icon @click="deleteItem(item)">
-                          <v-icon>mdi-delete</v-icon>
+                          <v-icon>$mdiDelete</v-icon>
                         </v-btn>
                       </template>
                     </v-data-table>

@@ -6,7 +6,7 @@
           Energy substitution
           <v-spacer></v-spacer>
           <v-btn class="float-right" color="primary" text @click="addDiffusion">
-            <v-icon left>mdi-plus-box</v-icon>
+            <v-icon left>$mdiPlusBox</v-icon>
             New intervention
           </v-btn>
         </v-card-title>
@@ -26,9 +26,9 @@
                     "
                   >
                     <v-icon v-if="interventionItem.selected" color="primary">
-                      mdi-checkbox-marked
+                      $mdiCheckbox-marked
                     </v-icon>
-                    <v-icon v-else>mdi-checkbox-blank-outline</v-icon>
+                    <v-icon v-else>$mdiCheckbox-blank-outline</v-icon>
                   </v-btn>
                 </span>
                 <span>{{ interventionItem.name }}</span>
@@ -40,7 +40,7 @@
                       deleteDuffusion(index);
                     "
                   >
-                    <v-icon>mdi-delete</v-icon>
+                    <v-icon>$mdiDelete</v-icon>
                   </v-btn>
                 </span>
               </v-expansion-panel-header>
@@ -74,7 +74,7 @@
             text
             @click="addEfficiency"
           >
-            <v-icon left>mdi-plus-box</v-icon>
+            <v-icon left>$mdiPlusBox</v-icon>
             New intervention
           </v-btn>
         </v-card-title>
@@ -102,7 +102,7 @@
                     <v-spacer></v-spacer>
                     <v-col cols="auto" class="d-flex align-center">
                       <v-btn icon @click="deleteEfficiency(index)">
-                        <v-icon>mdi-delete</v-icon>
+                        <v-icon>$mdiDelete</v-icon>
                       </v-btn>
                     </v-col>
                   </v-row>
@@ -119,7 +119,7 @@
           Cash-based interventions
           <v-spacer></v-spacer>
           <v-btn class="float-right" color="primary" text @click="addCash">
-            <v-icon left>mdi-plus-box</v-icon>
+            <v-icon left>$mdiPlusBox</v-icon>
             New intervention
           </v-btn>
         </v-card-title>
@@ -148,7 +148,7 @@
                     <v-spacer></v-spacer>
                     <v-col cols="auto" class="d-flex align-center">
                       <v-btn icon @click="deleteCash(index)">
-                        <v-icon>mdi-delete</v-icon>
+                        <v-icon>$mdiDelete</v-icon>
                       </v-btn>
                     </v-col>
                   </v-row>

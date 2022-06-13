@@ -46,7 +46,7 @@
                   <template v-slot:label>
                     <div class="d-flex align-end">
                       <v-icon :class="`c-${shelterColors[shelterType].name}`">
-                        mdi-{{ shelterIcons[shelterType] }}
+                        {{ shelterIcons[shelterType] }}
                       </v-icon>
                       {{ shelterType }}
                     </div>
@@ -65,7 +65,7 @@
                   text
                   @click="addProject"
                 >
-                  <v-icon left>mdi-plus-box</v-icon>
+                  <v-icon left>$mdiPlusBox</v-icon>
                   New shelter
                 </v-btn>
               </v-col>
@@ -109,7 +109,7 @@
                             shelterColors[project.shelter_type].name
                           }`"
                         >
-                          mdi-{{ shelterIcons[project.shelter_type] }}
+                          {{ shelterIcons[project.shelter_type] }}
                         </v-icon>
                         <div class="project__hidden-child float-right">
                           <span v-if="$can('edit', project)"
@@ -157,7 +157,7 @@
                                   "
                                 >
                                   <v-icon small class="better-click">
-                                    mdi-content-copy
+                                    $mdiContentCopy
                                   </v-icon>
                                 </v-btn>
                               </template>
@@ -177,7 +177,7 @@
                                   "
                                 >
                                   <v-icon small class="better-click">
-                                    mdi-delete
+                                    $mdiDelete
                                   </v-icon>
                                 </v-btn>
                               </template>
@@ -272,9 +272,9 @@ export default class ProjectList extends Vue {
   countriesMap = countriesMap;
 
   shelterIcons = {
-    Emergency: "home-variant-outline",
-    Transitional: "home-outline",
-    Durable: "home",
+    Emergency: "$mdiHomeVariantOutline",
+    Transitional: "$mdiHomeOutline",
+    Durable: "$mdiHome",
   };
 
   dialogDelete = false;

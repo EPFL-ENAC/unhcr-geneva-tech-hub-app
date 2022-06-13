@@ -2,7 +2,7 @@
   <v-tooltip bottom max-width="512">
     <template v-slot:activator="{ on, attrs }">
       <v-icon v-bind="attrs" class="ma-1" v-on="on"
-        >mdi-information-outline</v-icon
+        >$mdiInformationOutline</v-icon
       >
     </template>
     <slot></slot>

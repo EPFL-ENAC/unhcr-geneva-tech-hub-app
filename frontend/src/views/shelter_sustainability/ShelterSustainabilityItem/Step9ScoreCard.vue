@@ -46,7 +46,7 @@
                   <v-tooltip right :max-width="300">
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn icon v-bind="attrs" v-on="on">
-                        <v-icon> mdi-information </v-icon>
+                        <v-icon> $mdiInformation </v-icon>
                       </v-btn>
                     </template>
                     <span>{{ option.config.description }}</span>
@@ -266,7 +266,6 @@ export default class Step8ScoreCard extends Vue {
             const colors = this.colors[shelter_type];
             let firstValue = parseFloat(scor[key].toFixed(3));
             if (key === "habitability" || key === "techPerf") {
-              debugger;
               firstValue = firstValue * 100;
             }
             scor[key] = firstValue;

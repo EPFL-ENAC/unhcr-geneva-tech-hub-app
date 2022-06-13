@@ -4,7 +4,7 @@
       <v-spacer></v-spacer>
       <v-col cols="auto">
         <v-btn color="primary" :disabled="saveDisabled" @click="save">
-          <v-icon left>mdi-content-save</v-icon>
+          <v-icon left>$mdiContentSave</v-icon>
           Save
         </v-btn>
       </v-col>

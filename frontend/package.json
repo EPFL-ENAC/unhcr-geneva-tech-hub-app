@@ -10,7 +10,7 @@
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\""
   },
   "dependencies": {
-    "@mdi/font": "^6.5.95",
+    "@mdi/js": "^6.7.96",
     "axios": "^0.26.0",
     "core-js": "^3.6.5",
     "echarts": "^5.3.2",

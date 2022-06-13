@@ -24,7 +24,7 @@
             <template v-slot:activator="{ on, attrs }">
               {{ props.item.density }} {{ props.item.density_unit }}
               <v-btn icon v-bind="attrs" v-on="on">
-                <v-icon>mdi-information</v-icon>
+                <v-icon>$mdiInformation</v-icon>
               </v-btn>
             </template>
             <span>{{ props.item.density_ref | formatNumber }}</span>
@@ -35,7 +35,7 @@
             <template v-slot:activator="{ on, attrs }">
               {{ props.item.embodied_water | formatNumber }} L/kg
               <v-btn icon v-bind="attrs" v-on="on">
-                <v-icon>mdi-information</v-icon>
+                <v-icon>$mdiInformation</v-icon>
               </v-btn>
             </template>
             <span>{{ props.item.embodied_water_ref }}</span>
@@ -46,7 +46,7 @@
             <template v-slot:activator="{ on, attrs }">
               {{ props.item.embodied_carbon | formatNumber }} kgCO2e/kg
               <v-btn icon v-bind="attrs" v-on="on">
-                <v-icon>mdi-information</v-icon>
+                <v-icon>$mdiInformation</v-icon>
               </v-btn>
             </template>
             <span>{{ props.item.embodied_carbon_ref }}</span>

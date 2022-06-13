@@ -10,7 +10,7 @@
           v-model="username"
           outlined
           label="Login"
-          prepend-icon="mdi-account"
+          prepend-icon="$mdiAccount"
           placeholder=" "
           persistent-placeholder
           required
@@ -26,7 +26,7 @@
           label="Password"
           placeholder=" "
           persistent-placeholder
-          prepend-icon="mdi-lock"
+          prepend-icon="$mdiLock"
           required
           hide-details="true"
           type="password"
@@ -52,7 +52,6 @@ import { v4 as uuidv4 } from "uuid";
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-
 @Component({
   computed: {
     ...mapGetters("UserModule", ["user"]),

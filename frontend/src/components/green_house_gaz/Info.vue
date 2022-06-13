@@ -4,7 +4,7 @@
       <v-row>
         <v-col class="d-flex justify-end">
           <v-btn color="primary" :disabled="!formValid" type="submit">
-            <v-icon left>mdi-content-save</v-icon>
+            <v-icon left>$mdiContentSave</v-icon>
             Save
           </v-btn>
         </v-col>

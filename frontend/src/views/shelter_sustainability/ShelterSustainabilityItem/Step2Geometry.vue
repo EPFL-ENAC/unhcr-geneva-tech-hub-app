@@ -48,17 +48,18 @@
               </v-btn>
               <v-img
                 max-width="300px"
+                max-height="160px"
                 class="d-flex justify-center white-background"
                 :src="geometry.image_url"
                 :aria-label="geometry._id"
               ></v-img>
               <v-btn icon @click.stop="selectedItem = geometry">
-                <v-icon>mdi-magnify</v-icon>
+                <v-icon>{{ mdiMagnify }}</v-icon>
               </v-btn>
               <!-- <span>{{ geometry._id }}</span> -->
             </v-card-title>
             <v-card-text
-              v-if="!geometry.hiddenInputs"
+              v-if="!geometry.hiddenInputs && shelter_geometry_type"
               class="flex-gap-sm d-flex flex-column justify-space-between"
             >
               <v-expand-transition>
@@ -101,7 +102,7 @@
                       <v-card-title>
                         Door dimensions
                         <v-btn icon @click="removeDoor($doorKey)">
-                          <v-icon>mdi-delete</v-icon>
+                          <v-icon>{{ mdiDelete }}</v-icon>
                         </v-btn>
                       </v-card-title>
                       <v-form class="pa-md-4">
@@ -138,7 +139,7 @@
                       <v-card-title class="d-flex justify-space-between">
                         Window dimensions
                         <v-btn icon @click="removeWindow($windowKey)">
-                          <v-icon>mdi-delete</v-icon>
+                          <v-icon>{{ mdiDelete }}</v-icon>
                         </v-btn>
                       </v-card-title>
                       <v-form class="pa-md-4">
@@ -163,10 +164,10 @@
                   </v-col>
                   <v-col :lg="4" :md="6" sm="12" xs="12">
                     <v-btn block class="my-4" @click="addDoor">
-                      <v-icon left>mdi-plus-box</v-icon> Add door</v-btn
+                      <v-icon left>{{ mdiPlusBox }} </v-icon> Add door</v-btn
                     >
                     <v-btn block @click="addWindow"
-                      ><v-icon left>mdi-plus-box</v-icon> Add window</v-btn
+                      ><v-icon left>{{ mdiPlusBox }} </v-icon> Add window</v-btn
                     >
                   </v-col>
                 </v-row>
@@ -233,9 +234,9 @@ import {
   WindowDimensions,
 } from "@/store/ShelterInterface";
 import { getNewGeometry } from "@/store/ShelterModuleUtils";
+import { mdiDelete, mdiMagnify, mdiPlusBox } from "@mdi/js";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-
 /* two ways to have a store copy locally
 1. having a watcher on the store that cloneDeep to data() locally
 2. having a subscriber to mutation that's initialized at created
@@ -251,6 +252,10 @@ for the original discussion
 export default class Step2Geometry extends Vue {
   @Prop({ type: [Object], required: true })
   shelter!: Shelter;
+
+  mdiMagnify = mdiMagnify;
+  mdiDelete = mdiDelete;
+  mdiPlusBox = mdiPlusBox;
 
   public get localShelter(): Shelter {
     return cloneDeep(this.shelter);

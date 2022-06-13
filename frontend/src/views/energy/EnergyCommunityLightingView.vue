@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <v-alert type="warning">
-          <i><v-icon>mdi-wrench</v-icon> This module is under development</i>
+          <i><v-icon>$mdiWrench</v-icon> This module is under development</i>
         </v-alert>
       </v-col>
     </v-row>

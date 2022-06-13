@@ -104,7 +104,7 @@
         <v-dialog max-width="256">
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" icon v-on="on">
-              <v-icon>mdi-account-hard-hat</v-icon>
+              <v-icon>$mdiAccountHardHat</v-icon>
             </v-btn>
           </template>
           <v-card>

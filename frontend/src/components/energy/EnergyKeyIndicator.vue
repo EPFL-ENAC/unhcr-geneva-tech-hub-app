@@ -6,7 +6,9 @@
         <span class="font-weight-bold">{{ value | formatNumber(0, 0) }}</span>
         <template v-if="unit"> [{{ unit }}]</template>
         <span v-if="percentage !== 0" :style="{ color: color }"
-          >&nbsp;<v-icon :color="color" small>{{ icon }}</v-icon>
+          >&nbsp;<v-icon :class="iconClass" :color="color" small
+            >$mdiTriangle</v-icon
+          >
           <span>{{ percentage | formatNumber(0, 0, true) }} %</span>
         </span>
       </div>
@@ -46,13 +48,13 @@ export default class EnergyKeyIndicator extends Vue {
     }
   }
 
-  get icon(): string {
+  get iconClass(): string {
     if (this.value < this.baseValue) {
-      return "mdi-triangle mdi-rotate-180";
+      return "rotate-180";
     } else if (this.value > this.baseValue) {
-      return "mdi-triangle";
+      return "";
     } else {
-      return "mdi-triangle mdi-rotate-90";
+      return "rotate-90";
     }
   }
 

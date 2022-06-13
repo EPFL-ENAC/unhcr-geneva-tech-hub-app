@@ -14,7 +14,7 @@
         <v-col cols="1" class="d-flex justify-end align-center">
           <v-btn icon @click="toggle">
             <v-icon :class="{ 'chevron-rotate': !expandPanel }"
-              >mdi-chevron-down</v-icon
+              >$mdiChevronDown</v-icon
             >
           </v-btn>
         </v-col>

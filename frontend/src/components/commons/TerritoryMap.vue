@@ -83,20 +83,35 @@ export default class TerritoryMap extends Vue {
   selectedZoomFactor = 5;
 
   shelterIcons = {
-    Emergency: "home-variant-outline",
-    Transitional: "home-outline",
-    Durable: "home",
+    Emergency: "mdiHomeVariantOutline",
+    Transitional: "mdiHomeOutline",
+    Durable: "mdiHome",
   };
 
   public getIcon(defaultIcon: string, shelterType: ShelterType): L.DivIcon {
-    let className = `mdi mdi-${defaultIcon} customIcon`;
+    let className = `customIcon`;
+    let iconPath = this.$vuetify.icons.values.mdiPin;
     if (shelterType) {
-      className = `mdi mdi-${this.shelterIcons[shelterType]} c-${this.shelterColors[shelterType].name} customIcon`;
+      className = `c-${this.shelterColors[shelterType].name} customIcon`;
+      iconPath = this.$vuetify.icons.values[this.shelterIcons[shelterType]];
     }
     return L.divIcon({
-      html: "<i></i>",
+      html:
+        `<svg
+  version="1.1"
+  width="26"
+    height="26"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg"
+>
+      <path
+      d="` +
+        iconPath +
+        `"
+    />
+</svg>`,
       iconSize: [26, 26],
-      className: className,
+      className,
     });
   }
   public goToMarker(item: unknown): void {
@@ -167,14 +182,17 @@ export default class TerritoryMap extends Vue {
 
 ::v-deep .c-blue {
   color: var(--c-blue);
+  fill: var(--c-blue);
 }
 
 ::v-deep .c-brown {
   color: var(--c-brown);
+  fill: var(--c-brown);
 }
 
 ::v-deep .c-grey {
   color: var(--c-grey);
+  fill: var(--c-grey);
 }
 ::v-deep.leaflet-container.territory {
   z-index: 1;

@@ -29,16 +29,13 @@
           Total Endline CO2 Emissions:
           {{ totalEndline | formatNumber }} (tCO2e/year)
 
-          <v-icon :color="color">
-            {{ icon }}
-          </v-icon>
+          <v-icon :class="iconClass" :color="color"> $mdiTriangle </v-icon>
           <span
             :class="{
               'result-positive': totalChange > 0,
               'result-negative': totalChange < 0,
             }"
           >
-            {{ totalChange > 0 ? "+" : "" }}
             {{ totalChange | formatNumber(0, 0, true, "percent") }}
           </span>
         </h3>
@@ -131,13 +128,13 @@ export default class Results extends Vue {
     return this.totalResult("endline");
   }
 
-  get icon(): string {
+  get iconClass(): string {
     if (this.totalChange > 0) {
-      return "mdi-triangle";
+      return "";
     } else if (this.totalChange < 0) {
-      return "mdi-triangle mdi-rotate-180";
+      return "rotate-180";
     } else {
-      return "mdi-triangle mdi-rotate-90";
+      return "rotate-90";
     }
   }
 
