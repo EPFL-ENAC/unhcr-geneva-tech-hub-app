@@ -11,7 +11,7 @@
               text
               @click="addSurvey"
             >
-              <v-icon left>mdi-plus-box</v-icon>
+              <v-icon left>$mdiPlusBox</v-icon>
               New assessment
             </v-btn>
           </v-col>

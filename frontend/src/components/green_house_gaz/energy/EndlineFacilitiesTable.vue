@@ -65,7 +65,7 @@
           :disabled="disabled"
           @click="openItemDialog(item, item.name)"
         >
-          <v-icon> mdi-pencil</v-icon>
+          <v-icon> $mdiPencil</v-icon>
         </v-btn>
       </template>
       <template v-slot:foot="{}">

@@ -2,11 +2,11 @@
   <v-card>
     <v-card-text>
       <span v-for="cat in categories" :key="cat">
-        <v-icon :color="getColor(cat)">mdi-checkbox-blank</v-icon>
+        <v-icon :color="getColor(cat)">$mdiCheckbox-blank</v-icon>
         <span>{{ $t("energy." + cat) }}&nbsp;</span>
       </span>
       <span>
-        <v-icon :color="totalColor">mdi-checkbox-blank</v-icon>
+        <v-icon :color="totalColor">$mdiCheckbox-blank</v-icon>
         <span>Total&nbsp;</span>
       </span>
     </v-card-text>

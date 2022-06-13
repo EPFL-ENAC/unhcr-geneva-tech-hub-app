@@ -283,54 +283,54 @@ export default class EnergyProject extends Vue {
   readonly tabItems: TabItem[] = [
     {
       text: "Information",
-      icon: "mdi-information",
+      icon: "$mdiInformation",
       toName: "General",
     },
     {
       text: "Scenario",
-      icon: "mdi-skip-next",
+      icon: "$mdiSkipNext",
       toName: "Scenario",
     },
     {
       text: "Household",
-      icon: "mdi-home",
+      icon: "$mdiHome",
       toName: "Household",
       children: [
         {
           text: "Cooking",
-          icon: "mdi-stove",
+          icon: "$mdiStove",
           toName: "Cooking",
         },
         {
           text: "Lighting",
-          icon: "mdi-lightbulb",
+          icon: "$mdiLightbulb",
           toName: "Lighting",
         },
         {
           text: "Heating & Cooling",
-          icon: "mdi-sun-snowflake",
+          icon: "$mdiSunSnowflake",
           toName: "Heating",
         },
       ],
     },
     {
       text: "Community",
-      icon: "mdi-home-city",
+      icon: "$mdiHomeCity",
       toName: "Community",
       children: [
         {
           text: "Lighting",
-          icon: "mdi-lightbulb",
+          icon: "$mdiLightbulb",
           toName: "Lighting",
         },
         {
           text: "Heating & Cooling",
-          icon: "mdi-sun-snowflake",
+          icon: "$mdiSunSnowflake",
           toName: "Heating",
         },
         {
           text: "Goods & Services",
-          icon: "mdi-room-service",
+          icon: "$mdiRoomService",
           toName: "Services",
         },
       ],
@@ -338,7 +338,7 @@ export default class EnergyProject extends Vue {
     {},
     {
       text: "Summary",
-      icon: "mdi-chart-box",
+      icon: "$mdiChartBox",
       toName: "Result",
     },
   ];

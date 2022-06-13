@@ -92,20 +92,20 @@ export default class ProjectItem extends Vue {
         );
     return [
       {
-        icon: "mdi-information",
+        icon: "$mdiInformation",
         text: "About",
         to: "ShelterSustainabilityStep1",
       },
-      { icon: "mdi-shape", text: "Geometry", to: "ShelterSustainabilityStep2" },
+      { icon: "$mdiShape", text: "Geometry", to: "ShelterSustainabilityStep2" },
       {
-        icon: "mdi-clipboard-text-multiple",
+        icon: "$mdiClipboardTextMultiple",
         text: "Bill of Quantities",
         disabled: !this.shelter?.location_country,
         tooltipDisabledText: "Site country is not reference in the about page",
         to: "ShelterSustainabilityStep3",
       },
       {
-        icon: "mdi-leaf",
+        icon: "$mdiLeaf",
         text: "Environmental Perf",
         disabled: !this.shelter?.envPerfItems?.length,
         tooltipDisabledText:
@@ -113,17 +113,17 @@ export default class ProjectItem extends Vue {
         to: "ShelterSustainabilityStep5",
       },
       {
-        icon: "mdi-poll",
+        icon: "$mdiPoll",
         text: "Technical Perf",
         to: "ShelterSustainabilityStep6",
       },
       {
-        icon: "mdi-home",
+        icon: "$mdiHome",
         text: "Habitability",
         to: "ShelterSustainabilityStep7",
       },
       {
-        icon: "mdi-scoreboard",
+        icon: "$mdiScoreboard",
         disabled: !!this.shelter?.scorecard_errors?.length,
         text: "Scorecard",
         tooltipDisabledText: `Scorecard requires completion of other sections<br/> <br/><ul>${scorecardErrorText}</ul>`,

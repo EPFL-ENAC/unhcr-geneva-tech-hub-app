@@ -11,7 +11,7 @@
               <v-col :cols="6">
                 <v-row>
                   <v-col>
-                    <v-icon>mdi-account-hard-hat</v-icon>
+                    <v-icon>$mdiAccountHardHat</v-icon>
                     <b>Specialists</b> should create template projects, with
                     necessary details and range to facilitate future assessments
                     at a given site.
@@ -33,7 +33,7 @@
                   <v-col class="d-flex justify-center">
                     <v-btn dark color="primary" @click="continueAsSpecalist">
                       Continue as specialist
-                      <v-icon>mdi-account-hard-hat</v-icon>
+                      <v-icon>$mdiAccountHardHat</v-icon>
                     </v-btn>
                   </v-col>
                 </v-row>
@@ -59,7 +59,7 @@
         </v-card-title>
         <v-card-text>
           The simplest way to create a new project is to Duplicate
-          (<v-icon>mdi-content-copy</v-icon>) an existing Template.
+          (<v-icon>$mdiContentCopy</v-icon>) an existing Template.
 
           <p class="c-primary">
             The templates created by specialists appear in Blue.
@@ -82,7 +82,7 @@
           <div>
             Add project by clicking on
             <v-btn color="primary" text>
-              <v-icon left>mdi-plus-box</v-icon>
+              <v-icon left>$mdiPlusBox</v-icon>
               Add Project
             </v-btn>
           </div>
@@ -112,7 +112,7 @@
               text
               @click="createDialog = true"
             >
-              <v-icon left>mdi-plus-box</v-icon>
+              <v-icon left>$mdiPlusBox</v-icon>
               Add Project
             </v-btn>
           </v-col>
@@ -152,7 +152,7 @@
                                   class="ma-1"
                                   v-on="on"
                                 >
-                                  mdi-account-hard-hat
+                                  $mdiAccountHardHat
                                 </v-icon>
                               </template>
                               <span>Template</span>
@@ -171,7 +171,7 @@
                                   copySite(item);
                                 "
                               >
-                                <v-icon>mdi-content-copy</v-icon>
+                                <v-icon>$mdiContentCopy</v-icon>
                               </v-btn>
                             </template>
                             <span>Duplicate</span>
@@ -188,7 +188,7 @@
                                   deleteSite(item);
                                 "
                               >
-                                <v-icon>mdi-delete</v-icon>
+                                <v-icon>$mdiDelete</v-icon>
                               </v-btn>
                             </template>
                             <span>Delete</span>
@@ -227,7 +227,7 @@
           </v-card-text>
           <v-card-actions>
             <v-btn color="primary" :disabled="!formValid" type="submit" text>
-              <v-icon left>mdi-plus-box</v-icon>
+              <v-icon left>$mdiPlusBox</v-icon>
               Create
             </v-btn>
           </v-card-actions>

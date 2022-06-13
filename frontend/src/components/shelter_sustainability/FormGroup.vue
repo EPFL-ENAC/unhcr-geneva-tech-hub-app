@@ -16,7 +16,7 @@
       <v-col v-if="depth > 0" cols="1" class="d-flex justify-end align-center">
         <v-btn icon @click="toggle">
           <v-icon :class="{ 'chevron-rotate': !showSubPanel }"
-            >mdi-chevron-down</v-icon
+            >$mdiChevronDown</v-icon
           >
         </v-btn>
       </v-col>

@@ -6,7 +6,7 @@
           {{ year }}
           <template v-if="index > 0"
             >&nbsp;<v-edit-dialog>
-              <v-icon x-small>mdi-pencil</v-icon>
+              <v-icon x-small>$mdiPencil</v-icon>
               <template v-slot:input>
                 <v-text-field
                   :value="year"
@@ -24,7 +24,7 @@
     </v-col>
     <v-col cols="auto" class="d-flex align-center">
       <v-btn icon @click="addYear()">
-        <v-icon>mdi-plus</v-icon>
+        <v-icon>$mdiPlus</v-icon>
       </v-btn>
     </v-col>
   </v-row>

@@ -1,7 +1,7 @@
 export const ghg = {
   title: "GHG assessment",
   to: "GreenHouseGaz",
-  logoImg: "/app_logo/ghg.png",
+  logoIcon: "$vuetify.icon.ghg",
   description:
     "This tool is tailored to refugee camps and settlements for calculating greenhouse gas emissions associated with energy, material and transport uses.",
 };
@@ -9,7 +9,7 @@ export const ghg = {
 export const shelter = {
   title: "Shelter sustainability",
   to: "ShelterSustainability",
-  logoImg: "/app_logo/shelter.png",
+  logoIcon: "$vuetify.icon.shelter",
   link: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2022-04-11/houses_new.pdf",
   linkName:
     "A technical and environmental comparative overview of common shelter typologies found in settlements across UNHCR operations",
@@ -21,7 +21,7 @@ export const shelter = {
 export const energy = {
   title: "Energy planning",
   to: "energy",
-  logoIcon: "mdi-flash",
+  logoIcon: "$mdiFlash",
   description:
     "This Decision Support Tool assesses from a sustainability perspective, multi-year comparative performances of energy interventions for refugee camps. The boundaries of the energy system is Scope 1, i.e. activities in the camps. The energy system is composed of the following sub-systems: Household, Community, Production of goods and services, Central energy supply. The results encompass energy demand and supply, environmental and economic performances of the interventions under various (up to three) scenarios of the future.",
 };
@@ -29,7 +29,6 @@ export const energy = {
 export default [shelter, ghg, energy] as {
   title: string;
   to: string;
-  logoImg?: string;
-  logoIcon?: string;
+  logoIcon: string;
   description?: string;
 }[];

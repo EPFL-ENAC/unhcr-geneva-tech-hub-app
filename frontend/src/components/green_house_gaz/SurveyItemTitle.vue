@@ -14,7 +14,7 @@
       <v-col>
         <v-alert type="warning">
           <i
-            ><v-icon>mdi-wrench</v-icon> This module of the Assessment Tool is
+            ><v-icon>$mdiWrench</v-icon> This module of the Assessment Tool is
             under development</i
           >
         </v-alert>

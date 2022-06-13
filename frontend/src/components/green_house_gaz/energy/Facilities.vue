@@ -90,8 +90,8 @@
                             'facilities-negative': changeInEmissionNegative,
                           }"
                         >
-                          <v-icon :color="color">
-                            {{ icon }}
+                          <v-icon :class="iconClass" :color="color">
+                            $mdiTriangle
                           </v-icon>
                           {{
                             facilityForm.endline.results.changeInEmission
@@ -270,17 +270,17 @@ export default class Facilities extends Vue {
     return this.changeInEmissionPositive ? "+" : "";
   }
 
-  get icon(): string {
+  get iconClass(): string {
     const change = this.facilityForm.endline.results.changeInEmission;
     if (change == null) {
-      return "mdi-triangle mdi-rotate-90";
+      return "rotate-90";
     }
     if (change > 0) {
-      return "mdi-triangle";
+      return "";
     } else if (change < 0) {
-      return "mdi-triangle mdi-rotate-180";
+      return " rotate-180";
     } else {
-      return "mdi-triangle mdi-rotate-90";
+      return "rotate-90";
     }
   }
 

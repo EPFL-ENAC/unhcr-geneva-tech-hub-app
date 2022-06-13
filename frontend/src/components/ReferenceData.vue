@@ -5,7 +5,7 @@
         <v-list-item-title class="d-flex justify-space-between">
           <h2 class="text-h4 project__h3 font-weight-medium">Reference Data</h2>
           <v-btn icon @click="toggleReferenceData">
-            <v-icon>mdi-close</v-icon>
+            <v-icon>$mdiClose</v-icon>
           </v-btn>
         </v-list-item-title>
       </v-list-item-content>

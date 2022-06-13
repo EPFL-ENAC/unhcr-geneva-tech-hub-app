@@ -3,7 +3,7 @@
     <template v-slot:activator="{ attrs, on }">
       <slot :attrs="attrs" :on="on">
         <v-btn v-bind="attrs" icon v-on="on">
-          <v-icon>mdi-account-multiple</v-icon>
+          <v-icon>$mdiAccountMultiple</v-icon>
         </v-btn>
       </slot>
     </template>
@@ -19,7 +19,7 @@
             </v-list-item-content>
             <v-list-item-action v-if="isMember && item !== username">
               <v-btn icon @click="removeUser(index)">
-                <v-icon>mdi-delete</v-icon>
+                <v-icon>$mdiDelete</v-icon>
               </v-btn>
             </v-list-item-action>
           </v-list-item>
@@ -27,7 +27,7 @@
         <v-form v-if="$can('edit', { users })" ref="form" @submit="submit">
           <v-text-field
             v-model="user"
-            append-outer-icon="mdi-plus"
+            append-outer-icon="$mdiPlus"
             hide-details="auto"
             label="Username"
             :rules="rules"
@@ -38,7 +38,7 @@
       </v-card-text>
       <v-card-actions>
         <v-btn text @click="close">
-          <v-icon left>mdi-close</v-icon>
+          <v-icon left>$mdiClose</v-icon>
           Close
         </v-btn>
       </v-card-actions>

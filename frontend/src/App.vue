@@ -8,8 +8,12 @@
         }}</v-tab>
       </v-tabs>
       <v-spacer />
-      <v-btn icon @click.stop="toggleReferenceData">
-        <v-icon> mdi-database-arrow-right </v-icon>
+      <v-btn
+        icon
+        aria-label="dataset-reference-table"
+        @click.stop="toggleReferenceData"
+      >
+        <v-icon> $mdiDatabaseArrowRight </v-icon>
       </v-btn>
       <v-progress-linear
         :active="loading"
@@ -29,13 +33,19 @@
           @click.stop.prevent="() => toggleMini()"
         >
           <v-list-item-avatar>
-            <v-img v-if="gravatarImageUrl" :src="gravatarImageUrl"></v-img>
+            <v-avatar>
+              <v-icon class="account-color">$mdiAccountCircle </v-icon>
+            </v-avatar>
           </v-list-item-avatar>
 
           <v-list-item-title>{{ user.name }}</v-list-item-title>
 
-          <v-btn icon @click.stop.prevent="() => toggleMini()">
-            <v-icon>mdi-chevron-left</v-icon>
+          <v-btn
+            aria-label="toggle-left-panel"
+            icon
+            @click.stop.prevent="() => toggleMini()"
+          >
+            <v-icon>$mdiChevronLeft </v-icon>
           </v-btn>
         </v-list-item>
         <v-list-item
@@ -43,18 +53,22 @@
           class="px-2"
           @click.stop.prevent="() => toggleMini()"
         >
-          <v-btn icon @click.stop.prevent="() => toggleMini()">
+          <v-btn
+            aria-label="toggle-left-panel"
+            icon
+            @click.stop.prevent="() => toggleMini()"
+          >
             <v-icon
               :class="{
-                'mdi-rotate-180': mini,
+                'rotate-180': mini,
               }"
-              >mdi-chevron-left</v-icon
+              >$mdiChevronLeft</v-icon
             >
           </v-btn>
         </v-list-item>
         <v-list-item link :to="{ name: 'Apps' }">
           <v-list-item-icon>
-            <v-icon>mdi-briefcase</v-icon>
+            <v-icon color="light"> $mdiBriefcase </v-icon>
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>Apps</v-list-item-title>
@@ -68,10 +82,9 @@
         >
           <v-list-item-icon @click.stop>
             <v-img
-              v-if="app.logoImg"
+              v-if="app.logoSvg"
               max-width="24px"
-              :src="app.logoImg"
-              style="color: rgba(0, 0, 0, 0.54)"
+              :src="app.logoSvg"
             ></v-img>
             <v-icon v-if="app.logoIcon">
               {{ app.logoIcon }}
@@ -81,10 +94,9 @@
             {{ app.title }}
           </v-list-item-title>
         </v-list-item>
-
         <v-list-item link :to="{ name: 'About' }">
           <v-list-item-icon>
-            <v-icon>mdi-information</v-icon>
+            <v-icon> $mdiInformation </v-icon>
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>About</v-list-item-title>
@@ -92,7 +104,7 @@
         </v-list-item>
         <v-list-item v-if="$user('isLoggedOut')" @click="login">
           <v-list-item-icon>
-            <v-icon>mdi-login</v-icon>
+            <v-icon> $mdiLogin </v-icon>
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>Login</v-list-item-title>
@@ -100,7 +112,7 @@
         </v-list-item>
         <v-list-item v-if="$user('isLoggedIn')" @click="logout">
           <v-list-item-icon>
-            <v-icon>mdi-logout</v-icon>
+            <v-icon>$mdiLogout </v-icon>
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>Logout </v-list-item-title>
@@ -145,8 +157,14 @@
     >
       {{ snackbarText }}
       <template #action="{ attrs }">
-        <v-btn color="primary" icon v-bind="attrs" @click="snackbar = false">
-          <v-icon>mdi-close</v-icon>
+        <v-btn
+          aria-label="close-snakbar"
+          color="primary"
+          icon
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          <v-icon>$mdiClose</v-icon>
         </v-btn>
       </template>
     </v-snackbar>
@@ -224,14 +242,6 @@ export default class App extends Vue {
   get themeDark(): boolean {
     return false;
     // return this.$store.getters["ConfigModule/themeDark"];
-  }
-
-  get gravatarImageUrl(): string {
-    if (this.user?.name) {
-      const email_md5 = this.md5Function(this.user.name);
-      return `https://www.gravatar.com/avatar/${email_md5}?d=mp`;
-    }
-    return "";
   }
 
   @Watch("themeDark")
@@ -316,5 +326,22 @@ export default class App extends Vue {
 }
 .flag {
   border: 1px solid grey;
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+.rotate-90 {
+  transform: rotate(90deg);
+}
+
+.v-icon__component {
+  // for shelter and ghg svg custom icon component
+  // in case of other svg custom icom, act accordingly if you don't want to change
+  fill: currentColor;
+}
+
+.account-color > svg {
+  fill: #c5c5c5;
 }
 </style>

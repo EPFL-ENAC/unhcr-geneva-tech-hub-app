@@ -44,7 +44,6 @@ export function computeShelter(value: Shelter): Shelter {
     (x) => x !== undefined
   ) as number[];
   if (valuesTech.length) {
-    debugger;
     const score = valuesTech.reduce((acc, el) => acc + el);
     resultShelter.technical_performance_score =
       score / (TOTAL_TECH_PERF - nonApplicableTech);

@@ -66,7 +66,7 @@
             v-on="on"
             @click.stop="() => openItemDialog(item, item.name)"
           >
-            <v-icon small class="better-click"> mdi-pencil </v-icon>
+            <v-icon small class="better-click"> $mdiPencil </v-icon>
           </v-btn>
         </template>
         <span>Edit</span>
@@ -82,7 +82,7 @@
             v-on="on"
             @click.stop="() => openDuplicateItemDialog(item, item.name)"
           >
-            <v-icon small class="better-click"> mdi-content-copy </v-icon>
+            <v-icon small class="better-click"> $mdiContentCopy </v-icon>
           </v-btn>
         </template>
         <span>Duplicate</span>
@@ -98,7 +98,7 @@
             v-on="on"
             @click.stop="() => openDeleteDialog(item, item.name)"
           >
-            <v-icon small class="better-click"> mdi-delete </v-icon>
+            <v-icon small class="better-click"> $mdiDelete </v-icon>
           </v-btn>
         </template>
         <span>Delete</span>

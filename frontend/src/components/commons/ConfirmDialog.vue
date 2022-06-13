@@ -9,11 +9,11 @@
       </v-card-text>
       <v-card-actions>
         <v-btn color="primary" text @click="confirm">
-          <v-icon left>mdi-check</v-icon>
+          <v-icon left>$mdiCheck</v-icon>
           Confirm
         </v-btn>
         <v-btn text @click="cancel">
-          <v-icon left>mdi-close</v-icon>
+          <v-icon left>$mdiClose</v-icon>
           Cancel
         </v-btn>
       </v-card-actions>

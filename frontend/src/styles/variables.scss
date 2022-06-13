@@ -10,8 +10,27 @@ $c-brow: rgba(157, 72, 56, 1);
 $c-grey: rgba(84, 84, 86, 1);
 
 // https://www.ungm.org/UNUser/Documents/DownloadPublicDocument?docId=782892
-$body-font-family: "Proxima Nova", "Lato", "Arial";
+$body-font-family: "Proxima Nova", "Arial";
 
+
+@font-face {
+  font-family: 'Proxima Nova';
+  src: local('Proxima Nova Regular'), local('ProximaNova-Regular'),
+    url('/fonts/ProximaNova-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+@font-face {
+  font-family: 'Proxima Nova';
+  src: local('Proxima Nova Bold'), local('ProximaNova-Bold'),
+    url('/fonts/ProximaNova-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 // Common Styles
 
 .v-list-item {
