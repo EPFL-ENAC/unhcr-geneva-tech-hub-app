@@ -4,7 +4,7 @@ export default {
   name: "GreenHouseGazItemSurveys",
   component: () =>
     import(
-      /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/Surveys.vue"
+      /* webpackChunkName: "green_house_gaz" */ "../views/green_house_gaz/GreenHouseGazItem/GreenHouseGazItemSurveys.vue"
     ),
   redirect: { name: "GreenHouseGazItemSurveysList" },
   children: [

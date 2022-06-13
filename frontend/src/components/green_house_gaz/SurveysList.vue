@@ -39,13 +39,13 @@
       :item-class="rowClasses"
       @click:row="handleClick"
     >
-      <template v-slot:[`item.created_at`]="{ item }">
+      <template #[`item.created_at`]="{ item }">
         {{ item.created_at | formatDate }}
       </template>
-      <template v-slot:[`item.actions`]="{ item }">
+      <template #[`item.actions`]="{ item }">
         <div class="survey-list__actions">
           <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-btn
                 v-bind="attrs"
                 icon
@@ -60,7 +60,7 @@
             <span>Duplicate</span>
           </v-tooltip>
           <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-btn
                 v-if="$can('delete', localProject)"
                 v-bind="attrs"

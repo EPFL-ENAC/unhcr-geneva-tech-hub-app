@@ -40,7 +40,7 @@
                     @click.stop.prevent
                     @change="(v) => updateValue(child._id, v)"
                   >
-                    <template v-slot:label>
+                    <template #label>
                       {{ child.label }}
                     </template>
                   </v-checkbox>

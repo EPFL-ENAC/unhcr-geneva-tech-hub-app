@@ -5,7 +5,7 @@
     @after-sync="migrate"
     @save="save"
   >
-    <template v-slot>
+    <template #default>
       <v-row>
         <v-col cols="6">
           <v-expansion-panels>

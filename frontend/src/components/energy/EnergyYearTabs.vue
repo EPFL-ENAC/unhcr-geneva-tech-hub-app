@@ -7,7 +7,7 @@
           <template v-if="index > 0"
             >&nbsp;<v-edit-dialog>
               <v-icon x-small>$mdiPencil</v-icon>
-              <template v-slot:input>
+              <template #input>
                 <v-text-field
                   :value="year"
                   single-line

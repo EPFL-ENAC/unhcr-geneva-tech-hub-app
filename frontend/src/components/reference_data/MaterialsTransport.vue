@@ -116,22 +116,22 @@
         </v-col>
       </v-row>
       <v-data-table :headers="headers" :items="items">
-        <template v-slot:[`item.source`]="slotProps">
+        <template #[`item.source`]="slotProps">
           {{ getText(slotProps.item._id.split("_")[0]) }}
           <country-flag
             :country="slotProps.item._id.split('_')[0]"
             size="small"
           />
         </template>
-        <template v-slot:[`item.destination`]="{ item }">
+        <template #[`item.destination`]="{ item }">
           {{ getText(item._id.split("_")[1]) }}
           <country-flag :country="item._id.split('_')[1]" size="small" />
         </template>
 
-        <template v-slot:[`item.t`]="props">
+        <template #[`item.t`]="props">
           <span>{{ props.item.t | formatNumber }}</span>
         </template>
-        <template v-slot:[`item.o`]="props">
+        <template #[`item.o`]="props">
           <span>{{ props.item.o | formatNumber }}</span>
         </template>
       </v-data-table>

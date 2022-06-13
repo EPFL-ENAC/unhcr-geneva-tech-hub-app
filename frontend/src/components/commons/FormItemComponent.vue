@@ -10,9 +10,9 @@
       :disabled="disabled"
       @change="$emit('change', $event)"
     >
-      <template v-slot:label>
+      <template #label>
         <v-tooltip top>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <span v-bind="attrs" v-on="on">{{ label }}</span>
           </template>
           <span>{{ label }}</span>
@@ -32,16 +32,16 @@
       type="number"
       @change="$emit('change', $event)"
     >
-      <template v-slot:label>
+      <template #label>
         <v-tooltip top>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <span v-bind="attrs" v-on="on">{{ label }}</span>
           </template>
           <span>{{ label }}</span>
         </v-tooltip>
       </template>
-      <template v-if="actualUnit" v-slot:append>{{ actualUnit }}</template>
-      <template v-slot:append-outer>
+      <template v-if="actualUnit" #append>{{ actualUnit }}</template>
+      <template #append-outer>
         <slot name="append-outer"></slot>
       </template>
     </v-text-field>
@@ -59,15 +59,15 @@
       :readonly="readonly"
       :disabled="disabled"
     >
-      <template v-slot:label>
+      <template #label>
         <v-tooltip top>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <span v-bind="attrs" v-on="on">{{ label }}</span>
           </template>
           <span>{{ label }}</span>
         </v-tooltip>
       </template>
-      <template v-if="actualUnit" v-slot:append>{{ actualUnit }}</template>
+      <template v-if="actualUnit" #append>{{ actualUnit }}</template>
     </v-select>
     <v-combobox
       v-if="type === 'combobox'"
@@ -75,15 +75,15 @@
       :items="options"
       hide-details="auto"
     >
-      <template v-slot:label>
+      <template #label>
         <v-tooltip top>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <span v-bind="attrs" v-on="on">{{ label }}</span>
           </template>
           <span>{{ label }}</span>
         </v-tooltip>
       </template>
-      <template v-if="actualUnit" v-slot:append>{{ actualUnit }}</template>
+      <template v-if="actualUnit" #append>{{ actualUnit }}</template>
     </v-combobox>
     <form-item-component
       v-if="type === 'range'"
@@ -100,9 +100,9 @@
       :readonly="readonly"
       :disabled="disabled"
     >
-      <template v-if="!readonly && !disabled" v-slot:append-outer>
+      <template v-if="!readonly && !disabled" #append-outer>
         <v-dialog max-width="256">
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn v-bind="attrs" icon v-on="on">
               <v-icon>$mdiAccountHardHat</v-icon>
             </v-btn>

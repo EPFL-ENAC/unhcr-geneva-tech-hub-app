@@ -15,7 +15,7 @@
         >
           <!-- eslint-disable-next-line vue/no-v-html -->
           <span v-html="item.tooltipDisabledText"></span>
-          <template v-slot:activator="{ on }">
+          <template #activator="{ on }">
             <a class="v-tab" v-on="on">
               <!--
               ----  when v-tab disabled, tooltip does not work: wrap inside <a> element

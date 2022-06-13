@@ -45,7 +45,7 @@
           offset-y
           open-on-hover
         >
-          <template v-slot:activator="{ attrs, on }">
+          <template #activator="{ attrs, on }">
             <v-tab :key="`${$itemIndex}`" v-bind="attrs" v-on="on">
               <v-icon left>{{ item.icon }}</v-icon>
               {{ item.text }}

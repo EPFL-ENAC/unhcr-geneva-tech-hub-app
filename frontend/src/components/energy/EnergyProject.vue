@@ -16,7 +16,7 @@
               offset-y
               open-on-hover
             >
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{ on, attrs }">
                 <v-tab
                   v-bind="attrs"
                   :disabled="!item.toName"

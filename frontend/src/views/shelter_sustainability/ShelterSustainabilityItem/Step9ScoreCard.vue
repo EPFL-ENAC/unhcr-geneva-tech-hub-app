@@ -44,7 +44,7 @@
                     </span>
                   </span>
                   <v-tooltip right :max-width="300">
-                    <template v-slot:activator="{ on, attrs }">
+                    <template #activator="{ on, attrs }">
                       <v-btn icon v-bind="attrs" v-on="on">
                         <v-icon> $mdiInformation </v-icon>
                       </v-btn>

@@ -143,7 +143,7 @@
                           >
                             {{ item.name }}
                             <v-tooltip v-if="item.isTemplate" bottom>
-                              <template v-slot:activator="{ on, attrs }">
+                              <template #activator="{ on, attrs }">
                                 <v-icon
                                   :class="{
                                     'c-primary': item.isTemplate,
@@ -161,7 +161,7 @@
                         </v-list-item-content>
                         <v-list-item-action class="flex-row align-center">
                           <v-tooltip bottom>
-                            <template v-slot:activator="{ on, attrs }">
+                            <template #activator="{ on, attrs }">
                               <v-btn
                                 v-bind="attrs"
                                 icon
@@ -177,7 +177,7 @@
                             <span>Duplicate</span>
                           </v-tooltip>
                           <v-tooltip bottom>
-                            <template v-slot:activator="{ on, attrs }">
+                            <template #activator="{ on, attrs }">
                               <v-btn
                                 v-if="$can('delete', item)"
                                 v-bind="attrs"

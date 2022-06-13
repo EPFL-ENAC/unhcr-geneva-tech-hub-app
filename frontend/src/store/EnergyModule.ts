@@ -1,7 +1,7 @@
 import { ExistingDocument } from "@/models/couchdbModel";
 import {
   CookingFuel,
-  CookingStove as CookingStove,
+  CookingStove,
   ProjectDocument,
 } from "@/models/energyModel";
 import { DatabaseName, SyncDatabase } from "@/utils/couchdb";

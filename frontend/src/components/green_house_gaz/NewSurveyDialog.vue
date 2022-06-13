@@ -30,7 +30,7 @@
                   label="Select an existing site"
                   @input="onSelectExistingSite"
                 >
-                  <template v-slot:item="slotProps">
+                  <template #item="slotProps">
                     <div
                       class="d-flex justify-space-between"
                       style="width: 300px"

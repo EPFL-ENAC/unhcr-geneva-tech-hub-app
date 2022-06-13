@@ -5,7 +5,7 @@
     @after-sync="migrate"
     @save="save"
   >
-    <template v-slot>
+    <template #default>
       <energy-cooking-scenario
         v-model="module"
         :general-module="generalModule"

@@ -85,7 +85,7 @@
               :key="index"
             >
               <v-expansion-panel-header>
-                <template v-slot:default="{ open }">
+                <template #default="{ open }">
                   <v-row>
                     <v-col cols="auto">
                       <!-- todo: remove disabled when implemented -->
@@ -130,7 +130,7 @@
               :key="index"
             >
               <v-expansion-panel-header>
-                <template v-slot:default="{ open }">
+                <template #default="{ open }">
                   <v-row>
                     <v-col cols="auto">
                       <v-form :disabled="true">

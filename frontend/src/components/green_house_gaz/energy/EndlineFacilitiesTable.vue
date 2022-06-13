@@ -8,7 +8,7 @@
       :hide-default-footer="true"
       :items-per-page="-1"
     >
-      <template v-slot:top>
+      <template #top>
         <v-toolbar flat>
           <v-toolbar-title>Endline</v-toolbar-title>
           <!-- weird sync because new intervention is not a new item, but a modification of an existing -->
@@ -30,22 +30,22 @@
         </v-toolbar>
       </template>
 
-      <template v-slot:[`item.dieselLiters`]="{ item }">
+      <template #[`item.dieselLiters`]="{ item }">
         {{ item.dieselLiters | formatNumber }}
       </template>
-      <template v-slot:[`item.gridPower`]="{ item }">
+      <template #[`item.gridPower`]="{ item }">
         {{ item.gridPower | formatNumber }}
       </template>
-      <template v-slot:[`item.renewablePower`]="{ item }">
+      <template #[`item.renewablePower`]="{ item }">
         {{ item.renewablePower | formatNumber }}
       </template>
-      <template v-slot:[`item.totalCO2Emission`]="{ item }">
+      <template #[`item.totalCO2Emission`]="{ item }">
         <span class="bold-table-cell-content">
           {{ item.totalCO2Emission | formatNumber(0, 2) }}
         </span>
       </template>
 
-      <template v-slot:[`item.changeInEmission`]="{ item }">
+      <template #[`item.changeInEmission`]="{ item }">
         <span
           :class="{
             'facilities-positive': item.changeInEmission > 0,
@@ -57,7 +57,7 @@
         </span>
       </template>
 
-      <template v-slot:[`item.actions`]="{ item }">
+      <template #[`item.actions`]="{ item }">
         <v-btn
           icon
           small
@@ -68,7 +68,7 @@
           <v-icon> $mdiPencil</v-icon>
         </v-btn>
       </template>
-      <template v-slot:foot="{}">
+      <template #foot="{}">
         <tr>
           <td
             v-for="(header, $index) in headers"

@@ -1,6 +1,7 @@
 import filters from "@/plugins/filters";
 import "@/plugins/leaflet";
 import User from "@/plugins/user";
+import "@/styles/unhcr.scss";
 import "leaflet/dist/leaflet.css";
 import Vue from "vue";
 import CountryFlag from "vue-country-flag";
@@ -16,7 +17,7 @@ Vue.config.productionTip = false;
 
 Vue.use(User, { store });
 Vue.use(filters);
-Vue.component("country-flag", CountryFlag);
+Vue.component("CountryFlag", CountryFlag);
 
 export default new Vue({
   router,
