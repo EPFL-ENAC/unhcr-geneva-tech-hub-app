@@ -9,7 +9,7 @@
 # [optional footer(s)]
 # IMPORTANT!! Describe any side effects of the change.
 # uncomment following line if needed
-# BREAKING CHANGE: description + before + after 
+# BREAKING CHANGE: description + before + after
 
 # Provide links or keys to any relevant tickets, articles or other resources
 # Examples: "Closes Github issue #123"
@@ -17,7 +17,7 @@
 # Closes #123, #245, #992
 
 # --- COMMIT END ---
-# Type can be 
+# Type can be
 #   feat     (new feature)
 #   fix      (bug fix)
 #   refactor (refactoring production code)
@@ -34,7 +34,7 @@
 #   - Separate subject from body with a blank line
 #   - Use the body to explain what and why vs. how
 #   - Can use multiple lines with "-" for bullet points in body.
-#   - Don't forget footer 
+#   - Don't forget footer
 # --------------------
 # ** wip commit type
 #   A wip commit should only happen on a local branch. These commits are for
