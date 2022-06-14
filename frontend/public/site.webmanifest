@@ -1,6 +1,7 @@
 {
     "name": "unhcr-tss",
     "short_name": "unhcr-tss",
+    "start_url": "https://unhcr-tss.epfl.ch",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
