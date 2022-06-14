@@ -38,7 +38,9 @@ export default new (class User {
         // if (actionName === "delete") {
         //   return isDBAdmin; // was isDBAdmin
         // }
-        const isUser = user.roles.indexOf(USER) >= 0;
+        const isUser = user.roles.indexOf(GUEST_NAME) == -1;
+        // only guest are not allowed to create!
+        // if roles is empty it means it's a unhcr account
         if (actionName === "create") {
           return isUser;
         }

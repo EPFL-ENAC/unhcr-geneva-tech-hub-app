@@ -121,7 +121,7 @@ const actions: ActionTree<UserState, RootState> = {
       .then(() => {
         context.commit("SET_USER", {
           name: GUEST_NAME,
-          roles: [],
+          roles: [GUEST_NAME],
         });
       })
       .finally(() => {
