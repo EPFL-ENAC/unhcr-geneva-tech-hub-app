@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.1.1...v0.1.2) (2022-06-14)
+
+
+### Bug Fixes
+
+* **icons:** remove display margin/padding fro ghg survey list ([22d8477](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/22d84773bb33c04a0471a6491d2036437c3420fc))
+
 ### 0.1.1 (2022-06-14)
 
 
