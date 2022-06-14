@@ -10,7 +10,7 @@
     v-bind="{ ...$attrs, ...$props }"
     @change="(e) => updateCountry(e)"
   >
-    <template v-slot:item="slotProps">
+    <template #item="slotProps">
       <div class="d-flex justify-space-between" style="width: 300px">
         <country-flag :country="slotProps.item.code" size="small" />
         {{ slotProps.item.name }}

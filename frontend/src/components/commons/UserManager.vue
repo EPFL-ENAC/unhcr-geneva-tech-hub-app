@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="dialog" max-width="256">
-    <template v-slot:activator="{ attrs, on }">
+    <template #activator="{ attrs, on }">
       <slot :attrs="attrs" :on="on">
         <v-btn v-bind="attrs" icon v-on="on">
           <v-icon>$mdiAccountMultiple</v-icon>

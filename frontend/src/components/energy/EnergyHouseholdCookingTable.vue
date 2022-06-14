@@ -4,7 +4,7 @@
       <span>Cooking Technologies</span>
       <div class="flex-grow-1 d-flex justify-end">
         <v-dialog v-model="detailDialog">
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn v-bind="attrs" icon v-on="on">
               <v-icon>$mdiAccountHardHat</v-icon>
             </v-btn>
@@ -13,7 +13,7 @@
             <v-card-title>
               <span>Cooking Technologies (full view)</span>
               <v-dialog v-model="addDialog" max-width="512px">
-                <template v-slot:activator="{ on, attrs }">
+                <template #activator="{ on, attrs }">
                   <v-btn
                     v-bind="attrs"
                     color="primary"
@@ -56,7 +56,7 @@
                       show-expand
                       sort-by="index"
                     >
-                      <template v-slot:expanded-item="{ headers, item }">
+                      <template #expanded-item="{ headers, item }">
                         <td class="pa-2" :colspan="headers.length">
                           <v-row justify="center">
                             <v-col cols="3">
@@ -82,7 +82,7 @@
                       </template>
                       <template
                         v-for="cat in socioEconomicCategories"
-                        v-slot:[`item.${cat}`]="{ item }"
+                        #[`item.${cat}`]="{ item }"
                       >
                         <form-item-component
                           v-for="cellItem in tableCellItems"
@@ -93,10 +93,7 @@
                           v-bind="cellItem"
                         ></form-item-component>
                       </template>
-                      <template
-                        v-if="isTemplate"
-                        v-slot:[`item.action`]="{ item }"
-                      >
+                      <template v-if="isTemplate" #[`item.action`]="{ item }">
                         <v-btn icon @click="deleteItem(item)">
                           <v-icon>$mdiDelete</v-icon>
                         </v-btn>
@@ -123,7 +120,7 @@
         :items-per-page="5"
         sort-by="index"
       >
-        <template v-slot:[`item.image`]="{ item }">
+        <template #[`item.image`]="{ item }">
           <v-img
             :src="`${publicPath}images/energy/cookstoves/${item.id}.png`"
             contain
@@ -131,13 +128,13 @@
             aspect-ratio="1"
           ></v-img>
         </template>
-        <template v-slot:[`item.countPer10Households`]="{ item }">
+        <template #[`item.countPer10Households`]="{ item }">
           <v-tooltip
             bottom
             color="white"
             :disabled="item.countPer10Households === 0"
           >
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <span v-bind="attrs" v-on="on">
                 {{ item.countPer10Households }}
               </span>

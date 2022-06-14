@@ -9,7 +9,7 @@
         <v-card>
           <v-card-title>
             <v-radio hide-details="auto" :value="index">
-              <template v-slot:label>
+              <template #label>
                 <h3>{{ scenarioItem.name }}</h3>
               </template>
             </v-radio>

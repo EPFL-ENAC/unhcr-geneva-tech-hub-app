@@ -43,7 +43,7 @@
                   :value="shelterType"
                   dense
                 >
-                  <template v-slot:label>
+                  <template #label>
                     <div class="d-flex align-end">
                       <v-icon :class="`c-${shelterColors[shelterType].name}`">
                         {{ shelterIcons[shelterType] }}
@@ -145,7 +145,7 @@
                           </v-col>
                           <v-col :xs="12" :sm="4" class="d-flex justify-end">
                             <v-tooltip bottom>
-                              <template v-slot:activator="{ on, attrs }">
+                              <template #activator="{ on, attrs }">
                                 <v-btn
                                   v-bind="attrs"
                                   icon
@@ -164,7 +164,7 @@
                               <span>Duplicate shelter</span>
                             </v-tooltip>
                             <v-tooltip bottom>
-                              <template v-slot:activator="{ on, attrs }">
+                              <template #activator="{ on, attrs }">
                                 <v-btn
                                   v-if="$can('delete', project)"
                                   v-bind="attrs"

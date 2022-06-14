@@ -1,6 +1,6 @@
 <template>
   <v-tooltip bottom max-width="512">
-    <template v-slot:activator="{ on, attrs }">
+    <template #activator="{ on, attrs }">
       <v-icon v-bind="attrs" class="ma-1" v-on="on"
         >$mdiInformationOutline</v-icon
       >

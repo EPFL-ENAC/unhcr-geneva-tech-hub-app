@@ -34,7 +34,7 @@
                   item-key="materialId"
                   show-expand
                 >
-                  <template v-slot:header>
+                  <template #header>
                     <thead>
                       <tr>
                         <th colspan="1"></th>
@@ -74,29 +74,29 @@
                       </tr>
                     </thead>
                   </template>
-                  <template v-slot:[`item.weight`]="{ item }">
+                  <template #[`item.weight`]="{ item }">
                     <span>{{ item.weight | formatNumber }} </span>
                   </template>
-                  <template v-slot:[`item.embodiedCarbonProduction`]="{ item }">
+                  <template #[`item.embodiedCarbonProduction`]="{ item }">
                     <span
                       >{{ item.embodiedCarbonProduction | formatNumber }}
                     </span>
                   </template>
-                  <template v-slot:[`item.embodiedCarbonTransport`]="{ item }">
+                  <template #[`item.embodiedCarbonTransport`]="{ item }">
                     <span
                       >{{ item.embodiedCarbonTransport | formatNumber }}
                     </span>
                   </template>
-                  <template v-slot:[`item.embodiedCarbonTotal`]="{ item }">
+                  <template #[`item.embodiedCarbonTotal`]="{ item }">
                     <span>{{ item.embodiedCarbonTotal | formatNumber }} </span>
                   </template>
-                  <template v-slot:[`item.embodiedWater`]="{ item }">
+                  <template #[`item.embodiedWater`]="{ item }">
                     <span>{{ item.embodiedWater | formatNumber }} </span>
                   </template>
-                  <template v-slot:[`item.totalCost`]="{ item }">
+                  <template #[`item.totalCost`]="{ item }">
                     <span>{{ item.totalCost | formatNumber }} </span>
                   </template>
-                  <template v-slot:expanded-item="{ headers, item }">
+                  <template #expanded-item="{ headers, item }">
                     <td :colspan="headers.length" style="padding: 0 0 0 0">
                       <v-data-table
                         hide-default-footer
@@ -111,50 +111,46 @@
                           }}</span>
                           <span v-else> {{ slotProps.item.formId }}</span>
                         </template> -->
-                        <template v-slot:[`item.name`]="slotProps">
+                        <template #[`item.name`]="slotProps">
                           <span> {{ slotProps.item.name }}</span>
                         </template>
                         <!-- beware duplicated code from above -->
-                        <template v-slot:[`item.weight`]="slotProps">
+                        <template #[`item.weight`]="slotProps">
                           <span
                             >{{ slotProps.item.weight | formatNumber }}
                           </span>
                         </template>
                         <template
-                          v-slot:[`item.embodiedCarbonProduction`]="slotProps"
+                          #[`item.embodiedCarbonProduction`]="slotProps"
                         >
                           <span
                             >{{
-                              slotProps.item.embodiedCarbonProduction
-                                | formatNumber
+                              slotProps.item.embodiedCarbonProduction |
+                                formatNumber
                             }}
                           </span>
                         </template>
-                        <template
-                          v-slot:[`item.embodiedCarbonTransport`]="slotProps"
-                        >
+                        <template #[`item.embodiedCarbonTransport`]="slotProps">
                           <span
                             >{{
-                              slotProps.item.embodiedCarbonTransport
-                                | formatNumber
+                              slotProps.item.embodiedCarbonTransport |
+                                formatNumber
                             }}
                           </span>
                         </template>
-                        <template
-                          v-slot:[`item.embodiedCarbonTotal`]="slotProps"
-                        >
+                        <template #[`item.embodiedCarbonTotal`]="slotProps">
                           <span
                             >{{
                               slotProps.item.embodiedCarbonTotal | formatNumber
                             }}
                           </span>
                         </template>
-                        <template v-slot:[`item.embodiedWater`]="slotProps">
+                        <template #[`item.embodiedWater`]="slotProps">
                           <span
                             >{{ slotProps.item.embodiedWater | formatNumber }}
                           </span>
                         </template>
-                        <template v-slot:[`item.totalCost`]="slotProps">
+                        <template #[`item.totalCost`]="slotProps">
                           <span
                             >{{ slotProps.item.totalCost | formatNumber }}
                           </span>

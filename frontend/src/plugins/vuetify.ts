@@ -1,5 +1,5 @@
-import Ghg from "@/components/icons/ghg.vue";
-import Shelter from "@/components/icons/shelter.vue";
+import enacitGhg from "@/components/icons/enacitGhg.vue";
+import enacitShelter from "@/components/icons/enacitShelter.vue";
 import {
   mdiAccount,
   mdiAccountCircle,
@@ -63,10 +63,10 @@ export default new Vuetify({
     iconfont: "mdiSvg",
     values: {
       shelter: {
-        component: Shelter,
+        component: enacitShelter,
       },
       ghg: {
-        component: Ghg,
+        component: enacitGhg,
       },
       mdiAccount,
       mdiAccountCircle,

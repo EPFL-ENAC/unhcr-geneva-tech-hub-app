@@ -46,7 +46,7 @@
       </v-card-text>
       <v-card-text>
         <v-simple-table class="ma-8">
-          <template v-slot:default>
+          <template #default>
             <thead>
               <tr>
                 <th>Tool Name</th>

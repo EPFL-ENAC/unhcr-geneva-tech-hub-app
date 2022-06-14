@@ -114,10 +114,10 @@
                   :rules="rules"
                   @change="onUnitChange"
                 >
-                  <template v-slot:item="{ item }">
+                  <template #item="{ item }">
                     {{ UnitsRef[item] || item }}
                   </template>
-                  <template v-slot:selection="{ item }">
+                  <template #selection="{ item }">
                     {{ UnitsRef[item] || item }}
                   </template>
                 </v-select>

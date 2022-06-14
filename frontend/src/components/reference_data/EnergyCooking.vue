@@ -6,7 +6,7 @@
           <v-card-title>Stoves</v-card-title>
           <v-card-text>
             <v-data-table :headers="stoveHeaders" :items="stoves">
-              <template v-slot:[`item.energyEfficiency`]="{ item }">
+              <template #[`item.energyEfficiency`]="{ item }">
                 {{ item.energyEfficiency * 100 }}
               </template>
             </v-data-table>

@@ -27,7 +27,7 @@
             hide-default-footer
             :items-per-page="-1"
           >
-            <template v-slot:top>
+            <template #top>
               <v-toolbar flat>
                 <v-toolbar-title>Items</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
@@ -44,7 +44,7 @@
                 <delete-item-dialog />
               </v-toolbar>
             </template>
-            <template v-slot:[`item.name`]="{ item }">
+            <template #[`item.name`]="{ item }">
               <span v-if="item.itemType === 'Labour'"
                 >{{ item.itemType }} ({{ item.workerType }})
               </span>
@@ -55,7 +55,7 @@
                 >Other ({{ item.name }})</span
               >
             </template>
-            <template v-slot:[`item.source`]="{ item }">
+            <template #[`item.source`]="{ item }">
               <span v-if="countriesMap[item.source]">
                 {{ countriesMap[item.source].name }}
               </span>
@@ -63,7 +63,7 @@
                 {{ item.source }}
               </span>
             </template>
-            <template v-slot:[`item.formId`]="{ item }">
+            <template #[`item.formId`]="{ item }">
               <span
                 v-if="item.itemType === 'Material' && materialMap[item.formId]"
               >
@@ -72,28 +72,28 @@
               <span v-else>--</span>
             </template>
 
-            <template v-slot:[`item.materialId`]="{ item }">
+            <template #[`item.materialId`]="{ item }">
               <span v-if="item.itemType === 'Material'">{{
                 item.materialId
               }}</span>
               <span v-else>--</span>
             </template>
 
-            <template v-slot:[`item.quantity`]="{ item }">
+            <template #[`item.quantity`]="{ item }">
               <span>{{ item.quantity | formatNumber }}</span>
             </template>
 
-            <template v-slot:[`item.unitCost`]="{ item }">
+            <template #[`item.unitCost`]="{ item }">
               <span>{{ item.unitCost | formatNumber(2, 2) }}</span>
             </template>
 
-            <template v-slot:[`item.totalCost`]="{ item }">
+            <template #[`item.totalCost`]="{ item }">
               <span>{{ item.totalCost | formatNumber(2, 2) }}</span>
             </template>
 
-            <template v-slot:[`item.actions`]="{ item }">
+            <template #[`item.actions`]="{ item }">
               <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
+                <template #activator="{ on, attrs }">
                   <v-btn
                     v-bind="attrs"
                     icon
@@ -109,7 +109,7 @@
               </v-tooltip>
 
               <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
+                <template #activator="{ on, attrs }">
                   <v-btn
                     v-bind="attrs"
                     icon
@@ -126,7 +126,7 @@
                 <span>Duplicate</span>
               </v-tooltip>
               <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
+                <template #activator="{ on, attrs }">
                   <v-btn
                     v-bind="attrs"
                     icon
@@ -141,7 +141,7 @@
                 <span>Delete</span>
               </v-tooltip>
             </template>
-            <template v-if="totalCost != 0" v-slot:foot>
+            <template v-if="totalCost != 0" #foot>
               <tfoot>
                 <tr>
                   <td colspan="1">Total</td>

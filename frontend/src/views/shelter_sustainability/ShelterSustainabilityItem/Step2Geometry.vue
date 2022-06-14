@@ -217,12 +217,6 @@
   </v-container>
 </template>
 
-<style lang="scss">
-.flex-gap-sm {
-  gap: 16px;
-}
-</style>
-
 <script lang="ts">
 import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import { infoTooltipText } from "@/components/shelter_sustainability/infoTooltipText";
@@ -489,6 +483,12 @@ export default class Step2Geometry extends Vue {
   ];
 }
 </script>
+
+<style lang="scss">
+.flex-gap-sm {
+  gap: 16px;
+}
+</style>
 
 <style scoped>
 .v-card {

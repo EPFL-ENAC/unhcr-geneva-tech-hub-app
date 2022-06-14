@@ -2,14 +2,14 @@
   <v-card flat>
     <v-card-text v-if="iges_grid_2021">
       <v-data-table :headers="headers" :items="iges_grid_2021">
-        <template v-slot:[`item.value`]="props">
+        <template #[`item.value`]="props">
           <span>{{ props.item.value | formatNumber }}</span>
         </template>
       </v-data-table>
       <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
         {{ snackText }}
 
-        <template v-slot:action="{ attrs }">
+        <template #action="{ attrs }">
           <v-btn v-bind="attrs" text @click="snack = false"> Close </v-btn>
         </template>
       </v-snackbar>

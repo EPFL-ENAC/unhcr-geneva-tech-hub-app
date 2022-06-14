@@ -34,8 +34,8 @@
                   <span class="ml-4">
                     <span v-if="option.config.unit === '%'">
                       {{
-                        scorecard[option.config.id]
-                          | formatNumber(0, 0, false, "percent")
+                        scorecard[option.config.id] |
+                          formatNumber(0, 0, false, "percent")
                       }}
                     </span>
                     <span v-else>
@@ -44,7 +44,7 @@
                     </span>
                   </span>
                   <v-tooltip right :max-width="300">
-                    <template v-slot:activator="{ on, attrs }">
+                    <template #activator="{ on, attrs }">
                       <v-btn icon v-bind="attrs" v-on="on">
                         <v-icon> $mdiInformation </v-icon>
                       </v-btn>

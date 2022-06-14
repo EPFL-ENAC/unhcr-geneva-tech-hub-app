@@ -4,7 +4,7 @@
     :initial-module="initialModule"
     @save="save"
   >
-    <template v-slot>
+    <template #default>
       <v-row>
         <v-col cols="6">
           <h2>General</h2>
@@ -68,7 +68,7 @@
             <v-col>
               <h3>Quality of Life Levels</h3>
               <v-simple-table>
-                <template v-slot:default>
+                <template #default>
                   <thead>
                     <tr>
                       <th v-for="item in socioEconomicCategories" :key="item">

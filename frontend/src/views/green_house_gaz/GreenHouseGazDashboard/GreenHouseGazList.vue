@@ -29,7 +29,7 @@
           :item-class="rowClasses"
           @click:row="(item, event) => clickSite(item, keyIndex, event)"
         >
-          <template v-slot:expanded-item="{ headers, item }">
+          <template #expanded-item="{ headers, item }">
             <td :colspan="headers.length">
               <survey-list :site="item.id" :country-code="country.key" />
             </td>
@@ -85,7 +85,7 @@ export default class ProjectList extends Vue {
   }
 
   private unsetCountry(): void {
-    let hash = "";
+    const hash = "";
     this.$router.push({ hash });
   }
 
