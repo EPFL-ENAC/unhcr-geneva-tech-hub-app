@@ -30,8 +30,8 @@
                       <h3>
                         Total CO2 Emissions:
                         {{
-                          facilityForm.baseline.results.totalCO2Emission
-                            | formatNumber
+                          facilityForm.baseline.results.totalCO2Emission |
+                            formatNumber
                         }}
                         (tCO2e/year)
                       </h3>
@@ -80,8 +80,8 @@
                       <h3>
                         Total CO2 Emissions:
                         {{
-                          facilityForm.endline.results.totalCO2Emission
-                            | formatNumber
+                          facilityForm.endline.results.totalCO2Emission |
+                            formatNumber
                         }}
                         (tCO2e/year)
                         <span
@@ -94,8 +94,8 @@
                             $mdiTriangle
                           </v-icon>
                           {{
-                            facilityForm.endline.results.changeInEmission
-                              | formatNumber(0, 0, true, "percent")
+                            facilityForm.endline.results.changeInEmission |
+                              formatNumber(0, 0, true, "percent")
                           }}
                         </span>
                       </h3>

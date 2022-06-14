@@ -34,8 +34,8 @@
                   <span class="ml-4">
                     <span v-if="option.config.unit === '%'">
                       {{
-                        scorecard[option.config.id]
-                          | formatNumber(0, 0, false, "percent")
+                        scorecard[option.config.id] |
+                          formatNumber(0, 0, false, "percent")
                       }}
                     </span>
                     <span v-else>

@@ -164,14 +164,14 @@
                                   class="text-right"
                                 >
                                   {{
-                                    siteResult.categories[cat][item.key]
-                                      | formatNumber(0, item.decimal)
+                                    siteResult.categories[cat][item.key] |
+                                      formatNumber(0, item.decimal)
                                   }}
                                 </td>
                                 <td class="font-weight-bold text-right">
                                   {{
-                                    siteResult.categoryTotal[item.key]
-                                      | formatNumber(0, item.decimal)
+                                    siteResult.categoryTotal[item.key] |
+                                      formatNumber(0, item.decimal)
                                   }}
                                 </td>
                               </tr>

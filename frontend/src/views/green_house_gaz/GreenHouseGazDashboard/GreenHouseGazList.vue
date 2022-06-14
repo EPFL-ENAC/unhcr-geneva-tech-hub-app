@@ -85,7 +85,7 @@ export default class ProjectList extends Vue {
   }
 
   private unsetCountry(): void {
-    let hash = "";
+    const hash = "";
     this.$router.push({ hash });
   }
 

@@ -125,16 +125,16 @@
                         >
                           <span
                             >{{
-                              slotProps.item.embodiedCarbonProduction
-                                | formatNumber
+                              slotProps.item.embodiedCarbonProduction |
+                                formatNumber
                             }}
                           </span>
                         </template>
                         <template #[`item.embodiedCarbonTransport`]="slotProps">
                           <span
                             >{{
-                              slotProps.item.embodiedCarbonTransport
-                                | formatNumber
+                              slotProps.item.embodiedCarbonTransport |
+                                formatNumber
                             }}
                           </span>
                         </template>

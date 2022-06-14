@@ -245,11 +245,11 @@ export default class SurveyList extends Vue {
     let query;
     if (typeof value === "number") {
       const name = this.menuItems[value].redirect || this.menuItems[value].to;
-      let [category, subcategory] = name.split("-");
+      const [category, subcategory] = name.split("-");
       query = { category, subcategory };
     }
     if (typeof value === "string") {
-      let [category, subcategory] = value.split("-");
+      const [category, subcategory] = value.split("-");
       if (category && subcategory) {
         query = { category, subcategory };
       } else if (category) {
