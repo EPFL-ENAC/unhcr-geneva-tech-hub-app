@@ -1,0 +1,53 @@
+<type>([optional scope]): <description> (Max 50 char, Why is this change necessary?)
+# |<----  Using a Maximum Of 50 Characters  ---->|
+
+# [optional body]
+# |<----   Try To Limit Each Line to a Maximum Of 72 Characters   ---->|
+# Explain how the commit addresses the issue
+
+
+# [optional footer(s)]
+# IMPORTANT!! Describe any side effects of the change.
+# uncomment following line if needed
+# BREAKING CHANGE: description + before + after 
+
+# Provide links or keys to any relevant tickets, articles or other resources
+# Examples: "Closes Github issue #123"
+# Uncomment following line if needed
+# Closes #123, #245, #992
+
+# --- COMMIT END ---
+# Type can be 
+#   feat     (new feature)
+#   fix      (bug fix)
+#   refactor (refactoring production code)
+#   style    (formatting, missing semi colons, etc; no code change)
+#   docs     (changes to documentation)
+#   test     (adding or refactoring tests; no production code change)
+#   chore    (updating grunt/npm tasks or config files, etc; no production code change)
+#   wip      (work in progress commit to be squashed -- do not push!)**
+# --------------------
+# Remember to
+#   - not capitalize the subject line
+#   - Use the imperative mood in the subject line
+#   - Do not end the subject line with a period
+#   - Separate subject from body with a blank line
+#   - Use the body to explain what and why vs. how
+#   - Can use multiple lines with "-" for bullet points in body.
+#   - Don't forget footer 
+# --------------------
+# ** wip commit type
+#   A wip commit should only happen on a local branch. These commits are for
+#   unfinished snapshots that should not be checked into a shared branch.
+#   These commits should be squashed before changes are merged to
+#   a shared branch.
+# --------------------
+# For more information about this template and useful commit messages, check out
+#   - we follow: https://www.conventionalcommits.org/en/v1.0.0/#specification
+#   - https://gist.github.com/median-man/3a7c4324005e96f02691f3a20aeac26b
+#   - https://gist.github.com/adeekshith/cd4c95a064977cdc6c50
+#   - https://robots.thoughtbot.com/5-useful-tips-for-a-better-commit-message
+#   - https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+#   - https://8thlight.com/blog/kevin-liddle/2012/09/27/mind-your-git-manners.html
+#   - https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#
+#

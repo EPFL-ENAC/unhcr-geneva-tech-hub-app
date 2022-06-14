@@ -1,0 +1,13 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+COMMIT_MSG_FILE=$1  # name of file that contains the commit log message
+COMMIT_SOURCE=$2    # message, template, merge, squash, commit
+COMMIT_SHA=$3       # exists if amending or reusing a commit
+
+# If there is no commit source then we don't have a template and are just doing `git commit`
+# Override any global git templates that are already set
+if [ "$COMMIT_SOURCE" == "" -o "$COMMIT_SOURCE" == "template" ]; then
+  echo "" > $COMMIT_MSG_FILE
+  HUSKY_GIT_PARAMS="$COMMIT_MSG_FILE" npm run --no -- git-commit-template .husky/.commit-template
+fi
