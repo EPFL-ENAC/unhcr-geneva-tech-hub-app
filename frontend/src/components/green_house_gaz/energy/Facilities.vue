@@ -398,13 +398,28 @@ export default class Facilities extends Vue {
     item: EnergyFacilityItemResult | EnergyFacilityInterventionItemResult
   ): EChartsOption {
     // "Distribution of tCO2e/year per facilities"
-    // const data = items
-    //   .map((item: EnergyFacilityItem | EnergyFacilityInterventionItem) => ({
-    //     id: item.name,
-    //     name: item.name,
-    //     value: item.totalCO2Emission,
-    //   }))
-    //   .filter((item) => item.value > 0);
+    const data = [];
+    if (item.gridPower) {
+      data.push({
+        id: "gridPower",
+        name: "Grid",
+        value: item.gridPower,
+      });
+    }
+    if (item.dieselLiters) {
+      data.push({
+        id: "dieselLiters",
+        name: "Diesel",
+        value: item.dieselLiters * this.ghgMapRef?.REF_EFF_DIES.value,
+      });
+    }
+    if (item.gridPower) {
+      data.push({
+        id: "renewablePower",
+        name: "Renewable",
+        value: item.renewablePower,
+      });
+    }
     // energy mix
 
     return {
@@ -431,23 +446,7 @@ export default class Facilities extends Vue {
           label: {
             overflow: "break",
           },
-          data: [
-            {
-              id: "gridPower",
-              name: "Grid",
-              value: item.gridPower,
-            },
-            {
-              id: "dieselLiters",
-              name: "Diesel",
-              value: item.dieselLiters * this.ghgMapRef?.REF_EFF_DIES.value,
-            },
-            {
-              id: "renewablePower",
-              name: "Renewable",
-              value: item.renewablePower,
-            },
-          ],
+          data,
         },
       ],
       color: [cccmColors.primary, cccmColors.secondary1, cccmColors.green], //data.map((item) => getColor(item.id)),
