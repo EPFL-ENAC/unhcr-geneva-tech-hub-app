@@ -3,7 +3,7 @@
         "_id": "REF_DIES",
         "type": "number",
         "category": "ENERGY",
-        "description": "Energy - Electricity - Emissions Factor - Oil/Diesel",
+        "description": "Energy - Electricity - Emissions Factor - Oil/Diesel [-]",
         "value": 2.685640875,
         "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html"
     },
@@ -11,7 +11,7 @@
         "_id": "REF_GRD",
         "type": "number",
         "category": "ENERGY",
-        "description": "Energy - Electricity - Emissions Factor - National Grid",
+        "description": "Energy - Electricity - Emissions Factor - National Grid [-]",
         "value": 0,
         "source": "https://www.iges.or.jp/en/pub/list-grid-emission-factor/en"
     },
@@ -20,13 +20,15 @@
         "type": "number",
         "category": "ENERGY",
         "description": "Energy - Electricity - Efficiency - Diesel Generators (kWh/litre)",
-        "value": 2.5
+        "value": 2.5,
+        "source": "https://www.iges.or.jp/en/pub/list-grid-emission-factor/en"
     },
     {
         "_id": "REF_WSH_D",
         "type": "number",
         "category": "WASH",
-        "description": "WASH - Trucking - Emissions Factor - Diesel (up to 3.5 tonnes)",
-        "value": 0.25213
+        "description": "WASH - Trucking - Emissions Factor - Diesel (up to 3.5 tonnes) [-]",
+        "value": 0.25213,
+        "source": "https://unfccc.int/sites/default/files/resource/GHG_emissions_calculator_ver01.1_web.xlsx"
     }
 ]
