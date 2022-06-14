@@ -65,8 +65,8 @@
                 v-if="$can('delete', localProject)"
                 v-bind="attrs"
                 icon
-                class="better-click"
                 small
+                class="better-click"
                 v-on="on"
                 @click.stop="() => deleteItem(item)"
               >
@@ -297,7 +297,11 @@ export default class ProjectItem extends Vue {
 }
 .better-click {
   // so to increase clickable zone
-  padding: 1em;
-  margin: -1em;
+  // display: block;
+  // padding: 1em;
+  // margin: -1em;
+
+  align-items: center;
+  display: flex;
 }
 </style>

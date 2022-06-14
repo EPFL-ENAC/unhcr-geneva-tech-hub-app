@@ -141,8 +141,8 @@ import { mapActions, mapGetters } from "vuex";
 })
 /** ProjectList */
 export default class ProjectList extends Vue {
-  @Prop(Boolean)
-  readonly open: boolean = false;
+  @Prop({ type: Boolean, default: false })
+  readonly open!: boolean;
 
   addDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;
   updateDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;

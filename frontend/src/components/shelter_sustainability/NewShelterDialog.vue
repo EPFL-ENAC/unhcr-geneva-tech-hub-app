@@ -64,8 +64,8 @@ import { mapActions, mapGetters } from "vuex";
 })
 /** ProjectList */
 export default class NewShelterDialog extends Vue {
-  @Prop(Boolean)
-  readonly open: boolean = false;
+  @Prop({ type: Boolean, default: false })
+  readonly open!: boolean;
 
   $refs!: {
     newName: HTMLInputElement;
