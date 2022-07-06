@@ -67,6 +67,9 @@ import { mapActions, mapGetters } from "vuex";
   },
 })
 export default class LoginComponent extends Vue {
+  readonly jwtPattern =
+    /^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\\+\\/=]*)$/;
+
   formValid = false;
   username = "";
   password = "";
@@ -80,12 +83,20 @@ export default class LoginComponent extends Vue {
       const params = new URLSearchParams(this.$route.hash.substring(1));
       const idToken = params.get("id_token");
       if (idToken) {
-        this.loginToken(idToken).then(() => {
-          // push to current route if not current route
-          if (this.$route.name !== this.destinationRouteName) {
-            this.$router.push({ name: this.destinationRouteName });
-          }
-        });
+        this.loginToken(idToken)
+          .then(() => {
+            // push to current route if not current route
+            if (this.$route.name !== this.destinationRouteName) {
+              this.$router.push({ name: this.destinationRouteName });
+            }
+          })
+          .catch(() => {
+            if (this.jwtPattern.test(idToken)) {
+              this.error = `Invalid token: ${idToken}`;
+            } else {
+              this.error = "Invalid token format";
+            }
+          });
       }
     }
   }
