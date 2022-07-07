@@ -48,4 +48,9 @@ If adding a **new feature**, the PR's description includes:
 
 # Summary
 
-Please explain the purpose and scope of your contribution.
+Please explain the purpose and scope of your contribution. + screenshots if possible/necessary
+
+
+# Reviewer
+
+@blueur @guilbep
