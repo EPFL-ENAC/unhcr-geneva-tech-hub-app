@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.1.2...v0.1.3) (2022-07-08)
+
+
+### Features
+
+* **couchdb:** add jwt kid ([d78ab46](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d78ab46ae39a3969bb828eb7bcaa411cbd12cc76))
+* **login:** invalid token message ([fbbfd16](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/fbbfd160f0403af5d69841529e1382df47d7021d))
+
+
+### Bug Fixes
+
+* **azure:** add all pem from azure ([#36](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/36)) ([30a77b0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/30a77b07867a5c15616fd630fb465f504618f9e3)), closes [#32](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/32)
+
 ### [0.1.2](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.1.1...v0.1.2) (2022-06-14)
 
 
