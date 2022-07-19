@@ -9,18 +9,21 @@ export function getCurrentYear(): number {
   return new Date().getFullYear();
 }
 
-export function applyMap<T extends Record<keyof T, number>>(
-  t: T,
-  fn: (value: number) => number
-): T {
+export function applyMap<T>(
+  t: Record<keyof T, number | undefined>,
+  fn: (value: number | undefined) => number
+): Record<keyof T, number> {
   return Object.fromEntries<number>(
-    Object.entries<number>(t).map(([key, value]) => [key, fn(value)])
-  ) as T;
+    Object.entries<number | undefined>(t).map(([key, value]) => [
+      key,
+      fn(value),
+    ])
+  ) as Record<keyof T, number>;
 }
 
-export function applyReduce<T extends Record<keyof T, number>>(
+export function applyReduce<T extends Record<keyof T, number | undefined>>(
   ts: T[],
-  fn: (a: number, b: number) => number,
+  fn: (a: number | undefined, b: number | undefined) => number,
   initial?: T
 ): T {
   const callbackFn = (a: T, b: T) =>
@@ -32,6 +35,10 @@ export function applyReduce<T extends Record<keyof T, number>>(
   } else {
     return ts.reduce(callbackFn);
   }
+}
+
+export function fnSum(a: number | undefined, b: number | undefined): number {
+  return (a ?? 0) + (b ?? 0);
 }
 
 export function getCookingFuel(
