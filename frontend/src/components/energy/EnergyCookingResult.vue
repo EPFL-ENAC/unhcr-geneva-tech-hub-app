@@ -118,7 +118,18 @@
             <v-col>
               <v-expansion-panels>
                 <v-expansion-panel>
-                  <v-expansion-panel-header> Details </v-expansion-panel-header>
+                  <v-expansion-panel-header>
+                    <span>Details</span>
+                    <v-btn
+                      class="flex-grow-0"
+                      color="primary"
+                      text
+                      @click.stop.prevent="downloadExcel"
+                    >
+                      <v-icon left>$mdiDownload</v-icon>
+                      Download
+                    </v-btn>
+                  </v-expansion-panel-header>
                   <v-expansion-panel-content>
                     <v-tabs v-model="tab" center-active show-arrows>
                       <v-tab
@@ -215,8 +226,19 @@ import {
   SocioEconomicCategory,
 } from "@/models/energyModel";
 import { cccmColors } from "@/plugins/vuetify";
-import { applyMap, applyReduce, getColor } from "@/utils/energy";
-import { chain, clamp, cloneDeep, range, round, sortBy, sumBy } from "lodash";
+import { applyMap, applyReduce, fnSum, getColor } from "@/utils/energy";
+import download from "downloadjs";
+import { Workbook } from "exceljs";
+import {
+  chain,
+  clamp,
+  cloneDeep,
+  range,
+  round,
+  sortBy,
+  sumBy,
+  zip,
+} from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapState } from "vuex";
@@ -341,7 +363,7 @@ export default class EnergyCookingResult extends Vue {
       },
     ];
     const stoves: TableRow[] = sortBy(
-      this.householdCookingModule?.categoryCookings,
+      this.householdCookingModule?.technologyYears[0].technologies,
       (item) => item.stove.index
     ).map((cooking) => ({
       text: `${cooking.stove.name} - ${cooking.fuel.name}`,
@@ -418,7 +440,7 @@ export default class EnergyCookingResult extends Vue {
     ];
   }
 
-  get siteResults(): SiteResult[] {
+  get sites(): Site[] {
     const actions: Action[] = (
       this.householdCookingModule?.interventions.filter(
         (intervention) => intervention.selected
@@ -429,11 +451,19 @@ export default class EnergyCookingResult extends Vue {
           return new CookingTechnologyAction(intervention);
       }
     });
-    return this.getSites(actions).map((site) => this.computeSite(site));
+    return this.getSites(actions);
+  }
+
+  get baselineSites(): Site[] {
+    return this.getSites([]);
+  }
+
+  get siteResults(): SiteResult[] {
+    return this.sites.map((site) => this.computeSite(site));
   }
 
   get baselineResults(): SiteResult[] {
-    return this.getSites([]).map((site) => this.computeSite(site));
+    return this.baselineSites.map((site) => this.computeSite(site));
   }
 
   get globalResult(): GlobalResult {
@@ -494,7 +524,7 @@ export default class EnergyCookingResult extends Vue {
     return socioEconomicCategories.map((cat) => {
       const name = this.$t(`energy.${cat}`).toString();
       const ratio = option?.ratio ?? 1;
-      const mapValue = (value: number) => ratio * value;
+      const mapValue = (value?: number) => ratio * (value ?? 0);
       const keys = option?.keys;
       const itemName = option?.itemName ?? "";
       return {
@@ -561,7 +591,7 @@ export default class EnergyCookingResult extends Vue {
       type: type,
       name: option?.name ?? "Total",
       data: this.siteResults.map(
-        (result) => (option?.ratio ?? 1) * result.categoryTotal[key]
+        (result) => (option?.ratio ?? 1) * (result.categoryTotal[key] ?? 0)
       ),
       color: cccmColors.primary,
       yAxisIndex: option?.yAxisIndex,
@@ -726,7 +756,7 @@ export default class EnergyCookingResult extends Vue {
       const householdResult = this.computeHousehold(site, site.categories[cat]);
       const proportionalHousehold = applyMap(
         householdResult,
-        (value) => value * proportion
+        (value) => (value ?? 1) * proportion
       );
       return [
         cat,
@@ -737,7 +767,7 @@ export default class EnergyCookingResult extends Vue {
     });
     const categoryTotal = applyReduce(
       results.map((item) => item[3]),
-      (a, b) => a + b
+      fnSum
     );
     return {
       households: Object.fromEntries<HouseholdResult>(
@@ -745,7 +775,7 @@ export default class EnergyCookingResult extends Vue {
       ) as Record<SocioEconomicCategory, HouseholdResult>,
       householdAverage: applyReduce(
         results.map((item) => item[2]),
-        (a, b) => a + b
+        fnSum
       ),
       categories: Object.fromEntries<CategoryResult>(
         results.map(([cat, , , item]) => [cat, item])
@@ -816,18 +846,18 @@ export default class EnergyCookingResult extends Vue {
           variableCost,
           totalCost,
         },
-        (v) => v * technology.value.countPerHousehold
+        (v) => (v ?? 0) * technology.value.countPerHousehold
       );
       return result;
     });
     const householdResult = {
-      ...Object.fromEntries(
+      ...(Object.fromEntries<number>(
         input.cookingTechnologies.map((technology) => [
           technology.stove._id,
           technology.value.countPerHousehold,
         ])
-      ),
-      ...applyReduce(technologyResults, (a, b) => a + b, {
+      ) as Record<CookingStoveId, number | undefined>),
+      ...applyReduce(technologyResults, fnSum, {
         usefulEnergy: 0,
         finalEnergy: 0,
         woodWeight: 0,
@@ -858,9 +888,14 @@ export default class EnergyCookingResult extends Vue {
     householdResult: HouseholdResult
   ): CategoryResult {
     const householdCount = site.householdsCount * proportion;
-    const categoryResult = applyMap(householdResult, (v) => v * householdCount);
+    const categoryResult = applyMap(
+      householdResult,
+      (v) => (v ?? 0) * householdCount
+    );
     const energyEfficiency =
-      categoryResult.usefulEnergy / categoryResult.finalEnergy;
+      categoryResult.finalEnergy !== 0
+        ? categoryResult.usefulEnergy / categoryResult.finalEnergy
+        : 0;
     const discountedCost =
       categoryResult.totalCost / Math.pow(site.discountRate, site.yearCount);
     return {
@@ -873,11 +908,54 @@ export default class EnergyCookingResult extends Vue {
       costAffordability: householdResult.costAffordability * 100,
     };
   }
+
+  downloadExcel(): void {
+    this.downloadAsyncExcel("unhcr-tss-energy-household-cooking.xlsx");
+  }
+
+  async downloadAsyncExcel(filename: string): Promise<void> {
+    const workbook = new Workbook();
+    workbook.creator = "unhcr-tss.epfl.ch";
+    workbook.created = new Date();
+    zip(this.years, this.sites, this.siteResults)
+      .filter(
+        (item): item is [number, Site, SiteResult] =>
+          item[0] !== undefined &&
+          item[1] !== undefined &&
+          item[2] !== undefined
+      )
+      .forEach(([year, , siteResult]) => {
+        const worksheet = workbook.addWorksheet(`${year}`);
+        const totalColumn = this.categories.length + 2;
+        const headerRow = worksheet.getRow(1);
+        for (let i = 0; i < this.categories.length; i++) {
+          headerRow.getCell(i + 2).value = this.$t(
+            `energy.${this.categories[i]}`
+          ).toString();
+        }
+        headerRow.getCell(totalColumn).value = "Total";
+        for (let i = 0; i < this.lines.length; i++) {
+          const line = this.lines[i];
+          const row = worksheet.getRow(i + 2);
+          row.getCell(1).value = line.unit
+            ? `${line.text} [${line.unit}]`
+            : line.text;
+          for (let j = 0; j < this.categories.length; j++) {
+            const cat = this.categories[j];
+            row.getCell(j + 2).value = siteResult.categories[cat][line.key];
+          }
+          row.getCell(totalColumn).value = siteResult.categoryTotal[line.key];
+        }
+      });
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    download(new Uint8Array(buffer), filename);
+  }
 }
 
 interface TableRow {
   text: string;
-  key: keyof CategoryResult | CookingStoveId;
+  key: keyof CategoryResult;
   unit?: string;
   decimal?: number;
 }
@@ -973,7 +1051,7 @@ class CookingTechnologyAction extends Action {
   }
 }
 
-interface HouseholdResult {
+type HouseholdResult = Record<CookingStoveId, number | undefined> & {
   income: number;
   usefulEnergy: number;
   finalEnergy: number;
@@ -988,7 +1066,7 @@ interface HouseholdResult {
   variableCost: number;
   totalCost: number;
   costAffordability: number;
-}
+};
 
 interface CategoryResult extends HouseholdResult {
   proportion: number;
