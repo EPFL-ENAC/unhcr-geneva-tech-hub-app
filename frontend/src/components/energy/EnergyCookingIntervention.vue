@@ -26,9 +26,9 @@
                     "
                   >
                     <v-icon v-if="interventionItem.selected" color="primary">
-                      $mdiCheckbox-marked
+                      $mdiCheckboxMarked
                     </v-icon>
-                    <v-icon v-else>$mdiCheckbox-blank-outline</v-icon>
+                    <v-icon v-else>$mdiCheckboxBlankOutline</v-icon>
                   </v-btn>
                 </span>
                 <span>{{ interventionItem.name }}</span>
