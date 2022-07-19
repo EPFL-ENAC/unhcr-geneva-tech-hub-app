@@ -167,6 +167,7 @@ export const cccmColors = {
   secondary4: "#f0b89e",
   secondary5: "#f8e4d2",
   green: "rgba(1,178,152)",
+  primary50: "rgba(42, 135, 200, 0.5)",
 };
 
 export const indicatorColors = {
