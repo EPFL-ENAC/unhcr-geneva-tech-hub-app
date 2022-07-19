@@ -43,6 +43,12 @@
                 <v-col>
                   <energy-legend></energy-legend>
                 </v-col>
+                <v-col>
+                  <energy-radar-chart
+                    :items="radarItems"
+                    :properties="radarProperties"
+                  ></energy-radar-chart>
+                </v-col>
               </v-row>
             </v-col>
             <v-divider vertical></v-divider>
@@ -208,6 +214,10 @@ import EnergyChart, {
 } from "@/components/energy/EnergyChart.vue";
 import EnergyKeyIndicator from "@/components/energy/EnergyKeyIndicator.vue";
 import EnergyLegend from "@/components/energy/EnergyLegend.vue";
+import EnergyRadarChart, {
+  RadarItem,
+  RadarProperty,
+} from "@/components/energy/EnergyRadarChart.vue";
 import {
   CategoryCooking,
   CookingFuel,
@@ -247,6 +257,7 @@ import { mapState } from "vuex";
     EnergyChart,
     EnergyKeyIndicator,
     EnergyLegend,
+    EnergyRadarChart,
   },
   computed: {
     ...mapState("energy", ["cookingFuels"]),
@@ -261,6 +272,34 @@ export default class EnergyCookingResult extends Vue {
   householdCookingModule: HouseholdCookingModule | undefined;
   @Prop({ type: Object as () => ScenarioModule })
   scenarioModule: ScenarioModule | undefined;
+
+  readonly radarProperties: RadarProperty<GlobalResult>[] = [
+    {
+      name: "Energy",
+      key: "energy",
+    },
+    {
+      name: "Energy Efficiency",
+      key: "energyEfficiency",
+      max: 100,
+    },
+    {
+      name: "Emission CO2",
+      key: "emissionCo2",
+    },
+    {
+      name: "Wood Area",
+      key: "woodArea",
+    },
+    {
+      name: "Discounted Cost",
+      key: "discountedCost",
+    },
+    {
+      name: "Affordability",
+      key: "affordability",
+    },
+  ];
 
   tab: string | null = null;
   cookingFuels!: CookingFuel[];
@@ -471,6 +510,19 @@ export default class EnergyCookingResult extends Vue {
 
   get baselineResult(): GlobalResult {
     return this.getGlobalResult(this.baselineResults);
+  }
+
+  get radarItems(): RadarItem<GlobalResult>[] {
+    return [
+      {
+        name: "Interventions",
+        value: this.globalResult,
+      },
+      {
+        name: "Baseline",
+        value: this.baselineResult,
+      },
+    ];
   }
 
   getGlobalResult(results: SiteResult[]): GlobalResult {
