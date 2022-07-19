@@ -40,8 +40,7 @@
                 :y-labels="['[ha]']"
               ></energy-chart>
               <v-row>
-                <v-spacer></v-spacer>
-                <v-col cols="auto">
+                <v-col>
                   <energy-legend></energy-legend>
                 </v-col>
               </v-row>
