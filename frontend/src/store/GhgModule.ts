@@ -221,6 +221,9 @@ const actions: ActionTree<ProjectsState, RootState> = {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
   },
+  resetDoc: (context: ActionContext<ProjectsState, RootState>) => {
+    context.commit("SET_PROJECT", {} as GreenHouseGaz);
+  },
   updateDoc: async (
     context: ActionContext<ProjectsState, RootState>,
     value

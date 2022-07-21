@@ -90,11 +90,11 @@ export default class LoginComponent extends Vue {
               this.$router.push({ name: this.destinationRouteName });
             }
           })
-          .catch(() => {
+          .catch((error: Error) => {
             if (this.jwtPattern.test(idToken)) {
-              this.error = `Invalid token: ${idToken}`;
+              this.error = `${error} AND Invalid token: ${idToken}`;
             } else {
-              this.error = "Invalid token format";
+              this.error = `Invalid token format or other: ${error}`;
             }
           });
       }
@@ -122,7 +122,7 @@ export default class LoginComponent extends Vue {
     url.searchParams.append("client_id", process.env.VUE_APP_AUTH_CLIENT_ID);
     url.searchParams.append("nonce", uuidv4());
     url.searchParams.append("response_type", "id_token");
-    url.searchParams.append("scope", "openid");
+    url.searchParams.append("scope", "openid email");
     window.location.href = url.href;
   }
   loginCouchdb(): void {

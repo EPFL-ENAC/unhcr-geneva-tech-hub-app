@@ -44,7 +44,8 @@ export default new (class User {
         if (actionName === "create") {
           return isUser;
         }
-        const isAuthor = obj.users.indexOf(user.name) >= 0 ?? false;
+        const userIndex = obj?.users?.indexOf(user.name) ?? -1;
+        const isAuthor = userIndex >= 0;
         if (actionName === "edit" && obj?.users) {
           return isAuthor || isAdmin;
         }

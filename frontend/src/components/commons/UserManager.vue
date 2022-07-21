@@ -17,7 +17,9 @@
                 {{ item }}
               </v-list-item-title>
             </v-list-item-content>
-            <v-list-item-action v-if="isMember && item !== username">
+            <v-list-item-action
+              v-if="$can('edit', { users }) && item !== username"
+            >
               <v-btn icon @click="removeUser(index)">
                 <v-icon>$mdiDelete</v-icon>
               </v-btn>
@@ -64,10 +66,6 @@ export default class UserManager extends Vue {
 
   @Ref()
   readonly form: VForm | undefined;
-
-  get isMember(): boolean {
-    return this.users.includes(this.username);
-  }
 
   get rules(): Rule[] {
     return [checkRequired, checkExists(this.users)];

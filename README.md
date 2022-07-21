@@ -5,12 +5,11 @@ UNHCR Geneva Technical Hub App
 Regroup three projects: 
     -  project 1 (GHG emission calculator)
     -  project 2 (Shelter sutainability calculator)
-    -  project 3 (Energy )
+    -  project 3 (Energy)
 
 ## Project page
 
-- [project page](https://www.notion.so/enacit4r/9df03c05c0724fe7ae2b653836453253?v=e5af206750924a6bbe7fc72b5314a127&p=5759e42031cd429c8052418621d69889)
-- [test url](http://enacvm0084.xaas.epfl.ch/)
+- https://unhcr-tss.epfl.ch
 
 ## Development
 
@@ -29,18 +28,21 @@ Prerequisites:
 - [Docker](https://www.docker.com/)
   - [Docker Compose](https://docs.docker.com/compose/) 1.27.0+
 
-### Installation
+
+### Run for development
+
+#### Installation
 
 ```bash
 make install
 ```
 
-### Run for development
-
 #### CLI
 
 ```bash
-make run-frontend
+make run-database;
+make setup-database;
+make run-frontend;
 # http://127.0.0.1:8080
 ```
 
@@ -50,29 +52,26 @@ Run configurations are in `.vscode`: https://code.visualstudio.com/docs/editor/d
 
 ## Deployment
 
-### Locally with Docker Compose
+### Local build with Docker Compose
 
 ```bash
-make run
+make run # will build with docker-compose and run docker-compose up -d
 ```
 
 ### Server
 
-#### Prerequisites
+We use enacit-ansible to automate our process
 
-1. Add config to your .ssh/config or try your connection to your vm by using ssh -i (private_key) -l root enacvm0084.xaas.epfl.ch
-
+Just run the following command and it will install the latest commit from the main branch
 ```
-Host enacvm0084.xaas.epfl.ch
-    User root
-    IdentityFile ~/.ssh/id_ed25519_private_key
+ansible-playbook -v -i inventory/unhcr-tss.epfl.ch.yml  playbooks/deploy-app.yml
 ```
 
-2. Create new branch/Merge request in repository enacit-ansible for the vm provisioning
-3. Authorize cloning from the vm by adding a 'deploy-key' in the github setting of this repository
-   - the 'deploy-key' is the public key of the machine created by the provisioning
-4. Follow instruction in repository enacit-ansible to:
-    - deploy-os
-    - deploy-app
-5. Your Makefile should contain a 'run' command
-test
+- If you change  couchdb/etc/config.ini file
+  - You'll need to do the following:
+    ```
+    ssh unhcr-tss.epfl.ch
+    # wait to be connected
+    cd /opt/unhcr-tss;
+    docker-compose restart couchdb;
+    ```
