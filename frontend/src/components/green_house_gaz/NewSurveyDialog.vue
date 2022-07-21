@@ -1,6 +1,10 @@
 <template>
   <v-dialog v-model="dialogOpen" max-width="500px">
-    <v-form v-model="createProjectFormValid" @submit.prevent="submit">
+    <v-form
+      ref="newAssessmentForm"
+      v-model="createProjectFormValid"
+      @submit.prevent="submit"
+    >
       <v-card>
         <v-card-title>
           <span class="text-h5">New assessment</span>
@@ -14,6 +18,7 @@
                   v-model="newCampSite.country_code"
                   :rules="rulesCountry"
                   required
+                  @update="resetCampSiteName"
                 />
               </v-col>
               <v-col cols="12">
@@ -21,6 +26,7 @@
               </v-col>
               <v-col cols="5">
                 <v-select
+                  ref="existingSites"
                   v-model="newCampSite.name"
                   :disabled="existingSites.length === 0 || newName !== ''"
                   tabindex="0"
@@ -28,6 +34,7 @@
                   item-value="name"
                   item-text="name"
                   label="Select an existing site"
+                  :rules="rulesSelectExistingSite"
                   @input="onSelectExistingSite"
                 >
                   <template #item="slotProps">
@@ -57,6 +64,7 @@
                   :rules="rulesCreateNewSite"
                   label="Create a new site"
                   type="text"
+                  @input="$refs.newAssessmentForm.validate()"
                 />
               </v-col>
 
@@ -132,8 +140,7 @@ import { mapActions, mapGetters } from "vuex";
   },
 
   methods: {
-    // todo unified GHG database connection so we have only one store
-    ...mapActions("GhgModule", ["addDoc", "updateDoc", "getDoc"]),
+    ...mapActions("GhgModule", ["addDoc", "updateDoc", "getDoc", "resetDoc"]),
   },
   components: {
     CountrySelect,
@@ -146,7 +153,12 @@ export default class ProjectList extends Vue {
 
   addDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;
   updateDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;
-  getDoc!: (id: string) => null;
+  getDoc!: (id: string) => PromiseLike<void>;
+  resetDoc!: () => PromiseLike<void>;
+
+  $refs!: {
+    newAssessmentForm: Vue & { validate: () => boolean };
+  };
 
   countries!: Country[];
   project!: GreenHouseGaz;
@@ -161,6 +173,9 @@ export default class ProjectList extends Vue {
 
   public onSelectExistingSite(site: string): void {
     this.getDoc(site);
+  }
+  public onSelectCountry(): void {
+    this.resetDoc();
   }
 
   private newDefaultCampSite(): GreenHouseGaz {
@@ -198,8 +213,18 @@ export default class ProjectList extends Vue {
   public closeSiteDialog(): void {
     this.dialogOpen = false;
     this.$nextTick(() => {
-      this.newCampSite = this.newDefaultCampSite();
+      this.resetCampSite();
     });
+  }
+
+  public resetCampSite(): void {
+    this.newCampSite = this.newDefaultCampSite();
+  }
+
+  public resetCampSiteName(): void {
+    this.newCampSite.name = "";
+    this.newName = "";
+    this.editedItem.name = "";
   }
 
   createProjectFormValid = false;
@@ -215,11 +240,24 @@ export default class ProjectList extends Vue {
   }
   public ruleANameShouldHaveLength(v: string): boolean | string {
     return (
+      !!this.newCampSite.name ||
       v?.length > 1 ||
-      !this.newCampSite.name ||
       `Name should have a length >= 1`
     );
   }
+
+  public ruleShouldHaveTheEditRights(): boolean | string {
+    if (this.newName) {
+      return true;
+    } else {
+      return (
+        this.$can("edit", this.project) ||
+        `You're not on the list of authorized user for this existing site, please contact the creator of the site: ${this.project.name} ${this.project.created_by}`
+      );
+    }
+  }
+
+  rulesSelectExistingSite = [this.ruleShouldHaveTheEditRights];
 
   public ruleADescriptionIsRequired(value: string): boolean | string {
     return !!value || `A name is required`;
@@ -313,15 +351,25 @@ export default class ProjectList extends Vue {
   onOpenChange(value: boolean): void {
     // reset form on dialog open
     if (value === true) {
-      this.newCampSite = this.newDefaultCampSite();
+      this.resetCampSite();
     }
   }
+
+  @Watch("project", { immediate: true })
+  onProjectChange(value: GreenHouseGaz): void {
+    if (value?.users) {
+      this.$refs.newAssessmentForm?.validate();
+    }
+  }
+
   created(): void {
-    this.syncLocalCampSite();
+    this.resetDoc().then(() => {
+      this.syncLocalCampSite();
+    });
   }
 
   mounted(): void {
-    this.newCampSite = this.newDefaultCampSite();
+    this.resetCampSite();
   }
 }
 </script>

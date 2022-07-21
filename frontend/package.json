@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@mdi/js": "^6.7.96",
+    "@types/jsonwebtoken": "^8.5.8",
     "axios": "^0.27.2",
     "core-js": "^3.23.0",
     "echarts": "^5.3.3",
