@@ -39,4 +39,26 @@ export const infoTooltipText = {
     ready: true,
     text: "Coefficients used to calculate density, embodied carbon and embodied water are referenced from authoritative sources. Sources are presented alongside each coefficient. Actual embodied carbon and embodied water are process-specific and vary with production processes, prevailing energy source compositions, and cultivation processes. In general, global or generic coefficients have been selected in order to simplify User data input requirements (let us know if better coefficients are available that should be included).",
   },
+  step5EmbodiedWater: {
+    text: "Embodied water reflects the amount of tap water used in material production, estimated using coefficients based on global averages for production processes",
+  },
+  step5Material: {
+    text: "Each material listed in the Bill of Quantities is included here. Each material can be expanded to list the different forms in which the material appears in the shelter design.",
+  },
+
+  step5MaterialWeight: {
+    text: "The weight of each material is provided in order to present the relative amounts of materials used in the shelter design.",
+  },
+
+  step5EmbodiedCarbon: {
+    text: "Embodied carbon dioxide equivalent - expressed as kgCO2e/kg - reflects the amount of various greenhouse gases associated with the production and use of a material. The metric converts amounts of other gases to the equivalent amount of carbon dioxide with the same global warming potential.",
+  },
+
+  step5Production: {
+    text: "Production embodied carbon - expressed as kgCO2e/kg - reflects the amount of various greenhouse gases associated with all processes involved in the production of the material, including all production sub-processes relating to components of the material. A simpliefied calculation estimates Production EMbodied Carbon using coefficients derived from global averages.",
+  },
+
+  step5Transportation: {
+    text: "Transportation embodied carbon - expressed as kgCO2e/kg - reflects the amount of various greenhouse gases associated with transportation of the material from the site of production ot the site of use. A simplified calculation approximates Transportation Embodied Carbon based on the country of origin and country of use. The estimate combines estimates of national transportation distance based on country land area and international transportation distance based on standard shipping routes.",
+  },
 };

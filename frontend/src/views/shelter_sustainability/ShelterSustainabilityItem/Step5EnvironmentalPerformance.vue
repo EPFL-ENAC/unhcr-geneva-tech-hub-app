@@ -38,22 +38,32 @@
                     <thead>
                       <tr>
                         <th colspan="1"></th>
-                        <th rowspan="3">Material</th>
+                        <th rowspan="3">
+                          Material
+                          <info-tooltip>
+                            {{ infoTooltipText.step5Material.text }}
+                          </info-tooltip>
+                        </th>
                         <th style="vertical-align: middle; text-align: center">
                           Material weight (kg)
+                          <info-tooltip>
+                            {{ infoTooltipText.step5MaterialWeight.text }}
+                          </info-tooltip>
                         </th>
                         <th
                           colspan="3"
                           style="vertical-align: middle; text-align: center"
                         >
                           Embodied carbon (kgCO2e/kg)
+                          <info-tooltip>
+                            {{ infoTooltipText.step5EmbodiedCarbon.text }}
+                          </info-tooltip>
                         </th>
                         <th style="vertical-align: middle; text-align: center">
                           <span>
                             Embodied water (L)
                             <info-tooltip>
-                              Embodied potable/tap water, excludes water from
-                              natural irrigation
+                              {{ infoTooltipText.step5EmbodiedWater.text }}
                             </info-tooltip>
                           </span>
                         </th>
@@ -63,9 +73,15 @@
                         <th></th>
                         <th style="vertical-align: middle; text-align: center">
                           Production
+                          <info-tooltip>
+                            {{ infoTooltipText.step5Production.text }}
+                          </info-tooltip>
                         </th>
                         <th style="vertical-align: middle; text-align: center">
                           Transportation
+                          <info-tooltip>
+                            {{ infoTooltipText.step5Transportation.text }}
+                          </info-tooltip>
                         </th>
                         <th style="vertical-align: middle; text-align: center">
                           Total
