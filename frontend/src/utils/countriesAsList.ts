@@ -319,6 +319,7 @@ export const countries: CountryInfo[] = [
   { code: "ZA", name: "South Africa", lat: -30.559482, lon: 22.937506 },
   { code: "ZM", name: "Zambia", lat: -13.133897, lon: 27.849332 },
   { code: "ZW", name: "Zimbabwe", lat: -19.015438, lon: 29.154857 },
+  { code: "ZZ", name: "Unknown", lat: 0, lon: 0 },
 ];
 
 export const countriesMap = countries.reduce(

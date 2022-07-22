@@ -510,17 +510,28 @@ export default class DeleteItemDialog extends Vue {
               iso3166_2_to_3[
                 this.shelter.location_country as keyof typeof iso3166_2_to_3
               ];
-            const request_id = `${src}_${dst}`;
-            const country_src_dst_embodied_carbon =
-              await this.getTransportFactorForMaterial(request_id, local);
-            newValue.embodiedCarbonTransport =
-              weight * country_src_dst_embodied_carbon;
+            let country_src_dst_embodied_carbon: number | string = "n.a.";
+            if (src !== undefined && dst !== undefined) {
+              const request_id = `${src}_${dst}`;
+              country_src_dst_embodied_carbon =
+                await this.getTransportFactorForMaterial(request_id, local);
+              newValue.embodiedCarbonTransport =
+                weight * country_src_dst_embodied_carbon;
+            } else {
+              newValue.embodiedCarbonTransport =
+                country_src_dst_embodied_carbon;
+            }
           }
         } catch (e) {
           console.error(e);
         }
-        newValue.embodiedCarbonTotal =
-          newValue.embodiedCarbonProduction + newValue.embodiedCarbonTransport;
+        if (typeof newValue.embodiedCarbonTransport === "number") {
+          newValue.embodiedCarbonTotal =
+            newValue.embodiedCarbonProduction +
+            newValue.embodiedCarbonTransport;
+        } else {
+          newValue.embodiedCarbonTotal = newValue.embodiedCarbonProduction;
+        }
       }
       if (quantity && unitCost) {
         // compute totalCost
