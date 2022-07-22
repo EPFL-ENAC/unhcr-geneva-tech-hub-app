@@ -25,26 +25,16 @@ import { countries as Countries } from "@/utils/countriesAsList";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-@Component({
-  props: {
-    countries: {
-      default: () => [],
-      type: Array,
-      required: false,
-    },
-    value: {
-      required: true,
-      type: String,
-      default: "",
-    },
-  },
-})
+@Component({})
 export default class CountrySelect extends Vue {
-  value!: string;
-  countries!: string[];
-
   @Prop({ type: String, default: "Select country" })
   readonly label!: string;
+
+  @Prop({ type: Array, default: () => [] })
+  readonly countries!: string[];
+
+  @Prop({ type: String, default: "" })
+  readonly value!: string;
 
   public get currentValue(): string {
     return this.value;
@@ -61,16 +51,22 @@ export default class CountrySelect extends Vue {
           lon: 0, // not used
         })
       ) as CountryInfo[];
-      return this.countriesSorted(result);
+      return this.sortCountries(result);
     } else {
       const result = Countries.map((country) => ({
         ...country,
       })) as CountryInfo[];
-      return this.countriesSorted(result);
+      result.push({
+        name: "Unknown",
+        code: "ZZ",
+        lat: 0, // not used
+        lon: 0, // not used
+      });
+      return this.sortCountries(result);
     }
   }
 
-  public countriesSorted(value: CountryInfo[]): CountryInfo[] {
+  public sortCountries(value: CountryInfo[]): CountryInfo[] {
     const result = cloneDeep(value);
     result.sort((a: CountryInfo, b: CountryInfo): number => {
       if (a.name === b.name) {
