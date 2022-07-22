@@ -95,14 +95,22 @@ export function getEnvPerfItems(items: Item[] = []): MaterialTree[] {
     const children = prevMat?.children
       ? prevMat.children.push(el) && prevMat.children
       : [el];
+    let embodiedCarbonTransport: number | string;
+    const prevEmbodiedCarbonTransport: number =
+      (prevMat?.embodiedCarbonTransport as number) ?? 0;
+    if (typeof el.embodiedCarbonTransport === "number") {
+      embodiedCarbonTransport =
+        el.embodiedCarbonTransport + prevEmbodiedCarbonTransport;
+    } else {
+      embodiedCarbonTransport = 0;
+    }
     acc[el.materialId] = {
       materialId: el.materialId,
       formId: "",
       weight: el.weight + (prevMat?.weight ?? 0),
       embodiedCarbonProduction:
         el.embodiedCarbonProduction + (prevMat?.embodiedCarbonProduction ?? 0),
-      embodiedCarbonTransport:
-        el.embodiedCarbonTransport + (prevMat?.embodiedCarbonTransport ?? 0),
+      embodiedCarbonTransport,
       embodiedCarbonTotal:
         el.embodiedCarbonTotal + (prevMat?.embodiedCarbonTotal ?? 0),
       embodiedWater: el.embodiedWater + (prevMat?.embodiedWater ?? 0),
@@ -121,11 +129,20 @@ export function getTotalEnvPerf(
 ): MaterialTree {
   const total = values.reduce(
     (acc, el) => {
+      let embodiedCarbonTransport: number;
+      const prevEmbodiedCarbonTransport: number =
+        (acc?.embodiedCarbonTransport as number) ?? 0;
+      if (typeof el.embodiedCarbonTransport === "number") {
+        embodiedCarbonTransport =
+          el.embodiedCarbonTransport + prevEmbodiedCarbonTransport;
+      } else {
+        embodiedCarbonTransport = 0;
+      }
+
       acc.weight = el.weight + (acc?.weight ?? 0);
       acc.embodiedCarbonProduction =
         el.embodiedCarbonProduction + (acc?.embodiedCarbonProduction ?? 0);
-      acc.embodiedCarbonTransport =
-        el.embodiedCarbonTransport + (acc?.embodiedCarbonTransport ?? 0);
+      acc.embodiedCarbonTransport = embodiedCarbonTransport;
       acc.embodiedCarbonTotal =
         el.embodiedCarbonTotal + (acc?.embodiedCarbonTotal ?? 0);
       acc.embodiedWater = el.embodiedWater + (acc?.embodiedWater ?? 0);

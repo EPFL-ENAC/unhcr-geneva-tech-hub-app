@@ -562,7 +562,7 @@ export interface Material extends Item {
   formId: string;
   unit?: UnitsMaterial;
   embodiedCarbonProduction: number;
-  embodiedCarbonTransport: number;
+  embodiedCarbonTransport: number | string;
   embodiedCarbonTotal: number;
   embodiedWater: number;
   weight: number;
@@ -579,7 +579,7 @@ export interface MaterialTree {
   materialId?: string;
   formId?: string;
   embodiedCarbonProduction: number;
-  embodiedCarbonTransport: number;
+  embodiedCarbonTransport: number | string;
   embodiedCarbonTotal: number;
   embodiedWater: number;
   weight: number;
