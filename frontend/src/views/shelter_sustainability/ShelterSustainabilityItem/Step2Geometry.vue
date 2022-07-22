@@ -406,6 +406,13 @@ export default class Step2Geometry extends Vue {
     } else {
       res = L * W;
     }
+    const geometry = this.geometries.find(
+      (g) => g._id === this.shelter_geometry_type
+    );
+    if (geometry?.areaFunction) {
+      const res = geometry.areaFunction(shelterDimension);
+      return parseFloat(res.toFixed(2));
+    }
     return parseFloat(res.toFixed(2));
   }
 
@@ -479,6 +486,34 @@ export default class Step2Geometry extends Vue {
       name: "Other",
       hiddenInputs: true,
       image_url: "/houses_new/GTH-SSC_Graphics_Typology_Other_5.png",
+    },
+    {
+      _id: "tukul",
+      name: "Tukul",
+      image_url:
+        "/houses_new/177516466-55a94506-26b4-442e-a80e-0946c1b8835d.png",
+      shelter_dimensions: ["W", "H1", "H2"],
+      door_dimensions: ["Wd", "Hd"],
+      window_dimensions: ["Ww", "Hw", "Hs"],
+      areaFunction(shelterDimension: ShelterDimensions): number {
+        const { W } = shelterDimension || {};
+        if (!W) {
+          return 0;
+        }
+        const radius = W / 2;
+        return Math.PI * Math.pow(radius, 2);
+      },
+      volumeFunction(shelterDimension: ShelterDimensions): number {
+        const { W, H1, H2 } = shelterDimension || {};
+        if (!W || !H1 || !H2) {
+          return 0; // one dimension undefined volume is 0 by default
+        }
+        const radius = W / 2;
+        const surfaceArea = Math.PI * Math.pow(radius, 2);
+        const cylindricalVolume = surfaceArea * H1;
+        const coneVolume = surfaceArea * ((H2 - H1) / 3);
+        return cylindricalVolume + coneVolume;
+      },
     },
   ];
 }
