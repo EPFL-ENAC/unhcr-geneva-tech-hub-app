@@ -1,185 +1,68 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-card height="100%">
-        <v-card-title>
+      <energy-cooking-intervention-item
+        v-model="module.substitutionInterventions"
+        :form-items="technologyFormItems"
+        :default-item="technologyDefaultItem"
+      >
+        <template #title>
           Energy substitution
           <info-tooltip>
             Through an energy substitution, a conventional or improved
             technology of the reference system is replaced by a clean or
             specific technology including solar cookers.
           </info-tooltip>
-          <v-spacer></v-spacer>
-          <v-btn class="float-right" color="primary" text @click="addDiffusion">
-            <v-icon left>$mdiPlusBox</v-icon>
-            New intervention
-          </v-btn>
-        </v-card-title>
-        <v-card-text>
-          <v-expansion-panels multiple>
-            <v-expansion-panel
-              v-for="(interventionItem, index) in module.interventions"
-              :key="index"
-            >
-              <v-expansion-panel-header>
-                <v-btn
-                  class="flex-grow-0"
-                  icon
-                  @click="
-                    $event.stopPropagation();
-                    interventionItem.selected = !interventionItem.selected;
-                  "
-                >
-                  <v-icon v-if="interventionItem.selected" color="primary">
-                    $mdiCheckboxMarked
-                  </v-icon>
-                  <v-icon v-else>$mdiCheckboxBlankOutline</v-icon>
-                </v-btn>
-                <span>{{ interventionItem.name }}</span>
-                <v-btn
-                  class="flex-grow-0"
-                  icon
-                  @click="
-                    $event.stopPropagation();
-                    deleteDuffusion(index);
-                  "
-                >
-                  <v-icon>$mdiDelete</v-icon>
-                </v-btn>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <form-item-component
-                  v-for="item in technologyFormItems"
-                  :key="item.key"
-                  v-model="interventionItem[item.key]"
-                  v-bind="item"
-                ></form-item-component>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
-        </v-card-text>
-      </v-card>
+        </template>
+      </energy-cooking-intervention-item>
     </v-col>
     <v-col cols="12">
-      <v-card height="100%">
-        <v-card-title>
+      <energy-cooking-intervention-item
+        v-model="module.efficiencyInterventions"
+        :form-items="technologyFormItems"
+        :default-item="technologyDefaultItem"
+      >
+        <template #title>
           Energy efficiency improvement
           <info-tooltip>
             With this type of basic intervention, a conventional technology of
             the reference system is replaced by an improved one that uses the
             same fuel but with an improved efficiency.
           </info-tooltip>
-          <v-spacer></v-spacer>
-          <v-btn
-            class="float-right"
-            color="primary"
-            text
-            @click="addEfficiency"
-          >
-            <v-icon left>$mdiPlusBox</v-icon>
-            New intervention
-          </v-btn>
-        </v-card-title>
-        <v-card-text>
-          <v-expansion-panels multiple>
-            <v-expansion-panel
-              v-for="(interventionItem, index) in efficiencyInterventions"
-              :key="index"
-            >
-              <v-expansion-panel-header>
-                <template #default="{ open }">
-                  <v-row>
-                    <v-col cols="auto">
-                      <!-- todo: remove disabled when implemented -->
-                      <v-checkbox
-                        hide-details="auto"
-                        :input-value="open"
-                        :label="interventionItem.name"
-                        :readonly="true"
-                        :disabled="true"
-                        :value="false"
-                        @click.stop.prevent
-                      ></v-checkbox>
-                    </v-col>
-                    <v-spacer></v-spacer>
-                    <v-col cols="auto" class="d-flex align-center">
-                      <v-btn icon @click="deleteEfficiency(index)">
-                        <v-icon>$mdiDelete</v-icon>
-                      </v-btn>
-                    </v-col>
-                  </v-row>
-                </template>
-              </v-expansion-panel-header>
-            </v-expansion-panel>
-          </v-expansion-panels>
-        </v-card-text>
-      </v-card>
+        </template>
+      </energy-cooking-intervention-item>
     </v-col>
     <v-col cols="12">
-      <v-card height="100%">
-        <v-card-title>
+      <energy-cooking-intervention-item
+        v-model="module.cashInterventions"
+        :form-items="cashFormItems"
+        :default-item="cashDefaultItem"
+      >
+        <template #title>
           Cash-based interventions
           <info-tooltip>
             The aim is to provide poor households with subsidies to improve
             their energy cost affordability.
           </info-tooltip>
-          <v-spacer></v-spacer>
-          <v-btn class="float-right" color="primary" text @click="addCash">
-            <v-icon left>$mdiPlusBox</v-icon>
-            New intervention
-          </v-btn>
-        </v-card-title>
-        <v-card-text>
-          <v-expansion-panels multiple>
-            <v-expansion-panel
-              v-for="(interventionItem, index) in cashInterventions"
-              :key="index"
-            >
-              <v-expansion-panel-header>
-                <template #default="{ open }">
-                  <v-row>
-                    <v-col cols="auto">
-                      <v-form :disabled="true">
-                        <v-checkbox
-                          hide-details="auto"
-                          :input-value="open"
-                          :label="interventionItem.name"
-                          :readonly="true"
-                          :disabled="true"
-                          :value="false"
-                          @click.stop.prevent
-                        ></v-checkbox>
-                      </v-form>
-                    </v-col>
-                    <v-spacer></v-spacer>
-                    <v-col cols="auto" class="d-flex align-center">
-                      <v-btn icon @click="deleteCash(index)">
-                        <v-icon>$mdiDelete</v-icon>
-                      </v-btn>
-                    </v-col>
-                  </v-row>
-                </template>
-              </v-expansion-panel-header>
-            </v-expansion-panel>
-          </v-expansion-panels>
-        </v-card-text>
-      </v-card>
+        </template>
+      </energy-cooking-intervention-item>
     </v-col>
   </v-row>
 </template>
 
 <script lang="ts">
 import { FormItem, SelectOption } from "@/components/commons/FormItem";
-import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import InfoTooltip from "@/components/commons/InfoTooltip.vue";
-import EnergyForm from "@/components/energy/EnergyForm.vue";
+import EnergyCookingInterventionItem from "@/components/energy/EnergyCookingInterventionItem.vue";
 import {
+  CookingCashIntervention,
   CookingFuel,
   CookingStove,
   CookingStoveId,
   CookingTechnologyIntervention,
   GeneralModule,
   HouseholdCookingModule,
+  ParentIntervention,
   socioEconomicCategories,
   SocioEconomicCategory,
 } from "@/models/energyModel";
@@ -190,8 +73,7 @@ import { mapState } from "vuex";
 
 @Component({
   components: {
-    EnergyForm,
-    FormItemComponent,
+    EnergyCookingInterventionItem,
     InfoTooltip,
   },
   computed: {
@@ -207,27 +89,41 @@ export default class EnergyCookingIntervention extends Vue {
   @Prop({ type: Object as () => GeneralModule })
   generalModule!: GeneralModule;
 
-  // TODO remove and group types of intervention
-  efficiencyInterventions: {
-    name: string;
-  }[] = [];
-  cashInterventions: {
-    name: string;
-  }[] = [];
+  get technologyDefaultItem(): CookingTechnologyIntervention {
+    const currentYear = getCurrentYear();
+    return {
+      type: "cooking-technology",
+      name: "New intervention",
+      selected: false,
+      yearStart: currentYear,
+      yearEnd: currentYear,
+      newStoveId: "lpg",
+      oldStoveIds: [],
+      categories: socioEconomicCategories,
+      count: 0,
+    };
+  }
 
-  get technologyFormItems(): FormItem<keyof CookingTechnologyIntervention>[] {
+  get cashDefaultItem(): CookingCashIntervention {
+    const currentYear = getCurrentYear();
+    return {
+      type: "cooking-cash",
+      name: "New intervention",
+      selected: false,
+      yearStart: currentYear,
+      yearEnd: currentYear,
+      categories: socioEconomicCategories,
+      costAffordability: 0,
+    };
+  }
+
+  get formItems(): FormItem<keyof ParentIntervention>[] {
     return [
       {
         type: "text",
         key: "name",
         label: "Intervention name",
       },
-      {
-        type: "select",
-        key: "newStoveId",
-        label: "New cooker to diffuse",
-        options: this.stoveIdOptions,
-      } as FormItem<keyof CookingTechnologyIntervention, CookingStoveId>,
       {
         type: "number",
         key: "yearStart",
@@ -240,6 +136,18 @@ export default class EnergyCookingIntervention extends Vue {
         label: "Last year of diffusion",
         max: this.generalModule.yearEnd,
       },
+    ];
+  }
+
+  get technologyFormItems(): FormItem<keyof CookingTechnologyIntervention>[] {
+    return [
+      ...this.formItems,
+      {
+        type: "select",
+        key: "newStoveId",
+        label: "New cooker to diffuse",
+        options: this.stoveIdOptions,
+      } as FormItem<keyof CookingTechnologyIntervention, CookingStoveId>,
       {
         type: "select",
         key: "oldStoveIds",
@@ -264,12 +172,24 @@ export default class EnergyCookingIntervention extends Vue {
     ];
   }
 
-  get subsidiesFormItems(): FormItem<SocioEconomicCategory>[] {
-    return socioEconomicCategories.map((cat) => ({
-      type: "number",
-      key: cat,
-      label: `Share of subsidies by the donor for ${this.$t(`energy.${cat}`)}`,
-    }));
+  get cashFormItems(): FormItem<keyof CookingCashIntervention>[] {
+    return [
+      ...this.formItems,
+      {
+        type: "select",
+        key: "categories",
+        label: "Targeted quality of life levels",
+        options: this.categoryOptions,
+        multiple: true,
+      } as FormItem<keyof CookingCashIntervention, SocioEconomicCategory>,
+      {
+        type: "number",
+        key: "costAffordability",
+        label:
+          "Objective of energy for cooking cost affordability of each targeted QLL each intervention year",
+        subtype: "percent",
+      },
+    ];
   }
 
   get stoveIdOptions(): SelectOption<CookingStoveId>[] {
@@ -284,49 +204,6 @@ export default class EnergyCookingIntervention extends Vue {
       text: this.$t("energy." + cat).toString(),
       value: cat,
     }));
-  }
-
-  addDiffusion(): void {
-    const currentYear = getCurrentYear();
-    this.module.interventions.push({
-      type: "cooking-technology",
-      name: "Diffusion of new technology",
-      selected: false,
-      yearStart: currentYear,
-      yearEnd: currentYear,
-      newStoveId: "lpg",
-      oldStoveIds: [],
-      count: 0,
-      categories: [],
-      cost: 0,
-      subsidies: Object.fromEntries(
-        socioEconomicCategories.map((cat) => [cat, 0])
-      ) as Record<SocioEconomicCategory, number>,
-    });
-  }
-
-  deleteDuffusion(index: number): void {
-    this.module.interventions.splice(index, 1);
-  }
-
-  addEfficiency(): void {
-    this.efficiencyInterventions.push({
-      name: "New efficiency improvement",
-    });
-  }
-
-  deleteEfficiency(index: number): void {
-    this.efficiencyInterventions.splice(index, 1);
-  }
-
-  addCash(): void {
-    this.cashInterventions.push({
-      name: "New cash-based intervention",
-    });
-  }
-
-  deleteCash(index: number): void {
-    this.cashInterventions.splice(index, 1);
   }
 }
 </script>

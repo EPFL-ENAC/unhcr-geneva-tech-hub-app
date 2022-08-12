@@ -9,10 +9,6 @@ export interface Modules {
   general?: GeneralModule;
   householdCooking?: HouseholdCookingModule;
   scenario?: ScenarioModule;
-  /**
-   * @deprecated for backward compatibility
-   */
-  intervention?: InterventionModule;
 }
 
 // Common
@@ -115,8 +111,14 @@ export interface GeneralCategory {
 export interface HouseholdCookingModule {
   technologyYears: TechnologyYear[];
 
-  interventions: Intervention[];
+  substitutionInterventions: CookingTechnologyIntervention[];
+  efficiencyInterventions: CookingTechnologyIntervention[];
+  cashInterventions: CookingCashIntervention[];
 
+  /**
+   * @deprecated for backward compatibility
+   */
+  interventions?: CookingTechnologyIntervention[];
   /**
    * @deprecated for backward compatibility
    */
@@ -194,12 +196,8 @@ export type ScenarioTrend = "stable" | "increase" | "decrease";
 
 // Intervention
 
-export interface InterventionModule {
-  interventions: Intervention[];
-}
-export type Intervention = CookingTechnologyIntervention;
-interface ParentIntervention {
-  type: "cooking-technology";
+export interface ParentIntervention {
+  type: string;
   name: string;
   selected: boolean;
   yearStart: number;
@@ -209,10 +207,13 @@ export interface CookingTechnologyIntervention extends ParentIntervention {
   type: "cooking-technology";
   newStoveId: CookingStoveId;
   oldStoveIds: CookingStoveId[];
-  count: number;
   categories: SocioEconomicCategory[];
-  cost: number;
-  subsidies: Record<SocioEconomicCategory, number>;
+  count: number;
+}
+export interface CookingCashIntervention extends ParentIntervention {
+  type: "cooking-cash";
+  categories: SocioEconomicCategory[];
+  costAffordability: number;
 }
 
 // CouchDB Models

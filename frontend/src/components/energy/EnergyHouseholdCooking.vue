@@ -28,7 +28,7 @@
             <v-expansion-panel>
               <v-expansion-panel-header>
                 <h2>Interventions</h2>
-                {{ interventions.length }} selected
+                {{ interventionsCount }} selected
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <energy-cooking-intervention
@@ -67,11 +67,7 @@ import {
   CookingStove,
   GeneralModule,
   HouseholdCookingModule,
-  Intervention,
-  InterventionModule,
   ScenarioModule,
-  socioEconomicCategories,
-  SocioEconomicCategory,
 } from "@/models/energyModel";
 import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
@@ -98,13 +94,13 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   generalModule!: GeneralModule;
   @Prop({ type: Object as () => ScenarioModule })
   scenarioModule: ScenarioModule | undefined;
-  @Prop({ type: Object as () => InterventionModule })
-  interventionModule: InterventionModule | undefined;
 
   module: HouseholdCookingModule = {
     technologyYears: [],
     categoryCookings: [],
-    interventions: [],
+    substitutionInterventions: [],
+    efficiencyInterventions: [],
+    cashInterventions: [],
   };
 
   get scenarioName(): string | undefined {
@@ -113,10 +109,12 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
     )?.name;
   }
 
-  get interventions(): Intervention[] {
-    return this.module.interventions.filter(
-      (intervention) => intervention.selected
-    );
+  get interventionsCount(): number {
+    return [
+      ...this.module.substitutionInterventions,
+      ...this.module.efficiencyInterventions,
+      ...this.module.cashInterventions,
+    ].filter((intervention) => intervention.selected).length;
   }
 
   created(): void {
@@ -141,18 +139,16 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
         },
       ];
     }
-    if (!this.module.interventions) {
-      this.module.interventions = this.interventionModule
-        ? this.interventionModule.interventions
-        : [];
+    if (!this.module.substitutionInterventions) {
+      this.module.substitutionInterventions = this.module.interventions ?? [];
+      delete this.module.interventions;
     }
-    this.module.interventions.forEach((intervention) => {
-      if (!intervention.subsidies) {
-        intervention.subsidies = Object.fromEntries(
-          socioEconomicCategories.map((cat) => [cat, 0])
-        ) as Record<SocioEconomicCategory, number>;
-      }
-    });
+    if (!this.module.efficiencyInterventions) {
+      this.module.efficiencyInterventions = [];
+    }
+    if (!this.module.cashInterventions) {
+      this.module.cashInterventions = [];
+    }
   }
 }
 </script>
