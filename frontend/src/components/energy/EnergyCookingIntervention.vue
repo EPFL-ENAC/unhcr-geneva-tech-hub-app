@@ -22,44 +22,36 @@
               :key="index"
             >
               <v-expansion-panel-header>
-                <span>
-                  <v-btn
-                    icon
-                    @click="
-                      $event.stopPropagation();
-                      interventionItem.selected = !interventionItem.selected;
-                    "
-                  >
-                    <v-icon v-if="interventionItem.selected" color="primary">
-                      $mdiCheckboxMarked
-                    </v-icon>
-                    <v-icon v-else>$mdiCheckboxBlankOutline</v-icon>
-                  </v-btn>
-                </span>
+                <v-btn
+                  class="flex-grow-0"
+                  icon
+                  @click="
+                    $event.stopPropagation();
+                    interventionItem.selected = !interventionItem.selected;
+                  "
+                >
+                  <v-icon v-if="interventionItem.selected" color="primary">
+                    $mdiCheckboxMarked
+                  </v-icon>
+                  <v-icon v-else>$mdiCheckboxBlankOutline</v-icon>
+                </v-btn>
                 <span>{{ interventionItem.name }}</span>
-                <span>
-                  <v-btn
-                    icon
-                    @click="
-                      $event.stopPropagation();
-                      deleteDuffusion(index);
-                    "
-                  >
-                    <v-icon>$mdiDelete</v-icon>
-                  </v-btn>
-                </span>
+                <v-btn
+                  class="flex-grow-0"
+                  icon
+                  @click="
+                    $event.stopPropagation();
+                    deleteDuffusion(index);
+                  "
+                >
+                  <v-icon>$mdiDelete</v-icon>
+                </v-btn>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <form-item-component
-                  v-for="item in formItems"
+                  v-for="item in technologyFormItems"
                   :key="item.key"
                   v-model="interventionItem[item.key]"
-                  v-bind="item"
-                ></form-item-component>
-                <form-item-component
-                  v-for="item in subsidiesFormItems"
-                  :key="item.key"
-                  v-model="interventionItem.subsidies[item.key]"
                   v-bind="item"
                 ></form-item-component>
               </v-expansion-panel-content>
@@ -186,13 +178,14 @@ import {
   CookingStove,
   CookingStoveId,
   CookingTechnologyIntervention,
+  GeneralModule,
   HouseholdCookingModule,
   socioEconomicCategories,
   SocioEconomicCategory,
 } from "@/models/energyModel";
 import { getCookingFuel, getCurrentYear } from "@/utils/energy";
 import "vue-class-component/hooks";
-import { Component, VModel, Vue } from "vue-property-decorator";
+import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 import { mapState } from "vuex";
 
 @Component({
@@ -211,6 +204,8 @@ export default class EnergyCookingIntervention extends Vue {
 
   @VModel({ type: Object as () => HouseholdCookingModule })
   module!: HouseholdCookingModule;
+  @Prop({ type: Object as () => GeneralModule })
+  generalModule!: GeneralModule;
 
   // TODO remove and group types of intervention
   efficiencyInterventions: {
@@ -220,28 +215,30 @@ export default class EnergyCookingIntervention extends Vue {
     name: string;
   }[] = [];
 
-  get formItems(): FormItem<keyof CookingTechnologyIntervention>[] {
+  get technologyFormItems(): FormItem<keyof CookingTechnologyIntervention>[] {
     return [
       {
         type: "text",
         key: "name",
-        label: "Name",
+        label: "Intervention name",
       },
       {
         type: "select",
         key: "newStoveId",
-        label: "New technology",
+        label: "New cooker to diffuse",
         options: this.stoveIdOptions,
       } as FormItem<keyof CookingTechnologyIntervention, CookingStoveId>,
       {
         type: "number",
         key: "yearStart",
-        label: "Starting year of the diffusion",
+        label: "First year of the intervention",
+        min: this.generalModule.yearStart,
       },
       {
         type: "number",
         key: "yearEnd",
-        label: "Ending year of the diffusion",
+        label: "Last year of diffusion",
+        max: this.generalModule.yearEnd,
       },
       {
         type: "select",
@@ -251,22 +248,18 @@ export default class EnergyCookingIntervention extends Vue {
         multiple: true,
       } as FormItem<keyof CookingTechnologyIntervention, CookingStoveId>,
       {
-        type: "number",
-        key: "count",
-        label: "Number of cookstoves per year",
-      },
-      {
         type: "select",
         key: "categories",
-        label: "Target quality of life levels",
+        label: "Targeted quality of life levels",
         options: this.categoryOptions,
         multiple: true,
       } as FormItem<keyof CookingTechnologyIntervention, SocioEconomicCategory>,
       {
         type: "number",
-        key: "cost",
-        label: "Total cost per year",
-        unit: "$",
+        key: "count",
+        label:
+          "Objectives of number of conventional or improved cooking count per 10-household of each targeted QLL each intervention year",
+        ratio: 10,
       },
     ];
   }

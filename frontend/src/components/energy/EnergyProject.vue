@@ -244,7 +244,6 @@
 <script lang="ts">
 import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import UserManager from "@/components/commons/UserManager.vue";
-import EnergyCookingIntervention from "@/components/energy/EnergyCookingIntervention.vue";
 import EnergyCookingResult from "@/components/energy/EnergyCookingResult.vue";
 import EnergyCookingScenario from "@/components/energy/EnergyCookingScenario.vue";
 import EnergyGeneral from "@/components/energy/EnergyGeneral.vue";
@@ -262,7 +261,6 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
     EnergyGeneral,
     EnergyHouseholdCooking,
     EnergyCookingScenario,
-    EnergyCookingIntervention,
     EnergyCookingResult,
     InfoTooltip,
     UserManager,
