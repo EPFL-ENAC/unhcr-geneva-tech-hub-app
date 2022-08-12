@@ -33,6 +33,7 @@
               <v-expansion-panel-content>
                 <energy-cooking-intervention
                   v-model="module"
+                  :general-module="generalModule"
                 ></energy-cooking-intervention>
               </v-expansion-panel-content>
             </v-expansion-panel>

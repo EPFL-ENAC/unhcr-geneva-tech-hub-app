@@ -238,16 +238,7 @@ import { cccmColors } from "@/plugins/vuetify";
 import { applyMap, applyReduce, fnSum, getColor } from "@/utils/energy";
 import download from "downloadjs";
 import { Workbook } from "exceljs";
-import {
-  chain,
-  clamp,
-  cloneDeep,
-  range,
-  round,
-  sortBy,
-  sumBy,
-  zip,
-} from "lodash";
+import { chain, clamp, cloneDeep, range, sortBy, sumBy, zip } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapState } from "vuex";
@@ -1057,30 +1048,21 @@ class CookingTechnologyAction extends Action {
   }
 
   apply(site: Site): Site {
-    let remainingCount = this.intervention.count;
-    mainLoop: for (const category of this.intervention.categories) {
-      const householdCount = site.proportions[category] * site.householdsCount;
-      if (householdCount > 0) {
-        const input = site.categories[category];
-        const newStove = this.getStove(input, this.intervention.newStoveId);
-        for (const item of this.intervention.oldStoveIds
-          .map((id) => this.getStove(input, id))
-          .filter((item) => item.countPerHousehold > 0)) {
-          const count = round(item.countPerHousehold * householdCount);
-          const replaceCount = clamp(count, remainingCount);
-          remainingCount -= replaceCount;
-          const replacePerHousehold = replaceCount / householdCount;
-          item.countPerHousehold = round(
-            item.countPerHousehold - replacePerHousehold,
-            this.precision
-          );
-          newStove.countPerHousehold = round(
-            newStove.countPerHousehold + replacePerHousehold,
-            this.precision
-          );
-          if (remainingCount === 0) {
-            break mainLoop;
-          }
+    for (const category of this.intervention.categories) {
+      const input = site.categories[category];
+      const newStove = this.getStove(input, this.intervention.newStoveId);
+      let remainingCount = this.intervention.count;
+      remainingLoop: for (const item of this.intervention.oldStoveIds
+        .map((id) => this.getStove(input, id))
+        .filter((item) => item.countPerHousehold > 0)) {
+        const replaceCount = clamp(item.countPerHousehold, remainingCount);
+        remainingCount -= replaceCount;
+        const replacePerHousehold = replaceCount;
+        item.countPerHousehold = item.countPerHousehold - replacePerHousehold;
+        newStove.countPerHousehold =
+          newStove.countPerHousehold + replacePerHousehold;
+        if (remainingCount === 0) {
+          break remainingLoop;
         }
       }
     }
