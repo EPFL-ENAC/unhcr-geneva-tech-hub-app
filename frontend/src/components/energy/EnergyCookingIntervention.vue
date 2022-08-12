@@ -4,6 +4,11 @@
       <v-card height="100%">
         <v-card-title>
           Energy substitution
+          <info-tooltip>
+            Through an energy substitution, a conventional or improved
+            technology of the reference system is replaced by a clean or
+            specific technology including solar cookers.
+          </info-tooltip>
           <v-spacer></v-spacer>
           <v-btn class="float-right" color="primary" text @click="addDiffusion">
             <v-icon left>$mdiPlusBox</v-icon>
@@ -67,6 +72,11 @@
       <v-card height="100%">
         <v-card-title>
           Energy efficiency improvement
+          <info-tooltip>
+            With this type of basic intervention, a conventional technology of
+            the reference system is replaced by an improved one that uses the
+            same fuel but with an improved efficiency.
+          </info-tooltip>
           <v-spacer></v-spacer>
           <v-btn
             class="float-right"
@@ -117,6 +127,10 @@
       <v-card height="100%">
         <v-card-title>
           Cash-based interventions
+          <info-tooltip>
+            The aim is to provide poor households with subsidies to improve
+            their energy cost affordability.
+          </info-tooltip>
           <v-spacer></v-spacer>
           <v-btn class="float-right" color="primary" text @click="addCash">
             <v-icon left>$mdiPlusBox</v-icon>
@@ -165,6 +179,7 @@
 <script lang="ts">
 import { FormItem, SelectOption } from "@/components/commons/FormItem";
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
+import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import EnergyForm from "@/components/energy/EnergyForm.vue";
 import {
   CookingFuel,
@@ -182,8 +197,9 @@ import { mapState } from "vuex";
 
 @Component({
   components: {
-    FormItemComponent,
     EnergyForm,
+    FormItemComponent,
+    InfoTooltip,
   },
   computed: {
     ...mapState("energy", ["cookingFuels", "cookingStoves"]),
