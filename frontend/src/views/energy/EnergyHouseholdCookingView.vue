@@ -3,7 +3,6 @@
     :initial-module="modules.householdCooking"
     :general-module="modules.general"
     :scenario-module="modules.scenario"
-    :intervention-module="modules.intervention"
     @save="save"
   ></energy-household-cooking>
 </template>

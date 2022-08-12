@@ -220,6 +220,7 @@ import EnergyRadarChart, {
 } from "@/components/energy/EnergyRadarChart.vue";
 import {
   CategoryCooking,
+  CookingCashIntervention,
   CookingFuel,
   CookingFuelId,
   cookingFuelIds,
@@ -470,16 +471,20 @@ export default class EnergyCookingResult extends Vue {
   }
 
   get sites(): Site[] {
-    const actions: Action[] = (
-      this.householdCookingModule?.interventions.filter(
-        (intervention) => intervention.selected
-      ) ?? []
-    ).map((intervention) => {
-      switch (intervention.type) {
-        case "cooking-technology":
-          return new CookingTechnologyAction(intervention);
-      }
-    });
+    const actions: Action[] = [
+      ...(this.householdCookingModule?.substitutionInterventions ?? []),
+      ...(this.householdCookingModule?.efficiencyInterventions ?? []),
+      ...(this.householdCookingModule?.cashInterventions ?? []),
+    ]
+      .filter((intervention) => intervention.selected)
+      .map((intervention) => {
+        switch (intervention.type) {
+          case "cooking-technology":
+            return new CookingTechnologyAction(intervention);
+          case "cooking-cash":
+            return new CookingCashAction(intervention);
+        }
+      });
     return this.getSites(actions);
   }
 
@@ -1042,7 +1047,6 @@ abstract class Action {
 }
 
 class CookingTechnologyAction extends Action {
-  private readonly precision = 4;
   constructor(private intervention: CookingTechnologyIntervention) {
     super(intervention.yearStart, intervention.yearEnd);
   }
@@ -1081,6 +1085,17 @@ class CookingTechnologyAction extends Action {
     } else {
       throw new Error(`Stove id ${id} should be defined in Household Cooking`);
     }
+  }
+}
+
+class CookingCashAction extends Action {
+  constructor(intervention: CookingCashIntervention) {
+    super(intervention.yearStart, intervention.yearEnd);
+  }
+
+  apply(site: Site): Site {
+    // TODO
+    return site;
   }
 }
 
