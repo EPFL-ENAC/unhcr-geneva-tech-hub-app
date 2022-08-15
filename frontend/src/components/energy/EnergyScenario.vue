@@ -136,71 +136,27 @@ export default class EnergyScenario extends EnergyFormMixin<ScenarioModule> {
 
   migrate(): void {
     this.module.scenarios
-      .flatMap((scenario) => {
-        if (!scenario.years) {
-          scenario.years = [
-            {
-              yearIndex: 0,
-              householdSize: {
-                val: this.householdSize,
-              },
-              discountRate: scenario.discountRate ?? { val: 1 },
-              incomeRate: scenario.incomeRate ?? { val: 1 },
-              demographicGrowth: scenario.demographicGrowth ?? { val: 1 },
-              fuelPriceRates: Object.fromEntries(
-                cookingFuelIds.map((id) => [
-                  id,
-                  scenario.fuelPriceRate ?? { val: 1 },
-                ])
-              ) as Record<CookingFuelId, RangeModel>,
-            },
-          ];
-        }
-        return scenario.years;
-      })
+      .flatMap((scenario) => scenario.years)
       .forEach((scenario) => {
-        if (typeof scenario.householdSize === "number") {
-          scenario.householdSize = {
-            val: scenario.householdSize,
-          };
-        } else if (scenario.householdSize === undefined) {
-          scenario.householdSize = {
-            val: this.householdSize,
-          };
-        }
-        if (typeof scenario.discountRate === "number") {
-          scenario.discountRate = {
-            val: scenario.discountRate,
-          };
-        } else if (scenario.discountRate === undefined) {
-          scenario.discountRate = {
-            val: 1,
-          };
-        }
-        if (typeof scenario.incomeRate === "number") {
-          scenario.incomeRate = {
-            val: scenario.incomeRate,
-          };
-        } else if (scenario.incomeRate === undefined) {
-          scenario.incomeRate = {
-            val: 1,
-          };
-        }
-        if (typeof scenario.demographicGrowth === "number") {
-          scenario.demographicGrowth = {
-            val: scenario.demographicGrowth,
-          };
-        } else if (scenario.demographicGrowth === undefined) {
-          scenario.demographicGrowth = {
-            val: 1,
-          };
-        }
-        if (scenario.fuelPriceRates === undefined) {
-          scenario.fuelPriceRates = Object.fromEntries(
-            cookingFuelIds.map((id) => [id, { val: 1 }])
-          ) as Record<CookingFuelId, RangeModel>;
-        }
+        this.migrateRange(scenario.discountRate);
+        this.migrateRange(scenario.incomeRate);
+        this.migrateRange(scenario.demographicGrowth);
+        cookingFuelIds.map((id) =>
+          this.migrateRange(scenario.fuelPriceRates[id])
+        );
       });
+  }
+
+  private migrateRange(range: RangeModel): void {
+    if (range.val >= 1) {
+      range.val -= 1;
+      if (range.min !== undefined) {
+        range.min -= 1;
+      }
+      if (range.max !== undefined) {
+        range.max -= 1;
+      }
+    }
   }
 }
 </script>

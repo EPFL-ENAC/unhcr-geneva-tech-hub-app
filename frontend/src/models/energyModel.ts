@@ -157,23 +157,6 @@ export interface Scenario {
   investmentCostTrend: ScenarioTrend;
 
   years: ScenarioYear[];
-
-  /**
-   * @deprecated
-   */
-  discountRate?: RangeModel;
-  /**
-   * @deprecated
-   */
-  incomeRate?: RangeModel;
-  /**
-   * @deprecated
-   */
-  demographicGrowth?: RangeModel;
-  /**
-   * @deprecated
-   */
-  fuelPriceRate?: RangeModel;
 }
 export interface ScenarioYear {
   yearIndex: number;

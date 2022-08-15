@@ -243,7 +243,6 @@ import {
   fnSum,
   getColor,
   toPercentage,
-  toRate,
 } from "@/utils/energy";
 import download from "downloadjs";
 import { Workbook } from "exceljs";
@@ -722,7 +721,7 @@ export default class EnergyCookingResult extends Vue {
         }
         currentSite.yearCount = index;
         currentSite.populationCount =
-          previousSite.populationCount * currentSite.demographicGrowth;
+          previousSite.populationCount * (1 + currentSite.demographicGrowth);
         currentSite.householdsCount =
           currentSite.populationCount / currentSite.householdSize;
         currentSite.proportions = this.getNewProportions(previousSite);
@@ -751,7 +750,7 @@ export default class EnergyCookingResult extends Vue {
     ) as Record<SocioEconomicCategory, number>;
     const goalTotalIncome =
       sumBy(socioEconomicCategories, (cat) => proportions[cat] * incomes[cat]) *
-      site.incomeRate;
+      (1 + site.incomeRate);
     for (let index = 0; index < socioEconomicCategories.length - 1; index++) {
       const totalIncome = sumBy(
         socioEconomicCategories,
@@ -885,13 +884,13 @@ export default class EnergyCookingResult extends Vue {
       const emissionCo = usefulEnergy * technology.stove.emissionFactorCo;
       const emissionPm = usefulEnergy * technology.stove.emissionFactorPm;
       const fixedCost =
-        ((site.discountRate - 1) /
-          (1 - Math.pow(site.discountRate, -technology.stove.lifetime))) *
+        (site.discountRate /
+          (1 - Math.pow(1 + site.discountRate, -technology.stove.lifetime))) *
         technology.stove.investmentCost;
       const variableCost =
         fuelWeight *
         technology.fuel.price *
-        Math.pow(site.fuelPriceRates[technology.fuel._id], site.yearCount);
+        Math.pow(1 + site.fuelPriceRates[technology.fuel._id], site.yearCount);
       // CCI
       const totalCost = fixedCost + variableCost;
       const result = applyMap(
@@ -960,7 +959,8 @@ export default class EnergyCookingResult extends Vue {
         ? categoryResult.usefulEnergy / categoryResult.finalEnergy
         : 0;
     const discountedCost =
-      categoryResult.totalCost / Math.pow(site.discountRate, site.yearCount);
+      categoryResult.totalCost /
+      Math.pow(1 + site.discountRate, site.yearCount);
     return {
       ...categoryResult,
       proportion: proportion * 100,
@@ -1048,30 +1048,30 @@ export default class EnergyCookingResult extends Vue {
     ]);
     scenarioWorksheet.addRow([
       "Growth rate of the population [%]",
-      toRate(scenarioFirstYear?.demographicGrowth.min),
-      toRate(scenarioFirstYear?.demographicGrowth.max),
-      toRate(scenarioFirstYear?.demographicGrowth.val),
+      toPercentage(scenarioFirstYear?.demographicGrowth.min),
+      toPercentage(scenarioFirstYear?.demographicGrowth.max),
+      toPercentage(scenarioFirstYear?.demographicGrowth.val),
     ]);
     scenarioWorksheet.addRow([
       "Annual discount rate [%]",
-      toRate(scenarioFirstYear?.discountRate.min),
-      toRate(scenarioFirstYear?.discountRate.max),
-      toRate(scenarioFirstYear?.discountRate.val),
+      toPercentage(scenarioFirstYear?.discountRate.min),
+      toPercentage(scenarioFirstYear?.discountRate.max),
+      toPercentage(scenarioFirstYear?.discountRate.val),
     ]);
     scenarioWorksheet.addRow([
       "Annual increase rate of the annual income per household [%]",
-      toRate(scenarioFirstYear?.incomeRate.min),
-      toRate(scenarioFirstYear?.incomeRate.max),
-      toRate(scenarioFirstYear?.incomeRate.val),
+      toPercentage(scenarioFirstYear?.incomeRate.min),
+      toPercentage(scenarioFirstYear?.incomeRate.max),
+      toPercentage(scenarioFirstYear?.incomeRate.val),
     ]);
     scenarioWorksheet.addRow(["Annual change rate of the fuel price [%]"]);
     Object.entries(scenarioFirstYear?.fuelPriceRates ?? {}).forEach(
       ([id, range]) => {
         scenarioWorksheet.addRow([
           id,
-          toRate(range.min),
-          toRate(range.max),
-          toRate(range.val),
+          toPercentage(range.min),
+          toPercentage(range.max),
+          toPercentage(range.val),
         ]);
       }
     );

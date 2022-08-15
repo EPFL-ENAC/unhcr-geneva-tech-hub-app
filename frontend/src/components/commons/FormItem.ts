@@ -35,7 +35,7 @@ interface TextFormItem<K> extends AbstractFormItem<K> {
 
 interface NumberFormItem<K> extends AbstractFormItem<K> {
   type: "number";
-  subtype?: "percent" | "rate";
+  subtype?: "percent";
   unit?: string;
   min?: number;
   max?: number;
@@ -63,7 +63,7 @@ interface ComboboxFormItem<K> extends AbstractFormItem<K> {
 interface RangeFormItem<K> extends AbstractFormItem<K> {
   type: "range";
   isTemplate?: boolean;
-  subtype?: "rate";
+  subtype?: "percent";
 }
 
 interface CountryFormItem<K> extends AbstractFormItem<K> {
