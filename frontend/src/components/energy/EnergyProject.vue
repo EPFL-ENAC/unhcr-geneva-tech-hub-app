@@ -235,7 +235,11 @@
     </v-row>
     <v-row v-if="modules">
       <v-col>
-        <router-view v-model="modules"></router-view>
+        <router-view
+          v-model="modules"
+          :document-name="documentName"
+          :document-site-name="documentSiteName"
+        ></router-view>
       </v-col>
     </v-row>
   </v-container>
@@ -244,10 +248,6 @@
 <script lang="ts">
 import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import UserManager from "@/components/commons/UserManager.vue";
-import EnergyCookingResult from "@/components/energy/EnergyCookingResult.vue";
-import EnergyCookingScenario from "@/components/energy/EnergyCookingScenario.vue";
-import EnergyGeneral from "@/components/energy/EnergyGeneral.vue";
-import EnergyHouseholdCooking from "@/components/energy/EnergyHouseholdCooking.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
 import { Modules, ProjectDocument } from "@/models/energyModel";
 import { SyncDatabase } from "@/utils/couchdb";
@@ -258,10 +258,6 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 @Component({
   components: {
-    EnergyGeneral,
-    EnergyHouseholdCooking,
-    EnergyCookingScenario,
-    EnergyCookingResult,
     InfoTooltip,
     UserManager,
   },
@@ -390,6 +386,14 @@ export default class EnergyProject extends Vue {
 
   get modules(): Modules | undefined {
     return this.document?.modules;
+  }
+
+  get documentName(): string | undefined {
+    return this.document?.name;
+  }
+
+  get documentSiteName(): string | undefined {
+    return this.document?.siteName;
   }
 
   get savedDocument(): ExistingDocument<ProjectDocument> | null {

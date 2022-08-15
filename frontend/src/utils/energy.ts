@@ -70,3 +70,14 @@ export function getColor(cat: SocioEconomicCategory): string {
       return cccmColors.secondary1;
   }
 }
+
+export function toPercentage(value?: number): number | undefined {
+  return value !== undefined ? value * 100 : undefined;
+}
+
+/**
+ * @deprecated change values to percentage
+ */
+export function toRate(value?: number): number | undefined {
+  return value !== undefined ? (value - 1) * 100 : undefined;
+}

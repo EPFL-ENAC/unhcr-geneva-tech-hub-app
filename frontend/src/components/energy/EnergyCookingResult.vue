@@ -231,12 +231,20 @@ import {
   GeneralModule,
   HouseholdCookingInput,
   HouseholdCookingModule,
+  Scenario,
   ScenarioModule,
   socioEconomicCategories,
   SocioEconomicCategory,
 } from "@/models/energyModel";
 import { cccmColors } from "@/plugins/vuetify";
-import { applyMap, applyReduce, fnSum, getColor } from "@/utils/energy";
+import {
+  applyMap,
+  applyReduce,
+  fnSum,
+  getColor,
+  toPercentage,
+  toRate,
+} from "@/utils/energy";
 import download from "downloadjs";
 import { Workbook } from "exceljs";
 import { chain, clamp, cloneDeep, range, sortBy, sumBy, zip } from "lodash";
@@ -264,6 +272,10 @@ export default class EnergyCookingResult extends Vue {
   householdCookingModule: HouseholdCookingModule | undefined;
   @Prop({ type: Object as () => ScenarioModule })
   scenarioModule: ScenarioModule | undefined;
+  @Prop({ type: String })
+  documentName!: string;
+  @Prop({ type: String })
+  documentSiteName!: string;
 
   readonly radarProperties: RadarProperty<GlobalResult>[] = [
     {
@@ -521,6 +533,12 @@ export default class EnergyCookingResult extends Vue {
     ];
   }
 
+  get scenario(): Scenario | undefined {
+    return this.scenarioModule?.scenarios.find(
+      (scn) => scn.id === this.scenarioModule?.selectedId
+    );
+  }
+
   getGlobalResult(results: SiteResult[]): GlobalResult {
     const finalEnergy = chain(results)
       .sumBy((r) => r.categoryTotal.finalEnergy)
@@ -649,9 +667,7 @@ export default class EnergyCookingResult extends Vue {
   getSites(actions: Action[]): Site[] {
     const general = this.generalModule;
     const householdCooking = this.householdCookingModule;
-    const scenario = this.scenarioModule?.scenarios.find(
-      (scn) => scn.id === this.scenarioModule?.selectedId
-    );
+    const scenario = this.scenario;
     if (general && householdCooking && scenario) {
       const firstScenario = scenario.years[0];
       const firstTechnologies = householdCooking.technologyYears[0];
@@ -964,35 +980,136 @@ export default class EnergyCookingResult extends Vue {
     const workbook = new Workbook();
     workbook.creator = "unhcr-tss.epfl.ch";
     workbook.created = new Date();
-    zip(this.years, this.sites, this.siteResults)
+
+    const categoryNames = socioEconomicCategories.map((cat) =>
+      this.$t(`energy.${cat}`).toString()
+    );
+
+    const informationWorksheet = workbook.addWorksheet("Information");
+    informationWorksheet.addRow(["Site Name", this.documentSiteName]);
+    informationWorksheet.addRow(["Project Name", this.documentName]);
+    informationWorksheet.addRow([
+      "Starting Year",
+      this.generalModule?.yearStart,
+    ]);
+    informationWorksheet.addRow(["Ending Year", this.generalModule?.yearEnd]);
+    informationWorksheet.addRow([
+      "National currency",
+      this.generalModule?.currency,
+    ]);
+    informationWorksheet.addRow([
+      "Exchange rate with the US dollar",
+      this.generalModule?.exchangeRateUsd,
+    ]);
+    informationWorksheet.addRow([]);
+    informationWorksheet.addRow([
+      "Population of the site",
+      this.generalModule?.totalPopulation,
+    ]);
+    informationWorksheet.addRow([
+      "Number of families/households",
+      this.generalModule?.familiesCount,
+    ]);
+    informationWorksheet.addRow([
+      "Carbonation yield [%]",
+      toPercentage(this.generalModule?.woodCarbonation),
+    ]);
+    informationWorksheet.addRow([]);
+    informationWorksheet.addRow([undefined, ...categoryNames]);
+    informationWorksheet.addRow([
+      "Distribution of the households among the Quality of Life Levels (QLL) [%]",
+      ...socioEconomicCategories.map((cat) =>
+        toPercentage(this.generalModule?.categories[cat].proportion)
+      ),
+    ]);
+    informationWorksheet.addRow([
+      "Cooking time per day by household and QLL [h]",
+      ...socioEconomicCategories.map(
+        (cat) => this.generalModule?.categories[cat].cookingHours
+      ),
+    ]);
+    informationWorksheet.addRow([
+      "Annual income per household per QLL [currency]",
+      ...socioEconomicCategories.map(
+        (cat) => this.generalModule?.categories[cat].annualIncome
+      ),
+    ]);
+
+    const scenarioWorksheet = workbook.addWorksheet("Scenario");
+    const scenarioFirstYear = this.scenario?.years[0];
+    scenarioWorksheet.addRow(["Name of the scenario", this.scenario?.name]);
+    scenarioWorksheet.addRow([undefined, "Minimum", "Maximum", "Maximum"]);
+    scenarioWorksheet.addRow([
+      "Household size",
+      scenarioFirstYear?.householdSize.min,
+      scenarioFirstYear?.householdSize.max,
+      scenarioFirstYear?.householdSize.val,
+    ]);
+    scenarioWorksheet.addRow([
+      "Growth rate of the population [%]",
+      toRate(scenarioFirstYear?.demographicGrowth.min),
+      toRate(scenarioFirstYear?.demographicGrowth.max),
+      toRate(scenarioFirstYear?.demographicGrowth.val),
+    ]);
+    scenarioWorksheet.addRow([
+      "Annual discount rate [%]",
+      toRate(scenarioFirstYear?.discountRate.min),
+      toRate(scenarioFirstYear?.discountRate.max),
+      toRate(scenarioFirstYear?.discountRate.val),
+    ]);
+    scenarioWorksheet.addRow([
+      "Annual increase rate of the annual income per household [%]",
+      toRate(scenarioFirstYear?.incomeRate.min),
+      toRate(scenarioFirstYear?.incomeRate.max),
+      toRate(scenarioFirstYear?.incomeRate.val),
+    ]);
+    scenarioWorksheet.addRow(["Annual change rate of the fuel price [%]"]);
+    Object.entries(scenarioFirstYear?.fuelPriceRates ?? {}).forEach(
+      ([id, range]) => {
+        scenarioWorksheet.addRow([
+          id,
+          toRate(range.min),
+          toRate(range.max),
+          toRate(range.val),
+        ]);
+      }
+    );
+
+    const householdCookingWorksheet =
+      workbook.addWorksheet("Household Cooking");
+    householdCookingWorksheet.addRow([
+      "Number of cookers per 10-household per type of cooker and QLL",
+    ]);
+    householdCookingWorksheet.addRow(["Stove", "Fuel", ...categoryNames]);
+    this.householdCookingModule?.technologyYears[0].technologies.forEach(
+      (technology) => {
+        householdCookingWorksheet.addRow([
+          technology.stove.name,
+          technology.fuel.name,
+          ...socioEconomicCategories.map(
+            (cat) => technology.categories[cat].countPerHousehold * 10
+          ),
+        ]);
+      }
+    );
+
+    zip(this.years, this.siteResults)
       .filter(
-        (item): item is [number, Site, SiteResult] =>
-          item[0] !== undefined &&
-          item[1] !== undefined &&
-          item[2] !== undefined
+        (item): item is [number, SiteResult] =>
+          item[0] !== undefined && item[1] !== undefined
       )
-      .forEach(([year, , siteResult]) => {
+      .forEach(([year, siteResult]) => {
         const worksheet = workbook.addWorksheet(`${year}`);
-        const totalColumn = this.categories.length + 2;
-        const headerRow = worksheet.getRow(1);
-        for (let i = 0; i < this.categories.length; i++) {
-          headerRow.getCell(i + 2).value = this.$t(
-            `energy.${this.categories[i]}`
-          ).toString();
-        }
-        headerRow.getCell(totalColumn).value = "Total";
-        for (let i = 0; i < this.lines.length; i++) {
-          const line = this.lines[i];
-          const row = worksheet.getRow(i + 2);
-          row.getCell(1).value = line.unit
-            ? `${line.text} [${line.unit}]`
-            : line.text;
-          for (let j = 0; j < this.categories.length; j++) {
-            const cat = this.categories[j];
-            row.getCell(j + 2).value = siteResult.categories[cat][line.key];
-          }
-          row.getCell(totalColumn).value = siteResult.categoryTotal[line.key];
-        }
+        worksheet.addRow([undefined, ...categoryNames, "Total"]);
+        this.lines.forEach((line) => {
+          worksheet.addRow([
+            line.unit ? `${line.text} [${line.unit}]` : line.text,
+            ...socioEconomicCategories.map(
+              (cat) => siteResult.categories[cat][line.key]
+            ),
+            siteResult.categoryTotal[line.key],
+          ]);
+        });
       });
 
     const buffer = await workbook.xlsx.writeBuffer();

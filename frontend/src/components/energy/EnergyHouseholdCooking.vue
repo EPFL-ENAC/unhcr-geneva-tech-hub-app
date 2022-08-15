@@ -46,6 +46,8 @@
             :general-module="generalModule"
             :scenario-module="scenarioModule"
             :household-cooking-module="module"
+            :document-name="documentName"
+            :document-site-name="documentSiteName"
           ></energy-cooking-result>
         </v-col>
       </v-row>
@@ -94,6 +96,10 @@ export default class EnergyHouseholdCooking extends EnergyFormMixin<HouseholdCoo
   generalModule!: GeneralModule;
   @Prop({ type: Object as () => ScenarioModule })
   scenarioModule: ScenarioModule | undefined;
+  @Prop({ type: String })
+  documentName!: string;
+  @Prop({ type: String })
+  documentSiteName!: string;
 
   module: HouseholdCookingModule = {
     technologyYears: [],

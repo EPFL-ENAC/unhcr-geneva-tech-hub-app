@@ -16,6 +16,7 @@
         <v-divider vertical></v-divider>
         <v-col cols="6">
           <energy-map
+            :aspect-ratio="2"
             :markers="[latLng]"
             :zoom="4"
             @update:value="updateLatLng"
