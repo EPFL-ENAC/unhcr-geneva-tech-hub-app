@@ -1,5 +1,9 @@
 <template>
-  <router-view v-model="modules"></router-view>
+  <router-view
+    v-model="modules"
+    :document-name="documentName"
+    :document-site-name="documentSiteName"
+  ></router-view>
 </template>
 
 <script lang="ts">

@@ -3,6 +3,8 @@
     :initial-module="modules.householdCooking"
     :general-module="modules.general"
     :scenario-module="modules.scenario"
+    :document-name="documentName"
+    :document-site-name="documentSiteName"
     @save="save"
   ></energy-household-cooking>
 </template>
