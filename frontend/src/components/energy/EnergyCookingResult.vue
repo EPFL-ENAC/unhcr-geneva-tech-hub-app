@@ -972,11 +972,12 @@ export default class EnergyCookingResult extends Vue {
     };
   }
 
-  downloadExcel(): void {
-    this.downloadAsyncExcel("unhcr-tss-energy-household-cooking.xlsx");
+  async downloadExcel(): Promise<void> {
+    const buffer = await this.createWorkbook().xlsx.writeBuffer();
+    download(new Uint8Array(buffer), "unhcr-tss-energy-household-cooking.xlsx");
   }
 
-  async downloadAsyncExcel(filename: string): Promise<void> {
+  createWorkbook(): Workbook {
     const workbook = new Workbook();
     workbook.creator = "unhcr-tss.epfl.ch";
     workbook.created = new Date();
@@ -1093,6 +1094,26 @@ export default class EnergyCookingResult extends Vue {
       }
     );
 
+    const kpiWorksheet = workbook.addWorksheet("KPI");
+    kpiWorksheet.addRow(["Total Energy [MJ/HH]", this.globalResult.energy]);
+    kpiWorksheet.addRow([
+      "Global Efficiency [%]",
+      this.globalResult.energyEfficiency,
+    ]);
+    kpiWorksheet.addRow([
+      "Maximum annual wood equivalent area [ha]",
+      this.globalResult.woodArea,
+    ]);
+    kpiWorksheet.addRow([
+      "CO2 Emission [kg/HH]",
+      this.globalResult.emissionCo2,
+    ]);
+    kpiWorksheet.addRow([
+      "Sum Discounted Cost [$]",
+      this.globalResult.discountedCost,
+    ]);
+    kpiWorksheet.addRow(["Affordability [%]", this.globalResult.affordability]);
+
     zip(this.years, this.siteResults)
       .filter(
         (item): item is [number, SiteResult] =>
@@ -1112,8 +1133,7 @@ export default class EnergyCookingResult extends Vue {
         });
       });
 
-    const buffer = await workbook.xlsx.writeBuffer();
-    download(new Uint8Array(buffer), filename);
+    return workbook;
   }
 }
 
