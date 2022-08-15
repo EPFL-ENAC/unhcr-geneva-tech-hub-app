@@ -180,7 +180,7 @@ export default class FormItemComponent extends Vue {
   @Prop({ type: String as () => TypeType })
   readonly type!: TypeType;
   @Prop({ type: String as () => "percent" })
-  readonly subtype: "percent" | "rate" | undefined;
+  readonly subtype: "percent" | undefined;
   @Prop(String)
   readonly label: string | undefined;
   @Prop([Object, Array])
@@ -257,7 +257,7 @@ export default class FormItemComponent extends Vue {
   }
 
   get actualUnit(): string | undefined {
-    if (this.subtype === "percent" || this.subtype === "rate") {
+    if (this.subtype === "percent") {
       return "%";
     }
     return this.unit;
@@ -278,17 +278,10 @@ export default class FormItemComponent extends Vue {
   }
 
   get actualRatio(): number {
-    if (this.subtype === "percent" || this.subtype === "rate") {
+    if (this.subtype === "percent") {
       return 100;
     }
     return this.ratio ?? 1;
-  }
-
-  get actualOffset(): number {
-    if (this.subtype === "rate") {
-      return 1;
-    }
-    return 0;
   }
 
   get actualPrecision(): number {
@@ -303,7 +296,7 @@ export default class FormItemComponent extends Vue {
     if (typeof value === "string") {
       this.model = undefined;
     } else {
-      this.model = (value as number) / this.actualRatio + this.actualOffset;
+      this.model = (value as number) / this.actualRatio;
     }
   }
 
@@ -311,10 +304,7 @@ export default class FormItemComponent extends Vue {
     if (value === undefined) {
       return undefined;
     }
-    return round(
-      ((value as number) - this.actualOffset) * this.actualRatio,
-      this.actualPrecision
-    );
+    return round((value as number) * this.actualRatio, this.actualPrecision);
   }
 
   onRangeChanged(): void {
