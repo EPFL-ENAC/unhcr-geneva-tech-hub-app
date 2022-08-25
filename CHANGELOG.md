@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.1.3...v0.1.4) (2022-08-25)
+
+
+### Features
+
+* **#40:** download excel ([ff50cab](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/ff50cabdcbcde52b3fd0aadd960f0adbf587fe7e)), closes [#40](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/40)
+* **#40:** export information + scenario + cooking ([698f623](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/698f6236811ba203689ad477b74e8def22382cd4)), closes [#40](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/40)
+* **#40:** export kpi ([af2588e](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/af2588e807e2de860b57790946c1e8b4d467d1de)), closes [#40](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/40)
+* **#41:** energy radar chart ([f6f1e31](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f6f1e312f59a86f7510b509215f76ad6ad5f539c)), closes [#41](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/41)
+* **#44:** energy intervention tooltip ([cc0eb13](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/cc0eb13e4f15b2a9d4bf578115b7e9be1d34e336)), closes [#44](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/44)
+* **#45 #46:** intervention item ([45e15b8](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/45e15b8ed7b0ff514d4fa3254cff73a5d3121321)), closes [#45](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/45) [#46](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/46)
+* **#45:** energy subsitution ([231954c](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/231954cb0d804798c48e43c88de49bbec499b2e1)), closes [#45](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/45)
+* **energy:** household legend ([188ee03](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/188ee034b2295744e2a7e6b85fd6dc34ba005b96))
+* **energy:** rate to percent ([b458867](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/b45886759a54cafdff3f58cf918e16cfd8a968c2))
+* **rights:** better rights with azure ([40eca95](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/40eca951052c83d641f1de15bf988f4639be4951))
+* **shelter:** add new geometry tukul with area + volume formulas ([5a27be1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/5a27be1e2cd342246cab45fdf26fd696a226c031))
+* **shelter:** add unknown source country for materials ([25c57b3](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/25c57b3b1a65f2f6b30e7319e756d6e9edf5eb40))
+
+
+### Bug Fixes
+
+* $mdi icons ([2231269](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/22312697d1b1ee6c245c02566e8f0300a93f18a7))
+* **shelter:** provide additional notes/information to assist interpretation ([db01885](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/db0188533ba228a1907ecb1aa8ecc954a27c6dea)), closes [#34](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/34)
+
 ### [0.1.3](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.1.2...v0.1.3) (2022-07-08)
 
 
