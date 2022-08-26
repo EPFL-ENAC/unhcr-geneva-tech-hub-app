@@ -2,7 +2,7 @@ export const infoTooltipText = {
   "Energy-Facilities": {
     title: "Energy - Facilities",
     ready: true,
-    text: "The Facilities module enables the user to calculate the emissions from facilities such as schools using either diesel, solar or national grid energy sources or a hybrid mix of these sources.",
+    text: "The Facilities module enables the user to calculate the emissions from facilities such as schools using either diesel, solar or national grid energy sources or a hybrid mix of these sources. <br/> The GHG tool only considers Scope 1 and 2 emissions at this stage. The calculations are estimations. For renewables in particular, it is assumed that the addition of solar panels will add zero emissions.",
   },
   "Energy-Cooking": {
     title: "Energy - Cooking",
@@ -36,5 +36,10 @@ export const infoTooltipText = {
   "Offset-TreePlanting": {
     title: "Offset - Tree planting",
     text: "The Offset module will enable the user to calculate the emissions saved from the planting of a variety of tree types. The module calculates based on the number of trees planted and the age of the tree to determine its carbon emission equivalent sequestration capacity.",
+  },
+  Results: {
+    title: "Results",
+    ready: true,
+    text: "The GHG tool only considers Scope 1 and 2 emissions at this stage. The calculations are estimations. For renewables in particular, it is assumed that the addition of solar panels will add zero emissions.",
   },
 };

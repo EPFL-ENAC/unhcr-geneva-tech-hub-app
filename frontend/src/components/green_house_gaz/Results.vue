@@ -1,15 +1,6 @@
 <template>
   <v-container fluid>
-    <v-row>
-      <v-col>
-        <h2 class="text-h4 project__h3 font-weight-medium">Results</h2>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-divider></v-divider>
-      </v-col>
-    </v-row>
+    <survey-item-title title-key="Results" />
     <v-row>
       <v-col class="about-first-column d-flex justify-center" :cols="12">
         <v-responsive aspect-ratio="4" min-height="200" max-height="100%">
@@ -47,6 +38,7 @@
 
 <script lang="ts">
 import { computeChangeInEmission } from "@/components/green_house_gaz/changeInEmission";
+import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import {
   EnergySurvey,
   FormSurvey,
@@ -55,6 +47,7 @@ import {
   Survey,
   WashSurvey,
 } from "@/store/GhgInterface";
+
 import { BarChart } from "echarts/charts";
 import {
   GridComponent,
@@ -89,11 +82,19 @@ use([
   },
   components: {
     VChart,
+    SurveyItemTitle,
   },
 })
 export default class Results extends Vue {
   @Prop([Object, Array])
   readonly survey: Survey | undefined;
+
+  @Prop({ type: String, required: true, default: "" })
+  readonly titleKey!: string;
+
+  public get title(): string {
+    return this.titleKey;
+  }
 
   public get totalChange(): number {
     return computeChangeInEmission(this.totalBaseline, this.totalEndline);
