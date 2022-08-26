@@ -29,9 +29,9 @@ export const infoTooltipText = {
     title: "Material - CRI",
     text: "The Core Relief Items (CRI) module will enable the user to calculate the emissions from the production and transport of various CRI materials including HDPE, LDPE, polyester, cotton and stainless steel. Emission factors come from the ICE or EcoInvent databases.",
   },
-  "Material-HHWaste": {
-    title: "Material - HH Waste",
-    text: "The Household (HH) Waste module will enable the user to calculate the emissions from the production and transport of various HH waste materials including paper, plastic and biodegradable waste. Emission factors come from the ICE or EcoInvent databases.",
+  "Material-DomesticSolidWaste": {
+    title: "Material - Domestic solid waste",
+    text: "The Domestic solid waste module will enable the user to calculate the emissions from the production and transport of various domestic solid waste materials including paper, plastic and biodegradable waste. Emission factors come from the ICE or EcoInvent databases.",
   },
   "Offset-TreePlanting": {
     title: "Offset - Tree planting",

@@ -214,7 +214,7 @@ export default class Results extends Vue {
       },
       {
         color: `rgba(1218,182,0,${this.delta})`,
-        name: "Material - HH Waste",
+        name: "Material - Domestic solid waste",
         category: "material",
         subcategory: "hhwaste",
         stack: "co2",
