@@ -185,7 +185,7 @@ export default class Results extends Vue {
       },
       {
         color: `rgba(32,135,200,${this.omega})`,
-        name: "Wash - Trucking",
+        name: "WASH - Trucking",
         resultKey: "CO2_WSH_TRB",
         category: "wash",
         subcategory: "trucking",
