@@ -156,7 +156,7 @@ export default class EndlineFacilitiesTable extends Vue {
     },
     { text: "Diesel (litres)", value: "dieselLiters" },
     { text: "Grid power (kWh)", value: "gridPower" },
-    { text: "Renewable (kWh)", value: "renewablePower" },
+    { text: "Renewables (kW)", value: "renewablePower" },
     { text: "CO2 Emissions", value: "totalCO2Emission" },
     { text: "Change in Emissions", value: "changeInEmission" },
     { text: "", value: "actions", sortable: false, hideFooterContent: true },
