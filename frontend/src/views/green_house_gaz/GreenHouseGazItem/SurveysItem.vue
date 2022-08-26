@@ -107,7 +107,7 @@ import Lighting from "@/components/green_house_gaz/energy/Lighting.vue";
 import Pumping from "@/components/green_house_gaz/energy/Pumping.vue";
 import Info from "@/components/green_house_gaz/Info.vue";
 import CRI from "@/components/green_house_gaz/materials/CRI.vue";
-import HHWaste from "@/components/green_house_gaz/materials/HHWaste.vue";
+import DomesticSolidWaste from "@/components/green_house_gaz/materials/DomesticSolidWaste.vue";
 import Shelter from "@/components/green_house_gaz/materials/Shelter.vue";
 import TreePlanting from "@/components/green_house_gaz/offset/TreePlanting.vue";
 import Results from "@/components/green_house_gaz/Results.vue";
@@ -131,7 +131,7 @@ import { mapActions, mapGetters } from "vuex";
     Lighting,
     Pumping,
     CRI,
-    HHWaste,
+    DomesticSolidWaste,
     Shelter,
     Trucking,
     TreePlanting,
@@ -192,7 +192,11 @@ export default class SurveyList extends Vue {
       children: [
         { text: "Shelter", to: "Shelter", icon: "$mdiHomeGroup" },
         { text: "CRI", to: "CRI", icon: "$mdiWizardHat" },
-        { text: "HH waste", to: "HHWaste", icon: "$mdiToilet" },
+        {
+          text: "Domestic solid waste",
+          to: "DomesticSolidWaste",
+          icon: "$mdiToilet",
+        },
       ],
     },
     {
