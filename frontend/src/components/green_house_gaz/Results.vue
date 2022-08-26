@@ -37,6 +37,7 @@
             }"
           >
             {{ totalChange | formatNumber(0, 0, true, "percent") }}
+            ({{ (totalEndline - totalBaseline) | formatNumber }} tCO2e/year)
           </span>
         </h3>
       </v-col>

@@ -69,12 +69,12 @@
             </v-card-text>
             <v-container class="d-flex flex-column" fluid>
               <v-row>
-                <v-col cols="8" class="d-flex justify-end">
+                <v-col cols="5" class="d-flex justify-end">
                   <facilities-pie-chart
                     :option="getChartOption(facilityForm.endline.results)"
                   />
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="7">
                   <v-row>
                     <v-col class="d-flex justify-end">
                       <h3>
@@ -97,6 +97,13 @@
                             facilityForm.endline.results.changeInEmission |
                               formatNumber(0, 0, true, "percent")
                           }}
+
+                          ({{
+                            (facilityForm.endline.results.totalCO2Emission -
+                              facilityForm.baseline.results.totalCO2Emission) |
+                              formatNumber
+                          }}
+                          tCO2e/year)
                         </span>
                       </h3>
                     </v-col>

@@ -83,13 +83,16 @@
                 'bold-table-cell-content': results[header.value] === 0,
               }"
             >
+              <!-- last row total, last column change in emission -->
               {{ results[header.value] | formatNumber(0, 0, true, "percent") }}
             </span>
             <span v-else-if="!header.hideFooterContent">
               <span v-if="header.value === 'totalCO2Emission'">
+                <!-- last row total: co2 emission column -->
                 {{ results[header.value] | formatNumber(0, 0) }}
               </span>
               <span v-else>
+                <!-- last row total: column (diesel, grid power and renewable ) -->
                 {{ results[header.value] | formatNumber(0, 0) }}
               </span>
             </span>
