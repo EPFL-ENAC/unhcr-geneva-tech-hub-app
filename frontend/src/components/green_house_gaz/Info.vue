@@ -164,6 +164,7 @@ export default class GhgInfo extends Vue {
         type: "text",
         key: "name",
         label: "Name of the site",
+        disabled: true,
       },
       {
         type: "number",

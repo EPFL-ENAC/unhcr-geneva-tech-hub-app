@@ -252,7 +252,9 @@ export default class ProjectList extends Vue {
     } else {
       return (
         this.$can("edit", this.project) ||
-        `You're not on the list of authorized user for this existing site, please contact the creator of the site: ${this.project.name} ${this.project.created_by}`
+        `You're not on the list of authorized user for this existing site, please contact the creator of the site: ${
+          this.project.name ?? ""
+        } ${this.project.created_by ?? ""}`
       );
     }
   }
