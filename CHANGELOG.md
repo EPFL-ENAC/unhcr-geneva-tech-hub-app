@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.1.4...v0.1.5) (2022-08-26)
+
+
+### Features
+
+* **ghg:** add absolute change in emission for results and facilities page ([db315ea](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/db315eaec4d40b20a3e9e5d42d951fb5820678e0)), closes [#53](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/53)
+* **ghg:** add estimation clause to results, facilities and about page ([211eaa3](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/211eaa3666e15c843e0242c74a3d79d25df2ff6a)), closes [#52](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/52)
+
+
+### Bug Fixes
+
+* **ghg:** disable site name input form to avoid conflicts ([7c1c28c](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/7c1c28c900c31633d080cd8a3c7a0e7f48fc0d30))
+* **ghg:** replace Renewable (kWh) by Renewables (kW) ([66d27da](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/66d27dace59b126acede5d012e3fdb8d1d2f2687)), closes [#51](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/51)
+* **ghg:** transform to uppercase Wash into WASH ([515a6c1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/515a6c115d74dd6e3cfad8f4916358ae6ba84623)), closes [#58](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/58)
+
 ### [0.1.4](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.1.3...v0.1.4) (2022-08-25)
 
 
