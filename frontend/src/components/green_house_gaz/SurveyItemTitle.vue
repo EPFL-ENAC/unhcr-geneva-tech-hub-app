@@ -6,7 +6,8 @@
           {{ infoTooltipText[titleKey].title }}
         </h2>
         <info-tooltip>
-          {{ infoTooltipText[titleKey].text }}
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <p v-html="infoTooltipText[titleKey].text"></p>
         </info-tooltip>
       </v-col>
     </v-row>

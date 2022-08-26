@@ -24,7 +24,8 @@
                   {{ app.title }}
                 </v-list-item-title>
                 <div class="description">
-                  {{ app.description }}
+                  <!-- eslint-disable-next-line vue/no-v-html -->
+                  <p v-html="app.description"></p>
                 </div>
               </v-list-item-content>
 

@@ -57,7 +57,8 @@
               <tr v-for="(app, $key) in Apps" :key="$key">
                 <td>{{ app.title }}</td>
                 <td>
-                  {{ app.description }}
+                  <!-- eslint-disable-next-line vue/no-v-html -->
+                  <p v-html="app.description"></p>
                 </td>
               </tr>
             </tbody>
