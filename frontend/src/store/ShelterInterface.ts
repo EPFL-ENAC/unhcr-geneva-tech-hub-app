@@ -113,6 +113,7 @@ export type MaterialShape =
   | "CYLINDRICAL"
   | "FIXTURE"
   | "RECTANGULAR"
+  | "BRICK"
   | "ROPE"
   | "SHEET"
   | "UNDEFINED";
@@ -134,6 +135,7 @@ export type FormTypeMaterial =
   | "M_CYLINDRICAL"
   | "M_ROPE"
   | "M_COMPLEX-SECTION"
+  | "PCE_BRICK"
   | "PCE_RECTANGULAR"
   | "PCE_CYLINDRICAL"
   | "PCE_SHEET"
@@ -235,6 +237,32 @@ export const materialsInputs: MaterialsInputs = {
       key: "specification",
       label: "Specification",
       options: [], // to be dynamically overided by ShelterMaterial
+    },
+  ],
+  PCE_BRICK: [
+    {
+      type: "number",
+      key: "quantity",
+      label: "quantity",
+      suffix: UnitsRef.PCE,
+    },
+    {
+      type: "number",
+      key: "length",
+      label: "Length",
+      suffix: UnitsRef.mm,
+    },
+    {
+      type: "number",
+      key: "width",
+      label: "Width",
+      suffix: UnitsRef.mm,
+    },
+    {
+      type: "number",
+      key: "height",
+      label: "Height/thickness",
+      suffix: UnitsRef.mm,
     },
   ],
   PCE_RECTANGULAR: [
@@ -381,7 +409,7 @@ type MaterialsInputs = Record<FormTypeMaterial, FormItem[]>;
 type densityFunction = (item: Material, density: Density) => Weight;
 
 // use to convert liter in m3 and milimeter in meter;
-const ONE_THOUSANDTH = 1e-3;
+const ONE_THOUSANDTH = 1e-3; // 1/1e3 ==> 0.001
 
 export const materialFunctions: MaterialsFunction = {
   // return kg
@@ -390,18 +418,22 @@ export const materialFunctions: MaterialsFunction = {
     // n is item.quantity in liter hence (0.001 * n) m3 because 1000L = 1m3
     // density is kg per m3 or per 1000L
     // to keep dimensions consistent
-    return (item.quantity ?? 0) * density * ONE_THOUSANDTH;
+    const volume_in_m3 = (item.quantity ?? 0) * ONE_THOUSANDTH;
+    return volume_in_m3 * density;
   },
   M3: (item: Material, density: Density) => (item.quantity ?? 0) * density, // volume in M3
   M2_RECTANGULAR: (item: Material, density: Density) => {
     /* {THK}*<ARE>*[DEN]
-     ** height in MM is THK a.k.a thickness
-     ** quantity in squared meters
+     ** THK is height in MM a.k.a thickness
+     ** ARE is quantity in m2 // quantity in squared meters
+     **  m2 * mm/1000
+     **  1mm in meter => 1mm / 1e3 => 0.001m
      */
     const { height, quantity } = item;
     if (height && quantity) {
-      // return 0;//
-      return height * ONE_THOUSANDTH * (quantity ?? 0) * density;
+      const thickness_in_meter = height * ONE_THOUSANDTH;
+      const volume_in_m3 = thickness_in_meter * (quantity ?? 0);
+      return volume_in_m3 * density;
     }
     return 0;
   },
@@ -461,8 +493,22 @@ export const materialFunctions: MaterialsFunction = {
     }
     return 0;
   },
+  PCE_BRICK: (item: Material, density: Density) => {
+    /* {WID}*{HEI}*<LEN>*[DEN] // LEN is in mm
+    WID: number, HEI: number, LEN: number, DEN: number
+    */
+    const { quantity, length, width, height } = item;
+    if (quantity && length && width && height) {
+      const volume = width * length * height;
+      const total_volume = quantity * volume;
+      // we mulitply by 1e-9 because we have width,length and height in mm
+      const volume_in_m3 = total_volume * Math.pow(ONE_THOUSANDTH, 3);
+      return volume_in_m3 * density;
+    }
+    return 0;
+  },
   PCE_RECTANGULAR: (item: Material, density: Density) => {
-    /* {WID}*{HEI}*<LEN>*[DEN] // LEN is quantity in mm
+    /* {WID}*{HEI}*<LEN>*[DEN] // LEN is quantity in m
     WID: number, HEI: number, LEN: number, DEN: number
     */
     const { quantity, length, width, height } = item;
@@ -472,7 +518,7 @@ export const materialFunctions: MaterialsFunction = {
         quantity *
         length *
         height *
-        Math.pow(ONE_THOUSANDTH, 2) * // width, length, height in mm
+        Math.pow(ONE_THOUSANDTH, 2) * // width, height in mm and length in m
         density
       );
     }
