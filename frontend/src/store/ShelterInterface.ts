@@ -98,6 +98,7 @@ export const UnitsRef = {
   M3: "m³",
   L: "L",
   PCE: "Piece", // use plural letter
+  carbon: "kgCO2e/kg",
 };
 
 export const otherUnits = ["KG", "M", "M2", "M3", "L", "PCE"];
@@ -142,9 +143,24 @@ export type FormTypeMaterial =
   | "PCE_FIXTURE"
   | "PCE_UNDEFINED"
   | "PCE_COMPLEX-SECTION"
-  | "PCE_COMPLEX-SHEET";
+  | "PCE_COMPLEX-SHEET"
+  | "OTHER";
 
 export const materialsInputs: MaterialsInputs = {
+  OTHER: [
+    {
+      type: "number",
+      key: "quantity",
+      label: "quantity",
+      suffix: UnitsRef.KG,
+    },
+    {
+      type: "number",
+      key: "embodied_carbon",
+      label: "Embodied Carbon",
+      suffix: UnitsRef.carbon,
+    },
+  ],
   KG: [
     {
       type: "number",
@@ -414,6 +430,7 @@ const ONE_THOUSANDTH = 1e-3; // 1/1e3 ==> 0.001
 export const materialFunctions: MaterialsFunction = {
   // return kg
   KG: (item: Material) => item.quantity ?? 0, // quantity in kg,
+  OTHER: (item: Material) => item.quantity ?? 0, // quantity in kg,
   L: (item: Material, density: Density) => {
     // n is item.quantity in liter hence (0.001 * n) m3 because 1000L = 1m3
     // density is kg per m3 or per 1000L
@@ -554,7 +571,6 @@ export const materialFunctions: MaterialsFunction = {
     }
     return 0;
   }, // <NUM>*[DEN]
-
   PCE_UNDEFINED: (item: Material, density: Density) => {
     // vol * n * density, // {VOL}*<NUM>*[DEN]
     const { volume, quantity } = item;
@@ -611,6 +627,7 @@ export interface Material extends Item {
   embodiedCarbonTransport: number | string;
   embodiedCarbonTotal: number;
   embodiedWater: number;
+  // dimension
   weight: number;
   width?: number;
   height?: number;
@@ -618,6 +635,7 @@ export interface Material extends Item {
   diameter?: number;
   volume?: number;
   area?: number;
+  embodied_carbon?: number; // use for custom OTHER material id when we don't have any reference to embodied carbon
   specification?: number; // alpha from ShelterMaterial.parameters
 }
 export type MaterialKeys = keyof Material;
