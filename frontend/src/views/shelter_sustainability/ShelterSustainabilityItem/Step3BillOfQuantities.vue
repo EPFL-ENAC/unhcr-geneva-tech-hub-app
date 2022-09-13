@@ -69,6 +69,9 @@
               >
                 {{ materialMap[item.formId].form }}
               </span>
+              <span v-else-if="item.materialId === 'Other'">{{
+                item.formId
+              }}</span>
               <span v-else>--</span>
             </template>
 

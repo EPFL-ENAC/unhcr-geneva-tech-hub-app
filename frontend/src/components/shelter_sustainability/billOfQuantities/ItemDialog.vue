@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="isItemDialogOpen" max-width="500px" @input="setEditDialog">
+  <v-dialog :value="isItemDialogOpen" max-width="550px" @input="setEditDialog">
     <!-- Not necessary     :readonly="!$can('edit', shelter)"  -->
     <v-form
       ref="form"
@@ -73,7 +73,12 @@
                   @input="resetLocalItemFormId"
                 />
               </v-col>
-              <v-col cols="12" sm="6" md="6">
+              <v-col
+                v-if="localItem.materialId !== 'Other'"
+                cols="12"
+                sm="6"
+                md="6"
+              >
                 <v-select
                   v-model="localItem.formId"
                   :disabled="!localItem.materialId"
@@ -87,6 +92,26 @@
                   :rules="rules"
                   @change="resetUnitAndQuantity"
                 />
+              </v-col>
+              <v-col
+                v-if="localItem.materialId === 'Other'"
+                cols="12"
+                sm="6"
+                md="6"
+              >
+                <v-text-field
+                  v-model="localItem.formId"
+                  :disabled="!localItem.materialId"
+                  :items="currentMaterialForms"
+                  label="Form name"
+                  item-text="form"
+                  item-value="_id"
+                  name="type"
+                  type="string"
+                  required
+                  :rules="rules"
+                  @change="resetUnitAndQuantity"
+                ></v-text-field>
               </v-col>
             </v-row>
 
@@ -404,6 +429,10 @@ export default class DeleteItemDialog extends Vue {
 
   public get shapeItems(): FormItem[] {
     // depends on currentFormula
+    // exception when materialId is Other.
+    if (this.currentItem?._id === "OTH_") {
+      return materialsInputs["OTHER"] ?? [];
+    }
     if (this.currentFormula) {
       return materialsInputs[this.currentFormula] ?? [];
     }
@@ -438,8 +467,12 @@ export default class DeleteItemDialog extends Vue {
   public get currentItem(): ShelterMaterial | undefined {
     if (this.localItem.itemType === "Material") {
       const item = this.localItem as Material;
-      if (item.formId) {
-        return this.materialMap[item.formId];
+      if (item.materialId === "Other") {
+        return this.materialMap["OTH_"];
+      } else {
+        if (item.formId) {
+          return this.materialMap[item.formId];
+        }
       }
     }
 
@@ -482,12 +515,22 @@ export default class DeleteItemDialog extends Vue {
   public async computeCost(): Promise<void> {
     try {
       // side effect function: TODO: transform to pure function and move to utils
-      const { quantity, formId, unit, unitCost } = this.localItem as Material;
+      const { quantity, formId, unit, unitCost, materialId } = this
+        .localItem as Material;
+      let { embodied_carbon } = this.localItem as Material;
+
       const newValue = cloneDeep(this.localItem) as Material;
       if (formId && quantity && unit) {
-        const { embodied_carbon, embodied_water, density, local } =
-          this.materialMap[formId];
-        // compute real weight below
+        const material =
+          materialId === "Other"
+            ? this.materialMap["OTH_"]
+            : this.materialMap[formId];
+
+        const { embodied_water, density, local } = material;
+        // special case of when Other is the materialId
+        if (!embodied_carbon) {
+          embodied_carbon = material.embodied_carbon;
+        }
         let weight = 0;
         if (this.currentFormula) {
           const item = this.localItem as Material;
@@ -499,6 +542,8 @@ export default class DeleteItemDialog extends Vue {
         }
         newValue.weight = weight;
 
+        // if special case of materialId equal to Other
+        // retrieve embodied carbon from
         newValue.embodiedCarbonProduction = weight * embodied_carbon;
         newValue.embodiedWater = weight * embodied_water;
         newValue.embodiedCarbonTransport = 0;
