@@ -37,10 +37,7 @@
                       <v-row class="d-flex" style="height: 100%; width: 100%">
                         <v-col class="d-flex">
                           <territory-map
-                            :value="[
-                              localShelter.latitude,
-                              localShelter.longitude,
-                            ]"
+                            :value="[shelter.latitude, shelter.longitude]"
                             @update:value="updateLatLng"
                           />
                         </v-col>
