@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.7](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.1.6...v0.1.7) (2022-09-15)
+
+
+### Bug Fixes
+
+* **shelter:** add water coef for Other material in BOQ ([887f7c4](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/887f7c41558f9953099e48be4030c4cc7bb933aa)), closes [#34](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/34)
+
 ### [0.1.6](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.1.5...v0.1.6) (2022-09-15)
 
 
