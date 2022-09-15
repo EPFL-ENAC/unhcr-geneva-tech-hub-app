@@ -195,7 +195,7 @@ export default class SurveyList extends Vue {
         {
           text: "Domestic solid waste",
           to: "DomesticSolidWaste",
-          icon: "$mdiToilet",
+          icon: "$mdiTrashCanOutline",
         },
       ],
     },
