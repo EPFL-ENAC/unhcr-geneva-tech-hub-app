@@ -1,5 +1,8 @@
 import enacitGhg from "@/components/icons/enacitGhg.vue";
 import enacitShelter from "@/components/icons/enacitShelter.vue";
+// TODO: move icons to each component instead of loading globally
+// It's like this for legacy reasons (we moved away from the custom font paradigm)
+
 import {
   mdiAccount,
   mdiAccountCircle,
@@ -48,7 +51,7 @@ import {
   mdiStove,
   mdiSunSnowflake,
   mdiTankerTruck,
-  mdiToilet,
+  mdiTrashCanOutline,
   mdiTriangle,
   mdiWater,
   mdiWaterPump,
@@ -119,7 +122,7 @@ export default new Vuetify({
       mdiStove,
       mdiSunSnowflake,
       mdiTankerTruck,
-      mdiToilet,
+      mdiTrashCanOutline,
       mdiTriangle,
       mdiWater,
       mdiWaterPump,
