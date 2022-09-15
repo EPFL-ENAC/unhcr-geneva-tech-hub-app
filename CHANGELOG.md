@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.1.5...v0.2.0) (2022-09-15)
+
+
+### Features
+
+* **shelter:** add Other material and other format in BOQ ([87bc093](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/87bc09328d9c96d6244badebf6b9f66eb7d18d49))
+
+
+### Bug Fixes
+
+* **shelter:** add PCE_BRICK logic to the boq page ([2b31dd2](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/2b31dd2963fc8479305c396d8e81c1e7da325431))
+* **shelter:** project information page localShelter was not displayed properly ([ccd324d](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/ccd324d483df305a385f7ed6c94594ce482e36c2))
+
 ### [0.1.5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.1.4...v0.1.5) (2022-08-26)
 
 
