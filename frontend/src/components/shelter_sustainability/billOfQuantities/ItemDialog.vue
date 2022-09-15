@@ -187,6 +187,9 @@
                   v-else
                   v-model="localItem[shapeItem.key]"
                   v-bind="shapeItem"
+                  :messages="
+                    shapeItem.suffix_hint ? [shapeItem.suffix_hint] : []
+                  "
                   :suffix="
                     shapeItem.key === 'quantity'
                       ? quantitySuffix
@@ -517,19 +520,24 @@ export default class DeleteItemDialog extends Vue {
       // side effect function: TODO: transform to pure function and move to utils
       const { quantity, formId, unit, unitCost, materialId } = this
         .localItem as Material;
-      let { embodied_carbon } = this.localItem as Material;
+      let { embodied_carbon, embodied_water } = this.localItem as Material;
 
       const newValue = cloneDeep(this.localItem) as Material;
       if (formId && quantity && unit) {
-        const material =
-          materialId === "Other"
-            ? this.materialMap["OTH_"]
-            : this.materialMap[formId];
+        let material;
+        if (materialId === "Other") {
+          material = this.materialMap["OTH_"];
+        } else {
+          material = this.materialMap[formId];
+        }
 
-        const { embodied_water, density, local } = material;
+        const { density, local } = material;
         // special case of when Other is the materialId
         if (!embodied_carbon) {
           embodied_carbon = material.embodied_carbon;
+        }
+        if (!embodied_water) {
+          embodied_water = material.embodied_water;
         }
         let weight = 0;
         if (this.currentFormula) {
@@ -576,6 +584,11 @@ export default class DeleteItemDialog extends Vue {
             newValue.embodiedCarbonTransport;
         } else {
           newValue.embodiedCarbonTotal = newValue.embodiedCarbonProduction;
+        }
+        // overide env performance if embodied_carbon is undefined
+        if (materialId === "Other" && embodied_carbon === 0) {
+          newValue.embodiedCarbonTotal = 0;
+          newValue.embodiedCarbonTransport = 0;
         }
       }
       if (quantity && unitCost) {
@@ -668,4 +681,8 @@ export default class DeleteItemDialog extends Vue {
 }
 </script>
 
-<style></style>
+<style lang="scss">
+label > span:nth-child(1) {
+  font-size: 0.7rem;
+}
+</style>

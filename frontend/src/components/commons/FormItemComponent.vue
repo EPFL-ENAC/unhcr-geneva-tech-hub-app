@@ -25,6 +25,7 @@
       hide-details="auto"
       hide-spin-buttons
       required
+      :messages="messages"
       :suffix="suffix"
       :rules="actualRules"
       :readonly="readonly"
@@ -193,6 +194,8 @@ export default class FormItemComponent extends Vue {
   readonly unit: string | undefined;
   @Prop(String)
   readonly suffix: string | undefined;
+  @Prop({ type: Array as () => string[] })
+  readonly messages: string[] | undefined;
   @Prop(Number)
   readonly min: number | undefined;
   @Prop(Number)

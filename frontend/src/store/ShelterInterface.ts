@@ -99,6 +99,7 @@ export const UnitsRef = {
   L: "L",
   PCE: "Piece", // use plural letter
   carbon: "kgCO2e/kg",
+  water: "L/kg",
 };
 
 export const otherUnits = ["KG", "M", "M2", "M3", "L", "PCE"];
@@ -157,8 +158,20 @@ export const materialsInputs: MaterialsInputs = {
     {
       type: "number",
       key: "embodied_carbon",
-      label: "Embodied Carbon",
+      label: "Embodied CO2e coefficient",
       suffix: UnitsRef.carbon,
+      optional: true,
+      suffix_hint:
+        "if left blank, material excluded from environmental performance calculations",
+    },
+    {
+      type: "number",
+      key: "embodied_water",
+      label: "Embodied water coefficient",
+      suffix: UnitsRef.water,
+      optional: true,
+      suffix_hint:
+        "if left blank, material excluded from environmental performance calculations",
     },
   ],
   KG: [
@@ -635,7 +648,8 @@ export interface Material extends Item {
   diameter?: number;
   volume?: number;
   area?: number;
-  embodied_carbon?: number; // use for custom OTHER material id when we don't have any reference to embodied carbon
+  embodied_carbon?: number; // Embodied CO2e coefficient use for custom OTHER material id when we don't have any reference to embodied carbon
+  embodied_water?: number; // Embodied water coefficient: use for custom OTHER material
   specification?: number; // alpha from ShelterMaterial.parameters
 }
 export type MaterialKeys = keyof Material;
