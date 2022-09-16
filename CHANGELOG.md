@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.8](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.1.7...v0.1.8) (2022-09-16)
+
+
+### Bug Fixes
+
+* **reference-data:** add embodied water back to materials table ([1229ea0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/1229ea0f8ff278fe7f3ff76a17bb6b8ac4761563))
+* **shelter:** update material constant with latest values ([667ca1f](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/667ca1f27540fa65287348e5c7ee2c849cbf5f40))
+
 ## [0.1.7](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.1.6...v0.1.7) (2022-09-15)
 
 
