@@ -104,7 +104,8 @@ export default class Materials extends Vue {
       { text: "Material", value: "material" },
       { text: "Form", value: "form" },
       { text: "density", value: "density" },
-      { text: "embodied_carbon", value: "embodied_carbon" },
+      { text: "Embodied carbon", value: "embodied_carbon" },
+      { text: "Embodied water", value: "embodied_water" },
     ];
   }
 }
