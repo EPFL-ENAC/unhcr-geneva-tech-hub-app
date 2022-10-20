@@ -185,6 +185,11 @@
                             </v-tooltip>
                           </v-col>
                         </v-row>
+                        <v-row class="align-center d-flex font-italic">
+                          <v-col :xs="12" :sm="12" class="text-caption">
+                            Created by: {{ project.created_by }}
+                          </v-col>
+                        </v-row>
                       </v-card-subtitle>
                     </v-col>
                   </v-row>
