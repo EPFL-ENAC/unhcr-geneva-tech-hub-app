@@ -30,6 +30,26 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="dialogToggleReference" max-width="500px">
+      <v-card>
+        <v-card-title class="text-h5"
+          >Confirm that you want to&nbsp;
+          <span v-if="editedItem.reference">unset</span>
+          <span v-else>set</span> this assessment as reference?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="closeDialog">Cancel</v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="toggleItemAsReferenceConfirm"
+            >OK</v-btn
+          >
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-data-table
       :headers="headersSurvey"
       :items="localProject.surveys"
@@ -75,6 +95,29 @@
               </v-btn>
             </template>
             <span>Delete</span>
+          </v-tooltip>
+          <!-- show reference only as admin ? -->
+          <v-tooltip bottom>
+            <template #activator="{ on, attrs }">
+              <v-btn
+                v-if="$can('admin', localProject)"
+                v-bind="attrs"
+                icon
+                small
+                class="better-click"
+                v-on="on"
+                @click.stop="() => toggleItemReferenceStatus(item)"
+              >
+                <v-icon v-if="item.reference" small class="better-click">
+                  $mdiOctagram
+                </v-icon>
+                <v-icon v-else small class="better-click">
+                  $mdiOctagramOutline
+                </v-icon>
+              </v-btn>
+            </template>
+            <span v-if="!item.reference">Set as reference</span>
+            <span v-else>Unset as reference</span>
           </v-tooltip>
         </div>
       </template>
@@ -134,6 +177,7 @@ export default class ProjectItem extends Vue {
   dialog = false;
   dialogDelete = false;
   dialogDuplicate = false;
+  dialogToggleReference = false;
   editedIndex = -1;
   private newDefaultItem(): Survey {
     return {
@@ -201,9 +245,32 @@ export default class ProjectItem extends Vue {
     await this.closeDialog();
   }
 
+  toggleItemReferenceStatus(item: Survey): void {
+    this.editedIndex = this.localProject.surveys.indexOf(item);
+    this.editedItem = Object.assign({}, item) as Survey;
+    this.dialogToggleReference = true;
+  }
+
+  async toggleItemAsReferenceConfirm(): Promise<void> {
+    this.editedItem.reference = !this.editedItem.reference;
+
+    // copy
+    let newProjectSurveys: Survey[] = [];
+    newProjectSurveys = newProjectSurveys.concat(this.localProject.surveys);
+    newProjectSurveys.forEach((item: Survey): void => {
+      item.reference = undefined;
+    });
+    // replace
+    this.localProject.surveys = newProjectSurveys;
+    this.localProject.surveys.splice(this.editedIndex, 1, this.editedItem);
+    await this.submitForm(this.localProject);
+    await this.closeDialog();
+  }
+
   closeDialog(): void {
     this.dialogDelete = false;
     this.dialogDuplicate = false;
+    this.dialogToggleReference = false;
     this.$nextTick().then(() => {
       this.editedItem = this.newDefaultItem();
       this.editedIndex = -1;
