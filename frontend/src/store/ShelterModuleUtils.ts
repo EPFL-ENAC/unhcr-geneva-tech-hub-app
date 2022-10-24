@@ -22,6 +22,8 @@ export function generateState(): ShelterState {
     shelters: [],
     scorecards: [],
     localCouch: null,
+    years: [], // hold all the years of shelters created_at grouped
+    countries: [], // hold all the shelters countries grouped
   };
 }
 

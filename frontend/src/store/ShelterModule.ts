@@ -26,6 +26,8 @@ const getters: GetterTree<ShelterState, RootState> = {
   shelterLoading: (s): boolean => s.shelterLoading,
   db: (s): SyncDatabase<Shelter> | null => s.localCouch,
   scorecards: (s): ScoreCard[] => s.scorecards,
+  years: (s): string[] => s.years,
+  countries: (s): string[] => s.countries,
 };
 
 // WARNING: WRITE on remote / READ on local
@@ -42,6 +44,12 @@ const mutations: MutationTree<ShelterState> = {
   },
   SET_SCORECARDS(state, value) {
     state.scorecards = value;
+  },
+  SET_YEARS(state, value) {
+    state.years = value;
+  },
+  SET_COUNTRIES(state, value) {
+    state.countries = value;
   },
   SET_SHELTER_LOADING(state) {
     state.shelterLoading = true;
@@ -102,6 +110,44 @@ const actions: ActionTree<ShelterState, RootState> = {
         scorecards.sort((a, b) => Number(a.selected) - Number(b.selected));
         // we needed to sort the scorecards, so the selected may appear at the end
         context.commit("SET_SCORECARDS", scorecards);
+      })
+      .catch(function (err: Error) {
+        console.log(err);
+      });
+  },
+  getYears: (context: ActionContext<ShelterState, RootState>) => {
+    const localCouch = context.state.localCouch;
+    // shelters/_design/shelter/_view/years?include_docs=false&group=true&reduce=true
+    return localCouch?.remoteDB
+      .query("shelter/years", {
+        include_docs: false,
+        reduce: true,
+        group: true,
+      })
+      .then(function (result) {
+        const years = result.rows
+          .filter((row) => row.key != "")
+          .map((row) => row.key);
+        context.commit("SET_YEARS", years);
+      })
+      .catch(function (err: Error) {
+        console.log(err);
+      });
+  },
+  getCountries: (context: ActionContext<ShelterState, RootState>) => {
+    const localCouch = context.state.localCouch;
+    // shelters/_design/shelter/_view/countries?include_docs=false&group=true&reduce=true
+    return localCouch?.remoteDB
+      .query("shelter/countries", {
+        include_docs: false,
+        reduce: true,
+        group: true,
+      })
+      .then(function (result) {
+        const countries = result.rows
+          .filter((row) => row.key != "")
+          .map((row) => row.key);
+        context.commit("SET_COUNTRIES", countries);
       })
       .catch(function (err: Error) {
         console.log(err);
