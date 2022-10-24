@@ -49,6 +49,7 @@ export interface Survey extends SurveyForms {
   created_by: string;
   updated_by?: string;
   updated_at?: string;
+  reference?: boolean; // say if the survey is a reference or not
   name: string; // name is year
 }
 

@@ -33,11 +33,10 @@ export default new (class User {
         const isAdmin =
           user.roles.indexOf(USER_ADMIN) >= 0 ||
           user.roles.indexOf(DB_ADMIN) >= 0;
-        //   const isSpecialist = user.roles.indexOf(SPECIALIST) >= 0;
-        //   const isLoggedIn = user.name.length > 0;
-        // if (actionName === "delete") {
-        //   return isDBAdmin; // was isDBAdmin
-        // }
+
+        if (actionName === "admin") {
+          return isAdmin;
+        }
         const isUser = user.roles.indexOf(GUEST_NAME) == -1;
         // only guest are not allowed to create!
         // if roles is empty it means it's a unhcr account
