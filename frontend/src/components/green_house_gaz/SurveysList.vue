@@ -115,6 +115,9 @@
                   $mdiOctagramOutline
                 </v-icon>
               </v-btn>
+              <span v-else>
+                <v-icon v-if="item.reference" small> $mdiOctagram </v-icon>
+              </span>
             </template>
             <span v-if="!item.reference">Set as reference</span>
             <span v-else>Unset as reference</span>
@@ -171,7 +174,13 @@ export default class ProjectItem extends Vue {
   headersSurvey = [
     { text: "Description", value: "name" },
     { text: "Creation date", value: "created_at" },
-    { text: "Actions", value: "actions", sortable: false, align: "end" },
+    {
+      text: "Actions",
+      value: "actions",
+      sortable: false,
+      align: "end",
+      width: "200px",
+    },
   ];
 
   dialog = false;
@@ -354,9 +363,10 @@ export default class ProjectItem extends Vue {
 
 <style lang="scss" scoped>
 .survey-list__actions {
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  justify-content: flex-end;
   align-items: center;
+  grid-template-columns: repeat(3, 22px);
 }
 
 ::v-deep .site-row-pointer {
