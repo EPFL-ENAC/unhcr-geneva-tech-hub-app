@@ -6,6 +6,8 @@ export interface ShelterState {
   shelterLoading: boolean;
   shelters: Array<Shelter>;
   scorecards: Array<ScoreCard>;
+  years: Array<string>;
+  countries: Array<string>;
   localCouch: SyncDatabase<Shelter> | null;
 }
 
