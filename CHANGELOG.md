@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.1.8...v0.2.0) (2022-10-25)
+
+
+### Features
+
+* **ghg:** add reference span only for non-admin ([875bacf](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/875bacf1f31a71ba57dcb16baedd4d3f83c0887c))
+* **ghg:** add reference toggle for admin only ([3acb8cf](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/3acb8cf6e4653b4de6ce1029f69d2d5d10b406ec))
+* **ghg:** make assessment/survey readonly when reference field is set to true ([2be962c](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/2be962c63244a90d67196efae4c676b703167bd9))
+
+
+### Bug Fixes
+
+* **ghg:** reword tooltip for reference for non admin users ([b44dd53](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/b44dd5345ac3c8d5b42f1caeb354f171973eb2d1))
+
 ## [0.1.8](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.1.7...v0.1.8) (2022-09-16)
 
 
