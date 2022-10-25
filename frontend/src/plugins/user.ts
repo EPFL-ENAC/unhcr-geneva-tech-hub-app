@@ -14,6 +14,7 @@ declare module "vue/types/vue" {
 
 interface ObjWithUsersField {
   users: string[];
+  reference?: boolean;
 }
 
 const USER_ADMIN = "admin";
@@ -46,6 +47,9 @@ export default new (class User {
         const userIndex = obj?.users?.indexOf(user.name) ?? -1;
         const isAuthor = userIndex >= 0;
         if (actionName === "edit" && obj?.users) {
+          if (obj.reference) {
+            return false;
+          }
           return isAuthor || isAdmin;
         }
 

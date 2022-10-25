@@ -67,7 +67,11 @@
           <v-tooltip bottom>
             <template #activator="{ on, attrs }">
               <v-btn
-                v-if="$can('edit', localProject)"
+                v-if="
+                  $can('edit', {
+                    users: localProject.users,
+                  })
+                "
                 v-bind="attrs"
                 icon
                 class="better-click"

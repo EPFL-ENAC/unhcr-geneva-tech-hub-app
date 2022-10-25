@@ -1,9 +1,17 @@
 <template>
-  <v-form v-model="formValid" @submit.prevent="() => submitForm(localProject)">
+  <v-form
+    v-model="formValid"
+    v-bind="$attrs"
+    @submit.prevent="() => submitForm(localProject)"
+  >
     <v-container v-if="project.users" fluid>
       <v-row>
         <v-col class="d-flex justify-end">
-          <v-btn color="primary" :disabled="!formValid" type="submit">
+          <v-btn
+            color="primary"
+            :disabled="!formValid || $attrs.readonly"
+            type="submit"
+          >
             <v-icon left>$mdiContentSave</v-icon>
             Save
           </v-btn>
@@ -52,8 +60,8 @@
                         :key="index"
                         cols="12"
                         sm="6"
-                        md="4"
-                        lg="3"
+                        md="6"
+                        lg="6"
                         xl="4"
                       >
                         <form-item-component
@@ -98,6 +106,7 @@ import { LControlScale, LMap, LMarker, LTileLayer } from "vue2-leaflet";
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
+  inheritAttrs: true,
   computed: {
     ...mapGetters("GhgModule", ["project"]),
     ...mapGetters("UserModule", ["user"]),
