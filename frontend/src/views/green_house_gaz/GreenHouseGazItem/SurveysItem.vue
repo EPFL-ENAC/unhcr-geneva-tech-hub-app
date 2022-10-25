@@ -10,7 +10,14 @@
             <span>
               {{ currentProjectCountryName }}, {{ project.name }},
               {{ currentSurvey.name }}
-              {{ $can("edit", project) ? "" : "(Read only)" }}
+              {{
+                $can("edit", {
+                  users: project.users,
+                  reference: currentSurvey.reference,
+                })
+                  ? ""
+                  : "(Read only)"
+              }}
             </span>
           </h2>
         </v-col>
@@ -76,8 +83,9 @@
     <v-row>
       <v-col>
         <v-container v-if="project.users" fluid>
-          <!-- add !$can to put readonly mode for guest <v-form :readonly="!$can('edit', project)"> -->
-          <v-form>
+          <!-- add !$can to put readonly mode for guest (but for now we want the
+            user to be able to edit the field but not 'SAVE' them to the server) <v-form :readonly="isReadOnly"> -->
+          <v-form class="surveys-item__form">
             <component
               :is="subcategory"
               v-if="subcategory"
@@ -88,6 +96,7 @@
             <component
               :is="category"
               v-else
+              :readonly="isReadOnly"
               :survey-index="currentSurveyIndex"
               :survey.sync="currentSurvey"
               @update:survey="updateCurrentSurvey"
@@ -233,6 +242,13 @@ export default class SurveyList extends Vue {
     return `${this.category}-${this.subcategory}`;
   }
 
+  public get isReadOnly(): boolean {
+    return !this.$can("edit", {
+      users: this.project.users,
+      reference: this.currentSurvey?.reference,
+    });
+  }
+
   public get tabSelected(): string | number {
     const tabIndex = this.menuItems.findIndex((value: MenuItem) => {
       const [category] = value.to.split("-");
@@ -318,7 +334,7 @@ export default class SurveyList extends Vue {
   }
 
   public submitForm(value: GreenHouseGaz = this.project): void {
-    if (this.$can("edit", value)) {
+    if (!this.isReadOnly) {
       if (value.name !== "") {
         this.updateDoc(value);
       } else {

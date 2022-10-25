@@ -8,6 +8,8 @@
     :label="label"
     :return-object="true"
     v-bind="{ ...$attrs, ...$props }"
+    :readonly="readonly"
+    :disabled="disabled"
     @change="(e) => updateCountry(e)"
   >
     <template #item="slotProps">
@@ -35,6 +37,10 @@ export default class CountrySelect extends Vue {
 
   @Prop({ type: String, default: "" })
   readonly value!: string;
+  @Prop({ type: Boolean, default: false })
+  readonly readonly!: boolean;
+  @Prop({ type: Boolean, default: false })
+  readonly disabled!: boolean;
 
   public get currentValue(): string {
     return this.value;
