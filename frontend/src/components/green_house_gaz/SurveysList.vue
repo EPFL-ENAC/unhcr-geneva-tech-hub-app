@@ -102,9 +102,9 @@
               <v-btn
                 v-if="$can('admin', localProject)"
                 v-bind="attrs"
-                icon
-                small
                 class="better-click"
+                small
+                icon
                 v-on="on"
                 @click.stop="() => toggleItemReferenceStatus(item)"
               >
@@ -115,12 +115,17 @@
                   $mdiOctagramOutline
                 </v-icon>
               </v-btn>
-              <span v-else>
+              <span v-else v-bind="attrs" v-on="on">
                 <v-icon v-if="item.reference" small> $mdiOctagram </v-icon>
               </span>
             </template>
-            <span v-if="!item.reference">Set as reference</span>
-            <span v-else>Unset as reference</span>
+            <div v-if="$can('admin', localProject)">
+              <span v-if="!item.reference">Set as reference</span>
+              <span v-else>Unset as reference</span>
+            </div>
+            <div v-else>
+              <span v-if="item.reference">Reference</span>
+            </div>
           </v-tooltip>
         </div>
       </template>
