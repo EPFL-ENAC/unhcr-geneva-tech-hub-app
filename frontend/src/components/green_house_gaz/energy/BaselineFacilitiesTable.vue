@@ -41,7 +41,14 @@
       {{ facilityTypesMap[item.facilityType] }}
     </template>
     <template #[`item.dieselLiters`]="{ item }">
-      {{ item.dieselLiters | formatNumber }}
+      <span v-if="item.operatingHours && item.generatorSize">
+        ~
+        {{
+          (item.operatingHours * item.generatorSize * REF_DIES_GEN_VALUE) |
+            formatNumber
+        }}
+      </span>
+      <span v-else>{{ item.dieselLiters | formatNumber }}</span>
     </template>
     <template #[`item.gridPower`]="{ item }">
       {{ item.gridPower | formatNumber }}
@@ -132,14 +139,19 @@ import DuplicateFacilityDialog from "@/components/green_house_gaz/energy/Duplica
 import { facilityTypes } from "@/components/green_house_gaz/energy/Facility";
 import FacilityDialog from "@/components/green_house_gaz/energy/FacilityDialog.vue";
 import { EnergyFacilityItem } from "@/store/GhgInterface";
+import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { mapGetters } from "vuex";
 
 @Component({
   components: {
     DeleteFacilityDialog,
     FacilityDialog,
     DuplicateFacilityDialog,
+  },
+  computed: {
+    ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
   },
 })
 export default class BaselineFacilitiesTable extends Vue {
@@ -152,6 +164,7 @@ export default class BaselineFacilitiesTable extends Vue {
   @Prop({ type: Boolean, default: false })
   readonly disabled!: boolean;
 
+  ghgMapRef!: ItemReferencesMap;
   localItems: EnergyFacilityItem[] = [];
   dialogs = {} as Record<string, boolean>;
   defaultItem = {};
@@ -177,6 +190,10 @@ export default class BaselineFacilitiesTable extends Vue {
   @Watch("items", { immediate: true, deep: true })
   onItemChange(value: EnergyFacilityItem[]): void {
     this.localItems = cloneDeep(value);
+  }
+
+  public get REF_DIES_GEN_VALUE(): number {
+    return this.ghgMapRef?.REF_DIES_GEN?.value ?? 0;
   }
 
   public get facilityTypesMap(): Record<string, string> {

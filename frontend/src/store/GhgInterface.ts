@@ -145,6 +145,9 @@ type FacilityType =
 export interface EnergyItem {
   gridPower: number;
   dieselLiters: number;
+  disableDieselLiters: boolean;
+  generatorSize: number; // replace the diesel liter
+  operatingHours: number; // replace the diesel liter
   renewablePower: number;
 }
 

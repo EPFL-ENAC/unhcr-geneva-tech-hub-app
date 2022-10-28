@@ -12,6 +12,9 @@ export interface Facility {
   facilityType: FacilityType;
   gridPower: number;
   dieselLiters: number;
+  disableDieselLiters: boolean;
+  generatorSize: number; // replace the diesel liter
+  operatingHours: number; // replace the diesel liter
   renewablePower: number;
   totalCO2Emission: number;
 }

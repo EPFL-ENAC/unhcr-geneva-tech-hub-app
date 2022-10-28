@@ -417,7 +417,7 @@ export default class Facilities extends Vue {
       data.push({
         id: "dieselLiters",
         name: "Diesel",
-        value: item.dieselLiters * this.ghgMapRef?.REF_EFF_DIES.value,
+        value: item.dieselLiters * this.ghgMapRef?.REF_EFF_DIES?.value,
       });
     }
     if (item.gridPower) {
