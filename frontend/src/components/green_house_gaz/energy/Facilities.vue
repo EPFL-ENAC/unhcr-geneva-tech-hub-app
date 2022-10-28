@@ -4,6 +4,10 @@
 
     <v-row>
       <v-col>
+        <v-alert v-if="diffInTotalKwh" dense outlined type="warning">
+          This comparison is not valid because baseline and endline have
+          different energy demands.
+        </v-alert>
         <v-card elevation="2" rounded>
           <v-card-title>
             <h3 class="baseline-title font-weight-medium">Baseline</h3>
@@ -142,9 +146,11 @@ import {
 } from "@/store/GhgInterface";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { EChartsOption } from "echarts/types/dist/shared";
+import { sumBy } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
+
 @Component({
   computed: {
     ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
@@ -243,13 +249,10 @@ export default class Facilities extends Vue {
       this.facilityForm.baseline.results;
     // sum all rows into one object
     const endlineResults: EnergyFacilityInterventionItemResult = {
-      gridPower: inputs.reduce((acc, el) => acc + el.gridPower, 0),
-      dieselLiters: inputs.reduce((acc, el) => acc + el.dieselLiters, 0),
-      renewablePower: inputs.reduce((acc, el) => acc + el.renewablePower, 0),
-      totalCO2Emission: inputs.reduce(
-        (acc, el) => acc + el.totalCO2Emission,
-        0
-      ),
+      gridPower: sumBy(inputs, (el) => el.gridPower),
+      dieselLiters: sumBy(inputs, (el) => el.dieselLiters),
+      renewablePower: sumBy(inputs, (el) => el.renewablePower),
+      totalCO2Emission: sumBy(inputs, (el) => el.totalCO2Emission),
       changeInEmission: 0, // need to compute totalCO2 first
     };
     const changeInEmission = computeChangeInEmission(
@@ -308,13 +311,10 @@ export default class Facilities extends Vue {
   public computeBaselineResults(baselineInputs: EnergyFacilityItem[]): void {
     const inputs: EnergyFacilityItem[] = baselineInputs; // this.facilityForm.baseline.inputs;
     const results: EnergyFacilityItemResult = {
-      gridPower: inputs.reduce((acc, el) => acc + el.gridPower, 0),
-      dieselLiters: inputs.reduce((acc, el) => acc + el.dieselLiters, 0),
-      renewablePower: inputs.reduce((acc, el) => acc + el.renewablePower, 0),
-      totalCO2Emission: inputs.reduce(
-        (acc, el) => acc + el.totalCO2Emission,
-        0
-      ),
+      gridPower: sumBy(inputs, (el) => el.gridPower),
+      dieselLiters: sumBy(inputs, (el) => el.dieselLiters),
+      renewablePower: sumBy(inputs, (el) => el.renewablePower),
+      totalCO2Emission: sumBy(inputs, (el) => el.totalCO2Emission),
     };
     this.facilityForm.baseline.results = results;
     this.facilityForm.endline.inputs = this.copyBaselineToEndline();
@@ -400,12 +400,23 @@ export default class Facilities extends Vue {
     };
   }
 
-  public getChartOption(
-    // items: EnergyFacilityInterventionItem[] | EnergyFacilityItem[]
+  public get diffInTotalKwh() {
+    const baselineKWH = sumBy(
+      this.kwhData(this.facilityForm.baseline.results),
+      (el) => el.value
+    );
+    const endlineKWH = sumBy(
+      this.kwhData(this.facilityForm.endline.results),
+      (el) => el.value
+    );
+
+    return baselineKWH - endlineKWH !== 0;
+  }
+
+  private kwhData(
     item: EnergyFacilityItemResult | EnergyFacilityInterventionItemResult
-  ): EChartsOption {
-    // "Distribution of tCO2e/year per facilities"
-    const data = [];
+  ): EchartDataSerie[] {
+    const data: EchartDataSerie[] = [];
     if (item.gridPower) {
       data.push({
         id: "gridPower",
@@ -414,19 +425,34 @@ export default class Facilities extends Vue {
       });
     }
     if (item.dieselLiters) {
+      let dieselLitersKWH = 0;
+      if (item.generatorSize && item.operatingHours) {
+        dieselLitersKWH = item.generatorSize * item.operatingHours;
+      } else {
+        dieselLitersKWH =
+          item.dieselLiters * this.ghgMapRef?.REF_EFF_DIES?.value;
+      }
       data.push({
         id: "dieselLiters",
         name: "Diesel",
-        value: item.dieselLiters * this.ghgMapRef?.REF_EFF_DIES?.value,
+        value: dieselLitersKWH,
       });
     }
-    if (item.gridPower) {
+    if (item.renewablePower) {
       data.push({
         id: "renewablePower",
         name: "Solar",
         value: item.renewablePower,
       });
     }
+    return data;
+  }
+
+  public getChartOption(
+    item: EnergyFacilityItemResult | EnergyFacilityInterventionItemResult
+  ): EChartsOption {
+    // "Distribution of tCO2e/year per facilities"
+    const data = this.kwhData(item);
     // energy mix
 
     return {
@@ -456,9 +482,15 @@ export default class Facilities extends Vue {
           data,
         },
       ],
-      color: [cccmColors.primary, cccmColors.secondary1, cccmColors.green], //data.map((item) => getColor(item.id)),
+      color: [cccmColors.primary, cccmColors.secondary1, cccmColors.green],
     };
   }
+}
+
+interface EchartDataSerie {
+  id: string;
+  name: string;
+  value: number;
 }
 </script>
 
