@@ -423,7 +423,7 @@ export default class Facilities extends Vue {
     if (item.gridPower) {
       data.push({
         id: "renewablePower",
-        name: "Renewable",
+        name: "Solar",
         value: item.renewablePower,
       });
     }

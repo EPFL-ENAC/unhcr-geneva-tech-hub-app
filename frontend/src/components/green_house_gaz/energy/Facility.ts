@@ -19,7 +19,7 @@ export interface Facility {
 export const facilityTypes = [
   { name: "Diesel generators", componentName: "DieselGenerators" },
   { name: "National Grid", componentName: "NationalGrid" },
-  { name: "Renewable Energy", componentName: "RenewableEnergy" },
+  { name: "Solar Energy", componentName: "RenewableEnergy" },
   { name: "Hybrid Mix", componentName: "HybridMix" },
   { name: "Not powered", componentName: notPoweredName },
 ];
