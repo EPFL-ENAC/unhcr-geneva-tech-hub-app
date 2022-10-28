@@ -10,6 +10,11 @@
         <template #[`item.value`]="props">
           <span>{{ props.item.value | formatNumber }}</span>
         </template>
+        <template #[`item.source`]="props">
+          <a :href="props.item.source" target="_blank">{{
+            props.item.source
+          }}</a>
+        </template>
       </v-data-table>
     </v-card-text>
   </v-card>
