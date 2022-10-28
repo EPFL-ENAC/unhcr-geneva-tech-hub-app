@@ -157,6 +157,7 @@ export default class BaselineFacilitiesTable extends Vue {
   defaultItem = {};
   localItem: EnergyFacilityItem = {} as EnergyFacilityItem;
   itemIndex: number | string = -1;
+
   headers = [
     {
       text: "Name",
@@ -166,9 +167,9 @@ export default class BaselineFacilitiesTable extends Vue {
       value: "name",
     },
     { text: "Powered by", value: "facilityType", hideFooterContent: true },
-    { text: "Diesel (litres)", value: "dieselLiters" },
-    { text: "Grid power (kWh)", value: "gridPower" },
-    { text: "Renewables (kW)", value: "renewablePower" },
+    { text: "Total diesel used (litres/yr)", value: "dieselLiters" },
+    { text: "Grid power (kWh/yr)", value: "gridPower" },
+    { text: "Solar (kW installed per yr)", value: "renewablePower" },
     { text: "CO2 Emissions", value: "totalCO2Emission" },
     { text: "", value: "actions", sortable: false, hideFooterContent: true },
   ];
