@@ -20,13 +20,13 @@
         </v-col>
         <v-col>
           <!--     margin: 0px; padding: 0px; -->
-          <v-checkbox
+          <v-simple-checkbox
             :value="facility.disableDieselLiters"
             class="pa-0 ma-0"
             hide-details
-            @change="resetDieselLiters"
+            @input="resetDieselLiters"
           >
-          </v-checkbox>
+          </v-simple-checkbox>
         </v-col>
       </v-row>
       <v-row v-if="facility.disableDieselLiters">

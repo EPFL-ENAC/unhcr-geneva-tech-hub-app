@@ -41,14 +41,14 @@
       {{ facilityTypesMap[item.facilityType] }}
     </template>
     <template #[`item.dieselLiters`]="{ item }">
-      <span v-if="item.operatingHours && item.generatorSize">
+      <template v-if="item.operatingHours && item.generatorSize">
         ~
         {{
           (item.operatingHours * item.generatorSize * REF_DIES_GEN_VALUE) |
             formatNumber
         }}
-      </span>
-      <span v-else>{{ item.dieselLiters | formatNumber }}</span>
+      </template>
+      <template v-else>{{ item.dieselLiters | formatNumber }}</template>
     </template>
     <template #[`item.gridPower`]="{ item }">
       {{ item.gridPower | formatNumber }}
