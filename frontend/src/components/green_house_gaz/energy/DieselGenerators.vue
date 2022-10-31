@@ -16,7 +16,7 @@
       <v-row>
         <!-- flex + align-items: center; -->
         <v-col class="d-flex align-center">
-          I don't know Total of Liters used
+          I don't know Total of Litres used
         </v-col>
         <v-col>
           <!--     margin: 0px; padding: 0px; -->
