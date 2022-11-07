@@ -136,7 +136,7 @@
                                 :label="dimension"
                                 suffix="m"
                                 type="number"
-                                @change="updateFormInput"
+                                @change="updateShelterDoorDimensions"
                               />
                             </v-form>
                           </v-card>
@@ -308,10 +308,12 @@ export default class Step2Geometry extends Vue {
 
   public addDoor(): void {
     this.localShelter.geometry.doors_dimensions.push({ Wd: 0, Hd: 0 });
+    this.updateHabitability();
     this.updateFormInput();
   }
   public removeDoor(index: number): void {
     this.localShelter.geometry.doors_dimensions.splice(index, 1);
+    this.updateHabitability();
     this.updateFormInput();
   }
 
@@ -359,6 +361,12 @@ export default class Step2Geometry extends Vue {
     this.updateFormInput();
   }
 
+  public updateShelterDoorDimensions(): void {
+    this.updateHabitability();
+    // transmist change above
+    this.updateFormInput();
+  }
+
   @Watch("localShelter.geometry.shelter_geometry_type", { immediate: false })
   public onGeometryTypeChange(shelter_geometry_type: string): void {
     // reset all dimensions when no shelter geometry selected
@@ -387,6 +395,18 @@ export default class Step2Geometry extends Vue {
     this.localShelter.technical_performance.input_3b_4 = hasAWindowTooBig
       ? undefined
       : 1;
+  }
+
+  private updateHabitability(): void {
+    // Door(s) >= 90cm wide INPUT 5 habitability
+    const { doors_dimensions } = this.localShelter.geometry;
+    if (doors_dimensions.length === 0) {
+      return;
+    }
+    const maxDoorWidth = Math.max(
+      ...doors_dimensions.map((door) => door.Wd ?? 0)
+    );
+    this.localShelter.habitability.input5 = maxDoorWidth < 0.9 ? undefined : 1;
   }
 
   private doorDimensions(doorDimensions: DoorDimensions[]): number {
