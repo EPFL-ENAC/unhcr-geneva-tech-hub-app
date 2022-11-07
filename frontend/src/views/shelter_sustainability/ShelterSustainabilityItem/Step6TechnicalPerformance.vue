@@ -1,5 +1,6 @@
 <template>
   <v-form v-if="localShelter.technical_performance">
+    {{ localShelter.technical_performance.input_2a_1 }}
     <component
       :is="technicalPerformanceForm.type"
       :form="technicalPerformanceForm"
