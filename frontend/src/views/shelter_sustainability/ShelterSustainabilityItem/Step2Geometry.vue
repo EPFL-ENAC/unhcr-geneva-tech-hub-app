@@ -379,6 +379,14 @@ export default class Step2Geometry extends Vue {
     // Ratio of windows area to floor area > 0.10
     this.localShelter.technical_performance.input_2c_1 =
       windowArea / floorArea > 0.1 ? 1 : undefined;
+
+    // Window opening dimensions < 60x60cm
+    const hasAWindowTooBig =
+      this.getMaxWindowArea(this.localShelter.geometry.windows_dimensions) >=
+      0.36;
+    this.localShelter.technical_performance.input_3b_4 = hasAWindowTooBig
+      ? undefined
+      : 1;
   }
 
   private doorDimensions(doorDimensions: DoorDimensions[]): number {
@@ -408,6 +416,19 @@ export default class Step2Geometry extends Vue {
         return Ww * Hw;
       })
       .reduce((windowsArea, windowArea) => windowsArea + windowArea);
+  }
+  private getMaxWindowArea(windowDimensions: WindowDimensions[]): number {
+    if (windowDimensions.length === 0) {
+      return 0;
+    }
+    return Math.max(
+      ...windowDimensions.map(({ Ww, Hw }) => {
+        if (!Ww || !Hw) {
+          return 0; // missing Ww or Hw area is 0
+        }
+        return Ww * Hw;
+      })
+    );
   }
 
   private floorArea(shelterDimension: ShelterDimensions): number {

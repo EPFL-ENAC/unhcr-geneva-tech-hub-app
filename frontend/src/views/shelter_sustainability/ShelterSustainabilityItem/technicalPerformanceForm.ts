@@ -386,6 +386,7 @@ export default {
             {
               _id: "input_3b_4",
               score: 1,
+              disabled: true,
               label: "Window opening dimensions < 60x60cm",
               description:
                 "Personal security is extremely important in a shelter to provide protection and to support groups at risk to feel safe. Personal security is highly context-specific and varies between households and between individuals. It may be influenced by family or household composition (e.g., female headed households) and by tensions with host communities or with other displaced groups. For this assessment, only the provision of basic shelter security features is considered.",
