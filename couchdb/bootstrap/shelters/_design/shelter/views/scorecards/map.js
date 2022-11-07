@@ -10,5 +10,7 @@ function (doc) {
       habitability: score.habitability || 0,
       affordability: score.affordability || 0,
       shelter_type: doc.shelter_type || "",
+      created_at: doc.created_at || "",
+      location_country: doc.location_country || "",
     });
 }

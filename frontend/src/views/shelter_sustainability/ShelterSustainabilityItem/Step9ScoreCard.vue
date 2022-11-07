@@ -9,6 +9,52 @@
           {{ infoTooltipText[$route.name].text }}
         </info-tooltip>
       </v-col>
+      <v-col>
+        <v-row>
+          <v-col>
+            <v-select
+              v-model="shelterFilters.selectedShelters"
+              clearable
+              :items="listOfShelterType"
+              label="Select Shelter type"
+              name="type"
+              type="string"
+              multiple
+            />
+          </v-col>
+          <v-col>
+            <v-select
+              v-model="shelterFilters.selectedCountries"
+              :items="countries"
+              clearable
+              :menu-props="{ maxHeight: '300' }"
+              label="Select country"
+              multiple
+              persistent-hint
+            >
+              <template #item="{ item }">
+                {{ countriesMap[item].name }} ({{ countriesMap[item].code }}
+                )
+              </template>
+              <template #selection="{ item }">
+                {{ countriesMap[item].name }} ({{ countriesMap[item].code }}
+                )
+              </template>
+            </v-select>
+          </v-col>
+          <v-col>
+            <v-select
+              v-model="shelterFilters.selectedYears"
+              clearable
+              :items="years"
+              label="Select years"
+              name="type"
+              type="string"
+              multiple
+            />
+          </v-col>
+        </v-row>
+      </v-col>
     </v-row>
     <v-row>
       <v-col>
@@ -69,8 +115,14 @@
 <script lang="ts">
 import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import { infoTooltipText } from "@/components/shelter_sustainability/infoTooltipText";
-import { ScoreCard, Shelter } from "@/store/ShelterInterface";
+import {
+  listOfShelterType,
+  ScoreCard,
+  Shelter,
+  ShelterType,
+} from "@/store/ShelterInterface";
 import { SyncDatabase } from "@/utils/couchdb";
+import { countriesMap } from "@/utils/countriesAsList";
 import {
   alpha,
   alphaSecondary,
@@ -109,11 +161,17 @@ use([
       "shelter",
       "scorecards",
       "scorecard",
+      "years",
+      "countries",
       "db",
     ]),
   },
   methods: {
-    ...mapActions("ShelterModule", ["getScorecards"]),
+    ...mapActions("ShelterModule", [
+      "getScorecards",
+      "getYears",
+      "getCountries",
+    ]),
   },
   components: {
     VChart,
@@ -123,10 +181,23 @@ use([
 /** Project */
 export default class Step8ScoreCard extends Vue {
   shelter!: Shelter;
+  countries!: [];
+  years!: [];
   getScorecards!: (id: string) => Promise<ScoreCard[]>;
+  getYears!: () => Promise<null>;
+  getCountries!: () => Promise<null>;
   db!: SyncDatabase<Shelter> | null;
   scorecards!: ScoreCard[];
 
+  listOfShelterType = listOfShelterType;
+  shelterFilters: ShelterFilters = {
+    searchName: "",
+    selectedShelters: [],
+    selectedYears: [],
+    selectedCountries: [],
+  };
+
+  countriesMap = countriesMap;
   alpha = alpha;
   alphaSecondary = alphaSecondary;
   colors = shelterColors;
@@ -227,8 +298,48 @@ export default class Step8ScoreCard extends Vue {
     return this.shelter?.scorecard ?? ({} as ScoreCard);
   }
 
+  get scorecardsFiltered(): ScoreCard[] {
+    return this.scorecards
+      .filter((scoreCard: ScoreCard) => {
+        // shelter type
+        if (
+          this.shelterFilters.selectedShelters.length > 0 &&
+          scoreCard.shelter_type
+        ) {
+          return (
+            this.shelterFilters.selectedShelters.indexOf(
+              scoreCard.shelter_type
+            ) !== -1
+          );
+        }
+        return true;
+      })
+      .filter((scoreCard: ScoreCard) => {
+        // year
+        if (this.shelterFilters.selectedYears.length > 0) {
+          return (
+            this.shelterFilters.selectedYears.indexOf(
+              scoreCard?.created_at?.substring(0, 4) ?? ""
+            ) !== -1
+          );
+        }
+        return true;
+      })
+      .filter((scoreCard: ScoreCard) => {
+        // country
+        if (this.shelterFilters.selectedCountries.length > 0) {
+          return (
+            this.shelterFilters.selectedCountries.indexOf(
+              scoreCard?.location_country ?? ""
+            ) !== -1
+          );
+        }
+        return true;
+      });
+  }
+
   get options(): EChartsOption[] {
-    const scorecards = this.scorecards ?? [];
+    const scorecards = this.scorecardsFiltered ?? [];
     const title: Record<string, string | number>[] = [];
     const singleAxis: Record<
       string,
@@ -330,6 +441,11 @@ export default class Step8ScoreCard extends Vue {
     this.changes = this.db?.onChange(() => {
       this.getScorecards(id);
     });
+
+    // GET years and GET countries for v-select used by shelterFilters
+    this.getYears();
+    this.getCountries();
+
     this.$store.subscribe((mutation) => {
       // if Shelter not set probably mean db is not initiliazed yet
       const shouldUpdate = ["ShelterModule/SET_SHELTER"];
@@ -346,9 +462,7 @@ export default class Step8ScoreCard extends Vue {
 
 interface ScoreCardScatter extends ScoreCard {
   selected: boolean;
-  shelter_type: string;
   id: string;
-  name: string;
 }
 
 interface Config {
@@ -379,5 +493,12 @@ type ScoreCardsKey =
 interface MinMax {
   min: number;
   max: number;
+}
+
+interface ShelterFilters {
+  searchName: string | null;
+  selectedShelters: ShelterType[];
+  selectedYears: string[];
+  selectedCountries: string[];
 }
 </script>
