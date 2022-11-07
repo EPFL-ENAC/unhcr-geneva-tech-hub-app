@@ -38,7 +38,7 @@
                     <thead>
                       <tr>
                         <th colspan="1"></th>
-                        <th rowspan="3">
+                        <th style="text-align: center; vertical-align: middle">
                           Material
                           <info-tooltip>
                             {{ infoTooltipText.step5Material.text }}
@@ -52,6 +52,7 @@
                         </th>
                         <th
                           colspan="3"
+                          class="embodied-carbon-title-cell"
                           style="vertical-align: middle; text-align: center"
                         >
                           Embodied carbon (kgCO2e/kg)
@@ -69,6 +70,7 @@
                         </th>
                       </tr>
                       <tr>
+                        <th></th>
                         <th></th>
                         <th></th>
                         <th style="vertical-align: middle; text-align: center">
@@ -193,7 +195,7 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col>
+              <v-col :sm="12" :md="6">
                 <v-card>
                   <v-card-title>
                     <h2 class="text-h5 project-shelter__h4 font-weight-medium">
@@ -210,9 +212,7 @@
                   </v-card-text>
                 </v-card>
               </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
+              <v-col :sm="12" :md="6">
                 <v-card>
                   <v-card-title>
                     <h2 class="text-h5 project-shelter__h4 font-weight-medium">
@@ -420,7 +420,7 @@ export default class Step3Materials extends Vue {
     {
       title: "Embodied carbon total",
       selectedField: "embodiedCarbonTotal",
-      unitName: "kgCO2e/kg",
+      unitName: "kgCO2e",
     },
     {
       title: "Embodied water",
@@ -455,6 +455,26 @@ interface Info {
 .v-data-table.first-level ::v-deep {
   tbody tr:not(:last-child) {
     border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+  }
+  thead tr:first-child {
+    th {
+      border-top: thin solid rgba(0, 0, 0, 0.12);
+    }
+  }
+  thead tr {
+    th:last-child {
+      border-right: thin solid rgba(0, 0, 0, 0.12);
+    }
+    th.embodied-carbon-title-cell {
+      border-bottom: thin solid rgba(0, 0, 0, 0.12);
+    }
+  }
+  tbody tr:last-child {
+    td {
+      button {
+        visibility: hidden;
+      }
+    }
   }
 }
 .v-data-table.first-level
