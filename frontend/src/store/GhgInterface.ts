@@ -150,6 +150,7 @@ export interface EnergyItem {
   disableDieselLiters?: boolean;
   generatorSize?: number; // replace the diesel liter
   operatingHours?: number; // replace the diesel liter
+  generatorLoad?: number; // load of generator (should be default to 60%)
   renewablePower: number;
 }
 
