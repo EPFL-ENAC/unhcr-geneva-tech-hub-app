@@ -20,11 +20,12 @@
         <!-- Move to component, ShelterSustaibalityListHeader Search + create tooltip logic -->
 
         <v-row>
+          <!-- search name and custom check-boxese-->
           <v-col cols="9">
             <v-row>
               <v-col>
                 <v-text-field
-                  v-model="searchName"
+                  v-model="shelterFilters.searchName"
                   tabindex="2"
                   name="search name"
                   :clearable="true"
@@ -38,7 +39,7 @@
                 <v-checkbox
                   v-for="(shelterType, $index) in listOfShelterType"
                   :key="$index"
-                  v-model="selectedShelters"
+                  v-model="shelterFilters.selectedShelters"
                   :label="shelterType"
                   :value="shelterType"
                   dense
@@ -54,7 +55,41 @@
                 </v-checkbox>
               </v-col>
             </v-row>
+            <v-row>
+              <v-col>
+                <v-select
+                  v-model="shelterFilters.selectedCountries"
+                  :items="countries"
+                  clearable
+                  :menu-props="{ maxHeight: '300' }"
+                  label="Select country"
+                  multiple
+                  persistent-hint
+                >
+                  <template #item="{ item }">
+                    {{ countriesMap[item].name }} ({{ countriesMap[item].code }}
+                    )
+                  </template>
+                  <template #selection="{ item }">
+                    {{ countriesMap[item].name }} ({{ countriesMap[item].code }}
+                    )
+                  </template>
+                </v-select>
+              </v-col>
+              <v-col>
+                <v-select
+                  v-model="shelterFilters.selectedYears"
+                  clearable
+                  :items="years"
+                  label="Select years"
+                  name="type"
+                  type="string"
+                  multiple
+                />
+              </v-col>
+            </v-row>
           </v-col>
+          <!-- add new shelter -->
           <v-col>
             <v-row>
               <v-col class="d-flex align-center justify-end">
@@ -185,6 +220,11 @@
                             </v-tooltip>
                           </v-col>
                         </v-row>
+                        <v-row class="align-center d-flex font-italic">
+                          <v-col :xs="12" :sm="12" class="text-caption">
+                            Created by: {{ project.created_by }}
+                          </v-col>
+                        </v-row>
                       </v-card-subtitle>
                     </v-col>
                   </v-row>
@@ -223,7 +263,7 @@ import { mapActions, mapState } from "vuex";
 
 @Component({
   computed: {
-    ...mapState("ShelterModule", ["shelters", "db"]),
+    ...mapState("ShelterModule", ["shelters", "years", "countries", "db"]),
   },
 
   methods: {
@@ -232,6 +272,8 @@ import { mapActions, mapState } from "vuex";
       "removeDoc",
       "syncDB",
       "getShelters",
+      "getYears",
+      "getCountries",
       "closeDB",
     ]),
   },
@@ -242,22 +284,26 @@ import { mapActions, mapState } from "vuex";
 })
 /** ProjectList */
 export default class ProjectList extends Vue {
-  /**
-   * TODO: add colors for Territory Map [done]
-   * Add filters for list of shelters
-   * Add duplicate button // remove button in place
-   */
-
   newName = "";
-  searchName: string | null = "";
-  selectedShelters: ShelterType[] = [];
+
+  shelterFilters: ShelterFilters = {
+    searchName: "",
+    selectedShelters: [],
+    selectedYears: [],
+    selectedCountries: [],
+  };
+
   shelters!: [];
+  countries!: [];
+  years!: [];
   shelterDialog = false;
   duplicateDoc!: (shelter: Shelter) => Promise<null>;
   removeDoc!: (id: string) => void;
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
   getShelters!: () => Promise<null>;
+  getYears!: () => Promise<null>;
+  getCountries!: () => Promise<null>;
   db!: SyncDatabase<Shelter> | null;
 
   listOfShelterType = listOfShelterType;
@@ -314,16 +360,45 @@ export default class ProjectList extends Vue {
   }
 
   public get projects(): Shelter[] {
+    // TODO replace by _find mango query when indexes work with couchdb bootstrap
     return this.shelters
       .filter((shelter: Shelter) => {
-        if (this.searchName) {
-          return shelter.name.indexOf(this.searchName) !== -1;
+        // by name
+        if (this.shelterFilters.searchName) {
+          return shelter.name.indexOf(this.shelterFilters.searchName) !== -1;
         }
         return true;
       })
       .filter((shelter: Shelter) => {
-        if (this.selectedShelters.length > 0) {
-          return this.selectedShelters.indexOf(shelter.shelter_type) !== -1;
+        // shelter type
+        if (this.shelterFilters.selectedShelters.length > 0) {
+          return (
+            this.shelterFilters.selectedShelters.indexOf(
+              shelter.shelter_type
+            ) !== -1
+          );
+        }
+        return true;
+      })
+      .filter((shelter: Shelter) => {
+        // year
+        if (this.shelterFilters.selectedYears.length > 0) {
+          return (
+            this.shelterFilters.selectedYears.indexOf(
+              shelter.created_at.substring(0, 4)
+            ) !== -1
+          );
+        }
+        return true;
+      })
+      .filter((shelter: Shelter) => {
+        // country
+        if (this.shelterFilters.selectedCountries.length > 0) {
+          return (
+            this.shelterFilters.selectedCountries.indexOf(
+              shelter.location_country
+            ) !== -1
+          );
         }
         return true;
       });
@@ -341,12 +416,24 @@ export default class ProjectList extends Vue {
     this.syncDB();
     this.getShelters();
 
+    // GET years and GET countries for v-select used by shelterFilters
+    this.getYears();
+    this.getCountries();
+
+    // reload on db change
     this.db?.onChange(this.getShelters);
   }
 
   destroyed(): void {
     this.closeDB();
   }
+}
+
+interface ShelterFilters {
+  searchName: string | null;
+  selectedShelters: ShelterType[];
+  selectedYears: string[];
+  selectedCountries: string[];
 }
 </script>
 

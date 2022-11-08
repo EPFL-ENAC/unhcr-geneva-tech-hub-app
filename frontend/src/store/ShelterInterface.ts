@@ -6,6 +6,8 @@ export interface ShelterState {
   shelterLoading: boolean;
   shelters: Array<Shelter>;
   scorecards: Array<ScoreCard>;
+  years: Array<string>;
+  countries: Array<string>;
   localCouch: SyncDatabase<Shelter> | null;
 }
 
@@ -57,12 +59,16 @@ export interface Shelter {
 }
 
 export interface ScoreCard {
-  weight: number;
+  affordability: number;
   co2: number;
   h2o: number;
-  techPerf: number;
   habitability: number;
-  affordability: number;
+  name?: string;
+  shelter_type?: ShelterType;
+  created_at?: string; // todo
+  location_country?: string; // todo
+  techPerf: number;
+  weight: number;
 }
 
 export interface ScoreCardWithErrors {

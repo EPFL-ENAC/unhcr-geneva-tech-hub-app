@@ -43,6 +43,7 @@ export default {
           _id: "input5",
           label: "Door(s) >= 90cm wide",
           score: 1,
+          disabled: true,
           description:
             "To accommodate persons with disabilities and those facing mobility or access barriers (e.g. elderly, children, pregnant women), all doors in the shelter need to be wider than 90 cm to allow the passage of wheelchairs.",
         },

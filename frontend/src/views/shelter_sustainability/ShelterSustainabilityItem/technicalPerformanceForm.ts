@@ -145,6 +145,7 @@ export default {
             {
               _id: "input_2a_1",
               score: 1,
+              disabled: true,
               label:
                 "Ratio of window and ventilation openings area to floor area > 0.05",
               description:
@@ -271,6 +272,7 @@ export default {
             {
               _id: "input_2c_1",
               score: 1,
+              disabled: true,
               label: "Ratio of windows area to floor area > 0.10",
               description:
                 "Adequate lighting is an important aspect of health and well-being. The extent of natural lighting affects internal comfort, energy demand, the learning potential of children and the potential use of internal shelter space for livelihood activities. Size and placement of window openings should take into account natural lighting requirements and security concerns.  Here, a simplified calculation of the ratio of the area of openings to floor area is used to assess the adequacy of natural lighting. A threshold of 0.10 defines adequate natural lighting.",
@@ -384,6 +386,7 @@ export default {
             {
               _id: "input_3b_4",
               score: 1,
+              disabled: true,
               label: "Window opening dimensions < 60x60cm",
               description:
                 "Personal security is extremely important in a shelter to provide protection and to support groups at risk to feel safe. Personal security is highly context-specific and varies between households and between individuals. It may be influenced by family or household composition (e.g., female headed households) and by tensions with host communities or with other displaced groups. For this assessment, only the provision of basic shelter security features is considered.",
