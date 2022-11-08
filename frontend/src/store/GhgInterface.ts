@@ -68,7 +68,9 @@ export interface WashSurvey {
 
 export interface WashTruckingItemInputs {
   US_TYP: string;
+  US_UNI: string;
   TOT_WS: number;
+  LIT_WS: number;
   WACL: number;
   TR_VOL: number;
   TR_TYP: string;
