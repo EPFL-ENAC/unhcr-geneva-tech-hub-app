@@ -160,6 +160,9 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import { computeChangeInEmission } from "../changeInEmission";
 
+const DIESEL = "DIESEL";
+const PETROL = "Petrol / Gaz";
+
 @Component({
   computed: {
     ...mapGetters("GhgModule", ["project"]),
@@ -259,12 +262,18 @@ export default class Trucking extends Vue {
       // energy and iges not retrieved yet.
       throw new Error("ghg reference not loaded");
     }
-    const { REF_WSH_D } = this.ghgMapRef;
+    // REF_WSH_D is for DIESEL (old value)
+    // we need to retrieve it for Gaz also
+    // REF_WSH_D_L and REF_WSH_G_L
+    const { REF_WSH_D_L, REF_WSH_G_L } = this.ghgMapRef;
 
+    // if not diesel then it's gaz/petrol
+    const washFactor =
+      washInput.TR_TYP === DIESEL ? REF_WSH_D_L.value : REF_WSH_G_L.value;
     const res = {} as WashTruckingItemResults;
     res.TR_NUM = Math.ceil(washInput.WACL / washInput.TR_VOL);
     res.TR_DIST = res.TR_NUM * washInput.TOT_WS * 2;
-    res.CO2_WSH_TRB = (REF_WSH_D.value * res.TR_DIST) / 1000;
+    res.CO2_WSH_TRB = (washFactor * res.TR_DIST) / 1000;
     return res;
   }
 
@@ -312,7 +321,7 @@ export default class Trucking extends Vue {
       description: "Type of truck",
       code: "TR_TYP",
       type: "select",
-      items: ["DIESEL"],
+      items: [DIESEL, PETROL],
     },
   ];
 
