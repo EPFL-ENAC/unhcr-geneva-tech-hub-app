@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.2.0...v0.3.0) (2022-11-08)
+
+
+### Features
+
+* **diesel:** add generator configuration ([3ccb273](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/3ccb27354bfb66092fc72e3bfd42af83b816d78f))
+* **ghg-trucking:** add litres between sources ([93e4c9c](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/93e4c9cf68738295bf750125a97f134c220745b5))
+* **ghg:** add load for generator custom diesel formula ([00141b0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/00141b0ebcaa70d73fdf876312446dda65aa051f))
+* **ghg:** add new factor and petrol [#108](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/108) ([0f4eb14](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/0f4eb149c15ea3ee0aa1fe3cbc2d7db1552de795))
+* **ghg:** add warning for facilities screen when kwh differs [#105](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/105) ([6236874](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/623687437b7057f2f1e8666fb31922ccb79d3bd1))
+* **scorecard-improvements:** add filtering for scorecard ([4d3a67e](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/4d3a67e97788e1167a9fb6394b129123cc234d9c))
+* **shelter:** add select button for countries and years [#69](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/69) ([a4ba6df](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/a4ba6df44af3b048c9ffe417a9c144095476ea3a))
+* **shelter:** automatic width field with geometry ([4818833](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/481883367a284e24b160f1284a2cdd8081204679)), closes [#83](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/83)
+* **shelter:** new computation for windows area ([307f081](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/307f0818b1165bb067f48d8e3727474d28ab4358)), closes [#72](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/72)
+* **shelter:** new computation for windows area ([18b6657](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/18b66578fba7ee94de540be702ff97c327425f72)), closes [#72](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/72)
+* **shelters:** add created_by info to shelter list card ([e01bcd5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/e01bcd5a43295e6ad9c49ab8912ddb682e3ddae8))
+* **technical-performance:** improve technical performance automatic ([55b061a](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/55b061a3dd609996d1f1b41e0259e89031b7a362))
+
+
+### Bug Fixes
+
+* **facilities:** adjust titles and replace renewable by solar ([485eaee](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/485eaeeb36afece5d91433b03d5a8a4ed87e158c))
+* **ghg:** replace checkbox by simple-checkbox ([a8207fc](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/a8207fce2eae09d02edf9e927bdb20cf92ab720b))
+* **ghg:** replace Liters by Litres (us/uk typo) ([cdb8880](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/cdb88803d1ad2b89b6a96698f526cd22ffb77109))
+* **shelter:** environmental performance table header ([6444756](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/64447568a7bb610d88e045c70b62cb9758956b50))
+
 ## [0.2.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.1.8...v0.2.0) (2022-10-25)
 
 
