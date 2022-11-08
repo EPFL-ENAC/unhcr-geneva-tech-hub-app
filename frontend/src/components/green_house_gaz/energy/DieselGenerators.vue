@@ -51,11 +51,26 @@
             label="operating hours (hrs/yr)"
             @input="changeOperatingHours"
         /></v-col>
+        <v-col>
+          <v-text-field
+            :value="facility.generatorLoad"
+            type="number"
+            suffix="%"
+            required
+            :rules="rules"
+            min="0"
+            max="100"
+            step="10"
+            label="generator load (percentage)"
+            @input="changeGeneratorLoad"
+          />
+        </v-col>
       </v-row>
     </v-col>
   </div>
 </template>
 <script lang="ts">
+import { computeLitresDiesel } from "@/components/green_house_gaz/energy/computeCO2cost";
 import { Facility } from "@/components/green_house_gaz/energy/Facility";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { checkRequired, Rule } from "@/utils/rules";
@@ -84,28 +99,46 @@ export default class DieselGenerators extends Vue {
   public changeGeneratorSize(value: string): void {
     // we cast with parseFloat because the we use the @change and not the v-model number modifier
     const _temp: number = parseFloat(value || "0");
-    const dieselLiters =
-      _temp * this.facility.operatingHours * this.ghgMapRef?.REF_DIES_GEN.value;
     this.$emit("update:facility", {
       ...this.facility,
       generatorSize: _temp,
-      dieselLiters,
+      dieselLiters: computeLitresDiesel(
+        _temp,
+        this.facility.operatingHours,
+        this.facility.generatorLoad
+      ),
     });
   }
   public changeOperatingHours(value: string): void {
     // we cast with parseFloat because the we use the @change and not the v-model number modifier
     const _temp: number = parseFloat(value || "0");
-    const dieselLiters =
-      _temp * this.facility.generatorSize * this.ghgMapRef?.REF_DIES_GEN.value;
+
     this.$emit("update:facility", {
       ...this.facility,
       operatingHours: _temp,
-      dieselLiters,
+      dieselLiters: computeLitresDiesel(
+        this.facility.generatorSize,
+        _temp,
+        this.facility.generatorLoad
+      ),
+    });
+  }
+  public changeGeneratorLoad(value: string): void {
+    // we cast with parseFloat because the we use the @change and not the v-model number modifier
+    const _temp: number = parseFloat(value || "0");
+
+    this.$emit("update:facility", {
+      ...this.facility,
+      generatorLoad: _temp,
+      dieselLiters: computeLitresDiesel(
+        this.facility.generatorSize,
+        this.facility.operatingHours,
+        _temp
+      ),
     });
   }
 
   public resetDieselLiters(value: boolean): void {
-    console.log(value);
     if (value) {
       this.$emit("update:facility", {
         ...this.facility,

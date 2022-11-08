@@ -7,24 +7,32 @@
           <v-card-title><h1>Baseline</h1></v-card-title>
           <v-card-text>
             <div v-for="washInput in washInputs" :key="washInput.code">
-              <v-text-field
-                v-if="washInput.type === 'number'"
-                v-model="washForm.baseline.inputs[washInput.code]"
-                :label="washInput.description"
-                hide-spin-buttons
-                type="number"
-                :disabled="washInput.disabled"
-                @change="(e) => updateWashForm(e, 'baseline textfield')"
-              ></v-text-field>
-              <v-select
-                v-if="washInput.type === 'select'"
-                v-model="washForm.baseline.inputs[washInput.code]"
-                :items="washInput.items"
-                :label="washInput.description"
-                :disabled="washInput.disabled"
-                @change="(e) => updateWashForm(e, 'baseline select')"
+              <template
+                v-if="
+                  washForm.baseline.inputs[washInput.conditional] ===
+                  washInput.conditional_value
+                "
               >
-              </v-select>
+                <v-text-field
+                  v-if="washInput.type === 'number'"
+                  v-model="washForm.baseline.inputs[washInput.code]"
+                  :label="washInput.description"
+                  hide-spin-buttons
+                  :suffix="washInput.suffix"
+                  type="number"
+                  :disabled="washInput.disabled"
+                  @change="(e) => updateWashForm(e, 'baseline textfield')"
+                ></v-text-field>
+                <v-select
+                  v-if="washInput.type === 'select'"
+                  v-model="washForm.baseline.inputs[washInput.code]"
+                  :items="washInput.items"
+                  :label="washInput.description"
+                  :disabled="washInput.disabled"
+                  @change="(e) => updateWashForm(e, 'baseline select')"
+                >
+                </v-select>
+              </template>
             </div>
           </v-card-text>
           <v-divider />
@@ -37,6 +45,7 @@
                   :value="
                     washForm.baseline.results[washResult.code] | formatNumber
                   "
+                  :suffix="washResult.suffix"
                   :label="washResult.description"
                   :disabled="washResult.disabled"
                 ></v-text-field>
@@ -50,25 +59,33 @@
           <v-card-title> <h1>Endline</h1></v-card-title>
           <v-card-text>
             <div v-for="washInput in washInputs" :key="washInput.code">
-              <v-text-field
-                v-if="washInput.type === 'number'"
-                v-model.number="washForm.endline.inputs[washInput.code]"
-                :label="washInput.description"
-                hide-spin-buttons
-                type="number"
-                :disabled="washInput.disabled"
-                @change="(e) => updateWashForm(e, 'Endline select')"
-              ></v-text-field>
-              <v-select
-                v-if="washInput.type === 'select'"
-                v-model="washForm.endline.inputs[washInput.code]"
-                hide-spin-buttons
-                :items="washInput.items"
-                :label="washInput.description"
-                :disabled="washInput.disabled"
-                @change="(e) => updateWashForm(e, 'Endline select')"
+              <template
+                v-if="
+                  washForm.endline.inputs[washInput.conditional] ===
+                  washInput.conditional_value
+                "
               >
-              </v-select>
+                <v-text-field
+                  v-if="washInput.type === 'number'"
+                  v-model.number="washForm.endline.inputs[washInput.code]"
+                  :label="washInput.description"
+                  :suffix="washInput.suffix"
+                  hide-spin-buttons
+                  type="number"
+                  :disabled="washInput.disabled"
+                  @change="(e) => updateWashForm(e, 'Endline select')"
+                ></v-text-field>
+                <v-select
+                  v-if="washInput.type === 'select'"
+                  v-model="washForm.endline.inputs[washInput.code]"
+                  hide-spin-buttons
+                  :items="washInput.items"
+                  :label="washInput.description"
+                  :disabled="washInput.disabled"
+                  @change="(e) => updateWashForm(e, 'Endline select')"
+                >
+                </v-select>
+              </template>
             </div>
           </v-card-text>
           <v-divider />
@@ -78,6 +95,7 @@
               <v-text-field
                 v-for="washResult in washResults"
                 :key="washResult.code"
+                :suffix="washResult.suffix"
                 :value="
                   washForm.endline.results[washResult.code] | formatNumber
                 "
@@ -160,6 +178,9 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 import { computeChangeInEmission } from "../changeInEmission";
 
+const DIESEL = "DIESEL";
+const PETROL = "Petrol / Gaz";
+
 @Component({
   computed: {
     ...mapGetters("GhgModule", ["project"]),
@@ -217,6 +238,8 @@ export default class Trucking extends Vue {
       baseline: {
         inputs: {
           US_TYP: "WATER",
+          US_UNI: "KM",
+          LIT_WS: 0,
           TOT_WS: 10000,
           WACL: 5,
           TR_VOL: 2.5,
@@ -231,6 +254,8 @@ export default class Trucking extends Vue {
       endline: {
         inputs: {
           US_TYP: "WATER",
+          US_UNI: "KM",
+          LIT_WS: 0,
           TOT_WS: 10000,
           WACL: 5,
           TR_VOL: 2,
@@ -259,13 +284,32 @@ export default class Trucking extends Vue {
       // energy and iges not retrieved yet.
       throw new Error("ghg reference not loaded");
     }
-    const { REF_WSH_D } = this.ghgMapRef;
+    // REF_WSH_D is for DIESEL (old value)
+    // we need to retrieve it for Gaz also
+    // REF_WSH_D_L and REF_WSH_G_L
+    const { REF_WSH_D_L, REF_WSH_G_L, REF_WSH_D } = this.ghgMapRef;
 
+    // if not diesel then it's gaz/petrol
+    const washFactor =
+      washInput.TR_TYP === DIESEL ? REF_WSH_D_L.value : REF_WSH_G_L.value;
     const res = {} as WashTruckingItemResults;
-    res.TR_NUM = Math.ceil(washInput.WACL / washInput.TR_VOL);
-    res.TR_DIST = res.TR_NUM * washInput.TOT_WS * 2;
-    res.CO2_WSH_TRB = (REF_WSH_D.value * res.TR_DIST) / 1000;
-    return res;
+
+    // WS_FC = REF_WSH_G_L * WS_FC /1000 (Total fuel consumption (l/year))
+    // CO2_WSH_TR = REF_WSH_D_L * WS_FC / 1000 (Total CO2 Emissions (tCO2eq/year))
+    if (washInput.US_UNI === "KM") {
+      res.TR_NUM = Math.ceil(washInput.WACL / washInput.TR_VOL);
+      res.TR_DIST = res.TR_NUM * washInput.TOT_WS * 2;
+      res.CO2_WSH_TRB = (washFactor * res.TR_DIST) / 1000;
+      return res;
+    }
+    if (washInput.US_UNI === "LITRES") {
+      res.TR_NUM = Math.ceil(washInput.WACL / washInput.TR_VOL);
+      const TOT_WS = washInput.LIT_WS / REF_WSH_D.value; // based on litres consumption 25 litres per if REF_WSH_D is 0.25;
+      res.TR_DIST = res.TR_NUM * TOT_WS * 2;
+      res.CO2_WSH_TRB = (washFactor * res.TR_DIST) / 1000;
+      return res;
+    }
+    throw new Error("ghg wash input for trucking unknown unit type");
   }
 
   private computeBalance(): WashTruckingItemBalance {
@@ -294,9 +338,26 @@ export default class Trucking extends Vue {
       items: ["WATER", "WASTEWATER", "FAECAL SLUDGE"],
     },
     {
+      description: "Trucking unit",
+      code: "US_UNI",
+      type: "select",
+      items: ["KM", "LITRES"],
+    },
+    {
       description: "Distance between camp and water source",
       code: "TOT_WS",
+      conditional_value: "KM",
+      conditional: "US_UNI",
       type: "number",
+      suffix: "km",
+    },
+    {
+      description: "Litres between camp and water source",
+      code: "LIT_WS",
+      conditional_value: "LITRES",
+      conditional: "US_UNI",
+      type: "number",
+      suffix: "l",
     },
     {
       description: "Total volume of water collected (m3)",
@@ -312,7 +373,7 @@ export default class Trucking extends Vue {
       description: "Type of truck",
       code: "TR_TYP",
       type: "select",
-      items: ["DIESEL"],
+      items: [DIESEL, PETROL],
     },
   ];
 
@@ -327,6 +388,7 @@ export default class Trucking extends Vue {
       description: "Total distance travelled",
       code: "TR_DIST",
       type: "number",
+      suffix: "km",
       disabled: true,
     },
     {

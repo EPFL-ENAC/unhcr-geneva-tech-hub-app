@@ -15,6 +15,7 @@ export interface Facility {
   disableDieselLiters: boolean;
   generatorSize: number; // replace the diesel liter
   operatingHours: number; // replace the diesel liter
+  generatorLoad?: number; // replace the diesel factor
   renewablePower: number;
   totalCO2Emission: number;
 }

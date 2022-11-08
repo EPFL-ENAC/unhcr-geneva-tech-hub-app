@@ -68,7 +68,9 @@ export interface WashSurvey {
 
 export interface WashTruckingItemInputs {
   US_TYP: string;
+  US_UNI: string;
   TOT_WS: number;
+  LIT_WS: number;
   WACL: number;
   TR_VOL: number;
   TR_TYP: string;
@@ -148,6 +150,7 @@ export interface EnergyItem {
   disableDieselLiters?: boolean;
   generatorSize?: number; // replace the diesel liter
   operatingHours?: number; // replace the diesel liter
+  generatorLoad?: number; // load of generator (should be default to 60%)
   renewablePower: number;
 }
 
