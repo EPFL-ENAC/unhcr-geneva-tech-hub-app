@@ -180,18 +180,30 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col
-                v-for="(option, $idx) in graphTreeOptions"
-                :key="$idx"
-                :md="12"
-                :lg="4"
-              >
-                <graph-tree
-                  :selected-field="option.selectedField"
-                  :unit-name="option.unitName"
-                  :title="option.title"
-                  :items="items"
-                />
+              <v-col md="12" lg="1" class="shelter-graph-button__container">
+                <v-radio-group v-model="selectedGraph" mandatory>
+                  <v-radio label="Treemap" value="treemap"></v-radio>
+                  <v-radio label="Sunburst" value="sunburst"></v-radio>
+                  <v-radio label="Sankey" value="sankey"></v-radio>
+                </v-radio-group>
+              </v-col>
+              <v-col lg="11" md="12">
+                <v-row>
+                  <v-col
+                    v-for="(option, $idx) in graphTreeOptions"
+                    :key="$idx"
+                    :md="12"
+                    :lg="4"
+                  >
+                    <graph-tree
+                      :selected-field="option.selectedField"
+                      :graph-type="selectedGraph"
+                      :unit-name="option.unitName"
+                      :title="option.title"
+                      :items="items"
+                    />
+                  </v-col>
+                </v-row>
               </v-col>
             </v-row>
             <v-row>
@@ -283,6 +295,7 @@ export default class Step3Materials extends Vue {
   singleExpand = true;
   infoTooltipText = infoTooltipText;
   expanded = [];
+  selectedGraph = "treemap";
 
   showSubPanel = {} as Record<string, boolean>;
   public toggle(key: string): void {
@@ -437,6 +450,12 @@ interface Info {
 </script>
 
 <style scoped lang="scss">
+.shelter-graph-button__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+}
 .v-data-table ::v-deep {
   thead {
     tr > th {
