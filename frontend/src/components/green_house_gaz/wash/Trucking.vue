@@ -287,26 +287,29 @@ export default class Trucking extends Vue {
     // REF_WSH_D is for DIESEL (old value)
     // we need to retrieve it for Gaz also
     // REF_WSH_D_L and REF_WSH_G_L
-    const { REF_WSH_D_L, REF_WSH_G_L, REF_WSH_D } = this.ghgMapRef;
+    const { REF_WSH_D_L, REF_WSH_G_L, REF_WSH_D, REF_WSH_G } = this.ghgMapRef;
 
-    // if not diesel then it's gaz/petrol
-    const washFactor =
-      washInput.TR_TYP === DIESEL ? REF_WSH_D_L.value : REF_WSH_G_L.value;
     const res = {} as WashTruckingItemResults;
 
-    // WS_FC = REF_WSH_G_L * WS_FC /1000 (Total fuel consumption (l/year))
-    // CO2_WSH_TR = REF_WSH_D_L * WS_FC / 1000 (Total CO2 Emissions (tCO2eq/year))
+    // CO2_WSH_D=REF_WSH_D_L * D_L/1000 (diesel calculation, answer in CO2eq/yr)
+    // CO2_WSH_G=REF_WSH_G_L * G_L/1000 (diesel calculation, answer in CO2eq/yr)
+    // if not diesel then it's gaz/petrol
+
+    const washFactorKM =
+      washInput.TR_TYP === DIESEL ? REF_WSH_D.value : REF_WSH_G.value;
     if (washInput.US_UNI === "KM") {
       res.TR_NUM = Math.ceil(washInput.WACL / washInput.TR_VOL);
       res.TR_DIST = res.TR_NUM * washInput.TOT_WS * 2;
-      res.CO2_WSH_TRB = (washFactor * res.TR_DIST) / 1000;
+      res.CO2_WSH_TRB = (washFactorKM * res.TR_DIST) / 1000;
       return res;
     }
+
+    const washFactorL =
+      washInput.TR_TYP === DIESEL ? REF_WSH_D_L.value : REF_WSH_G_L.value;
     if (washInput.US_UNI === "LITRES") {
       res.TR_NUM = Math.ceil(washInput.WACL / washInput.TR_VOL);
-      const TOT_WS = washInput.LIT_WS / REF_WSH_D.value; // based on litres consumption 25 litres per if REF_WSH_D is 0.25;
-      res.TR_DIST = res.TR_NUM * TOT_WS * 2;
-      res.CO2_WSH_TRB = (washFactor * res.TR_DIST) / 1000;
+      res.TR_DIST = 0; // the DIST is unknown since we only have the number of litres
+      res.CO2_WSH_TRB = (washFactorL * washInput.LIT_WS) / 1000;
       return res;
     }
     throw new Error("ghg wash input for trucking unknown unit type");

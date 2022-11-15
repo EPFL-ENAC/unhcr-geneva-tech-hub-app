@@ -32,6 +32,14 @@
         "source": "https://unfccc.int/sites/default/files/resource/GHG_emissions_calculator_ver01.1_web.xlsx"
     },
     {
+        "_id": "REF_WSH_G",
+        "type": "number",
+        "category": "WASH",
+        "description": "WASH - Trucking - Emissions Factor - Gasoline (up to 3.5 tonnes) [-]",
+        "value": 0.22,
+        "source": "https://unfccc.int/sites/default/files/resource/GHG_emissions_calculator_ver01.1_web.xlsx"
+    },
+    {
         "_id": "REF_WSH_D_L",
         "category": "WASH",
         "description": "WASH - Trucking - Emissions Factor - Diesel (100% mineral diesel) [kg CO2e/l]",
