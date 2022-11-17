@@ -251,6 +251,7 @@ export function generateNewShelter(name: string, user: CouchUser): Shelter {
       technical_performance: {},
       geometry: getNewGeometry(),
       items: [],
+      items_individual_shelter: 1,
       envPerfItems: [],
       totalEnvPerf: getTotalEnvPerf([], []),
       scorecard: getDefaultScoreCard(),

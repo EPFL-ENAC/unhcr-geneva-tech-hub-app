@@ -39,6 +39,7 @@ export interface Shelter {
   risk_seismic: string;
 
   items: Item[];
+  items_individual_shelter: number;
   envPerfItems: MaterialTree[];
   totalEnvPerf: MaterialTree;
 
