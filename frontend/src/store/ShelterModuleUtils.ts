@@ -10,7 +10,7 @@ import {
   Shelter,
   ShelterState,
 } from "@/store/ShelterInterface";
-import { cloneDeep } from "lodash";
+import { cloneDeep, isNumber } from "lodash";
 import { CouchUser } from "./UserModule";
 
 const TOTAL_HAB = 14;
@@ -30,10 +30,15 @@ export function generateState(): ShelterState {
 export function computeShelter(value: Shelter): Shelter {
   const newShelter = cloneDeep(value);
   const resultShelter = completeMissingFields(newShelter);
-  resultShelter.envPerfItems = getEnvPerfItems(newShelter?.items);
+  // Divide by number of individual shelters in BOQ
+  resultShelter.envPerfItems = getEnvPerfItems(
+    newShelter?.items,
+    newShelter?.items_individual_shelter
+  );
   resultShelter.totalEnvPerf = getTotalEnvPerf(
     resultShelter.envPerfItems,
-    newShelter?.items
+    newShelter?.items,
+    newShelter?.items_individual_shelter
   );
 
   // change because of non-applicable
@@ -90,7 +95,10 @@ export function getFormIdItems(items: Item[] = []): string[] {
     .map((el: Item) => (el as Material).formId);
 }
 
-export function getEnvPerfItems(items: Item[] = []): MaterialTree[] {
+export function getEnvPerfItems(
+  items: Item[] = [],
+  items_individual_shelter = 1
+): MaterialTree[] {
   const mats = items.filter(isMaterial).reduce((acc, n: Item) => {
     const el = n as Material;
     const prevMat = acc[el.materialId];
@@ -122,12 +130,39 @@ export function getEnvPerfItems(items: Item[] = []): MaterialTree[] {
     } as MaterialTree;
     return acc;
   }, {} as MaterialTreeRecord);
-  return Object.values(mats) as MaterialTree[];
+  console.log(items_individual_shelter);
+  const result = Object.values(mats).map((mat) => ({
+    ...mat,
+    children: mat.children?.map((child) => ({
+      ...child,
+      embodiedCarbonProduction:
+        child.embodiedCarbonProduction / items_individual_shelter,
+      embodiedCarbonTotal: child.embodiedCarbonTotal / items_individual_shelter,
+      embodiedCarbonTransport: isNumber(child.embodiedCarbonTransport)
+        ? child.embodiedCarbonTransport / items_individual_shelter
+        : child.embodiedCarbonTransport,
+      embodiedWater: child.embodiedWater / items_individual_shelter,
+      totalCost: child.totalCost / items_individual_shelter,
+      weight: child.weight / items_individual_shelter,
+    })),
+    embodiedCarbonProduction:
+      mat.embodiedCarbonProduction / items_individual_shelter,
+    embodiedCarbonTotal: mat.embodiedCarbonTotal / items_individual_shelter,
+    embodiedCarbonTransport: isNumber(mat.embodiedCarbonTransport)
+      ? mat.embodiedCarbonTransport / items_individual_shelter
+      : mat.embodiedCarbonTransport,
+    embodiedWater: mat.embodiedWater / items_individual_shelter,
+    totalCost: mat.totalCost / items_individual_shelter,
+    weight: mat.weight / items_individual_shelter,
+  })) as MaterialTree[];
+  return result;
+  // return Object.values(mats) as MaterialTree[];
 }
 
 export function getTotalEnvPerf(
   values: MaterialTree[],
-  items: Item[] = []
+  items: Item[] = [],
+  items_individual_shelter = 1
 ): MaterialTree {
   const total = values.reduce(
     (acc, el) => {
