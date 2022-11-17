@@ -9,3 +9,7 @@ test:
 
 lint:
 	npm run lint
+
+lint-staged:
+	npm run lint-staged
+

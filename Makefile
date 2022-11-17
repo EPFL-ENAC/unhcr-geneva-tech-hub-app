@@ -18,6 +18,10 @@ test:
 lint:
 	$(MAKE) -C frontend lint
 
+lint-staged:
+	$(MAKE) -C frontend lint-staged
+
+
 # setup and run when deploying on server
 setup:
 	echo "nothing to see here"

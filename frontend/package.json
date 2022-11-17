@@ -7,6 +7,7 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
+    "lint-staged": "lint-staged",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\""
   },
   "dependencies": {
@@ -66,7 +67,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^9.1.1",
     "glob-parent": ">=5.1.2",
-    "lint-staged": "^13.0.1",
+    "lint-staged": "^13.0.3",
     "node-fetch": ">=2.6.7",
     "node-forge": ">=1.0.0",
     "nth-check": ">=2.0.1",
@@ -80,13 +81,9 @@
     "vue-template-compiler": "^2.6.14",
     "vuetify-loader": "^1.7.0"
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
   "lint-staged": {
     "*.{js,jsx,vue,ts,tsx}": [
-      "vue-cli-service lint",
-      "git add"
+      "vue-cli-service lint"
     ]
   }
 }
