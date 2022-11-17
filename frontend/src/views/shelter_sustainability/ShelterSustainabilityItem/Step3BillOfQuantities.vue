@@ -239,7 +239,7 @@ export default class Step3Materials extends Vue {
     { text: "Unit", value: "unit" },
     { text: "Quantity", value: "quantity", align: "right" },
     { text: "Unit cost (USD)", value: "unitCost", align: "right" },
-    { text: "Total cost (USD)", value: "totalCost", align: "right" },
+    { text: "Item cost (USD)", value: "totalCost", align: "right" },
     { text: "", value: "actions", sortable: false, width: "140px" },
   ];
 
