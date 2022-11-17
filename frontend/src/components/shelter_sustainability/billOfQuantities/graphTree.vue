@@ -7,6 +7,7 @@
 <script lang="ts">
 import { MaterialTree, MaterialTreeKey } from "@/store/ShelterInterface";
 import { ShelterMaterial } from "@/store/SheltersMaterialModule";
+import { materialColors } from "@/utils/materialColors";
 import {
   SankeyChart,
   SankeySeriesOption,
@@ -55,111 +56,7 @@ export default class GraphTree extends Vue {
   readonly graphType!: string;
 
   materialMap!: Record<string, ShelterMaterial>;
-
-  private generateColorSpaceForList(v: string[]): Record<string, string[]> {
-    /* the idea is to return something like:
-    {
-      'Steel': [primary color, children color....]
-    }
-    We use the HWB color space for generating the colors
-    https://en.wikipedia.org/wiki/HWB_color_model
-    we want 10 sub colors, because we don't have more than 10 nuances of sub color
-    black 60 white 0
-    black 60 white 20
-    black 40 white 0
-    black 40 white 20
-    black 20 white 0
-    black 20 white 20
-    black 0 white 0
-    black 0 white 20
-    black 0 white 40
-    black 0 white 60
-    black 0 white 80
-    */
-    // below functions are from: https://w3c.github.io/csswg-drafts/css-color/#the-hwb-notation
-    /**
-     * @param {number} hue -  Hue as degrees 0..360
-     * @param {number} white -  Whiteness as percentage 0..100
-     * @param {number} black -  Blackness as percentage 0..100
-     * @return {number[]} Array of RGB components 0..1
-     */
-    function hwbToRgb(hue: number, white: number, black: number): number[] {
-      white /= 100;
-      black /= 100;
-      if (white + black >= 1) {
-        const gray = white / (white + black);
-        return [gray, gray, gray];
-      }
-      const rgb = hslToRgb(hue, 100, 50);
-      for (let i = 0; i < 3; i++) {
-        rgb[i] *= 1 - white - black;
-        rgb[i] += white;
-      }
-      return rgb;
-    }
-    /**
-     * @param {number} hue - Hue as degrees 0..360
-     * @param {number} sat - Saturation as percentage 0..100
-     * @param {number} light - Lightness as percentage 0..100
-     * @return {number[]} Array of RGB components 0..1
-     */
-    function hslToRgb(hue: number, sat: number, light: number) {
-      hue = hue % 360;
-
-      if (hue < 0) {
-        hue += 360;
-      }
-
-      sat /= 100;
-      light /= 100;
-
-      function f(n: number) {
-        const k = (n + hue / 30) % 12;
-        const a = sat * Math.min(light, 1 - light);
-        return light - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
-      }
-
-      return [f(0), f(8), f(4)];
-    }
-    const huesStep = Math.floor(360 / v.length);
-    const white = [0, 0, 0, 20, 0, 20, 40, 60, 80];
-    const black = [30, 20, 10, 10, 0, 0, 0, 0, 0];
-    const wb = white.map((b, i) => [b, black[i]]);
-    const result = v.reduce(
-      (acc: Record<string, string[]>, el, currentIndex) => {
-        acc[el] = wb.map((wbValue) => {
-          const newColor = hwbToRgb(
-            currentIndex * huesStep,
-            wbValue[0],
-            wbValue[1]
-          ).map((x: number) => x * 255);
-          return `rgb(${newColor[0]}, ${newColor[1]}, ${newColor[2]})`;
-        });
-        return acc;
-      },
-      {}
-    );
-    return result;
-  }
-
-  private get materialIds(): string[] {
-    // we want to have only the unique set of currrent table
-    return Array.from(
-      new Set(
-        this.itemsWithoutTotal.map((item) => {
-          return item.materialId;
-        }) as string[]
-      )
-    );
-    /* if we wanted to have all keys we should do the following */
-    // return Array.from(
-    //   new Set(Object.values(this.materialMap).map((x) => x.material))
-    // );
-  }
-  private get materialColorsId(): Record<string, string[]> {
-    return this.generateColorSpaceForList(this.materialIds);
-  }
-
+  materialColors = materialColors;
   private get itemsWithoutTotal(): MaterialTree[] {
     return this.items.length === 0 ? this.items : this.items.slice(0, -1);
   }
@@ -168,11 +65,13 @@ export default class GraphTree extends Vue {
     const key = this.selectedField as MaterialTreeKey;
     const unitName = this.unitName as string;
     const localMaterialMap = this.materialMap;
-    if (!localMaterialMap) {
+    if (!localMaterialMap || Object.keys(localMaterialMap).length == 0) {
       return [];
     }
     return this.itemsWithoutTotal.map((item: MaterialTree) => {
-      const currentColors = this.materialColorsId[item.materialId ?? ""] ?? [];
+      const currentColors = [
+        ...(this.materialColors[item.materialId ?? ""] ?? []),
+      ];
       return {
         name: item.materialId,
         value: [item[key], unitName],
@@ -180,7 +79,7 @@ export default class GraphTree extends Vue {
           color: currentColors[0],
         },
 
-        children: item?.children?.map((child: MaterialTree, childIndex) => {
+        children: item?.children?.map((child: MaterialTree) => {
           const matched = localMaterialMap[child.formId as string] ?? {};
           // const name = `${matched?.material} — ${matched?.form}`;
           const name = `${matched?.form}`;
@@ -188,7 +87,7 @@ export default class GraphTree extends Vue {
             name,
             value: [child[key], unitName],
             itemStyle: {
-              color: currentColors[childIndex + 1],
+              color: matched.color,
             },
           } as datatree;
         }),
@@ -203,7 +102,7 @@ export default class GraphTree extends Vue {
 
     this.itemsWithoutTotal.forEach((item: MaterialTree) => {
       const currentMaterialId = item.materialId ?? "";
-      const currentColors = this.materialColorsId[currentMaterialId] ?? [];
+      const currentColors = this.materialColors[currentMaterialId] ?? [];
 
       result[currentMaterialId] = {
         name: currentMaterialId,
@@ -212,7 +111,7 @@ export default class GraphTree extends Vue {
           color: currentColors[0],
         },
       };
-      item?.children?.forEach((child: MaterialTree, childIndex) => {
+      item?.children?.forEach((child: MaterialTree) => {
         const matched = localMaterialMap[child.formId as string] ?? {};
         // const name = `${matched?.material} — ${matched?.form}`;
         const name = `${matched?.form}`;
@@ -225,7 +124,7 @@ export default class GraphTree extends Vue {
             unitName,
           ] as number[],
           itemStyle: {
-            color: currentColors[childIndex + 1],
+            color: matched.color,
           },
         };
       });
