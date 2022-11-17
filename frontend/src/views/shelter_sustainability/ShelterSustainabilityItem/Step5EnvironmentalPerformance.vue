@@ -37,7 +37,7 @@
                   <template #header>
                     <thead>
                       <tr>
-                        <th colspan="1"></th>
+                        <th colspan="1">Per Shelter</th>
                         <th style="text-align: center; vertical-align: middle">
                           Material
                           <info-tooltip>
