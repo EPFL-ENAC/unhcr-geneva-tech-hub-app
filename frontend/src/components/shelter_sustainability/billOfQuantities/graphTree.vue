@@ -22,6 +22,7 @@ import {
   TitleOption,
   TooltipOption,
 } from "echarts/types/dist/shared";
+import { kebabCase } from "lodash";
 import VChart from "vue-echarts";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
@@ -40,7 +41,7 @@ use([
     VChart,
   },
   computed: {
-    ...mapGetters("SheltersMaterialModule", ["materialMap"]),
+    ...mapGetters("SheltersMaterialModule", ["materialMap", "materials"]),
   },
 })
 export default class GraphTree extends Vue {
@@ -56,6 +57,7 @@ export default class GraphTree extends Vue {
   readonly graphType!: string;
 
   materialMap!: Record<string, ShelterMaterial>;
+  materials!: string[];
   materialColors = materialColors;
   private get itemsWithoutTotal(): MaterialTree[] {
     return this.items.length === 0 ? this.items : this.items.slice(0, -1);
@@ -68,10 +70,24 @@ export default class GraphTree extends Vue {
     if (!localMaterialMap || Object.keys(localMaterialMap).length == 0) {
       return [];
     }
+    // this.materials.forEach((material) => {
+    //   const currentColors = [...(this.materialColors[material ?? ""] ?? [])];
+    //   console.log(
+    //     `.${kebabCase(material)} {\n background-color: ${currentColors[0]}\n}`
+    //   );
+    // });
+    // console.log(this.materialMap);
+    // to generate css
+    Object.values(this.materialMap).map((x) =>
+      console.log(`.${kebabCase(x._id)} {
+        background-color: ${x.color}
+      }`)
+    );
     return this.itemsWithoutTotal.map((item: MaterialTree) => {
       const currentColors = [
         ...(this.materialColors[item.materialId ?? ""] ?? []),
       ];
+
       return {
         name: item.materialId,
         value: [item[key], unitName],
