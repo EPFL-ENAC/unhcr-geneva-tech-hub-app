@@ -23,7 +23,7 @@
             <v-row>
               <v-col class="about-first-column d-flex justify-center" lg="12">
                 <v-data-table
-                  class="first-level"
+                  class="first-level elevation-1 hover:primary"
                   :headers="headers"
                   :items="items"
                   hide-default-header
@@ -31,6 +31,7 @@
                   :items-per-page="-1"
                   :single-expand="singleExpand"
                   :expanded.sync="expanded"
+                  :item-class="itemMaterialClass"
                   item-key="materialId"
                   show-expand
                 >
@@ -93,26 +94,26 @@
                     </thead>
                   </template>
                   <template #[`item.weight`]="{ item }">
-                    <span>{{ item.weight | formatNumber }} </span>
+                    <span>{{ item.weight | formatNumber }}</span>
                   </template>
                   <template #[`item.embodiedCarbonProduction`]="{ item }">
-                    <span
-                      >{{ item.embodiedCarbonProduction | formatNumber }}
+                    <span>
+                      {{ item.embodiedCarbonProduction | formatNumber }}
                     </span>
                   </template>
                   <template #[`item.embodiedCarbonTransport`]="{ item }">
-                    <span
-                      >{{ item.embodiedCarbonTransport | formatNumber }}
+                    <span>
+                      {{ item.embodiedCarbonTransport | formatNumber }}
                     </span>
                   </template>
                   <template #[`item.embodiedCarbonTotal`]="{ item }">
-                    <span>{{ item.embodiedCarbonTotal | formatNumber }} </span>
+                    <span>{{ item.embodiedCarbonTotal | formatNumber }}</span>
                   </template>
                   <template #[`item.embodiedWater`]="{ item }">
-                    <span>{{ item.embodiedWater | formatNumber }} </span>
+                    <span>{{ item.embodiedWater | formatNumber }}</span>
                   </template>
                   <template #[`item.totalCost`]="{ item }">
-                    <span>{{ item.totalCost | formatNumber }} </span>
+                    <span>{{ item.totalCost | formatNumber }}</span>
                   </template>
                   <template #expanded-item="{ headers, item }">
                     <td :colspan="headers.length" style="padding: 0 0 0 0">
@@ -122,6 +123,7 @@
                         :items-per-page="-1"
                         :headers="headersSubItems"
                         :items="item.children"
+                        :item-class="itemFormClass"
                       >
                         <!-- <template v-slot:[`item.formId`]="slotProps">
                           <span v-if="materialMap[slotProps.item.formId]">{{
@@ -130,47 +132,47 @@
                           <span v-else> {{ slotProps.item.formId }}</span>
                         </template> -->
                         <template #[`item.name`]="slotProps">
-                          <span> {{ slotProps.item.name }}</span>
+                          <span>{{ slotProps.item.name }}</span>
                         </template>
                         <!-- beware duplicated code from above -->
                         <template #[`item.weight`]="slotProps">
-                          <span
-                            >{{ slotProps.item.weight | formatNumber }}
+                          <span>
+                            {{ slotProps.item.weight | formatNumber }}
                           </span>
                         </template>
                         <template
                           #[`item.embodiedCarbonProduction`]="slotProps"
                         >
-                          <span
-                            >{{
+                          <span>
+                            {{
                               slotProps.item.embodiedCarbonProduction |
                                 formatNumber
                             }}
                           </span>
                         </template>
                         <template #[`item.embodiedCarbonTransport`]="slotProps">
-                          <span
-                            >{{
+                          <span>
+                            {{
                               slotProps.item.embodiedCarbonTransport |
                                 formatNumber
                             }}
                           </span>
                         </template>
                         <template #[`item.embodiedCarbonTotal`]="slotProps">
-                          <span
-                            >{{
+                          <span>
+                            {{
                               slotProps.item.embodiedCarbonTotal | formatNumber
                             }}
                           </span>
                         </template>
                         <template #[`item.embodiedWater`]="slotProps">
-                          <span
-                            >{{ slotProps.item.embodiedWater | formatNumber }}
+                          <span>
+                            {{ slotProps.item.embodiedWater | formatNumber }}
                           </span>
                         </template>
                         <template #[`item.totalCost`]="slotProps">
-                          <span
-                            >{{ slotProps.item.totalCost | formatNumber }}
+                          <span>
+                            {{ slotProps.item.totalCost | formatNumber }}
                           </span>
                         </template>
                       </v-data-table>
@@ -259,7 +261,7 @@ import { getFormIdItems } from "@/store/ShelterModuleUtils";
 import { ShelterMaterial } from "@/store/SheltersMaterialModule";
 import habitatRisks from "@/views/shelter_sustainability/ShelterSustainabilityItem/habitatRisks";
 import reuseRecycling from "@/views/shelter_sustainability/ShelterSustainabilityItem/reuseRecycling";
-import { cloneDeep } from "lodash";
+import { cloneDeep, kebabCase } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";
 import { mapActions, mapGetters } from "vuex";
@@ -313,6 +315,12 @@ export default class Step3Materials extends Vue {
     return getFormIdItems(this.shelter.items);
   }
 
+  public itemMaterialClass(value: MaterialTree): string {
+    return kebabCase(value.materialId) as string;
+  }
+  public itemFormClass(value: MaterialTree): string {
+    return kebabCase(value.formId) as string;
+  }
   public get headers(): DataTableHeader[] {
     return [
       {
@@ -515,5 +523,311 @@ interface Info {
 .center-table {
   vertical-align: middle;
   text-align: center;
+}
+</style>
+<style>
+.alu-cpa:hover {
+  background-color: hsl(206, 33%, 87%);
+}
+.alu-oth:hover {
+  background-color: hsl(206, 33%, 77%);
+}
+.alu-she:hover {
+  background-color: hsl(206, 33%, 67%);
+}
+.bit-all:hover {
+  background-color: hsl(328, 47%, 62%);
+}
+.bit-oth:hover {
+  background-color: hsl(328, 47%, 52%);
+}
+.bmb-mat:hover {
+  background-color: hsl(96, 60%, 63%);
+}
+.bmb-oth:hover {
+  background-color: hsl(96, 60%, 53%);
+}
+.bmb-pol:hover {
+  background-color: hsl(96, 60%, 43%);
+}
+.car-all:hover {
+  background-color: hsl(32, 90%, 65%);
+}
+.car-oth:hover {
+  background-color: hsl(32, 90%, 45%);
+}
+.cem-mtr:hover {
+  background-color: hsl(51, 15%, 66%);
+}
+.cem-oth:hover {
+  background-color: hsl(51, 15%, 56%);
+}
+.cem-pur:hover {
+  background-color: hsl(51, 15%, 46%);
+}
+.cla-brf:hover {
+  background-color: hsl(51, 70%, 71%);
+}
+.cla-bru:hover {
+  background-color: hsl(51, 70%, 66%);
+}
+.cla-oth:hover {
+  background-color: hsl(51, 70%, 51%);
+}
+.cla-tlf:hover {
+  background-color: hsl(51, 70%, 46%);
+}
+.cla-tlr:hover {
+  background-color: hsl(51, 70%, 41%);
+}
+.con-aeb:hover {
+  background-color: hsl(51, 5%, 86%);
+}
+.con-gen:hover {
+  background-color: hsl(51, 5%, 76%);
+}
+.con-oth:hover {
+  background-color: hsl(51, 5%, 66%);
+}
+.con-pcb:hover {
+  background-color: hsl(51, 5%, 60%);
+}
+.con-pcu:hover {
+  background-color: hsl(51, 5%, 52%);
+}
+.con-rei:hover {
+  background-color: hsl(51, 5%, 46%);
+}
+.ear-oth:hover {
+  background-color: hsl(51, 85%, 76%);
+}
+.ear-pla:hover {
+  background-color: hsl(51, 85%, 66%);
+}
+.ear-rme:hover {
+  background-color: hsl(51, 85%, 56%);
+}
+.ear-rof:hover {
+  background-color: hsl(51, 85%, 46%);
+}
+.gla-oth:hover {
+  background-color: hsl(59, 100%, 62%);
+}
+.gla-win:hover {
+  background-color: hsl(59, 100%, 52%);
+}
+.gla-woo:hover {
+  background-color: hsl(59, 100%, 42%);
+}
+.gra-all:hover {
+  background-color: hsl(96, 90%, 33%);
+}
+.gyp-oth:hover {
+  background-color: hsl(51, 60%, 56%);
+}
+.gyp-pla:hover {
+  background-color: hsl(51, 60%, 46%);
+}
+.hmp-oth:hover {
+  background-color: hsl(96, 80%, 33%);
+}
+.hmp-rop:hover {
+  background-color: hsl(96, 80%, 23%);
+}
+.lme-oth:hover {
+  background-color: hsl(51, 40%, 56%);
+}
+.lme-pla:hover {
+  background-color: hsl(51, 40%, 46%);
+}
+.oth:hover {
+  background-color: hsl(0, 0%, 25%);
+}
+.pla-oth:hover {
+  background-color: hsl(328, 87%, 83%);
+}
+.pla-pcc:hover {
+  background-color: hsl(328, 87%, 78%);
+}
+.pla-pcs:hover {
+  background-color: hsl(328, 87%, 73%);
+}
+.pla-pct:hover {
+  background-color: hsl(328, 87%, 68%);
+}
+.pla-psy:hover {
+  background-color: hsl(328, 87%, 63%);
+}
+.pla-pvc:hover {
+  background-color: hsl(328, 87%, 58%);
+}
+.pla-rop:hover {
+  background-color: hsl(328, 87%, 53%);
+}
+.pla-tar:hover {
+  background-color: hsl(328, 87%, 48%);
+}
+.plc-hvy:hover {
+  background-color: hsl(32, 50%, 65%);
+}
+.plc-lht:hover {
+  background-color: hsl(32, 50%, 55%);
+}
+.plc-oth:hover {
+  background-color: hsl(32, 50%, 45%);
+}
+.rbr-all:hover {
+  background-color: hsl(328, 37%, 72%);
+}
+.snd-all:hover {
+  background-color: hsl(41, 95%, 56%);
+}
+.snd-oth:hover {
+  background-color: hsl(41, 95%, 46%);
+}
+.ste-chs:hover {
+  background-color: hsl(206, 83%, 87%);
+}
+.ste-cse:hover {
+  background-color: hsl(206, 83%, 82%);
+}
+.ste-eas:hover {
+  background-color: hsl(206, 83%, 78%);
+}
+.ste-fxh:hover {
+  background-color: hsl(206, 43%, 87%);
+}
+.ste-fxl:hover {
+  background-color: hsl(206, 43%, 77%);
+}
+.ste-fxn:hover {
+  background-color: hsl(206, 43%, 67%);
+}
+.ste-fxo:hover {
+  background-color: hsl(206, 43%, 62%);
+}
+.ste-gsh:hover {
+  background-color: hsl(206, 83%, 75%);
+}
+.ste-ise:hover {
+  background-color: hsl(206, 83%, 73%);
+}
+.ste-oth:hover {
+  background-color: hsl(206, 83%, 69%);
+}
+.ste-pla:hover {
+  background-color: hsl(206, 83%, 65%);
+}
+.ste-reb:hover {
+  background-color: hsl(206, 83%, 61%);
+}
+.ste-rhs:hover {
+  background-color: hsl(206, 83%, 57%);
+}
+.ste-seo:hover {
+  background-color: hsl(206, 83%, 53%);
+}
+.ste-shs:hover {
+  background-color: hsl(206, 83%, 49%);
+}
+.ste-str:hover {
+  background-color: hsl(206, 83%, 45%);
+}
+.ste-wir:hover {
+  background-color: hsl(206, 83%, 41%);
+}
+.sto-agg:hover {
+  background-color: hsl(51, 25%, 76%);
+}
+.sto-blk:hover {
+  background-color: hsl(51, 25%, 71%);
+}
+.sto-oth:hover {
+  background-color: hsl(51, 25%, 66%);
+}
+.tim-hdc:hover {
+  background-color: hsl(96, 20%, 73%);
+}
+.tim-hdr:hover {
+  background-color: hsl(96, 20%, 68%);
+}
+.tim-oth:hover {
+  background-color: hsl(96, 20%, 63%);
+}
+.tim-ply:hover {
+  background-color: hsl(96, 20%, 58%);
+}
+.tim-sfc:hover {
+  background-color: hsl(96, 20%, 53%);
+}
+.tim-sfr:hover {
+  background-color: hsl(96, 20%, 48%);
+}
+
+.aluminium:hover {
+  background-color: hsl(206, 33%, 57%);
+}
+.bitumen:hover {
+  background-color: hsl(328, 47%, 42%);
+}
+.bamboo:hover {
+  background-color: hsl(96, 60%, 43%);
+}
+.cardboard-paper:hover {
+  background-color: hsl(32, 90%, 35%);
+}
+.cement:hover {
+  background-color: hsl(51, 15%, 36%);
+}
+.clay:hover {
+  background-color: hsl(51, 70%, 36%);
+}
+.concrete:hover {
+  background-color: hsl(51, 5%, 36%);
+}
+.earth-soil-mud:hover {
+  background-color: hsl(51, 85%, 36%);
+}
+.glass:hover {
+  background-color: hsl(59, 100%, 32%);
+}
+.grass-straw:hover {
+  background-color: hsl(96, 90%, 23%);
+}
+.gypsum:hover {
+  background-color: hsl(51, 60%, 36%);
+}
+.hemp:hover {
+  background-color: hsl(96, 80%, 13%);
+}
+.lime:hover {
+  background-color: hsl(51, 40%, 36%);
+}
+.other:hover {
+  background-color: hsl(0, 0%, 25%);
+}
+.plastic-polymer:hover {
+  background-color: hsl(328, 87%, 43%);
+}
+.canvas-polycotton:hover {
+  background-color: hsl(32, 50%, 35%);
+}
+.rubber:hover {
+  background-color: hsl(328, 37%, 62%);
+}
+.sand:hover {
+  background-color: hsl(41, 95%, 36%);
+}
+.steel:hover {
+  background-color: hsl(206, 83%, 37%);
+}
+.steel-brass-fixture-fixing:hover {
+  background-color: hsl(206, 43%, 57%);
+}
+.stone:hover {
+  background-color: hsl(51, 25%, 61%);
+}
+.timber:hover {
+  background-color: hsl(96, 20%, 43%);
 }
 </style>
