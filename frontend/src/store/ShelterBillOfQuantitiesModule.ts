@@ -1,4 +1,4 @@
-import { Item, Material, Other } from "@/store/ShelterInterface";
+import { Item, Material } from "@/store/ShelterInterface";
 import { cloneDeep } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -37,14 +37,6 @@ function getDefaultLabourItem(): Item {
     _id: uuidv4(),
     itemType: "Labour",
   } as Item;
-}
-
-function getDefaultOther(): Item {
-  return {
-    _id: uuidv4(),
-    itemType: "Other",
-    unit: "PCE",
-  } as Other;
 }
 
 /** Default Configure state value */
@@ -147,9 +139,6 @@ const actions: ActionTree<BoqState, RootState> = {
   },
   setItemToDefaultMaterial: (context: ActionContext<BoqState, RootState>) => {
     context.commit("SET_EDITED_ITEM", getDefaultMaterialItem());
-  },
-  setItemToDefaultOther: (context: ActionContext<BoqState, RootState>) => {
-    context.commit("SET_EDITED_ITEM", getDefaultOther());
   },
   saveItem: (context: ActionContext<BoqState, RootState>, item: Item) => {
     if (context.state.editedIndex > -1) {

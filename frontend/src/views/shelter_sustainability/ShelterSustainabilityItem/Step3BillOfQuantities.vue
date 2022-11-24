@@ -104,6 +104,10 @@
               <span>{{ item.quantity | formatNumber }}</span>
             </template>
 
+            <template #[`item.unit`]="{ item }">
+              <span>{{ UnitsRef[item.unit] || item.unit }}</span>
+            </template>
+
             <template #[`item.unitCost`]="{ item }">
               <span>{{ item.unitCost | formatNumber(2, 2) }}</span>
             </template>
@@ -197,7 +201,7 @@ import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import DeleteItemDialog from "@/components/shelter_sustainability/billOfQuantities/DeleteItemDialog.vue";
 import ItemDialog from "@/components/shelter_sustainability/billOfQuantities/ItemDialog.vue";
 import { infoTooltipText } from "@/components/shelter_sustainability/infoTooltipText";
-import { Item, Shelter } from "@/store/ShelterInterface";
+import { Item, Shelter, UnitsRef } from "@/store/ShelterInterface";
 import { countriesMap } from "@/utils/countriesAsList";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -261,6 +265,7 @@ export default class Step3Materials extends Vue {
       this.setItemsIndividualShelter(valueInteger);
     }
   }
+  UnitsRef = UnitsRef;
   countriesMap = countriesMap;
   infoTooltipText = infoTooltipText;
   headers = [
@@ -273,8 +278,8 @@ export default class Step3Materials extends Vue {
     { text: "Origin", value: "source" },
     { text: "Material", value: "materialId" },
     { text: "Form", value: "formId" },
-    { text: "Unit", value: "unit" },
     { text: "Quantity", value: "quantity", align: "right" },
+    { text: "Unit", value: "unit" },
     { text: "Unit cost (USD)", value: "unitCost", align: "right" },
     { text: "Item cost (USD)", value: "totalCost", align: "right" },
     { text: "", value: "actions", sortable: false, width: "140px" },
