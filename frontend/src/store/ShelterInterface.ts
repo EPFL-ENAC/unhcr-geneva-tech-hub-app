@@ -64,12 +64,16 @@ export interface ScoreCard {
   co2: number;
   h2o: number;
   habitability: number;
-  name?: string;
-  shelter_type?: ShelterType;
-  created_at?: string; // todo
-  location_country?: string; // todo
   techPerf: number;
   weight: number;
+}
+
+export interface ScoreCardWithShelterInfo extends ScoreCard {
+  name: string;
+  shelter_type: ShelterType;
+  created_at: string; // todo
+  location_country: string; // todo
+  id: string;
 }
 
 export interface ScoreCardWithErrors {
