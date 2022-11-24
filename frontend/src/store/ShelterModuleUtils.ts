@@ -37,8 +37,7 @@ export function computeShelter(value: Shelter): Shelter {
   );
   resultShelter.totalEnvPerf = getTotalEnvPerf(
     resultShelter.envPerfItems,
-    newShelter?.items,
-    newShelter?.items_individual_shelter
+    newShelter?.items
   );
 
   // change because of non-applicable
@@ -130,7 +129,6 @@ export function getEnvPerfItems(
     } as MaterialTree;
     return acc;
   }, {} as MaterialTreeRecord);
-  console.log(items_individual_shelter);
   const result = Object.values(mats).map((mat) => ({
     ...mat,
     children: mat.children?.map((child) => ({
@@ -156,13 +154,11 @@ export function getEnvPerfItems(
     weight: mat.weight / items_individual_shelter,
   })) as MaterialTree[];
   return result;
-  // return Object.values(mats) as MaterialTree[];
 }
 
 export function getTotalEnvPerf(
   values: MaterialTree[],
-  items: Item[] = [],
-  items_individual_shelter = 1
+  items: Item[] = []
 ): MaterialTree {
   const total = values.reduce(
     (acc, el) => {

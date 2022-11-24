@@ -70,13 +70,6 @@ export default class GraphTree extends Vue {
     if (!localMaterialMap || Object.keys(localMaterialMap).length == 0) {
       return [];
     }
-    // this.materials.forEach((material) => {
-    //   const currentColors = [...(this.materialColors[material ?? ""] ?? [])];
-    //   console.log(
-    //     `.${kebabCase(material)} {\n background-color: ${currentColors[0]}\n}`
-    //   );
-    // });
-    // console.log(this.materialMap);
     // to generate css
     Object.values(this.materialMap).map((x) =>
       console.log(`.${kebabCase(x._id)} {
@@ -140,7 +133,7 @@ export default class GraphTree extends Vue {
             unitName,
           ] as number[],
           itemStyle: {
-            color: matched.color,
+            color: matched.color ?? "grey",
           },
         };
       });
@@ -217,7 +210,6 @@ export default class GraphTree extends Vue {
     return {
       trigger: "item",
       confine: false,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       formatter: this.tooltipFormatter,
     };
   }
@@ -311,8 +303,7 @@ export default class GraphTree extends Vue {
 interface datatree {
   name: string;
   value: number[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  itemStyle: any;
+  itemStyle: Record<string, string>;
   children?: datatree[];
 }
 
@@ -325,8 +316,7 @@ interface sankeyLinks {
 interface sankeyData {
   name: string;
   value: number[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  itemStyle: any;
+  itemStyle: Record<string, string>;
 }
 </script>
 
