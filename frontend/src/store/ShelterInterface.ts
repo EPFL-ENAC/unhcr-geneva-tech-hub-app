@@ -171,6 +171,8 @@ export const materialsInputs: MaterialsInputs = {
       key: "embodied_carbon",
       label: "Embodied CO2e coefficient",
       suffix: UnitsRef.carbon,
+      conditionKey: "unit",
+      conditionValue: "KG",
       optional: true,
       suffix_hint:
         "if left blank, material excluded from environmental performance calculations",
@@ -179,6 +181,8 @@ export const materialsInputs: MaterialsInputs = {
       type: "number",
       key: "embodied_water",
       label: "Embodied water coefficient",
+      conditionKey: "unit",
+      conditionValue: "KG",
       suffix: UnitsRef.water,
       optional: true,
       suffix_hint:

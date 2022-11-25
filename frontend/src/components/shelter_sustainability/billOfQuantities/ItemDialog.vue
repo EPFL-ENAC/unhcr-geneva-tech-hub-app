@@ -62,7 +62,7 @@
               <v-col cols="12" sm="6" md="6">
                 <v-select
                   v-model="localItem.materialId"
-                  :items="materials"
+                  :items="materialsWithoutOther"
                   label="Material"
                   item-text="text"
                   item-value="value"
@@ -71,7 +71,32 @@
                   required
                   :rules="rules"
                   @input="resetLocalItemFormId"
-                />
+                >
+                  <template #label>
+                    <div
+                      v-if="localItem.materialId === 'Other'"
+                      class="v-select__selection v-select__selections"
+                    >
+                      Other
+                    </div>
+                    <div v-else>Material</div>
+                  </template>
+                  <template #append-item>
+                    <v-divider class="mb-2"></v-divider>
+                    <v-list-item
+                      ripple
+                      :class="`${
+                        localItem.materialId === 'Other'
+                          ? ' v-list-item primary--text v-list-item--active v-list-item--link theme--light v-list-item--highlighted'
+                          : ''
+                      }`"
+                      @mousedown.prevent
+                      @click="toggleOtherMaterial"
+                    >
+                      <v-list-item-content> Other </v-list-item-content>
+                    </v-list-item>
+                  </template>
+                </v-select>
               </v-col>
               <v-col
                 v-if="localItem.materialId !== 'Other'"
@@ -103,7 +128,9 @@
                   v-model="localItem.formId"
                   :disabled="!localItem.materialId"
                   :items="currentMaterialForms"
-                  label="Form name"
+                  :label="`${
+                    localItem.materialId == 'Other' ? 'Material' : 'Form'
+                  } name`"
                   item-text="form"
                   item-value="_id"
                   name="type"
@@ -115,16 +142,6 @@
               </v-col>
             </v-row>
 
-            <v-row v-else-if="localItem.itemType === 'Other'">
-              <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                  v-model="localItem.name"
-                  label="Item name"
-                  required
-                  :rules="rules"
-                ></v-text-field>
-              </v-col>
-            </v-row>
             <!-- Unit and Quantity for Labour/Material/Other-->
             <v-row v-if="localItem.itemType">
               <v-col v-if="!itemUnitsDisabled" cols="12" sm="6" md="6">
@@ -184,7 +201,12 @@
                   @input="computeCost"
                 />
                 <form-item-component
-                  v-else
+                  v-else-if="
+                    !shapeItem.conditionKey ||
+                    (shapeItem.conditionKey &&
+                      localItem[shapeItem.conditionKey] ===
+                        shapeItem.conditionValue)
+                  "
                   v-model="localItem[shapeItem.key]"
                   v-bind="shapeItem"
                   :messages="
@@ -298,7 +320,6 @@ import { mapActions, mapGetters } from "vuex";
       "setItem",
       "setItemToDefaultLabour",
       "setItemToDefaultMaterial",
-      "setItemToDefaultOther",
       "closeEditDialog",
       "setEditDialog",
       "setItem",
@@ -318,7 +339,6 @@ export default class DeleteItemDialog extends Vue {
   saveItem!: (item: Item) => Promise<void>;
   setItemToDefaultLabour!: () => void;
   setItemToDefaultMaterial!: () => void;
-  setItemToDefaultOther!: () => void;
   $refs!: {
     form: VForm;
   };
@@ -332,7 +352,7 @@ export default class DeleteItemDialog extends Vue {
   getDoc!: (id: string) => Promise<ShelterTransport>;
 
   formValid = false;
-  itemTypes = ["Material", "Labour", "Other"];
+  itemTypes = ["Material", "Labour"];
   labourUnits = ["Hour", "Day", "Lump sum"];
   otherUnits = otherUnits;
   workerTypes = ["Skilled", "Unskilled"];
@@ -345,6 +365,10 @@ export default class DeleteItemDialog extends Vue {
 
   readonly pluralRules = new Intl.PluralRules("en-US");
   readonly UnitsRef = UnitsRef;
+
+  public get materialsWithoutOther(): string[] {
+    return this.materials.filter((el: string) => el != "Other");
+  }
   private pluralize(count: number, singular: string, plural: string) {
     const grammaticalNumber = this.pluralRules.select(count);
     switch (grammaticalNumber) {
@@ -368,10 +392,7 @@ export default class DeleteItemDialog extends Vue {
         );
       }
     }
-    if (
-      this.localItem.itemType === "Material" ||
-      this.localItem.itemType === "Other"
-    ) {
+    if (this.localItem.itemType === "Material") {
       const item = this.localItem as Material;
       const unitName = UnitsRef[item.unit as UnitsMaterial];
       if (item.unit === "PCE") {
@@ -405,15 +426,13 @@ export default class DeleteItemDialog extends Vue {
     if (this.localItem.itemType === "Material") {
       return this.currentItem?.units ?? [];
     }
-    if (this.localItem.itemType === "Other") {
-      return this.otherUnits;
-    }
     return [];
   }
   public get itemUnitsDisabled(): boolean {
     if (this.localItem.itemType === "Material") {
       const item = this.localItem as Material;
-      return !item.formId;
+      // find the good condition to show when  && item.materialId !== "Other"
+      return !item.formId && item.materialId !== "Other";
     }
     return false;
   }
@@ -504,6 +523,11 @@ export default class DeleteItemDialog extends Vue {
     if (this.localItem.itemType === "Material") {
       const item = this.localItem as Material;
       const { shape } = this.currentItem ?? { shape: "UNDEFINED" };
+      if (item.materialId === "Other") {
+        // if other we don't want anything else
+        return "OTHER";
+        // return item.unit as FormTypeMaterial;
+      }
       if (item.formId && shape) {
         if (item.unit && special.indexOf(item.unit) !== -1) {
           return `${item.unit}_${shape}` as FormTypeMaterial;
@@ -586,7 +610,10 @@ export default class DeleteItemDialog extends Vue {
           newValue.embodiedCarbonTotal = newValue.embodiedCarbonProduction;
         }
         // overide env performance if embodied_carbon is undefined
-        if (materialId === "Other" && embodied_carbon === 0) {
+        if (
+          materialId === "Other" &&
+          (embodied_carbon === 0 || newValue.unit !== "KG")
+        ) {
           newValue.embodiedCarbonTotal = 0;
           newValue.embodiedCarbonTransport = 0;
         }
@@ -641,12 +668,19 @@ export default class DeleteItemDialog extends Vue {
       this.setItemToDefaultLabour();
     } else if (newValue === "Material") {
       this.setItemToDefaultMaterial();
-    } else if (newValue === "Other") {
-      this.setItemToDefaultOther();
     }
     // set default country
     this.localItem.source = this.shelter.location_country;
     this.validate();
+  }
+
+  public toggleOtherMaterial(): void {
+    if (this.localItem.itemType === "Material") {
+      const localMaterial = this.localItem as Material;
+      localMaterial.materialId = "Other";
+      this.localItem = localMaterial;
+      this.resetLocalItemFormId();
+    }
   }
 
   private setLocalItem(value: Item) {

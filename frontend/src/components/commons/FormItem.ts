@@ -16,7 +16,8 @@ export type FormItem<K = string, V = string> =
   | SelectFormItem<K, V>
   | ComboboxFormItem<K>
   | RangeFormItem<K>
-  | CountryFormItem<K>;
+  | CountryFormItem<K>
+  | ConditionalFormItem<K>;
 
 interface AbstractFormItem<K> {
   key: K;
@@ -70,6 +71,11 @@ interface RangeFormItem<K> extends AbstractFormItem<K> {
 
 interface CountryFormItem<K> extends AbstractFormItem<K> {
   type: "country";
+}
+
+interface ConditionalFormItem<K> extends NumberFormItem<K> {
+  conditionKey: string;
+  conditionValue: string;
 }
 
 export interface BooleanOptions {

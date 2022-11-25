@@ -22,7 +22,6 @@ import {
   TitleOption,
   TooltipOption,
 } from "echarts/types/dist/shared";
-import { kebabCase } from "lodash";
 import VChart from "vue-echarts";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
@@ -70,12 +69,7 @@ export default class GraphTree extends Vue {
     if (!localMaterialMap || Object.keys(localMaterialMap).length == 0) {
       return [];
     }
-    // to generate css
-    Object.values(this.materialMap).map((x) =>
-      console.log(`.${kebabCase(x._id)} {
-        background-color: ${x.color}
-      }`)
-    );
+
     return this.itemsWithoutTotal.map((item: MaterialTree) => {
       const currentColors = [
         ...(this.materialColors[item.materialId ?? ""] ?? []),
