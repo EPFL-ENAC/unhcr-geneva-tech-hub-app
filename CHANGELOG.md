@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.3.0...v0.3.1) (2022-11-25)
+
+
+### Features
+
+* **shelter:** add basic number of individual shelter ui for boq ([8ebe561](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/8ebe561133bbcbb9a51d27f63a03b481746a425e)), closes [#97](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/97)
+* **shelter:** add css colors for materials and form ([29c024e](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/29c024e50b356c78d0c170eefffca3ae74f6769c))
+* **shelter:** add new graphs for environmental performance ([cd1c82f](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/cd1c82f8a91152a62161c6c19f436ea5eb6cda99))
+* **shelter:** compute multiple shelter for boq and scorecard ([c90a233](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c90a233174241e909dbf4bacd4bb2885d0a60dfd))
+* **shelter:** merge behavior for the two others ([b7d2db5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/b7d2db5e79450da2fb1962e28afa405fcd9b5cd6)), closes [#116](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/116)
+* **shelter:** remove console.log and add readonly ([d4e581f](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d4e581fa53db1410dd4c4366888c391c25da7f69))
+* **shelter:** replace generated colors by fixed colors for materials ([f8a76d8](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f8a76d8afb39baefe954e45036069126c3ca8f9b)), closes [#131](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/131)
+* **shelter:** replace Perf by Impact ([f7c71f5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f7c71f548062928dc88bb276462cf70a4b678036)), closes [#140](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/140)
+
+
+### Bug Fixes
+
+* **ghg:** correct formulas for wash trucking CO2 emmision ([e349039](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/e349039f706f0d11cc68fdc0e8e64e3636d38d1c)), closes [#135](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/135)
+* **shelter:** add echart types to graphTree ([8338235](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/8338235bc337c9dbfb3352a0edf45800e9d3cd5b))
+* **shelter:** correct suggestion made on pull request [#137](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/137) ([63c6943](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/63c69432ffded57e012e5eb7c0455a322fbc799d))
+* **shelter:** keep selected shelter in filter [#84](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/84) ([834b735](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/834b73565a9b415ffc495e123d5bbe17524d3fb0))
+* **shelter:** replace Select years, country by Filter years ([3b0c2ce](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/3b0c2ce8344a11e62a7fb83fd3b47a3b5b70291d)), closes [#133](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/133)
+* **shelter:** replace Total cost by Item cost ([5a128b6](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/5a128b6786cb4d6ee49fc41f065063506ac36d9d)), closes [#113](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/113)
+
 ## [0.3.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.2.0...v0.3.0) (2022-11-08)
 
 
