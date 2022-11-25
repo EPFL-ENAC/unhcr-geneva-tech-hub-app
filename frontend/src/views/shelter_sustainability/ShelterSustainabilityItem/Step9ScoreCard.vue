@@ -16,7 +16,7 @@
               v-model="shelterFilters.selectedShelters"
               clearable
               :items="listOfShelterType"
-              label="Select Shelter type"
+              label="Filter Shelter types"
               name="type"
               type="string"
               multiple
@@ -28,7 +28,7 @@
               :items="countries"
               clearable
               :menu-props="{ maxHeight: '300' }"
-              label="Select country"
+              label="Filter countries"
               multiple
               persistent-hint
             >
@@ -47,7 +47,7 @@
               v-model="shelterFilters.selectedYears"
               clearable
               :items="years"
-              label="Select years"
+              label="Filter years"
               name="type"
               type="string"
               multiple
@@ -118,6 +118,7 @@ import { infoTooltipText } from "@/components/shelter_sustainability/infoTooltip
 import {
   listOfShelterType,
   ScoreCard,
+  ScoreCardWithShelterInfo,
   Shelter,
   ShelterType,
 } from "@/store/ShelterInterface";
@@ -139,7 +140,7 @@ import {
 } from "echarts/components";
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
-import { CallbackDataParams, EChartsOption } from "echarts/types/dist/shared";
+import { EChartsOption } from "echarts/types/dist/shared";
 import PouchDB from "pouchdb";
 import VChart from "vue-echarts";
 import { Component, Vue } from "vue-property-decorator";
@@ -183,11 +184,11 @@ export default class Step8ScoreCard extends Vue {
   shelter!: Shelter;
   countries!: [];
   years!: [];
-  getScorecards!: (id: string) => Promise<ScoreCard[]>;
+  getScorecards!: (id: string) => Promise<ScoreCardWithShelterInfo[]>;
   getYears!: () => Promise<null>;
   getCountries!: () => Promise<null>;
   db!: SyncDatabase<Shelter> | null;
-  scorecards!: ScoreCard[];
+  scorecards!: ScoreCardWithShelterInfo[];
 
   listOfShelterType = listOfShelterType;
   shelterFilters: ShelterFilters = {
@@ -298,43 +299,32 @@ export default class Step8ScoreCard extends Vue {
     return this.shelter?.scorecard ?? ({} as ScoreCard);
   }
 
-  get scorecardsFiltered(): ScoreCard[] {
+  get scorecardsFiltered(): ScoreCardWithShelterInfo[] {
+    const { selectedShelters, selectedYears, selectedCountries } =
+      this.shelterFilters;
     return this.scorecards
-      .filter((scoreCard: ScoreCard) => {
-        // shelter type
-        if (
-          this.shelterFilters.selectedShelters.length > 0 &&
-          scoreCard.shelter_type
-        ) {
-          return (
-            this.shelterFilters.selectedShelters.indexOf(
-              scoreCard.shelter_type
-            ) !== -1
-          );
-        }
-        return true;
+      .filter((scoreCard: ScoreCardWithShelterInfo) => {
+        return (
+          selectedShelters.length == 0 ||
+          selectedShelters.includes(scoreCard.shelter_type) ||
+          scoreCard.id == this.shelter._id
+        );
       })
-      .filter((scoreCard: ScoreCard) => {
-        // year
-        if (this.shelterFilters.selectedYears.length > 0) {
-          return (
-            this.shelterFilters.selectedYears.indexOf(
-              scoreCard?.created_at?.substring(0, 4) ?? ""
-            ) !== -1
-          );
-        }
-        return true;
+      .filter((scoreCard: ScoreCardWithShelterInfo) => {
+        return (
+          selectedYears.length == 0 ||
+          selectedYears.includes(
+            scoreCard?.created_at?.substring(0, 4) ?? ""
+          ) ||
+          scoreCard.id == this.shelter._id
+        );
       })
-      .filter((scoreCard: ScoreCard) => {
-        // country
-        if (this.shelterFilters.selectedCountries.length > 0) {
-          return (
-            this.shelterFilters.selectedCountries.indexOf(
-              scoreCard?.location_country ?? ""
-            ) !== -1
-          );
-        }
-        return true;
+      .filter((scoreCard: ScoreCardWithShelterInfo) => {
+        return (
+          selectedCountries.length == 0 ||
+          selectedCountries.includes(scoreCard?.location_country ?? "") ||
+          scoreCard.id == this.shelter._id
+        );
       });
   }
 
@@ -370,7 +360,7 @@ export default class Step8ScoreCard extends Vue {
         coordinateSystem: "singleAxis",
         type: "scatter",
         data:
-          scorecards?.map((item: ScoreCard) => {
+          scorecards?.map((item: ScoreCardWithShelterInfo) => {
             const scor = item as ScoreCardScatter;
             const key = config.id as ScoreCardsKey;
             const shelter_type = scor.shelter_type as colorType;
@@ -427,10 +417,6 @@ export default class Step8ScoreCard extends Vue {
     }));
   }
 
-  click(params: CallbackDataParams): void {
-    console.log(params);
-  }
-
   changes!: PouchDB.Core.Changes<Shelter> | undefined;
   mounted(): void {
     // we don't init/close the db, it's handled by parent route component
@@ -460,7 +446,7 @@ export default class Step8ScoreCard extends Vue {
   }
 }
 
-interface ScoreCardScatter extends ScoreCard {
+interface ScoreCardScatter extends ScoreCardWithShelterInfo {
   selected: boolean;
   id: string;
 }

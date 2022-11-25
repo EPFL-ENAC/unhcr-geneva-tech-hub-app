@@ -12,6 +12,7 @@ import { RootState } from ".";
 
 interface BoqState {
   items: Item[];
+  items_individual_shelter: number;
   editedItem: Item;
   editedIndex: number;
   isItemDialogOpen: boolean;
@@ -50,6 +51,7 @@ function getDefaultOther(): Item {
 function generateState(): BoqState {
   return {
     items: [],
+    items_individual_shelter: 1,
     editedItem: getDefaultItem() as Item,
     editedIndex: -1,
     isItemDialogOpen: false,
@@ -60,6 +62,7 @@ function generateState(): BoqState {
 /** Getters */
 const getters: GetterTree<BoqState, RootState> = {
   items: (s): Item[] | null => s.items,
+  items_individual_shelter: (s): number => s.items_individual_shelter ?? 1,
   editedItem: (s): Item => s.editedItem,
   editedIndex: (s): number => s.editedIndex,
   isItemDialogOpen: (s): boolean => s.isItemDialogOpen, // works for new & edit
@@ -68,6 +71,9 @@ const getters: GetterTree<BoqState, RootState> = {
 
 /** Mutations */
 const mutations: MutationTree<BoqState> = {
+  SET_ITEMS_INDIVIDUAL_SHELTER(state: BoqState, v: number): void {
+    state.items_individual_shelter = v ?? 1;
+  },
   SET_ITEMS(state: BoqState, items: Item[]): void {
     state.items = items ?? [];
   },
@@ -107,6 +113,14 @@ const mutations: MutationTree<BoqState> = {
 
 /** Action */
 const actions: ActionTree<BoqState, RootState> = {
+  setItemsIndividualShelter: (
+    context: ActionContext<BoqState, RootState>,
+    numberOfShelter: number
+  ) => {
+    if (context.state.items_individual_shelter !== numberOfShelter) {
+      context.commit("SET_ITEMS_INDIVIDUAL_SHELTER", numberOfShelter);
+    }
+  },
   setItems: (context: ActionContext<BoqState, RootState>, items: Item[]) => {
     context.commit("SET_ITEMS", items);
   },

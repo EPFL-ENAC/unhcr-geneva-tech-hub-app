@@ -241,6 +241,11 @@ const actions: ActionTree<ShelterState, RootState> = {
           context.state.shelter.items,
           { root: true }
         );
+        context.dispatch(
+          "ShelterBillOfQuantitiesModule/setItemsIndividualShelter",
+          context.state.shelter.items_individual_shelter,
+          { root: true }
+        );
         return context.state.shelter;
       });
     } else {

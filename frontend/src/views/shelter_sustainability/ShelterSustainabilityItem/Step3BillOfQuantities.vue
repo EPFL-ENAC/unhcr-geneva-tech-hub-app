@@ -15,7 +15,25 @@
         <v-divider></v-divider>
       </v-col>
     </v-row>
-
+    <v-row>
+      <v-col>
+        <v-banner>
+          <h2 class="py-3">Scope</h2>
+          <p>
+            Number of individual shelters covered by the Bill of Quantities.
+          </p>
+          <template #actions>
+            <v-text-field
+              :value="items_individual_shelter"
+              label="Number of individual shelters"
+              type="number"
+              :min="1"
+              @change="individualShelterChange"
+            ></v-text-field>
+          </template>
+        </v-banner>
+      </v-col>
+    </v-row>
     <v-row>
       <v-col>
         <v-sheet v-if="items" elevation="2" rounded>
@@ -154,6 +172,17 @@
                   </td>
                   <td colspan="1"></td>
                 </tr>
+                <tr>
+                  <td colspan="1">Total per Shelter</td>
+                  <td colspan="6"></td>
+                  <td colspan="1" class="text-right">
+                    {{
+                      (totalCost / items_individual_shelter) |
+                        formatNumber(2, 2)
+                    }}
+                  </td>
+                  <td colspan="1"></td>
+                </tr>
               </tfoot>
             </template>
           </v-data-table>
@@ -178,6 +207,7 @@ import { mapActions, mapGetters } from "vuex";
   computed: {
     ...mapGetters("ShelterBillOfQuantitiesModule", [
       "items",
+      "items_individual_shelter",
       "isItemDialogOpen",
     ]),
     ...mapGetters("SheltersMaterialModule", ["materialMap"]),
@@ -185,6 +215,7 @@ import { mapActions, mapGetters } from "vuex";
   methods: {
     ...mapActions("ShelterBillOfQuantitiesModule", [
       "setItems",
+      "setItemsIndividualShelter",
       "duplicate",
       "openNewItemDialog",
       "openEditItemDialog",
@@ -206,6 +237,16 @@ import { mapActions, mapGetters } from "vuex";
 export default class Step3Materials extends Vue {
   @Prop({ type: [Object], required: true })
   shelter!: Shelter;
+  items_individual_shelter!: number;
+  items!: Item[];
+  isItemDialogOpen!: boolean;
+  setItems!: (items: Item[]) => void;
+  setItemsIndividualShelter!: (v: number) => void;
+  updateDoc!: (doc: Shelter) => void;
+  duplicate!: (item: Item) => void;
+  syncDB!: () => null;
+  closeDB!: () => Promise<null>;
+  getAllDocs!: () => Promise<null>;
 
   public get localShelter(): Shelter {
     return cloneDeep(this.shelter);
@@ -214,16 +255,12 @@ export default class Step3Materials extends Vue {
   public set localShelter(newShelter: Shelter) {
     this.$emit("update:shelter", newShelter);
   }
-
-  items!: Item[];
-  isItemDialogOpen!: boolean;
-  setItems!: (items: Item[]) => void;
-  updateDoc!: (doc: Shelter) => void;
-  duplicate!: (item: Item) => void;
-  syncDB!: () => null;
-  closeDB!: () => Promise<null>;
-  getAllDocs!: () => Promise<null>;
-
+  public individualShelterChange(value: string): void {
+    const valueInteger = parseInt(value, 10);
+    if (this.items_individual_shelter !== valueInteger) {
+      this.setItemsIndividualShelter(valueInteger);
+    }
+  }
   countriesMap = countriesMap;
   infoTooltipText = infoTooltipText;
   headers = [
@@ -239,12 +276,17 @@ export default class Step3Materials extends Vue {
     { text: "Unit", value: "unit" },
     { text: "Quantity", value: "quantity", align: "right" },
     { text: "Unit cost (USD)", value: "unitCost", align: "right" },
-    { text: "Total cost (USD)", value: "totalCost", align: "right" },
+    { text: "Item cost (USD)", value: "totalCost", align: "right" },
     { text: "", value: "actions", sortable: false, width: "140px" },
   ];
 
   public submitForm(): void {
     this.$set(this.localShelter, "items", this.items);
+    this.$set(
+      this.localShelter,
+      "items_individual_shelter",
+      this.items_individual_shelter
+    );
     this.localShelter = Object.assign({}, this.localShelter);
   }
 
@@ -255,6 +297,7 @@ export default class Step3Materials extends Vue {
         "ShelterBillOfQuantitiesModule/DELETE_ITEM",
         "ShelterBillOfQuantitiesModule/DUPLICATE_ITEM",
         "ShelterBillOfQuantitiesModule/UPDATE_ITEM",
+        "ShelterBillOfQuantitiesModule/SET_ITEMS_INDIVIDUAL_SHELTER",
       ];
       if (shouldUpdate.includes(mutation.type)) {
         this.submitForm();

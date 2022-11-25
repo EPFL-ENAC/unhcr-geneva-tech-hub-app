@@ -1,5 +1,6 @@
 import { MaterialShape } from "@/store/ShelterInterface";
 import { SyncDatabase } from "@/utils/couchdb";
+import { materialColors } from "@/utils/materialColors";
 import {
   ActionContext,
   ActionTree,
@@ -41,6 +42,7 @@ export interface ShelterMaterial {
   units: string[]; //['KG', 'M2', 'PCE']
   shape: MaterialShape;
   parameters?: Record<string, number>;
+  color?: string; // hsl(34, 10%, 10%);
   _id: string; // "ALU-CPA_"
 }
 
@@ -169,9 +171,16 @@ const actions: ActionTree<SheltersMaterialState, RootState> = {
 
   setMaterialForm: (
     context: ActionContext<SheltersMaterialState, RootState>,
-    value
+    materialFormList
   ) => {
-    if (value) {
+    if (materialFormList) {
+      const copyColors = JSON.parse(JSON.stringify(materialColors));
+      const value = materialFormList.map((materialForm: ShelterMaterial) => {
+        // we don't shift but pop, because =>
+        // we want to keep the first value of array for the material itself
+        materialForm.color = copyColors[materialForm.material].pop();
+        return materialForm;
+      }) as ShelterMaterial[];
       const materials = Array.from(
         new Set(value.map((x: ShelterMaterial) => x.material))
       );

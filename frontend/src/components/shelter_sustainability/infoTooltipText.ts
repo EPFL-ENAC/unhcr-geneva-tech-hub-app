@@ -15,7 +15,7 @@ export const infoTooltipText = {
     text: "Input information about all materials and labour from the Bill of Quantities (BOQ). Options include materials, forms of materials, and units that are commonly used in shelter designs and associated BOQs (let us know if we’ve missed a material or format that should be included).",
   },
   ShelterSustainabilityStep5: {
-    title: "Environmental Performance",
+    title: "Environmental Impact",
     ready: true,
     text: "Presents information about material use, embodied carbon, embodied water, habitat risks, and reuse-recycling considerations for each material listed in the BOQ. Coefficients used to calculate embodied carbon associated with production and transportation and embodied water (and associated data sources) are presented in the Reference Data section.",
   },

@@ -62,7 +62,7 @@
                   :items="countries"
                   clearable
                   :menu-props="{ maxHeight: '300' }"
-                  label="Select country"
+                  label="Filter countries"
                   multiple
                   persistent-hint
                 >
@@ -81,7 +81,7 @@
                   v-model="shelterFilters.selectedYears"
                   clearable
                   :items="years"
-                  label="Select years"
+                  label="Filter years"
                   name="type"
                   type="string"
                   multiple
