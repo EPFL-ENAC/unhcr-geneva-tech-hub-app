@@ -530,7 +530,6 @@ export default class DeleteItemDialog extends Vue {
       }
       if (item.formId && shape) {
         if (item.unit && special.indexOf(item.unit) !== -1) {
-          console.log(`${item.unit}_${shape}`);
           return `${item.unit}_${shape}` as FormTypeMaterial;
         }
         return item.unit as FormTypeMaterial;
