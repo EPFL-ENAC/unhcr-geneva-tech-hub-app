@@ -265,7 +265,7 @@ export default class Step3Materials extends Vue {
       this.setItemsIndividualShelter(valueInteger);
     }
   }
-  UnitsRef = UnitsRef;
+  readonly UnitsRef = UnitsRef;
   countriesMap = countriesMap;
   infoTooltipText = infoTooltipText;
   headers = [
