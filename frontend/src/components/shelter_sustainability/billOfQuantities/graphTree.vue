@@ -189,8 +189,7 @@ export default class GraphTree extends Vue {
     const v = params.data.value[0];
     const unit = params.data.value[1];
     const name = params.treePathInfo
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .map((x: any) => x.name)
+      .map((x: TreePathInfo) => x.name)
       .join(" — ")
       .substr(3);
     return `</div>${name}: ${formatNumber(v)} ${unit}</div>`;
@@ -318,6 +317,21 @@ interface sankeyData {
   value: number[];
   itemStyle: Record<string, string>;
 }
+
+interface TreePathInfo {
+  name: string;
+  dataIndex: number;
+  value: OptionDataItem;
+}
+
+declare type OptionDataItem =
+  | OptionDataValue
+  | Dictionary<OptionDataValue>
+  | OptionDataValue[];
+declare type OptionDataValue = string | number;
+declare type Dictionary<T> = {
+  [key: string]: T;
+};
 </script>
 
 <style></style>
