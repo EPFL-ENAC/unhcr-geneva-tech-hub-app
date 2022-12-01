@@ -18,7 +18,23 @@ export default {
       name: "ShelterSustainabilityList",
       component: () =>
         import(
-          /* webpackChunkName: "shelter_sustainability" */ "../views/shelter_sustainability/ShelterSustainabilityList.vue"
+          /* webpackChunkName: "shelter_sustainability-list" */ "../views/shelter_sustainability/ShelterSustainabilityList.vue"
+        ),
+    },
+    {
+      path: "compare",
+      name: "ShelterSustainabilityCompare",
+      component: () =>
+        import(
+          /* webpackChunkName: "shelter_sustainability-compare" */ "../views/shelter_sustainability/ShelterSustainabilityCompare.vue"
+        ),
+    },
+    {
+      path: "overview",
+      name: "ShelterSustainabilityOverview",
+      component: () =>
+        import(
+          /* webpackChunkName: "shelter_sustainability-overview" */ "../views/shelter_sustainability/ShelterSustainabilityOverview.vue"
         ),
     },
     {
@@ -64,7 +80,7 @@ export default {
           meta: { step: 5 },
           component: () =>
             import(
-              /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step5EnvironmentalPerformance.vue"
+              /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step5EnvironmentalImpact.vue"
             ),
         },
         {

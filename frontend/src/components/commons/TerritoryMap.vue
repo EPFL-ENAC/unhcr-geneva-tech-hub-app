@@ -82,6 +82,7 @@ export default class TerritoryMap extends Vue {
   shelterColors = shelterColors;
   selectedZoomFactor = 5;
 
+  // duplicate of shelterIcons in shelterTypeColors because of $ sign
   shelterIcons = {
     Emergency: "mdiHomeVariantOutline",
     Transitional: "mdiHomeOutline",
@@ -166,20 +167,6 @@ export default class TerritoryMap extends Vue {
 ::v-deep.leaflet-container.crosshair-cursor-enabled {
   cursor: crosshair;
 }
-// /* Change cursor when mousing over clickable layer */
-// ::v-deep.leaflet-clickable {
-//   cursor: pointer !important;
-// }
-// /* Change cursor when over entire map */
-// ::v-deep.leaflet-container {
-//   cursor: crosshair !important;
-// }
-::v-deep .customIcon {
-  &::before {
-    font-size: 24px;
-  }
-}
-
 ::v-deep .c-blue {
   color: var(--c-blue);
   fill: var(--c-blue);
@@ -193,6 +180,12 @@ export default class TerritoryMap extends Vue {
 ::v-deep .c-grey {
   color: var(--c-grey);
   fill: var(--c-grey);
+}
+
+::v-deep .customIcon {
+  &::before {
+    font-size: 24px;
+  }
 }
 ::v-deep.leaflet-container.territory {
   z-index: 1;

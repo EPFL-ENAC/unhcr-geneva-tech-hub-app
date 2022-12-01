@@ -39,7 +39,7 @@
                 <v-checkbox
                   v-for="(shelterType, $index) in listOfShelterType"
                   :key="$index"
-                  v-model="shelterFilters.selectedShelters"
+                  v-model="shelterFilters.selectedShelterTypes"
                   :label="shelterType"
                   :value="shelterType"
                   dense
@@ -102,6 +102,19 @@
                 >
                   <v-icon left>$mdiPlusBox</v-icon>
                   New shelter
+                </v-btn>
+                <v-btn
+                  :disabled="selectedShelters.length === 0"
+                  class="float-right"
+                  color="primary"
+                  text
+                  :to="{
+                    name: 'ShelterSustainabilityCompare',
+                    query: { ids: selectedShelters.join('|') },
+                  }"
+                >
+                  <v-icon left>$mdiScale</v-icon>
+                  Compare shelter
                 </v-btn>
               </v-col>
             </v-row>
@@ -178,7 +191,11 @@
                           <v-col :xs="12" :sm="4" class="text-caption">
                             Updated: {{ project.updated_at | formatDate }}
                           </v-col>
-                          <v-col :xs="12" :sm="4" class="d-flex justify-end">
+                          <v-col
+                            :xs="12"
+                            :sm="4"
+                            class="d-flex align-center justify-end"
+                          >
                             <v-tooltip bottom>
                               <template #activator="{ on, attrs }">
                                 <v-btn
@@ -217,6 +234,24 @@
                                 </v-btn>
                               </template>
                               <span>Delete shelter</span>
+                            </v-tooltip>
+                            <v-tooltip bottom>
+                              <template #activator="{ on, attrs }">
+                                <v-checkbox
+                                  v-model="selectedShelters"
+                                  :readonly="
+                                    selectedShelters.length >= 3 &&
+                                    !selectedShelters.includes(project._id)
+                                  "
+                                  :value="project._id"
+                                  v-bind="attrs"
+                                  class="better-click"
+                                  @change="updateQueryIds"
+                                  @click.stop.prevent=""
+                                  v-on="on"
+                                ></v-checkbox>
+                              </template>
+                              <span>Select shelter for comparison</span>
                             </v-tooltip>
                           </v-col>
                         </v-row>
@@ -257,7 +292,11 @@ import {
 } from "@/store/ShelterInterface";
 import { SyncDatabase } from "@/utils/couchdb";
 import { countriesMap } from "@/utils/countriesAsList";
-import { shelterColors } from "@/views/shelter_sustainability/shelterTypeColors";
+import {
+  shelterColors,
+  shelterIcons,
+} from "@/views/shelter_sustainability/shelterTypeColors";
+import { isString } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
 
@@ -288,7 +327,7 @@ export default class ProjectList extends Vue {
 
   shelterFilters: ShelterFilters = {
     searchName: "",
-    selectedShelters: [],
+    selectedShelterTypes: [],
     selectedYears: [],
     selectedCountries: [],
   };
@@ -309,6 +348,7 @@ export default class ProjectList extends Vue {
   listOfShelterType = listOfShelterType;
   shelterColors = shelterColors;
   createProjectFormValid = true;
+  selectedShelters: string[] = [];
   rules = [
     (v: string): boolean | string => !!v || `A name is required`,
     (v: string): boolean | string =>
@@ -317,11 +357,7 @@ export default class ProjectList extends Vue {
 
   countriesMap = countriesMap;
 
-  shelterIcons = {
-    Emergency: "$mdiHomeVariantOutline",
-    Transitional: "$mdiHomeOutline",
-    Durable: "$mdiHome",
-  };
+  shelterIcons = shelterIcons;
 
   dialogDelete = false;
   deleteId = "";
@@ -371,9 +407,9 @@ export default class ProjectList extends Vue {
       })
       .filter((shelter: Shelter) => {
         // shelter type
-        if (this.shelterFilters.selectedShelters.length > 0) {
+        if (this.shelterFilters.selectedShelterTypes.length > 0) {
           return (
-            this.shelterFilters.selectedShelters.indexOf(
+            this.shelterFilters.selectedShelterTypes.indexOf(
               shelter.shelter_type
             ) !== -1
           );
@@ -411,6 +447,12 @@ export default class ProjectList extends Vue {
   public addProject(): void {
     this.shelterDialog = true;
   }
+  public updateQueryIds(): void {
+    this.$router.replace({
+      path: this.$route.path,
+      query: { ids: this.selectedShelters.join("|") },
+    });
+  }
 
   mounted(): void {
     this.syncDB();
@@ -422,6 +464,11 @@ export default class ProjectList extends Vue {
 
     // reload on db change
     this.db?.onChange(this.getShelters);
+
+    const queryIds = this.$route.query.ids;
+    if (isString(queryIds)) {
+      this.selectedShelters = queryIds.length > 0 ? queryIds.split("|") : [];
+    }
   }
 
   destroyed(): void {
@@ -431,7 +478,7 @@ export default class ProjectList extends Vue {
 
 interface ShelterFilters {
   searchName: string | null;
-  selectedShelters: ShelterType[];
+  selectedShelterTypes: ShelterType[];
   selectedYears: string[];
   selectedCountries: string[];
 }
@@ -523,14 +570,17 @@ interface ShelterFilters {
 <style scoped lang="scss">
 ::v-deep .c-blue {
   color: var(--c-blue);
+  fill: var(--c-blue);
 }
 
 ::v-deep .c-brown {
   color: var(--c-brown);
+  fill: var(--c-brown);
 }
 
 ::v-deep .c-grey {
   color: var(--c-grey);
+  fill: var(--c-grey);
 }
 .custom-checkboxes {
   gap: 12px;
