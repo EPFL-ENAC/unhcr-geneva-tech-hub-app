@@ -238,7 +238,7 @@ export default class GraphTree extends Vue {
           itemStyle: {
             borderWidth: 1,
             borderColor: "rgba(150,160,255,.5)",
-            borderRadius: 7,
+            // borderRadius: 7,
           },
           label: {
             show: false,

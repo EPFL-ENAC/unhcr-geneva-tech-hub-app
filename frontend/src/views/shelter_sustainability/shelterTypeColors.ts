@@ -24,3 +24,9 @@ export const shelterColors = {
     secondary: `rgba(248, 228, 210,${alphaSecondary})`,
   },
 };
+
+export const shelterIcons = {
+  Emergency: "$mdiHomeVariantOutline",
+  Transitional: "$mdiHomeOutline",
+  Durable: "$mdiHome",
+};

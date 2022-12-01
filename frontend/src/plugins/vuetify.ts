@@ -2,7 +2,9 @@ import enacitGhg from "@/components/icons/enacitGhg.vue";
 import enacitShelter from "@/components/icons/enacitShelter.vue";
 // TODO: move icons to each component instead of loading globally
 // It's like this for legacy reasons (we moved away from the custom font paradigm)
-
+// $mdiViewQuilt
+// $mdiChartDonutVariant
+// $mdiChartSankey
 import {
   mdiAccount,
   mdiAccountCircle,
@@ -29,6 +31,7 @@ import {
   mdiHomeGroup,
   mdiHomeOutline,
   mdiHomeVariantOutline,
+  mdiHumanMale,
   mdiInformation,
   mdiInformationOutline,
   mdiLeaf,
@@ -46,6 +49,7 @@ import {
   mdiPlusBox,
   mdiPoll,
   mdiRoomService,
+  mdiScale,
   mdiScoreboard,
   mdiShape,
   mdiShower,
@@ -107,6 +111,7 @@ export default new Vuetify({
       mdiHomeOutline,
       mdiHomeCity,
       mdiHomeGroup,
+      mdiHumanMale,
       mdiLock,
       mdiLeaf,
       mdiLightbulb,
@@ -119,6 +124,7 @@ export default new Vuetify({
       mdiPlusBox,
       mdiPoll,
       mdiRoomService,
+      mdiScale,
       mdiScoreboard,
       mdiShape,
       mdiShower,

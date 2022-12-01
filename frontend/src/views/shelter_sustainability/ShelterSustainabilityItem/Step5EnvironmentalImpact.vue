@@ -183,10 +183,14 @@
             </v-row>
             <v-row>
               <v-col md="12" lg="1" class="shelter-graph-button__container">
+                <div>View</div>
                 <v-radio-group v-model="selectedGraph" mandatory>
-                  <v-radio label="Treemap" value="treemap"></v-radio>
-                  <v-radio label="Sunburst" value="sunburst"></v-radio>
-                  <v-radio label="Sankey" value="sankey"></v-radio>
+                  <v-radio value="treemap"></v-radio>
+                  <v-icon>$mdiViewQuilt</v-icon>
+                  <v-radio value="sunburst"></v-radio>
+                  <v-icon>$mdiChartDonutVariant</v-icon>
+                  <v-radio value="sankey"></v-radio>
+                  <v-icon>$mdiChartSankey</v-icon>
                 </v-radio-group>
               </v-col>
               <v-col lg="11" md="12">
@@ -435,11 +439,11 @@ export default class Step3Materials extends Vue {
   graphTreeOptions = [
     {
       selectedField: "weight",
-      title: "Weight",
+      title: "Material weight",
       unitName: "Kg",
     },
     {
-      title: "Embodied carbon total",
+      title: "Embodied carbon (total)",
       selectedField: "embodiedCarbonTotal",
       unitName: "kgCO2e",
     },

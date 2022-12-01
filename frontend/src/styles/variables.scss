@@ -25,3 +25,19 @@ $body-font-family: "Proxima Nova", "Arial";
 .v-card__title {
   word-break: break-word;
 }
+
+
+.c-blue {
+  color: var(--c-blue);
+  fill: var(--c-blue);
+}
+
+.c-brown {
+  color: var(--c-brown);
+  fill: var(--c-brown);
+}
+
+.c-grey {
+  color: var(--c-grey);
+  fill: var(--c-grey);
+}
