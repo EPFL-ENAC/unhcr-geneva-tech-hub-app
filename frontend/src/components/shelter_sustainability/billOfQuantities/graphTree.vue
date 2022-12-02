@@ -203,6 +203,7 @@ export default class GraphTree extends Vue {
     return {
       trigger: "item",
       confine: false,
+      appendToBody: true,
       formatter: this.tooltipFormatter,
     };
   }

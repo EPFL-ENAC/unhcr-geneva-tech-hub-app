@@ -2,9 +2,6 @@ import enacitGhg from "@/components/icons/enacitGhg.vue";
 import enacitShelter from "@/components/icons/enacitShelter.vue";
 // TODO: move icons to each component instead of loading globally
 // It's like this for legacy reasons (we moved away from the custom font paradigm)
-// $mdiViewQuilt
-// $mdiChartDonutVariant
-// $mdiChartSankey
 import {
   mdiAccount,
   mdiAccountCircle,
@@ -12,6 +9,8 @@ import {
   mdiAccountMultiple,
   mdiBriefcase,
   mdiChartBox,
+  mdiChartDonutVariant,
+  mdiChartSankey,
   mdiCheck,
   mdiCheckboxBlank,
   mdiCheckboxBlankOutline,
@@ -59,6 +58,7 @@ import {
   mdiTankerTruck,
   mdiTrashCanOutline,
   mdiTriangle,
+  mdiViewQuilt,
   mdiWater,
   mdiWaterPump,
   mdiWizardHat,
@@ -101,6 +101,9 @@ export default new Vuetify({
       mdiDownload,
       mdiFlash,
       mdiInformation,
+      mdiViewQuilt,
+      mdiChartDonutVariant,
+      mdiChartSankey,
       mdiInformationOutline,
       mdiLogin,
       mdiLogout,

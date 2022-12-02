@@ -1,7 +1,9 @@
 export const alphaSecondary = 0.6;
 export const alpha = 0.2;
 import { cccmColors } from "@/plugins/vuetify";
-export const shelterColors = {
+import { ShelterType } from "@/store/ShelterInterface";
+
+export const shelterColors: Record<ShelterType, ShelterColor> = {
   Emergency: {
     name: "blue",
     primary: cccmColors.primary, // "#2A87C8" blue unhcr cccm
@@ -24,6 +26,13 @@ export const shelterColors = {
     secondary: `rgba(248, 228, 210,${alphaSecondary})`,
   },
 };
+
+export type ShelterColors = Record<ShelterType, ShelterColor>;
+export interface ShelterColor {
+  name: string;
+  primary: string;
+  secondary: string;
+}
 
 export const shelterIcons = {
   Emergency: "$mdiHomeVariantOutline",

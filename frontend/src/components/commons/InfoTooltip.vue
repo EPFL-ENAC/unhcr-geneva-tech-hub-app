@@ -1,5 +1,9 @@
 <template>
-  <v-tooltip bottom max-width="512">
+  <v-tooltip
+    v-bind="$attrs"
+    :bottom="'bottom' in $attrs ? $attrs['bottom'] : true"
+    :max-width="'max-width' in $attrs ? $attrs['max-width'] : 512"
+  >
     <template #activator="{ on, attrs }">
       <v-icon v-bind="attrs" class="ma-1" v-on="on"
         >$mdiInformationOutline</v-icon
@@ -11,6 +15,6 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-@Component
+@Component({ inheritAttrs: true })
 export default class InfoTooltip extends Vue {}
 </script>
