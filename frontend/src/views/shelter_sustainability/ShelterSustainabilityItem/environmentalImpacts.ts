@@ -9,7 +9,7 @@ export const environmentalImpacts: ScorecardConfig[] = [
       return undefined; // don't know why but it truncates properly at . 2 decimals
     },
     title: "Embodied CO2",
-    unit: "kg-CO2/year/m²",
+    unit: "kgCO2e/year/m²",
     selectedField: "embodiedCarbonTotal",
     selectedFieldUnit: "kgCO2e",
     subpart: true,
@@ -41,14 +41,14 @@ export const environmentalImpacts: ScorecardConfig[] = [
 
   {
     id: "weight",
-    selectedField: "weight",
-    seltectedFieldUnit: "Kg",
     title: "Material efficiency",
     subpart: true,
     min: 0,
     max: function (): undefined {
       return undefined; // don't know why but it truncates properly at . 2 decimals
     },
+    selectedField: "weight",
+    selectedFieldUnit: "Kg",
     unit: "kg/year/m²",
     description:
       "Material efficiency score describes total weight (kg) per year (of intended use) per square meter (of habitable space), enabling comparison across shelters of differing size and durability.",
