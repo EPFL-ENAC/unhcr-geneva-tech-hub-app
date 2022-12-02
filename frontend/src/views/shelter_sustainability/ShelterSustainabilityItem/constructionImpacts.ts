@@ -1,5 +1,6 @@
+import { ScorecardConfig } from "@/views/shelter_sustainability/ShelterSustainabilityItem/generateScorecardOptions";
 import { alpha } from "@/views/shelter_sustainability/shelterTypeColors";
-export default [
+export const constructionImpacts: ScorecardConfig[] = [
   {
     id: "techPerf",
     min: 0,

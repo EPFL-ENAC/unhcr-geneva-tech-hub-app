@@ -3,16 +3,17 @@ export const geometryOtherName = "other";
 export const geometriesUrl = {
   gableHW: "/houses_new/SSC_P1_Shelter-GableHW_220201.png",
   flatRoof: "/houses_new/SSC_P3_Shelter-FlatRoof_220201.png",
-  tukul: "/houses_new/177516466-55a94506-26b4-442e-a80e-0946c1b8835d.png",
   dome: "/houses_new/SSC_P4_Shelter-Dome_220201.png",
-  [geometryOtherName]: "/houses_new/GTH-SSC_Graphics_Typology_Other_5.png",
+  tukul: "/houses_new/SSC_P5_Shelter-Tukul_220201.png",
+  [geometryOtherName]: "/houses_new/SSC_P6_Shelter-Other_220201.png",
 };
 
-export const geometries = [
+export const geometries: Geometry[] = [
   {
     _id: "gableHW", // High wall
     name: "Double-pitch roof (hip or gable) - Regular plan",
     image_url: geometriesUrl.gableHW,
+    image_clean_url: geometriesUrl.gableHW.replace("_new", "_clean"),
     shelter_dimensions: ["L", "W", "H1", "H2"],
     door_dimensions: ["Wd", "Hd"],
     window_dimensions: ["Ww", "Hw", "Hs"],
@@ -28,6 +29,7 @@ export const geometries = [
     _id: "flatRoof",
     name: "Single-pitch roof (inc. flat roof) - Regular plan",
     image_url: geometriesUrl.flatRoof,
+    image_clean_url: geometriesUrl.flatRoof.replace("_new", "_clean"),
     shelter_dimensions: ["L", "W", "H"],
     door_dimensions: ["Wd", "Hd"],
     window_dimensions: ["Ww", "Hw", "Hs"],
@@ -43,6 +45,7 @@ export const geometries = [
     _id: "tukul",
     name: "Conical roof - circular plan",
     image_url: geometriesUrl.tukul,
+    image_clean_url: geometriesUrl.tukul.replace("_new", "_clean"),
     shelter_dimensions: ["W", "H1", "H2"],
     door_dimensions: ["Wd", "Hd"],
     window_dimensions: ["Ww", "Hw", "Hs"],
@@ -70,6 +73,7 @@ export const geometries = [
     _id: "dome",
     name: "Dome - Circle or ellipse plan",
     image_url: geometriesUrl.dome,
+    image_clean_url: geometriesUrl.dome.replace("_new", "_clean"),
     shelter_dimensions: ["L", "W", "H"],
     door_dimensions: ["Wd", "Hd"],
     window_dimensions: ["Ww", "Hw", "Hs"],
@@ -86,5 +90,27 @@ export const geometries = [
     name: "Irregular roof or plan",
     hiddenInputs: true,
     image_url: geometriesUrl[geometryOtherName],
+    image_clean_url: geometriesUrl[geometryOtherName].replace("_new", "_clean"),
   },
 ];
+
+export const geometriesName = geometries.reduce(
+  (acc: Record<string, string>, geometry: Geometry) => {
+    acc[geometry._id] = geometry.name;
+    return acc;
+  },
+  {} as Record<string, string>
+);
+
+interface Geometry {
+  _id: string;
+  name: string;
+  image_url: string;
+  image_clean_url: string;
+  shelter_dimensions?: string[];
+  door_dimensions?: string[];
+  window_dimensions?: string[];
+  areaFunction?: (shelterDimension: ShelterDimensions) => number;
+  volumeFunction?: (shelterDimension: ShelterDimensions) => number;
+  hiddenInputs?: undefined | boolean;
+}

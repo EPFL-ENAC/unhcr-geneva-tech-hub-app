@@ -71,21 +71,39 @@
               </v-col>
             </v-row>
             <v-row
-              v-for="affordability in affordabilities"
+              v-for="(affordability, idx) in affordabilities"
               :key="affordability.id"
             >
               <v-col cols="3" class="ml-4">
-                {{ affordability.title }}:
-                <v-tooltip right :max-width="300">
-                  <template #activator="{ on, attrs }">
-                    <v-btn icon v-bind="attrs" v-on="on">
-                      <v-icon> $mdiInformation </v-icon>
-                    </v-btn>
-                  </template>
-                  <span>{{ affordability.description }}</span>
-                </v-tooltip>
+                <v-row
+                  ><v-col>
+                    {{ affordability.title }}:
+                    <info-tooltip right :max-width="300" :bottom="false"
+                      >{{ affordability.description }}
+                    </info-tooltip>
+                  </v-col></v-row
+                >
+                <v-row>
+                  <v-col>
+                    <v-responsive
+                      aspect-ratio="5"
+                      min-height="20"
+                      max-height="120"
+                      max-width="80%"
+                    >
+                      <v-chart
+                        autoresize
+                        :option="optionsAffordabilities[idx]"
+                      ></v-chart>
+                    </v-responsive>
+                  </v-col>
+                </v-row>
               </v-col>
-              <v-col v-for="shelter in shelters" :key="shelter._id">
+              <v-col
+                v-for="shelter in shelters"
+                :key="shelter._id"
+                class="d-flex"
+              >
                 <v-layout class="align-center">
                   <span>
                     {{ shelter.scorecard[affordability.id] | formatNumber() }}
@@ -104,15 +122,24 @@
         <v-row>
           <v-col>
             <v-row>
-              <v-col cols="3" class="ml-4">Shape</v-col>
+              <v-col cols="3" class="ml-4 ml-4 col col-3 d-flex align-center"
+                >Shape</v-col
+              >
               <v-col v-for="shelter in shelters" :key="shelter._id">
                 <v-img
+                  v-if="shelter.geometry.shelter_geometry_type"
                   max-width="150px"
                   max-height="150px"
                   class="d-flex justify-center white-background"
-                  :src="geometriesUrl[shelter.geometry.shelter_geometry_type]"
+                  :src="
+                    geometriesUrl[
+                      shelter.geometry.shelter_geometry_type
+                    ].replace('_new', '_clean')
+                  "
                   :aria-label="shelter.geometry.shelter_geometry_type"
-                  :title="shelter.geometry.shelter_geometry_type"
+                  :title="
+                    geometriesName[shelter.geometry.shelter_geometry_type]
+                  "
                 >
                 </v-img>
               </v-col>
@@ -125,21 +152,39 @@
               </v-col>
             </v-row>
             <v-row
-              v-for="constructionImpact in constructionImpacts"
+              v-for="(constructionImpact, idx) in constructionImpacts"
               :key="constructionImpact.id"
             >
-              <v-col cols="3" class="ml-4"
-                >{{ constructionImpact.title }}:
-                <v-tooltip right :max-width="300">
-                  <template #activator="{ on, attrs }">
-                    <v-btn icon v-bind="attrs" v-on="on">
-                      <v-icon> $mdiInformation </v-icon>
-                    </v-btn>
-                  </template>
-                  <span>{{ constructionImpact.description }}</span>
-                </v-tooltip>
+              <v-col cols="3" class="ml-4">
+                <v-row>
+                  <v-col>
+                    {{ constructionImpact.title }}:
+                    <info-tooltip right :max-width="300" :bottom="false"
+                      >{{ constructionImpact.description }}
+                    </info-tooltip>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-responsive
+                      aspect-ratio="5"
+                      min-height="40"
+                      max-height="120"
+                      max-width="80%"
+                    >
+                      <v-chart
+                        autoresize
+                        :option="optionsConstructionImpacts[idx]"
+                      ></v-chart>
+                    </v-responsive>
+                  </v-col>
+                </v-row>
               </v-col>
-              <v-col v-for="shelter in shelters" :key="shelter._id">
+              <v-col
+                v-for="shelter in shelters"
+                :key="shelter._id"
+                class="d-flex"
+              >
                 <v-layout class="align-center">
                   <span>
                     {{
@@ -161,21 +206,39 @@
         <v-row>
           <v-col>
             <v-row
-              v-for="environmentalImpact in environmentalImpacts"
+              v-for="(environmentalImpact, idx) in environmentalImpacts"
               :key="environmentalImpact.id"
             >
-              <v-col cols="3" class="ml-4"
-                >{{ environmentalImpact.title }}:
-                <v-tooltip right :max-width="300">
-                  <template #activator="{ on, attrs }">
-                    <v-btn icon v-bind="attrs" v-on="on">
-                      <v-icon> $mdiInformation </v-icon>
-                    </v-btn>
-                  </template>
-                  <span>{{ environmentalImpact.description }}</span>
-                </v-tooltip>
+              <v-col cols="3" class="ml-4">
+                <v-row>
+                  <v-col>
+                    {{ environmentalImpact.title }}:
+                    <info-tooltip right :max-width="300" :bottom="false"
+                      >{{ environmentalImpact.description }}
+                    </info-tooltip>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-responsive
+                      aspect-ratio="5"
+                      min-height="20"
+                      max-height="120"
+                      max-width="80%"
+                    >
+                      <v-chart
+                        autoresize
+                        :option="optionsEnvironmentalImpacts[idx]"
+                      ></v-chart>
+                    </v-responsive>
+                  </v-col>
+                </v-row>
               </v-col>
-              <v-col v-for="shelter in shelters" :key="shelter._id">
+              <v-col
+                v-for="shelter in shelters"
+                :key="shelter._id"
+                class="d-flex"
+              >
                 <v-layout class="align-center">
                   <span>
                     {{
@@ -196,29 +259,67 @@
 </template>
 
 <script lang="ts">
-import { Shelter } from "@/store/ShelterInterface";
+import { ScoreCardWithShelterInfo, Shelter } from "@/store/ShelterInterface";
 import { isString } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 
+import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import { SyncDatabase } from "@/utils/couchdb";
-import affordabilities from "@/views/shelter_sustainability/ShelterSustainabilityItem/affordabilities";
-import constructionImpacts from "@/views/shelter_sustainability/ShelterSustainabilityItem/constructionImpacts";
-import environmentalImpacts from "@/views/shelter_sustainability/ShelterSustainabilityItem/environmentalImpacts";
-import { geometriesUrl } from "@/views/shelter_sustainability/ShelterSustainabilityItem/geometries";
+import { affordabilities } from "@/views/shelter_sustainability/ShelterSustainabilityItem/affordabilities";
+import { constructionImpacts } from "@/views/shelter_sustainability/ShelterSustainabilityItem/constructionImpacts";
+import { environmentalImpacts } from "@/views/shelter_sustainability/ShelterSustainabilityItem/environmentalImpacts";
+import { generateScorecardOptions } from "@/views/shelter_sustainability/ShelterSustainabilityItem/generateScorecardOptions";
+import {
+  geometriesName,
+  geometriesUrl,
+} from "@/views/shelter_sustainability/ShelterSustainabilityItem/geometries";
 import {
   shelterColors,
   shelterIcons,
 } from "@/views/shelter_sustainability/shelterTypeColors";
+import { ScatterChart } from "echarts/charts";
+import {
+  GridComponent,
+  LegendComponent,
+  MarkPointComponent,
+  SingleAxisComponent,
+  TitleComponent,
+  TooltipComponent,
+} from "echarts/components";
+import { use } from "echarts/core";
+import { CanvasRenderer } from "echarts/renderers";
+import { EChartsOption } from "echarts/types/dist/shared";
 import PouchDB from "pouchdb";
+import VChart from "vue-echarts";
 import { Route } from "vue-router";
 import { mapActions, mapGetters } from "vuex";
 
+use([
+  CanvasRenderer,
+  SingleAxisComponent,
+  ScatterChart,
+  GridComponent,
+  LegendComponent,
+  TitleComponent,
+  TooltipComponent,
+  MarkPointComponent,
+]);
+
 @Component({
   computed: {
-    ...mapGetters("ShelterModule", ["db"]),
+    ...mapGetters("ShelterModule", ["db", "scorecards"]),
   },
   methods: {
-    ...mapActions("ShelterModule", ["getDoc", "syncDB", "closeDB"]),
+    ...mapActions("ShelterModule", [
+      "getDoc",
+      "getScorecards",
+      "syncDB",
+      "closeDB",
+    ]),
+  },
+  components: {
+    VChart,
+    InfoTooltip,
   },
 })
 /** ProjectList */
@@ -228,6 +329,9 @@ export default class ShelterSustainabilityCompare extends Vue {
   closeDB!: () => null;
   $route!: Route;
   db!: SyncDatabase<Shelter> | null;
+  scorecards!: ScoreCardWithShelterInfo[];
+  getScorecards!: (id: string[]) => Promise<ScoreCardWithShelterInfo[]>;
+
   changes!: PouchDB.Core.Changes<Shelter> | undefined;
 
   newName = "";
@@ -235,10 +339,33 @@ export default class ShelterSustainabilityCompare extends Vue {
   affordabilities = affordabilities;
   constructionImpacts = constructionImpacts;
   environmentalImpacts = environmentalImpacts;
+  geometriesName = geometriesName;
   geometriesUrl = geometriesUrl;
   shelterColors = shelterColors;
   shelterIcons = shelterIcons;
   loaded = false;
+
+  get optionsAffordabilities(): EChartsOption[] {
+    return generateScorecardOptions(
+      affordabilities,
+      this.scorecards,
+      shelterColors
+    );
+  }
+  get optionsConstructionImpacts(): EChartsOption[] {
+    return generateScorecardOptions(
+      constructionImpacts,
+      this.scorecards,
+      shelterColors
+    );
+  }
+  get optionsEnvironmentalImpacts(): EChartsOption[] {
+    return generateScorecardOptions(
+      environmentalImpacts,
+      this.scorecards,
+      shelterColors
+    );
+  }
 
   public async retrieveData(): Promise<void> {
     const queryIds = this.$route.query.ids;
@@ -257,6 +384,8 @@ export default class ShelterSustainabilityCompare extends Vue {
           (p: PromiseSettledResult<Shelter>) =>
             (p as PromiseFulfilledResult<Shelter>).value
         );
+        // TODO: we have a cache problem;
+        await this.getScorecards(shelterIds);
       }
       this.loaded = true;
     } catch (e) {

@@ -1,20 +1,7 @@
+import { ScorecardConfig } from "@/views/shelter_sustainability/ShelterSustainabilityItem/generateScorecardOptions";
 import { alpha } from "@/views/shelter_sustainability/shelterTypeColors";
-// {
-//   selectedField: "weight",
-//   title: "Weight",
-//   unitName: "Kg",
-// },
-// {
-//   title: "Embodied carbon total",
-//   selectedField: "embodiedCarbonTotal",
-//   unitName: "kgCO2e",
-// },
-// {
-//   title: "Embodied water",
-//   selectedField: "embodiedWater",
-//   unitName: "L",
-// },
-export default [
+
+export const environmentalImpacts: ScorecardConfig[] = [
   {
     id: "co2",
     min: 0,

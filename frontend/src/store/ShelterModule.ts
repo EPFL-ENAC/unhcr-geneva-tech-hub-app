@@ -7,6 +7,7 @@ import {
   generateState,
 } from "@/store/ShelterModuleUtils";
 import { SyncDatabase } from "@/utils/couchdb";
+import { isString } from "lodash";
 import {
   ActionContext,
   ActionTree,
@@ -97,16 +98,21 @@ const actions: ActionTree<ShelterState, RootState> = {
   },
   getScorecards: (
     context: ActionContext<ShelterState, RootState>,
-    id: string
+    ids: string | string[]
   ) => {
     const localCouch = context.state.localCouch;
     // shelters/_design/shelter/_view/scorecards?include_docs=true
+    const selectedIds = isString(ids) ? [ids] : ids;
     return localCouch?.remoteDB
       .query("shelter/scorecards", { include_docs: true })
       .then(function (result) {
         const scorecards = result.rows
           .filter((x) => x.value !== undefined)
-          .map((x) => ({ ...x.value, id: x.id, selected: x.id === id }));
+          .map((x) => ({
+            ...x.value,
+            id: x.id,
+            selected: selectedIds.includes(x.id),
+          }));
         scorecards.sort((a, b) => Number(a.selected) - Number(b.selected));
         // we needed to sort the scorecards, so the selected may appear at the end
         context.commit("SET_SCORECARDS", scorecards);

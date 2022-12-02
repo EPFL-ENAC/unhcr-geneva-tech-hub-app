@@ -183,15 +183,27 @@
             </v-row>
             <v-row>
               <v-col md="12" lg="1" class="shelter-graph-button__container">
-                <div>View</div>
-                <v-radio-group v-model="selectedGraph" mandatory>
-                  <v-radio value="treemap"></v-radio>
-                  <v-icon>$mdiViewQuilt</v-icon>
-                  <v-radio value="sunburst"></v-radio>
-                  <v-icon>$mdiChartDonutVariant</v-icon>
-                  <v-radio value="sankey"></v-radio>
-                  <v-icon>$mdiChartSankey</v-icon>
-                </v-radio-group>
+                <div class="d-flex justify-center">View</div>
+                <div class="d-flex justify-center">
+                  <v-radio-group v-model="selectedGraph" mandatory>
+                    <v-radio value="treemap">
+                      <template #label>
+                        <v-icon>$mdiViewQuilt</v-icon>
+                      </template>
+                    </v-radio>
+                    <v-radio value="sunburst">
+                      <template #label>
+                        <v-icon>$mdiChartDonutVariant</v-icon>
+                      </template>
+                    </v-radio>
+
+                    <v-radio value="sankey">
+                      <template #label>
+                        <v-icon>$mdiChartSankey</v-icon>
+                      </template>
+                    </v-radio>
+                  </v-radio-group>
+                </div>
               </v-col>
               <v-col lg="11" md="12">
                 <v-row>

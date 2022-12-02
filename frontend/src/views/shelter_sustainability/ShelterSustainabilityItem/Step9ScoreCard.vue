@@ -124,9 +124,13 @@ import {
 } from "@/store/ShelterInterface";
 import { SyncDatabase } from "@/utils/couchdb";
 import { countriesMap } from "@/utils/countriesAsList";
-import affordabilities from "@/views/shelter_sustainability/ShelterSustainabilityItem/affordabilities";
-import constructionImpacts from "@/views/shelter_sustainability/ShelterSustainabilityItem/constructionImpacts";
-import environmentalImpacts from "@/views/shelter_sustainability/ShelterSustainabilityItem/environmentalImpacts";
+import { affordabilities } from "@/views/shelter_sustainability/ShelterSustainabilityItem/affordabilities";
+import { constructionImpacts } from "@/views/shelter_sustainability/ShelterSustainabilityItem/constructionImpacts";
+import { environmentalImpacts } from "@/views/shelter_sustainability/ShelterSustainabilityItem/environmentalImpacts";
+import {
+  generateScorecardOptions,
+  ScorecardConfig,
+} from "@/views/shelter_sustainability/ShelterSustainabilityItem/generateScorecardOptions";
 import {
   alpha,
   alphaSecondary,
@@ -148,6 +152,7 @@ import PouchDB from "pouchdb";
 import VChart from "vue-echarts";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
+
 use([
   CanvasRenderer,
   SingleAxisComponent,
@@ -210,11 +215,19 @@ export default class Step8ScoreCard extends Vue {
   affordabilities = affordabilities;
   constructionImpacts = constructionImpacts;
 
-  configs = [
+  configs: ScorecardConfig[] = [
     ...environmentalImpacts,
     ...affordabilities,
     ...constructionImpacts,
   ];
+
+  get options(): EChartsOption[] {
+    return generateScorecardOptions(
+      this.configs,
+      this.scorecardsFiltered,
+      this.colors
+    );
+  }
 
   get scorecard(): ScoreCard {
     return this.shelter?.scorecard ?? ({} as ScoreCard);
@@ -249,95 +262,6 @@ export default class Step8ScoreCard extends Vue {
       });
   }
 
-  get options(): EChartsOption[] {
-    const scorecards = this.scorecardsFiltered ?? [];
-    const title: Record<string, string | number>[] = [];
-    const singleAxis: Record<
-      string,
-      | string
-      | number
-      | boolean
-      | Record<string, number>
-      | ((v: MinMax) => undefined)
-    >[] = [];
-    const series: Record<
-      string,
-      string | number | boolean | Serie[] | SymbSizeFn
-    >[] = [];
-    this.configs.forEach((config: Config): void => {
-      singleAxis.push({
-        left: 100,
-        type: "value",
-        boundaryGap: false,
-        height: "10%",
-        axisLabel: {
-          interval: 2,
-        },
-        min: config.min ?? "dataMin",
-        max: config.max ?? "dataMax",
-      });
-      series.push({
-        singleAxisIndex: 0,
-        coordinateSystem: "singleAxis",
-        type: "scatter",
-        data:
-          scorecards?.map((item: ScoreCardWithShelterInfo) => {
-            const scor = item as ScoreCardScatter;
-            const key = config.id as ScoreCardsKey;
-            const shelter_type = scor.shelter_type as colorType;
-            const colors = this.colors[shelter_type];
-            let firstValue = parseFloat(scor[key].toFixed(3));
-            if (key === "habitability" || key === "techPerf") {
-              firstValue = firstValue * 100;
-            }
-            scor[key] = firstValue;
-            return {
-              value: [firstValue, scor.selected ? 4 : 2, key, scor, config],
-              itemStyle: {
-                color: scor.selected ? colors.primary : colors.secondary, //config.colors.secondary,
-              },
-              symbol: scor.selected ? "diamond" : "circle",
-              symbolSize: scor.selected ? 24 : 8,
-            };
-          }) ?? [],
-        symbolSize: (dataItem: number[]) => dataItem[1] * 4,
-      });
-    });
-    return this.configs.map((config, idx) => ({
-      title: title[idx],
-      singleAxis: singleAxis[idx],
-      series: series[idx],
-      config,
-      legend: {
-        type: "scroll",
-        top: 20,
-      },
-      grid: {
-        bottom: 12,
-      },
-      tooltip: {
-        trigger: "axis",
-        confine: true,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        formatter: (params: any): string => {
-          const formatNumber = this.$options.filters?.formatNumber;
-          if (!formatNumber) {
-            return "error: format number undefined";
-          }
-          return params.reduce((acc: string, param: Serie) => {
-            acc = acc ? `${acc}<br/>` : "";
-            const key = param.value[2] as ScoreCardsKey;
-            const scorecard = param.value[3] as ScoreCardScatter;
-            const name = scorecard.name;
-            return `${acc}</div>${name}: ${formatNumber(scorecard[key])} ${
-              config.unit
-            }</div>`;
-          }, "");
-        },
-      },
-    }));
-  }
-
   changes!: PouchDB.Core.Changes<Shelter> | undefined;
   mounted(): void {
     // we don't init/close the db, it's handled by parent route component
@@ -365,41 +289,6 @@ export default class Step8ScoreCard extends Vue {
   destroyed(): void {
     this.changes?.cancel();
   }
-}
-
-interface ScoreCardScatter extends ScoreCardWithShelterInfo {
-  selected: boolean;
-  id: string;
-}
-
-interface Config {
-  id: string;
-  title: string;
-  unit: string;
-  min?: number;
-  max?: number | ((v: MinMax) => undefined);
-  colors: {
-    primary: string;
-    secondary: string;
-  };
-}
-interface Serie {
-  value: (number | string | ScoreCardScatter | Config)[];
-}
-
-type colorType = "Emergency" | "Transitional" | "Durable" | "";
-
-type SymbSizeFn = (a: number[]) => number;
-type ScoreCardsKey =
-  | "weight"
-  | "co2"
-  | "h2o"
-  | "techPerf"
-  | "affordability"
-  | "habitability";
-interface MinMax {
-  min: number;
-  max: number;
 }
 
 interface ShelterFilters {
