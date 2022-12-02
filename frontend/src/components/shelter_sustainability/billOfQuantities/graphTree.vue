@@ -1,5 +1,5 @@
 <template>
-  <v-responsive aspect-ratio="8" min-height="250">
+  <v-responsive v-bind="{ ...$attrs, ...$props }">
     <v-chart autoresize :option="option"></v-chart>
   </v-responsive>
 </template>
@@ -39,6 +39,7 @@ use([
   components: {
     VChart,
   },
+  inheritAttrs: true,
   computed: {
     ...mapGetters("SheltersMaterialModule", ["materialMap", "materials"]),
   },
@@ -54,6 +55,10 @@ export default class GraphTree extends Vue {
   readonly title: string | undefined;
   @Prop({ type: [String], default: "sunburst" })
   readonly graphType!: string;
+  @Prop({ type: [Object, Array], default: () => ["20%", "80%"] })
+  readonly radius!: string[];
+  @Prop({ type: [String], default: "250px" })
+  readonly minHeight!: string;
 
   materialMap!: Record<string, ShelterMaterial>;
   materials!: string[];
@@ -231,7 +236,7 @@ export default class GraphTree extends Vue {
           },
           type: "sunburst",
           id: "graphTreeIdEchart",
-          radius: ["20%", "80%"],
+          radius: this.radius,
           nodeClick: undefined,
           data: this.generateTreeData,
           animationDurationUpdate: 1000,
