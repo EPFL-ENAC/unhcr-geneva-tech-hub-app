@@ -8,7 +8,8 @@ export function computeLitresDiesel(
 ): number {
   // generatorLoad in percentage 10% not 0.1
   const REF_DIES_GEN = -0.031 * Math.log((generatorLoad ?? 0.6) / 100) + 0.2514;
-  return generatorSize * operatingHours * REF_DIES_GEN;
+  const litres = generatorSize * operatingHours * REF_DIES_GEN;
+  return parseFloat(litres.toFixed(2));
 }
 
 export function computeCO2Cost(
