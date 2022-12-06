@@ -181,13 +181,13 @@ function colorTemplate(literals: TemplateStringsArray, alpha = "1") {
 }
 
 export const cccmColors = {
-  primary: (alpha: string) => colorTemplate`rgba(42, 135, 200, ${alpha})`,
-  secondary1: (alpha: string) => colorTemplate`rgba(84, 84, 86, ${alpha})`,
-  secondary2: (alpha: string) => colorTemplate`rgba(157, 72, 56, ${alpha})`,
-  secondary3: (alpha: string) => colorTemplate`rgba(212, 140, 116, ${alpha})`,
-  secondary4: (alpha: string) => colorTemplate`rgba(240, 184, 158, ${alpha})`,
-  secondary5: (alpha: string) => colorTemplate`rgba(248, 228, 210, ${alpha})`,
-  green: (alpha: string) => colorTemplate`rgba1,178,152, ${alpha})`,
+  primary: (alpha = "1") => colorTemplate`rgba(42, 135, 200, ${alpha})`,
+  secondary1: (alpha = "1") => colorTemplate`rgba(84, 84, 86, ${alpha})`,
+  secondary2: (alpha = "1") => colorTemplate`rgba(157, 72, 56, ${alpha})`,
+  secondary3: (alpha = "1") => colorTemplate`rgba(212, 140, 116, ${alpha})`,
+  secondary4: (alpha = "1") => colorTemplate`rgba(240, 184, 158, ${alpha})`,
+  secondary5: (alpha = "1") => colorTemplate`rgba(248, 228, 210, ${alpha})`,
+  green: (alpha = "1") => colorTemplate`rgba1,178,152, ${alpha})`,
 };
 
 export const indicatorColors = {
