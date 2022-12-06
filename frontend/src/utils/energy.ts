@@ -59,15 +59,15 @@ export function getCookingFuel(
 export function getColor(cat: SocioEconomicCategory): string {
   switch (cat) {
     case "veryLow":
-      return cccmColors.secondary5;
+      return cccmColors.secondary5();
     case "low":
-      return cccmColors.secondary4;
+      return cccmColors.secondary4();
     case "middle":
-      return cccmColors.secondary3;
+      return cccmColors.secondary3();
     case "high":
-      return cccmColors.secondary2;
+      return cccmColors.secondary2();
     case "veryHigh":
-      return cccmColors.secondary1;
+      return cccmColors.secondary1();
   }
 }
 

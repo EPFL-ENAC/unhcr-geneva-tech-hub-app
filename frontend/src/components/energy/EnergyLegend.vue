@@ -24,6 +24,6 @@ import { Component, Vue } from "vue-property-decorator";
 export default class EnergyLegend extends Vue {
   readonly categories = socioEconomicCategories;
   readonly getColor = getColor;
-  readonly totalColor = cccmColors.primary;
+  readonly totalColor = cccmColors.primary();
 }
 </script>

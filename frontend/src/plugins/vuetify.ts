@@ -175,15 +175,19 @@ export default new Vuetify({
  * https://data2.unhcr.org/en/documents/download/60115
  * // https://unhcr-web.github.io/unhcRstyle/docs/reference/unhcr_green.html
  */
+
+function colorTemplate(literals: TemplateStringsArray, alpha = "1") {
+  return literals[0] + alpha + literals[1];
+}
+
 export const cccmColors = {
-  primary: "#2A87C8",
-  secondary1: "#545456",
-  secondary2: "#9d4838",
-  secondary3: "#d48c74",
-  secondary4: "#f0b89e",
-  secondary5: "#f8e4d2",
-  green: "rgba(1,178,152)",
-  primary50: "rgba(42, 135, 200, 0.5)",
+  primary: (alpha: string) => colorTemplate`rgba(42, 135, 200, ${alpha})`,
+  secondary1: (alpha: string) => colorTemplate`rgba(84, 84, 86, ${alpha})`,
+  secondary2: (alpha: string) => colorTemplate`rgba(157, 72, 56, ${alpha})`,
+  secondary3: (alpha: string) => colorTemplate`rgba(212, 140, 116, ${alpha})`,
+  secondary4: (alpha: string) => colorTemplate`rgba(240, 184, 158, ${alpha})`,
+  secondary5: (alpha: string) => colorTemplate`rgba(248, 228, 210, ${alpha})`,
+  green: (alpha: string) => colorTemplate`rgba1,178,152, ${alpha})`,
 };
 
 export const indicatorColors = {
