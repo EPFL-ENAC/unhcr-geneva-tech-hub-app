@@ -7,7 +7,6 @@ import {
   generateState,
 } from "@/store/ShelterModuleUtils";
 import { SyncDatabase } from "@/utils/couchdb";
-import { isString } from "lodash";
 import {
   ActionContext,
   ActionTree,
@@ -102,7 +101,7 @@ const actions: ActionTree<ShelterState, RootState> = {
   ) => {
     const localCouch = context.state.localCouch;
     // shelters/_design/shelter/_view/scorecards?include_docs=true
-    const selectedIds = isString(ids) ? [ids] : ids;
+    const selectedIds = typeof ids === "string" ? [ids] : ids;
     return localCouch?.remoteDB
       .query("shelter/scorecards", { include_docs: true })
       .then(function (result) {

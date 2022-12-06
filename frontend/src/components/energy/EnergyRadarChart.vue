@@ -61,7 +61,7 @@ export default class EnergyRadarChart<
           value: this.properties.map((property) => item.value[property.key]),
         })),
       },
-      color: [cccmColors.primary, cccmColors.primary50],
+      color: [cccmColors.primary(), cccmColors.primary("0.5")],
     };
   }
 }

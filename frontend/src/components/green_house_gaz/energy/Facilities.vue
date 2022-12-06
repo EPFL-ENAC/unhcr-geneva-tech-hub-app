@@ -482,7 +482,11 @@ export default class Facilities extends Vue {
           data,
         },
       ],
-      color: [cccmColors.primary, cccmColors.secondary1, cccmColors.green],
+      color: [
+        cccmColors.primary(),
+        cccmColors.secondary1(),
+        cccmColors.green(),
+      ],
     };
   }
 }

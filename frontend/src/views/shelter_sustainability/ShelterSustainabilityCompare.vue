@@ -268,7 +268,6 @@
 
 <script lang="ts">
 import { ScoreCardWithShelterInfo, Shelter } from "@/store/ShelterInterface";
-import { isString } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 
 import InfoTooltip from "@/components/commons/InfoTooltip.vue";
@@ -391,7 +390,7 @@ export default class ShelterSustainabilityCompare extends Vue {
     const queryIds = this.$route.query.ids;
     this.loaded = false;
     try {
-      if (isString(queryIds)) {
+      if (typeof queryIds === "string") {
         const shelterIds = queryIds.length > 0 ? queryIds.split("|") : [];
 
         const promises: PromiseSettledResult<Shelter>[] =

@@ -6,7 +6,6 @@ export const affordabilities: ScorecardConfig[] = [
     id: "affordability",
     title: "Affordability",
     min: 0,
-    // max: 100,
     unit: "$/year/m²",
     description:
       "Affordability score describes shelter cost (USD) per year (of intended use) per square meter (of habitable space), enabling comparison across shelters of differing size and durability.",

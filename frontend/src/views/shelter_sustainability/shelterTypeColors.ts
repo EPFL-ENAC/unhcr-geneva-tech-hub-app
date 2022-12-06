@@ -6,24 +6,24 @@ import { ShelterType } from "@/store/ShelterInterface";
 export const shelterColors: Record<ShelterType, ShelterColor> = {
   Emergency: {
     name: "blue",
-    primary: cccmColors.primary, // "#2A87C8" blue unhcr cccm
-    secondary: `rgba(32,135,200,${alphaSecondary})`,
+    primary: cccmColors.primary(),
+    secondary: cccmColors.primary(alphaSecondary.toString()),
   },
   Transitional: {
     name: "brown",
-    primary: cccmColors.secondary2, // #9d4838" brown unhcr cccm
-    secondary: `rgba(157,72,56,${alphaSecondary})`,
+    primary: cccmColors.secondary2(),
+    secondary: cccmColors.secondary2(alphaSecondary.toString()),
   },
   Durable: {
     name: "grey",
-    primary: cccmColors.secondary1, // `#545456`, // grey unhcr
-    secondary: `rgba(84,84,86,${alphaSecondary})`,
+    primary: cccmColors.secondary1(),
+    secondary: cccmColors.secondary1(alphaSecondary.toString()),
   },
   "": {
     // default
     name: "default",
-    primary: cccmColors.secondary5, // #f8e4d2 `rgba(248, 228, 210,1)`, // secondary colour 1
-    secondary: `rgba(248, 228, 210,${alphaSecondary})`,
+    primary: cccmColors.secondary5(),
+    secondary: cccmColors.secondary5(alphaSecondary.toString()),
   },
 };
 

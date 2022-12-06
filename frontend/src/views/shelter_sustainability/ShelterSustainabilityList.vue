@@ -296,7 +296,6 @@ import {
   shelterColors,
   shelterIcons,
 } from "@/views/shelter_sustainability/shelterTypeColors";
-import { isString } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
 
@@ -466,7 +465,7 @@ export default class ProjectList extends Vue {
     this.db?.onChange(this.getShelters);
 
     const queryIds = this.$route.query.ids;
-    if (isString(queryIds)) {
+    if (typeof queryIds === "string") {
       this.selectedShelters = queryIds.length > 0 ? queryIds.split("|") : [];
     }
   }

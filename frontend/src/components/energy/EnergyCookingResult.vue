@@ -657,7 +657,7 @@ export default class EnergyCookingResult extends Vue {
       data: this.siteResults.map(
         (result) => (option?.ratio ?? 1) * (result.categoryTotal[key] ?? 0)
       ),
-      color: cccmColors.primary,
+      color: cccmColors.primary(),
       yAxisIndex: option?.yAxisIndex,
       unit: option?.unit,
     };
