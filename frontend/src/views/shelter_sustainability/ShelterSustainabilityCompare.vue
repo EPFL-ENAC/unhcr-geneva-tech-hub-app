@@ -189,7 +189,10 @@
                   <span>
                     {{
                       shelter.scorecard[constructionImpact.id] |
-                        formatNumber(0, 0, false, "percent")
+                        formatNumber({
+                          style: "percent",
+                          maximumFractionDigits: 0,
+                        })
                     }}
                   </span>
                 </v-layout>

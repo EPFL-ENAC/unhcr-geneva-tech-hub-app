@@ -41,7 +41,7 @@
       </template>
       <template #[`item.totalCO2Emission`]="{ item }">
         <span class="bold-table-cell-content">
-          {{ item.totalCO2Emission | formatNumber(0, 2) }}
+          {{ item.totalCO2Emission | formatNumber }}
         </span>
       </template>
 
@@ -53,7 +53,14 @@
             'bold-table-cell-content': item.changeInEmission === 0,
           }"
         >
-          {{ item.changeInEmission | formatNumber(0, 0, true, "percent") }}
+          {{
+            item.changeInEmission |
+              formatNumber({
+                style: "percent",
+                signDisplay: "exceptZero",
+                maximumFractionDigits: 0,
+              })
+          }}
         </span>
       </template>
 
@@ -84,16 +91,33 @@
               }"
             >
               <!-- last row total, last column change in emission -->
-              {{ results[header.value] | formatNumber(0, 0, true, "percent") }}
+              {{
+                results[header.value] |
+                  formatNumber({
+                    style: "percent",
+                    signDisplay: "exceptZero",
+                    maximumFractionDigits: 0,
+                  })
+              }}
             </span>
             <span v-else-if="!header.hideFooterContent">
               <span v-if="header.value === 'totalCO2Emission'">
                 <!-- last row total: co2 emission column -->
-                {{ results[header.value] | formatNumber(0, 0) }}
+                {{
+                  results[header.value] |
+                    formatNumber({
+                      maximumFractionDigits: 0,
+                    })
+                }}
               </span>
               <span v-else>
                 <!-- last row total: column (diesel, grid power and renewable ) -->
-                {{ results[header.value] | formatNumber(0, 0) }}
+                {{
+                  results[header.value] |
+                    formatNumber({
+                      maximumFractionDigits: 0,
+                    })
+                }}
               </span>
             </span>
           </td>

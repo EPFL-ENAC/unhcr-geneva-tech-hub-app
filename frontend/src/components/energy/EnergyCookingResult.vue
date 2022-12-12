@@ -181,13 +181,17 @@
                                 >
                                   {{
                                     siteResult.categories[cat][item.key] |
-                                      formatNumber(0, item.decimal)
+                                      formatNumber({
+                                        maximumFractionDigits: item.decimal,
+                                      })
                                   }}
                                 </td>
                                 <td class="font-weight-bold text-right">
                                   {{
                                     siteResult.categoryTotal[item.key] |
-                                      formatNumber(0, item.decimal)
+                                      formatNumber({
+                                        maximumFractionDigits: item.decimal,
+                                      })
                                   }}
                                 </td>
                               </tr>

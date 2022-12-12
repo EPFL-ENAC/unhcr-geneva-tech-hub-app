@@ -27,7 +27,14 @@
               'result-negative': totalChange < 0,
             }"
           >
-            {{ totalChange | formatNumber(0, 0, true, "percent") }}
+            {{
+              totalChange |
+                formatNumber({
+                  style: "percent",
+                  signDisplay: "exceptZero",
+                  maximumFractionDigits: 0,
+                })
+            }}
             ({{ (totalEndline - totalBaseline) | formatNumber }} tCO2e/year)
           </span>
         </h3>

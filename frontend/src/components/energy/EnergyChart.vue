@@ -125,8 +125,9 @@ export default class EnergyChart extends Vue {
                           t.name
                         }:&nbsp;</span><span style="float:right"><b>${formatNumber(
                           p.data[t.key],
-                          0,
-                          decimal
+                          {
+                            maximumFractionDigits: decimal,
+                          }
                         )}${unitText}</b></span>`
                     )
                     .join("<br>");
@@ -135,8 +136,13 @@ export default class EnergyChart extends Vue {
               : undefined,
             valueFormatter: item.unit
               ? (value) =>
-                  `${formatNumber(value as number, 0, decimal)} [${item.unit}]`
-              : (value) => formatNumber(value as number, 0, decimal),
+                  `${formatNumber(value as number, {
+                    maximumFractionDigits: decimal,
+                  })} [${item.unit}]`
+              : (value) =>
+                  formatNumber(value as number, {
+                    maximumFractionDigits: decimal,
+                  }) as string,
           },
         };
         return option;

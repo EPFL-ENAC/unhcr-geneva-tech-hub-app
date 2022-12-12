@@ -99,7 +99,11 @@
                           </v-icon>
                           {{
                             facilityForm.endline.results.changeInEmission |
-                              formatNumber(0, 0, true, "percent")
+                              formatNumber({
+                                style: "percent",
+                                signDisplay: "exceptZero",
+                                maximumFractionDigits: 0,
+                              })
                           }}
 
                           ({{

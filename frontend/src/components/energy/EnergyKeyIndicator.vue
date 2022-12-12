@@ -3,18 +3,36 @@
     <template #activator="{ on, attrs }">
       <div v-bind="attrs" class="text-subtitle-1" v-on="on">
         {{ name }}:
-        <span class="font-weight-bold">{{ value | formatNumber(0, 0) }}</span>
+        <span class="font-weight-bold">{{
+          value |
+            formatNumber({
+              maximumFractionDigits: 0,
+            })
+        }}</span>
         <template v-if="unit"> [{{ unit }}]</template>
         <span v-if="percentage !== 0" :style="{ color: color }"
           >&nbsp;<v-icon :class="iconClass" :color="color" small
             >$mdiTriangle</v-icon
           >
-          <span>{{ percentage | formatNumber(0, 0, true) }} %</span>
+          <span>{{
+            percentage |
+              formatNumber({
+                style: "percent",
+                signDisplay: "exceptZero",
+                maximumFractionDigits: 0,
+              })
+          }}</span>
         </span>
       </div>
     </template>
     <div class="text-subtitle-1">
-      Baseline: {{ baseValue | formatNumber(0, 0) }}
+      Baseline:
+      {{
+        baseValue |
+          formatNumber({
+            maximumFractionDigits: 0,
+          })
+      }}
       <template v-if="unit">[{{ unit }}]</template>
     </div>
   </v-tooltip>

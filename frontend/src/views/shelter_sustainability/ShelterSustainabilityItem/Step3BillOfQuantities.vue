@@ -109,11 +109,21 @@
             </template>
 
             <template #[`item.unitCost`]="{ item }">
-              <span>{{ item.unitCost | formatNumber(2, 2) }}</span>
+              <span>{{
+                item.unitCost |
+                  formatNumber({
+                    minimumFractionDigits: 2,
+                  })
+              }}</span>
             </template>
 
             <template #[`item.totalCost`]="{ item }">
-              <span>{{ item.totalCost | formatNumber(2, 2) }}</span>
+              <span>{{
+                item.totalCost |
+                  formatNumber({
+                    minimumFractionDigits: 2,
+                  })
+              }}</span>
             </template>
 
             <template #[`item.actions`]="{ item }">
@@ -172,7 +182,12 @@
                   <td colspan="1">Total</td>
                   <td colspan="6"></td>
                   <td colspan="1" class="text-right">
-                    {{ totalCost | formatNumber(2, 2) }}
+                    {{
+                      totalCost |
+                        formatNumber({
+                          minimumFractionDigits: 2,
+                        })
+                    }}
                   </td>
                   <td colspan="1"></td>
                 </tr>
@@ -182,7 +197,9 @@
                   <td colspan="1" class="text-right">
                     {{
                       (totalCost / items_individual_shelter) |
-                        formatNumber(2, 2)
+                        formatNumber({
+                          minimumFractionDigits: 2,
+                        })
                     }}
                   </td>
                   <td colspan="1"></td>

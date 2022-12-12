@@ -13,22 +13,31 @@ export default {
   },
 };
 
+const defaultOptions: ExtendedFormatOptions = {
+  maximumFractionDigits: 2,
+};
+// how to use
+// formatNumber(0.43433333345)
+// --> 0,43
+// formatNumber(0.43433333345, { style: "percent", maximumFractionDigits: 0 })
+// --> 43%
 export function formatNumber(
   n: number,
-  minimumFractionDigits = 0,
-  maximumFractionDigits = 2,
-  sign = false,
-  style?: string,
-  maximumSignificantDigits?: number
+  { ...options } = defaultOptions
 ): string {
   if (n === null || isNaN(n)) {
     return "—";
   }
-  return Intl.NumberFormat("fr-mathmono", {
-    minimumFractionDigits,
-    maximumFractionDigits,
-    maximumSignificantDigits,
-    signDisplay: sign ? "exceptZero" : undefined,
-    style,
-  }).format(n);
+
+  const finalOptions = {
+    ...defaultOptions,
+    ...options,
+  };
+  const formatted = Intl.NumberFormat("fr-mathmono", finalOptions).format(n);
+
+  return `${formatted}${finalOptions.suffix ? ` ${finalOptions.suffix}` : ""}`;
+}
+
+export interface ExtendedFormatOptions extends Intl.NumberFormatOptions {
+  suffix?: string;
 }

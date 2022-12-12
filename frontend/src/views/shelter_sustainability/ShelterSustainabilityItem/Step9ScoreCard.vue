@@ -81,12 +81,19 @@
                     <span v-if="option.config.unit === '%'">
                       {{
                         scorecard[option.config.id] |
-                          formatNumber(0, 0, false, "percent")
+                          formatNumber({
+                            style: "percent",
+                            maximumFractionDigits: 0,
+                          })
                       }}
                     </span>
                     <span v-else>
-                      {{ scorecard[option.config.id] | formatNumber() }}
-                      {{ option.config.unit }}
+                      {{
+                        scorecard[option.config.id] |
+                          formatNumber({
+                            suffix: option.config.unit,
+                          })
+                      }}
                     </span>
                   </span>
                   <v-tooltip right :max-width="300">
