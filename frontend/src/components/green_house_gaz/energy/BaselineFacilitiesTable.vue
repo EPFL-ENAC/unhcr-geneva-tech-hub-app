@@ -58,7 +58,7 @@
     </template>
     <template #[`item.totalCO2Emission`]="{ item }">
       <span class="bold-table-cell-content">
-        {{ item.totalCO2Emission | formatNumber(0, 2) }}
+        {{ item.totalCO2Emission | formatNumber }}
       </span>
     </template>
     <template #[`item.actions`]="{ item }">
@@ -121,10 +121,20 @@
         >
           <span v-if="!header.hideFooterContent">
             <span v-if="header.value === 'totalCO2Emission'">
-              {{ results[header.value] | formatNumber(0, 0) }}
+              {{
+                results[header.value] |
+                  formatNumber({
+                    maximumFractionDigits: 0,
+                  })
+              }}
             </span>
             <span v-else>
-              {{ results[header.value] | formatNumber(0, 0) }}
+              {{
+                results[header.value] |
+                  formatNumber({
+                    maximumFractionDigits: 0,
+                  })
+              }}
             </span>
           </span>
         </td>
