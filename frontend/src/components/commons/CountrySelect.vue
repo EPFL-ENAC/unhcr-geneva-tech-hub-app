@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { CountryInfo } from "@/store/GhgInterface";
+import { CountryInfo } from "@/store/GhgInterface.vue";
 import { countries as Countries } from "@/utils/countriesAsList";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue } from "vue-property-decorator";

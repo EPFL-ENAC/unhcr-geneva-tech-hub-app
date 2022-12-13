@@ -8,7 +8,7 @@
 <script lang="ts">
 import SurveyItemDefaultForm from "@/components/green_house_gaz/SurveyItemDefaultForm.vue";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
-import { FormSurvey } from "@/store/GhgInterface";
+import { FormSurvey } from "@/store/GhgInterface.vue";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 

@@ -148,7 +148,7 @@ import DeleteFacilityDialog from "@/components/green_house_gaz/energy/DeleteFaci
 import DuplicateFacilityDialog from "@/components/green_house_gaz/energy/DuplicateFacilityDialog.vue";
 import { facilityTypes } from "@/components/green_house_gaz/energy/Facility";
 import FacilityDialog from "@/components/green_house_gaz/energy/FacilityDialog.vue";
-import { EnergyFacilityItem } from "@/store/GhgInterface";
+import { EnergyFacilityItem } from "@/store/GhgInterface.vue";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";

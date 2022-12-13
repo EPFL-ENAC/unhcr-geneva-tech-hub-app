@@ -129,7 +129,13 @@
   -> redirect to proper surveyId page edit
 */
 import CountrySelect from "@/components/commons/CountrySelect.vue";
-import { Country, GreenHouseGaz, Sites, Survey } from "@/store/GhgInterface.js";
+// TODO use generic Survey instead of Survey
+import {
+  Country,
+  GreenHouseGaz,
+  Sites,
+  Survey,
+} from "@/store/GhgInterface.vue";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";

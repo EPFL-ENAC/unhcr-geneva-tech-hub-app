@@ -110,7 +110,7 @@ import {
   EnergyFacilityInterventionItem,
   EnergyFacilityItem,
   GreenHouseGaz,
-} from "@/store/GhgInterface";
+} from "@/store/GhgInterface.vue";
 import { IgesItemInterface } from "@/store/GhgReferenceIgesGridModule";
 import {
   ItemReferencesMap,

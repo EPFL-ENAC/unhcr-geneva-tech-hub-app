@@ -92,7 +92,7 @@ import {
 import HybridMix from "@/components/green_house_gaz/energy/HybridMix.vue";
 import NationalGrid from "@/components/green_house_gaz/energy/NationalGrid.vue";
 import RenewableEnergy from "@/components/green_house_gaz/energy/RenewableEnergy.vue";
-import { GreenHouseGaz } from "@/store/GhgInterface";
+import { GreenHouseGaz } from "@/store/GhgInterface.vue";
 import { IgesItemInterface } from "@/store/GhgReferenceIgesGridModule";
 import {
   ItemReferencesMap,

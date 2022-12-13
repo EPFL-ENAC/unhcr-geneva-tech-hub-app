@@ -1,4 +1,4 @@
-import { CountriesInfoMap, CountryInfo } from "@/store/GhgInterface";
+import { CountriesInfoMap, CountryInfo } from "@/store/GhgInterface.vue";
 
 export const countries: CountryInfo[] = [
   { code: "AC", name: "Ascension Island", lat: 0, lon: 0 },

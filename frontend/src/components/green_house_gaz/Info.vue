@@ -90,7 +90,7 @@ import CountrySelect from "@/components/commons/CountrySelect.vue";
 import { FormItem } from "@/components/commons/FormItem";
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import TerritoryMap from "@/components/commons/TerritoryMap.vue";
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
+import { GreenHouseGaz, Survey } from "@/store/GhgInterface.vue";
 import { CouchUser } from "@/store/UserModule";
 import {
   attributionMap,

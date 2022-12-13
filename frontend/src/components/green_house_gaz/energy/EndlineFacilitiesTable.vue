@@ -134,7 +134,7 @@ import InterventionDialog from "@/components/green_house_gaz/energy/Intervention
 import {
   EnergyFacilityInterventionItem,
   EnergyFacilityItem,
-} from "@/store/GhgInterface";
+} from "@/store/GhgInterface.vue";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 

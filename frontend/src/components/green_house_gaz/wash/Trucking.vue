@@ -1,192 +1,40 @@
 <template>
   <v-container fluid>
     <survey-item-title :title-key="title" />
-    <v-row>
-      <v-col :cols="4">
-        <v-card elevation="2">
-          <v-card-title><h1>Baseline</h1></v-card-title>
-          <v-card-text>
-            <div v-for="washInput in washInputs" :key="washInput.code">
-              <template
-                v-if="
-                  washForm.baseline.inputs[washInput.conditional] ===
-                  washInput.conditional_value
-                "
-              >
-                <v-text-field
-                  v-if="washInput.type === 'number'"
-                  v-model="washForm.baseline.inputs[washInput.code]"
-                  :label="washInput.description"
-                  hide-spin-buttons
-                  :suffix="washInput.suffix"
-                  type="number"
-                  :disabled="washInput.disabled"
-                  @change="(e) => updateWashForm(e, 'baseline textfield')"
-                ></v-text-field>
-                <v-select
-                  v-if="washInput.type === 'select'"
-                  v-model="washForm.baseline.inputs[washInput.code]"
-                  :items="washInput.items"
-                  :label="washInput.description"
-                  :disabled="washInput.disabled"
-                  @change="(e) => updateWashForm(e, 'baseline select')"
-                >
-                </v-select>
-              </template>
-            </div>
-          </v-card-text>
-          <v-divider />
-          <v-card flat>
-            <v-card-title><h2>Results</h2></v-card-title>
-            <v-card-text>
-              <div v-for="washResult in washResults" :key="washResult.code">
-                <v-text-field
-                  hide-spin-buttons
-                  :value="
-                    washForm.baseline.results[washResult.code] | formatNumber
-                  "
-                  :suffix="washResult.suffix"
-                  :label="washResult.description"
-                  :disabled="washResult.disabled"
-                ></v-text-field>
-              </div>
-            </v-card-text>
-          </v-card>
-        </v-card>
-      </v-col>
-      <v-col :cols="4">
-        <v-card elevation="2">
-          <v-card-title> <h1>Endline</h1></v-card-title>
-          <v-card-text>
-            <div v-for="washInput in washInputs" :key="washInput.code">
-              <template
-                v-if="
-                  washForm.endline.inputs[washInput.conditional] ===
-                  washInput.conditional_value
-                "
-              >
-                <v-text-field
-                  v-if="washInput.type === 'number'"
-                  v-model.number="washForm.endline.inputs[washInput.code]"
-                  :label="washInput.description"
-                  :suffix="washInput.suffix"
-                  hide-spin-buttons
-                  type="number"
-                  :disabled="washInput.disabled"
-                  @change="(e) => updateWashForm(e, 'Endline select')"
-                ></v-text-field>
-                <v-select
-                  v-if="washInput.type === 'select'"
-                  v-model="washForm.endline.inputs[washInput.code]"
-                  hide-spin-buttons
-                  :items="washInput.items"
-                  :label="washInput.description"
-                  :disabled="washInput.disabled"
-                  @change="(e) => updateWashForm(e, 'Endline select')"
-                >
-                </v-select>
-              </template>
-            </div>
-          </v-card-text>
-          <v-divider />
-          <v-card flat>
-            <v-card-title><h2>Results</h2></v-card-title>
-            <v-card-text>
-              <v-text-field
-                v-for="washResult in washResults"
-                :key="washResult.code"
-                :suffix="washResult.suffix"
-                :value="
-                  washForm.endline.results[washResult.code] | formatNumber
-                "
-                :label="washResult.description"
-                :disabled="washResult.disabled"
-              ></v-text-field>
-            </v-card-text>
-          </v-card>
-        </v-card>
-      </v-col>
-      <v-col :cols="4">
-        <v-card elevation="2">
-          <v-card-title><h1>Balance</h1></v-card-title>
-          <v-card-text>
-            <v-text-field
-              v-for="washBalanceResult in washBalanceResultsPart1"
-              :key="washBalanceResult.code"
-              :value="
-                washForm.endline.resultsBalance[washBalanceResult.code]
-                  | formatNumber
-              "
-              :label="washBalanceResult.description"
-              :disabled="washBalanceResult.disabled"
-              :suffix="washBalanceResult.suffix"
-            ></v-text-field>
-          </v-card-text>
-          <v-divider />
-          <v-card
-            outlined
-            :class="{
-              'wash-positive':
-                washForm.endline.resultsBalance.changeInEmission > 0,
-              'wash-negative':
-                washForm.endline.resultsBalance.changeInEmission < 0,
-            }"
-          >
-            <v-card-text>
-              <v-text-field
-                v-for="washBalanceResult in washBalanceResultsPart2"
-                :key="washBalanceResult.code"
-                :value="
-                  washForm.endline.resultsBalance[washBalanceResult.code]
-                    | formatNumber({
-                      signDisplay: 'exceptZero',
-                      style: washBalanceResult.formatType,
-                    })
-                "
-                :label="washBalanceResult.description"
-                :disabled="washBalanceResult.disabled"
-                :suffix="washBalanceResult.suffix"
-                :class="{
-                  'wash-positive':
-                    washBalanceResult.code === 'changeInEmission' &&
-                    washForm.endline.resultsBalance[washBalanceResult.code] > 0,
-                  'wash-negative':
-                    washBalanceResult.code === 'changeInEmission' &&
-                    washForm.endline.resultsBalance[washBalanceResult.code] < 0,
-                }"
-              ></v-text-field>
-            </v-card-text>
-          </v-card>
-        </v-card>
-      </v-col>
-    </v-row>
+    <baseline-endline-wrapper
+      v-model="washForm"
+      :headers="truckingHeaders"
+      :diff-dimension="diffDimension"
+      name="transport"
+    />
   </v-container>
 </template>
 
 <script lang="ts">
+import { computeChangeInEmission } from "@/components/green_house_gaz/changeInEmission";
+import BaselineEndlineWrapper from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
+import { formatNumber } from "@/plugins/filters";
 import {
-  GreenHouseGaz,
-  WashTruckingItemBalance,
-  WashTruckingItemInputs,
-  WashTruckingItemResults,
-  WashTruckingSurvey,
-} from "@/store/GhgInterface";
+  GenericFormSurvey,
+  SurveyInput,
+  SurveyItem,
+  SurveyResult,
+} from "@/store/GhgInterface.vue";
 import {
   ItemReferencesMap,
   ReferenceItemInterface,
 } from "@/store/GhgReferenceModule";
+import { get as _get, sumBy } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-import { computeChangeInEmission } from "../changeInEmission";
 
-const DIESEL = "DIESEL";
-const PETROL = "Petrol / Gaz";
+export const DIESEL = "DIESEL";
+export const PETROL = "Petrol / Gaz";
 
 @Component({
   computed: {
-    ...mapGetters("GhgModule", ["project"]),
     ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
   },
   methods: {
@@ -198,6 +46,7 @@ const PETROL = "Petrol / Gaz";
   },
   components: {
     SurveyItemTitle,
+    BaselineEndlineWrapper,
   },
 })
 export default class Trucking extends Vue {
@@ -213,63 +62,63 @@ export default class Trucking extends Vue {
 
   ghgMapRef!: ItemReferencesMap;
 
-  project!: GreenHouseGaz;
+  diffDimension: keyof WashTruckingItemInput = "WACL";
 
   public get title(): string {
     return this.titleKey;
   }
   public get washForm(): WashTruckingSurvey {
-    return this.form || this.generateNewWashForm();
+    // migration code.
+    if (!this.form) {
+      return this.generateNewWashForm();
+    }
+    // TODO: MIGRATION remove when data migration complete
+    if (this.form?.baseline.items === undefined) {
+      return this.generateNewWashForm();
+    }
+    // END OF TODO: MIGRATION
+    return this.form;
   }
 
-  public set washForm(newForm: WashTruckingSurvey) {
+  public set washForm(value: WashTruckingSurvey) {
+    const newForm = JSON.parse(JSON.stringify(value));
+    newForm.baseline.items = this.computeTotalCO2(newForm.baseline.items);
+    newForm.baseline.results = this.computeResults(newForm.baseline.items);
+
+    newForm.endline.items = this.computeTotalCO2(newForm.endline.items);
+    newForm.endline.items = this.computeChangeInItemsWithRatio(
+      newForm.baseline.items,
+      newForm.endline.items
+    );
+    newForm.endline.results = this.computeResults(newForm.endline.items);
+    // compute balance once endline results are computed
+    // this could include also other diff like truck number or distance
+    const changeInEmission = computeChangeInEmission(
+      newForm.baseline.results.totalCO2Emission,
+      newForm.endline.results.totalCO2Emission
+    );
+    newForm.endline.results.changeInEmission = changeInEmission;
     this.$emit("update:form", newForm);
-  }
-  public updateWashForm(): void {
-    this.washForm.baseline.results = this.computeResults(
-      this.washForm.baseline.inputs
-    );
-    this.washForm.endline.results = this.computeResults(
-      this.washForm.endline.inputs
-    );
-    this.washForm.endline.resultsBalance = this.computeBalance();
-    this.washForm = Object.assign({}, this.washForm);
   }
 
   private generateNewWashForm(): WashTruckingSurvey {
     return {
       baseline: {
-        inputs: {
-          US_TYP: "WATER",
-          US_UNI: "KM",
-          LIT_WS: 0,
-          TOT_WS: 10000,
-          WACL: 5,
-          TR_VOL: 2.5,
-          TR_TYP: "DIESEL",
-        },
+        items: [],
         results: {
           TR_NUM: 0,
           TR_DIST: 0,
-          CO2_WSH_TRB: 0,
+          WACL: 0,
+          totalCO2Emission: 0,
         },
       },
       endline: {
-        inputs: {
-          US_TYP: "WATER",
-          US_UNI: "KM",
-          LIT_WS: 0,
-          TOT_WS: 10000,
-          WACL: 5,
-          TR_VOL: 2,
-          TR_TYP: "DIESEL",
-        },
+        items: [],
         results: {
           TR_NUM: 0,
           TR_DIST: 0,
-          CO2_WSH_TRB: 0,
-        },
-        resultsBalance: {
+          WACL: 0,
+          CO2_WSH_TRB: 0, // obsolete ?
           TR_NUM_DIFF: 0,
           TR_DIST_DIFF: 0,
           totalCO2Emission: 0,
@@ -279,165 +128,302 @@ export default class Trucking extends Vue {
     };
   }
 
-  private computeResults(
-    washInput: WashTruckingItemInputs
-  ): WashTruckingItemResults {
-    // use GHG_REFERENCE table
-    if (!this.ghgMapRef) {
-      // energy and iges not retrieved yet.
-      throw new Error("ghg reference not loaded");
+  private truckingComputeCO2Cost(
+    localItem: WashTruckingItem,
+    REF_WSH_D: ReferenceItemInterface | undefined,
+    REF_WSH_G: ReferenceItemInterface | undefined,
+    REF_WSH_D_L: ReferenceItemInterface | undefined,
+    REF_WSH_G_L: ReferenceItemInterface | undefined
+  ): WashTruckingItem {
+    const { US_UNI, US_TYP, WACL, TR_TYP, TOT_WS, TR_VOL, LIT_WS } =
+      localItem.input || {};
+    try {
+      /*
+        When wastewater or faecal sludge is checked in the dropdown,
+        So the input volume pumped must be multiplied by 0.85.
+      */
+      const volumeCollected = ["WASTEWATER", "FAECAL SLUDGE"].includes(US_TYP)
+        ? WACL * 0.85
+        : WACL;
+      // move to special function
+      const washFactorKM =
+        TR_TYP === DIESEL ? REF_WSH_D?.value : REF_WSH_G?.value;
+      if (!washFactorKM) {
+        throw new Error(`washFactorKM undefined`);
+      }
+      if (US_UNI === "KM" && washFactorKM) {
+        localItem.computed.TR_NUM = Math.ceil(volumeCollected / TR_VOL);
+        /*
+        the distance should be checked that is it the one way distance which is converted
+        into a roundtrip distance by multiplying by 2
+        */
+        localItem.computed.TR_DIST = localItem.computed.TR_NUM * TOT_WS * 2;
+        localItem.computed.totalCO2Emission =
+          (washFactorKM * localItem.computed.TR_DIST) / 1000;
+      }
+
+      const washFactorL =
+        TR_TYP === DIESEL ? REF_WSH_D_L?.value : REF_WSH_G_L?.value;
+      if (!washFactorL) {
+        throw new Error(`washFactorL undefined`);
+      }
+      if (US_UNI === "LITRES" && washFactorL) {
+        // add RATIO of 0.85 if type is FEACES
+        localItem.computed.TR_NUM = Math.ceil(volumeCollected / TR_VOL);
+        localItem.computed.TR_DIST = 0; // the DIST is unknown since we only have the number of litres
+        localItem.computed.totalCO2Emission = (washFactorL * LIT_WS) / 1000;
+      }
+      return localItem;
+    } catch (error) {
+      throw new Error(`ghg wash input for trucking unknown unit type ${error}`);
     }
-    // REF_WSH_D is for DIESEL (old value)
-    // we need to retrieve it for Gaz also
-    // REF_WSH_D_L and REF_WSH_G_L
-    const { REF_WSH_D_L, REF_WSH_G_L, REF_WSH_D, REF_WSH_G } = this.ghgMapRef;
-
-    const res = {} as WashTruckingItemResults;
-
-    // CO2_WSH_D=REF_WSH_D_L * D_L/1000 (diesel calculation, answer in CO2eq/yr)
-    // CO2_WSH_G=REF_WSH_G_L * G_L/1000 (diesel calculation, answer in CO2eq/yr)
-    // if not diesel then it's gaz/petrol
-
-    const washFactorKM =
-      washInput.TR_TYP === DIESEL ? REF_WSH_D.value : REF_WSH_G.value;
-    if (washInput.US_UNI === "KM") {
-      res.TR_NUM = Math.ceil(washInput.WACL / washInput.TR_VOL);
-      res.TR_DIST = res.TR_NUM * washInput.TOT_WS * 2;
-      res.CO2_WSH_TRB = (washFactorKM * res.TR_DIST) / 1000;
-      return res;
-    }
-
-    const washFactorL =
-      washInput.TR_TYP === DIESEL ? REF_WSH_D_L.value : REF_WSH_G_L.value;
-    if (washInput.US_UNI === "LITRES") {
-      res.TR_NUM = Math.ceil(washInput.WACL / washInput.TR_VOL);
-      res.TR_DIST = 0; // the DIST is unknown since we only have the number of litres
-      res.CO2_WSH_TRB = (washFactorL * washInput.LIT_WS) / 1000;
-      return res;
-    }
-    throw new Error("ghg wash input for trucking unknown unit type");
   }
 
-  private computeBalance(): WashTruckingItemBalance {
-    const res = {} as WashTruckingItemBalance;
-    const baselineRes = this.washForm.baseline.results;
-    const endlineRes = this.washForm.endline.results;
-    res.TR_NUM_DIFF =
-      Math.abs(baselineRes.TR_NUM - endlineRes.TR_NUM) / baselineRes.TR_NUM;
-    res.TR_DIST_DIFF =
-      Math.abs(baselineRes.TR_DIST - endlineRes.TR_DIST) / baselineRes.TR_DIST;
-    res.totalCO2Emission = endlineRes.CO2_WSH_TRB - baselineRes.CO2_WSH_TRB;
-    res.changeInEmission = computeChangeInEmission(
-      baselineRes.CO2_WSH_TRB,
-      endlineRes.CO2_WSH_TRB
+  private computeTotalCO2(items: WashTruckingItem[]): WashTruckingItem[] {
+    return items.map((item: WashTruckingItem) => {
+      return this.truckingComputeCO2Cost(
+        item,
+        this.ghgMapRef?.REF_WSH_D,
+        this.ghgMapRef?.REF_WSH_G,
+        this.ghgMapRef?.REF_WSH_D_L,
+        this.ghgMapRef?.REF_WSH_G_L
+      );
+    });
+  }
+
+  private computeResults(
+    washItems: WashTruckingItem[]
+  ): WashTruckingItemResults {
+    const res = {} as WashTruckingItemResults;
+    res.totalCO2Emission = sumBy(
+      washItems,
+      (washItem) => washItem.computed.totalCO2Emission
     );
+    res.WACL = sumBy(washItems, (washItem) => washItem.input.WACL);
     return res;
   }
 
-  // B is for Baseline
-  // E is for endline
-  readonly washInputs = [
+  private computeChangeInItemsWithRatio(
+    washItems: WashTruckingItem[],
+    washInterventions: WashTruckingItem[]
+  ): WashTruckingItem[] {
+    const washItemsByIncrement = washItems.reduce(
+      (acc: Record<number, WashTruckingItem>, el: WashTruckingItem) => {
+        acc[el.increment] = el;
+        return acc;
+      },
+      {}
+    );
+    washInterventions.forEach((intervention: WashTruckingItem) => {
+      const baselineItem =
+        washItemsByIncrement[intervention.originIncrement ?? -1];
+      const baselineCO2 = baselineItem.computed.totalCO2Emission;
+      const endlineCO2 = intervention.computed.totalCO2Emission;
+      const totalChangeInEmission = computeChangeInEmission(
+        baselineCO2,
+        endlineCO2
+      );
+      const ratio: number =
+        (intervention.input[this.diffDimension] as number) /
+        (baselineItem.input[this.diffDimension] as number);
+      intervention.computed.changeInEmission = totalChangeInEmission * ratio;
+    });
+    return washInterventions;
+  }
+  n2sFormatter(n: number): string {
+    // https://stackoverflow.com/a/30686832
+    let s = "";
+    if (!n) s = "a";
+    else
+      while (n) {
+        s = String.fromCharCode(97 + (n % 26)) + s;
+        n = Math.floor(n / 26);
+      }
+    return s;
+  }
+  readonly truckingHeaders = [
+    // replace description by label
+    // replace code by value
     {
-      description: "Trucking type",
-      code: "US_TYP",
+      text: "#", // unique name === dropdown of existant facilities
+      value: "increment",
+      type: "number",
+      hideFooterContent: false,
+      baselineOnly: true,
+      formatter: this.n2sFormatter,
+    },
+    {
+      text: "#", // unique name === dropdown of existant facilities
+      value: "originIncrement",
+      endlineOnly: true,
+      type: "number",
+      hideFooterContent: false,
+      formatter: (
+        v: number,
+        _: unknown,
+        item: SurveyItem,
+        items: SurveyItem[]
+      ) => {
+        const increment: number = _get(item, "increment");
+        // todo finish custom increment function
+        const increments = items
+          .filter((item: SurveyItem) => item.originIncrement === v)
+          .map((item: SurveyItem) => item.increment);
+        const indexOf = increments.indexOf(increment);
+        return `${this.n2sFormatter(v)}${"'".repeat(indexOf)}`;
+      },
+      formatterOrigin: (v: number) => {
+        return `${this.n2sFormatter(v)}`;
+      },
+    },
+    {
+      text: "Intervention",
+      value: "input.description",
+      type: "text",
+
+      endlineOnly: true,
+      hideFooterContent: false,
+    },
+    {
+      text: "Fluid transported", // named "Trucking type",
+      value: "input.US_TYP",
       type: "select",
+      hideFooterContent: false,
       items: ["WATER", "WASTEWATER", "FAECAL SLUDGE"],
     },
     {
-      description: "Trucking unit",
-      code: "US_UNI",
+      text: "Trucking unit",
+      value: "input.US_UNI",
       type: "select",
+
       items: ["KM", "LITRES"],
+      hideFooterContent: false,
     },
     {
-      description: "Distance between camp and water source",
-      code: "TOT_WS",
+      text: "Distance between camp and water source",
+      value: "input.TOT_WS",
       conditional_value: "KM",
       conditional: "US_UNI",
+      style: {
+        cols: "12",
+      },
       type: "number",
+      hideFooterContent: false,
       suffix: "km",
+      formatter: (v: number, { ...args }) => {
+        return formatNumber(v, { suffix: args.suffix });
+      },
     },
     {
-      description: "Litres between camp and water source",
-      code: "LIT_WS",
+      text: "Litres between camp and water source",
+      value: "input.LIT_WS",
       conditional_value: "LITRES",
       conditional: "US_UNI",
+      style: {
+        cols: "12",
+      },
       type: "number",
+      hideFooterContent: false,
       suffix: "l",
+      formatter: (v: number, { ...args }) => {
+        return formatNumber(v, { suffix: args.suffix });
+      },
     },
     {
-      description: "Total volume of water collected (m3)",
-      code: "WACL",
+      text: `Total volume pumped (m3)`,
+      value: "input.WACL",
+      hideFooterContent: false,
+      style: {
+        cols: "12",
+      },
       type: "number",
     },
     {
-      description: "Volume of one water truck",
-      code: "TR_VOL",
+      text: "Volume of one water truck",
+      value: "input.TR_VOL",
+      conditional_value: "KM",
+      conditional: "US_UNI",
+      style: {
+        cols: "12",
+      },
       type: "number",
     },
     {
-      description: "Type of truck",
-      code: "TR_TYP",
+      text: "Type of truck",
+      value: "input.TR_TYP",
       type: "select",
+      hideFooterContent: false,
       items: [DIESEL, PETROL],
     },
-  ];
 
-  readonly washResults = [
     {
-      description: "Approximate number of trucks used",
-      code: "TR_NUM",
+      text: "Approximate number of trucks used",
+      value: "computed.TR_NUM",
       type: "number",
       disabled: true,
     },
     {
-      description: "Total distance travelled",
-      code: "TR_DIST",
+      text: "Total distance travelled",
+      value: "computed.TR_DIST",
       type: "number",
+
       suffix: "km",
       disabled: true,
     },
     {
-      description: "Total CO2 Emissions for trucking type",
-      code: "CO2_WSH_TRB",
+      text: "Total CO2 Emissions (tCO2e/year)",
+      value: "computed.totalCO2Emission",
+      hideFooterContent: false,
+      formatter: (v: number, { ...args }) => {
+        return formatNumber(v, { suffix: args.suffix });
+      },
       type: "number",
       disabled: true,
     },
-  ];
-
-  readonly washBalanceResultsPart1 = [
     {
-      description: "Change in number of trucks used",
-      code: "TR_NUM_DIFF",
-      type: "percentage",
-      suffix: "%",
-      disabled: true,
-    },
-    {
-      description: "Change in total distance travelled",
-      code: "TR_DIST_DIFF",
-      suffix: "%",
-      type: "percentage",
-      disabled: true,
-    },
-  ];
-
-  readonly washBalanceResultsPart2 = [
-    {
-      description: "Total change in CO2 emissions (in tCO2e/year)",
-      code: "totalCO2Emission",
+      text: "Change in Emissions",
+      value: "computed.changeInEmission",
       type: "number",
-      formatType: "decimal",
-      disabled: true,
+      hideFooterContent: false,
+      disable: true,
+      readonly: true,
+      endlineOnly: true,
+      formatter: (v: number) => {
+        return formatNumber(v, { style: "percent", signDisplay: "exceptZero" });
+      },
+      classFormatter: (v: number): string => {
+        const classes: string[] = [];
+        v > 0 ? classes.push("item-positive") : void 0;
+        v < 0 ? classes.push("item-negative") : void 0;
+        v === 0 ? classes.push("bold-table-content") : void 0;
+        return classes.join(" ");
+      },
     },
     {
-      description: "Percentage change in emissions",
-      code: "changeInEmission",
-      type: "percentage",
-      formatType: "percent",
-      disabled: true,
+      text: "",
+      value: "actions",
+      hidden: true,
+      hideFooterContent: false,
+      width: "140px",
     },
-  ];
+  ].map((item) => {
+    const [category, key] = item.value.split(".");
+    const isInput = category === "input";
+    return {
+      align: "start",
+      sortable: false,
+      hideFooterContent: item.hideFooterContent ?? true,
+      label: item.text, // for form-item-component
+      key, // for form-item-component
+      isInput,
+      category, // input or computed,
+      formatter: (v: unknown) => v,
+      classFormatter: () => "",
+      options:
+        item?.items?.map((item) => ({ text: item, value: item })) ?? undefined,
+      ...item,
+    };
+  });
 
   public mounted(): void {
     this.syncDBGhg();
@@ -448,33 +434,42 @@ export default class Trucking extends Vue {
     this.closeDBGhg();
   }
 }
+
+export interface WashTruckingItemInput extends SurveyInput {
+  US_TYP: string;
+  US_UNI: string;
+  TOT_WS: number;
+  LIT_WS: number;
+  WACL: number;
+  TR_VOL: number;
+  TR_TYP: string;
+}
+
+export interface WashTruckingItemResults extends SurveyResult {
+  TR_NUM: number;
+  TR_DIST: number;
+  WACL: number; // total of collected volume
+  totalCO2Emission: number;
+}
+export interface WashTruckingItem extends SurveyItem {
+  input: WashTruckingItemInput;
+  computed: WashTruckingItemResults;
+}
+
+export interface WashTruckingItemResultsBalance extends SurveyResult {
+  TR_NUM_DIFF: number;
+  TR_DIST_DIFF: number;
+  totalCO2Emission: number;
+  changeInEmission: number;
+}
+export interface WashTruckingItemResultsWithBalance
+  extends WashTruckingItemResults,
+    WashTruckingItemResultsBalance {}
+
+export type WashTruckingSurvey = GenericFormSurvey<
+  WashTruckingItem,
+  WashTruckingItemResults,
+  WashTruckingItem,
+  WashTruckingItemResultsWithBalance
+>;
 </script>
-
-<style lang="scss" scoped>
-::v-deep .theme--light.v-input--is-disabled input {
-  color: black;
-}
-::v-deep .wash-negative.theme--light.v-input--is-disabled input {
-  color: green;
-}
-::v-deep .wash-positive.theme--light.v-input--is-disabled input {
-  color: red;
-}
-
-::v-deep .theme--light.v-sheet--outlined {
-  &.wash-negative {
-    border: 2px solid green;
-  }
-  &.wash-positive {
-    border: 2px solid red;
-  }
-  .v-label {
-    color: black;
-    font-weight: 700;
-    font-size: large;
-  }
-  input {
-    font-size: larger;
-  }
-}
-</style>
