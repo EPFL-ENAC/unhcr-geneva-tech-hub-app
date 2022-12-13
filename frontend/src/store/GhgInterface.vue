@@ -1,0 +1,266 @@
+<script lang="ts">
+import { WashTruckingSurvey } from "@/components/green_house_gaz/wash/Trucking.vue";
+// import { Material } from "@/store/ShelterInterface";
+export type CountriesInfoMap = Record<string, CountryInfo>;
+export interface Country {
+  key: CountryCode;
+  value: Sites;
+}
+
+export interface CountryInfo {
+  name: string;
+  code: string;
+  lat: number;
+  lon: number;
+}
+export interface Site {
+  id: string; // site unique identitier (name as first)
+  name: string; // site name // location
+  country_code: CountryCode;
+  created_by: Email;
+  users: Email[];
+  lat?: number;
+  lon?: number;
+}
+type CountryCode = string;
+type Email = string;
+export type Sites = Site[];
+
+export interface GreenHouseGaz {
+  _id?: string | undefined;
+  name: string;
+  country_code: string;
+  latitude: number;
+  longitude: number;
+  surveys: Survey[];
+  users: string[];
+  created_by: string;
+  created_at: string;
+}
+
+export interface SurveyForms {
+  energy: EnergySurvey;
+  wash: WashSurvey;
+  material: MaterialSurvey;
+  offset: OffsetSurvey;
+}
+
+// export type SurveyCategory = "energy" | "wash" | "material" | "offset";
+
+export type SurveyCategory = keyof SurveyForms;
+
+export interface Survey extends SurveyForms {
+  _id?: string; // uuid4
+  created_at: string;
+  created_by: string;
+  updated_by?: string;
+  updated_at?: string;
+  reference?: boolean; // say if the survey is a reference or not
+  name: string; // name is year
+}
+
+export type SurveyKey = keyof Survey;
+
+export interface EnergySurvey {
+  facilities: EnergyFacilitySurvey;
+  cooking: GenericFormSurvey<
+    SurveyItem,
+    SurveyResult,
+    SurveyItem,
+    SurveyResult
+  >;
+  lighting: GenericFormSurvey<
+    SurveyItem,
+    SurveyResult,
+    SurveyItem,
+    SurveyResult
+  >;
+  pumping: GenericFormSurvey<
+    SurveyItem,
+    SurveyResult,
+    SurveyItem,
+    SurveyResult
+  >;
+}
+export type EnergySurveyCategory = keyof EnergySurvey;
+
+// should be generic survey with import type from Trucking.vue
+export interface WashSurvey {
+  trucking: WashTruckingSurvey;
+}
+
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+// TODO replace by GenericFormSurvey
+export interface FormSurvey {
+  baseline: {
+    inputs: FormSurveyInput[];
+    results: FormSurveyResult;
+  };
+  endline: {
+    inputs: FormSurveyInput[];
+    results: FormSurveyResultWithBalance;
+  };
+}
+
+export interface FormSurveyInput {
+  name?: string;
+}
+
+export interface FormSurveyResult {
+  totalCO2Emission: number;
+}
+
+export interface FormSurveyResultWithBalance extends FormSurveyResult {
+  changeInEmission: number | null;
+}
+
+// GENERIC START
+export type SurveyInputValue = number | string | boolean;
+export type SurveyInput = Record<string, SurveyInputValue>;
+export type SurveyResultValue = number | boolean;
+export type SurveyResult = Record<string, SurveyResultValue>;
+export interface SurveyItem {
+  _id: string; // as of uuidv4Type
+  increment: number; // increment value in number
+  origin?: string; // as of uuidv4Type of an existing item
+  originIncrement?: number; // increment value of an existing
+  input: SurveyInput;
+  computed: SurveyResult;
+}
+
+export interface GenericFormSurvey<
+  BaselineItemType extends SurveyItem,
+  BaselineResultsType extends SurveyResult,
+  EndlineItemType extends SurveyItem,
+  EndlineResultsType extends SurveyResult
+> {
+  baseline: GenericBaseline<BaselineItemType, BaselineResultsType>;
+  endline: GenericEndline<EndlineItemType, EndlineResultsType>;
+}
+export interface GenericBaseline<
+  BaselineItemType extends SurveyItem,
+  BaselineResultsType extends SurveyResult
+> {
+  items: BaselineItemType[];
+  results: BaselineResultsType;
+}
+
+export interface GenericEndline<
+  EndlineItemType extends SurveyItem,
+  EndlineResultsType extends SurveyResult
+> {
+  items: EndlineItemType[];
+  results: EndlineResultsType;
+}
+
+// GENERIC STOP
+// start of energy facility survey
+export interface EnergyFacilitySurvey {
+  baseline: {
+    inputs: EnergyFacilityItem[];
+    results: EnergyFacilityItemResult;
+  };
+  endline: {
+    inputs: EnergyFacilityInterventionItem[];
+    results: EnergyFacilityInterventionItemResult;
+  };
+}
+
+type FacilityType =
+  | "DieselGenerators"
+  | "NationalGrid"
+  | "RenewableEnergy"
+  | "HybridMix"
+  | "NotPowered";
+
+export interface EnergyItem {
+  gridPower: number;
+  dieselLiters: number;
+  disableDieselLiters?: boolean;
+  generatorSize?: number; // replace the diesel liter
+  operatingHours?: number; // replace the diesel liter
+  generatorLoad?: number; // load of generator (should be default to 60%)
+  renewablePower: number;
+}
+
+export interface EnergyFacilityItem extends EnergyItem {
+  name: string;
+  facilityType: FacilityType;
+  totalCO2Emission: number;
+}
+
+export type EnergyFacilityItemResult = Omit<
+  EnergyFacilityItem,
+  "name" | "facilityType"
+>;
+
+export interface EnergyFacilityInterventionItem
+  extends Omit<EnergyFacilityItem, "facilityType"> {
+  description: string;
+  changeInEmission: number | null;
+}
+
+export type EnergyFacilityInterventionItemResult = Omit<
+  EnergyFacilityInterventionItem,
+  "description" | "name"
+>;
+
+// start of material survey
+export interface MaterialSurvey {
+  shelter: GenericFormSurvey<
+    SurveyItem,
+    SurveyResult,
+    SurveyItem,
+    SurveyResult
+  >;
+  cri: GenericFormSurvey<SurveyItem, SurveyResult, SurveyItem, SurveyResult>;
+  hhwaste: GenericFormSurvey<
+    SurveyItem,
+    SurveyResult,
+    SurveyItem,
+    SurveyResult
+  >;
+}
+
+// export type MaterialCRISurvey = FormSurvey;
+
+// export type MaterialHHwasteSurvey = FormSurvey;
+
+export interface OffsetSurvey {
+  treeplanting: GenericFormSurvey<
+    SurveyItem,
+    SurveyResult,
+    SurveyItem,
+    SurveyResult
+  >;
+}
+
+// export interface OffsetTreePlantingSurvey {
+//   baseline: number;
+//   endline: number;
+// }
+// export interface MaterialShelterSurvey {
+//   baseline: MaterialShelterSurveyItem;
+//   endline: MaterialShelterSurveyItemWithBalance;
+// }
+// export interface MaterialShelterSurveyItem {
+//   inputs: Material[];
+//   results: Material[];
+// }
+
+// export interface MaterialShelterSurveyItemWithBalance
+//   extends MaterialShelterSurveyItem {
+//   resultsBalance: MaterialShelterSurveyBalance;
+// }
+
+// export interface MaterialShelterSurveyBalance {
+//   SH_BAL_MAT: number; // Difference in material used
+//   SH_BAL_CO2: number; // Difference in CO2 Emissions
+// }
+export type SurveySubcategory =
+  | keyof EnergySurvey
+  | keyof WashSurvey
+  | keyof MaterialSurvey
+  | keyof OffsetSurvey;
+</script>

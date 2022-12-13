@@ -139,7 +139,7 @@
 
 <script lang="ts">
 import { getNewName, updateMetaFields } from "@/store/documentUtils";
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
+import { GreenHouseGaz, Survey } from "@/store/GhgInterface.vue";
 import { CouchUser } from "@/store/UserModule";
 import { SyncDatabase } from "@/utils/couchdb";
 import { cloneDeep } from "lodash";
@@ -255,7 +255,7 @@ export default class ProjectItem extends Vue {
     // if surveys === [] empty we want to delete the project!
     if (this.localProject.surveys.length === 0 && this.localProject._id) {
       await this.removeDoc(this.localProject._id).then((response) => {
-        console.log(response);
+        console.log("success removing doc", response);
       });
     } else {
       await this.submitForm(this.localProject);

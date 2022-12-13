@@ -89,9 +89,8 @@
             <component
               :is="subcategory"
               v-if="subcategory"
-              :form.sync="currentSurvey[normedCategory][normedSubcategory]"
+              :form.sync="localFormSurvey"
               :title-key="currentKeyTitle"
-              @update:form="updateCurrentSurvey"
             />
             <component
               :is="category"
@@ -99,7 +98,6 @@
               :readonly="isReadOnly"
               :survey-index="currentSurveyIndex"
               :survey.sync="currentSurvey"
-              @update:survey="updateCurrentSurvey"
             />
           </v-form>
         </v-container>
@@ -121,7 +119,15 @@ import Shelter from "@/components/green_house_gaz/materials/Shelter.vue";
 import TreePlanting from "@/components/green_house_gaz/offset/TreePlanting.vue";
 import Results from "@/components/green_house_gaz/Results.vue";
 import Trucking from "@/components/green_house_gaz/wash/Trucking.vue";
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
+import {
+  GenericFormSurvey,
+  GreenHouseGaz,
+  Survey,
+  SurveyCategory,
+  SurveyItem,
+  SurveyResult,
+  SurveySubcategory,
+} from "@/store/GhgInterface.vue";
 import getCountryName from "@/utils/getCountryName";
 import { cloneDeep, isEqual } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
@@ -226,20 +232,43 @@ export default class SurveyList extends Vue {
     return (this.$route.query.category as string) ?? "";
   }
 
-  public get normedCategory(): string {
-    return this.category.toLowerCase();
+  public get normedCategory(): SurveyCategory {
+    return this.category?.toLowerCase() as SurveyCategory;
   }
 
   public get subcategory(): string {
     return (this.$route.query.subcategory as string) ?? "";
   }
 
-  public get normedSubcategory(): string {
-    return this.subcategory.toLowerCase();
+  public get normedSubcategory(): SurveySubcategory {
+    return this.subcategory.toLowerCase() as SurveySubcategory;
   }
 
   public get currentKeyTitle(): string {
     return `${this.category}-${this.subcategory}`;
+  }
+
+  public get localFormSurvey():
+    | GenericFormSurvey<SurveyItem, SurveyResult, SurveyItem, SurveyResult>
+    | undefined {
+    const category = this.currentSurvey?.[this.normedCategory];
+    const subcategory =
+      category?.[this.normedSubcategory as keyof typeof category];
+    return subcategory;
+  }
+
+  public set localFormSurvey(
+    value:
+      | GenericFormSurvey<SurveyItem, SurveyResult, SurveyItem, SurveyResult>
+      | undefined
+  ) {
+    if (this.currentSurvey && this.normedCategory && this.normedSubcategory) {
+      const category = this.currentSurvey?.[this.normedCategory];
+      // help from @blueur needed for type
+      const subcategory = this.normedSubcategory as keyof typeof category;
+      this.currentSurvey[this.normedCategory][subcategory] = value as never;
+      this.updateCurrentSurvey();
+    }
   }
 
   public get isReadOnly(): boolean {
@@ -332,7 +361,6 @@ export default class SurveyList extends Vue {
     // force update via setter
     this.currentSurvey = Object.assign({}, this.currentSurvey);
   }
-
   public submitForm(value: GreenHouseGaz = this.project): void {
     if (!this.isReadOnly) {
       if (value.name !== "") {

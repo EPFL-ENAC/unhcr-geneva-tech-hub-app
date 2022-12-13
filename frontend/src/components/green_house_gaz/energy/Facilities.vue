@@ -147,7 +147,7 @@ import {
   EnergyFacilityItem,
   EnergyFacilityItemResult,
   EnergyFacilitySurvey,
-} from "@/store/GhgInterface";
+} from "@/store/GhgInterface.vue";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { EChartsOption } from "echarts/types/dist/shared";
 import { sumBy } from "lodash";
@@ -406,18 +406,18 @@ export default class Facilities extends Vue {
 
   public get diffInTotalKwh() {
     const baselineKWH = sumBy(
-      this.kwhData(this.facilityForm.baseline.results),
+      this.kwhDataFacilities(this.facilityForm.baseline.results),
       (el) => el.value
     );
     const endlineKWH = sumBy(
-      this.kwhData(this.facilityForm.endline.results),
+      this.kwhDataFacilities(this.facilityForm.endline.results),
       (el) => el.value
     );
 
     return baselineKWH - endlineKWH !== 0;
   }
 
-  private kwhData(
+  private kwhDataFacilities(
     item: EnergyFacilityItemResult | EnergyFacilityInterventionItemResult
   ): EchartDataSerie[] {
     const data: EchartDataSerie[] = [];
@@ -456,7 +456,7 @@ export default class Facilities extends Vue {
     item: EnergyFacilityItemResult | EnergyFacilityInterventionItemResult
   ): EChartsOption {
     // "Distribution of tCO2e/year per facilities"
-    const data = this.kwhData(item);
+    const data = this.kwhDataFacilities(item);
     // energy mix
 
     return {

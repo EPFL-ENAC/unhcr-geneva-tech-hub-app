@@ -229,6 +229,7 @@ export default class GraphTree extends Vue {
     return {
       tooltip: this.tooltipOption,
       title: this.titleOption,
+
       series: [
         {
           emphasis: {

@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import SurveyList from "@/components/green_house_gaz/SurveysList.vue";
-import { Country, Site } from "@/store/GhgInterface";
+import { Country, Site } from "@/store/GhgInterface.vue";
 import { countries as Countries, countriesMap } from "@/utils/countriesAsList";
 import { Component, Vue } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";

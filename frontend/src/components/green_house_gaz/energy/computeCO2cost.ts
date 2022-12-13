@@ -1,4 +1,4 @@
-import { EnergyItem } from "@/store/GhgInterface";
+import { EnergyItem } from "@/store/GhgInterface.vue";
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
 
 export function computeLitresDiesel(
