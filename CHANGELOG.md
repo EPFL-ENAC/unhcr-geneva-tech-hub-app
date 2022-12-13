@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.4.0...v0.5.0) (2022-12-13)
+
+
+### Features
+
+* **ghg:** add generic baseline-endline ([4bdb496](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/4bdb4960d7019a5f9e58ce6ab8adef34da9b7da7))
+
+
+### Bug Fixes
+
+* **filters:** rewrite formatNumber filter ([9de7405](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/9de740510f7c4b13fca56b94983fa487096f41e5))
+
 ## [0.4.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.3.0...v0.4.0) (2022-12-06)
 
 
