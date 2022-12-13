@@ -27,5 +27,6 @@ setup:
 	echo "nothing to see here"
 
 run:
-	docker-compose build --parallel --pull
+	docker-compose pull
+	docker-compose build --parallel --no-cache
 	docker-compose up -d --remove-orphans
