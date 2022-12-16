@@ -3,7 +3,7 @@
     <v-row>
       <!-- flex + align-items: center; -->
       <v-col class="d-flex align-center">
-        I don't know Total of Litres used
+        {{ selectText }}
       </v-col>
       <v-col>
         <!--     margin: 0px; padding: 0px; -->
@@ -66,6 +66,13 @@ export default class DieselGenerators extends Vue {
   @Prop({ type: Object, required: true, default: () => ({}) })
   facility!: Facility;
 
+  @Prop({
+    type: String,
+    required: false,
+    default: "I don't know Total of Litres used",
+  })
+  selectText!: string;
+
   public get localFacility(): Facility {
     return this.facility;
   }
@@ -123,6 +130,7 @@ export default class DieselGenerators extends Vue {
       this.localFacility = {
         ...this.localFacility,
         dieselLiters: 0,
+        generatorLoad: 60,
         disableDieselLiters: true,
       };
     } else {
@@ -130,6 +138,8 @@ export default class DieselGenerators extends Vue {
         ...this.localFacility,
         generatorSize: 0,
         operatingHours: 0,
+        dieselLiters: 0,
+        generatorLoad: 60,
         disableDieselLiters: false,
       };
     }
