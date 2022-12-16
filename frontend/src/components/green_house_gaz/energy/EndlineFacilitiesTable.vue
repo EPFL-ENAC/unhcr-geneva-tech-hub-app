@@ -31,7 +31,14 @@
       </template>
 
       <template #[`item.dieselLiters`]="{ item }">
-        {{ item.dieselLiters | formatNumber }}
+        <template v-if="item.operatingHours && item.generatorSize">
+          ~
+          {{
+            (item.operatingHours * item.generatorSize * REF_DIES_GEN_VALUE) |
+              formatNumber
+          }}
+        </template>
+        <template v-else>{{ item.dieselLiters | formatNumber }}</template>
       </template>
       <template #[`item.gridPower`]="{ item }">
         {{ item.gridPower | formatNumber }}
@@ -135,14 +142,19 @@ import {
   EnergyFacilityInterventionItem,
   EnergyFacilityItem,
 } from "@/store/GhgInterface.vue";
+import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { mapGetters } from "vuex";
 
 @Component({
   components: {
     DeleteInterventionDialog,
     InterventionDialog,
     DuplicateInterventionDialog,
+  },
+  computed: {
+    ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
   },
 })
 export default class EndlineFacilitiesTable extends Vue {
@@ -164,6 +176,7 @@ export default class EndlineFacilitiesTable extends Vue {
   localItem: EnergyFacilityInterventionItem =
     {} as EnergyFacilityInterventionItem;
   itemIndex: number | string = -1;
+  ghgMapRef!: ItemReferencesMap;
 
   headers = [
     {
@@ -190,7 +203,9 @@ export default class EndlineFacilitiesTable extends Vue {
   onItemChange(value: EnergyFacilityInterventionItem[]): void {
     this.localItems = cloneDeep(value);
   }
-
+  public get REF_DIES_GEN_VALUE(): number {
+    return this.ghgMapRef?.REF_DIES_GEN?.value ?? 0;
+  }
   public newDefaultItem(): EnergyFacilityInterventionItem {
     return {
       name: "", // existing facility id

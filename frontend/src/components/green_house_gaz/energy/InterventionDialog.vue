@@ -40,16 +40,10 @@
                       :rules="rules"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="6">
-                    <v-text-field
-                      v-model.number="localItem.dieselLiters"
-                      type="number"
-                      required
-                      :rules="rules"
-                      :min="0"
-                      label="Litres of diesel used"
-                    />
-                  </v-col>
+                  <diesel-generator-without-litres
+                    :facility.sync="localItem"
+                    select-text="New generator size"
+                  />
                   <v-col cols="12" sm="6" md="6">
                     <v-text-field
                       v-model.number="localItem.gridPower"
@@ -106,6 +100,8 @@
 <script lang="ts">
 import { computeChangeInEmission } from "@/components/green_house_gaz/changeInEmission";
 import { computeCO2Cost } from "@/components/green_house_gaz/energy/computeCO2cost";
+import DieselGeneratorWithoutLitres from "@/components/green_house_gaz/energy/DieselGeneratorWithoutLitres.vue";
+
 import {
   EnergyFacilityInterventionItem,
   EnergyFacilityItem,
@@ -139,6 +135,9 @@ import { mapActions, mapGetters } from "vuex";
       closeDBGhgIgesGrid: "closeDB",
       getAllDocsGhgIgesGrid: "getAllDocs",
     }),
+  },
+  components: {
+    DieselGeneratorWithoutLitres,
   },
 })
 export default class InterventionDialog extends Vue {
