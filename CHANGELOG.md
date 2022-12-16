@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.5.0...v0.5.1) (2022-12-16)
+
+
+### Bug Fixes
+
+* **ghg:** add a custom way of adding generator info for interventions ([2ffb588](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/2ffb58872aef1247a3c89bc566fe250c0ec199a0)), closes [#165](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/165)
+* **ghg:** add info tooltip and move hrs/year to hrs/day ([2aafcf2](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/2aafcf274b26b66db06820302a19d99ef6c1469b)), closes [#166](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/166)
+
 ## [0.5.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.4.0...v0.5.0) (2022-12-13)
 
 
