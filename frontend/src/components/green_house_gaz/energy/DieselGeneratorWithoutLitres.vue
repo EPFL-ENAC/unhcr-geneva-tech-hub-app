@@ -26,7 +26,11 @@
           :min="0"
           label="generator size (kW)"
           @input="changeGeneratorSize"
-        />
+        >
+          <template #prepend>
+            <info-tooltip> read from nameplate </info-tooltip>
+          </template>
+        </v-text-field>
       </v-col>
       <v-col :cols="12">
         <v-text-field
@@ -35,9 +39,17 @@
           required
           :rules="rules"
           :min="0"
-          label="operating hours (hrs/yr)"
+          label="operating hours (hrs/day)"
           @input="changeOperatingHours"
-      /></v-col>
+        >
+          <template #prepend>
+            <info-tooltip>
+              from daily log and application will extrapolate this information
+              to be annual
+            </info-tooltip>
+          </template>
+        </v-text-field></v-col
+      >
       <v-col :cols="12">
         <v-text-field
           :value="localFacility.generatorLoad"
@@ -50,18 +62,30 @@
           step="10"
           label="generator load (percentage)"
           @input="changeGeneratorLoad"
-        />
+        >
+          <template #prepend>
+            <info-tooltip>
+              default average load of 60% per year will be used if not
+              overwritten
+            </info-tooltip>
+          </template>
+        </v-text-field>
       </v-col>
     </v-row>
   </v-col>
 </template>
 <script lang="ts">
+import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import { computeLitresDiesel } from "@/components/green_house_gaz/energy/computeCO2cost";
 import { Facility } from "@/components/green_house_gaz/energy/Facility";
 import { checkRequired, Rule } from "@/utils/rules";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-@Component
+@Component({
+  components: {
+    InfoTooltip,
+  },
+})
 export default class DieselGenerators extends Vue {
   @Prop({ type: Object, required: true, default: () => ({}) })
   facility!: Facility;
