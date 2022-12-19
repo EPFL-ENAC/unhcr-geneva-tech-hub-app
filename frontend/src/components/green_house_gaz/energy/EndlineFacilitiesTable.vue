@@ -184,7 +184,7 @@ export default class EndlineFacilitiesTable extends Vue {
     {} as EnergyFacilityInterventionItem;
   itemIndex: number | string = -1;
   ghgMapRef!: ItemReferencesMap;
-  getLitres = getLitres;
+  readonly getLitres = getLitres;
 
   headers = [
     {

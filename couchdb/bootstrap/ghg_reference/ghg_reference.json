@@ -1,63 +1,83 @@
 [
-    {
-        "_id": "REF_DIES",
-        "type": "number",
-        "category": "ENERGY",
-        "description": "Energy - Electricity - Emissions Factor - Oil/Diesel [-]",
-        "value": 2.685640875,
-        "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html"
-    },
-    {
-        "_id": "REF_GRD",
-        "type": "number",
-        "category": "ENERGY",
-        "description": "Energy - Electricity - Emissions Factor - National Grid [-]",
-        "value": 0,
-        "source": "https://www.iges.or.jp/en/pub/list-grid-emission-factor/en"
-    },
-    {
-        "_id": "REF_EFF_DIES",
-        "type": "number",
-        "category": "ENERGY",
-        "description": "Energy - Electricity - Efficiency - Diesel Generators (kWh/litre)",
-        "value": 2.5,
-        "source": "https://www.iges.or.jp/en/pub/list-grid-emission-factor/en"
-    },
-    {
-        "_id": "REF_WSH_D",
-        "type": "number",
-        "category": "WASH",
-        "description": "WASH - Trucking - Emissions Factor - Diesel (up to 3.5 tonnes) [-]",
-        "value": 0.25213,
-        "source": "https://unfccc.int/sites/default/files/resource/GHG_emissions_calculator_ver01.1_web.xlsx"
-    },
-    {
-        "_id": "REF_WSH_G",
-        "type": "number",
-        "category": "WASH",
-        "description": "WASH - Trucking - Emissions Factor - Gasoline (up to 3.5 tonnes) [-]",
-        "value": 0.22,
-        "source": "https://unfccc.int/sites/default/files/resource/GHG_emissions_calculator_ver01.1_web.xlsx"
-    },
-    {
-        "_id": "REF_WSH_D_L",
-        "category": "WASH",
-        "description": "WASH - Trucking - Emissions Factor - Diesel (100% mineral diesel) [kg CO2e/l]",
-        "value": 2.7,
-        "source": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022"
-    },
-    {
-        "_id": "REF_WSH_G_L",
-        "category": "WASH",
-        "description": "WASH - Trucking - Emissions Factor - Gasoline (100% mineral gasoline) [kg CO2e/l]",
-        "value": 2.34,
-        "source": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022"
-    },
-    {
-        "_id": "REF_DIES_GEN",
-        "category": "ENERGY",
-        "description": "Energy - Facilities - Estimated Fuel Consumption for Diesel Generator [L/kWh]",
-        "value": 0.32,
-        "source": "https://plan.sa.gov.au/__data/assets/pdf_file/0007/574531/Appendix-O-Greenhouse-Gas-Calculations.pdf"
-    }
+  {
+    "_id": "REF_DIES_L",
+    "type": "number",
+    "category": "ENERGY",
+    "description": "Emissions Factor - Diesel (100% mineral diesel) [kg CO2e/l]",
+    "value": 2.72440045,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
+    "index": 0
+  },
+  {
+    "_id": "REF_GAZ_L",
+    "type": "number",
+    "category": "ENERGY",
+    "description": "Emissions Factor - Gasoline (100% mineral gasoline) [kg CO2e/l]",
+    "value": 2.34,
+    "source": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022",
+    "index": 1
+  },
+  {
+    "_id": "REF_RNW",
+    "type": "number",
+    "category": "ENERGY",
+    "description": "Energy - Electricity - Solar Emissions Factor [-]",
+    "value": 0,
+    "source": null,
+    "index": 2
+  },
+  {
+    "_id": "REF_GRD",
+    "type": "number",
+    "category": "ENERGY",
+    "description": "Energy - Electricity - Emissions Factor - National Grid [-]",
+    "value": 0,
+    "source": "https://www.iges.or.jp/en/pub/list-grid-emission-factor/en",
+    "index": 3
+  },
+  {
+    "_id": "REF_EFF_DIES",
+    "type": "number",
+    "category": "ENERGY",
+    "description": "Energy - Electricity - Efficiency - Diesel Generators (kWh/litre)",
+    "value": 0.267,
+    "source": "https://plan.sa.gov.au/__data/assets/pdf_file/0007/574531/Appendix-O-Greenhouse-Gas-Calculations.pdf",
+    "index": 4
+  },
+  {
+    "_id": "REF_WSH_D",
+    "type": "number",
+    "category": "WASH",
+    "description": "WASH - Trucking - Emissions Factor - Diesel (up to 3.5 tonnes) [-]",
+    "value": 0.25213,
+    "source": "https://unfccc.int/sites/default/files/resource/GHG_emissions_calculator_ver01.1_web.xlsx",
+    "index": 5
+  },
+  {
+    "_id": "REF_WSH_G",
+    "type": "number",
+    "category": "WASH",
+    "description": "WASH - Trucking - Emissions Factor - Gasoline (up to 3.5 tonnes) [-]",
+    "value": 0.22,
+    "source": "https://unfccc.int/sites/default/files/resource/GHG_emissions_calculator_ver01.1_web.xlsx",
+    "index": 6
+  },
+  {
+    "_id": "REF_DIES_GEN",
+    "type": "number",
+    "category": "ENERGY",
+    "description": "Energy - Facilities - Estimated Fuel Consumption for Diesel Generator [L/kWh]",
+    "value": 0.32,
+    "source": "https://plan.sa.gov.au/__data/assets/pdf_file/0007/574531/Appendix-O-Greenhouse-Gas-Calculations.pdf",
+    "index": 7
+  },
+  {
+    "_id": "REF_WW_FS",
+    "type": "number",
+    "category": "WASH",
+    "description": "WASH - Trucking - Water to Wastewater Conversion Factor",
+    "value": 0.85,
+    "source": null,
+    "index": 8
+  }
 ]

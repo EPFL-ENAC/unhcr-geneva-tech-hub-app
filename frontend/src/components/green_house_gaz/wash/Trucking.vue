@@ -132,18 +132,19 @@ export default class Trucking extends Vue {
     localItem: WashTruckingItem,
     REF_WSH_D: ReferenceItemInterface | undefined,
     REF_WSH_G: ReferenceItemInterface | undefined,
-    REF_WSH_D_L: ReferenceItemInterface | undefined,
-    REF_WSH_G_L: ReferenceItemInterface | undefined
+    REF_DIES_L: ReferenceItemInterface | undefined,
+    REF_GAZ_L: ReferenceItemInterface | undefined,
+    REF_WW_FS: ReferenceItemInterface | undefined
   ): WashTruckingItem {
     const { US_UNI, US_TYP, WACL, TR_TYP, TOT_WS, TR_VOL, LIT_WS } =
       localItem.input || {};
     try {
       /*
         When wastewater or faecal sludge is checked in the dropdown,
-        So the input volume pumped must be multiplied by 0.85.
+        So the input volume pumped must be multiplied by 0.85. or REF_WW_FS
       */
       const volumeCollected = ["WASTEWATER", "FAECAL SLUDGE"].includes(US_TYP)
-        ? WACL * 0.85
+        ? WACL * (REF_WW_FS?.value ?? 0.85)
         : WACL;
       // move to special function
       const washFactorKM =
@@ -163,12 +164,11 @@ export default class Trucking extends Vue {
       }
 
       const washFactorL =
-        TR_TYP === DIESEL ? REF_WSH_D_L?.value : REF_WSH_G_L?.value;
+        TR_TYP === DIESEL ? REF_DIES_L?.value : REF_GAZ_L?.value;
       if (!washFactorL) {
         throw new Error(`washFactorL undefined`);
       }
       if (US_UNI === "LITRES" && washFactorL) {
-        // add RATIO of 0.85 if type is FEACES
         localItem.computed.TR_NUM = Math.ceil(volumeCollected / TR_VOL);
         localItem.computed.TR_DIST = 0; // the DIST is unknown since we only have the number of litres
         localItem.computed.totalCO2Emission = (washFactorL * LIT_WS) / 1000;
@@ -185,8 +185,9 @@ export default class Trucking extends Vue {
         item,
         this.ghgMapRef?.REF_WSH_D,
         this.ghgMapRef?.REF_WSH_G,
-        this.ghgMapRef?.REF_WSH_D_L,
-        this.ghgMapRef?.REF_WSH_G_L
+        this.ghgMapRef?.REF_DIES_L,
+        this.ghgMapRef?.REF_GAZ_L,
+        this.ghgMapRef?.REF_WW_FS
       );
     });
   }

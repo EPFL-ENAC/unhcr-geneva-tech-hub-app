@@ -206,8 +206,7 @@ export default class FacilityDialog extends Vue {
 
     this.localItem.totalCO2Emission = computeCO2Cost(
       this.localItem,
-      this.ghgMapRef?.REF_DIES,
-      this.ghgMapRef?.REF_WSH_D_L,
+      this.ghgMapRef?.REF_DIES_L,
       this.project_REF_GRD
     );
     this.localItem.dieselPower = computeDieselPower(
