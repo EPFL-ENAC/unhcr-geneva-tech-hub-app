@@ -186,7 +186,7 @@ export default class BaselineFacilitiesTable extends Vue {
   defaultItem = {};
   localItem: EnergyFacilityItem = {} as EnergyFacilityItem;
   itemIndex: number | string = -1;
-  getLitres = getLitres;
+  readonly getLitres = getLitres;
 
   headers = [
     {

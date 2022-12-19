@@ -144,18 +144,8 @@ export default class Trucking extends Vue {
     };
   }
 
-  private computeCO2Cost(
-    localItem: EnergyCookingItem
-    // REF_WSH_D: ReferenceItemInterface | undefined,
-    // REF_WSH_G: ReferenceItemInterface | undefined,
-    // REF_WSH_D_L: ReferenceItemInterface | undefined,
-    // REF_WSH_G_L: ReferenceItemInterface | undefined
-  ): EnergyCookingItem {
-    // const { US_UNI, US_TYP, WACL, TR_TYP, TOT_WS, TR_VOL, LIT_WS } =
-    //   localItem.input || {};
+  private computeCO2Cost(localItem: EnergyCookingItem): EnergyCookingItem {
     try {
-      // localItem.computed.TR_NUM = Math.ceil(volumeCollected / TR_VOL);
-      // localItem.computed.TR_DIST = 0; // the DIST is unknown since we only have the number of litres
       localItem.computed.totalCO2Emission = 0; // (44 * LIT_WS) / 1000;
       return localItem;
     } catch (error) {
@@ -165,13 +155,7 @@ export default class Trucking extends Vue {
 
   private computeTotalCO2(items: EnergyCookingItem[]): EnergyCookingItem[] {
     return items.map((item: EnergyCookingItem) => {
-      return this.computeCO2Cost(
-        item
-        // this.ghgMapRef?.REF_WSH_D,
-        // this.ghgMapRef?.REF_WSH_G,
-        // this.ghgMapRef?.REF_WSH_D_L,
-        // this.ghgMapRef?.REF_WSH_G_L
-      );
+      return this.computeCO2Cost(item);
     });
   }
 

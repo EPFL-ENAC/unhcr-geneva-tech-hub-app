@@ -353,9 +353,8 @@ export default class Facilities extends Vue {
             endlineInputsName.indexOf(baselineInput.name) === -1
         )
         .map((input: EnergyFacilityItem) => {
-          const deepCopy = cloneDeep(input);
           const newEndlineInput: EnergyFacilityInterventionItem = {
-            ...deepCopy,
+            ...cloneDeep(input),
             description: "",
             changeInEmission: 0, // recompute
           };
