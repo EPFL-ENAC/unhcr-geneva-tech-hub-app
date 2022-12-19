@@ -96,13 +96,6 @@ export default class Results extends Vue {
   @Prop([Object, Array])
   readonly survey: Survey | undefined;
 
-  @Prop({ type: String, required: true, default: "" })
-  readonly titleKey!: string;
-
-  public get title(): string {
-    return this.titleKey;
-  }
-
   public get totalChange(): number {
     return computeChangeInEmission(this.totalBaseline, this.totalEndline);
   }
@@ -195,7 +188,7 @@ export default class Results extends Vue {
       {
         color: `rgba(32,135,200,${this.omega})`,
         name: "WASH - Trucking",
-        resultKey: "CO2_WSH_TRB",
+        resultKey: "totalCO2Emission",
         category: "wash",
         subcategory: "trucking",
         stack: "co2",
@@ -241,10 +234,11 @@ export default class Results extends Vue {
   public get option(): EChartsOption {
     const result: EChartsOption = {
       tooltip: {
-        trigger: "axis",
+        trigger: "item",
         renderMode: "html",
         confine: false,
         appendToBody: true,
+        // formatter: '{a} {b} {c} {d} {e} ',
         axisPointer: {
           type: "shadow",
         },
