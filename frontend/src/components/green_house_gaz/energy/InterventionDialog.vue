@@ -42,7 +42,7 @@
                   </v-col>
                   <diesel-generator-without-litres
                     :facility.sync="localItem"
-                    select-text="New generator size"
+                    select-text="New generator"
                   />
                   <v-col cols="12" sm="6" md="6">
                     <v-text-field
@@ -99,7 +99,10 @@
 
 <script lang="ts">
 import { computeChangeInEmission } from "@/components/green_house_gaz/changeInEmission";
-import { computeCO2Cost } from "@/components/green_house_gaz/energy/computeCO2cost";
+import {
+  computeCO2Cost,
+  computeDieselPower,
+} from "@/components/green_house_gaz/energy/computeCO2cost";
 import DieselGeneratorWithoutLitres from "@/components/green_house_gaz/energy/DieselGeneratorWithoutLitres.vue";
 
 import {
@@ -216,7 +219,10 @@ export default class InterventionDialog extends Vue {
       this.ghgMapRef?.REF_WSH_D_L,
       this.project_REF_GRD
     );
-
+    this.localItem.dieselPower = computeDieselPower(
+      this.localItem,
+      this.ghgMapRef?.REF_EFF_DIES
+    );
     // it's all done in parent component Facilities
     this.selectFacility(this.localItem.name);
     if (this.selectedFacility) {

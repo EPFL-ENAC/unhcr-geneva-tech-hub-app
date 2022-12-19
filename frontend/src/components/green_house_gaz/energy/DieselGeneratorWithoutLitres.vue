@@ -110,43 +110,34 @@ export default class DieselGenerators extends Vue {
   public changeGeneratorSize(value: string): void {
     // we cast with parseFloat because the we use the @change and not the v-model number modifier
     const _temp: number = parseFloat(value || "0");
-    this.localFacility = {
-      ...this.facility,
+    const change = {
+      ...this.localFacility,
       generatorSize: _temp,
-      dieselLiters: computeLitresDiesel(
-        _temp,
-        this.localFacility.operatingHours,
-        this.localFacility.generatorLoad
-      ),
     };
+    change.dieselLiters = computeLitresDiesel(change);
+    this.localFacility = change;
   }
   public changeOperatingHours(value: string): void {
     // we cast with parseFloat because the we use the @change and not the v-model number modifier
     const _temp: number = parseFloat(value || "0");
 
-    this.localFacility = {
+    const change = {
       ...this.localFacility,
       operatingHours: _temp,
-      dieselLiters: computeLitresDiesel(
-        this.localFacility.generatorSize,
-        _temp,
-        this.localFacility.generatorLoad
-      ),
     };
+    change.dieselLiters = computeLitresDiesel(change);
+    this.localFacility = change;
   }
   public changeGeneratorLoad(value: string): void {
     // we cast with parseFloat because the we use the @change and not the v-model number modifier
     const _temp: number = parseFloat(value || "0");
 
-    this.localFacility = {
+    const change = {
       ...this.localFacility,
       generatorLoad: _temp,
-      dieselLiters: computeLitresDiesel(
-        this.localFacility.generatorSize,
-        this.localFacility.operatingHours,
-        _temp
-      ),
     };
+    change.dieselLiters = computeLitresDiesel(change);
+    this.localFacility = change;
   }
 
   public resetDieselLiters(value: boolean): void {
