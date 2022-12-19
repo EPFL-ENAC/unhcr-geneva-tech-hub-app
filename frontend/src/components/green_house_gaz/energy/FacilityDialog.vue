@@ -82,7 +82,10 @@
 </template>
 
 <script lang="ts">
-import { computeCO2Cost } from "@/components/green_house_gaz/energy/computeCO2cost";
+import {
+  computeCO2Cost,
+  computeDieselPower,
+} from "@/components/green_house_gaz/energy/computeCO2cost";
 import DieselGenerators from "@/components/green_house_gaz/energy/DieselGenerators.vue";
 import {
   Facility,
@@ -206,6 +209,10 @@ export default class FacilityDialog extends Vue {
       this.ghgMapRef?.REF_DIES,
       this.ghgMapRef?.REF_WSH_D_L,
       this.project_REF_GRD
+    );
+    this.localItem.dieselPower = computeDieselPower(
+      this.localItem,
+      this.ghgMapRef?.REF_EFF_DIES
     );
     this.$emit("update:item", this.localItem);
     this.isOpen = false;

@@ -4,7 +4,7 @@
 
     <v-row>
       <v-col>
-        <v-alert v-if="diffInTotalKwh" dense outlined type="warning">
+        <v-alert v-if="diffInTotalKwh" dense outlined type="error">
           This comparison is not valid because baseline and endline have
           different energy demands.
         </v-alert>
@@ -150,7 +150,7 @@ import {
 } from "@/store/GhgInterface.vue";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { EChartsOption } from "echarts/types/dist/shared";
-import { sumBy } from "lodash";
+import { cloneDeep, sumBy } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
@@ -254,6 +254,7 @@ export default class Facilities extends Vue {
     // sum all rows into one object
     const endlineResults: EnergyFacilityInterventionItemResult = {
       gridPower: sumBy(inputs, (el) => el.gridPower),
+      dieselPower: sumBy(inputs, (el) => el.dieselPower ?? 0),
       dieselLiters: sumBy(inputs, (el) => el.dieselLiters),
       renewablePower: sumBy(inputs, (el) => el.renewablePower),
       totalCO2Emission: sumBy(inputs, (el) => el.totalCO2Emission),
@@ -316,6 +317,7 @@ export default class Facilities extends Vue {
     const inputs: EnergyFacilityItem[] = baselineInputs; // this.facilityForm.baseline.inputs;
     const results: EnergyFacilityItemResult = {
       gridPower: sumBy(inputs, (el) => el.gridPower),
+      dieselPower: sumBy(inputs, (el) => el.dieselPower ?? 0),
       dieselLiters: sumBy(inputs, (el) => el.dieselLiters),
       renewablePower: sumBy(inputs, (el) => el.renewablePower),
       totalCO2Emission: sumBy(inputs, (el) => el.totalCO2Emission),
@@ -351,20 +353,10 @@ export default class Facilities extends Vue {
             endlineInputsName.indexOf(baselineInput.name) === -1
         )
         .map((input: EnergyFacilityItem) => {
-          const {
-            name,
-            gridPower,
-            dieselLiters,
-            renewablePower,
-            totalCO2Emission,
-          } = input;
+          const deepCopy = cloneDeep(input);
           const newEndlineInput: EnergyFacilityInterventionItem = {
-            name,
+            ...deepCopy,
             description: "",
-            gridPower,
-            dieselLiters,
-            renewablePower,
-            totalCO2Emission,
             changeInEmission: 0, // recompute
           };
           return newEndlineInput;
@@ -386,6 +378,7 @@ export default class Facilities extends Vue {
         inputs: [],
         results: {
           gridPower: 0,
+          dieselPower: 0,
           dieselLiters: 0,
           renewablePower: 0,
           totalCO2Emission: 0,
@@ -395,6 +388,7 @@ export default class Facilities extends Vue {
         inputs: [],
         results: {
           gridPower: 0,
+          dieselPower: 0,
           dieselLiters: 0,
           renewablePower: 0,
           totalCO2Emission: 0,
@@ -428,18 +422,11 @@ export default class Facilities extends Vue {
         value: item.gridPower,
       });
     }
-    if (item.dieselLiters) {
-      let dieselLitersKWH = 0;
-      if (item.generatorSize && item.operatingHours) {
-        dieselLitersKWH = item.generatorSize * item.operatingHours;
-      } else {
-        dieselLitersKWH =
-          item.dieselLiters * this.ghgMapRef?.REF_EFF_DIES?.value;
-      }
+    if (item.dieselPower) {
       data.push({
         id: "dieselLiters",
         name: "Diesel",
-        value: dieselLitersKWH,
+        value: item.dieselPower,
       });
     }
     if (item.renewablePower) {

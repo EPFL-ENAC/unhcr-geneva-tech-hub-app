@@ -42,11 +42,7 @@
     </template>
     <template #[`item.dieselLiters`]="{ item }">
       <template v-if="item.operatingHours && item.generatorSize">
-        ~
-        {{
-          (item.operatingHours * item.generatorSize * REF_DIES_GEN_VALUE) |
-            formatNumber
-        }}
+        ~ {{ getLitres(item) }}
       </template>
       <template v-else>{{ item.dieselLiters | formatNumber }}</template>
     </template>
@@ -128,6 +124,15 @@
                   })
               }}
             </span>
+            <span v-else-if="header.value === 'dieselLiters'">
+              {{
+                results[header.value] |
+                  formatNumber({
+                    maximumFractionDigits: 0,
+                  })
+              }}
+              ({{ results.dieselPower }} in Kwh)
+            </span>
             <span v-else>
               {{
                 results[header.value] |
@@ -144,6 +149,7 @@
 </template>
 
 <script lang="ts">
+import { getLitres } from "@/components/green_house_gaz/energy/computeCO2cost";
 import DeleteFacilityDialog from "@/components/green_house_gaz/energy/DeleteFacilityDialog.vue";
 import DuplicateFacilityDialog from "@/components/green_house_gaz/energy/DuplicateFacilityDialog.vue";
 import { facilityTypes } from "@/components/green_house_gaz/energy/Facility";
@@ -180,6 +186,7 @@ export default class BaselineFacilitiesTable extends Vue {
   defaultItem = {};
   localItem: EnergyFacilityItem = {} as EnergyFacilityItem;
   itemIndex: number | string = -1;
+  getLitres = getLitres;
 
   headers = [
     {
@@ -200,10 +207,6 @@ export default class BaselineFacilitiesTable extends Vue {
   @Watch("items", { immediate: true, deep: true })
   onItemChange(value: EnergyFacilityItem[]): void {
     this.localItems = cloneDeep(value);
-  }
-
-  public get REF_DIES_GEN_VALUE(): number {
-    return this.ghgMapRef?.REF_DIES_GEN?.value ?? 0;
   }
 
   public get facilityTypesMap(): Record<string, string> {
@@ -227,6 +230,7 @@ export default class BaselineFacilitiesTable extends Vue {
       facilityType: "DieselGenerators",
       gridPower: 0,
       dieselLiters: 0,
+      dieselPower: 0,
       renewablePower: 0,
       totalCO2Emission: 0,
     };

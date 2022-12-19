@@ -22,7 +22,7 @@
           <v-col cols="12">
             <v-row>
               <v-col :cols="6" class="d-flex justify-start">
-                <v-alert v-if="!isDiffNull" dense outlined type="warning">
+                <v-alert v-if="!isDiffNull" dense outlined type="error">
                   This comparison is not valid because baseline and endline have
                   different {{ diffDimensionText }}.
                 </v-alert>

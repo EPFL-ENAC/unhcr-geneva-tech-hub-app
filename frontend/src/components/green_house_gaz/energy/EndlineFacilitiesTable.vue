@@ -33,10 +33,7 @@
       <template #[`item.dieselLiters`]="{ item }">
         <template v-if="item.operatingHours && item.generatorSize">
           ~
-          {{
-            (item.operatingHours * item.generatorSize * REF_DIES_GEN_VALUE) |
-              formatNumber
-          }}
+          {{ getLitres(item) }}
         </template>
         <template v-else>{{ item.dieselLiters | formatNumber }}</template>
       </template>
@@ -117,6 +114,15 @@
                     })
                 }}
               </span>
+              <span v-else-if="header.value === 'dieselLiters'">
+                {{
+                  results[header.value] |
+                    formatNumber({
+                      maximumFractionDigits: 0,
+                    })
+                }}
+                ({{ results.dieselPower }} in Kwh)
+              </span>
               <span v-else>
                 <!-- last row total: column (diesel, grid power and renewable ) -->
                 {{
@@ -135,6 +141,7 @@
 </template>
 
 <script lang="ts">
+import { getLitres } from "@/components/green_house_gaz/energy/computeCO2cost";
 import DeleteInterventionDialog from "@/components/green_house_gaz/energy/DeleteInterventionDialog.vue";
 import DuplicateInterventionDialog from "@/components/green_house_gaz/energy/DuplicateInterventionDialog.vue";
 import InterventionDialog from "@/components/green_house_gaz/energy/InterventionDialog.vue";
@@ -177,6 +184,7 @@ export default class EndlineFacilitiesTable extends Vue {
     {} as EnergyFacilityInterventionItem;
   itemIndex: number | string = -1;
   ghgMapRef!: ItemReferencesMap;
+  getLitres = getLitres;
 
   headers = [
     {
@@ -202,9 +210,6 @@ export default class EndlineFacilitiesTable extends Vue {
   @Watch("items", { immediate: true, deep: true })
   onItemChange(value: EnergyFacilityInterventionItem[]): void {
     this.localItems = cloneDeep(value);
-  }
-  public get REF_DIES_GEN_VALUE(): number {
-    return this.ghgMapRef?.REF_DIES_GEN?.value ?? 0;
   }
   public newDefaultItem(): EnergyFacilityInterventionItem {
     return {
