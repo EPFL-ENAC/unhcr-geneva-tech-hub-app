@@ -1,7 +1,7 @@
 <template>
   <v-card flat>
-    <v-card-text v-if="iges_grid_2021">
-      <v-data-table :headers="headers" :items="iges_grid_2021">
+    <v-card-text v-if="iges_grid">
+      <v-data-table :headers="headers" :items="iges_grid">
         <template #[`item.value`]="props">
           <span>{{ props.item.value | formatNumber }}</span>
         </template>
@@ -24,7 +24,7 @@ import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("GhgReferenceIgesGridModule", ["iges_grid_2021"]),
+    ...mapGetters("GhgReferenceIgesGridModule", ["iges_grid"]),
     ...mapGetters(["referenceDataDrawer"]),
   },
   methods: {
@@ -36,14 +36,14 @@ import { mapActions, mapGetters } from "vuex";
     ]),
   },
 })
-export default class IgesGrid2021 extends Vue {
+export default class IgesGrid extends Vue {
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
   getAllDocs!: () => Promise<null>;
 
   updateDoc!: (obj: IgesItemInterface) => PromiseLike<IgesItemInterface>;
 
-  iges_grid_2021!: IgesItemInterface[];
+  iges_grid!: IgesItemInterface[];
   snack = false;
   snackColor = "";
   snackText = "";

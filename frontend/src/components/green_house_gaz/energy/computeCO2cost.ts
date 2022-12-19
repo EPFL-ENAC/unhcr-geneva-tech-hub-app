@@ -34,7 +34,7 @@ export function computeCO2Cost(
   result += (dieselLitres * (REF_DIES_L?.value ?? 0)) / 1000;
 
   if (REF_GRD && localItem.gridPower) {
-    // FYI, some countries are not in the IGES_GRID_2021
+    // FYI, some countries are not in the IGES_GRID
     result += (localItem.gridPower * REF_GRD.value) / 1000;
   }
   return result;

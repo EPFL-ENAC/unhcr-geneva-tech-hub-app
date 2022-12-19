@@ -124,7 +124,7 @@ import { mapActions, mapGetters } from "vuex";
 @Component({
   computed: {
     ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
-    ...mapGetters("GhgReferenceIgesGridModule", ["iges_grid_2021"]),
+    ...mapGetters("GhgReferenceIgesGridModule", ["iges_grid"]),
     ...mapGetters("GhgModule", ["project", "project_REF_GRD"]),
   },
   methods: {
@@ -173,7 +173,7 @@ export default class InterventionDialog extends Vue {
   getAllDocsGhgIgesGrid!: () => Promise<IgesItemInterface[]>;
 
   ghgMapRef!: ItemReferencesMap;
-  iges_grid_2021!: IgesItemInterface[];
+  iges_grid!: IgesItemInterface[];
 
   formValid = false;
   localItem: EnergyFacilityInterventionItem | null = null;

@@ -20,7 +20,7 @@ interface GhgReferenceIgesGridState {
   localCouch: SyncDatabase<IgesItemInterface> | null;
 }
 
-const DB_NAME = "ghg_reference_iges_grid_2021";
+const DB_NAME = "ghg_reference_iges_grid";
 const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 
 /** Default Configure state value */
@@ -34,7 +34,7 @@ function generateState(): GhgReferenceIgesGridState {
 
 /** Getters */
 const getters: GetterTree<GhgReferenceIgesGridState, RootState> = {
-  iges_grid_2021: (s): IgesItemInterface[] | null => s.items,
+  iges_grid: (s): IgesItemInterface[] | null => s.items,
 };
 
 /** Mutations */
