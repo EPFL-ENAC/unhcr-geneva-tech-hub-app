@@ -64,16 +64,15 @@ const getters: GetterTree<ProjectsState, RootState> = {
     rootGetters
   ): ReferenceItemInterface | null => {
     const ghgMapRef = rootGetters["GhgReferenceModule/ghgMapRef"];
-    const iges_grid_2021 =
-      rootGetters["GhgReferenceIgesGridModule/iges_grid_2021"];
-    if (!ghgMapRef || !iges_grid_2021) {
+    const iges_grid = rootGetters["GhgReferenceIgesGridModule/iges_grid"];
+    if (!ghgMapRef || !iges_grid) {
       return null;
     }
     const REF_GRD = ghgMapRef.REF_GRD;
-    const iges_grid_2021_match = iges_grid_2021.find(
+    const iges_grid_match = iges_grid.find(
       (el: IgesItemInterface) => el._id === getters.project.country_code
     );
-    REF_GRD.value = iges_grid_2021_match?.value || REF_GRD.value; // find REF_GRD per country
+    REF_GRD.value = iges_grid_match?.value || REF_GRD.value; // find REF_GRD per country
 
     return REF_GRD;
   },
