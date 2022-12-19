@@ -5,7 +5,7 @@
   ],
   "python.analysis.typeCheckingMode": "strict",
   "python.defaultInterpreterPath": "${workspaceFolder}/backend/.venv",
-  "python.formatting.provider": "black",
+  "python.formatting.provider": "yapf",
   "python.linting.flake8Enabled": true,
   "python.testing.pytestEnabled": true,
   "python.testing.pytestPath": "${workspaceFolder}/backend/tests"
