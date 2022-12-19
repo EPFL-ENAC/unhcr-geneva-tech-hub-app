@@ -8,9 +8,11 @@ export function computeLitresDiesel(localItem: EnergyItem): number {
     generatorLoad = 60,
   } = localItem || {};
   // generatorLoad in percentage 10% not 0.1
-  const REF_DIES_GEN = -0.031 * Math.log((generatorLoad ?? 60) / 100) + 0.2514;
-  // operating hours are hours-per-day and we should use hours-per-year
-  const litres = generatorSize * (operatingHours * 365) * REF_DIES_GEN;
+  const genLoad = (generatorLoad ?? 60) / 100;
+  const DIE_GEN_L_per_kWh = -0.031 * Math.log(genLoad) + 0.2514;
+  const litres =
+    generatorSize * (operatingHours * 365) * DIE_GEN_L_per_kWh * genLoad;
+
   return parseFloat(litres.toFixed(2));
 }
 
