@@ -8,7 +8,7 @@
         :rules="rules"
         :min="0"
         :disabled="localFacility.disableDieselLiters"
-        label="Litres of diesel used"
+        label="Litres of diesel used per year"
         @input="changeDieselLiters"
       />
     </v-col>
