@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.2](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.5.1...v0.5.2) (2022-12-19)
+
+
+### Bug Fixes
+
+* **171:** add litresPower and other changes ([ff6b860](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/ff6b860a4d16877e9e14e5c62f6fbb3a77c8fe44))
+* **ghg-energy-facilities:** change the formula for generator load ([ed11fbf](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/ed11fbf4ee5d7d412e6ae5735539e680d159a3e0)), closes [#175](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/175)
+* **ghg-energy-facility:** better text for dialog form ([59ee80c](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/59ee80c71aa20f771fd3c31165094352ded87745)), closes [#174](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/174)
+* **ghg-results:** display only highlighted item ([092c8bb](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/092c8bb8fb8085a57c1e337f53f3f4381b75a548)), closes [#33](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/33)
+* **iges-grid:** rename iges_grid_2021 to iges_grid ([78d6cb7](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/78d6cb721efc7821e75fbf918cadd4e1a0596b09))
+
 ## [0.5.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.5.0...v0.5.1) (2022-12-16)
 
 
