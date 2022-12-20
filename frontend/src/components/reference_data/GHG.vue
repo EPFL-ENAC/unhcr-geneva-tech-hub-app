@@ -9,7 +9,10 @@
       >
         <template #[`item.value`]="props">
           <span :title="props.item._id">{{
-            props.item.value | formatNumber
+            props.item.value |
+              formatNumber({
+                maximumFractionDigits: 3,
+              })
           }}</span>
         </template>
         <template #[`item.source`]="props">
