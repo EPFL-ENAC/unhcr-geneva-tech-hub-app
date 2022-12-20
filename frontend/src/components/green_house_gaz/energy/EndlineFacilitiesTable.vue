@@ -121,7 +121,13 @@
                       maximumFractionDigits: 0,
                     })
                 }}
-                ({{ results.dieselPower }} in Kwh)
+                ({{
+                  results.dieselPower |
+                    formatNumber({
+                      maximumFractionDigits: 0,
+                    })
+                }}
+                in Kwh)
               </span>
               <span v-else>
                 <!-- last row total: column (diesel, grid power and renewable ) -->
