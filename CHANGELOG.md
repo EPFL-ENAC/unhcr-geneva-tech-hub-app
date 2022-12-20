@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.4](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.5.3...v0.5.4) (2022-12-20)
+
+
+### Bug Fixes
+
+* **ghg-reference:** remove REF_EFF_DIES unused ([1e65966](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/1e6596631dc0ed330fe9d63bf5c4c171a93ad3aa))
+
 ## [0.5.3](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.5.2...v0.5.3) (2022-12-20)
 
 
