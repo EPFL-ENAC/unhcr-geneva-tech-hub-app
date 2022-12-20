@@ -471,8 +471,10 @@ export default class Facilities extends Vue {
         textStyle: {
           fontSize: 12,
           width: "500px",
+          lineHeight: 12,
         },
-        top: "bottom",
+        top: "auto",
+        padding: 0,
         left: "center",
       },
 

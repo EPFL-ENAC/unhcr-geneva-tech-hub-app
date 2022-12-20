@@ -1,5 +1,5 @@
 <template>
-  <v-responsive height="128px" width="128px">
+  <v-responsive height="200px" width="128px">
     <v-chart autoresize :option="option"></v-chart>
   </v-responsive>
 </template>
