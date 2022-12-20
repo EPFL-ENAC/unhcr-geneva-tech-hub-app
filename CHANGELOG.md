@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.3](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.5.2...v0.5.3) (2022-12-20)
+
+
+### Bug Fixes
+
+* **ghg-energy-facilities:** better formating for title piechart ([c15221f](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c15221f4808d9c4dcff9e4629cce138571fdea64))
+* **ghg:** add formatter for kwh ([d5c382f](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d5c382f5c701d8c1def15eb42ba5a2b7883c8567))
+* **ghg:** change fraction number for ghg reference ([ff058cb](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/ff058cb8c241cd2273cb2dd10de6bfc7b7f41031))
+* **ghg:** correct pie chart and compute power for diesel ([90bba74](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/90bba74e025829cc5d30f1aaa31a902d4ff6fe40))
+
 ## [0.5.2](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.5.1...v0.5.2) (2022-12-19)
 
 
