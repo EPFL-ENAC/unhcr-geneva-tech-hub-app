@@ -260,6 +260,13 @@ export default class Facilities extends Vue {
       totalCO2Emission: sumBy(inputs, (el) => el.totalCO2Emission),
       changeInEmission: 0, // need to compute totalCO2 first
     };
+    endlineResults.totalPower =
+      (endlineResults?.gridPower ?? 0) +
+      (endlineResults?.dieselPower ?? 0) +
+      endlineResults.renewablePower;
+    endlineResults.totalPower = parseFloat(
+      endlineResults.totalPower.toFixed(0)
+    );
     const changeInEmission = computeChangeInEmission(
       baselineResults.totalCO2Emission,
       endlineResults.totalCO2Emission
@@ -322,6 +329,12 @@ export default class Facilities extends Vue {
       renewablePower: sumBy(inputs, (el) => el.renewablePower),
       totalCO2Emission: sumBy(inputs, (el) => el.totalCO2Emission),
     };
+
+    results.totalPower =
+      (results?.gridPower ?? 0) +
+      (results?.dieselPower ?? 0) +
+      results.renewablePower;
+    results.totalPower = parseFloat(results.totalPower.toFixed(0));
     this.facilityForm.baseline.results = results;
     this.facilityForm.endline.inputs = this.copyBaselineToEndline();
     /// compute endline results
@@ -398,16 +411,9 @@ export default class Facilities extends Vue {
   }
 
   public get diffInTotalKwh() {
-    const baselineKWH = sumBy(
-      this.kwhDataFacilities(this.facilityForm.baseline.results),
-      (el) => el.value
-    );
-    const endlineKWH = sumBy(
-      this.kwhDataFacilities(this.facilityForm.endline.results),
-      (el) => el.value
-    );
-
-    return baselineKWH - endlineKWH !== 0;
+    const baselineKWh = this.facilityForm.baseline.results.totalPower ?? 0;
+    const endlineKWh = this.facilityForm.endline.results.totalPower ?? 0;
+    return baselineKWh - endlineKWh !== 0;
   }
 
   private kwhDataFacilities(
@@ -419,6 +425,10 @@ export default class Facilities extends Vue {
         id: "gridPower",
         name: "Grid",
         value: item.gridPower,
+        colorBy: "series",
+        itemStyle: {
+          color: cccmColors.primary(),
+        },
       });
     }
     if (item.dieselPower) {
@@ -426,6 +436,10 @@ export default class Facilities extends Vue {
         id: "dieselLiters",
         name: "Diesel",
         value: item.dieselPower,
+        colorBy: "series",
+        itemStyle: {
+          color: cccmColors.secondary1(),
+        },
       });
     }
     if (item.renewablePower) {
@@ -433,6 +447,11 @@ export default class Facilities extends Vue {
         id: "renewablePower",
         name: "Solar",
         value: item.renewablePower,
+        colorBy: "series",
+        color: cccmColors.green(),
+        itemStyle: {
+          color: cccmColors.green(),
+        },
       });
     }
     return data;
@@ -444,14 +463,16 @@ export default class Facilities extends Vue {
     // "Distribution of tCO2e/year per facilities"
     const data = this.kwhDataFacilities(item);
     // energy mix
-
     return {
       title: {
-        text: "Energy Mix (kWh)", //"Distribution of tCO2e/year per facilities",
+        text: `Energy Mix (${this.$options.filters?.formatNumber(
+          item.totalPower
+        )} kWh)`, //"Distribution of tCO2e/year per facilities",
         textStyle: {
           fontSize: 12,
           width: "500px",
         },
+        top: "bottom",
         left: "center",
       },
 
@@ -461,7 +482,7 @@ export default class Facilities extends Vue {
       series: [
         {
           type: "pie",
-          radius: "25%",
+          radius: "60%",
           tooltip: {
             valueFormatter: (value) =>
               this.$options.filters?.formatNumber(value) + " (kWh)",
@@ -472,11 +493,6 @@ export default class Facilities extends Vue {
           data,
         },
       ],
-      color: [
-        cccmColors.primary(),
-        cccmColors.secondary1(),
-        cccmColors.green(),
-      ],
     };
   }
 }
@@ -485,6 +501,11 @@ interface EchartDataSerie {
   id: string;
   name: string;
   value: number;
+  color?: string;
+  colorBy?: string;
+  itemStyle?: {
+    color: string;
+  };
 }
 </script>
 

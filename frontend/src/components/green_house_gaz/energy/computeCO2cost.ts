@@ -13,7 +13,7 @@ export function computeLitresDiesel(localItem: EnergyItem): number {
   const litres =
     generatorSize * (operatingHours * 365) * DIE_GEN_L_per_kWh * genLoad;
 
-  return parseFloat(litres.toFixed(2));
+  return parseFloat(litres.toFixed(0));
 }
 
 export function getLitres(localItem: EnergyItem): number {
@@ -44,6 +44,9 @@ export function computeDieselPower(
   localItem: EnergyItem,
   REF_EFF_DIES: ReferenceItemInterface | undefined
 ): number {
-  const result = localItem.dieselLiters * (REF_EFF_DIES?.value ?? 0);
-  return parseFloat(result.toFixed(2));
+  if (REF_EFF_DIES?.value) {
+    const result = localItem.dieselLiters / REF_EFF_DIES?.value;
+    return parseFloat(result.toFixed(0));
+  }
+  return 0;
 }

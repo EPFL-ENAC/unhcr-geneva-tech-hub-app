@@ -187,7 +187,7 @@ export const cccmColors = {
   secondary3: (alpha = "1") => colorTemplate`rgba(212, 140, 116, ${alpha})`,
   secondary4: (alpha = "1") => colorTemplate`rgba(240, 184, 158, ${alpha})`,
   secondary5: (alpha = "1") => colorTemplate`rgba(248, 228, 210, ${alpha})`,
-  green: (alpha = "1") => colorTemplate`rgba1,178,152, ${alpha})`,
+  green: (alpha = "1") => colorTemplate`rgba(1, 178, 152, ${alpha})`,
 };
 
 export const indicatorColors = {

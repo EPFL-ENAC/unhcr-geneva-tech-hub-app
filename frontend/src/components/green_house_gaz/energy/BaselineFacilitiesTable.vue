@@ -41,10 +41,14 @@
       {{ facilityTypesMap[item.facilityType] }}
     </template>
     <template #[`item.dieselLiters`]="{ item }">
-      <template v-if="item.operatingHours && item.generatorSize">
-        ~ {{ getLitres(item) }}
-      </template>
-      <template v-else>{{ item.dieselLiters | formatNumber }}</template>
+      {{ item.disableDieselLiters ? "~" : "" }}
+      {{ getLitres(item) | formatNumber }} ({{
+        item.dieselPower |
+          formatNumber({
+            maximumFractionDigits: 0,
+          })
+      }}
+      Kwh)
     </template>
     <template #[`item.gridPower`]="{ item }">
       {{ item.gridPower | formatNumber }}
@@ -137,7 +141,7 @@
                     maximumFractionDigits: 0,
                   })
               }}
-              in Kwh)
+              Kwh)
             </span>
             <span v-else>
               {{

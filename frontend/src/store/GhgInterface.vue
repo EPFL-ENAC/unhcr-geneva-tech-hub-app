@@ -189,6 +189,7 @@ export interface EnergyFacilityItem extends EnergyItem {
   name: string;
   facilityType: FacilityType;
   totalCO2Emission: number;
+  totalPower?: number;
 }
 
 export type EnergyFacilityItemResult = Omit<
