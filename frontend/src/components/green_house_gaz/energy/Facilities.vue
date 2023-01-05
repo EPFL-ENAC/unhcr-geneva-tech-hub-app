@@ -4,10 +4,6 @@
 
     <v-row>
       <v-col>
-        <v-alert v-if="diffInTotalKwh" dense outlined type="error">
-          This comparison is not valid because baseline and endline have
-          different energy demands.
-        </v-alert>
         <v-card elevation="2" rounded>
           <v-card-title>
             <h3 class="baseline-title font-weight-medium">Baseline</h3>
@@ -72,6 +68,14 @@
               />
             </v-card-text>
             <v-container class="d-flex flex-column" fluid>
+              <v-row>
+                <v-col>
+                  <v-alert v-if="diffInTotalKwh" dense outlined type="error">
+                    This comparison is not valid because baseline and endline
+                    have different energy demands.
+                  </v-alert>
+                </v-col>
+              </v-row>
               <v-row>
                 <v-col cols="5" class="d-flex justify-end">
                   <facilities-pie-chart
