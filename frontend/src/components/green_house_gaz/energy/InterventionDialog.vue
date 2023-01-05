@@ -98,12 +98,12 @@
 </template>
 
 <script lang="ts">
-import { computeChangeInEmission } from "@/components/green_house_gaz/changeInEmission";
 import {
   computeCO2Cost,
   computeDieselPower,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
 import DieselGeneratorWithoutLitres from "@/components/green_house_gaz/energy/DieselGeneratorWithoutLitres.vue";
+import { computeChangeInEmission } from "@/components/green_house_gaz/generic/changeInEmission";
 
 import {
   EnergyFacilityInterventionItem,

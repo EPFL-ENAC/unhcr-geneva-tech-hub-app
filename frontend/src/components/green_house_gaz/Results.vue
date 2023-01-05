@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { computeChangeInEmission } from "@/components/green_house_gaz/changeInEmission";
+import { computeChangeInEmission } from "@/components/green_house_gaz/generic/changeInEmission";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import {
   EnergySurvey,
