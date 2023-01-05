@@ -2,16 +2,16 @@
   <v-container fluid>
     <survey-item-title :title-key="title" />
     <!-- <baseline-endline-wrapper
-      v-model="cookstoveForm"
-      :headers="cookstoveHeaders"
+      v-model="localForm"
+      :headers="headers"
       :diff-dimension="diffDimension"
+      :compute-item="computeItem"
       :name="name"
     /> -->
   </v-container>
 </template>
 
 <script lang="ts">
-import { computeChangeInEmission } from "@/components/green_house_gaz/changeInEmission";
 import BaselineEndlineWrapper from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import { formatNumber } from "@/plugins/filters";
@@ -21,14 +21,9 @@ import {
   SurveyItem,
   SurveyResult,
 } from "@/store/GhgInterface.vue";
-import {
-  ItemReferencesMap,
-  ReferenceItemInterface,
-} from "@/store/GhgReferenceModule";
-import { sumBy } from "lodash";
+
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
 
 // const Wood = "Wood";
 // const Charcoal = "Charcoal";
@@ -49,16 +44,6 @@ const COOK_APP_CONV = "CONVENTIONAL";
 const COOK_APP_CLEAN = "Clean";
 
 @Component({
-  computed: {
-    ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
-  },
-  methods: {
-    ...mapActions("GhgReferenceModule", {
-      syncDBGhg: "syncDB",
-      closeDBGhg: "closeDB",
-      getAllDocsGhg: "getAllDocs",
-    }),
-  },
   components: {
     SurveyItemTitle,
     BaselineEndlineWrapper,
@@ -68,14 +53,8 @@ export default class Trucking extends Vue {
   @Prop({ type: String, required: true, default: "" })
   readonly titleKey!: string;
 
-  @Prop([Object, Array])
-  readonly form: EnergyCookingSurvey | undefined;
-
-  syncDBGhg!: () => null;
-  closeDBGhg!: () => Promise<null>;
-  getAllDocsGhg!: () => Promise<ReferenceItemInterface[]>;
-
-  ghgMapRef!: ItemReferencesMap;
+  @Prop({ type: [Object, Array] })
+  readonly form!: EnergyCookingSurvey;
 
   diffDimension: keyof EnergyCookingItemInput = "cardinal";
   name = "cookstove";
@@ -83,165 +62,35 @@ export default class Trucking extends Vue {
   public get title(): string {
     return this.titleKey;
   }
-  public get cookstoveForm(): EnergyCookingSurvey {
-    // migration code.
-    if (!this.form) {
-      return this.generateNewForm();
-    }
-    // TODO: MIGRATION remove when data migration complete
-    if (this.form?.baseline.items === undefined) {
-      return this.generateNewForm();
-    }
-    // END OF TODO: MIGRATION
+  public get localForm(): EnergyCookingSurvey {
     return this.form;
   }
 
-  public set cookstoveForm(value: EnergyCookingSurvey) {
-    // compute result for every item!
-    const newForm = JSON.parse(JSON.stringify(value));
-    newForm.baseline.items = this.computeTotalCO2(newForm.baseline.items);
-    newForm.baseline.results = this.computeResults(newForm.baseline.items);
-    newForm.endline.items = this.computeTotalCO2(newForm.endline.items);
-    newForm.endline.items = this.computeChangeInItemsWithRatio(
-      newForm.baseline.items,
-      newForm.endline.items
-    );
-    newForm.endline.results = {
-      ...this.computeEndlineResults(
-        newForm.baseline.items,
-        newForm.endline.items
-      ),
-    };
-    // compute balance once endline results are computed
-    const changeInEmission = computeChangeInEmission(
-      newForm.baseline.results.totalCO2Emission,
-      newForm.endline.results.totalCO2Emission
-    );
-    // res.TR_NUM_DIFF =
-    //   Math.abs(baselineRes.TR_NUM - endlineRes.TR_NUM) / baselineRes.TR_NUM;
-    // res.TR_DIST_DIFF =
-    //   Math.abs(baselineRes.TR_DIST - endlineRes.TR_DIST) / baselineRes.TR_DIST;
-    // res.totalCO2Emission =
-    newForm.endline.results.changeInEmission = changeInEmission;
-    this.$emit("update:form", newForm);
+  public set localForm(value: EnergyCookingSurvey) {
+    this.$emit("update:form", value);
   }
 
-  private generateNewForm(): EnergyCookingSurvey {
-    return {
-      baseline: {
-        items: [],
-        results: {
-          totalCO2Emission: 0,
-        },
-      },
-      endline: {
-        items: [],
-        results: {
-          totalCO2Emission: 0,
-          changeInEmission: 0,
-        },
-      },
-    };
-  }
-
-  private computeCO2Cost(localItem: EnergyCookingItem): EnergyCookingItem {
-    try {
-      localItem.computed.totalCO2Emission = 0; // (44 * LIT_WS) / 1000;
-      return localItem;
-    } catch (error) {
-      throw new Error(`ghg wash input for ${name} unknown unit type ${error}`);
-    }
-  }
-
-  private computeTotalCO2(items: EnergyCookingItem[]): EnergyCookingItem[] {
-    return items.map((item: EnergyCookingItem) => {
-      return this.computeCO2Cost(item);
-    });
-  }
-
-  private computeResults(
-    washItems: EnergyCookingItem[]
+  public computeItem(
+    localItemInput: EnergyCookingItemInput
   ): EnergyCookingItemResults {
-    const res = {} as EnergyCookingItemResults;
-    res.totalCO2Emission = sumBy(
-      washItems,
-      (washItem) => washItem.computed.totalCO2Emission
-    );
-    // res.WACL = sumBy(washItems, (washItem) => washItem.input.WACL);
-    return res;
-  }
-  private getMerged(
-    baselineItems: EnergyCookingItem[],
-    endlineItems: EnergyCookingItem[]
-  ): EnergyCookingItem[] {
-    // replace item in washItems by corresponding intervention in origin.
-    return baselineItems.reduce(
-      (acc: EnergyCookingItem[], item: EnergyCookingItem) => {
-        const foundInterventions = endlineItems.filter((intervention) => {
-          return intervention.increment === item.increment;
-        });
-        if (foundInterventions.length > 0) {
-          acc = acc.concat(foundInterventions);
-        } else {
-          acc.push(item);
-        }
-        return acc;
-      },
-      []
-    );
-  }
-
-  private computeEndlineResults(
-    washItems: EnergyCookingItem[],
-    washInterventions: EnergyCookingItem[]
-  ): EnergyCookingItemResultsWithBalance {
-    const merged = this.getMerged(washItems, washInterventions);
     return {
-      totalCO2Emission: sumBy(
-        merged,
-        (washItem) => washItem.computed.totalCO2Emission
-      ),
-      // WACL: sumBy(merged, (washItem) => washItem.input.WACL),
-      // TR_NUM: sumBy(merged, (washItem) => washItem.computed.TR_NUM),
-      // TR_DIST: sumBy(merged, (washItem) => washItem.computed.TR_DIST),
-      // TR_NUM_DIFF: 0, // useless TODO: remove
-      // TR_DIST_DIFF: 0, // useless TODO: remove
-      changeInEmission: 0,
+      totalCO2Emission: localItemInput.cardinal * 30,
     };
   }
 
-  private computeChangeInItemsWithRatio(
-    washItems: EnergyCookingItem[],
-    washInterventions: EnergyCookingItem[]
-  ): EnergyCookingItem[] {
-    // const merged = this.getMerged(washItems, washInterventions);
-    const washItemsByIncrement = washItems.reduce(
-      (acc: Record<number, EnergyCookingItem>, el: EnergyCookingItem) => {
-        acc[el.increment] = el;
-        return acc;
-      },
-      {}
-    );
-    washInterventions.forEach((intervention: EnergyCookingItem) => {
-      const baselineItem = washItemsByIncrement[intervention.increment];
-      const baselineCO2 = baselineItem.computed.totalCO2Emission;
-      const endlineCO2 = intervention.computed.totalCO2Emission;
-      const totalChangeInEmission = computeChangeInEmission(
-        baselineCO2,
-        endlineCO2
-      );
-      // ask @blueur how to make it not ugly
-      const ratio: number =
-        (intervention.input[this.diffDimension] as number) /
-        (baselineItem.input[this.diffDimension] as number);
-      intervention.computed.changeInEmission = totalChangeInEmission * ratio;
-    });
-    return washInterventions;
+  n2sFormatter(n: number): string {
+    // https://stackoverflow.com/a/30686832
+    let s = "";
+    if (!n) s = "a";
+    else
+      while (n) {
+        s = String.fromCharCode(97 + (n % 26)) + s;
+        n = Math.floor(n / 26);
+      }
+    return s;
   }
 
-  readonly cookstoveHeaders = [
-    // replace description by label
-    // replace code by value
+  readonly headers = [
     {
       text: "#", // unique name === dropdown of existant facilities
       value: "increment",
@@ -348,33 +197,15 @@ export default class Trucking extends Vue {
       ...item,
     };
   });
-
-  public mounted(): void {
-    this.syncDBGhg();
-    this.getAllDocsGhg();
-  }
-
-  public destroyed(): void {
-    this.closeDBGhg();
-  }
 }
 
 export interface EnergyCookingItemInput extends SurveyInput {
-  // US_TYP: string;
-  // US_UNI: string;
-  // TOT_WS: number;
-  // LIT_WS: number;
-  // WACL: number;
-  // TR_VOL: number;
-  // TR_TYP: string;
   cookTechno: string;
   fuelType: string;
+  cardinal: number;
 }
 
 export interface EnergyCookingItemResults extends SurveyResult {
-  // TR_NUM: number;
-  // TR_DIST: number;
-  // WACL: number; // total of collected volume
   totalCO2Emission: number;
 }
 export interface EnergyCookingItem extends SurveyItem {
@@ -383,8 +214,6 @@ export interface EnergyCookingItem extends SurveyItem {
 }
 
 export interface EnergyCookingItemResultsBalance extends SurveyResult {
-  // TR_NUM_DIFF: number;
-  // TR_DIST_DIFF: number;
   totalCO2Emission: number;
   changeInEmission: number;
 }

@@ -135,10 +135,10 @@
 </template>
 
 <script lang="ts">
-import { computeChangeInEmission } from "@/components/green_house_gaz/changeInEmission";
 import BaselineFacilitiesTable from "@/components/green_house_gaz/energy/BaselineFacilitiesTable.vue";
 import EndlineFacilitiesTable from "@/components/green_house_gaz/energy/EndlineFacilitiesTable.vue";
 import FacilitiesPieChart from "@/components/green_house_gaz/energy/FacilitiesPieChart.vue";
+import { computeChangeInEmission } from "@/components/green_house_gaz/generic/changeInEmission";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import { cccmColors } from "@/plugins/vuetify";
 import {

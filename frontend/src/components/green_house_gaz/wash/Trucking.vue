@@ -5,13 +5,13 @@
       v-model="washForm"
       :headers="truckingHeaders"
       :diff-dimension="diffDimension"
+      :compute-item="truckingComputeCO2Cost"
       name="transport"
     />
   </v-container>
 </template>
 
 <script lang="ts">
-import { computeChangeInEmission } from "@/components/green_house_gaz/changeInEmission";
 import BaselineEndlineWrapper from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import { formatNumber } from "@/plugins/filters";
@@ -21,46 +21,27 @@ import {
   SurveyItem,
   SurveyResult,
 } from "@/store/GhgInterface.vue";
-import {
-  ItemReferencesMap,
-  ReferenceItemInterface,
-} from "@/store/GhgReferenceModule";
-import { get as _get, sumBy } from "lodash";
+import { ItemReferencesMap } from "@/store/GhgReferenceModule";
+
+import { get as _get } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
 
 export const DIESEL = "DIESEL";
 export const PETROL = "Petrol / Gaz";
 
 @Component({
-  computed: {
-    ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
-  },
-  methods: {
-    ...mapActions("GhgReferenceModule", {
-      syncDBGhg: "syncDB",
-      closeDBGhg: "closeDB",
-      getAllDocsGhg: "getAllDocs",
-    }),
-  },
   components: {
     SurveyItemTitle,
     BaselineEndlineWrapper,
   },
 })
 export default class Trucking extends Vue {
-  @Prop({ type: String, required: true, default: "" })
+  @Prop({ type: String, required: true })
   readonly titleKey!: string;
 
-  @Prop([Object, Array])
-  readonly form: WashTruckingSurvey | undefined;
-
-  syncDBGhg!: () => null;
-  closeDBGhg!: () => Promise<null>;
-  getAllDocsGhg!: () => Promise<ReferenceItemInterface[]>;
-
-  ghgMapRef!: ItemReferencesMap;
+  @Prop({ type: [Object, Array], required: true })
+  readonly form!: WashTruckingSurvey;
 
   diffDimension: keyof WashTruckingItemInput = "WACL";
 
@@ -68,169 +49,58 @@ export default class Trucking extends Vue {
     return this.titleKey;
   }
   public get washForm(): WashTruckingSurvey {
-    // migration code.
-    if (!this.form) {
-      return this.generateNewWashForm();
-    }
-    // TODO: MIGRATION remove when data migration complete
-    if (this.form?.baseline.items === undefined) {
-      return this.generateNewWashForm();
-    }
-    // END OF TODO: MIGRATION
     return this.form;
   }
 
   public set washForm(value: WashTruckingSurvey) {
-    const newForm = JSON.parse(JSON.stringify(value));
-    newForm.baseline.items = this.computeTotalCO2(newForm.baseline.items);
-    newForm.baseline.results = this.computeResults(newForm.baseline.items);
-
-    newForm.endline.items = this.computeTotalCO2(newForm.endline.items);
-    newForm.endline.items = this.computeChangeInItemsWithRatio(
-      newForm.baseline.items,
-      newForm.endline.items
-    );
-    newForm.endline.results = this.computeResults(newForm.endline.items);
-    // compute balance once endline results are computed
-    // this could include also other diff like truck number or distance
-    const changeInEmission = computeChangeInEmission(
-      newForm.baseline.results.totalCO2Emission,
-      newForm.endline.results.totalCO2Emission
-    );
-    newForm.endline.results.changeInEmission = changeInEmission;
-    this.$emit("update:form", newForm);
+    this.$emit("update:form", value);
   }
 
-  private generateNewWashForm(): WashTruckingSurvey {
-    return {
-      baseline: {
-        items: [],
-        results: {
-          TR_NUM: 0,
-          TR_DIST: 0,
-          WACL: 0,
-          totalCO2Emission: 0,
-        },
-      },
-      endline: {
-        items: [],
-        results: {
-          TR_NUM: 0,
-          TR_DIST: 0,
-          WACL: 0,
-          CO2_WSH_TRB: 0, // obsolete ?
-          TR_NUM_DIFF: 0,
-          TR_DIST_DIFF: 0,
-          totalCO2Emission: 0,
-          changeInEmission: 0,
-        },
-      },
-    };
-  }
-
-  private truckingComputeCO2Cost(
-    localItem: WashTruckingItem,
-    REF_WSH_D: ReferenceItemInterface | undefined,
-    REF_WSH_G: ReferenceItemInterface | undefined,
-    REF_DIES_L: ReferenceItemInterface | undefined,
-    REF_GAZ_L: ReferenceItemInterface | undefined,
-    REF_WW_FS: ReferenceItemInterface | undefined
-  ): WashTruckingItem {
+  public truckingComputeCO2Cost(
+    localItemInput: WashTruckingItemInput,
+    ghgMapRef: ItemReferencesMap
+  ): WashTruckingItemResults {
     const { US_UNI, US_TYP, WACL, TR_TYP, TOT_WS, TR_VOL, LIT_WS } =
-      localItem.input || {};
+      localItemInput || {};
+    const { REF_WSH_D, REF_WSH_G, REF_DIES_L, REF_GAZ_L, REF_WW_FS } =
+      ghgMapRef;
     try {
       /*
         When wastewater or faecal sludge is checked in the dropdown,
         So the input volume pumped must be multiplied by 0.85. or REF_WW_FS
       */
+      const itemComputed = {} as WashTruckingItemResults;
+
       const volumeCollected = ["WASTEWATER", "FAECAL SLUDGE"].includes(US_TYP)
         ? WACL * (REF_WW_FS?.value ?? 0.85)
         : WACL;
-      // move to special function
-      const washFactorKM =
-        TR_TYP === DIESEL ? REF_WSH_D?.value : REF_WSH_G?.value;
-      if (!washFactorKM) {
-        throw new Error(`washFactorKM undefined`);
-      }
-      if (US_UNI === "KM" && washFactorKM) {
-        localItem.computed.TR_NUM = Math.ceil(volumeCollected / TR_VOL);
-        /*
-        the distance should be checked that is it the one way distance which is converted
-        into a roundtrip distance by multiplying by 2
-        */
-        localItem.computed.TR_DIST = localItem.computed.TR_NUM * TOT_WS * 2;
-        localItem.computed.totalCO2Emission =
-          (washFactorKM * localItem.computed.TR_DIST) / 1000;
+      if (US_UNI === "KM") {
+        const washFactorKM =
+          TR_TYP === DIESEL ? REF_WSH_D?.value : REF_WSH_G?.value;
+        if (!washFactorKM) {
+          throw new Error(`washFactorKM undefined`);
+        }
+        itemComputed.TR_NUM = Math.ceil(volumeCollected / TR_VOL);
+        /* roundtrip distance by multiplying by 2 */
+        itemComputed.TR_DIST = itemComputed.TR_NUM * TOT_WS * 2;
+        itemComputed.totalCO2Emission =
+          (washFactorKM * itemComputed.TR_DIST) / 1000;
       }
 
-      const washFactorL =
-        TR_TYP === DIESEL ? REF_DIES_L?.value : REF_GAZ_L?.value;
-      if (!washFactorL) {
-        throw new Error(`washFactorL undefined`);
+      if (US_UNI === "LITRES") {
+        const washFactorL =
+          TR_TYP === DIESEL ? REF_DIES_L?.value : REF_GAZ_L?.value;
+        if (!washFactorL) {
+          throw new Error(`washFactorL undefined`);
+        }
+        itemComputed.totalCO2Emission = (washFactorL * LIT_WS) / 1000;
       }
-      if (US_UNI === "LITRES" && washFactorL) {
-        localItem.computed.TR_NUM = Math.ceil(volumeCollected / TR_VOL);
-        localItem.computed.TR_DIST = 0; // the DIST is unknown since we only have the number of litres
-        localItem.computed.totalCO2Emission = (washFactorL * LIT_WS) / 1000;
-      }
-      return localItem;
+      return itemComputed;
     } catch (error) {
       throw new Error(`ghg wash input for trucking unknown unit type ${error}`);
     }
   }
 
-  private computeTotalCO2(items: WashTruckingItem[]): WashTruckingItem[] {
-    return items.map((item: WashTruckingItem) => {
-      return this.truckingComputeCO2Cost(
-        item,
-        this.ghgMapRef?.REF_WSH_D,
-        this.ghgMapRef?.REF_WSH_G,
-        this.ghgMapRef?.REF_DIES_L,
-        this.ghgMapRef?.REF_GAZ_L,
-        this.ghgMapRef?.REF_WW_FS
-      );
-    });
-  }
-
-  private computeResults(
-    washItems: WashTruckingItem[]
-  ): WashTruckingItemResults {
-    const res = {} as WashTruckingItemResults;
-    res.totalCO2Emission = sumBy(
-      washItems,
-      (washItem) => washItem.computed.totalCO2Emission
-    );
-    res.WACL = sumBy(washItems, (washItem) => washItem.input.WACL);
-    return res;
-  }
-
-  private computeChangeInItemsWithRatio(
-    washItems: WashTruckingItem[],
-    washInterventions: WashTruckingItem[]
-  ): WashTruckingItem[] {
-    const washItemsByIncrement = washItems.reduce(
-      (acc: Record<number, WashTruckingItem>, el: WashTruckingItem) => {
-        acc[el.increment] = el;
-        return acc;
-      },
-      {}
-    );
-    washInterventions.forEach((intervention: WashTruckingItem) => {
-      const baselineItem =
-        washItemsByIncrement[intervention.originIncrement ?? -1];
-      const baselineCO2 = baselineItem.computed.totalCO2Emission;
-      const endlineCO2 = intervention.computed.totalCO2Emission;
-      const totalChangeInEmission = computeChangeInEmission(
-        baselineCO2,
-        endlineCO2
-      );
-      const ratio: number =
-        (intervention.input[this.diffDimension] as number) /
-        (baselineItem.input[this.diffDimension] as number);
-      intervention.computed.changeInEmission = totalChangeInEmission * ratio;
-    });
-    return washInterventions;
-  }
   n2sFormatter(n: number): string {
     // https://stackoverflow.com/a/30686832
     let s = "";
@@ -337,6 +207,7 @@ export default class Trucking extends Vue {
       style: {
         cols: "12",
       },
+      computeResults: true,
       type: "number",
     },
     {
@@ -378,6 +249,7 @@ export default class Trucking extends Vue {
       formatter: (v: number, { ...args }) => {
         return formatNumber(v, { suffix: args.suffix });
       },
+      computeResults: true,
       type: "number",
       disabled: true,
     },
@@ -425,15 +297,6 @@ export default class Trucking extends Vue {
       ...item,
     };
   });
-
-  public mounted(): void {
-    this.syncDBGhg();
-    this.getAllDocsGhg();
-  }
-
-  public destroyed(): void {
-    this.closeDBGhg();
-  }
 }
 
 export interface WashTruckingItemInput extends SurveyInput {
