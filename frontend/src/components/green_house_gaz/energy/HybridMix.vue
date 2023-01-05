@@ -20,7 +20,7 @@
         required
         :rules="rules"
         :min="0"
-        label="kWh used (national grid)"
+        label="kWh used per year (national grid)"
         @input="changeGridPower"
       />
     </v-col>

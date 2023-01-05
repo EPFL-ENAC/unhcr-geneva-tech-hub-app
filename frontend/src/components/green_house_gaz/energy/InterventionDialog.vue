@@ -51,7 +51,7 @@
                       required
                       :rules="rules"
                       :min="0"
-                      label="kWh used (national grid)"
+                      label="kWh used per year (national grid)"
                     />
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
