@@ -70,5 +70,95 @@
     "value": 0.85,
     "source": null,
     "index": 7
+  },
+  {
+    "_id": "REF_FNRB",
+    "type": "number",
+    "category": "ENERGY",
+    "description": "Energy - Cookstove - Fraction of Non renewable biomass (fNRB)",
+    "value": 0.76,
+    "source": "https://cdm.unfccc.int/DNA/fNRB/index.html",
+    "index": 8
+  },
+  {
+    "_id": "REF_EFF_FWD",
+    "type": "number",
+    "category": "Energy",
+    "description": "Energy - Cookstove - Efficiency (TCO2e/T) Wood",
+    "value": 1.894776,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
+    "index": 9
+  },
+  {
+    "_id": "REF_EFF_CHC",
+    "type": "number",
+    "category": "Energy",
+    "description": "Energy - Cookstove - Efficiency (TCO2e/T) Charcoal",
+    "value": 4.9055795,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
+    "index": 10
+  },
+  {
+    "_id": "REF_EFF_BRQ",
+    "type": "number",
+    "category": "Energy",
+    "description": "Energy - Cookstove - Efficiency (TCO2e/T) Briquette",
+    "value": 1.97028,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
+    "index": 11
+  },
+  {
+    "_id": "REF_EFF_PLTS",
+    "type": "number",
+    "category": "Energy",
+    "description": "Energy - Cookstove - Efficiency (TCO2e/T) Pellets",
+    "value": 1.97028,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
+    "index": 12
+  },
+  {
+    "_id": "REF_EFF_CNDL",
+    "type": "number",
+    "category": "Energy",
+    "description": "Energy - Cookstove - Efficiency (TCO2e/T) candle (paraffin)",
+    "value": 3.3718,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/3_Volume3/V3_5_Ch5_Non_Energy_Products.pdf",
+    "index": 13
+  },
+  {
+    "_id": "REF_EFF_ETH",
+    "type": "number",
+    "category": "Energy",
+    "description": "Energy - Cookstove - Efficiency (kg CO2e/L or m3 for biogas) ETHANOL",
+    "value": 1.23910872,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
+    "index": 14
+  },
+  {
+    "_id": "REF_EFF_LPG",
+    "type": "number",
+    "category": "Energy",
+    "description": "Energy - Cookstove - Efficiency (kg CO2e/L or m3 for biogas) LPG",
+    "value": 1.615952943,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
+    "index": 15
+  },
+  {
+    "_id": "REF_EFF_BGS",
+    "type": "number",
+    "category": "Energy",
+    "description": "Energy - Cookstove - Efficiency (kg CO2e/L or m3 for biogas) BIOGASS",
+    "value": 2.48420844,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
+    "index": 16
+  },
+  {
+    "_id": "REF_EFF_KRS",
+    "type": "number",
+    "category": "Energy",
+    "description": "Energy - Cookstove - Efficiency (kg CO2e/L or m3 for biogas) KEROSENE",
+    "value": 2.559489354,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
+    "index": 17
   }
 ]
