@@ -7,3 +7,13 @@ REF_EFF_DIES,number,ENERGY,Energy - Electricity - Efficiency - Diesel Generators
 REF_WSH_D,number,WASH,WASH - Trucking - Emissions Factor - Diesel (up to 3.5 tonnes) [-],0.25213,https://unfccc.int/sites/default/files/resource/GHG_emissions_calculator_ver01.1_web.xlsx
 REF_WSH_G,number,WASH,WASH - Trucking - Emissions Factor - Gasoline (up to 3.5 tonnes) [-],0.22,https://unfccc.int/sites/default/files/resource/GHG_emissions_calculator_ver01.1_web.xlsx
 REF_WW_FS,number,WASH,WASH - Trucking - Water to Wastewater Conversion Factor,0.85,
+REF_FNRB,number,ENERGY,Energy - Cookstove - Fraction of Non renewable biomass (fNRB),0.76,https://cdm.unfccc.int/DNA/fNRB/index.html
+REF_EFF_FWD,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Wood,1.894776,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
+REF_EFF_CHC,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Charcoal,4.9055795,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
+REF_EFF_BRQ,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Briquette,1.97028,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
+REF_EFF_PLTS,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Pellets,1.97028,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
+REF_EFF_CNDL,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) candle (paraffin),3.3718,https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/3_Volume3/V3_5_Ch5_Non_Energy_Products.pdf
+REF_EFF_ETH,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L or m3 for biogas) ETHANOL,1.23910872,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
+REF_EFF_LPG,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L or m3 for biogas) LPG,1.615952943,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
+REF_EFF_BGS,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L or m3 for biogas) BIOGASS,2.48420844,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
+REF_EFF_KRS,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L or m3 for biogas) KEROSENE,2.559489354,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html

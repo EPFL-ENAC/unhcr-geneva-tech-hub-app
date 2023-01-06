@@ -38,6 +38,7 @@ import {
   GenericEndline,
   GenericFormSurvey,
   SurveyInput,
+  SurveyInputValue,
   SurveyItem,
   SurveyResult,
 } from "@/store/GhgInterface.vue";
@@ -206,7 +207,6 @@ export default class BaselineEndlineWrapper<
       newForm.baseline.results.totalCO2Emission,
       newForm.endline.results.totalCO2Emission
     );
-
     this.$emit("input", newForm);
   }
 
@@ -286,6 +286,7 @@ export interface SurveyTableHeader {
   label?: string;
   category?: string; // example increment
   classFormatter?: (v: unknown) => string;
+  customEventInput?: (v: SurveyInputValue, localInput: SurveyInput) => unknown;
   formatter?: (v: unknown) => unknown;
   conditional_value: string; // e.g "LITRES",
   conditional: string; // based on other SurveyTableHeader field "US_UNI", needs to have conditional_value set

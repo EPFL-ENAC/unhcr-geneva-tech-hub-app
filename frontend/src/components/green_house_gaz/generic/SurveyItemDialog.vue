@@ -38,16 +38,16 @@
                   v-if="
                     surveyItem.type &&
                     surveyItem.isInput &&
-                    localInput[surveyItem.conditional] ===
-                      surveyItem.conditional_value
+                    matchCondition(localInput, surveyItem)
                   "
                   :key="$index"
                   :cols="surveyItem?.style?.cols ?? 6"
                   xs="12"
                 >
                   <form-item-component
-                    v-model="localInput[surveyItem.key]"
+                    :value="localInput[surveyItem.key]"
                     v-bind="surveyItem"
+                    @input="(v) => customFormInput(v, surveyItem, localInput)"
                   />
                 </v-col>
               </template>
@@ -85,7 +85,11 @@
 <script lang="ts">
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import { SurveyTableHeader } from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
-import { SurveyInput, SurveyItem } from "@/store/GhgInterface.vue";
+import {
+  SurveyInput,
+  SurveyInputValue,
+  SurveyItem,
+} from "@/store/GhgInterface.vue";
 
 import { VForm } from "@/utils/vuetify";
 import { cloneDeep } from "lodash";
@@ -112,7 +116,7 @@ export default class SurveyItemDialog extends Vue {
   readonly name!: string;
 
   @Prop([Array])
-  readonly headers!: SurveyTableHeader;
+  readonly headers!: SurveyTableHeader[];
 
   $refs!: {
     form: VForm;
@@ -135,7 +139,18 @@ export default class SurveyItemDialog extends Vue {
   set isOpen(value: boolean) {
     this.$emit("update:dialogOpen", value);
   }
-
+  public customFormInput(
+    v: SurveyInputValue,
+    surveyItem: SurveyTableHeader,
+    localInput: SurveyInput
+  ): void {
+    localInput = (surveyItem?.customEventInput?.(v, localInput) ??
+      localInput) as SurveyInput;
+    // always
+    localInput[surveyItem.key] = v;
+    // probably use this.$set instead ?
+    this.localInput = localInput;
+  }
   public get isNewMode(): boolean {
     return Object.keys(this.item?.input ?? []).length === 0;
   }
@@ -156,9 +171,20 @@ export default class SurveyItemDialog extends Vue {
     if (!this.localInput) {
       return Promise.resolve();
     }
-    this.localItem.input = this.localInput;
+    // this.localItem.input = this.localInput;
+    this.$set(this.localItem, "input", this.localInput);
     this.$emit("update:item", this.localItem);
     this.isOpen = false;
+  }
+  public matchCondition(
+    localInput: SurveyInput,
+    surveyItem: SurveyTableHeader
+  ) {
+    const target = localInput?.[surveyItem.conditional];
+    const objective = surveyItem.conditional_value;
+    // if objective is emptystring it means we matched all value, we just need the
+    // target to be defined
+    return target === objective || (target && objective == "");
   }
 }
 

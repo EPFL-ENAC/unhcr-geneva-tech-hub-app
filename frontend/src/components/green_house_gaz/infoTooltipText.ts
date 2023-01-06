@@ -6,7 +6,7 @@ export const infoTooltipText = {
   },
   "Energy-Cooking": {
     title: "Energy - Cooking",
-    ready: false,
+    ready: true,
     text: "The Cooking module will enable the user to calculate the emissions from various forms of cookstoves including charcoal, firewood, briquettes, LPG, solar or grid connected and improved. Emissions calculations will also be updated if improved cooking appliances such as pressure cookers are used. Calculations will also include the emissions from charcoal production.",
   },
   "Energy-Lighting": {
