@@ -288,6 +288,12 @@ export default class GraphTree extends Vue {
         color: "source",
         curveness: 0.5,
       },
+      label: {
+        fontSize: 7,
+        align: "left",
+        overflow: "break",
+        width: "70",
+      },
     };
     return {
       tooltip: {
