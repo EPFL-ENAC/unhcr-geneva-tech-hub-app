@@ -321,6 +321,11 @@ export default class App extends Vue {
 }
 
 @media print {
+  * {
+    -webkit-print-color-adjust: exact; /* Chrome, Safari 6 – 15.3, Edge */
+    color-adjust: exact; /* Firefox 48 – 96 */
+    print-color-adjust: exact; /* Firefox 97+, Safari 15.4+ */
+  }
   .v-application .v-app-bar,
   .v-application .v-navigation-drawer {
     display: none;
@@ -331,6 +336,9 @@ export default class App extends Vue {
     margin: -1em;
     padding: 0;
     width: 100%;
+  }
+  .pagebreak {
+    page-break-before: always;
   }
 }
 
