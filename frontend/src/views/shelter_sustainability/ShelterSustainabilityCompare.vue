@@ -23,23 +23,23 @@
               >Print</v-btn
             >
           </v-col>
-          <v-col>
+          <v-col
+            v-for="shelter in shelters"
+            :key="shelter._id"
+            :cols="Math.floor(9 / shelters.length)"
+          >
             <v-row>
-              <v-col v-for="shelter in shelters" :key="shelter._id">
-                <v-row>
-                  <v-col class="d-flex justify-center">
-                    {{ shelter.name }}
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col class="d-flex justify-center">
-                    <v-icon
-                      :class="`c-${shelterColors[shelter.shelter_type].name}`"
-                    >
-                      {{ shelterIcons[shelter.shelter_type] }}
-                    </v-icon>
-                  </v-col>
-                </v-row>
+              <v-col class="d-flex justify-center">
+                {{ shelter.name }}
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="d-flex justify-center">
+                <v-icon
+                  :class="`c-${shelterColors[shelter.shelter_type].name}`"
+                >
+                  {{ shelterIcons[shelter.shelter_type] }}
+                </v-icon>
               </v-col>
             </v-row>
           </v-col>
@@ -51,11 +51,12 @@
         <v-row>
           <v-col>
             <v-row>
-              <v-col cols="3" class="ml-4">Intended occupants</v-col>
+              <v-col cols="3" class="ml-screen-4">Intended occupants</v-col>
               <v-col
                 v-for="shelter in shelters"
                 :key="shelter._id"
                 class="d-flex justify-center"
+                :cols="Math.floor(9 / shelters.length)"
               >
                 <v-icon
                   v-for="n in shelter.shelter_occupants"
@@ -68,21 +69,23 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="3" class="ml-4">Intended lifespan</v-col>
+              <v-col cols="3" class="ml-screen-4">Intended lifespan</v-col>
               <v-col
                 v-for="shelter in shelters"
                 :key="shelter._id"
                 class="d-flex justify-center"
+                :cols="Math.floor(9 / shelters.length)"
               >
                 {{ shelter.shelter_lifespan }} year(s)
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="3" class="ml-4">Setup</v-col>
+              <v-col cols="3" class="ml-screen-4">Setup</v-col>
               <v-col
                 v-for="shelter in shelters"
                 :key="shelter._id"
                 class="d-flex justify-center"
+                :cols="Math.floor(9 / shelters.length)"
               >
                 <!-- todo: use filter for plural for day(s) -->
                 {{ shelter.setup_people }} ppl x {{ shelter.setup_time }} day(s)
@@ -92,7 +95,7 @@
               v-for="(affordability, idx) in affordabilities"
               :key="affordability.id"
             >
-              <v-col cols="3" class="ml-4">
+              <v-col cols="3" class="ml-screen-4">
                 <v-row
                   ><v-col>
                     {{ affordability.title }}:
@@ -121,6 +124,7 @@
                 v-for="shelter in shelters"
                 :key="shelter._id"
                 class="d-flex justify-center"
+                :cols="Math.floor(9 / shelters.length)"
               >
                 <v-layout class="align-center d-flex justify-center">
                   <span>
@@ -140,18 +144,20 @@
         <v-row>
           <v-col>
             <v-row>
-              <v-col cols="3" class="ml-4 col col-3 d-flex align-center"
+              <v-col cols="3" class="ml-screen-4 col col-3 d-flex align-center"
                 >Shape</v-col
               >
               <v-col
                 v-for="shelter in shelters"
                 :key="shelter._id"
                 class="d-flex justify-center"
+                :cols="Math.floor(9 / shelters.length)"
               >
                 <v-img
                   v-if="shelter.geometry.shelter_geometry_type"
                   max-width="150px"
                   max-height="150px"
+                  aspect-ratio="1"
                   class="d-flex justify-center white-background"
                   :src="
                     geometriesUrl[
@@ -167,11 +173,12 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="3" class="ml-4">Volume</v-col>
+              <v-col cols="3" class="ml-screen-4">Volume</v-col>
               <v-col
                 v-for="shelter in shelters"
                 :key="shelter._id"
                 class="d-flex justify-center"
+                :cols="Math.floor(9 / shelters.length)"
               >
                 <div>
                   {{ shelter.geometry.floorArea }} m<sup>2</sup>,
@@ -183,7 +190,7 @@
               v-for="(constructionImpact, idx) in constructionImpacts"
               :key="constructionImpact.id"
             >
-              <v-col cols="3" class="ml-4">
+              <v-col cols="3" class="ml-screen-4">
                 <v-row>
                   <v-col>
                     {{ constructionImpact.title }}:
@@ -212,6 +219,7 @@
                 v-for="shelter in shelters"
                 :key="shelter._id"
                 class="d-flex justify-center align-center"
+                :cols="Math.floor(9 / shelters.length)"
               >
                 <span>
                   {{
@@ -229,7 +237,7 @@
         <!-- END OF CONSTRUCTION -->
 
         <!-- BEGIN ENVIRONMENTAL IMPACT -->
-        <v-row
+        <v-row class="pagebreak"
           ><v-col><b>ENVIRONMENTAL IMPACT</b></v-col></v-row
         >
         <v-row>
@@ -239,7 +247,10 @@
               :key="environmentalImpact.id"
               style="border-bottom: 1px solid grey"
             >
-              <v-col cols="3" class="ml-4 d-flex flex-column justify-center">
+              <v-col
+                cols="3"
+                class="ml-screen-4 d-flex flex-column justify-center"
+              >
                 <div>
                   {{ environmentalImpact.title }}:
                   <info-tooltip right :max-width="300" :bottom="false"
@@ -260,9 +271,16 @@
                   </v-responsive>
                 </div>
               </v-col>
-              <v-col v-for="shelter in shelters" :key="shelter._id">
+              <v-col
+                v-for="shelter in shelters"
+                :key="shelter._id"
+                :cols="Math.floor(9 / shelters.length)"
+              >
                 <v-row>
-                  <v-col class="text-center">
+                  <v-col
+                    cols="12"
+                    class="text-center d-flex justify-center align-center"
+                  >
                     <span>
                       {{
                         shelter.scorecard[environmentalImpact.id] |
@@ -273,7 +291,7 @@
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col>
+                  <v-col cols="12" class="d-flex justify-center align-center">
                     <graph-tree
                       max-height="150px"
                       min-height="150px"
