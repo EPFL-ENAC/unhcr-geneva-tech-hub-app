@@ -320,6 +320,20 @@ export default class App extends Vue {
   --c-unhcr: var(--v-primary-base);
 }
 
+@media print {
+  .v-application .v-app-bar,
+  .v-application .v-navigation-drawer {
+    display: none;
+  }
+
+  @page {
+    size: A4;
+    margin: -1em;
+    padding: 0;
+    width: 100%;
+  }
+}
+
 .project__header,
 .project__h3 {
   color: var(--c-shelter);

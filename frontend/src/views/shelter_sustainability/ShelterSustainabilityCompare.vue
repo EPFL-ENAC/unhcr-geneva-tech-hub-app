@@ -13,17 +13,26 @@
     <v-row v-else>
       <v-col>
         <v-row>
-          <v-col cols="3"></v-col>
+          <v-col cols="3">
+            <v-btn
+              class="d-print-none"
+              @click="
+                window.print();
+                return false;
+              "
+              >Print</v-btn
+            >
+          </v-col>
           <v-col>
             <v-row>
               <v-col v-for="shelter in shelters" :key="shelter._id">
                 <v-row>
-                  <v-col>
+                  <v-col class="d-flex justify-center">
                     {{ shelter.name }}
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col>
+                  <v-col class="d-flex justify-center">
                     <v-icon
                       :class="`c-${shelterColors[shelter.shelter_type].name}`"
                     >
@@ -43,7 +52,11 @@
           <v-col>
             <v-row>
               <v-col cols="3" class="ml-4">Intended occupants</v-col>
-              <v-col v-for="shelter in shelters" :key="shelter._id">
+              <v-col
+                v-for="shelter in shelters"
+                :key="shelter._id"
+                class="d-flex justify-center"
+              >
                 <v-icon
                   v-for="n in shelter.shelter_occupants"
                   :key="n"
@@ -56,18 +69,23 @@
             </v-row>
             <v-row>
               <v-col cols="3" class="ml-4">Intended lifespan</v-col>
-              <v-col v-for="shelter in shelters" :key="shelter._id">
+              <v-col
+                v-for="shelter in shelters"
+                :key="shelter._id"
+                class="d-flex justify-center"
+              >
                 {{ shelter.shelter_lifespan }} year(s)
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="3" class="ml-4">Setup</v-col>
-              <v-col v-for="shelter in shelters" :key="shelter._id">
-                <div class="flex align-center">
-                  <!-- todo: use filter for plural for day(s) -->
-                  {{ shelter.setup_people }} ppl x
-                  {{ shelter.setup_time }} day(s)
-                </div>
+              <v-col
+                v-for="shelter in shelters"
+                :key="shelter._id"
+                class="d-flex justify-center"
+              >
+                <!-- todo: use filter for plural for day(s) -->
+                {{ shelter.setup_people }} ppl x {{ shelter.setup_time }} day(s)
               </v-col>
             </v-row>
             <v-row
@@ -102,9 +120,9 @@
               <v-col
                 v-for="shelter in shelters"
                 :key="shelter._id"
-                class="d-flex"
+                class="d-flex justify-center"
               >
-                <v-layout class="align-center">
+                <v-layout class="align-center d-flex justify-center">
                   <span>
                     {{ shelter.scorecard[affordability.id] | formatNumber() }}
                     {{ affordability.unit }}
@@ -122,10 +140,14 @@
         <v-row>
           <v-col>
             <v-row>
-              <v-col cols="3" class="ml-4 ml-4 col col-3 d-flex align-center"
+              <v-col cols="3" class="ml-4 col col-3 d-flex align-center"
                 >Shape</v-col
               >
-              <v-col v-for="shelter in shelters" :key="shelter._id">
+              <v-col
+                v-for="shelter in shelters"
+                :key="shelter._id"
+                class="d-flex justify-center"
+              >
                 <v-img
                   v-if="shelter.geometry.shelter_geometry_type"
                   max-width="150px"
@@ -146,9 +168,15 @@
             </v-row>
             <v-row>
               <v-col cols="3" class="ml-4">Volume</v-col>
-              <v-col v-for="shelter in shelters" :key="shelter._id">
-                {{ shelter.geometry.floorArea }} m<sup>2</sup>,
-                {{ shelter.geometry.volume }} m<sup>3</sup>
+              <v-col
+                v-for="shelter in shelters"
+                :key="shelter._id"
+                class="d-flex justify-center"
+              >
+                <div>
+                  {{ shelter.geometry.floorArea }} m<sup>2</sup>,
+                  {{ shelter.geometry.volume }} m<sup>3</sup>
+                </div>
               </v-col>
             </v-row>
             <v-row
@@ -183,19 +211,17 @@
               <v-col
                 v-for="shelter in shelters"
                 :key="shelter._id"
-                class="d-flex"
+                class="d-flex justify-center align-center"
               >
-                <v-layout class="align-center">
-                  <span>
-                    {{
-                      shelter.scorecard[constructionImpact.id] |
-                        formatNumber({
-                          style: "percent",
-                          maximumFractionDigits: 0,
-                        })
-                    }}
-                  </span>
-                </v-layout>
+                <span>
+                  {{
+                    shelter.scorecard[constructionImpact.id] |
+                      formatNumber({
+                        style: "percent",
+                        maximumFractionDigits: 0,
+                      })
+                  }}
+                </span>
               </v-col>
             </v-row>
           </v-col>
@@ -213,7 +239,7 @@
               :key="environmentalImpact.id"
               style="border-bottom: 1px solid grey"
             >
-              <v-col cols="3" class="d-flex flex-column justify-center">
+              <v-col cols="3" class="ml-4 d-flex flex-column justify-center">
                 <div>
                   {{ environmentalImpact.title }}:
                   <info-tooltip right :max-width="300" :bottom="false"

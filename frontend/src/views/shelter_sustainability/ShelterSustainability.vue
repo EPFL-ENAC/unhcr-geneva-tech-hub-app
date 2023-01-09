@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-tabs>
+    <v-tabs class="d-print-none">
       <v-tab :to="{ name: 'ShelterSustainabilityList', query: $route.query }"
         >All shelters</v-tab
       >
