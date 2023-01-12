@@ -1,5 +1,19 @@
 <template>
   <v-container>
+    <v-row class="d-print-none">
+      <v-col>
+        <v-btn
+          :to="{ name: 'ShelterSustainabilityList', query: $route.query }"
+          class="ma-2"
+          outlined
+          small
+          fab
+          color="primary"
+        >
+          <v-icon>$mdiArrowLeftCircle</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
     <v-row v-if="loaded && shelters.length === 0">
       <v-col>
         <v-alert type="warning">
