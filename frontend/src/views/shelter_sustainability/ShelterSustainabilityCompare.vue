@@ -195,8 +195,8 @@
                 :cols="Math.floor(9 / shelters.length)"
               >
                 <div>
-                  {{ shelter.geometry.floorArea }} m<sup>2</sup>,
-                  {{ shelter.geometry.volume }} m<sup>3</sup>
+                  {{ shelter.geometry.floorArea | formatNumber }} m<sup>2</sup>,
+                  {{ shelter.geometry.volume | formatNumber }} m<sup>3</sup>
                 </div>
               </v-col>
             </v-row>
