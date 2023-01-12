@@ -205,8 +205,6 @@ export default class SurveyList extends Vue {
       to: "Material",
       redirect: "Material-Shelter",
       children: [
-        { text: "Shelter", to: "Shelter", icon: "$mdiHomeGroup" },
-        { text: "CRI", to: "CRI", icon: "$mdiWizardHat" },
         {
           text: "Domestic solid waste",
           to: "DomesticSolidWaste",
