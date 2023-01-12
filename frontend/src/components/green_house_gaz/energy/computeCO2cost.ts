@@ -11,7 +11,7 @@ export function computeLitresDiesel(localItem: EnergyItem): number {
   const genLoad = (generatorLoad ?? 60) / 100;
   const DIE_GEN_L_per_kWh = -0.031 * Math.log(genLoad) + 0.2514;
   const litres =
-    generatorSize * (operatingHours * 365) * DIE_GEN_L_per_kWh * genLoad;
+    generatorSize * (operatingHours * 365.25) * DIE_GEN_L_per_kWh * genLoad;
 
   return parseFloat(litres.toFixed(0));
 }
