@@ -186,7 +186,7 @@ export default class Trucking extends Vue {
       },
     },
     {
-      text: "Litres between camp and water source",
+      text: "Liters of fuel consumed",
       value: "input.LIT_WS",
       conditional_value: "LITRES",
       conditional: "US_UNI",
@@ -201,7 +201,7 @@ export default class Trucking extends Vue {
       },
     },
     {
-      text: `Total volume pumped (m3)`,
+      text: `Total volume transported (m3)`,
       value: "input.WACL",
       hideFooterContent: false,
       style: {
