@@ -110,6 +110,15 @@ export default {
               /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step9ScoreCard.vue"
             ),
         },
+        {
+          name: "ShelterReportStep10",
+          path: "10",
+          meta: { step: 10 },
+          component: () =>
+            import(
+              /* webpackChunkName: "group-project" */ "../views/shelter_sustainability/ShelterSustainabilityItem/Step10ReportCard.vue"
+            ),
+        },
       ],
     },
   ],

@@ -34,6 +34,7 @@ export interface RootState {
   error?: string;
   /** Hold value that say if referenceDataDrawer is open or not */
   referenceDataDrawer: boolean;
+  overviewDataDrawer: boolean;
 }
 
 /** State Default value */
@@ -43,6 +44,7 @@ const state: RootState = {
   message: undefined,
   error: undefined,
   referenceDataDrawer: false,
+  overviewDataDrawer: false,
 };
 
 /** Getters */
@@ -52,6 +54,7 @@ const getters: GetterTree<RootState, RootState> = {
   message: (s): string | undefined => s.message,
   error: (s): string | undefined => s.error,
   referenceDataDrawer: (s): boolean => s.referenceDataDrawer,
+  overviewDataDrawer: (s): boolean => s.overviewDataDrawer,
 };
 
 /** Mutations */
@@ -101,6 +104,9 @@ const mutations: MutationTree<RootState> = {
    */
   storeReferenceDataDrawer(s, value: boolean) {
     s.referenceDataDrawer = value;
+  },
+  storeOverviewDataDrawer(s, value: boolean) {
+    s.overviewDataDrawer = value;
   },
 };
 
@@ -152,6 +158,12 @@ const actions: ActionTree<RootState, RootState> = {
   ) {
     context.commit("storeReferenceDataDrawer", referenceDataDrawer);
   },
+  setOverviewDataDrawer(
+    context: ActionContext<RootState, RootState>,
+    overviewDataDrawer = false
+  ) {
+    context.commit("storeOverviewDataDrawer", overviewDataDrawer);
+  },
   /**
    * toggleReferenceData
    */
@@ -159,6 +171,15 @@ const actions: ActionTree<RootState, RootState> = {
     context.commit(
       "storeReferenceDataDrawer",
       !context.state.referenceDataDrawer
+    );
+  },
+  /**
+   * toggleOverviewData
+   */
+  toggleOverviewData(context: ActionContext<RootState, RootState>) {
+    context.commit(
+      "storeOverviewDataDrawer",
+      !context.state.overviewDataDrawer
     );
   },
 };

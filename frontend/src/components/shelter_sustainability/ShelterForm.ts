@@ -13,6 +13,7 @@ export interface ShelterFormInput {
   description?: string;
   label: string;
   score: number;
+  imagePath?: string;
   _id: string;
 }
 

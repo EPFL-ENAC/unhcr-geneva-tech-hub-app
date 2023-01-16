@@ -16,8 +16,28 @@ export const listOfShelterType: ShelterType[] = [
   "Transitional",
   "Durable",
 ];
-
 export type ShelterType = "Emergency" | "Transitional" | "Durable" | "";
+
+export const listOfRegions: ShelterRegions[] = [
+  "All",
+  "East and Horn of Africa and the Great Lakes",
+  "Southern Africa",
+  "West and Central Africa",
+  "The Americas",
+  "Asia and the Pacific",
+  "Europe",
+  "Middle East and North Africa",
+];
+
+export type ShelterRegions =
+  | "All"
+  | "East and Horn of Africa and the Great Lakes"
+  | "Southern Africa"
+  | "West and Central Africa"
+  | "The Americas"
+  | "Asia and the Pacific"
+  | "Europe"
+  | "Middle East and North Africa";
 // 1) Image, 2) drawings - floor plan, 3) drawings, roof plan, 4) drawing - section, 5) drawing - elevation
 export const imageShelterTypes = [
   "Image",
@@ -88,9 +108,15 @@ export interface ScoreCardWithShelterInfo extends ScoreCard {
   name: string;
   shelter_type: ShelterType;
   created_at: string; // todo
+  created_by: string;
+  updated_by: string;
+  updated_at: string;
+  organisation: string;
+  year: string;
   location_country: string; // todo
   id: string;
 }
+export type ScoreCardWithShelterInfoKeys = keyof ScoreCardWithShelterInfo;
 
 export interface ScoreCardWithErrors {
   scorecard: ScoreCard;

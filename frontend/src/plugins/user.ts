@@ -76,15 +76,11 @@ export default new (class User {
     };
 
     Vue.prototype.$userName = (): string => {
-      // use like so:
-      // v-if="$user('isLoggedIn')"
       const user = store.getters["UserModule/user"];
       return user.name;
     };
 
     Vue.prototype.$userRoles = (): string[] => {
-      // use like so:
-      // v-if="$user('isLoggedIn')"
       const user = store.getters["UserModule/user"];
       return user.roles;
     };

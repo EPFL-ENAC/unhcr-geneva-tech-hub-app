@@ -9,6 +9,14 @@
       </v-tabs>
       <v-spacer />
       <v-btn
+        v-if="'ShelterSustainabilityList' === $router.currentRoute.name"
+        icon
+        aria-label="dataset-overview-table"
+        @click.stop="toggleOverviewData"
+      >
+        <v-icon> $mdiChartBarStacked </v-icon>
+      </v-btn>
+      <v-btn
         icon
         aria-label="dataset-reference-table"
         @click.stop="toggleReferenceData"
@@ -144,6 +152,7 @@
 
     <v-main v-else>
       <reference-data />
+      <overview-data />
       <v-fade-transition mode="out-in">
         <router-view />
         <router-view name="Login" />
@@ -178,6 +187,7 @@
 
 <script lang="ts">
 import LoginComponent from "@/components/LoginComponent.vue";
+import OverviewData from "@/components/OverviewData.vue";
 import ReferenceData from "@/components/ReferenceData.vue";
 import { CouchUser } from "@/store/UserModule";
 import Apps from "@/utils/apps";
@@ -190,23 +200,25 @@ import { mapActions, mapGetters } from "vuex";
 @Component({
   computed: {
     ...mapGetters("UserModule", ["user"]),
-    ...mapGetters(["referenceDataDrawer"]),
+    ...mapGetters(["referenceDataDrawer", "overviewDataDrawer"]),
   },
   methods: {
     ...mapActions("UserModule", {
       logoutStore: "logout",
       getSessionStore: "getSession",
     }),
-    ...mapActions(["toggleReferenceData"]),
+    ...mapActions(["toggleReferenceData", "toggleOverviewData"]),
   },
   components: {
     LoginComponent,
     ReferenceData,
+    OverviewData,
   },
 })
 /** ProjectList */
 export default class App extends Vue {
   referenceDataDrawer!: boolean;
+  overviewDataDrawer!: boolean;
   toggleReferenceData!: () => AxiosPromise;
   // probably vuex Promise and not AxiosPromise
   logoutStore!: () => AxiosPromise;
