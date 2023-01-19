@@ -53,6 +53,7 @@ export function loginToken(token: string): AxiosPromise {
       Authorization: `Bearer ${token}`,
     },
   }).then((response) => {
+    // TODO: find a way to use the .exp field of the jwt as a + security++
     sessionStorage.setItem(SessionStorageKey.Token, token);
     return response;
   });

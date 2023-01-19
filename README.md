@@ -31,6 +31,30 @@ Prerequisites:
 
 ### Run for development
 
+#### Create .env file to hold your Secrets
+
+An environment file should be created; you may copy paste the following
+code, don't forget to replace by the appropriate bucket name and HOSTNAME
+
+```bash
+tee -a .env << EOF
+COUCHDB_USER=admin
+COUCHDB_PASSWORD=couchdb
+COUCHDB_HOST=localhost
+# EPFL DNS
+DNS=128.178.15.8
+
+# used by nginx s3 service and fast api boto api
+S3_ENDPOINT_HOSTNAME=s3.epfl.ch
+S3_ENDPOINT_PROTOCOL=https://
+S3_ACCESS_KEY_ID=EPFL_S3_ACCESS_KEY
+S3_SECRET_ACCESS_KEY=EPFL_S3_SECRET_KEY
+S3_REGION=EU
+S3_Bucket=xxxxx-xxxxxxxxxxxxxxxxxxxxxxx
+S3_Key=
+EOF
+```
+
 #### Installation
 
 ```bash
@@ -101,3 +125,11 @@ make setup-database
 - find the new user and download
 - save the document by deplacing `couchdb/bootstrap/_users/new_username.json`
 - remove the `'_rev'` field and commit the file
+
+
+## file uploads
+- 2 services necessary
+  - nginx proxy to our custom epfl s3 instance
+  - python fast api using boto3 to upload files to the s3 instance
+We don't store the uploaded file directly to a database, it should be done by the frontend by talking directly to couchdb. The API just return the path served by the nginx reverse proxy
+
