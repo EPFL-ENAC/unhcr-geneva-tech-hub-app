@@ -93,12 +93,51 @@
                       />
                       <template v-for="image in localShelter.images">
                         <v-card :key="image.name" class="my-3" color="white">
-                          <div
-                            class="d-flex flex-no-wrap justify-space-between"
-                          >
-                            <div>
-                              <v-card-title class="text-h5" color="black">
-                                {{ image.name }}
+                          <div class="d-flex flex-wrap justify-space-between">
+                            <div v-if="$can('edit', localShelter)">
+                              <v-card-title class="text" color="black">
+                                <v-row>
+                                  <v-col>
+                                    <div class="mr-4" aria-label="image name">
+                                      <a
+                                        v-if="toggledImage != image.url"
+                                        :href="image.url"
+                                        target="_blank"
+                                      >
+                                        {{ image.name }}
+                                      </a>
+                                      <v-text-field
+                                        v-else
+                                        v-model="image.name"
+                                        append-icon="$mdiClose"
+                                        hint="Press escape or enter when finished"
+                                        @keypress.enter="toggleImage"
+                                        @keypress.escape="toggleImage"
+                                        @click:append="toggleImage"
+                                        @change="updateFormInput"
+                                      >
+                                      </v-text-field>
+                                    </div>
+                                  </v-col>
+                                  <v-col :cols="2">
+                                    <v-btn
+                                      v-if="toggledImage != image.url"
+                                      icon
+                                      @click="toggleImage(image.url)"
+                                      ><v-icon small>$mdiPencil</v-icon></v-btn
+                                    >
+                                  </v-col>
+                                  <v-col :cols="2">
+                                    <v-btn
+                                      v-if="toggledImage != image.url"
+                                      icon
+                                      @click="download(image.url)"
+                                      ><v-icon small
+                                        >$mdiDownload</v-icon
+                                      ></v-btn
+                                    >
+                                  </v-col>
+                                </v-row>
                               </v-card-title>
                               <v-card-actions>
                                 <v-select
@@ -110,9 +149,33 @@
                                 ></v-select>
                               </v-card-actions>
                             </div>
-
-                            <v-avatar class="ma-3" size="125" tile>
-                              <v-img :src="image.url"></v-img>
+                            <div v-else>
+                              <v-card-title class="text" color="black">
+                                <a
+                                  :href="image.url"
+                                  target="_blank"
+                                  class="text"
+                                >
+                                  {{ image.name }}
+                                </a>
+                                <v-btn icon @click="download(image.url)"
+                                  ><v-icon>$mdiDownload</v-icon></v-btn
+                                >
+                              </v-card-title>
+                              <v-card-subtitle class="text" color="black">
+                                {{ image.type }}
+                              </v-card-subtitle>
+                            </div>
+                            <v-avatar
+                              class="profile"
+                              color="grey"
+                              size="164"
+                              tile
+                            >
+                              <v-img
+                                :src="image.url"
+                                aspect-ratio="4/4"
+                              ></v-img>
                             </v-avatar>
                           </div>
                         </v-card>
@@ -202,6 +265,8 @@
 
 <script lang="ts">
 import CountrySelect from "@/components/commons/CountrySelect.vue";
+import download from "downloadjs";
+
 import { FormItem } from "@/components/commons/FormItem";
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import InfoTooltip from "@/components/commons/InfoTooltip.vue";
@@ -235,6 +300,7 @@ export default class Step1 extends Vue {
   shelter!: Shelter;
   localShelter = cloneDeep(this.shelter);
 
+  download = download;
   @Watch("shelter", { immediate: true, deep: true })
   onShelterChange(newShelter: Shelter): void {
     this.localShelter = cloneDeep(newShelter);
@@ -250,6 +316,11 @@ export default class Step1 extends Vue {
   shelterTypes = listOfShelterType;
   imageShelterTypes = imageShelterTypes;
   uploadDialog = false;
+  toggledImage = "";
+
+  public toggleImage(url: string): void {
+    this.toggledImage = url;
+  }
 
   lifeExpectancy = [
     { label: "6 months or less", value: 0.5 },
