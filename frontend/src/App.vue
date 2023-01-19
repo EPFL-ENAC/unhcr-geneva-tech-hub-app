@@ -34,11 +34,16 @@
         >
           <v-list-item-avatar>
             <v-avatar>
-              <v-icon class="account-color">$mdiAccountCircle </v-icon>
+              <v-icon v-if="$can('admin')" large title="admin"
+                >$mdiShieldAccount</v-icon
+              >
+              <v-icon v-else large class="account-color"
+                >$mdiAccountCircle
+              </v-icon>
             </v-avatar>
           </v-list-item-avatar>
 
-          <v-list-item-title>{{ user.name }}</v-list-item-title>
+          <v-list-item-title>{{ user.name }} </v-list-item-title>
 
           <v-btn
             aria-label="toggle-left-panel"
