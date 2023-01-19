@@ -62,6 +62,7 @@ services:
       - S3_Key=${S3_Key} 
       - CORS_ENABLED=${CORS_ENABLED} 
       - ROOT_PATH=
+      - AUTH_SERVER="http://couchdb:5984"
     ports:
       - '5050:5050'
     labels:

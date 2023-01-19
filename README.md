@@ -47,11 +47,13 @@ DNS=128.178.15.8
 # used by nginx s3 service and fast api boto api
 S3_ENDPOINT_HOSTNAME=s3.epfl.ch
 S3_ENDPOINT_PROTOCOL=https://
-S3_ACCESS_KEY_ID=EPFL_S3_ACCESS_KEY
-S3_SECRET_ACCESS_KEY=EPFL_S3_SECRET_KEY
+S3_ACCESS_KEY_ID=XXXXXX_REPLACE__ME_XXX
+S3_SECRET_ACCESS_KEY=XXXXXX_REPLACE__ME_XXX
 S3_REGION=EU
-S3_Bucket=xxxxx-xxxxxxxxxxxxxxxxxxxxxxx
-S3_Key=
+S3_Bucket=XXXXXX_REPLACE__ME_XXX
+# for instance if S3_Key is foo/bar/ ; the url will start with: /s3/foo/bar/
+S3_Key=XXXXXX_REPLACE__ME_XXX
+
 EOF
 ```
 

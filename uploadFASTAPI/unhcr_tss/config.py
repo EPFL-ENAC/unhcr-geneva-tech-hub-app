@@ -16,6 +16,7 @@ settings = Dynaconf(
         Validator("S3_REGION", must_exist=True, default="EU"),
         Validator("S3_Bucket", must_exist=True),
         Validator("S3_Key", must_exist=True, default=""),
+        Validator("AUTH_SERVER"),
     ],
 )
 
