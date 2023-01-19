@@ -1,7 +1,19 @@
 # FastAPI
 Based loosely on https://github.com/gauravgola96/FastAPI-Example
 
-API for uploading object(.png) to S3 bucket asynchronously
+## Requirements
+- python 3.10.9
+- poetry
+- Make
+- Docker with docker compose
+- OS:
+  - Windows: docker desktop with wsl
+  - Apple: with docker desktop dependencies installed via brew
+  - Linux: libwebp-dev
+
+## How to run
+API for uploading object(.png|.jpg) to S3 bucket asynchronously
+-> convert png or jpg to webp files
 
 Create a file .env and put all s3 credential here
 ```
@@ -21,7 +33,7 @@ S3_Key =
 
 Run Locally
 ```
-python api.py
+make install; make run
 ```
 
 Swagger docs
@@ -35,4 +47,4 @@ Path : ./Dockerfile
 ```
 
 ## Install
-Don't forget to install libwebp-dev on the machine
+Don't forget to install libwebp-dev on the machine (cf Dockerfile)
