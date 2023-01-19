@@ -1,5 +1,19 @@
 <template>
   <v-container>
+    <v-row class="d-print-none">
+      <v-col>
+        <v-btn
+          :to="{ name: 'ShelterSustainabilityList', query: $route.query }"
+          class="ma-2"
+          outlined
+          small
+          fab
+          color="primary"
+        >
+          <v-icon>$mdiArrowLeftCircle</v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
     <v-row v-if="loaded && shelters.length === 0">
       <v-col>
         <v-alert type="warning">
@@ -181,8 +195,8 @@
                 :cols="Math.floor(9 / shelters.length)"
               >
                 <div>
-                  {{ shelter.geometry.floorArea }} m<sup>2</sup>,
-                  {{ shelter.geometry.volume }} m<sup>3</sup>
+                  {{ shelter.geometry.floorArea | formatNumber }} m<sup>2</sup>,
+                  {{ shelter.geometry.volume | formatNumber }} m<sup>3</sup>
                 </div>
               </v-col>
             </v-row>
