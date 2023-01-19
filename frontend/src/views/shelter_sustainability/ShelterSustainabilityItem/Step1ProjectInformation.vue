@@ -119,23 +119,36 @@
                                       </v-text-field>
                                     </div>
                                   </v-col>
-                                  <v-col :cols="2">
+                                  <v-col :cols="1">
                                     <v-btn
                                       v-if="toggledImage != image.url"
+                                      small
                                       icon
                                       @click="toggleImage(image.url)"
                                       ><v-icon small>$mdiPencil</v-icon></v-btn
                                     >
                                   </v-col>
-                                  <v-col :cols="2">
+                                  <v-col :cols="1">
                                     <v-btn
                                       v-if="toggledImage != image.url"
+                                      small
                                       icon
                                       @click="download(image.url)"
                                       ><v-icon small
                                         >$mdiDownload</v-icon
                                       ></v-btn
                                     >
+                                  </v-col>
+                                  <v-col :cols="1">
+                                    <v-btn
+                                      v-if="toggledImage != image.url"
+                                      color="red"
+                                      icon
+                                      small
+                                      @click="removeImage(image.url)"
+                                    >
+                                      <v-icon small>$mdiDelete</v-icon>
+                                    </v-btn>
                                   </v-col>
                                 </v-row>
                               </v-card-title>
@@ -276,6 +289,7 @@ import UserManager from "@/components/commons/UserManager.vue";
 import { infoTooltipText } from "@/components/shelter_sustainability/infoTooltipText";
 import InputWithInfo from "@/components/shelter_sustainability/InputWithInfo.vue";
 import {
+  ImageShelter,
   imageShelterTypes,
   listOfShelterType,
   Shelter,
@@ -307,7 +321,7 @@ export default class Step1 extends Vue {
   }
 
   public updateFormInput(): void {
-    const newShelter = Object.assign({}, this.localShelter);
+    const newShelter = JSON.parse(JSON.stringify(this.localShelter));
     this.$emit("update:shelter", newShelter);
   }
 
@@ -320,6 +334,16 @@ export default class Step1 extends Vue {
 
   public toggleImage(url: string): void {
     this.toggledImage = url;
+  }
+  public removeImage(url: string): void {
+    this.$set(
+      this.localShelter,
+      "images",
+      this.localShelter.images.filter(
+        (image: ImageShelter) => image.url !== url
+      )
+    );
+    this.updateFormInput();
   }
 
   lifeExpectancy = [
