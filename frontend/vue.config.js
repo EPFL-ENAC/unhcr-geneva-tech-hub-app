@@ -21,6 +21,22 @@ module.exports = {
         ws: true,
         changeOrigin: true,
       },
+      "^/api": {
+        target: "http://localhost:5050/",
+        pathRewrite: {
+          "^/api": "", // remove base path
+        },
+        ws: true,
+        changeOrigin: true,
+      },
+      "^/s3": {
+        target: "http://localhost:5660/",
+        pathRewrite: {
+          "^/s3": "",
+        },
+        ws: true,
+        changeOrigin: true,
+      },
     },
   },
 

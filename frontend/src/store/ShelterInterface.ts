@@ -18,6 +18,21 @@ export const listOfShelterType: ShelterType[] = [
 ];
 
 export type ShelterType = "Emergency" | "Transitional" | "Durable" | "";
+// 1) Image, 2) drawings - floor plan, 3) drawings, roof plan, 4) drawing - section, 5) drawing - elevation
+export const imageShelterTypes = [
+  "Image",
+  "drawings - floor plan",
+  "drawings - roof plan",
+  "drawing - section",
+  "drawing - elevation",
+] as const;
+export type ImageShelterType = typeof imageShelterTypes[number];
+
+export interface ImageShelter {
+  url: string; // path like /s3/unhcr_tss/xx
+  name: string;
+  type: ImageShelterType;
+}
 export interface Shelter {
   _id?: string;
   _rev?: string;
@@ -33,7 +48,7 @@ export interface Shelter {
   location_country: string;
   latitude: number;
   longitude: number;
-  img_url: string;
+  images: ImageShelter[]; // uploaded images to custom s3
 
   risk_flood: string;
   risk_seismic: string;

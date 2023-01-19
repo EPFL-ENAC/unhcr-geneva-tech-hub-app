@@ -273,7 +273,7 @@ export function generateNewShelter(name: string, user: CouchUser): Shelter {
       location_country: "", // iso code ?
       latitude: 0,
       longitude: 0,
-      img_url: "",
+      images: [],
       risk_flood: "",
       risk_seismic: "",
       habitability: {},
@@ -310,7 +310,7 @@ export function completeMissingFields(shelter: Shelter): Shelter {
     location_country: shelter.location_country ?? "", // iso code ?
     latitude: shelter.latitude ?? 0,
     longitude: shelter.longitude ?? 0,
-    img_url: shelter.img_url ?? "",
+    images: shelter.images ?? [],
     risk_flood: shelter.risk_flood ?? "",
     risk_seismic: shelter.risk_seismic ?? "",
     habitability: shelter.habitability ?? {},

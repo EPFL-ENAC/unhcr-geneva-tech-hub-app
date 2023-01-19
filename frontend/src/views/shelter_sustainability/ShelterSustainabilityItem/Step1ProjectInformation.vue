@@ -83,15 +83,40 @@
                         @change="updateFormInput"
                       />
 
-                      <form-item-component
-                        v-model="localShelter.img_url"
-                        v-bind="img_url"
-                        @change="updateFormInput"
-                      ></form-item-component>
-                      <v-img
-                        v-if="localShelter.img_url"
-                        :src="localShelter.img_url"
-                      ></v-img>
+                      <v-btn class="my-3" @click="uploadDialog = true">
+                        upload files
+                      </v-btn>
+                      <upload-images
+                        :dialog.sync="uploadDialog"
+                        :multiple="true"
+                        @filesUploaded="processUpload($event)"
+                      />
+                      <template v-for="image in localShelter.images">
+                        <v-card :key="image.name" class="my-3" color="white">
+                          <div
+                            class="d-flex flex-no-wrap justify-space-between"
+                          >
+                            <div>
+                              <v-card-title class="text-h5" color="black">
+                                {{ image.name }}
+                              </v-card-title>
+                              <v-card-actions>
+                                <v-select
+                                  v-model="image.type"
+                                  :items="imageShelterTypes"
+                                  label="Select type of image"
+                                  outlined
+                                  @change="updateFormInput"
+                                ></v-select>
+                              </v-card-actions>
+                            </div>
+
+                            <v-avatar class="ma-3" size="125" tile>
+                              <v-img :src="image.url"></v-img>
+                            </v-avatar>
+                          </div>
+                        </v-card>
+                      </template>
                     </v-col>
                     <v-col class="about-second-column" cols="4">
                       <v-text-field
@@ -181,10 +206,15 @@ import { FormItem } from "@/components/commons/FormItem";
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import TerritoryMap from "@/components/commons/TerritoryMap.vue";
+import UploadImages from "@/components/commons/UploadImages.vue";
 import UserManager from "@/components/commons/UserManager.vue";
 import { infoTooltipText } from "@/components/shelter_sustainability/infoTooltipText";
 import InputWithInfo from "@/components/shelter_sustainability/InputWithInfo.vue";
-import { listOfShelterType, Shelter } from "@/store/ShelterInterface";
+import {
+  imageShelterTypes,
+  listOfShelterType,
+  Shelter,
+} from "@/store/ShelterInterface";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
@@ -196,6 +226,7 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
     FormItemComponent,
     TerritoryMap,
     InfoTooltip,
+    UploadImages,
   },
 })
 /** Project */
@@ -217,6 +248,9 @@ export default class Step1 extends Vue {
   infoTooltipText = infoTooltipText;
   occupantsOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   shelterTypes = listOfShelterType;
+  imageShelterTypes = imageShelterTypes;
+  uploadDialog = false;
+
   lifeExpectancy = [
     { label: "6 months or less", value: 0.5 },
     { label: "1 year", value: 1 },
@@ -287,6 +321,36 @@ export default class Step1 extends Vue {
       return false;
     }
     return url.protocol === "http:" || url.protocol === "https:";
+  }
+
+  public processUpload(files: File[]) {
+    if (files.length > 0) {
+      const formData = new FormData();
+
+      files.forEach((file) => {
+        formData.append("files", file);
+      });
+
+      const options = {
+        method: "POST",
+        body: formData,
+      };
+      fetch("/api/upload", options)
+        .then((response) => response.json())
+        .then((data) => {
+          this.$set(this.localShelter, "images", data.filenames);
+          this.updateFormInput();
+          this.$store.dispatch("notifyUser", "Successful upload to server");
+        })
+        .catch((error: Error) => {
+          this.$store.dispatch(
+            "notifyUser",
+            `Could not upload images ${error}`
+          );
+        });
+    } else {
+      this.$store.dispatch("notifyUser", "No file to upload");
+    }
   }
 
   riskFlood = {
