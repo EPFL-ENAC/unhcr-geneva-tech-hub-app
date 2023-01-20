@@ -20,7 +20,7 @@
         <v-file-input
           v-model="uploadedFiles"
           :rules="rules"
-          accept="image/png, image/jpeg, image/bmp, image/webp"
+          accept="image/png, image/jpeg, image/bmp, image/webp, image/gif, application/pdf"
           placeholder="Select an image"
           prepend-icon="mdi-camera"
           label="Select Images"
