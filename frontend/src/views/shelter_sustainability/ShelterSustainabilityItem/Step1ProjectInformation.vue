@@ -180,6 +180,7 @@
                               </v-card-subtitle>
                             </div>
                             <v-avatar
+                              v-if="image.type !== 'pdf'"
                               class="profile"
                               color="grey"
                               size="164"

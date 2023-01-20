@@ -25,6 +25,7 @@ export const imageShelterTypes = [
   "drawings - roof plan",
   "drawing - section",
   "drawing - elevation",
+  "pdf",
 ] as const;
 export type ImageShelterType = typeof imageShelterTypes[number];
 

@@ -9,7 +9,8 @@ pdf_mimetypes = [
 png_mimetypes = ["image/png", "application/png", "application/x-png"]
 jpg_mimetypes = ["image/jpg", "application/jpg", "application/x-jpg"]
 gif_mimetypes = ["image/gif"]
-image_mimetypes = png_mimetypes + jpg_mimetypes + gif_mimetypes
+other_image_mimetypes = ["image/bmp", "image/webp"]
+image_mimetypes = png_mimetypes + jpg_mimetypes + gif_mimetypes + other_image_mimetypes
 valid_mimetypes = image_mimetypes + pdf_mimetypes
 
 
