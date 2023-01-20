@@ -322,7 +322,7 @@ export default class Step1 extends Vue {
   }
 
   public updateFormInput(): void {
-    const newShelter = JSON.parse(JSON.stringify(this.localShelter));
+    const newShelter = cloneDeep(this.localShelter);
     this.$emit("update:shelter", newShelter);
   }
 
