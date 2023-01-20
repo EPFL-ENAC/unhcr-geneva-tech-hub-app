@@ -23,3 +23,5 @@ settings = Dynaconf(
 
 cors_enabled: bool = settings.cors_enabled  # type: ignore
 root_path: str = settings.root_path  # type: ignore
+S3_Key: bool = settings.S3_Key  # type: ignore
+S3_Key: str = settings.S3_Key  # type: ignore
