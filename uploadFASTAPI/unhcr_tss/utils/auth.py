@@ -2,6 +2,7 @@ from unhcr_tss.config import settings
 from requests import get
 from fastapi import Cookie, Header
 from typing import Union
+from fastapi.exceptions import HTTPException
 
 
 def isUserLoggedIn(AuthSession: Union[str, None] = Cookie(default=None),
@@ -19,3 +20,11 @@ def isUserLoggedIn(AuthSession: Union[str, None] = Cookie(default=None),
             headers=headers)
     userCtx = r.json().get("userCtx")
     return userCtx.get("name") is not None
+
+
+async def authorization_checker(
+        AuthSession: Union[str, None] = Cookie(default=None),
+        Authorization: Union[str, None] = Header(default=None)):
+    if (not isUserLoggedIn(AuthSession, Authorization)):
+        raise HTTPException(status_code=401,
+                            detail="You are not authenticated")
