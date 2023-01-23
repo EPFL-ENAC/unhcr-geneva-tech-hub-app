@@ -36,4 +36,7 @@ COPY ./unhcr_tss /app/unhcr_tss
 
 RUN pip install --no-cache-dir .
 
+
 CMD [ "uvicorn", "unhcr_tss.main:app", "--host", "0.0.0.0", "--port", "5050" ]
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=3s --retries=2 CMD wget --no-verbose --tries=1 --spider http://localhost:5050/ping || exit 1
