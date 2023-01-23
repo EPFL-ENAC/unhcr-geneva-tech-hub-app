@@ -42,14 +42,14 @@ services:
       - '5984:5984'
     restart: unless-stopped
     volumes:
-      - ./couchdb/etc/config.ini:/opt/couchdb/etc/local.d/config.ini
+      - ./couchdb-setup/etc/config.ini:/opt/couchdb/etc/local.d/config.ini
       - couchdb_data:/opt/couchdb/data/
   couchdb-setup:
     environment:
       - COUCHDB_USER=${COUCHDB_USER}
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
       - COUCHDB_HOST=couchdb
-    build: ./couchdb
+    build: ./couchdb-setup
   upload-fast-api:
     build: ./uploadFASTAPI
     environment:
