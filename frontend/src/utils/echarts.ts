@@ -36,3 +36,8 @@ export interface TooltipFormatterParams<D = Record<string, unknown>> {
   // the percentage of pie chart
   percent: number;
 }
+
+export interface BoxPlotTooltipFormatterParams<D = Record<string, unknown>>
+  extends TooltipFormatterParams<D> {
+  marker: string;
+}

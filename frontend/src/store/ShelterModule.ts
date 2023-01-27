@@ -97,11 +97,18 @@ const actions: ActionTree<ShelterState, RootState> = {
   },
   getScorecards: (
     context: ActionContext<ShelterState, RootState>,
-    ids: string | string[]
+    ids: string | string[] | undefined
   ) => {
     const localCouch = context.state.localCouch;
     // shelters/_design/shelter/_view/scorecards?include_docs=true
-    const selectedIds = typeof ids === "string" ? [ids] : ids;
+    let selectedIds: string[] = [];
+    if (typeof ids === "string") {
+      selectedIds = [ids];
+    } else if (ids === undefined) {
+      selectedIds = [];
+    } else {
+      selectedIds = ids;
+    }
     return localCouch?.remoteDB
       .query("shelter/scorecards", { include_docs: true })
       .then(function (result) {

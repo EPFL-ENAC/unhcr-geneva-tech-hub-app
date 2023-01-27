@@ -1,13 +1,23 @@
 <template>
   <v-container fluid class="shelter__boq">
-    <v-row>
-      <v-col class="d-flex">
-        <h2 class="text-h4 project__h3 font-weight-medium">
-          {{ infoTooltipText[$route.name].title }}
-        </h2>
-        <info-tooltip>
-          {{ infoTooltipText[$route.name].text }}
-        </info-tooltip>
+    <v-row v-if="$router.currentRoute.name === 'ShelterSustainabilityStep3'">
+      <v-col class="d-flex justify-space-between">
+        <div class="d-flex flex-row">
+          <h2 class="text-h4 project__h3 font-weight-medium">
+            {{ infoTooltipText[$route.name].title }}
+          </h2>
+          <info-tooltip>
+            {{ infoTooltipText[$route.name].text }}
+          </info-tooltip>
+        </div>
+        <v-btn
+          class="d-print-none"
+          @click="
+            window.print();
+            return false;
+          "
+          >Export Bill of Quantities pdf</v-btn
+        >
       </v-col>
     </v-row>
     <v-row>
@@ -350,5 +360,14 @@ export default class Step3Materials extends Vue {
 <style lang="scss" scoped>
 .shelter__boq tfoot {
   font-weight: bold;
+}
+
+@media print {
+  @page {
+    size: landscape;
+  }
+  // * {
+  //   font-size: 7px;
+  // }
 }
 </style>

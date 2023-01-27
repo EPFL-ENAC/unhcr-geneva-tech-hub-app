@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="project">
     <v-tabs
-      class="fixed-tabs-bar d-flex"
+      class="fixed-tabs-bar d-flex d-print-none"
       centered
       grow
       :show-arrows="true"
@@ -128,6 +128,11 @@ export default class ProjectItem extends Vue {
         text: "Scorecard",
         tooltipDisabledText: `Scorecard requires completion of other sections<br/> <br/><ul>${scorecardErrorText}</ul>`,
         to: "ShelterSustainabilityStep9",
+      },
+      {
+        icon: "$mdiFilePdfBox",
+        text: "Assessment report",
+        to: "ShelterReportStep10",
       },
     ];
   }

@@ -34,6 +34,11 @@ export const infoTooltipText = {
     ready: true,
     text: "Scorecard",
   },
+  ShelterReportStep10: {
+    title: "Assessment report",
+    ready: true,
+    text: "Assessment report",
+  },
   Materials: {
     title: "Materials",
     ready: true,

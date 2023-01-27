@@ -2,14 +2,14 @@
   <v-container v-if="shelter" fluid>
     <v-row>
       <v-col class="d-flex">
-        <h2 class="text-h4 project__h3 font-weight-medium">
+        <h2 class="d-flex align-center text-h4 project__h3 font-weight-medium">
           {{ infoTooltipText[$route.name].title }}
         </h2>
         <info-tooltip>
           {{ infoTooltipText[$route.name].text }}
         </info-tooltip>
       </v-col>
-      <v-col>
+      <v-col class="d-print-none">
         <v-row>
           <v-col>
             <v-select
@@ -53,10 +53,20 @@
               multiple
             />
           </v-col>
+          <v-col class="d-flex align-center">
+            <v-btn
+              class="d-print-none"
+              @click="
+                window.print();
+                return false;
+              "
+              >Export Scorecard pdf</v-btn
+            >
+          </v-col>
         </v-row>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row class="d-print-none">
       <v-col>
         <v-divider></v-divider>
       </v-col>
@@ -96,9 +106,9 @@
                       }}
                     </span>
                   </span>
-                  <v-tooltip right :max-width="300">
+                  <v-tooltip right :max-width="300" class="d-print-none">
                     <template #activator="{ on, attrs }">
-                      <v-btn icon v-bind="attrs" v-on="on">
+                      <v-btn icon v-bind="attrs" class="d-print-none" v-on="on">
                         <v-icon> $mdiInformation </v-icon>
                       </v-btn>
                     </template>
@@ -269,6 +279,7 @@ export default class Step8ScoreCard extends Vue {
       });
   }
 
+  // TODO: should be a mixin so we can use it in OverviewProjects also
   changes!: PouchDB.Core.Changes<Shelter> | undefined;
   mounted(): void {
     // we don't init/close the db, it's handled by parent route component
@@ -305,3 +316,11 @@ interface ShelterFilters {
   selectedCountries: string[];
 }
 </script>
+
+<style lang="scss" scoped>
+@media print {
+  @page {
+    size: landscape;
+  }
+}
+</style>

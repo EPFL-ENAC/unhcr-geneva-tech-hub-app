@@ -10,7 +10,12 @@ function (doc) {
       habitability: score.habitability || 0,
       affordability: score.affordability || 0,
       shelter_type: doc.shelter_type || "",
+      created_by: doc.created_by || "",
       created_at: doc.created_at || "",
+      year: (doc.created_at || "").substr(0,4),
+      updated_at: doc.updated_at || "",
+      updated_by: doc.updated_by || "",
       location_country: doc.location_country || "",
+      organisation: doc.organisation || "",
     });
 }

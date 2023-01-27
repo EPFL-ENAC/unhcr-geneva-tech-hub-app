@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row class="d-print-none">
-      <v-col>
+      <v-col class="d-flex justify-space-between">
         <v-btn
           :to="{ name: 'ShelterSustainabilityList', query: $route.query }"
           class="ma-2"
@@ -12,6 +12,14 @@
         >
           <v-icon>$mdiArrowLeftCircle</v-icon>
         </v-btn>
+        <v-btn
+          class="d-print-none"
+          @click="
+            window.print();
+            return false;
+          "
+          >Export Comparison pdf</v-btn
+        >
       </v-col>
     </v-row>
     <v-row v-if="loaded && shelters.length === 0">
@@ -27,16 +35,7 @@
     <v-row v-else>
       <v-col>
         <v-row>
-          <v-col cols="3">
-            <v-btn
-              class="d-print-none"
-              @click="
-                window.print();
-                return false;
-              "
-              >Print</v-btn
-            >
-          </v-col>
+          <v-col cols="3"> </v-col>
           <v-col
             v-for="shelter in shelters"
             :key="shelter._id"
