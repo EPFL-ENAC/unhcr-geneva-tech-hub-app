@@ -2,7 +2,7 @@ _id,type,category,description,value,source
 REF_DIES_L,number,ENERGY,Emissions Factor - Diesel (100% mineral diesel) [kg CO2e/l],2.72440045,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
 REF_GAZ_L,number,ENERGY,Emissions Factor - Gasoline (100% mineral gasoline) [kg CO2e/l],2.34,https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022
 REF_RNW,number,ENERGY,Energy - Electricity - Solar Emissions Factor [-],0,
-REF_GRD,number,ENERGY,Energy - Electricity - Emissions Factor - National Grid [-],0,https://www.iges.or.jp/en/pub/list-grid-emission-factor/en
+REF_GRD,number,ENERGY,Energy - Electricity - Emissions Factor - National Grid [-],0.6448,https://www.iges.or.jp/en/pub/list-grid-emission-factor/en
 REF_EFF_DIES,number,ENERGY,Energy - Electricity - Efficiency - Diesel Generators (kWh/litre),0.267,https://plan.sa.gov.au/__data/assets/pdf_file/0007/574531/Appendix-O-Greenhouse-Gas-Calculations.pdf
 REF_WSH_D,number,WASH,WASH - Trucking - Emissions Factor - Diesel (up to 3.5 tonnes) [-],0.25213,https://unfccc.int/sites/default/files/resource/GHG_emissions_calculator_ver01.1_web.xlsx
 REF_WSH_G,number,WASH,WASH - Trucking - Emissions Factor - Gasoline (up to 3.5 tonnes) [-],0.22,https://unfccc.int/sites/default/files/resource/GHG_emissions_calculator_ver01.1_web.xlsx

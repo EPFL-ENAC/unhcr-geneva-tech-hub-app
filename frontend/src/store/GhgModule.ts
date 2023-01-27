@@ -72,7 +72,7 @@ const getters: GetterTree<ProjectsState, RootState> = {
     const iges_grid_match = iges_grid.find(
       (el: IgesItemInterface) => el._id === getters.project.country_code
     );
-    REF_GRD.value = iges_grid_match?.value || REF_GRD.value; // find REF_GRD per country
+    REF_GRD.value = iges_grid_match?.value ?? REF_GRD.value; // find REF_GRD per country
 
     return REF_GRD;
   },
