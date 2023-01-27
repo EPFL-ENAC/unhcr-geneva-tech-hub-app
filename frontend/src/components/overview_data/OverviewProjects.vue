@@ -65,6 +65,10 @@ import {
   ShelterRegions,
 } from "@/store/ShelterInterface";
 import { SyncDatabase } from "@/utils/couchdb";
+import {
+  shelterColors,
+  shelterIcons,
+} from "@/views/shelter_sustainability/shelterTypeColors";
 import { CallbackDataParams, EChartsOption } from "echarts/types/dist/shared";
 import { map, mean, sum } from "lodash";
 import PouchDB from "pouchdb";
@@ -110,6 +114,9 @@ export default class OverviewProjects extends Vue {
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
   getShelters!: () => Promise<null>;
+
+  shelterColors = shelterColors;
+  shelterIcons = shelterIcons;
 
   shelterFilters: OverviewFilters = {
     selectedRegions: ["All"],
@@ -191,6 +198,29 @@ export default class OverviewProjects extends Vue {
       ],
       legend: {
         top: "0px",
+        data: [
+          {
+            name: "Emergency",
+            icon: ("path://" +
+              this.$vuetify.icons.values[
+                this.shelterIcons.Emergency.replace("$", "")
+              ]) as string,
+          },
+          {
+            name: "Transitional",
+            icon: ("path://" +
+              this.$vuetify.icons.values[
+                this.shelterIcons.Transitional.replace("$", "")
+              ]) as string,
+          },
+          {
+            name: "Durable",
+            icon: ("path://" +
+              this.$vuetify.icons.values[
+                this.shelterIcons.Durable.replace("$", "")
+              ]) as string,
+          },
+        ],
       },
       tooltip: {
         trigger: "item",
@@ -200,6 +230,11 @@ export default class OverviewProjects extends Vue {
         confine: false,
         appendToBody: true,
       },
+      color: [
+        shelterColors.Emergency.primary,
+        shelterColors.Transitional.primary,
+        shelterColors.Durable.primary,
+      ],
       grid: {
         left: "10%",
         top: "20%",
@@ -293,7 +328,7 @@ export default class OverviewProjects extends Vue {
       [], // 2022 year2
     ]}, {}, {}]
     */
-
+    // TODO: make it generic by using: shelterColors.Emergency
     const emergency_shelter = scorecards.filter(
       (scorecard) => scorecard.shelter_type !== "Emergency"
     );
