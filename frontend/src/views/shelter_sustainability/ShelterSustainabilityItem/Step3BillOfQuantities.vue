@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="shelter__boq">
-    <v-row>
+    <v-row v-if="$router.currentRoute.name === 'ShelterSustainabilityStep3'">
       <v-col class="d-flex justify-space-between">
         <div class="d-flex flex-row">
           <h2 class="text-h4 project__h3 font-weight-medium">
