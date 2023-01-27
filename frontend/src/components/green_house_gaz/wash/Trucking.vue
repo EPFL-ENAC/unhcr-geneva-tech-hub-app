@@ -169,6 +169,16 @@ export default class Trucking extends Vue {
 
       items: ["KM", "LITRES"],
       hideFooterContent: false,
+      customEventInput: (truckId: string, localInput: SurveyInput) => {
+        // does not work with reference ?
+        // reset all values
+        // localInput.fuelType = "CHC";
+        delete localInput.TOT_WS;
+        delete localInput.TR_VOL;
+        delete localInput.LIT_WS;
+        // delete localInput.WACL;
+        return localInput;
+      },
     },
     {
       text: "Distance between camp and water source",

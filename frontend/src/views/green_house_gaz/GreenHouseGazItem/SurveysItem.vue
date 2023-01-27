@@ -119,6 +119,8 @@ import Shelter from "@/components/green_house_gaz/materials/Shelter.vue";
 import TreePlanting from "@/components/green_house_gaz/offset/TreePlanting.vue";
 import Results from "@/components/green_house_gaz/Results.vue";
 import Trucking from "@/components/green_house_gaz/wash/Trucking.vue";
+import Wastewater from "@/components/green_house_gaz/wash/Wastewater.vue";
+
 import {
   GenericFormSurvey,
   GreenHouseGaz,
@@ -153,6 +155,7 @@ import { mapActions, mapGetters } from "vuex";
     Results,
     UserManager,
     Info,
+    Wastewater,
   },
 })
 /** ProjectList */
@@ -180,11 +183,6 @@ export default class SurveyList extends Vue {
           text: "Lighting",
           to: "Lighting",
         },
-        {
-          icon: "$mdiWaterPump",
-          text: "Pumping",
-          to: "Pumping",
-        },
       ],
       icon: "$mdiLightningBolt",
       text: "Energy",
@@ -196,7 +194,20 @@ export default class SurveyList extends Vue {
       text: "WASH",
       to: "WASH",
       redirect: "WASH-Trucking",
-      children: [{ text: "Trucking", to: "Trucking", icon: "$mdiTankerTruck" }],
+      children: [
+        { text: "Trucking", to: "Trucking", icon: "$mdiTankerTruck" },
+
+        {
+          icon: "$mdiWaterPump",
+          text: "Water Pumping",
+          to: "Pumping",
+        },
+        {
+          icon: "$mdiToilet",
+          text: "Wastewater",
+          to: "Wastewater",
+        },
+      ],
     },
     {
       icon: "$mdiHome",

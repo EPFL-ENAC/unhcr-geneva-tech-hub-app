@@ -39,7 +39,7 @@
           required
           :rules="rules"
           :min="0"
-          label="operating hours (hrs/day)"
+          label="operating hours (hrs/week)"
           @input="changeOperatingHours"
         >
           <template #prepend>

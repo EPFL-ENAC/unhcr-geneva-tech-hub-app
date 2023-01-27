@@ -7,11 +7,12 @@ export function computeLitresDiesel(localItem: EnergyItem): number {
     operatingHours = 0,
     generatorLoad = 60,
   } = localItem || {};
+  // 52 is number of weeks per year
   // generatorLoad in percentage 10% not 0.1
   const genLoad = (generatorLoad ?? 60) / 100;
   const DIE_GEN_L_per_kWh = -0.031 * Math.log(genLoad) + 0.2514;
   const litres =
-    generatorSize * (operatingHours * 365.25) * DIE_GEN_L_per_kWh * genLoad;
+    generatorSize * (operatingHours * 52) * DIE_GEN_L_per_kWh * genLoad;
 
   return parseFloat(litres.toFixed(0));
 }
