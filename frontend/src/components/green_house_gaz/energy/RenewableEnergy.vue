@@ -6,8 +6,14 @@
       required
       :rules="rules"
       :min="0"
-      label="Total kW of solar installed per year"
+      label="Total kW of solar installed"
       @input="changeRenewablePower"
+    />
+    <v-text-field
+      :value="4455"
+      disabled
+      suffix="kWh/yr"
+      label="Total kWh/yr produced (estimated)"
     />
   </v-col>
 </template>
@@ -21,6 +27,7 @@ export default class RenewableEnergy extends Vue {
   @Prop({ type: Object, required: true, default: () => ({}) })
   facility!: Facility;
 
+  // TODO: finish link with database
   rules: Rule[] = [checkRequired];
   public changeRenewablePower(value: string): void {
     const renewablePower: number = parseFloat(value || "0");

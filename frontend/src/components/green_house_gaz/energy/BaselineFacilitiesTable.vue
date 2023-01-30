@@ -209,7 +209,7 @@ export default class BaselineFacilitiesTable extends Vue {
     { text: "Powered by", value: "facilityType", hideFooterContent: true },
     { text: "Total diesel used (litres/yr)", value: "dieselLiters" },
     { text: "Grid power (kWh/yr)", value: "gridPower" },
-    { text: "Solar (kW installed per yr)", value: "renewablePower" },
+    { text: "Solar (kWh/yr)", value: "renewablePower" },
     { text: "CO2 Emissions", value: "totalCO2Emission" },
     { text: "", value: "actions", sortable: false, hideFooterContent: true },
   ];
