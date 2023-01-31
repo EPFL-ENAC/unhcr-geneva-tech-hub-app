@@ -116,7 +116,7 @@ export interface FormSurveyResultWithBalance extends FormSurveyResult {
 }
 
 // GENERIC START
-export type SurveyInputValue = number | string | boolean;
+export type SurveyInputValue = number | string | boolean | string[];
 export type SurveyInput = Record<string, SurveyInputValue>;
 export type SurveyResultValue = number | boolean;
 export type SurveyResult = Record<string, SurveyResultValue>;

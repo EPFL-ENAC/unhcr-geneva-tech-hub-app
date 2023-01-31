@@ -196,6 +196,24 @@ export default class GhgInfo extends Vue {
         key: "country_code",
         label: "Country code",
       },
+      {
+        type: "number",
+        key: "population",
+        label: "Total population",
+        min: 0,
+      },
+      {
+        type: "number",
+        key: "pp_per_hh",
+        label: "Ave. People per HH",
+        min: 0,
+      },
+      {
+        type: "number",
+        key: "hh",
+        label: "% of HHs using cookstove",
+        min: 0,
+      },
     ];
   }
 

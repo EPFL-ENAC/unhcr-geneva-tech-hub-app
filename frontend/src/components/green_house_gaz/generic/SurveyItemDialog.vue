@@ -33,7 +33,7 @@
               </v-col>
             </v-row>
             <v-row>
-              <template v-for="(surveyItem, $index) in headers">
+              <template v-for="(surveyItem, $index) in dynamicHeaders">
                 <v-col
                   v-if="
                     surveyItem.type &&
@@ -123,6 +123,7 @@ export default class SurveyItemDialog extends Vue {
   };
 
   formValid = false;
+  refreshKey = 0;
   localInput: SurveyInput = {} as SurveyInput;
   localItem: SurveyItem = {} as SurveyItem;
 
@@ -132,6 +133,10 @@ export default class SurveyItemDialog extends Vue {
     this.localInput = cloneDeep(value.input);
   }
 
+  // @Watch("localInput", { deep: true })
+  // onLocalInputChange(value: SurveyInput): void {
+
+  // }
   get isOpen(): boolean {
     return this.dialogOpen;
   }
@@ -144,18 +149,35 @@ export default class SurveyItemDialog extends Vue {
     surveyItem: SurveyTableHeader,
     localInput: SurveyInput
   ): void {
-    localInput = (surveyItem?.customEventInput?.(v, localInput) ??
-      localInput) as SurveyInput;
-    // always
-    localInput[surveyItem.key] = v;
-    // probably use this.$set instead ?
-    this.localInput = localInput;
+    const newLocalInput = (surveyItem?.customEventInput?.(v, localInput) ??
+      cloneDeep(localInput)) as SurveyInput;
+    newLocalInput[surveyItem.key] = v;
+    this.localInput = newLocalInput;
+    this.refreshKey = this.refreshKey + 1;
   }
   public get isNewMode(): boolean {
     return Object.keys(this.item?.input ?? []).length === 0;
   }
   public get title(): string {
     return this.isNewMode ? `New ${this.name}` : `Edit ${this.name}`;
+  }
+
+  public get dynamicHeaders(): SurveyTableHeader[] {
+    this.refreshKey; // Some hack it is: https://stackoverflow.com/questions/48700142/vue-js-force-computed-properties-to-recompute
+    return this.headers.map((header: SurveyTableHeader) => {
+      if (typeof header.items === "string") {
+        // console.log(header.items);
+        // should be lodash get with items as the PATH // TODO: fixme before release
+        const fueltypes = this.localInput.fuelTypes as string[];
+        if (typeof fueltypes === "object" && fueltypes.length) {
+          header.options = fueltypes.map((x) => ({
+            text: header.formatter?.(x as unknown) ?? x,
+            value: x,
+          }));
+        }
+      }
+      return header;
+    });
   }
 
   public selectOrigin(value: number): void {

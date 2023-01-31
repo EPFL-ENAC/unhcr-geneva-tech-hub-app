@@ -235,6 +235,7 @@ export default class FormItemComponent extends Vue {
           text: option.text,
           value: option.value,
         }));
+      // TODO: maybe change this way for async purposes
       default:
         return [];
     }

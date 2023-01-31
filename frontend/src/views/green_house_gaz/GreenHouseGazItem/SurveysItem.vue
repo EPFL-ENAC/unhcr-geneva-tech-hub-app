@@ -91,6 +91,7 @@
               v-if="subcategory"
               :form.sync="localFormSurvey"
               :title-key="currentKeyTitle"
+              :survey="currentSurvey"
             />
             <component
               :is="category"
