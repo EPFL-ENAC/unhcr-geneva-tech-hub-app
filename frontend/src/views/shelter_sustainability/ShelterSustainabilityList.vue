@@ -124,24 +124,14 @@
         <v-row>
           <v-col justify="center">
             <v-row>
-              <v-col
-                v-for="project in projects"
-                :key="project._id"
-                cols="12"
-                sm="12"
-                md="12"
-                lg="6"
-                xl="4"
-              >
+              <v-col v-for="project in projects" :key="project._id" cols="12">
                 <v-card
                   :to="{
                     name: 'ShelterSustainabilityEdit',
                     params: { id: encodeURIComponent(project._id) },
                   }"
                   class="project"
-                  max-width="400"
-                  min-width="290"
-                  min-height="200"
+                  min-width="100%"
                   hover
                   outlined
                   :class="{
@@ -150,22 +140,19 @@
                   }"
                 >
                   <v-row>
-                    <v-col cols="12">
-                      <v-card-subtitle class="pb-0">
-                        <v-icon
-                          :class="`c-${
-                            shelterColors[project.shelter_type].name
-                          }`"
-                        >
-                          {{ shelterIcons[project.shelter_type] }}
-                        </v-icon>
-                        <div class="project__hidden-child float-right">
-                          <span v-if="$can('edit', project)"
-                            >Read and write</span
-                          >
-                          <span v-else>Read only</span>
-                        </div>
-                      </v-card-subtitle>
+                    <v-col cols="1">
+                      <v-icon
+                        :class="`c-${shelterColors[project.shelter_type].name}`"
+                        class="pa-8"
+                      >
+                        {{ shelterIcons[project.shelter_type] }}
+                      </v-icon>
+                      <div class="d-none project__hidden-child float-right">
+                        <span v-if="$can('edit', project)">Read and write</span>
+                        <span v-else>Read only</span>
+                      </div>
+                    </v-col>
+                    <v-col cols="4">
                       <v-card-title>
                         {{ project.name }}
                       </v-card-title>
@@ -183,84 +170,89 @@
                           {{ countriesMap[project.location_country].name }}
                         </span>
                       </v-card-subtitle>
-                      <v-card-subtitle class="pb-0">
-                        <v-row class="align-center d-flex">
-                          <v-col :xs="12" :sm="4" class="text-caption">
-                            Created: {{ project.created_at | formatDate }}
-                          </v-col>
-                          <v-col :xs="12" :sm="4" class="text-caption">
-                            Updated: {{ project.updated_at | formatDate }}
-                          </v-col>
-                          <v-col
-                            :xs="12"
-                            :sm="4"
-                            class="d-flex align-center justify-end"
-                          >
-                            <v-tooltip bottom>
-                              <template #activator="{ on, attrs }">
-                                <v-btn
-                                  v-bind="attrs"
-                                  icon
-                                  class="better-click mr-2"
-                                  small
-                                  v-on="on"
-                                  @click.stop.prevent="
-                                    () => duplicateDoc(project)
-                                  "
-                                >
-                                  <v-icon small class="better-click">
-                                    $mdiContentCopy
-                                  </v-icon>
-                                </v-btn>
-                              </template>
-                              <span>Duplicate shelter</span>
-                            </v-tooltip>
-                            <v-tooltip bottom>
-                              <template #activator="{ on, attrs }">
-                                <v-btn
-                                  v-if="$can('delete', project)"
-                                  v-bind="attrs"
-                                  icon
-                                  class="better-click mr-2"
-                                  small
-                                  v-on="on"
-                                  @click.stop.prevent="
-                                    () => deleteItem(project._id)
-                                  "
-                                >
-                                  <v-icon small class="better-click">
-                                    $mdiDelete
-                                  </v-icon>
-                                </v-btn>
-                              </template>
-                              <span>Delete shelter</span>
-                            </v-tooltip>
-                            <v-tooltip bottom>
-                              <template #activator="{ on, attrs }">
-                                <v-checkbox
-                                  v-model="selectedShelters"
-                                  :readonly="
-                                    selectedShelters.length >= 3 &&
-                                    !selectedShelters.includes(project._id)
-                                  "
-                                  :value="project._id"
-                                  v-bind="attrs"
-                                  class="better-click"
-                                  @change="updateQueryIds"
-                                  @click.stop.prevent=""
-                                  v-on="on"
-                                ></v-checkbox>
-                              </template>
-                              <span>Select shelter for comparison</span>
-                            </v-tooltip>
-                          </v-col>
-                        </v-row>
-                        <v-row class="align-center d-flex font-italic">
-                          <v-col :xs="12" :sm="12" class="text-caption">
-                            Created by: {{ project.created_by }}
-                          </v-col>
-                        </v-row>
-                      </v-card-subtitle>
+                    </v-col>
+                    <v-col cols="6 justify-center align-center d-flex">
+                      <v-row class="align-center d-flex">
+                        <v-col cols="4" class="text-caption">
+                          Created: {{ project.created_at | formatDate }}
+                        </v-col>
+                        <v-col cols="4" class="text-caption">
+                          Updated: {{ project.updated_at | formatDate }}
+                        </v-col>
+                        <v-col
+                          cols="4"
+                          class="text-caption align-center d-flex font-italic"
+                        >
+                          Created by: {{ project.created_by }}
+                        </v-col>
+                      </v-row>
+                    </v-col>
+
+                    <v-col cols="1">
+                      <v-row>
+                        <v-col
+                          :cols="12"
+                          class="d-flex align-center justify-end"
+                        >
+                          <v-tooltip bottom>
+                            <template #activator="{ on, attrs }">
+                              <v-btn
+                                v-bind="attrs"
+                                icon
+                                class="better-click mr-2"
+                                small
+                                v-on="on"
+                                @click.stop.prevent="
+                                  () => duplicateDoc(project)
+                                "
+                              >
+                                <v-icon small class="better-click">
+                                  $mdiContentCopy
+                                </v-icon>
+                              </v-btn>
+                            </template>
+                            <span>Duplicate shelter</span>
+                          </v-tooltip>
+                          <v-tooltip bottom>
+                            <template #activator="{ on, attrs }">
+                              <v-btn
+                                v-if="$can('delete', project)"
+                                v-bind="attrs"
+                                icon
+                                class="better-click mr-2"
+                                small
+                                v-on="on"
+                                @click.stop.prevent="
+                                  () => deleteItem(project._id)
+                                "
+                              >
+                                <v-icon small class="better-click">
+                                  $mdiDelete
+                                </v-icon>
+                              </v-btn>
+                            </template>
+                            <span>Delete shelter</span>
+                          </v-tooltip>
+                          <v-tooltip bottom>
+                            <template #activator="{ on, attrs }">
+                              <v-checkbox
+                                v-model="selectedShelters"
+                                :readonly="
+                                  selectedShelters.length >= 3 &&
+                                  !selectedShelters.includes(project._id)
+                                "
+                                :value="project._id"
+                                v-bind="attrs"
+                                class="better-click"
+                                @change="updateQueryIds"
+                                @click.stop.prevent=""
+                                v-on="on"
+                              ></v-checkbox>
+                            </template>
+                            <span>Select shelter for comparison</span>
+                          </v-tooltip>
+                        </v-col>
+                      </v-row>
                     </v-col>
                   </v-row>
                 </v-card>
@@ -488,7 +480,7 @@ interface ShelterFilters {
   $header_height: 64px;
   display: grid;
   grid-template-rows: calc(100vh - #{$header_height});
-  grid-template-columns: 50% 25px 50%;
+  grid-template-columns: 60% 25px 40%;
   grid-template-areas: "a b c";
 
   flex: 1 1 auto;
