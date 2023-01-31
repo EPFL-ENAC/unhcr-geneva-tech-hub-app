@@ -364,13 +364,13 @@ export default class Step1 extends Vue {
   textRules = [
     (v: string): boolean | string => !!v || `is required`,
     (v: string): boolean | string =>
-      v?.length > 1 || `should have a length >= 1`,
+      v?.length >= 1 || `should have a length >= 1`,
   ];
   shelterTypeRules = this.textRules;
 
   shelterTotalRules = [
     (v: number): boolean | string => !!v || `is required`,
-    (v: number): boolean | string => v > 1 || `should have a length >= 1`,
+    (v: number): boolean | string => v >= 1 || `should have a length >= 1`,
     (v: number): boolean | string =>
       v <= 10000000 || `should not be more than 10 000 000 shelters`,
   ];
