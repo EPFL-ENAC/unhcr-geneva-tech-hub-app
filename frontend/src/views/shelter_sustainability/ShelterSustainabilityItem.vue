@@ -105,14 +105,6 @@ export default class ProjectItem extends Vue {
         to: "ShelterSustainabilityStep3",
       },
       {
-        icon: "$mdiLeaf",
-        text: "Environmental Impact",
-        disabled: !this.shelter?.envPerfItems?.length,
-        tooltipDisabledText:
-          "Bill of quantities needed to assess environmental performance",
-        to: "ShelterSustainabilityStep5",
-      },
-      {
         icon: "$mdiPoll",
         text: "Technical Performance",
         to: "ShelterSustainabilityStep6",
@@ -121,6 +113,14 @@ export default class ProjectItem extends Vue {
         icon: "$mdiHome",
         text: "Habitability",
         to: "ShelterSustainabilityStep7",
+      },
+      {
+        icon: "$mdiLeaf",
+        text: "Environmental Impact",
+        disabled: !this.shelter?.envPerfItems?.length,
+        tooltipDisabledText:
+          "Bill of quantities needed to assess environmental performance",
+        to: "ShelterSustainabilityStep5",
       },
       {
         icon: "$mdiScoreboard",
