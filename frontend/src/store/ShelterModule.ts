@@ -40,6 +40,15 @@ const mutations: MutationTree<ShelterState> = {
     state.localCouch?.cancel();
   },
   SET_SHELTERS(state, value) {
+    value.sort(function (a: Shelter, b: Shelter) {
+      const nameA = a.name.toLowerCase(),
+        nameB = b.name.toLowerCase();
+      if (nameA < nameB)
+        //sort string ascending
+        return -1;
+      if (nameA > nameB) return 1;
+      return 0; //default return value (no sorting)
+    });
     state.shelters = value;
   },
   SET_SCORECARDS(state, value) {
