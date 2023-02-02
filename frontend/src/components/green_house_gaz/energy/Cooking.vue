@@ -385,7 +385,7 @@ export default class Trucking extends Vue {
       // beginning of diesel generators
       {
         value: "input.disableDieselLiters",
-        conditional_value: "ELE_DIES",
+        conditional_value: ["ELE_DIES", "ELE_HYB"],
         text: "I do know the total litres of diesel used",
         conditional: "fuelType",
         style: {
@@ -402,6 +402,7 @@ export default class Trucking extends Vue {
         conditional_value: false,
         conditional: "disableDieselLiters",
         text: "Total litres of diesel used per day",
+        suffix: "l",
         style: {
           cols: "12",
         },
@@ -425,19 +426,6 @@ export default class Trucking extends Vue {
         },
       },
       {
-        value: "input.operatingHours", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
-        conditional_value: true,
-        conditional: "disableDieselLiters",
-        text: "operating hours (hrs/day)",
-        tooltipInfo:
-          "from daily log and application will extrapolate this information to be annual",
-        suffix: "hrs/day",
-        style: {
-          cols: "12",
-        },
-        type: "number",
-      },
-      {
         value: "input.generatorLoad", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
         conditional_value: true,
         conditional: "disableDieselLiters",
@@ -450,11 +438,24 @@ export default class Trucking extends Vue {
         type: "number",
         subtype: "percent",
       },
+      {
+        value: "input.operatingHours", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        conditional_value: true,
+        conditional: "disableDieselLiters",
+        text: "operating hours (hrs/day)",
+        tooltipInfo:
+          "from daily log and application will extrapolate this information to be annual",
+        suffix: "hrs/day",
+        style: {
+          cols: "12",
+        },
+        type: "number",
+      },
       // end of diesel generators
       // begingin og national grid
       {
         value: "input.fuelUsage", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
-        conditional_value: "ELE_GRID",
+        conditional_value: ["ELE_GRID", "ELE_HYB"],
         conditional: "fuelType",
         text: "Estimated Kwh/day/HH for national grid",
         suffix: "Kwh/day/HH",
@@ -467,7 +468,8 @@ export default class Trucking extends Vue {
       // begingin of solar
       {
         value: "input.solarInstalled", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
-        conditional_value: "ELE_SOLAR",
+        conditional_value: ["ELE_SOLAR", "ELE_HYB"],
+        conditional: "fuelType",
         customEventInput: (
           solarInstalled: number,
           localInput: EnergyCookingItemInput
@@ -476,7 +478,6 @@ export default class Trucking extends Vue {
           return localInput;
         },
         text: "Total kW of solar installed per HH",
-        conditional: "fuelType",
         suffix: "Kw/HH",
         style: {
           cols: "12",
@@ -485,7 +486,7 @@ export default class Trucking extends Vue {
       },
       {
         value: "input.fuelUsage", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
-        conditional_value: "ELE_SOLAR",
+        conditional_value: ["ELE_SOLAR", "ELE_HYB"],
         disabled: true,
         text: "Total kWh/day produced (estimated)",
         conditional: "fuelType",
