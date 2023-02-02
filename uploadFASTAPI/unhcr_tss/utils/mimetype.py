@@ -7,7 +7,10 @@ pdf_mimetypes = [
     "text/x-pdf"
 ]
 png_mimetypes = ["image/png", "application/png", "application/x-png"]
-jpg_mimetypes = ["image/jpg", "application/jpg", "application/x-jpg"]
+jpg_mimetypes = [
+    "image/jpg", "application/jpg", "application/x-jpg", "image/jpeg",
+    "application/jpeg"
+]
 gif_mimetypes = ["image/gif"]
 other_image_mimetypes = ["image/bmp", "image/webp"]
 image_mimetypes = png_mimetypes + jpg_mimetypes + gif_mimetypes + other_image_mimetypes
