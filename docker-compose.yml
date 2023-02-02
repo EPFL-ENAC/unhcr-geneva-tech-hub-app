@@ -49,13 +49,15 @@ services:
       interval: 1m30s
       timeout: 30s
       retries: 5
-      start_period: 30s
+      start_period: 10s
   couchdb-setup:
     environment:
       - COUCHDB_USER=${COUCHDB_USER}
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
       - COUCHDB_HOST=couchdb
     build: ./couchdb-setup
+    depends_on:
+      - couchdb
   upload-fast-api:
     build: ./uploadFASTAPI
     environment:
@@ -76,6 +78,8 @@ services:
       - "traefik.http.routers.uploadFASTAPI.middlewares=uploadFASTAPI-middleware"
       - "traefik.http.middlewares.uploadFASTAPI-middleware.stripprefix.prefixes=/api"
     restart: unless-stopped
+    depends_on:
+      - couchdb
   s3_server:
     build: ./s3_server
     restart: unless-stopped
