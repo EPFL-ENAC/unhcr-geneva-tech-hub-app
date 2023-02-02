@@ -53,10 +53,10 @@
       <v-col :cols="12">
         <v-text-field
           :value="localFacility.generatorLoad"
-          type="number"
-          suffix="%"
           required
           :rules="rules"
+          suffix="%"
+          type="number"
           min="0"
           max="100"
           step="10"

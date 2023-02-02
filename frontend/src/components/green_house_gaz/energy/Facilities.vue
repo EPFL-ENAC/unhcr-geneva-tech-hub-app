@@ -258,8 +258,8 @@ export default class Facilities extends Vue {
     // sum all rows into one object
     const endlineResults: EnergyFacilityInterventionItemResult = {
       gridPower: sumBy(inputs, (el) => el.gridPower),
-      dieselPower: sumBy(inputs, (el) => el.dieselPower ?? 0),
-      dieselLiters: sumBy(inputs, (el) => el.dieselLiters),
+      dieselPower: sumBy(inputs, (el) => el?.dieselPower ?? 0),
+      dieselLiters: sumBy(inputs, (el) => el?.dieselLiters ?? 0),
       renewablePower: sumBy(inputs, (el) => el.renewablePower),
       totalCO2Emission: sumBy(inputs, (el) => el.totalCO2Emission),
       changeInEmission: 0, // need to compute totalCO2 first
@@ -328,8 +328,8 @@ export default class Facilities extends Vue {
     const inputs: EnergyFacilityItem[] = baselineInputs; // this.facilityForm.baseline.inputs;
     const results: EnergyFacilityItemResult = {
       gridPower: sumBy(inputs, (el) => el.gridPower),
-      dieselPower: sumBy(inputs, (el) => el.dieselPower ?? 0),
-      dieselLiters: sumBy(inputs, (el) => el.dieselLiters),
+      dieselPower: sumBy(inputs, (el) => el?.dieselPower ?? 0),
+      dieselLiters: sumBy(inputs, (el) => el?.dieselLiters ?? 0),
       renewablePower: sumBy(inputs, (el) => el.renewablePower),
       totalCO2Emission: sumBy(inputs, (el) => el.totalCO2Emission),
     };

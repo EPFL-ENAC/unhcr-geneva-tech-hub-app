@@ -209,7 +209,8 @@ const actions: ActionTree<ProjectsState, RootState> = {
   getDoc: (context: ActionContext<ProjectsState, RootState>, id) => {
     const db = context.state.localCouch?.remoteDB;
     if (db) {
-      db.get(id)
+      return db
+        .get(id)
         .then(function (result) {
           context.commit("SET_PROJECT", result);
         })

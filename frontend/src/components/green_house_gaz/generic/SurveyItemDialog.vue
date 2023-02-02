@@ -38,7 +38,7 @@
                   v-if="
                     surveyItem.type &&
                     surveyItem.isInput &&
-                    matchCondition(localInput, surveyItem)
+                    matchConditions(localInput, surveyItem)
                   "
                   :key="$index"
                   :cols="surveyItem?.style?.cols ?? 6"
@@ -92,7 +92,7 @@ import {
 } from "@/store/GhgInterface.vue";
 
 import { VForm } from "@/utils/vuetify";
-import { cloneDeep } from "lodash";
+import { cloneDeep, get as _get } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 @Component({
@@ -133,10 +133,6 @@ export default class SurveyItemDialog extends Vue {
     this.localInput = cloneDeep(value.input);
   }
 
-  // @Watch("localInput", { deep: true })
-  // onLocalInputChange(value: SurveyInput): void {
-
-  // }
   get isOpen(): boolean {
     return this.dialogOpen;
   }
@@ -166,15 +162,26 @@ export default class SurveyItemDialog extends Vue {
     this.refreshKey; // Some hack it is: https://stackoverflow.com/questions/48700142/vue-js-force-computed-properties-to-recompute
     return this.headers.map((header: SurveyTableHeader) => {
       if (typeof header.items === "string") {
-        // console.log(header.items);
-        // should be lodash get with items as the PATH // TODO: fixme before release
-        const fueltypes = this.localInput.fuelTypes as string[];
-        if (typeof fueltypes === "object" && fueltypes.length) {
-          header.options = fueltypes.map((x) => ({
+        // should be lodash get with items as the PATH
+        const [category, key] = header.items.split(".");
+        if (category !== "input") {
+          throw new Error(
+            "items category should be input like so: `input.fuelTypes` for instance"
+          );
+        }
+        const items = _get(this.localInput, key) as string[];
+        if (typeof items === "object" && items.length) {
+          header.options = items.map((x) => ({
             text: header.formatter?.(x as unknown) ?? x,
             value: x,
           }));
         }
+      }
+      // TODO implement a dynamic way for header.items when it's a function ? cf below
+      if (typeof header.text === "function") {
+        // we don't overide text (dynamic text should not be authorized for table)
+        // only for header in form
+        header.label = header.text(this.localInput);
       }
       return header;
     });
@@ -198,15 +205,72 @@ export default class SurveyItemDialog extends Vue {
     this.$emit("update:item", this.localItem);
     this.isOpen = false;
   }
+
+  public matchConditions(
+    localInput: SurveyInput,
+    surveyItem: SurveyTableHeader
+  ) {
+    if (typeof surveyItem.conditional === "undefined") {
+      return true;
+    }
+    if (
+      typeof surveyItem.conditional === "object" &&
+      Array.isArray(surveyItem.conditional)
+    ) {
+      let result = false;
+
+      surveyItem.conditional.every((conditional: string) => {
+        const temp = this.matchCondition(localInput, {
+          ...surveyItem,
+          conditional, // override surveyItem.conditional
+        });
+        if (temp) {
+          result = temp;
+          return false;
+        }
+        return true;
+      });
+      return result;
+    }
+    if (typeof surveyItem.conditional === "string") {
+      return this.matchCondition(localInput, surveyItem);
+    }
+    throw new Error(
+      `Could not match condition in current form: ${JSON.stringify(surveyItem)}`
+    );
+  }
+
   public matchCondition(
     localInput: SurveyInput,
     surveyItem: SurveyTableHeader
   ) {
-    const target = localInput?.[surveyItem.conditional];
-    const objective = surveyItem.conditional_value;
     // if objective is emptystring it means we matched all value, we just need the
     // target to be defined
-    return target === objective || (target && objective == "");
+    if (typeof surveyItem.conditional === "undefined") {
+      return true;
+    }
+    if (typeof surveyItem.conditional_value === "undefined") {
+      return true;
+    }
+    if (typeof surveyItem.conditional === "string") {
+      const target: SurveyInputValue = localInput?.[surveyItem.conditional];
+      const objective: SurveyInputValue = surveyItem.conditional_value;
+      if (typeof objective === "string" || typeof objective === "boolean") {
+        // the trick is to delete the target on input change
+        // so the target may be undefined when necessary
+        return target === objective || (target && objective === "");
+      }
+      if (typeof objective === "object" && Array.isArray(objective)) {
+        if (typeof target === "string" && target) {
+          // TODO: it's weird that includes only works with string
+          return objective.includes(target) || objective.includes("");
+        }
+      }
+      return false;
+    }
+    throw new Error(
+      `conditional ""${surveyItem.conditional}"" should be of type string\n with conditional value: ${surveyItem.conditional_value}\n in surveyTableHeader item: ${surveyItem.value}`
+    );
   }
 }
 

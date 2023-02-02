@@ -116,7 +116,7 @@ export interface FormSurveyResultWithBalance extends FormSurveyResult {
 }
 
 // GENERIC START
-export type SurveyInputValue = number | string | boolean | string[];
+export type SurveyInputValue = number | string | boolean | string[] | undefined;
 export type SurveyInput = Record<string, SurveyInputValue>;
 export type SurveyResultValue = number | boolean;
 export type SurveyResult = Record<string, SurveyResultValue>;
@@ -174,13 +174,16 @@ type FacilityType =
   | "HybridMix"
   | "NotPowered";
 
-export interface EnergyItem {
-  gridPower: number;
-  dieselLiters: number;
+export interface DieselItem {
+  dieselLiters?: number;
   disableDieselLiters?: boolean;
   generatorSize?: number; // replace the diesel liter
   operatingHours?: number; // replace the diesel liter
   generatorLoad?: number; // load of generator (should be default to 60%)
+}
+
+export interface EnergyItem extends DieselItem {
+  gridPower: number;
   dieselPower?: number;
   renewablePower: number;
 }

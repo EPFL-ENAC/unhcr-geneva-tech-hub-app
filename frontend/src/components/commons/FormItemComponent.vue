@@ -45,6 +45,11 @@
       <template #append-outer>
         <slot name="append-outer"></slot>
       </template>
+      <template v-if="tooltipInfo" #prepend>
+        <info-tooltip>
+          {{ tooltipInfo ?? label }}
+        </info-tooltip>
+      </template>
     </v-text-field>
     <v-select
       v-if="type === 'boolean' || type === 'select'"
@@ -156,6 +161,8 @@
 
 <script lang="ts">
 import CountrySelect from "@/components/commons/CountrySelect.vue";
+import InfoTooltip from "@/components/commons/InfoTooltip.vue";
+
 import {
   BooleanOptions,
   SelectOption,
@@ -173,6 +180,7 @@ import { Component, Prop, VModel, Vue } from "vue-property-decorator";
   name: "FormItemComponent",
   components: {
     CountrySelect,
+    InfoTooltip,
   },
 })
 export default class FormItemComponent extends Vue {
@@ -184,6 +192,8 @@ export default class FormItemComponent extends Vue {
   readonly subtype: "percent" | undefined;
   @Prop(String)
   readonly label: string | undefined;
+  @Prop(String)
+  readonly tooltipInfo: string | undefined;
   @Prop([Object, Array])
   readonly options:
     | BooleanOptions
@@ -235,7 +245,6 @@ export default class FormItemComponent extends Vue {
           text: option.text,
           value: option.value,
         }));
-      // TODO: maybe change this way for async purposes
       default:
         return [];
     }
@@ -276,7 +285,7 @@ export default class FormItemComponent extends Vue {
 
   get actualMax(): number | undefined {
     if (this.subtype === "percent") {
-      return 100;
+      return 1;
     }
     return this.max;
   }
