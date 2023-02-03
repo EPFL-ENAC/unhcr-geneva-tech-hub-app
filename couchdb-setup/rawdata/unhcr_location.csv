@@ -1,4 +1,4 @@
-Country,Location,Population,Location id,latitude,longitude,GHI/Daily_solar_peak_hours
+Country,_id,Population,Location id,latitude,longitude,GHI/Daily_solar_peak_hours
 IRN,Abazar : Point,127,1430,28.978026,50.8379918,5.607999802
 SUD,Abu Gabra,14696,3984,11.066265,26.854147,6.181000233
 SUD,Abuda : Point,2367,2785,14.3525,35.8897,6.218999863
