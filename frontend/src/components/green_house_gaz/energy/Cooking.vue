@@ -17,7 +17,11 @@ import BaselineEndlineWrapper, {
 } from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 
-import { computeLitresPerDayDiesel } from "@/components/green_house_gaz/energy/computeCO2cost";
+import {
+  computeKWHPerDayPerCountry,
+  computeLitresPerDayDiesel,
+  countryIrradianceKeys,
+} from "@/components/green_house_gaz/energy/computeCO2cost";
 import { formatNumber } from "@/plugins/filters";
 import {
   DieselItem,
@@ -61,8 +65,8 @@ const fuelFactors = {
   BRQ: 1.2697,
   ETH: 1.2391,
   KRS: 2.5595,
-  PET: 0, // TODO same as wash
-  DIES: 0, // TODO same as facilities for diesel gen
+  PET: 0, // same as wash
+  DIES: 0, // same as facilities for diesel gen
   ELE_SOLAR: 0, // no eff
   ELE_GRID: 0,
   ELE_DIES: 0,
@@ -173,6 +177,9 @@ export default class Trucking extends Vue {
   @Prop([Object, Array])
   readonly survey: Survey | undefined;
 
+  @Prop({ type: String, required: true, default: "" })
+  readonly countryCode!: countryIrradianceKeys;
+
   diffDimension: keyof EnergyCookingItemInput = "numberOfCookstove";
   name = "cookstove";
 
@@ -260,6 +267,7 @@ export default class Trucking extends Vue {
   // should be a getter so it may be reactive for fuelTypes
   public get headers(): SurveyTableHeader[] {
     // public get headers(): any {
+    const countryCode = this.countryCode;
     return [
       {
         text: "#", // unique name === dropdown of existant facilities
@@ -474,7 +482,10 @@ export default class Trucking extends Vue {
           solarInstalled: number,
           localInput: EnergyCookingItemInput
         ) => {
-          localInput.fuelUsage = solarInstalled * 5.6; // TODO: better formula to be given
+          localInput.fuelUsage = computeKWHPerDayPerCountry(
+            solarInstalled,
+            countryCode
+          );
           return localInput;
         },
         text: "Total kW of solar installed per HH",
@@ -514,7 +525,7 @@ export default class Trucking extends Vue {
         style: {
           cols: "12",
         },
-        default_value: "6", // TODO fix to number
+        default_value: "6", // TODO implement default_value in reset function
         value: "input.chcProcessingFactor",
         type: "number",
       },
@@ -561,7 +572,7 @@ export default class Trucking extends Vue {
         },
         max: 100,
         subtype: "percent",
-        type: "number", // TODO should be able to use percentage type
+        type: "number",
       },
       {
         text: "Total CO2 Emissions (tCO2e/year)",

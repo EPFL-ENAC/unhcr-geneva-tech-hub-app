@@ -92,6 +92,7 @@
               :form.sync="localFormSurvey"
               :title-key="currentKeyTitle"
               :survey="currentSurvey"
+              :country-code="project.country_code"
             />
             <component
               :is="category"

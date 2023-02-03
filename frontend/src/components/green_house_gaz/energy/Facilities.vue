@@ -1,7 +1,6 @@
 <template>
   <v-container fluid>
     <survey-item-title :title-key="title" />
-
     <v-row>
       <v-col>
         <v-card elevation="2" rounded>
@@ -12,6 +11,7 @@
             <baseline-facilities-table
               :items.sync="facilityForm.baseline.inputs"
               :results="facilityForm.baseline.results"
+              :country-code="countryCode"
               :disabled="!baselineMode"
               @update:items="computeBaselineResults"
             />
@@ -63,6 +63,7 @@
                 :facilities="facilityForm.baseline.inputs"
                 :items.sync="facilityForm.endline.inputs"
                 :results="facilityForm.endline.results"
+                :country-code="countryCode"
                 :disabled="baselineMode"
                 @update:items="computeEndlineResults"
               />
@@ -140,6 +141,7 @@
 
 <script lang="ts">
 import BaselineFacilitiesTable from "@/components/green_house_gaz/energy/BaselineFacilitiesTable.vue";
+import { countryIrradianceKeys } from "@/components/green_house_gaz/energy/computeCO2cost";
 import EndlineFacilitiesTable from "@/components/green_house_gaz/energy/EndlineFacilitiesTable.vue";
 import FacilitiesPieChart from "@/components/green_house_gaz/energy/FacilitiesPieChart.vue";
 import { computeChangeInEmission } from "@/components/green_house_gaz/generic/changeInEmission";
@@ -175,6 +177,8 @@ export default class Facilities extends Vue {
   readonly form: EnergyFacilitySurvey | undefined;
   @Prop({ type: String, required: true, default: "" })
   readonly titleKey!: string;
+  @Prop({ type: String, required: true, default: "" })
+  readonly countryCode!: countryIrradianceKeys;
 
   ghgMapRef!: ItemReferencesMap;
   baselineMode = true;

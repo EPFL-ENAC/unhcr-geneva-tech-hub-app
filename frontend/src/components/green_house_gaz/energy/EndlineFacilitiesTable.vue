@@ -17,6 +17,7 @@
             :facilities="facilities"
             :item-index.sync="itemIndex"
             :item="localItem"
+            :country-code="countryCode"
             @update:item="updateWithItem"
           />
           <duplicate-intervention-dialog
@@ -185,6 +186,9 @@ export default class EndlineFacilitiesTable extends Vue {
 
   @Prop({ type: Array, default: () => [] })
   readonly facilities!: EnergyFacilityItem[];
+
+  @Prop({ type: String, required: true, default: "" })
+  readonly countryCode!: string;
 
   localItems: EnergyFacilityInterventionItem[] = [];
   dialogs = {} as Record<string, boolean>;

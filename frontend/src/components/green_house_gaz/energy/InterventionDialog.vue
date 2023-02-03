@@ -36,8 +36,6 @@
                     <v-text-field
                       v-model="localItem.description"
                       label="Intervention description"
-                      required
-                      :rules="rules"
                     ></v-text-field>
                   </v-col>
                   <diesel-generator-without-litres
@@ -54,16 +52,10 @@
                       label="kWh used per year (national grid)"
                     />
                   </v-col>
-                  <v-col cols="12" sm="6" md="6">
-                    <v-text-field
-                      v-model.number="localItem.renewablePower"
-                      type="number"
-                      required
-                      :rules="rules"
-                      :min="0"
-                      label="Total kW of solar installed"
-                    />
-                  </v-col>
+                  <renewable-energy
+                    :facility.sync="localItem"
+                    :country-code="countryCode"
+                  />
                 </v-row>
               </v-col>
             </v-row>
@@ -103,6 +95,7 @@ import {
   computeDieselPower,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
 import DieselGeneratorWithoutLitres from "@/components/green_house_gaz/energy/DieselGeneratorWithoutLitres.vue";
+import RenewableEnergy from "@/components/green_house_gaz/energy/RenewableEnergy.vue";
 import { computeChangeInEmission } from "@/components/green_house_gaz/generic/changeInEmission";
 
 import {
@@ -141,6 +134,7 @@ import { mapActions, mapGetters } from "vuex";
   },
   components: {
     DieselGeneratorWithoutLitres,
+    RenewableEnergy,
   },
 })
 export default class InterventionDialog extends Vue {
@@ -157,6 +151,8 @@ export default class InterventionDialog extends Vue {
 
   @Prop({ type: Array, default: () => [] })
   readonly facilities!: EnergyFacilityItem[];
+  @Prop({ type: String, required: true, default: "" })
+  readonly countryCode!: string;
 
   $refs!: {
     form: VForm;
