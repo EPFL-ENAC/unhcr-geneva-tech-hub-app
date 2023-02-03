@@ -435,6 +435,7 @@ export default class Step1 extends Vue {
         .then((response) => response.json())
         .then((data) => {
           this.$set(this.localShelter, "images", data.filenames);
+          // add files  instead of replacing them
           this.updateFormInput();
           this.$store.dispatch("notifyUser", "Successful upload to server");
         })

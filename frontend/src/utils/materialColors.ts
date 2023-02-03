@@ -12,7 +12,12 @@ export const materialColors: Record<string, string[]> = {
   ],
   Hemp: ["hsl(96, 80%, 13%)", "hsl(96, 80%, 23%)", "hsl(96, 80%, 33%)"],
   "Grass, straw": ["hsl(96, 90%, 23%)", "hsl(96, 90%, 33%)"],
-  Bamboo: ["hsl(96, 60%, 43%)", "hsl(96, 60%, 53%)", "hsl(96, 60%, 63%)"],
+  Bamboo: [
+    "hsl(96, 60%, 43%)",
+    "hsl(96, 60%, 53%)",
+    "hsl(96, 60%, 63%)",
+    "hsl(96, 60%, 84%)",
+  ],
   Timber: [
     "hsl(96, 20%, 43%)",
     "hsl(96, 20%, 48%)",

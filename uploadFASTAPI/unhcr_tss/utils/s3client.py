@@ -80,7 +80,7 @@ class S3_SERVICE(object):
         if uploads3:
             s3_url = f"/s3/{key}"
             # response http to be used by the frontend
-            return {"url": s3_url, "name": name, "type": "pdf"}
+            return {"url": s3_url, "name": name, "type": "Report"}
         else:
             raise HTTPException(status_code=500,
                                 detail="Failed to upload pdf to S3")

@@ -41,11 +41,11 @@ export type ShelterRegions =
 // 1) Image, 2) drawings - floor plan, 3) drawings, roof plan, 4) drawing - section, 5) drawing - elevation
 export const imageShelterTypes = [
   "Image",
-  "drawings - floor plan",
-  "drawings - roof plan",
-  "drawing - section",
-  "drawing - elevation",
-  "pdf",
+  "Drawings - floor plan",
+  "Drawings - roof plan",
+  "Drawing - section",
+  "Drawing - elevation",
+  "Report",
 ] as const;
 export type ImageShelterType = typeof imageShelterTypes[number];
 
