@@ -83,33 +83,48 @@
                         @change="updateFormInput"
                       />
 
-                      <v-btn class="my-3" @click="uploadDialog = true">
+                      <v-btn
+                        class="my-3"
+                        :disabled="localShelter.images.length >= 10"
+                        @click="uploadDialog = true"
+                      >
                         upload files
                       </v-btn>
+                      <span
+                        :class="{
+                          'warning--text': localShelter.images.length >= 10,
+                          'd-none': localShelter.images.length < 10,
+                        }"
+                        >(Max limit of 10 files per shelter)
+                      </span>
                       <upload-images
                         :dialog.sync="uploadDialog"
                         :multiple="true"
+                        :loading.sync="uploadLoading"
                         @filesUploaded="processUpload($event)"
                       />
                       <template v-for="image in localShelter.images">
-                        <v-card :key="image.name" class="my-3" color="white">
+                        <v-card :key="image.url" class="my-3" color="white">
                           <div class="d-flex flex-wrap justify-space-between">
                             <div v-if="$can('edit', localShelter)">
                               <v-card-title class="text" color="black">
                                 <v-row>
-                                  <v-col>
-                                    <div class="mr-4" aria-label="image name">
+                                  <v-col :cols="6">
+                                    <div aria-label="image name">
                                       <a
                                         v-if="toggledImage != image.url"
                                         :href="image.url"
                                         target="_blank"
                                       >
-                                        {{ image.name }}
+                                        <span style="text-overflow: ellipsis">{{
+                                          image.name
+                                        }}</span>
                                       </a>
                                       <v-text-field
                                         v-else
                                         v-model="image.name"
-                                        append-icon="$mdiClose"
+                                        append-icon="$mdiCheck"
+                                        append-class="text-primary"
                                         hint="Press escape or enter when finished"
                                         @keypress.enter="toggleImage"
                                         @keypress.escape="toggleImage"
@@ -145,7 +160,7 @@
                                       color="red"
                                       icon
                                       small
-                                      @click="removeImage(image.url)"
+                                      @click="removeAsset(image)"
                                     >
                                       <v-icon small>$mdiDelete</v-icon>
                                     </v-btn>
@@ -160,6 +175,15 @@
                                   outlined
                                   @change="updateFormInput"
                                 ></v-select>
+                                <v-textarea
+                                  v-model="image.description"
+                                  label="Description"
+                                  outlined
+                                  counter
+                                  :rules="rulesCounter"
+                                  @change="updateFormInput"
+                                >
+                                </v-textarea>
                               </v-card-actions>
                             </div>
                             <div v-else>
@@ -179,17 +203,26 @@
                                 {{ image.type }}
                               </v-card-subtitle>
                             </div>
+                            <!-- Image / Drawing / Report / Other -->
                             <v-avatar
-                              v-if="image.type !== 'pdf'"
+                              v-if="['Image', 'Drawing'].includes(image.type)"
                               class="profile"
                               color="grey"
                               size="164"
                               tile
                             >
-                              <v-img
-                                :src="image.url"
-                                aspect-ratio="4/4"
-                              ></v-img>
+                              <v-img :src="image.url"></v-img>
+                            </v-avatar>
+                            <v-avatar
+                              v-else
+                              class="profile"
+                              color="grey"
+                              size="120"
+                              tile
+                            >
+                              <v-card-title class="white--text"
+                                >Thumbnail not available</v-card-title
+                              >
                             </v-avatar>
                           </div>
                         </v-card>
@@ -331,20 +364,50 @@ export default class Step1 extends Vue {
   shelterTypes = listOfShelterType;
   imageShelterTypes = imageShelterTypes;
   uploadDialog = false;
+  uploadLoading = false;
   toggledImage = "";
-
   public toggleImage(url: string): void {
     this.toggledImage = url;
   }
-  public removeImage(url: string): void {
-    this.$set(
-      this.localShelter,
-      "images",
-      this.localShelter.images.filter(
-        (image: ImageShelter) => image.url !== url
-      )
+  public removeAsset(asset: ImageShelter): void {
+    // call delete
+    const assetUrlsFiltered = [asset.url, asset.origin_url].filter(
+      (x) => x !== undefined
     );
-    this.updateFormInput();
+    const options = {
+      method: "DELETE",
+      body: JSON.stringify({
+        paths: assetUrlsFiltered,
+      }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    };
+    fetch("/api/upload", options)
+      .then(async (response) => {
+        if (response.ok) {
+          return response;
+        }
+        throw new Error(`${response.status} ${response.statusText}`);
+      })
+      .then(() => {
+        this.$set(
+          this.localShelter,
+          "images",
+          this.localShelter.images.filter(
+            (image: ImageShelter) => !assetUrlsFiltered.includes(image.url)
+          )
+        );
+        this.updateFormInput();
+        this.$store.dispatch(
+          "notifyUser",
+          "Successfull deletion of assets from server"
+        );
+      })
+      .catch((error: Error) => {
+        this.$store.dispatch("notifyUser", `Could not delete assets ${error}`);
+      });
   }
 
   lifeExpectancy = [
@@ -360,6 +423,8 @@ export default class Step1 extends Vue {
     { label: "9 years", value: 9 },
     { label: "10 years", value: 10 },
   ];
+
+  rulesCounter = [(v: string) => v?.length <= 200 || "Max 200 characters"];
 
   textRules = [
     (v: string): boolean | string => !!v || `is required`,
@@ -432,9 +497,22 @@ export default class Step1 extends Vue {
         body: formData,
       };
       fetch("/api/upload", options)
-        .then((response) => response.json())
+        .then(async (response) => {
+          let responseJson;
+          try {
+            responseJson = await response.json();
+          } catch (e) {
+            throw new Error(`${response.status} ${response.statusText}`);
+          }
+          if (response.ok) {
+            return responseJson;
+          }
+          throw new Error(
+            `${response.status} ${response.statusText}: ${responseJson.detail}`
+          );
+        })
         .then((data) => {
-          this.$set(this.localShelter, "images", data.filenames);
+          this.localShelter.images.push(...data.filenames);
           // add files  instead of replacing them
           this.updateFormInput();
           this.$store.dispatch("notifyUser", "Successful upload to server");
@@ -444,9 +522,15 @@ export default class Step1 extends Vue {
             "notifyUser",
             `Could not upload images ${error}`
           );
+        })
+        .finally(() => {
+          this.uploadDialog = false;
+          this.uploadLoading = false;
         });
     } else {
       this.$store.dispatch("notifyUser", "No file to upload");
+      this.uploadDialog = false;
+      this.uploadLoading = false;
     }
   }
 

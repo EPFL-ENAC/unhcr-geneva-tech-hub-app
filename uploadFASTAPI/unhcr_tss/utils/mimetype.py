@@ -12,8 +12,8 @@ jpg_mimetypes = [
     "application/jpeg"
 ]
 gif_mimetypes = ["image/gif"]
-other_image_mimetypes = ["image/bmp", "image/webp"]
-image_mimetypes = png_mimetypes + jpg_mimetypes + gif_mimetypes + other_image_mimetypes
+others: list[str] = ["image/bmp", "image/webp"]
+image_mimetypes: list[str] = png_mimetypes + jpg_mimetypes + gif_mimetypes + others
 valid_mimetypes = image_mimetypes + pdf_mimetypes
 
 

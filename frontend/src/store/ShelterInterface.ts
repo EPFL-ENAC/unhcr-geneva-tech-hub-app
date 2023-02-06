@@ -38,19 +38,20 @@ export type ShelterRegions =
   | "Asia and the Pacific"
   | "Europe"
   | "Middle East and North Africa";
-// 1) Image, 2) drawings - floor plan, 3) drawings, roof plan, 4) drawing - section, 5) drawing - elevation
+
+// update --> Image / Drawing / Report / Other
 export const imageShelterTypes = [
   "Image",
-  "Drawings - floor plan",
-  "Drawings - roof plan",
-  "Drawing - section",
-  "Drawing - elevation",
+  "Drawing",
   "Report",
+  "Other",
 ] as const;
 export type ImageShelterType = typeof imageShelterTypes[number];
 
 export interface ImageShelter {
   url: string; // path like /s3/unhcr_tss/xx
+  origin_url?: string; // only for image
+  description?: string;
   name: string;
   type: ImageShelterType;
 }
