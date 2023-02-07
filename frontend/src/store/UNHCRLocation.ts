@@ -8,12 +8,12 @@ import {
 } from "vuex";
 import { RootState } from ".";
 
-interface GHGSolarState {
-  item: GHGSolar;
-  items: GHGSolar[];
+interface UNHCRLocationState {
+  item: UNHCRLocation;
+  items: UNHCRLocation[];
   paginate: Paginate;
   itemsLength: number;
-  localCouch: SyncDatabase<GHGSolarState> | null;
+  localCouch: SyncDatabase<UNHCRLocationState> | null;
 }
 
 export interface Paginate {
@@ -30,19 +30,24 @@ export interface Paginate {
   Sand
   Stone
 */
-export interface GHGSolar {
-  _id: string; // 'iso two letters'
-  c: number; // number of hours
+export interface UNHCRLocation {
+  _id: string; // "Abazar : Point",
+  Country: string; // "IR",
+  Population: number;
+  "Location id": number;
+  latitude: number; //: 28.978026
+  longitude: number; // : 50.8379918,
+  "GHI/Daily_solar_peak_hours": number; // 5.607999802,
 }
 
 const MSG_COULD_NOT_FIND_ITEM = "Could not find item with this id";
-const DB_NAME = "solar_averaged";
+const DB_NAME = "unhcr_location";
 const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 
 /** Default Configure state value */
-function generateState(): GHGSolarState {
+function generateState(): UNHCRLocationState {
   return {
-    item: {} as GHGSolar,
+    item: {} as UNHCRLocation,
     items: [],
     paginate: {
       limit: 10,
@@ -54,15 +59,15 @@ function generateState(): GHGSolarState {
 }
 
 /** Getters */
-const getters: GetterTree<GHGSolarState, RootState> = {
-  item: (s): GHGSolar => s.item,
-  items: (s): GHGSolar[] => s.items,
+const getters: GetterTree<UNHCRLocationState, RootState> = {
+  item: (s): UNHCRLocation => s.item,
+  items: (s): UNHCRLocation[] => s.items,
   paginate: (s): Paginate => s.paginate,
   itemsLength: (s): number => s.itemsLength,
 };
 
 /** Mutations */
-const mutations: MutationTree<GHGSolarState> = {
+const mutations: MutationTree<UNHCRLocationState> = {
   INIT_DB(state) {
     state.localCouch = new SyncDatabase(DB_NAME);
   },
@@ -84,8 +89,8 @@ const mutations: MutationTree<GHGSolarState> = {
 };
 
 /** Action */
-const actions: ActionTree<GHGSolarState, RootState> = {
-  syncDB: (context: ActionContext<GHGSolarState, RootState>) => {
+const actions: ActionTree<UNHCRLocationState, RootState> = {
+  syncDB: (context: ActionContext<UNHCRLocationState, RootState>) => {
     context.commit("INIT_DB");
     const localCouch = context.state.localCouch;
 
@@ -94,10 +99,10 @@ const actions: ActionTree<GHGSolarState, RootState> = {
       context.dispatch("getAllDocs");
     });
   },
-  closeDB: (context: ActionContext<GHGSolarState, RootState>) => {
+  closeDB: (context: ActionContext<UNHCRLocationState, RootState>) => {
     context.commit("CLOSE_DB");
   },
-  getAllDocs: async (context: ActionContext<GHGSolarState, RootState>) => {
+  getAllDocs: async (context: ActionContext<UNHCRLocationState, RootState>) => {
     const db = context.state.localCouch?.db;
     if (db) {
       try {
@@ -122,7 +127,7 @@ const actions: ActionTree<GHGSolarState, RootState> = {
 };
 
 /** VuexStore */
-const GhgReferenceSolarModule: Module<GHGSolarState, RootState> = {
+const ShelterMaterialsModule: Module<UNHCRLocationState, RootState> = {
   namespaced: true,
   state: generateState(),
   getters,
@@ -130,4 +135,4 @@ const GhgReferenceSolarModule: Module<GHGSolarState, RootState> = {
   actions,
 };
 
-export default GhgReferenceSolarModule;
+export default ShelterMaterialsModule;

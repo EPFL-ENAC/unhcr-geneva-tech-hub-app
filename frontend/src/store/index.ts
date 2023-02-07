@@ -3,10 +3,13 @@ import EnergyModule from "@/store/EnergyModule";
 import GhgModule from "@/store/GhgModule";
 import GhgReferenceIgesGridModule from "@/store/GhgReferenceIgesGridModule";
 import GhgReferenceModule from "@/store/GhgReferenceModule";
+import GhgReferenceSolarModule from "@/store/GHGReferenceSolarModule";
 import ShelterBillOfQuantitiesModule from "@/store/ShelterBillOfQuantitiesModule";
 import ShelterModule from "@/store/ShelterModule";
 import SheltersMaterialModule from "@/store/SheltersMaterialModule";
 import SheltersTransportModule from "@/store/SheltersTransportModule";
+import UNHCRLocation from "@/store/UNHCRLocation";
+
 import UserModule from "@/store/UserModule";
 import Vue from "vue";
 import Vuex, {
@@ -202,6 +205,8 @@ const store: StoreOptions<RootState> = {
     GhgModule,
     GhgReferenceModule,
     GhgReferenceIgesGridModule,
+    GhgReferenceSolarModule,
+    UNHCRLocation,
     UserModule,
     energy: EnergyModule,
   },

@@ -30,9 +30,11 @@
 <script lang="ts">
 import EnergyCooking from "@/components/reference_data/EnergyCooking.vue";
 import GHG from "@/components/reference_data/GHG.vue";
+import GHGSolarModule from "@/components/reference_data/GHGSolarModule.vue";
 import IgesGrid from "@/components/reference_data/IgesGrid.vue";
 import Materials from "@/components/reference_data/Materials.vue";
 import MaterialsTransport from "@/components/reference_data/MaterialsTransport.vue";
+import UNHCRLocation from "@/components/reference_data/UNHCRLocation.vue";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
@@ -49,6 +51,8 @@ import { mapActions, mapGetters } from "vuex";
     Materials,
     IgesGrid,
     EnergyCooking,
+    UNHCRLocation,
+    GHGSolarModule,
   },
 })
 /** ProjectList */
@@ -70,6 +74,8 @@ export default class App extends Vue {
       componentName: "IgesGrid",
     },
     { tab: "GHG", componentName: "GHG" },
+    { tab: "UNHCR Locations", componentName: "UNHCRLocation" },
+    { tab: "GHG Solar average", componentName: "GHGSolarModule" },
     { tab: "Materials", componentName: "Materials" },
     {
       tab: "Materials transport",
