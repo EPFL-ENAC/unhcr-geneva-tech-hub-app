@@ -562,7 +562,7 @@ export default class Trucking extends Vue {
         type: "select",
       },
       {
-        text: "Percentage of total cookstove of this type",
+        text: "Percentage of total cookstoves",
         computeResults: true,
         value: "input.numberOfCookstove",
         conditional_value: ["", cookstoveIdWithoutAccess],
