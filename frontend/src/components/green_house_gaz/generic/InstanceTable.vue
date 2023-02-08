@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <v-data-table
     v-if="items"
@@ -56,16 +57,15 @@
             item
           )
         "
-      >
-        {{
+        v-html="
           tableHeader.formatter(
             get(item, tableHeader.value),
             tableHeader,
             item,
             items
           )
-        }}
-      </div>
+        "
+      ></div>
     </template>
     <template #[`item.actions`]="{ item }">
       <v-tooltip bottom>

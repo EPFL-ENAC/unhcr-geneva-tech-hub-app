@@ -54,6 +54,18 @@
                         : previousItem.input[surveyItem.key]
                     }}
                   </span>
+                  <div
+                    v-if="surveyItem.image"
+                    class="d-flex flex-row justify-center align-center"
+                  >
+                    <v-img
+                      v-if="localInput.image"
+                      max-width="150px"
+                      max-height="150px"
+                      aspect-ratio="1"
+                      :src="localInput.image"
+                    />
+                  </div>
                   <form-item-component
                     :value="localInput[surveyItem.key]"
                     v-bind="surveyItem"
