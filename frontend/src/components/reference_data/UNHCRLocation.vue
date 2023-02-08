@@ -1,19 +1,29 @@
 <template>
   <v-card flat>
     <v-card-text v-if="items">
-      <v-data-table
-        :headers="headers"
-        :items="items"
-        hide-default-footer
-        :items-per-page="-1"
-      >
-        <template #[`item.Country`]="props">
-          <span :title="props.item.Country"
-            >{{ countriesMap[props.item.Country].name }}
-            <country-flag :country="props.item.Country" size="small" />
-          </span>
-        </template>
-      </v-data-table>
+      <v-row>
+        <v-col>
+          Longterm daily average of solar hours per site (Source: Solar Global
+          Atlas)
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-data-table
+            :headers="headers"
+            :items="items"
+            hide-default-footer
+            :items-per-page="-1"
+          >
+            <template #[`item.Country`]="props">
+              <span :title="props.item.Country"
+                >{{ countriesMap[props.item.Country].name }}
+                <country-flag :country="props.item.Country" size="small" />
+              </span>
+            </template>
+          </v-data-table>
+        </v-col>
+      </v-row>
     </v-card-text>
   </v-card>
 </template>
