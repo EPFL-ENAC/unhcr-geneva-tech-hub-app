@@ -206,6 +206,17 @@ const actions: ActionTree<ProjectsState, RootState> = {
         console.log(err);
       });
   },
+  setDoc: (
+    context: ActionContext<ProjectsState, RootState>,
+    value: GreenHouseGaz
+  ) => {
+    const user = context.rootGetters["UserModule/user"] as CouchUser;
+    if (!user) {
+      throw new Error(MSG_USER_NOT_PRESENT);
+    }
+    const newValue = updateMetaFieldsForUpdate(value, user);
+    context.commit("SET_PROJECT", newValue);
+  },
   getDoc: (context: ActionContext<ProjectsState, RootState>, id) => {
     const db = context.state.localCouch?.remoteDB;
     if (db) {
@@ -213,9 +224,10 @@ const actions: ActionTree<ProjectsState, RootState> = {
         .get(id)
         .then(function (result) {
           context.commit("SET_PROJECT", result);
+          return result;
         })
         .catch(function (err: Error) {
-          console.log(err);
+          throw new Error(err?.message + id);
         });
     } else {
       throw new Error(MSG_DB_DOES_NOT_EXIST);

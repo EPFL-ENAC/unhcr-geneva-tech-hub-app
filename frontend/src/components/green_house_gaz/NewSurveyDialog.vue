@@ -28,9 +28,11 @@
                 <v-select
                   ref="existingSites"
                   v-model="newCampSite.name"
-                  :disabled="existingSites.length === 0 || newName !== ''"
+                  :disabled="
+                    existingSitesWithUnhcrSites.length === 0 || newName !== ''
+                  "
                   tabindex="0"
-                  :items="existingSites"
+                  :items="existingSitesWithUnhcrSites"
                   item-value="name"
                   item-text="name"
                   label="Select an existing site"
@@ -136,17 +138,26 @@ import {
   Sites,
   Survey,
 } from "@/store/GhgInterface.vue";
-import { cloneDeep } from "lodash";
+import { UNHCRLocation } from "@/store/UNHCRLocation";
+import { cloneDeep, isEmpty } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
+    ...mapGetters("UNHCRLocation", ["items"]),
     ...mapGetters("GhgModule", ["countries", "project"]),
   },
 
   methods: {
-    ...mapActions("GhgModule", ["addDoc", "updateDoc", "getDoc", "resetDoc"]),
+    ...mapActions("UNHCRLocation", ["syncDB", "getAllDocs", "closeDB"]),
+    ...mapActions("GhgModule", [
+      "addDoc",
+      "updateDoc",
+      "getDoc",
+      "setDoc",
+      "resetDoc",
+    ]),
   },
   components: {
     CountrySelect,
@@ -157,9 +168,15 @@ export default class ProjectList extends Vue {
   @Prop({ type: Boolean, default: false })
   readonly open!: boolean;
 
+  syncDB!: () => null;
+  closeDB!: () => Promise<null>;
+  getAllDocs!: () => Promise<UNHCRLocation>;
+  items!: UNHCRLocation[];
+
   addDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;
   updateDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;
   getDoc!: (id: string) => PromiseLike<void>;
+  setDoc!: (obj: GreenHouseGaz) => PromiseLike<void>;
   resetDoc!: () => PromiseLike<void>;
 
   $refs!: {
@@ -177,8 +194,23 @@ export default class ProjectList extends Vue {
     this.$emit("update:open", v);
   }
 
-  public onSelectExistingSite(site: string): void {
-    this.getDoc(site);
+  public async onSelectExistingSite(site: string): Promise<void> {
+    try {
+      await this.getDoc(site);
+    } catch (error) {
+      // try to find it inside the existingUNHCR and call
+      // "GhgModule/SET_PROJECT"; or a new action
+      const foundUNHCR = this.unhcrProjects.find(
+        (site) => site.name === site.name
+      );
+      if (!foundUNHCR) {
+        throw new Error("Could not find existing site");
+      }
+      debugger;
+      this.setDoc(foundUNHCR);
+    } finally {
+      this.$refs.newAssessmentForm.validate();
+    }
   }
   public onSelectCountry(): void {
     this.resetDoc();
@@ -214,6 +246,50 @@ export default class ProjectList extends Vue {
       return [] as Sites;
     }
     return currentCountry.value;
+  }
+
+  get unhcrLocations(): UNHCRLocation[] {
+    return this.items
+      .filter((item) => item.Country === this.newCampSite.country_code)
+      .map((x) => {
+        delete x._rev;
+        return x;
+      });
+  }
+
+  get unhcrSites(): Sites {
+    const result = this.unhcrLocations.map((x) => ({
+      id: x._id, // site unique identitier (name as first)
+      name: x._id, // site name // location
+      country_code: x.Country,
+      created_by: this.$userName(),
+      users: [this.$userName()],
+      lat: x.latitude,
+      lon: x.longitude,
+      solar: x["GHI/Daily_solar_peak_hours"],
+      population: x.Population,
+    }));
+    return result;
+  }
+
+  get unhcrProjects(): GreenHouseGaz[] {
+    return this.unhcrLocations.map(
+      (x) =>
+        ({
+          ...this.newDefaultCampSite(),
+          ...x,
+          name: x._id, // site unique identitier (name as first)
+          country_code: x.Country,
+          solar: x["GHI/Daily_solar_peak_hours"],
+          population: x.Population,
+          created_by: this.$userName(), // hack to avoid rule in v-form
+          users: [this.$userName()], // hack to avoid rule in v-form
+        } as GreenHouseGaz)
+    );
+  }
+
+  get existingSitesWithUnhcrSites(): Sites {
+    return this.unhcrSites.concat(this.existingSites);
   }
 
   public closeSiteDialog(): void {
@@ -256,6 +332,10 @@ export default class ProjectList extends Vue {
     if (this.newName) {
       return true;
     } else {
+      // TRICKY: if unhcr site.. it's not a project yet.. so we need to create it.
+      if (isEmpty(this.project)) {
+        return true;
+      }
       return (
         this.$can("edit", this.project) ||
         `You're not on the list of authorized user for this existing site, please contact the creator of the site: ${
@@ -276,7 +356,7 @@ export default class ProjectList extends Vue {
       return true;
     } else {
       const surveys =
-        this.newCampSite.surveys?.map((survey) => survey.name) ?? [];
+        this.newCampSite?.surveys?.map((survey) => survey.name) ?? [];
       return (
         surveys.indexOf(value) === -1 ||
         `An assessment with this name already exist`
@@ -285,7 +365,8 @@ export default class ProjectList extends Vue {
   }
 
   public ruleSiteAlreadyExist(value: string): boolean | string {
-    const sites = this.existingSites?.map((survey) => survey.name) ?? [];
+    const sites =
+      this.existingSitesWithUnhcrSites?.map((survey) => survey.name) ?? [];
     return (
       sites.indexOf(value) === -1 ||
       `An assessment with this site already exist`
@@ -296,6 +377,7 @@ export default class ProjectList extends Vue {
     // if does not exist
     // addDoc else
     // update doc with new survey
+    // if it's unhcr.. then it's a new document
     const saveFn = this.newName ? this.addDoc : this.updateDoc;
     this.newCampSite.surveys.push(this.editedItem);
     // newName has priority
@@ -371,6 +453,8 @@ export default class ProjectList extends Vue {
   }
 
   created(): void {
+    this.syncDB();
+    this.getAllDocs();
     this.resetDoc().then(() => {
       this.syncLocalCampSite();
     });
@@ -378,6 +462,7 @@ export default class ProjectList extends Vue {
 
   mounted(): void {
     this.resetCampSite();
+    this.closeDB();
   }
 }
 </script>

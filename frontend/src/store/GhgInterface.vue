@@ -17,8 +17,8 @@ export interface Site {
   id: string; // site unique identitier (name as first)
   name: string; // site name // location
   country_code: CountryCode;
-  created_by: Email;
-  users: Email[];
+  created_by: Email | string;
+  users: Email[] | string[];
   lat?: number;
   lon?: number;
 }
@@ -34,6 +34,8 @@ export interface GreenHouseGaz {
   longitude: number;
   surveys: Survey[];
   users: string[];
+  solar?: number;
+  population?: number;
   created_by: string;
   created_at: string;
 }

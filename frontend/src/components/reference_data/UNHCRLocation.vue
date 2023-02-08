@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
+import { UNHCRLocation } from "@/store/UNHCRLocation";
 import { countriesMap } from "@/utils/countriesAsList";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
@@ -36,8 +36,8 @@ import { mapActions, mapGetters } from "vuex";
 export default class Energy extends Vue {
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
-  getAllDocs!: () => Promise<ReferenceItemInterface>;
-  items!: ReferenceItemInterface[];
+  getAllDocs!: () => Promise<UNHCRLocation>;
+  items!: UNHCRLocation[];
   countriesMap = countriesMap;
   mounted(): void {
     this.syncDB();

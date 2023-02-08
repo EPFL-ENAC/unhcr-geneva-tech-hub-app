@@ -31,6 +31,7 @@ export interface Paginate {
   Stone
 */
 export interface UNHCRLocation {
+  _rev?: string;
   _id: string; // "Abazar : Point",
   Country: string; // "IR",
   Population: number;
