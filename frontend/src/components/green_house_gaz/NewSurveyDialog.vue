@@ -452,17 +452,18 @@ export default class ProjectList extends Vue {
     }
   }
 
-  created(): void {
+  mounted(): void {
     this.syncDB();
     this.getAllDocs();
     this.resetDoc().then(() => {
       this.syncLocalCampSite();
     });
+    this.resetCampSite();
   }
 
-  mounted(): void {
-    this.resetCampSite();
+  destroyed(): void {
     this.closeDB();
+    this.resetCampSite();
   }
 }
 </script>
