@@ -44,6 +44,16 @@
                   :cols="surveyItem?.style?.cols ?? 6"
                   xs="12"
                 >
+                  <span v-if="diffDimension === surveyItem.key">
+                    Previous {{ surveyItem.label }} was:
+                    {{
+                      surveyItem.formatter
+                        ? surveyItem.formatter(
+                            previousItem.input[surveyItem.key]
+                          )
+                        : previousItem.input[surveyItem.key]
+                    }}
+                  </span>
                   <form-item-component
                     :value="localInput[surveyItem.key]"
                     v-bind="surveyItem"
@@ -118,14 +128,19 @@ export default class SurveyItemDialog extends Vue {
   @Prop([Array])
   readonly headers!: SurveyTableHeader[];
 
+  @Prop([String])
+  readonly diffDimension!: keyof SurveyInput;
+
   $refs!: {
     form: VForm;
   };
 
   formValid = false;
   refreshKey = 0;
+
   localInput: SurveyInput = {} as SurveyInput;
   localItem: SurveyItem = {} as SurveyItem;
+  // previousItem: SurveyItem = {} as SurveyItem;
 
   @Watch("item", { immediate: true, deep: true })
   onItemChange(value: SurveyItem): void {
@@ -185,6 +200,14 @@ export default class SurveyItemDialog extends Vue {
       }
       return header;
     });
+  }
+
+  public get previousItem(): SurveyItem {
+    return (
+      this.referenceItems?.find(
+        (x) => x.increment === this.localItem.increment
+      ) ?? ({} as SurveyItem)
+    );
   }
 
   public selectOrigin(value: number): void {

@@ -52,7 +52,14 @@
                       label="kWh used per year (national grid)"
                     />
                   </v-col>
+                  <v-col cols="12">
+                    <span>
+                      Previous consumption for this facility was:
+                      {{ previousPower }} kWh/yr
+                    </span>
+                  </v-col>
                   <renewable-energy
+                    :authorized-reverse="true"
                     :facility.sync="localItem"
                     :country-code="countryCode"
                   />
@@ -188,6 +195,17 @@ export default class InterventionDialog extends Vue {
 
   set isOpen(value: boolean) {
     this.$emit("update:dialogOpen", value);
+  }
+  public get previousFacility(): EnergyFacilityItem {
+    return (
+      this.facilities.find(
+        (item: EnergyFacilityItem) => item.name === this.localItem?.name
+      ) ?? ({} as EnergyFacilityItem)
+    );
+  }
+  public get previousPower(): number {
+    const { gridPower, dieselPower, renewablePower } = this.previousFacility;
+    return (gridPower ?? 0) + (dieselPower ?? 0) + (renewablePower ?? 0);
   }
   public selectFacility(facilityName: string): void {
     this.selectedFacility =

@@ -71,6 +71,31 @@ export function computeKWHPerYearPerCountry(
   return parseFloat(kWhPerYear.toFixed(1));
 }
 
+export function computeKWInstalledWithKwhPerDayPerCountry(
+  kWh: number,
+  countryTwoLetterCode: countryIrradianceKeys
+): number {
+  // return the number of kwh per day
+
+  const defaultIrradiance = countryIrradiance.default;
+  const kw =
+    kWh / (countryIrradiance?.[countryTwoLetterCode] ?? defaultIrradiance);
+
+  // if kwh = kw * h then
+  // kw = kwh / h
+  return parseFloat(kw.toFixed(1));
+}
+
+export function computeKWInstalledWithKwhPerYearPerCountry(
+  kwh: number,
+  countryTwoLetterCode: countryIrradianceKeys
+): number {
+  const kWInstalledPerYear =
+    computeKWInstalledWithKwhPerDayPerCountry(kwh, countryTwoLetterCode) /
+    numberOfDaysPerYear;
+  return parseFloat(kWInstalledPerYear.toFixed(1));
+}
+
 export function computeLitresDiesel(localItem: DieselItem): number {
   const {
     generatorSize = 0,

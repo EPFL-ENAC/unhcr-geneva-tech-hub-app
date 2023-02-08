@@ -14,6 +14,7 @@
           :headers="headers"
           :sort-by="sortBy"
           :name="name"
+          :diff-dimension="diffDimension"
           @update:items="updateEndlineInputs"
         />
       </v-card-text>

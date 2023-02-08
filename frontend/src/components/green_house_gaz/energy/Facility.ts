@@ -21,7 +21,7 @@ export interface Facility {
   dieselPower: number; // computed based on litres and REF_DIES_EFF
   // end of diesela
   renewablePower: number;
-
+  renewableKiloWattInstalled: number;
   // computed
   totalCO2Emission: number;
 }

@@ -206,7 +206,6 @@ export default class ProjectList extends Vue {
       if (!foundUNHCR) {
         throw new Error("Could not find existing site");
       }
-      debugger;
       this.setDoc(foundUNHCR);
     } finally {
       this.$refs.newAssessmentForm.validate();

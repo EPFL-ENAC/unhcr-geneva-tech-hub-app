@@ -74,6 +74,12 @@
                   <v-alert v-if="diffInTotalKwh" dense outlined type="error">
                     This comparison is not valid because baseline and endline
                     have different energy demands.
+                    <br />
+                    Baseline:
+                    {{ facilityForm.baseline.results.totalPower }} kWh/yr
+                    <br />
+                    Endline:
+                    {{ facilityForm.endline.results.totalPower }} kWh/yr
                   </v-alert>
                 </v-col>
               </v-row>

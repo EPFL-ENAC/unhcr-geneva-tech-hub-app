@@ -581,7 +581,7 @@ export default class Trucking extends Vue {
         subtype: "percent",
         type: "number",
         hideFooterContent: false,
-        formatter: (v: number, { ...args }) => {
+        formatter: (v: number) => {
           return formatNumber(v, {
             style: "percent",
             maximumFractionDigits: 0,
