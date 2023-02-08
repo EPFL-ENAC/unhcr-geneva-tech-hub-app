@@ -18,6 +18,7 @@ import BaselineEndlineWrapper, {
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 
 import {
+  computeDieselPower,
   computeKWHPerDayPerCountry,
   computeLitresPerDayDiesel,
   countryIrradianceKeys,
@@ -25,6 +26,7 @@ import {
 import { formatNumber } from "@/plugins/filters";
 import {
   DieselItem,
+  EnergyItem,
   GenericFormSurvey,
   SurveyInput,
   SurveyItem,
@@ -430,6 +432,10 @@ export default class Trucking extends Vue {
         type: "number",
         customEventInput: (_: number, localInput: EnergyCookingItemInput) => {
           localInput.dieselLiters = computeLitresPerDayDiesel(localInput);
+          localInput.dieselPower = computeDieselPower(
+            localInput as EnergyItem,
+            { value: 4, description: "", _id: "GHG" } // fake data TODO: fixme when formula is here
+          ); //
           return localInput;
         },
       },
@@ -454,6 +460,7 @@ export default class Trucking extends Vue {
         tooltipInfo:
           "from daily log and application will extrapolate this information to be annual",
         suffix: "hrs/day",
+        min: 0,
         style: {
           cols: "12",
         },
@@ -462,7 +469,7 @@ export default class Trucking extends Vue {
       // end of diesel generators
       // begingin og national grid
       {
-        value: "input.fuelUsage", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        value: "input.gridPower", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
         conditional_value: ["ELE_GRID", "ELE_HYB"],
         conditional: "fuelType",
         text: "Estimated Kwh/day/HH for national grid",
@@ -482,7 +489,7 @@ export default class Trucking extends Vue {
           solarInstalled: number,
           localInput: EnergyCookingItemInput
         ) => {
-          localInput.fuelUsage = computeKWHPerDayPerCountry(
+          localInput.renewablePower = computeKWHPerDayPerCountry(
             solarInstalled,
             countryCode
           );
@@ -496,7 +503,7 @@ export default class Trucking extends Vue {
         type: "number",
       },
       {
-        value: "input.fuelUsage", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        value: "input.renewablePower", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
         conditional_value: ["ELE_SOLAR", "ELE_HYB"],
         disabled: true,
         text: "Total kWh/day produced (estimated)",
@@ -573,6 +580,13 @@ export default class Trucking extends Vue {
         max: 100,
         subtype: "percent",
         type: "number",
+        hideFooterContent: false,
+        formatter: (v: number, { ...args }) => {
+          return formatNumber(v, {
+            style: "percent",
+            maximumFractionDigits: 0,
+          });
+        },
       },
       {
         text: "Total CO2 Emissions (tCO2e/year)",
@@ -660,7 +674,10 @@ export interface SelectCustom<V> {
   _id: V;
 }
 
-export interface EnergyCookingItemInput extends SurveyInput, DieselItem {
+export interface EnergyCookingItemInput
+  extends SurveyInput,
+    DieselItem,
+    EnergyItem {
   numberOfCookstove?: number; // computed based on % of HH and stuffs
   fuelUsage?: number; // [kg or L/day]
   fuelType?: string; // key
