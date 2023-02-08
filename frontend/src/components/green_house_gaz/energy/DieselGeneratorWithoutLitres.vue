@@ -93,7 +93,7 @@ export default class DieselGenerators extends Vue {
   @Prop({
     type: String,
     required: false,
-    default: "I don't know total litres of diesel used",
+    default: "Number of litres of diesel NOT known",
   })
   selectText!: string;
 

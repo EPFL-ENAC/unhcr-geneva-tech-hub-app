@@ -396,7 +396,7 @@ export default class Trucking extends Vue {
       {
         value: "input.disableDieselLiters",
         conditional_value: ["ELE_DIES", "ELE_HYB"],
-        text: "I do know the total litres of diesel used",
+        text: "Number of litres of diesel known",
         conditional: "fuelType",
         style: {
           cols: "12",
