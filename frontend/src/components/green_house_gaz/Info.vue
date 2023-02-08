@@ -31,8 +31,8 @@
                         :key="index"
                         cols="12"
                         sm="6"
-                        md="4"
-                        lg="3"
+                        md="6"
+                        lg="4"
                         xl="4"
                       >
                         <form-item-component
@@ -60,8 +60,8 @@
                         :key="index"
                         cols="12"
                         sm="6"
-                        md="6"
-                        lg="6"
+                        md="4"
+                        lg="4"
                         xl="4"
                       >
                         <form-item-component
@@ -200,6 +200,12 @@ export default class GhgInfo extends Vue {
         type: "number",
         key: "population",
         label: "Total population",
+        min: 0,
+      },
+      {
+        type: "number",
+        key: "solar",
+        label: "GHI/Daily_solar_peak_hours",
         min: 0,
       },
       {
