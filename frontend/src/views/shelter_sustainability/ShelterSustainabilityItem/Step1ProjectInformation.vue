@@ -24,287 +24,296 @@
     </v-row>
     <v-row>
       <v-col>
-        <v-card flat>
-          <v-row>
-            <v-col>
-              <v-sheet v-if="localShelter" elevation="2" rounded>
-                <v-container fluid>
-                  <v-row>
-                    <v-col cols="4">
-                      <v-row>
-                        <v-col class=""> Select location </v-col>
-                      </v-row>
-                      <v-row class="d-flex" style="height: 100%; width: 100%">
-                        <v-col class="d-flex">
-                          <territory-map
-                            :value="[shelter.latitude, shelter.longitude]"
-                            @update:value="updateLatLng"
-                          />
-                        </v-col>
-                      </v-row>
-                    </v-col>
-                    <v-col class="about-first-column" cols="4">
-                      <v-text-field
-                        v-model="localShelter.name"
-                        name="name"
-                        label="Project name"
-                        type="text"
-                        required
-                        :rules="textRules"
-                        @change="updateFormInput"
-                      />
+        <v-sheet v-if="localShelter" elevation="2" rounded>
+          <v-container fluid>
+            <v-row>
+              <v-col cols="4">
+                <v-row>
+                  <v-col class=""> Select location </v-col>
+                </v-row>
+                <v-row class="d-flex" style="height: 100%; width: 100%">
+                  <v-col class="d-flex">
+                    <territory-map
+                      :value="[shelter.latitude, shelter.longitude]"
+                      @update:value="updateLatLng"
+                    />
+                  </v-col>
+                </v-row>
+              </v-col>
+              <v-col class="about-first-column" cols="4">
+                <v-text-field
+                  v-model="localShelter.name"
+                  name="name"
+                  label="Project name"
+                  type="text"
+                  required
+                  :rules="textRules"
+                  @change="updateFormInput"
+                />
 
-                      <v-text-field
-                        id="location_name"
-                        v-model="localShelter.location_name"
-                        name="location_name"
-                        label="Site name"
-                        type="text"
-                        @change="updateFormInput"
-                      />
-                      <country-select
-                        id="location_country"
-                        v-model.number="localShelter['location_country']"
-                        required
-                        label="Country"
-                        type="text"
-                        name="location_country"
-                        @change="updateFormInput"
-                      />
+                <v-text-field
+                  id="location_name"
+                  v-model="localShelter.location_name"
+                  name="location_name"
+                  label="Site name"
+                  type="text"
+                  @change="updateFormInput"
+                />
+                <country-select
+                  id="location_country"
+                  v-model.number="localShelter['location_country']"
+                  required
+                  label="Country"
+                  type="text"
+                  name="location_country"
+                  @change="updateFormInput"
+                />
 
-                      <v-text-field
-                        id="organisation"
-                        v-model="localShelter.organisation"
-                        name="organisation"
-                        label="Implementing organisation"
-                        type="text"
-                        required
-                        :rules="textRules"
-                        @change="updateFormInput"
-                      />
+                <v-text-field
+                  id="organisation"
+                  v-model="localShelter.organisation"
+                  name="organisation"
+                  label="Implementing organisation"
+                  type="text"
+                  required
+                  :rules="textRules"
+                  @change="updateFormInput"
+                />
+              </v-col>
+              <v-col class="about-second-column" cols="4">
+                <v-text-field
+                  v-model.number="localShelter.shelter_total"
+                  name="shelter_total"
+                  label="Number of shelters"
+                  type="number"
+                  required
+                  :rules="shelterTotalRules"
+                  @change="updateFormInput"
+                />
+                <v-select
+                  v-model.number="localShelter.shelter_occupants"
+                  :items="occupantsOptions"
+                  label="Intended Occupants per shelter"
+                  name="shelter_occupants"
+                  type="number"
+                  required
+                  :rules="shelterOccupantRules"
+                  @change="updateFormInput"
+                ></v-select>
+                <v-select
+                  v-model="localShelter.shelter_type"
+                  :items="shelterTypes"
+                  label="Shelter type"
+                  name="shelter_type"
+                  required
+                  :rules="shelterTypeRules"
+                  @change="updateFormInput"
+                ></v-select>
+                <v-select
+                  v-model.number="localShelter.shelter_lifespan"
+                  :items="lifeExpectancy"
+                  name="shelter_lifespan"
+                  label="Expected average shelter lifespan"
+                  item-text="label"
+                  item-value="value"
+                  type="number"
+                  required
+                  :rules="shelterLifespanRules"
+                  @change="updateFormInput"
+                ></v-select>
 
-                      <v-btn
-                        class="my-3"
-                        :disabled="localShelter.images.length >= 10"
-                        @click="uploadDialog = true"
-                      >
-                        upload files
-                      </v-btn>
-                      <span
-                        :class="{
-                          'warning--text': localShelter.images.length >= 10,
-                          'd-none': localShelter.images.length < 10,
-                        }"
-                        >(Max limit of 10 files per shelter)
-                      </span>
-                      <upload-images
-                        :dialog.sync="uploadDialog"
-                        :multiple="true"
-                        :loading.sync="uploadLoading"
-                        @filesUploaded="processUpload($event)"
-                      />
-                      <template v-for="image in localShelter.images">
-                        <v-card :key="image.url" class="my-3" color="white">
-                          <div class="d-flex flex-wrap justify-space-between">
-                            <div v-if="$can('edit', localShelter)">
-                              <v-card-title class="text" color="black">
-                                <v-row>
-                                  <v-col :cols="6">
-                                    <div aria-label="image name">
-                                      <a
-                                        v-if="toggledImage != image.url"
-                                        :href="image.url"
-                                        target="_blank"
-                                      >
-                                        <span style="text-overflow: ellipsis">{{
-                                          image.name
-                                        }}</span>
-                                      </a>
-                                      <v-text-field
-                                        v-else
-                                        v-model="image.name"
-                                        append-icon="$mdiCheck"
-                                        append-class="text-primary"
-                                        hint="Press escape or enter when finished"
-                                        @keypress.enter="toggleImage"
-                                        @keypress.escape="toggleImage"
-                                        @click:append="toggleImage"
-                                        @change="updateFormInput"
-                                      >
-                                      </v-text-field>
-                                    </div>
-                                  </v-col>
-                                  <v-col :cols="1">
-                                    <v-btn
-                                      v-if="toggledImage != image.url"
-                                      small
-                                      icon
-                                      @click="toggleImage(image.url)"
-                                      ><v-icon small>$mdiPencil</v-icon></v-btn
-                                    >
-                                  </v-col>
-                                  <v-col :cols="1">
-                                    <v-btn
-                                      v-if="toggledImage != image.url"
-                                      small
-                                      icon
-                                      @click="download(image.url)"
-                                      ><v-icon small
-                                        >$mdiDownload</v-icon
-                                      ></v-btn
-                                    >
-                                  </v-col>
-                                  <v-col :cols="1">
-                                    <v-btn
-                                      v-if="toggledImage != image.url"
-                                      color="red"
-                                      icon
-                                      small
-                                      @click="removeAsset(image)"
-                                    >
-                                      <v-icon small>$mdiDelete</v-icon>
-                                    </v-btn>
-                                  </v-col>
-                                </v-row>
-                              </v-card-title>
-                              <v-card-actions>
-                                <v-select
-                                  v-model="image.type"
-                                  :items="imageShelterTypes"
-                                  label="Select type of image"
-                                  outlined
-                                  @change="updateFormInput"
-                                ></v-select>
-                                <v-textarea
-                                  v-model="image.description"
-                                  label="Description"
-                                  outlined
-                                  counter
-                                  :rules="rulesCounter"
-                                  @change="updateFormInput"
-                                >
-                                </v-textarea>
-                              </v-card-actions>
-                            </div>
-                            <div v-else>
-                              <v-card-title class="text" color="black">
-                                <a
-                                  :href="image.url"
-                                  target="_blank"
-                                  class="text"
-                                >
-                                  {{ image.name }}
-                                </a>
-                                <v-btn icon @click="download(image.url)"
-                                  ><v-icon>$mdiDownload</v-icon></v-btn
-                                >
-                              </v-card-title>
-                              <v-card-subtitle class="text" color="black">
-                                {{ image.type }}
-                              </v-card-subtitle>
-                            </div>
-                            <!-- Image / Drawing / Report / Other -->
-                            <v-avatar
-                              v-if="['Image', 'Drawing'].includes(image.type)"
-                              class="profile"
-                              color="grey"
-                              size="164"
-                              tile
-                            >
-                              <v-img :src="image.url"></v-img>
-                            </v-avatar>
-                            <v-avatar
-                              v-else
-                              class="profile"
-                              color="grey"
-                              size="120"
-                              tile
-                            >
-                              <v-card-title class="white--text"
-                                >Thumbnail not available</v-card-title
-                              >
-                            </v-avatar>
-                          </div>
-                        </v-card>
-                      </template>
-                    </v-col>
-                    <v-col class="about-second-column" cols="4">
-                      <v-text-field
-                        v-model.number="localShelter.shelter_total"
-                        name="shelter_total"
-                        label="Number of shelters"
-                        type="number"
-                        required
-                        :rules="shelterTotalRules"
-                        @change="updateFormInput"
-                      />
-                      <v-select
-                        v-model.number="localShelter.shelter_occupants"
-                        :items="occupantsOptions"
-                        label="Intended Occupants per shelter"
-                        name="shelter_occupants"
-                        type="number"
-                        required
-                        :rules="shelterOccupantRules"
-                        @change="updateFormInput"
-                      ></v-select>
-                      <v-select
-                        v-model="localShelter.shelter_type"
-                        :items="shelterTypes"
-                        label="Shelter type"
-                        name="shelter_type"
-                        required
-                        :rules="shelterTypeRules"
-                        @change="updateFormInput"
-                      ></v-select>
-                      <v-select
-                        v-model.number="localShelter.shelter_lifespan"
-                        :items="lifeExpectancy"
-                        name="shelter_lifespan"
-                        label="Expected average shelter lifespan"
-                        item-text="label"
-                        item-value="value"
-                        type="number"
-                        required
-                        :rules="shelterLifespanRules"
-                        @change="updateFormInput"
-                      ></v-select>
+                <v-divider />
+                <v-text-field
+                  v-model.number="localShelter.setup_people"
+                  name="setup_people"
+                  label="Number of people for setup"
+                  type="number"
+                  @change="updateFormInput"
+                />
+                <v-text-field
+                  v-model.number="localShelter.setup_time"
+                  name="setup_time"
+                  label="Time for setup (days)"
+                  type="number"
+                  @change="updateFormInput"
+                />
+                <v-divider />
+                <input-with-info
+                  v-model="localShelter.risk_flood"
+                  :info="riskFlood"
+                  :depth="2"
+                  @change="updateFormInput"
+                />
+                <input-with-info
+                  v-model="localShelter.risk_seismic"
+                  :info="riskSeismic"
+                  :depth="2"
+                  @change="updateFormInput"
+                />
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-sheet>
+      </v-col>
+    </v-row>
 
-                      <v-divider />
-                      <v-text-field
-                        v-model.number="localShelter.setup_people"
-                        name="setup_people"
-                        label="Number of people for setup"
-                        type="number"
-                        @change="updateFormInput"
-                      />
-                      <v-text-field
-                        v-model.number="localShelter.setup_time"
-                        name="setup_time"
-                        label="Time for setup (days)"
-                        type="number"
-                        @change="updateFormInput"
-                      />
-                      <v-divider />
-                      <input-with-info
-                        v-model="localShelter.risk_flood"
-                        :info="riskFlood"
-                        :depth="2"
-                        @change="updateFormInput"
-                      />
-                      <input-with-info
-                        v-model="localShelter.risk_seismic"
-                        :info="riskSeismic"
-                        :depth="2"
-                        @change="updateFormInput"
-                      />
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-sheet>
-            </v-col>
-          </v-row>
-        </v-card>
+    <v-row>
+      <v-col>
+        <v-divider></v-divider>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col class="d-flex justify-center">
+        <v-btn
+          class="my-4"
+          width="33%"
+          :disabled="localShelter.images.length >= 10"
+          @click="uploadDialog = true"
+        >
+          upload files
+        </v-btn>
+        <span
+          :class="{
+            'warning--text': localShelter.images.length >= 10,
+            'd-none': localShelter.images.length < 10,
+          }"
+          >(Max limit of 10 files per shelter)
+        </span>
+        <upload-images
+          :dialog.sync="uploadDialog"
+          :multiple="true"
+          :loading.sync="uploadLoading"
+          @filesUploaded="processUpload($event)"
+        />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <template v-for="image in localShelter.images">
+          <v-card :key="image.url" class="my-4" color="white">
+            <v-row class="d-flex align-center">
+              <!-- todo: move to modal -->
+              <!-- thumbnail, name, input:image_type, input_description then edit/download/delete,-->
+              <v-col>
+                <v-avatar
+                  v-if="['Image', 'Drawing'].includes(image.type)"
+                  class="profile"
+                  color="grey"
+                  size="164"
+                  tile
+                >
+                  <v-img :src="image.url"></v-img>
+                </v-avatar>
+                <v-avatar v-else class="profile" color="grey" size="164" tile>
+                  <v-card-title class="white--text"
+                    >Thumbnail not available</v-card-title
+                  >
+                </v-avatar>
+              </v-col>
+              <v-col>
+                <div v-if="$can('edit', localShelter)" aria-label="image name">
+                  <a
+                    v-if="toggledImage != image.url"
+                    :href="image.url"
+                    target="_blank"
+                  >
+                    <span style="text-overflow: ellipsis">{{
+                      image.name
+                    }}</span>
+                  </a>
+                  <v-text-field
+                    v-else
+                    v-model="image.name"
+                    append-icon="$mdiCheck"
+                    append-class="text-primary"
+                    hint="Press escape or enter when finished"
+                    @keypress.enter="toggleImage"
+                    @keypress.escape="toggleImage"
+                    @click:append="toggleImage"
+                    @change="updateFormInput"
+                  >
+                  </v-text-field>
+                  <v-btn
+                    v-if="toggledImage != image.url"
+                    small
+                    icon
+                    @click="toggleImage(image.url)"
+                    ><v-icon small>$mdiPencil</v-icon></v-btn
+                  >
+                </div>
+                <div v-else>
+                  <a :href="image.url" target="_blank" class="text">
+                    {{ image.name }}
+                  </a>
+                </div>
+              </v-col>
+              <v-col>
+                <div v-if="$can('edit', localShelter)" aria-label="asset name">
+                  <v-select
+                    v-model="image.type"
+                    :items="imageShelterTypes"
+                    label="Select type of asset"
+                    outlined
+                    @change="updateFormInput"
+                  ></v-select>
+                </div>
+                <div v-else>
+                  {{ image.type }}
+                </div>
+              </v-col>
+              <v-col>
+                <div v-if="$can('edit', localShelter)" aria-label="asset name">
+                  <v-textarea
+                    v-model="image.description"
+                    label="Description"
+                    outlined
+                    counter
+                    :single-line="true"
+                    no-resize="true"
+                    rows="2"
+                    :rules="rulesCounter"
+                    @change="updateFormInput"
+                  />
+                </div>
+                <div v-else>
+                  {{ image.description }}
+                </div>
+              </v-col>
+              <v-col>
+                <v-row v-if="$can('edit', localShelter)" class="row">
+                  <v-col class="d-flex justify-end">
+                    <v-btn
+                      v-if="toggledImage != image.url"
+                      big
+                      @click="download(image.url)"
+                      >download<v-icon small>$mdiDownload</v-icon></v-btn
+                    >
+                    <v-btn
+                      v-if="toggledImage != image.url"
+                      class="mr-8"
+                      color="red"
+                      icon
+                      big
+                      @click="removeAsset(image)"
+                    >
+                      <v-icon small>$mdiDelete</v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+                <v-row v-else class="row d-flex align-center">
+                  <v-col :cols="2" class="mr-8">
+                    <v-btn
+                      v-if="toggledImage != image.url"
+                      big
+                      @click="download(image.url)"
+                      >download <v-icon small>$mdiDownload</v-icon></v-btn
+                    >
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-card>
+        </template>
       </v-col>
     </v-row>
   </v-container>
