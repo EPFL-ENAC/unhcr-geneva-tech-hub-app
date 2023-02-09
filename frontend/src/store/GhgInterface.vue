@@ -38,6 +38,7 @@ export interface GreenHouseGaz {
   population?: number;
   created_by: string;
   created_at: string;
+  isUNHCR?: boolean;
 }
 
 export interface SurveyForms {

@@ -13,7 +13,7 @@ module.exports = {
 
   devServer: {
     // https://github.com/webpack/webpack-dev-server/issues/1850#issuecomment-490926569
-    host: "::1",
+    host: "127.0.0.1",
     // hot: false,
     // liveReload: true,
     // ipc: true,
@@ -23,8 +23,9 @@ module.exports = {
         pathRewrite: {
           "^/db": "", // remove base path
         },
-        ws: true,
         changeOrigin: true,
+        secure: false,
+        logLevel: "debug",
       },
       "^/api": {
         target: "http://127.0.0.1:5050/",

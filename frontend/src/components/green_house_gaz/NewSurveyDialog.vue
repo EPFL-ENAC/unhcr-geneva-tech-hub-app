@@ -201,11 +201,12 @@ export default class ProjectList extends Vue {
       // try to find it inside the existingUNHCR and call
       // "GhgModule/SET_PROJECT"; or a new action
       const foundUNHCR = this.unhcrProjects.find(
-        (site) => site.name === site.name
+        (unhcrProject) => unhcrProject.name === site
       );
       if (!foundUNHCR) {
         throw new Error("Could not find existing site");
       }
+      foundUNHCR.isUNHCR = true;
       this.setDoc(foundUNHCR);
     } finally {
       this.$refs.newAssessmentForm.validate();
@@ -377,7 +378,8 @@ export default class ProjectList extends Vue {
     // addDoc else
     // update doc with new survey
     // if it's unhcr.. then it's a new document
-    const saveFn = this.newName ? this.addDoc : this.updateDoc;
+    const saveFn =
+      this.newName || this.newCampSite.isUNHCR ? this.addDoc : this.updateDoc;
     this.newCampSite.surveys.push(this.editedItem);
     // newName has priority
     this.newCampSite.name = this.newName || this.newCampSite.name;

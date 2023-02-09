@@ -57,6 +57,7 @@
       hide-default-footer
       :items-per-page="-1"
       :item-class="rowClasses"
+      :loading="projectLoading"
       @click:row="handleClick"
     >
       <template #[`item.created_at`]="{ item }">
@@ -148,7 +149,7 @@ import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("GhgModule", ["project"]),
+    ...mapGetters("GhgModule", ["project", "projectLoading"]),
     ...mapGetters("UserModule", ["user"]),
   },
   methods: {
@@ -175,6 +176,7 @@ export default class ProjectItem extends Vue {
   removeDoc!: (id: string) => Promise<void>;
   closeDB!: () => null;
   project!: GreenHouseGaz;
+  projectLoading!: boolean;
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
 
   localProject = {} as GreenHouseGaz;
@@ -343,18 +345,6 @@ export default class ProjectItem extends Vue {
     });
   }
 
-  created(): void {
-    this.syncLocalShelter();
-  }
-
-  mounted(): void {
-    this.syncDB();
-    if (this.site) {
-      this.getDoc(this.site);
-    }
-  }
-  // TODO: avoid double request in mounted and watch find a way
-
   // watch site and trigger retrieve
   @Watch("site", { immediate: true })
   onSiteChange(newValue: string): void {
@@ -363,6 +353,14 @@ export default class ProjectItem extends Vue {
         this.getDoc(newValue);
       }
     });
+  }
+
+  mounted(): void {
+    this.syncDB();
+    this.syncLocalShelter();
+    if (this.site) {
+      this.getDoc(this.site);
+    }
   }
   destroyed(): void {
     this.closeDB();
