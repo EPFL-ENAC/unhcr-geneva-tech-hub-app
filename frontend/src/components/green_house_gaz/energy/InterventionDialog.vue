@@ -38,7 +38,7 @@
                       label="Intervention description"
                     ></v-text-field>
                   </v-col>
-                  <diesel-generator-without-litres
+                  <diesel-generators
                     :facility.sync="localItem"
                     select-text="New generator"
                   />
@@ -101,6 +101,8 @@ import {
   computeCO2Cost,
   computeDieselPower,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
+import DieselGenerators from "@/components/green_house_gaz/energy/DieselGenerators.vue";
+
 import DieselGeneratorWithoutLitres from "@/components/green_house_gaz/energy/DieselGeneratorWithoutLitres.vue";
 import RenewableEnergy from "@/components/green_house_gaz/energy/RenewableEnergy.vue";
 import { computeChangeInEmission } from "@/components/green_house_gaz/generic/changeInEmission";
@@ -142,6 +144,7 @@ import { mapActions, mapGetters } from "vuex";
   components: {
     DieselGeneratorWithoutLitres,
     RenewableEnergy,
+    DieselGenerators,
   },
 })
 export default class InterventionDialog extends Vue {
