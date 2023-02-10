@@ -57,6 +57,8 @@
 
 <script lang="ts">
 import BarChartOverview from "@/components/overview_data/BarChartOverview.vue";
+import { isoToRegion } from "@/utils/countriesAsList";
+
 import {
   listOfRegions,
   listOfShelterType,
@@ -285,33 +287,33 @@ export default class OverviewProjects extends Vue {
   }
 
   public get shelterOverviewConfigs(): any[] {
-    if (this.scorecards.length === 0) {
+    if (this.filteredScorecards.length === 0) {
       return [];
     }
     return [
       {
         title: "Habitability",
-        option: this.getboxplotConfig("habitability", this.scorecards),
+        option: this.getboxplotConfig("habitability", this.filteredScorecards),
       },
       {
         title: "Affordability",
-        option: this.getboxplotConfig("affordability", this.scorecards),
+        option: this.getboxplotConfig("affordability", this.filteredScorecards),
       },
       {
         title: "Technical Performance",
-        option: this.getboxplotConfig("techPerf", this.scorecards),
+        option: this.getboxplotConfig("techPerf", this.filteredScorecards),
       },
       {
         title: "Environmental impact <br/> Embodied water",
-        option: this.getboxplotConfig("h2o", this.scorecards),
+        option: this.getboxplotConfig("h2o", this.filteredScorecards),
       },
       {
         title: "Environmental impact <br/> Embodied CO2",
-        option: this.getboxplotConfig("co2", this.scorecards),
+        option: this.getboxplotConfig("co2", this.filteredScorecards),
       },
       {
         title: "Environmental impact <br/> Material efficiency",
-        option: this.getboxplotConfig("weight", this.scorecards),
+        option: this.getboxplotConfig("weight", this.filteredScorecards),
       },
     ];
   }
@@ -412,23 +414,34 @@ export default class OverviewProjects extends Vue {
     };
   }
 
+  public get filteredScorecards(): any[] {
+    if (this.shelterFilters.selectedRegions.includes("All")) {
+      return this.scorecards;
+    }
+    return this.scorecards.filter((x) =>
+      this.shelterFilters.selectedRegions.includes(
+        isoToRegion[x.location_country]
+      )
+    );
+  }
+
   public get organisations(): string[] {
-    if (this.scorecards.length === 0) {
+    if (this.filteredScorecards.length === 0) {
       return [];
     }
     return Array.from(
-      new Set(this.scorecards.map((x) => x.organisation))
+      new Set(this.filteredScorecards.map((x) => x.organisation))
     ).filter((x) => x !== "");
   }
 
   public get projectBarChartOption(): EChartsOption {
-    if (this.scorecards.length === 0) {
+    if (this.filteredScorecards.length === 0) {
       return this.getDefaultBarChart([]);
     }
 
     const series = this.organisations.map<EChartsOption>(
       (organisation: string) => {
-        const organisationScorecards = this.scorecards.filter(
+        const organisationScorecards = this.filteredScorecards.filter(
           (scorecard) => scorecard.organisation === organisation
         );
         return {
@@ -450,10 +463,10 @@ export default class OverviewProjects extends Vue {
   }
 
   public get userBarChartOption(): EChartsOption {
-    if (this.scorecards.length === 0) {
+    if (this.filteredScorecards.length === 0) {
       return this.getDefaultBarChart([]);
     }
-    const localScorecards = this.scorecards;
+    const localScorecards = this.filteredScorecards;
     function getUsersPerYear(year: string): number {
       return Array.from(
         new Set(

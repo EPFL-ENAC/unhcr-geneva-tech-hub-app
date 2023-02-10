@@ -1,4 +1,5 @@
 import { CountriesInfoMap, CountryInfo } from "@/store/GhgInterface.vue";
+import { ShelterRegions } from "@/store/ShelterInterface";
 export const regions = [
   "Asia and the Pacific",
   "Europe",
@@ -8,7 +9,7 @@ export const regions = [
   "West and Central Africa",
   "East and Horn of Africa",
 ];
-export const isoToRegion = {
+export const isoToRegion: Record<string, ShelterRegions> = {
   AF: "Asia and the Pacific",
   AL: "Europe",
   DZ: "Middle East and North Africa",
