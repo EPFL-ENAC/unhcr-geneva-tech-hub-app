@@ -27,10 +27,6 @@ export default class ProjectItem extends Vue {
   mounted(): void {
     this.syncDB();
     this.getDoc(decodeURIComponent(this.$route.params.site));
-    // find out why it does not work
-    // setTimeout(() => {
-    //   this.getDoc(decodeURIComponent(this.$route.params.site));
-    // }, 100);
   }
   destroyed(): void {
     this.closeDB();

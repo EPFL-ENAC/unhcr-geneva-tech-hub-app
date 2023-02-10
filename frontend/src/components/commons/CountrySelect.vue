@@ -89,12 +89,13 @@ export default class CountrySelect extends Vue {
   }
 
   public updateCountry(country: CountryInfo): void {
-    this.$emit("input", country.code);
-    this.$emit("update", country.code);
-    this.$emit("change", country.code);
-    // if country change.. force latitude
     this.$emit("update:latitude", country.lat);
     this.$emit("update:longitude", country.lon);
+    this.$emit("input", country.code);
+    this.$emit("update", country.code);
+    this.$emit("update:value", country.code);
+    // if country change.. force latitude with a delay
+    this.$emit("change", country.code);
   }
 }
 </script>

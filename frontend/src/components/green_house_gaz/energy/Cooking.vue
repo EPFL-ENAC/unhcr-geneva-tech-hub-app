@@ -60,24 +60,24 @@ const fuelTypes = {
 };
 // Emission factor for CO2 [ton/ton of fuel] from IPCC
 // should be from the GHG_REFERENCE FACTOR
-const fuelFactors = {
-  FWD: 1.8948,
-  CHC: 3.477,
-  PLTS: 1.2697,
-  BRQ: 1.2697,
-  ETH: 1.2391,
-  KRS: 2.5595,
-  PET: 0, // same as wash
-  DIES: 0, // same as facilities for diesel gen
-  ELE_SOLAR: 0, // no eff
-  ELE_GRID: 0,
-  ELE_DIES: 0,
-  ELE_HYB: 0,
-  THE: 0, // no eff
-  LPG: 1.616,
-  BGS: 2.4842,
-  PNG: 2.4842,
-};
+// const fuelFactors = {
+//   FWD: 1.8948,
+//   CHC: 3.477,
+//   PLTS: 1.2697,
+//   BRQ: 1.2697,
+//   ETH: 1.2391,
+//   KRS: 2.5595,
+//   PET: 0, // same as wash
+//   DIES: 0, // same as facilities for diesel gen
+//   ELE_SOLAR: 0, // no eff
+//   ELE_GRID: 0,
+//   ELE_DIES: 0,
+//   ELE_HYB: 0,
+//   THE: 0, // no eff
+//   LPG: 1.616,
+//   BGS: 2.4842,
+//   PNG: 2.4842,
+// };
 
 // no appliances for now
 // const COOK_APP_Pressure = "Pressure cooke";

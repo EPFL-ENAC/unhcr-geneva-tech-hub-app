@@ -34,7 +34,7 @@
                 <v-row class="d-flex" style="height: 100%; width: 100%">
                   <v-col class="d-flex">
                     <territory-map
-                      :value="[shelter.latitude, shelter.longitude]"
+                      :value="latLng"
                       @update:value="updateLatLng"
                     />
                   </v-col>
@@ -61,12 +61,14 @@
                 />
                 <country-select
                   id="location_country"
-                  v-model.number="localShelter['location_country']"
+                  :value.sync="localShelter.location_country"
                   required
                   label="Country"
                   type="text"
                   name="location_country"
                   @change="updateFormInput"
+                  @update:latitude="updateLatitude"
+                  @update:longitude="updateLongitude"
                 />
 
                 <v-text-field
@@ -332,13 +334,21 @@ import UserManager from "@/components/commons/UserManager.vue";
 import { infoTooltipText } from "@/components/shelter_sustainability/infoTooltipText";
 import InputWithInfo from "@/components/shelter_sustainability/InputWithInfo.vue";
 import {
+  attributionMap,
+  defaultCoordinates,
+  defaultZoom,
+  urlMap,
+} from "@/utils/mapWorld";
+import { LatLngExpression } from "leaflet";
+
+import {
   ImageShelter,
   imageShelterTypes,
   listOfShelterType,
   Shelter,
 } from "@/store/ShelterInterface";
 import { cloneDeep } from "lodash";
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, VModel, Vue } from "vue-property-decorator";
 
 @Component({
   components: {
@@ -353,19 +363,19 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 })
 /** Project */
 export default class Step1 extends Vue {
-  @Prop({ type: [Object], required: true })
-  shelter!: Shelter;
-  localShelter = cloneDeep(this.shelter);
+  @VModel({ type: [Object], required: true }) localShelter!: Shelter;
 
   download = download;
-  @Watch("shelter", { immediate: true, deep: true })
-  onShelterChange(newShelter: Shelter): void {
-    this.localShelter = cloneDeep(newShelter);
-  }
+
+  readonly zoom = defaultZoom;
+  readonly defaultCoordinates = defaultCoordinates;
+  readonly url = urlMap;
+  readonly attribution = attributionMap;
 
   public updateFormInput(): void {
     const newShelter = cloneDeep(this.localShelter);
     this.$emit("update:shelter", newShelter);
+    this.$emit("input", newShelter); // for v-model
   }
 
   infoTooltipText = infoTooltipText;
@@ -572,17 +582,24 @@ export default class Step1 extends Vue {
   };
 
   public updateLatitude(lat: number): void {
-    this.$set(this.localShelter, "latitude", lat);
+    this.$set(this.localShelter, "latitude", parseFloat(lat.toFixed(3)));
   }
 
   public updateLongitude(lon: number): void {
-    this.$set(this.localShelter, "longitude", lon);
+    this.$set(this.localShelter, "longitude", parseFloat(lon.toFixed(3)));
   }
-
   public updateLatLng(latLng: number[]): void {
     this.updateLatitude(latLng[0]);
     this.updateLongitude(latLng[1]);
     this.updateFormInput();
+  }
+
+  get latLng(): LatLngExpression {
+    const { latitude, longitude } = this.localShelter;
+    if (latitude !== undefined) {
+      return [latitude ?? 0, longitude ?? 0];
+    }
+    return defaultCoordinates as LatLngExpression;
   }
 
   public img_url = {

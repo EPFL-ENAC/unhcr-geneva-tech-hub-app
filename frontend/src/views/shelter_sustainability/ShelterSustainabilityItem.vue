@@ -1,5 +1,13 @@
 <template>
   <v-container fluid class="project">
+    <header class="justify-space-between align-center d-none d-print-flex">
+      <h2 class="font-weight-bold primary--text text-h2">
+        Shelter name: {{ shelter.name }}
+      </h2>
+    </header>
+    <hr
+      class="d-none d-print-flex font-weight-bold justify-space-between align-center primary my-4"
+    />
     <v-tabs
       class="fixed-tabs-bar d-flex d-print-none"
       centered
@@ -45,7 +53,12 @@
     </v-tabs>
     <v-container v-if="shelter.users" fluid>
       <v-form @submit.stop.prevent="">
-        <router-view :shelter="shelter" @update:shelter="submitForm" />
+        <router-view
+          :value="shelter"
+          :shelter="shelter"
+          @input="submitForm"
+          @update:shelter="submitForm"
+        />
       </v-form>
     </v-container>
   </v-container>
