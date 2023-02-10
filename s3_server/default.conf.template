@@ -1,4 +1,4 @@
-proxy_cache_path /etc/nginx/cache keys_zone=s3_server:64m max_size=1024M inactive=24h use_temp_path=off;
+proxy_cache_path /etc/nginx/cache levels=1:2 keys_zone=s3_server:64M max_size=2G inactive=24h use_temp_path=off;
 
 server {
     listen         5660 default_server;
