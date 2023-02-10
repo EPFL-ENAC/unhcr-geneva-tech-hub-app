@@ -13,13 +13,13 @@ module.exports = {
 
   devServer: {
     // https://github.com/webpack/webpack-dev-server/issues/1850#issuecomment-490926569
-    host: "127.0.0.1",
-    // hot: false,
+    // host: "127.0.0.1",
+    hot: false,
     // liveReload: true,
     // ipc: true,
     proxy: {
       "^/db": {
-        target: "http://127.0.0.1:5984/",
+        target: "http://localhost:5984/",
         pathRewrite: {
           "^/db": "", // remove base path
         },
@@ -28,7 +28,7 @@ module.exports = {
         logLevel: "debug",
       },
       "^/api": {
-        target: "http://127.0.0.1:5050/",
+        target: "http://localhost:5050/",
         pathRewrite: {
           "^/api": "", // remove base path
         },
@@ -36,7 +36,7 @@ module.exports = {
         changeOrigin: true,
       },
       "^/s3": {
-        target: "http://127.0.0.1:5660/",
+        target: "http://localhost:5660/",
         pathRewrite: {
           "^/s3": "",
         },
