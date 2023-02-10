@@ -164,6 +164,11 @@ export default class ProjectItem extends Vue {
     this.closeDB();
     this.changes?.cancel();
   }
+
+  beforeRouteLeave(to: unknown, from: unknown, next: any): void {
+    this.$store.dispatch("ShelterModule/resetDoc");
+    next();
+  }
 }
 
 interface MenuItem {

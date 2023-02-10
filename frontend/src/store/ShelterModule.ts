@@ -69,6 +69,9 @@ const mutations: MutationTree<ShelterState> = {
   SET_SHELTER(state, newShelter) {
     state.shelter = newShelter;
   },
+  UNSET_SHELTER(state) {
+    state.shelter = {} as Shelter;
+  },
   ADD_DOC(state, value) {
     state.shelters.push(value);
   },
@@ -251,27 +254,29 @@ const actions: ActionTree<ShelterState, RootState> = {
     const result = computeShelter(value);
     context.commit("SET_SHELTER", result);
   },
-  getDoc: (context: ActionContext<ShelterState, RootState>, id) => {
-    const remoteDB = context.state.localCouch?.remoteDB;
-    if (remoteDB) {
-      return remoteDB.get(id).then(function (result: Shelter) {
-        result = computeShelter(result);
-        context.commit("SET_SHELTER", result);
-        context.dispatch(
-          "ShelterBillOfQuantitiesModule/setItems",
-          context.state.shelter.items,
-          { root: true }
-        );
-        context.dispatch(
-          "ShelterBillOfQuantitiesModule/setItemsIndividualShelter",
-          context.state.shelter.items_individual_shelter,
-          { root: true }
-        );
-        return context.state.shelter;
-      });
+  getDoc: async (context: ActionContext<ShelterState, RootState>, id) => {
+    let result: Shelter | undefined =
+      await context.state.localCouch?.localDB.get(id);
+    if (result) {
+      result = computeShelter(result);
+      context.commit("SET_SHELTER", result);
+      await context.dispatch(
+        "ShelterBillOfQuantitiesModule/setItems",
+        context.state.shelter.items,
+        { root: true }
+      );
+      await context.dispatch(
+        "ShelterBillOfQuantitiesModule/setItemsIndividualShelter",
+        context.state.shelter.items_individual_shelter,
+        { root: true }
+      );
+      return result;
     } else {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
+  },
+  resetDoc(context: ActionContext<ShelterState, RootState>) {
+    context.commit("UNSET_SHELTER");
   },
 };
 

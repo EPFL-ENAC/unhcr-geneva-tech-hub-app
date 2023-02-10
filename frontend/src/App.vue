@@ -3,9 +3,10 @@
     <v-app-bar app dense>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-tabs>
-        <v-tab v-if="rootRoute" :to="{ name: rootRoute.name }">{{
-          rootRouteTitle
-        }}</v-tab>
+        <v-tab v-if="rootRoute" :to="{ name: rootRoute.name }"
+          >{{ rootRouteTitle }}
+          <span v-if="currentRouteId">: {{ currentRouteId }}</span>
+        </v-tab>
       </v-tabs>
       <v-spacer />
       <v-btn
@@ -237,6 +238,10 @@ export default class App extends Vue {
   rootRoute = {} as RouteRecordPublic;
   currentRouteName = "";
   rootRouteTitle = "";
+
+  get currentRouteId(): string | undefined {
+    return this.$store.getters?.["ShelterModule/shelter"]?.name;
+  }
 
   get snackbarText(): string {
     return this.$store.getters.message;

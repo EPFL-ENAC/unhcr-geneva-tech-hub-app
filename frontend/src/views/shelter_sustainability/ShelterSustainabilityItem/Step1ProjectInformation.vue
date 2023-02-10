@@ -269,7 +269,7 @@
                     outlined
                     counter
                     :single-line="true"
-                    no-resize="true"
+                    :no-resize="true"
                     rows="2"
                     :rules="rulesCounter"
                     @change="updateFormInput"

@@ -277,6 +277,7 @@
 <script lang="ts">
 import TerritoryMap from "@/components/commons/TerritoryMap.vue";
 import NewShelterDialog from "@/components/shelter_sustainability/NewShelterDialog.vue";
+import store from "@/store";
 import {
   listOfShelterType,
   Shelter,
@@ -464,6 +465,11 @@ export default class ProjectList extends Vue {
 
   destroyed(): void {
     this.closeDB();
+  }
+
+  beforeRouteEnter(to: unknown, from: unknown, next: any): void {
+    store.dispatch("ShelterModule/resetDoc");
+    next();
   }
 }
 
