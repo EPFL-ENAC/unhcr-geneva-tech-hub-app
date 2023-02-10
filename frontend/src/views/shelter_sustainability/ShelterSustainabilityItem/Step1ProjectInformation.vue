@@ -69,8 +69,16 @@
                   @change="updateFormInput"
                   @update:latitude="updateLatitude"
                   @update:longitude="updateLongitude"
+                  @update:region="updateRegion"
                 />
-
+                <v-text-field
+                  id="region"
+                  :value="localShelter.region"
+                  name="region"
+                  label="region"
+                  :disabled="true"
+                  type="text"
+                />
                 <v-text-field
                   id="organisation"
                   v-model="localShelter.organisation"
@@ -594,6 +602,9 @@ export default class Step1 extends Vue {
     this.updateFormInput();
   }
 
+  public updateRegion(region: string): void {
+    this.$set(this.localShelter, "region", region);
+  }
   get latLng(): LatLngExpression {
     const { latitude, longitude } = this.localShelter;
     if (latitude !== undefined) {

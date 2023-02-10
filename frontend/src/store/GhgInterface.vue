@@ -1,5 +1,6 @@
 <script lang="ts">
 import { WashTruckingSurvey } from "@/components/green_house_gaz/wash/Trucking.vue";
+import { ShelterRegions } from "@/store/ShelterInterface";
 // import { Material } from "@/store/ShelterInterface";
 export type CountriesInfoMap = Record<string, CountryInfo>;
 export interface Country {
@@ -10,6 +11,7 @@ export interface Country {
 export interface CountryInfo {
   name: string;
   code: string;
+  region: ShelterRegions;
   lat: number;
   lon: number;
 }

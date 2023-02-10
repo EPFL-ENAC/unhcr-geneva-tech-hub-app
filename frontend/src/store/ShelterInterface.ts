@@ -20,24 +20,25 @@ export type ShelterType = "Emergency" | "Transitional" | "Durable" | "";
 
 export const listOfRegions: ShelterRegions[] = [
   "All",
-  "East and Horn of Africa and the Great Lakes",
-  "Southern Africa",
-  "West and Central Africa",
-  "The Americas",
   "Asia and the Pacific",
   "Europe",
   "Middle East and North Africa",
+  "Southern Africa",
+  "The Americas",
+  "West and Central Africa",
+  "East and Horn of Africa",
 ];
 
 export type ShelterRegions =
   | "All"
-  | "East and Horn of Africa and the Great Lakes"
+  | "East and Horn of Africa"
   | "Southern Africa"
   | "West and Central Africa"
   | "The Americas"
   | "Asia and the Pacific"
   | "Europe"
-  | "Middle East and North Africa";
+  | "Middle East and North Africa"
+  | "Unknown";
 
 // update --> Image / Drawing / Report / Other
 export const imageShelterTypes = [
