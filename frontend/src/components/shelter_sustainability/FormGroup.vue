@@ -9,9 +9,18 @@
           }  font-weight-medium`"
           >{{ form.title }}</component
         >
+
         <info-tooltip v-if="infoTooltipText[$route.name] && depth === 0">
           {{ infoTooltipText[$route.name].text }}
         </info-tooltip>
+        <span
+          v-if="result"
+          :class="`text-h${depth + 5} project__h${
+            depth + 3
+          }  font-weight-medium`"
+        >
+          ({{ result }})
+        </span>
       </v-col>
       <v-col v-if="depth > 0" cols="1" class="d-flex justify-end align-center">
         <v-btn icon @click="toggle">
@@ -71,6 +80,10 @@ import { Component, Vue } from "vue-property-decorator";
     },
     value: {
       type: Object as () => Score,
+    },
+    result: {
+      type: String,
+      default: "",
     },
     depth: {
       type: Number,

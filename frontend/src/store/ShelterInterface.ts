@@ -82,9 +82,11 @@ export interface Shelter {
   totalEnvPerf: MaterialTree;
 
   habitability: Score;
-  habitability_score: number | undefined;
+  habitability_score: number | undefined; // percentage
+  habitability_score_real?: string | undefined; // helper string
   technical_performance: Score;
-  technical_performance_score: number | undefined;
+  technical_performance_score: number | undefined; // percentage
+  technical_performance_score_real?: string | undefined; // helper string
 
   scorecard: ScoreCard;
   scorecard_errors: string[];

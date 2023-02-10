@@ -4,6 +4,7 @@
       :is="habitabilityForm.type"
       :form="habitabilityForm"
       :value="localShelter.habitability"
+      :result="localShelter.habitability_score_real"
       @input="(v) => update(v)"
     ></component>
   </v-form>

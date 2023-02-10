@@ -4,6 +4,7 @@
       :is="technicalPerformanceForm.type"
       :form="technicalPerformanceForm"
       :value="localShelter.technical_performance"
+      :result="localShelter.technical_performance_score_real"
       @input="(v) => update(v)"
     ></component>
   </v-form>
