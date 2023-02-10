@@ -1,7 +1,13 @@
 <template>
   <v-container fluid>
-    <v-row v-if="form.title">
-      <v-col :cols="depth > 0 ? 11 : 12" class="d-flex">
+    <v-row
+      v-if="form.title"
+      :class="{
+        'v-tabs fixed-tabs-bar d-flex d-print-none v-tabs--centered v-tabs--grow theme--light':
+          depth == 0,
+      }"
+    >
+      <v-col :cols="depth > 0 ? 11 : 12" class="d-flex v-tabs-bar">
         <component
           :is="`h${depth + 2}`"
           :class="`text-h${depth + 4} project__h${
