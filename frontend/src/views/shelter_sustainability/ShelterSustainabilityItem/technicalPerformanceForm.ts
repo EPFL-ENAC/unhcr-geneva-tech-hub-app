@@ -242,6 +242,16 @@ export default {
                   label:
                     "Roof comprised of single layer of lightweight material (CGI, etc.)",
                 },
+
+                {
+                  _id: "input_2b_6a",
+                  score: 1,
+                  description:
+                    "Improved insulation performance reduces heat gain from outside in hot climates and heat loss from inside in cold climates. Roofs comprising multiple layers of materials with better insulating properties separated by air cavities provide greater insulating performance.  In general, thin metalic materials that are commonly used in roofing provide poor insulation against conductive heat gain/loss, though reflective surfaces can provide good insulation against radiant heat gain. Good insulating materials for layers internal to roofs include glass wool and expanded polystyrene.",
+
+                  label:
+                    "Roof comprised of single layer of heavy material (e.g., earth, concrete slab)",
+                },
                 {
                   _id: "input_2b_7",
                   score: 1,
