@@ -1,8 +1,8 @@
 <template>
   <v-container fluid class="project">
     <header class="justify-space-between align-center d-none d-print-flex">
-      <h2 class="font-weight-bold primary--text text-h2">
-        Shelter name: {{ shelter.name }}
+      <h2 class="font-weight-bold primary--text text-h4">
+        {{ shelter.name }}
       </h2>
     </header>
     <hr
