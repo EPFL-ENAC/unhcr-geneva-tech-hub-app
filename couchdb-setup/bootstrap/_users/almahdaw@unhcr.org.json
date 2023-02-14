@@ -1,0 +1,10 @@
+{
+  "_id": "org.couchdb.user:almahdaw@unhcr.org",
+  "name": "almahdaw@unhcr.org",
+  "roles": [],
+  "type": "user",
+  "password_scheme": "pbkdf2",
+  "iterations": 10,
+  "derived_key": "050d506f3b5cebe1c9b143e40fabe1f1845e8f83",
+  "salt": "477bfc4548e86b6499954115cc9d6213"
+}

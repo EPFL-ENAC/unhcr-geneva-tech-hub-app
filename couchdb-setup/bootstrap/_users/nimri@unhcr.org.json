@@ -1,0 +1,10 @@
+{
+  "_id": "org.couchdb.user:nimri@unhcr.org",
+  "name": "nimri@unhcr.org",
+  "roles": [],
+  "type": "user",
+  "password_scheme": "pbkdf2",
+  "iterations": 10,
+  "derived_key": "950565794b6d1b11b3fe2dd91ad00d8bca2be068",
+  "salt": "cedab96ecb899c6c1fe3886acf9f9b77"
+}
