@@ -1,6 +1,6 @@
 import { ExistingDocument } from "@/models/couchdbModel";
 import { SessionStorageKey } from "@/utils/storage";
-import axios, { AxiosPromise } from "axios";
+import axios, { AxiosPromise, AxiosResponse } from "axios";
 import PouchDB from "pouchdb";
 import qs from "qs";
 
@@ -59,16 +59,16 @@ export function loginToken(token: string): AxiosPromise {
   });
 }
 
-export function logout(): AxiosPromise {
-  return axios({
+export async function logout(): Promise<AxiosResponse> {
+  return await axios({
     method: "delete",
     url: sessionUrl,
     withCredentials: true,
   });
 }
 
-export function getSession(): AxiosPromise {
-  return axios({
+export async function getSession(): Promise<AxiosResponse> {
+  return await axios({
     method: "get",
     url: sessionUrl,
     headers: {

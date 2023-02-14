@@ -121,24 +121,25 @@ const actions: ActionTree<UserState, RootState> = {
         context.commit("UNSET_USER_LOADING");
       });
   },
-  loginToken: (context: ActionContext<UserState, RootState>, token: string) => {
+  loginToken: async (
+    context: ActionContext<UserState, RootState>,
+    token: string
+  ) => {
     context.commit("SET_USER_LOADING");
+    await context.dispatch("logout");
     sessionStorage.removeItem(SessionStorageKey.Token);
     return loginTokenTool(token)
       .then((axiosResponse) => {
         // parse again the jwt, and update userCTX with custom email claim
         const payload = parseJwt(token);
         const userFromCouchDB = axiosResponse.data.userCtx;
-        userFromCouchDB.sub = userFromCouchDB.name;
+        userFromCouchDB.sub = payload.sub;
         if (payload.email) {
           // we don't want to have an undefined name, since it is equal to not logged in user
           userFromCouchDB.name = payload.email;
         }
         context.commit("SET_USER", userFromCouchDB);
         return axiosResponse;
-      })
-      .catch((error) => {
-        throw error;
       })
       .finally(() => {
         context.commit("UNSET_USER_LOADING");
@@ -159,7 +160,7 @@ const actions: ActionTree<UserState, RootState> = {
         context.commit("UNSET_USER_LOADING");
       });
   },
-  logout: (context: ActionContext<UserState, RootState>) => {
+  logout: async (context: ActionContext<UserState, RootState>) => {
     context.commit("SET_USER_LOADING");
     sessionStorage.removeItem(SessionStorageKey.Token);
     if (context.getters.user.sub) {
@@ -170,13 +171,9 @@ const actions: ActionTree<UserState, RootState> = {
       window.location.href =
         "https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=https%3A%2F%2Funhcr-tss.epfl.ch";
     } else {
-      logoutTool()
-        .then(() => {
-          context.commit("SET_USER", generateEmptyUser());
-        })
-        .finally(() => {
-          context.commit("UNSET_USER_LOADING");
-        });
+      await logoutTool();
+      context.commit("SET_USER", generateEmptyUser());
+      context.commit("UNSET_USER_LOADING");
     }
   },
   getSession: (context: ActionContext<UserState, RootState>) => {
