@@ -3,7 +3,10 @@
     <v-app-bar app dense>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-tabs>
-        <v-tab v-if="rootRoute" :to="{ name: rootRoute.name }"
+        <v-tab
+          v-if="rootRoute"
+          :to="{ name: rootRoute.name }"
+          class="shelter-title-tab"
           >{{ rootRouteTitle }}
           <span v-if="currentRouteId">: {{ currentRouteId }}</span>
         </v-tab>
@@ -388,5 +391,12 @@ export default class App extends Vue {
 
 .account-color > svg {
   fill: #c5c5c5;
+}
+</style>
+
+<style lang="scss" scoped>
+.shelter-title-tab {
+  max-width: 100%;
+  justify-content: left;
 }
 </style>
