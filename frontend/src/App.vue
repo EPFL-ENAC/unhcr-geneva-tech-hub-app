@@ -331,6 +331,7 @@ export default class App extends Vue {
     this.$vuetify.theme.dark = false; //this.$store.getters["ConfigModule/themeDark"];
     document.title = this.title;
     /// retrieve user
+    // retrieve user only if not in
     this.getSessionStore();
   }
 }

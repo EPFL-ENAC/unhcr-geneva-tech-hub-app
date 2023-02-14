@@ -1,11 +1,28 @@
 import { ExistingDocument } from "@/models/couchdbModel";
 import { SessionStorageKey } from "@/utils/storage";
 import axios, { AxiosPromise, AxiosResponse } from "axios";
+import { JwtPayload } from "jsonwebtoken";
 import PouchDB from "pouchdb";
 import qs from "qs";
 
 const databaseUrl: string = url(process.env.VUE_APP_COUCHDB_URL);
 const designDocumentPrefix = "_design/";
+
+export function parseJwt(token: string): JwtPayload {
+  const base64Url = token.split(".")[1];
+  const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  const jsonPayload = decodeURIComponent(
+    window
+      .atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
+
+  return JSON.parse(jsonPayload);
+}
 
 function url(value = ""): string {
   try {
@@ -30,7 +47,7 @@ function getUrl(path: string): string {
 
 const sessionUrl: string = getUrl("_session");
 
-export function login(username: string, password: string): AxiosPromise {
+export function loginDefault(username: string, password: string): AxiosPromise {
   return axios({
     method: "post",
     url: sessionUrl,
@@ -45,21 +62,23 @@ export function login(username: string, password: string): AxiosPromise {
   });
 }
 
-export function loginToken(token: string): AxiosPromise {
-  return axios({
-    method: "get",
-    url: sessionUrl,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }).then((response) => {
-    // TODO: find a way to use the .exp field of the jwt as a + security++
-    sessionStorage.setItem(SessionStorageKey.Token, token);
-    return response;
-  });
+export async function loginJWT(token: string): Promise<AxiosResponse> {
+  // TODO: find a way to use the .exp field of the jwt as a + security++
+  sessionStorage.removeItem(SessionStorageKey.Token);
+  const response = await getSessionWithBearer(token);
+  sessionStorage.setItem(SessionStorageKey.Token, token);
+
+  // parse the jwt, and update userCTX with custom email claim
+  const payload = parseJwt(token);
+  const userFromCouchDB = response.data.userCtx;
+  userFromCouchDB.sub = payload.sub;
+  // we don't want to have an undefined name, since it is equal to not logged in user
+  userFromCouchDB.name = payload.email ?? userFromCouchDB.name;
+  response.data = userFromCouchDB;
+  return response;
 }
 
-export async function logout(): Promise<AxiosResponse> {
+export async function logoutCookie(): Promise<AxiosResponse> {
   return await axios({
     method: "delete",
     url: sessionUrl,
@@ -67,7 +86,7 @@ export async function logout(): Promise<AxiosResponse> {
   });
 }
 
-export async function getSession(): Promise<AxiosResponse> {
+export async function getSessionWithCookie(): Promise<AxiosResponse> {
   return await axios({
     method: "get",
     url: sessionUrl,
@@ -75,6 +94,19 @@ export async function getSession(): Promise<AxiosResponse> {
       Accept: "application/json",
     },
     withCredentials: true,
+  });
+}
+
+export async function getSessionWithBearer(
+  token: string
+): Promise<AxiosResponse> {
+  return await axios({
+    method: "get",
+    url: sessionUrl,
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   });
 }
 
