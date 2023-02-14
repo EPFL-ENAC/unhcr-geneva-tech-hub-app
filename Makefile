@@ -9,6 +9,9 @@ run-frontend:
 run-database:
 	docker-compose up --build -d couchdb
 
+azure:
+	$(MAKE) -C azure
+
 setup-database:
 	docker-compose up --build --force-recreate couchdb-setup
 
