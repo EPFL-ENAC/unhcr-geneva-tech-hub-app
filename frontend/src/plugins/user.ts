@@ -13,10 +13,13 @@ declare module "vue/types/vue" {
 }
 
 interface ObjWithUsersField {
-  users: string[];
+  users: (UserWithSub | string)[];
   reference?: boolean;
 }
-
+interface UserWithSub {
+  name: string;
+  sub: string;
+}
 const USER_ADMIN = "admin";
 const DB_ADMIN = "_admin";
 const SPECIALIST = "specialist";
@@ -44,16 +47,33 @@ export default new (class User {
         if (actionName === "create") {
           return isUser;
         }
-        const userIndex = obj?.users?.indexOf(user.name) ?? -1;
-        const isAuthor = userIndex >= 0;
-        if (actionName === "edit" && obj?.users) {
+        if (obj?.users === undefined) {
+          return false;
+        }
+        // Try for name or sub
+        // filter users with object style
+        const usersObject: UserWithSub[] = obj?.users.filter(
+          (x) => typeof x === "object" && x !== null
+        ) as UserWithSub[];
+        const usersString = obj?.users.filter((x) => typeof x == "string");
+        const usersName = usersObject
+          .map((x) => x?.name)
+          .filter((x) => x !== undefined);
+        const usersSub =
+          usersObject.map((x) => x?.sub).filter((x) => x !== undefined) ?? [];
+        const AllPossibleUsers = usersString.concat(usersName).concat(usersSub);
+        // BIG warning if name of user contains @unhcr.org the couchdb won't allow them
+        const isAuthor =
+          AllPossibleUsers.includes(user.name) ||
+          AllPossibleUsers.includes(user?.sub);
+        if (actionName === "edit") {
           if (obj.reference) {
             return false;
           }
           return isAuthor || isAdmin;
         }
 
-        if (actionName === "delete" && obj?.users) {
+        if (actionName === "delete") {
           return isAuthor || isAdmin;
         }
       }
