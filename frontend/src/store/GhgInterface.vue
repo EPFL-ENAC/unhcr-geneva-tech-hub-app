@@ -20,14 +20,17 @@ export interface Site {
   name: string; // site name // location
   country_code: CountryCode;
   created_by: Email | string;
-  users: Email[] | string[];
+  users: (User | Email | string)[];
   lat?: number;
   lon?: number;
 }
 type CountryCode = string;
 type Email = string;
 export type Sites = Site[];
-
+export interface User {
+  name: string;
+  sub: string;
+}
 export interface GreenHouseGaz {
   _id?: string | undefined;
   name: string;
@@ -35,7 +38,7 @@ export interface GreenHouseGaz {
   latitude: number;
   longitude: number;
   surveys: Survey[];
-  users: string[];
+  users: (User | Email | string)[];
   solar?: number;
   population?: number;
   created_by: string;

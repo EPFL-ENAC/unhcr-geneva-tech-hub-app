@@ -235,12 +235,24 @@ const actions: ActionTree<ShelterState, RootState> = {
           /* eslint-disable-next-line */
         } catch (e: any) {
           if (e.error === "conflict") {
-            console.log("conflict error");
+            console.error(
+              `updateDoc in ShelterModule: conflict error ${JSON.stringify(e)}`
+            );
 
             // TODO: rerun dispatch updateDoc but only once
             // let newValue = await context.dispatch("getDoc", computedShelter._id);
             // computedShelter._rev = newValue._rev;
             // try again with latest revision
+          } else {
+            console.error(
+              `updateDoc in ShelterModule: error ${JSON.stringify(e)}`
+            );
+            // TODO: notifyUser should trigger everytime we call it
+            context.dispatch(
+              "notifyUser",
+              `${e.error}: ${e.message} ( ${e.status} )`,
+              { root: true }
+            );
           }
           context.commit("UNSET_SHELTER_LOADING");
         }
