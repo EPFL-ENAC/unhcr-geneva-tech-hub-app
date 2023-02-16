@@ -6,12 +6,12 @@ function (newDoc, oldDoc, userCtx, secObj) {
     if (!oldDoc) {
         if (!newDoc.users) {
             throw ({
-                forbidden: 'users field should be present'
+                forbidden: 'unhcr-tss:couchdb:ghg:project -> users field should be present'
             })
         }
         if (!newDoc.created_by) {
             throw ({
-                forbidden: 'created_by field should be present'
+                forbidden: 'unhcr-tss:couchdb:ghg:project -> created_by field should be present'
             })
         }
         return;
@@ -19,21 +19,24 @@ function (newDoc, oldDoc, userCtx, secObj) {
     if (!!newDoc && !!oldDoc && !newDoc._deleted) {
         var isUser = oldDoc.users.indexOf(userCtx.name) !== -1;
         if (isUser || isSpecialist || isAdmin || isDBAdmin) {
+            log("unhcr-tss:couchdb:ghg:project -> UPDATE DOCUMENT SUCCESS");
             return;
         } else {
+            log("unhcr-tss:couchdb:ghg:project -> UPDATE DOCUMENT ERROR");
             throw ({
-                forbidden: 'Only users may update shelter docs.'
+                forbidden: 'unhcr-tss:couchdb:ghg:project -> Only users may update shelter docs.'
             })
         }
     }
     if (newDoc._deleted) {
         var isUser = oldDoc.users.indexOf(userCtx.name) !== -1;
         if (isUser || isSpecialist || isAdmin || isDBAdmin) {
+            log("unhcr-tss:couchdb:ghg:project -> DELETE DOCUMENT SUCCESS");
             return;
         } else {
-            log("THROW ERROR");
+            log("unhcr-tss:couchdb:ghg:project -> DELETE DOCUMENT ERROR");
             throw ({
-                forbidden: 'Only admins or DB admins may delete user docs.'
+                forbidden: 'unhcr-tss:couchdb:ghg:project -> Only admins or DB admins may delete user docs.'
             })
         }
     }

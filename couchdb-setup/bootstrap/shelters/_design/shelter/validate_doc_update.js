@@ -5,13 +5,15 @@ function (newDoc, oldDoc, userCtx, secObj) {
 
     if (!oldDoc) {
         if (!newDoc.users) {
+            log("unhcr-tss:couchdb:shelters:shelter -> users field DOCUMENT ERROR");
             throw ({
-                forbidden: 'users field should be present'
+                forbidden: 'unhcr-tss:couchdb:shelters:shelter -> users field should be present'
             })
         }
         if (!newDoc.created_by) {
+            log("unhcr-tss:couchdb:shelters:shelter -> created_by field DOCUMENT ERROR");
             throw ({
-                forbidden: 'created_by field should be present'
+                forbidden: 'unhcr-tss:couchdb:shelters:shelter -> created_by field should be present'
             })
         }
         return;
@@ -20,11 +22,12 @@ function (newDoc, oldDoc, userCtx, secObj) {
         var isUser = oldDoc.users.indexOf(userCtx.name) !== -1;
         if (isUser || isSpecialist || isAdmin || isDBAdmin) {
             // only users may update document
-            log("UPDATE DOCUMENT SUCCESS");
+            log("unhcr-tss:couchdb:shelters:shelter -> UPDATE DOCUMENT SUCCESS");
             return;
         } else {
+            log("unhcr-tss:couchdb:shelters:shelter -> UPDATE DOCUMENT ERROR");
             throw ({
-                forbidden: 'Only users may update shelter docs.'
+                forbidden: 'unhcr-tss:couchdb:shelters:shelter -> Only users may update shelter docs.'
             })
         }
     }
@@ -32,11 +35,12 @@ function (newDoc, oldDoc, userCtx, secObj) {
      if (newDoc._deleted) {
         var isUser = oldDoc.users.indexOf(userCtx.name) !== -1;
         if (isUser || isSpecialist || isAdmin || isDBAdmin) {
+            log("unhcr-tss:couchdb:shelters:shelter -> DELETE DOCUMENT SUCCESS");
             return;
         } else {
-            log("THROW ERROR");
+            log("unhcr-tss:couchdb:shelters:shelter -> DELETE DOCUMENT ERROR");
             throw ({
-                forbidden: 'Only admins or DB admins may delete user docs.'
+                forbidden: 'unhcr-tss:couchdb:shelters:shelter -> Only admins or DB admins may delete user docs.'
             })
         }
     }
