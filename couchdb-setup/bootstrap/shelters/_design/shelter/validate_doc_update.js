@@ -19,7 +19,7 @@ function (newDoc, oldDoc, userCtx, secObj) {
         return;
     }
     if (!!newDoc && !!oldDoc && !newDoc._deleted) {
-        var isUser = oldDoc.users.indexOf(userCtx.name) !== -1;
+        var isUser = oldDoc.users.indexOf(userCtx.name) !== -1 || userCtx.name.includes("unhcr.org");
         if (isUser || isSpecialist || isAdmin || isDBAdmin) {
             // only users may update document
             log("unhcr-tss:couchdb:shelters:shelter -> UPDATE DOCUMENT SUCCESS");

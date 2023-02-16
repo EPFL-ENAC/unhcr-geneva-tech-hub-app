@@ -17,7 +17,7 @@ function (newDoc, oldDoc, userCtx, secObj) {
         return;
     }
     if (!!newDoc && !!oldDoc && !newDoc._deleted) {
-        var isUser = oldDoc.users.indexOf(userCtx.name) !== -1;
+        var isUser = oldDoc.users.indexOf(userCtx.name) !== -1 || userCtx.name.includes("unhcr.org");
         if (isUser || isSpecialist || isAdmin || isDBAdmin) {
             log("unhcr-tss:couchdb:ghg:project -> UPDATE DOCUMENT SUCCESS");
             return;
