@@ -23,25 +23,22 @@ module.exports = {
         pathRewrite: {
           "^/db": "", // remove base path
         },
-        changeOrigin: true,
+        ws: true,
         secure: false,
-        logLevel: "debug",
       },
       "^/api": {
         target: "http://localhost:5050/",
         pathRewrite: {
           "^/api": "", // remove base path
         },
-        ws: true,
-        changeOrigin: true,
+        secure: false,
       },
       "^/s3": {
         target: "http://localhost:5660/",
         pathRewrite: {
           "^/s3": "",
         },
-        ws: true,
-        changeOrigin: true,
+        secure: false,
       },
     },
   },

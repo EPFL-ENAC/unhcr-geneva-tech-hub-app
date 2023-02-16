@@ -54,6 +54,7 @@ function generateState(): UserState {
 /** Getters */
 const getters: GetterTree<UserState, RootState> = {
   user: (s): CouchUser => s.user,
+  token: () => sessionStorage.getItem(SessionStorageKey.Token),
 };
 
 /** Mutations */

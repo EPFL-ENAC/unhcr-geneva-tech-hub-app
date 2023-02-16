@@ -407,13 +407,14 @@ export default class Step1 extends Vue {
         paths: assetUrlsFiltered,
       }),
       headers: {
+        Authorization: `Bearer ${this.$store.getters["UserModule/token"]}`,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
     };
     fetch("/api/upload", options)
       .then(async (response) => {
-        if (response.ok) {
+        if (response.ok && response.status === 200) {
           return response;
         }
         throw new Error(`${response.status} ${response.statusText}`);
@@ -522,6 +523,9 @@ export default class Step1 extends Vue {
       const options = {
         method: "POST",
         body: formData,
+        headers: {
+          Authorization: `Bearer ${this.$store.getters["UserModule/token"]}`,
+        },
       };
       fetch("/api/upload", options)
         .then(async (response) => {
@@ -531,7 +535,7 @@ export default class Step1 extends Vue {
           } catch (e) {
             throw new Error(`${response.status} ${response.statusText}`);
           }
-          if (response.ok) {
+          if (response.ok && response.status === 200) {
             return responseJson;
           }
           throw new Error(
