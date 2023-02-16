@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from unhcr_tss import __name__ as title
 from unhcr_tss import __version__
-from unhcr_tss.config import cors_enabled, root_path
+from unhcr_tss.config import CORS_ENABLED, root_path
 from unhcr_tss.routers import ping
 from unhcr_tss.routers import root
 from unhcr_tss.routers import upload
@@ -22,10 +22,10 @@ app = FastAPI(
     openapi_url='{}/openapi.json'.format(root_path),
 )
 
-if not cors_enabled:
-    logger.warn("cors enabled")
-else:
+if not CORS_ENABLED:
     logger.warn("cors disabled")
+else:
+    logger.warn("cors enabled")
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
