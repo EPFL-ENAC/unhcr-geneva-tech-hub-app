@@ -3,6 +3,7 @@ from requests import get
 from fastapi import Cookie, Header
 from typing import Union
 from fastapi.exceptions import HTTPException
+from fastapi.logger import logger
 
 
 def isUserLoggedIn(AuthSession: Union[str, None] = Cookie(default=None),
@@ -13,12 +14,14 @@ def isUserLoggedIn(AuthSession: Union[str, None] = Cookie(default=None),
     # prioritize cookie over headers
     cookies = {'AuthSession': AuthSession}
     headers = {}
-    if AuthSession is None:
+    if AuthSession is None or AuthSession == "":
         headers = {'Authorization': Authorization}
     r = get(settings.AUTH_SERVER + "/_session",
             cookies=cookies,
             headers=headers)
     userCtx = r.json().get("userCtx")
+    if (userCtx.get("name") is None):
+        logger.error(f"user is not recognised {str(userCtx)}")
     return userCtx.get("name") is not None
 
 
