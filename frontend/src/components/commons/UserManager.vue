@@ -39,7 +39,7 @@
             v-model="userName"
             append-outer-icon="$mdiPlus"
             hide-details="auto"
-            label="Username or unhcr sub"
+            label="Username or UNHCR sub"
             :rules="rules"
             @click:append-outer="addUser"
           >

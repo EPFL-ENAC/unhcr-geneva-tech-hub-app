@@ -16,7 +16,7 @@
             window.print();
             return false;
           "
-          >Export Assessment report as pdf</v-btn
+          >Export Assessment report</v-btn
         >
       </v-col>
     </v-row>

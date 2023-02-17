@@ -140,7 +140,7 @@
                   }"
                 >
                   <v-row>
-                    <v-col cols="1">
+                    <v-col cols="1" class="d-flex justify-center align-center">
                       <v-icon
                         :class="`c-${shelterColors[project.shelter_type].name}`"
                         class="pa-8"
@@ -152,12 +152,12 @@
                         <span v-else>Read only</span>
                       </div>
                     </v-col>
-                    <v-col>
+                    <v-col class="d-flex justify-center align-center">
                       <v-avatar
                         v-if="project.image?.url"
                         class="profile"
                         color="grey"
-                        size="164"
+                        size="64"
                         tile
                       >
                         <v-img :src="project.image?.url"></v-img>
@@ -166,15 +166,13 @@
                         v-else
                         class="profile"
                         color="grey"
-                        size="164"
+                        size="64"
                         tile
                       >
-                        <v-card-title class="white--text"
-                          >Thumbnail not available</v-card-title
-                        >
+                        <v-card-title class="white--text"></v-card-title>
                       </v-avatar>
                     </v-col>
-                    <v-col cols="4" class="d-flex justify-center align-center">
+                    <v-col cols="4" class="d-flex justify-start align-center">
                       <v-card-title>
                         {{ project.name }}
                       </v-card-title>
@@ -415,7 +413,7 @@ export default class ProjectList extends Vue {
       .filter((shelter: Shelter) => {
         // by name
         if (this.shelterFilters.searchName) {
-          return shelter.name.indexOf(this.shelterFilters.searchName) !== -1;
+          return shelter.name.includes(this.shelterFilters.searchName);
         }
         return true;
       })
@@ -435,7 +433,7 @@ export default class ProjectList extends Vue {
         if (this.shelterFilters.selectedYears.length > 0) {
           return (
             this.shelterFilters.selectedYears.indexOf(
-              shelter.created_at.substring(0, 4)
+              shelter.created_at?.substring(0, 4)
             ) !== -1
           );
         }
@@ -444,10 +442,8 @@ export default class ProjectList extends Vue {
       .filter((shelter: Shelter) => {
         // country
         if (this.shelterFilters.selectedCountries.length > 0) {
-          return (
-            this.shelterFilters.selectedCountries.indexOf(
-              shelter.location_country
-            ) !== -1
+          return this.shelterFilters.selectedCountries.includes(
+            shelter.location_country
           );
         }
         return true;

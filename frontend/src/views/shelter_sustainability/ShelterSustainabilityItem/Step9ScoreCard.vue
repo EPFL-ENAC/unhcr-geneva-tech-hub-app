@@ -60,7 +60,7 @@
                 window.print();
                 return false;
               "
-              >Export Scorecard pdf</v-btn
+              >Assessment report</v-btn
             >
           </v-col>
         </v-row>
