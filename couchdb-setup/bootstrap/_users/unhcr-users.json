@@ -28,5 +28,6 @@
   {"_id":"org.couchdb.user:sandare@unhcr.org","name":"sandare@unhcr.org","roles":[],"type":"user","password_scheme":"pbkdf2","iterations":10,"derived_key":"7e7ca36fbd229d282811ff4bb9b937e5763e16f0","salt":"dbe390854c8df13354f7829f6ba5a4a5"},
   {"_id":"org.couchdb.user:shafata@unhcr.org","name":"shafata@unhcr.org","roles":[],"type":"user","password_scheme":"pbkdf2","iterations":10,"derived_key":"af86d9e59214241cedbee3c5092eb4c94bed631d","salt":"8707b68bc1238191ed533771a640e7d1"},
   {"_id":"org.couchdb.user:tilahunt@unhcr.org","name":"tilahunt@unhcr.org","roles":[],"type":"user","password_scheme":"pbkdf2","iterations":10,"derived_key":"fdcdb457d22f1a8a4a0d83eada0c68118c4f5171","salt":"a98f48de8cd4b2219afb71f8d7b3075f"},
-  {"_id":"org.couchdb.user:younisl@unhcr.org","name":"younisl@unhcr.org","roles":[],"type":"user","password_scheme":"pbkdf2","iterations":10,"derived_key":"fe29600c9385b4336386bed080a077421556032e","salt":"48bea24e80f3a61061be753f72707d6c"}
-  ]
+  {"_id":"org.couchdb.user:younisl@unhcr.org","name":"younisl@unhcr.org","roles":[],"type":"user","password_scheme":"pbkdf2","iterations":10,"derived_key":"fe29600c9385b4336386bed080a077421556032e","salt":"48bea24e80f3a61061be753f72707d6c"},
+  {"_id": "org.couchdb.user:testtss@unhcr.org","name": "testtss@unhcr.org", "roles": [], "type": "user", "password_scheme": "pbkdf2", "iterations": 10, "derived_key": "b980b0f25fd36f3c6a257436af8c0a52ff488dea", "salt": "5fa24b0b0a53839e0eb54c9f6f7c64c8"}
+]
