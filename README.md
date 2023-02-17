@@ -2,15 +2,9 @@
 
 UNHCR Geneva Technical Hub App
 
-Regroup three projects:
+## Status
+Currently under development, release 1.0 expected March 2023, then user testing.
 
-- project 1 (GHG emission calculator)
-- project 2 (Shelter sutainability calculator)
-- project 3 (Energy)
-
-## Project page
-
-- https://unhcr-tss.epfl.ch
 
 ## Development
 
@@ -104,6 +98,13 @@ ansible-playbook -v -i inventory/unhcr-tss.epfl.ch.yml  playbooks/deploy-app.yml
     ```
   - same for unhcr-tss-test.epfl.ch
 
+### Deployment process
+
+* regular (at least weekly) releases onto the staging environment - http://unhcr-tss-test.epfl.ch/ accessible within EPFL only.
+* monthly (by the 1st) releases onto the production environment  http://unhcr-tss.epfl.ch/ including only features validated.
+* intermediate releases may happen occasionally for hot fixes 
+
+Releases number follow [semantic versioning conventions](https://semver.org/\). 
 
 ## Create a new user
 There is two way of doing this: first one using curl; second one using couchdb-bootstrap
@@ -177,3 +178,10 @@ make azure
   - python fast api using boto3 to upload files to the s3 instance
 We don't store the uploaded file directly to a database, it should be done by the frontend by talking directly to couchdb. The API just return the path served by the nginx reverse proxy
 
+
+
+## Collaborators
+
+[EPFL Essential Tech Center](https://www.essentialtech.ch/)
+[ENAC FAR](https://www.epfl.ch/labs/far/)
+[ENAC-IT4R](http://enac-it4r.epfl.ch/)
