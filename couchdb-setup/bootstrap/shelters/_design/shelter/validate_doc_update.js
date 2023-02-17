@@ -18,14 +18,43 @@ function (newDoc, oldDoc, userCtx, secObj) {
         }
         return;
     }
+
+    function checkIfUserExist(
+        userCtx, // : CouchUser | string
+        users // : (CouchUser | string)[]
+      ) // : boolean
+      {
+        // Try for name or sub
+        // filter users with object style
+        const usersObject = // : CouchUser[]
+            users.filter(
+          (x) => typeof x === "object" && x !== null
+        );
+        const usersString = users.filter((x) => typeof x == "string");
+        const usersName = usersObject
+          .map((x) => x.name)
+          .filter((x) => x !== undefined);
+        const usersSub = usersObject
+          .map((x) => x.sub)
+          .filter((x) => x !== undefined);
+        const allPossibleUsers = usersString.concat(usersName).concat(usersSub);
+        if (typeof userCtx === "string") {
+          return allPossibleUsers.includes(userCtx);
+        }
+        // in our case user
+        return (
+          allPossibleUsers.includes(userCtx.name || "")
+        );
+      }
+
     if (!!newDoc && !!oldDoc && !newDoc._deleted) {
-        var isUser = oldDoc.users.indexOf(userCtx.name) !== -1 || userCtx.name.includes("unhcr.org");
+        var isUser = checkIfUserExist(userCtx, oldDoc.users);
         if (isUser || isSpecialist || isAdmin || isDBAdmin) {
             // only users may update document
             log("unhcr-tss:couchdb:shelters:shelter -> UPDATE DOCUMENT SUCCESS");
             return;
         } else {
-            log("unhcr-tss:couchdb:shelters:shelter -> UPDATE DOCUMENT ERROR");
+            log("unhcr-tss:couchdb:shelters:shelter -> UPDATE DOCUMENT ERROR" + JSON.stringify(userCtx) + '__' + JSON.stringify(oldDoc.users) + '__' + '<--');
             throw ({
                 forbidden: 'unhcr-tss:couchdb:shelters:shelter -> Only users may update shelter docs.'
             })
@@ -33,7 +62,7 @@ function (newDoc, oldDoc, userCtx, secObj) {
     }
 
      if (newDoc._deleted) {
-        var isUser = oldDoc.users.indexOf(userCtx.name) !== -1;
+        var isUser = checkIfUserExist(userCtx, oldDoc.users);
         if (isUser || isSpecialist || isAdmin || isDBAdmin) {
             log("unhcr-tss:couchdb:shelters:shelter -> DELETE DOCUMENT SUCCESS");
             return;
