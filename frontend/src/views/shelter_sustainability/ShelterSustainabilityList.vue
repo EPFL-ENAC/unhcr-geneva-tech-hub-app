@@ -152,7 +152,29 @@
                         <span v-else>Read only</span>
                       </div>
                     </v-col>
-                    <v-col cols="4">
+                    <v-col>
+                      <v-avatar
+                        v-if="project.image?.url"
+                        class="profile"
+                        color="grey"
+                        size="164"
+                        tile
+                      >
+                        <v-img :src="project.image?.url"></v-img>
+                      </v-avatar>
+                      <v-avatar
+                        v-else
+                        class="profile"
+                        color="grey"
+                        size="164"
+                        tile
+                      >
+                        <v-card-title class="white--text"
+                          >Thumbnail not available</v-card-title
+                        >
+                      </v-avatar>
+                    </v-col>
+                    <v-col cols="4" class="d-flex justify-center align-center">
                       <v-card-title>
                         {{ project.name }}
                       </v-card-title>
@@ -171,7 +193,7 @@
                         </span>
                       </v-card-subtitle>
                     </v-col>
-                    <v-col cols="6 justify-center align-center d-flex">
+                    <v-col cols="4 justify-center align-center d-flex">
                       <v-row class="align-center d-flex">
                         <v-col cols="4" class="text-caption">
                           Created: {{ project.created_at | formatDate }}

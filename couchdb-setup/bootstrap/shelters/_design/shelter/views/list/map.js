@@ -1,4 +1,14 @@
 function (doc) {
+  function findShelterImage(images) {
+    if (!images || typeof images !== 'object' || !Array.isArray(images)) {
+      return '';
+    }
+    var firstImage = images.find(function(image) { return image.type === "Image"});
+    if (!firstImage) {
+      return '';
+    }
+    return firstImage;
+  }
   // retrieve only fields necessary for listing shelters
   emit(doc._id, {
       name: doc.name,
@@ -12,5 +22,6 @@ function (doc) {
       created_by: doc.created_by,
       created_at: doc.created_at,
       updated_at: doc.updated_at,
+      image: findShelterImage(doc.images)
     });
 }
