@@ -248,6 +248,7 @@ import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import EnergyMap from "@/components/energy/EnergyMap.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
 import { GeneralModule, ProjectDocument } from "@/models/energyModel";
+import { CouchUser } from "@/store/UserModule";
 import { energy } from "@/utils/apps";
 import { SyncDatabase } from "@/utils/couchdb";
 import { chain, cloneDeep, groupBy } from "lodash";
@@ -308,6 +309,10 @@ export default class EnergyHome extends Vue {
     return this.$userName();
   }
 
+  get user(): CouchUser {
+    return this.$user();
+  }
+
   get groups(): Group[] {
     return chain(groupBy(this.sites, (site) => site.siteName ?? "No Site"))
       .entries()
@@ -356,7 +361,7 @@ export default class EnergyHome extends Vue {
         .post({
           name: this.newSiteProp.projectName ?? "",
           siteName: this.newSiteProp.siteName ?? "",
-          users: [this.username],
+          users: [this.user],
           modules: {},
         })
         .then(() => {
@@ -376,7 +381,7 @@ export default class EnergyHome extends Vue {
       this.sitesDatabase.remoteDB.post({
         name: `${document.name} - copy`,
         siteName: document.siteName ?? document.modules.general?.name,
-        users: [this.username],
+        users: [this.user],
         modules: cloneDeep(document.modules),
       })
     );

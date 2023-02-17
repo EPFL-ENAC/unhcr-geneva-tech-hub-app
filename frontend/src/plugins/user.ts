@@ -6,7 +6,8 @@ declare module "vue/types/vue" {
   // 3. Declare augmentation for Vue
   interface Vue {
     $can: (actionName: string, obj: ObjWithUsersField) => boolean;
-    $user: (isStatus: string) => boolean;
+    $user: () => CouchUser;
+    $userIs: (isStatus: string) => boolean;
     $userName: () => string;
     $userRoles: () => string[];
   }
@@ -97,28 +98,26 @@ export default new (class User {
       return false;
     };
 
-    Vue.prototype.$user = (isStatus: string): boolean => {
+    Vue.prototype.$userIs = (isStatus: string): boolean => {
       const user = store.getters["UserModule/user"];
       const rights = {
-        isUserAdmin: user.loaded && user.roles.indexOf(USER_ADMIN) >= 0,
-        isDBAdmin: user.loaded && user.roles.indexOf(DB_ADMIN) >= 0,
-        isSpecialist: user.loaded && user.roles.indexOf(SPECIALIST) >= 0,
-        isUser: user.loaded && user.roles.indexOf(USER) >= 0,
-        isGuest: user.loaded && user.name === GUEST_NAME,
-        isLoggedIn: user.loaded && user.name.length > 0,
-        isLoggedOut: user.loaded && user.name.length == 0,
+        UserAdmin: user.loaded && user.roles.indexOf(USER_ADMIN) >= 0,
+        DBAdmin: user.loaded && user.roles.indexOf(DB_ADMIN) >= 0,
+        Specialist: user.loaded && user.roles.indexOf(SPECIALIST) >= 0,
+        User: user.loaded && user.roles.indexOf(USER) >= 0,
+        Guest: user.loaded && user.name === GUEST_NAME,
+        LoggedIn: user.loaded && user.name.length > 0,
+        LoggedOut: user.loaded && user.name.length == 0,
       } as Record<string, boolean>;
       return rights[isStatus];
     };
 
-    Vue.prototype.$userName = (): string => {
-      const user = store.getters["UserModule/user"];
-      return user.name;
-    };
+    Vue.prototype.$userName = (): string =>
+      store.getters["UserModule/user"].name;
 
-    Vue.prototype.$userRoles = (): string[] => {
-      const user = store.getters["UserModule/user"];
-      return user.roles;
-    };
+    Vue.prototype.$user = (): string => store.getters["UserModule/user"];
+
+    Vue.prototype.$userRoles = (): string[] =>
+      store.getters["UserModule/user"].roles;
   }
 })();

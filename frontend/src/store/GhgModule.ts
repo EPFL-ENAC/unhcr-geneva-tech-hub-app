@@ -50,7 +50,7 @@ function generateNewProject(
     return {
       ...newGhg,
       _id: newGhg.name,
-      users: [user.name],
+      users: [user],
       created_by: user.name,
     };
   }

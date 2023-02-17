@@ -229,8 +229,11 @@ const actions: ActionTree<ShelterState, RootState> = {
         context.commit("SET_SHELTER_LOADING");
         try {
           const response = await remoteDB.put(computedShelter);
-          const newValue = await context.dispatch("getDoc", response.id);
-          context.commit("SET_SHELTER", newValue);
+          computedShelter._rev = response.rev;
+          // we were calling the get Doc too many times
+          // const newValue = await context.dispatch("getDoc", response.id);
+
+          context.commit("SET_SHELTER", computedShelter);
           context.commit("UNSET_SHELTER_LOADING");
           /* eslint-disable-next-line */
         } catch (e: any) {

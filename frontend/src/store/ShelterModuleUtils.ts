@@ -293,7 +293,7 @@ export function generateNewShelter(name: string, user: CouchUser): Shelter {
       totalEnvPerf: getTotalEnvPerf([], []),
       scorecard: getDefaultScoreCard(),
       scorecard_errors: [],
-      users: [user.name],
+      users: [user],
       created_by: user.name,
       created_at: currentDate,
       updated_at: currentDate,

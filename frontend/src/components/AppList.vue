@@ -1,11 +1,11 @@
 <template>
   <v-container>
-    <v-row v-if="$user('isLoggedOut')">
+    <v-row v-if="$userIs('LoggedOut')">
       <v-col>
         <v-alert type="warning"> You are not logged in </v-alert>
       </v-col>
     </v-row>
-    <v-row v-if="$user('isLoggedIn')">
+    <v-row v-if="$userIs('LoggedIn')">
       <v-col v-for="app in apps" :key="app.title">
         <v-hover v-slot="{ hover }">
           <v-card

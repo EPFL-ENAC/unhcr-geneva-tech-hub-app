@@ -1,4 +1,5 @@
 import { FormItem } from "@/components/commons/FormItem";
+import { CouchUser } from "@/store/UserModule";
 import { SyncDatabase } from "@/utils/couchdb";
 
 export interface ShelterState {
@@ -92,16 +93,13 @@ export interface Shelter {
   scorecard_errors: string[];
   geometry: Geometry;
 
-  users: (string | Email | User)[];
+  users: (string | Email | CouchUser)[];
   created_by: string;
   created_at: string;
   updated_at: string;
   updated_by: string;
 }
-export interface User {
-  name: string;
-  sub: string;
-}
+
 export type Email = string;
 export interface ScoreCard {
   affordability: number;

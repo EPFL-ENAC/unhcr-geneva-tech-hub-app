@@ -1,8 +1,10 @@
+import { CouchUser } from "@/store/UserModule";
+
 export interface ProjectDocument {
   name: string;
   siteName: string;
   isTemplate?: boolean;
-  users: string[];
+  users: (string | CouchUser)[];
   modules: Modules;
 }
 export interface Modules {

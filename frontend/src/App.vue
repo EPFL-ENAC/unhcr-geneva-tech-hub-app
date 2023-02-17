@@ -119,7 +119,7 @@
             <v-list-item-title>About</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-if="$user('isLoggedOut')" @click="login">
+        <v-list-item v-if="$userIs('LoggedOut')" @click="login">
           <v-list-item-icon>
             <v-icon> $mdiLogin </v-icon>
           </v-list-item-icon>
@@ -127,7 +127,7 @@
             <v-list-item-title>Login</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-if="$user('isLoggedIn')" @click="logout">
+        <v-list-item v-if="$userIs('LoggedIn')" @click="logout">
           <v-list-item-icon>
             <v-icon>$mdiLogout </v-icon>
           </v-list-item-icon>
@@ -138,7 +138,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-main v-if="$user('isLoggedOut')">
+    <v-main v-if="$userIs('LoggedOut')">
       <v-layout
         v-if="$router.currentRoute.name !== 'Login'"
         align-center

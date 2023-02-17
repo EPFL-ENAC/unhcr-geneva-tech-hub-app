@@ -257,13 +257,14 @@ export default class ProjectList extends Vue {
       });
   }
 
+  // TODO: replace username by user
   get unhcrSites(): Sites {
     const result = this.unhcrLocations.map((x) => ({
       id: x._id, // site unique identitier (name as first)
       name: x._id, // site name // location
       country_code: x.Country,
       created_by: this.$userName(),
-      users: [this.$userName()],
+      users: [this.$user()],
       lat: x.latitude,
       lon: x.longitude,
       solar: x["GHI/Daily_solar_peak_hours"],
@@ -283,7 +284,7 @@ export default class ProjectList extends Vue {
           solar: x["GHI/Daily_solar_peak_hours"],
           population: x.Population,
           created_by: this.$userName(), // hack to avoid rule in v-form
-          users: [this.$userName()], // hack to avoid rule in v-form
+          users: [this.$user()], // hack to avoid rule in v-form
         } as GreenHouseGaz)
     );
   }

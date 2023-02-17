@@ -1,6 +1,7 @@
 <script lang="ts">
 import { WashTruckingSurvey } from "@/components/green_house_gaz/wash/Trucking.vue";
 import { ShelterRegions } from "@/store/ShelterInterface";
+import { CouchUser } from "./UserModule";
 // import { Material } from "@/store/ShelterInterface";
 export type CountriesInfoMap = Record<string, CountryInfo>;
 export interface Country {
@@ -20,17 +21,14 @@ export interface Site {
   name: string; // site name // location
   country_code: CountryCode;
   created_by: Email | string;
-  users: (User | Email | string)[];
+  users: (CouchUser | Email | string)[];
   lat?: number;
   lon?: number;
 }
 type CountryCode = string;
 type Email = string;
 export type Sites = Site[];
-export interface User {
-  name: string;
-  sub: string;
-}
+
 export interface GreenHouseGaz {
   _id?: string | undefined;
   name: string;
@@ -38,7 +36,7 @@ export interface GreenHouseGaz {
   latitude: number;
   longitude: number;
   surveys: Survey[];
-  users: (User | Email | string)[];
+  users: (CouchUser | Email | string)[];
   solar?: number;
   population?: number;
   created_by: string;
