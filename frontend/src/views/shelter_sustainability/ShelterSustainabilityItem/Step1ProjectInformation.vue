@@ -224,7 +224,7 @@
                 <div v-if="$can('edit', localShelter)" aria-label="image name">
                   <a
                     v-if="toggledImage != image.url"
-                    :href="image.url"
+                    :href="image?.origin_url ?? image?.url"
                     target="_blank"
                   >
                     <span style="text-overflow: ellipsis">{{
@@ -252,7 +252,11 @@
                   >
                 </div>
                 <div v-else>
-                  <a :href="image.url" target="_blank" class="text">
+                  <a
+                    :href="image?.origin_url ?? image?.url"
+                    target="_blank"
+                    class="text"
+                  >
                     {{ image.name }}
                   </a>
                 </div>
@@ -295,13 +299,16 @@
                     <v-btn
                       v-if="toggledImage != image.url"
                       big
-                      @click="download(image.url)"
+                      :href="image?.origin_url ?? image?.url"
+                      target="_blank"
                       >download<v-icon small>$mdiDownload</v-icon></v-btn
                     >
                     <v-btn
                       v-if="toggledImage != image.url"
                       class="mr-8"
                       color="red"
+                      :loading="uploadLoading === image.url"
+                      :disabled="uploadLoading === image.url"
                       icon
                       big
                       @click="removeAsset(image)"
@@ -315,7 +322,8 @@
                     <v-btn
                       v-if="toggledImage != image.url"
                       big
-                      @click="download(image.url)"
+                      :href="image?.origin_url ?? image?.url"
+                      target="_blank"
                       >download <v-icon small>$mdiDownload</v-icon></v-btn
                     >
                   </v-col>
@@ -391,13 +399,14 @@ export default class Step1 extends Vue {
   shelterTypes = listOfShelterType;
   imageShelterTypes = imageShelterTypes;
   uploadDialog = false;
-  uploadLoading = false;
+  uploadLoading: string | boolean = false;
   toggledImage = "";
   public toggleImage(url: string): void {
     this.toggledImage = url;
   }
   public removeAsset(asset: ImageShelter): void {
     // call delete
+    this.uploadLoading = asset.url;
     const assetUrlsFiltered = [asset.url, asset.origin_url].filter(
       (x) => x !== undefined
     );
@@ -414,7 +423,7 @@ export default class Step1 extends Vue {
     };
     fetch("/api/upload", options)
       .then(async (response) => {
-        if (response.ok && response.status === 200) {
+        if (response.ok && response.status === 204) {
           return response;
         }
         throw new Error(`${response.status} ${response.statusText}`);
@@ -432,9 +441,13 @@ export default class Step1 extends Vue {
           "notifyUser",
           "Successfull deletion of assets from server"
         );
+        // just to be sure purge nginx cache of the previous location!
       })
       .catch((error: Error) => {
         this.$store.dispatch("notifyUser", `Could not delete assets ${error}`);
+      })
+      .finally(() => {
+        this.uploadLoading = false;
       });
   }
 
