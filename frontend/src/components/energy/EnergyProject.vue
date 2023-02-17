@@ -250,6 +250,7 @@ import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import UserManager from "@/components/commons/UserManager.vue";
 import { ExistingDocument } from "@/models/couchdbModel";
 import { Modules, ProjectDocument } from "@/models/energyModel";
+import { CouchUser } from "@/store/UserModule";
 import { SyncDatabase } from "@/utils/couchdb";
 import { checkRequired } from "@/utils/rules";
 import { cloneDeep, isEqual } from "lodash";
@@ -370,11 +371,11 @@ export default class EnergyProject extends Vue {
     }
   }
 
-  get users(): string[] {
+  get users(): (string | CouchUser)[] {
     return this.document?.users ?? [];
   }
 
-  set users(value: string[]) {
+  set users(value: (string | CouchUser)[]) {
     if (this.document) {
       this.document.users = value;
     }
