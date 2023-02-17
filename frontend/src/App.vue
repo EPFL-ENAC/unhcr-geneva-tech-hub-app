@@ -274,10 +274,6 @@ export default class App extends Vue {
     this.$vuetify.theme.dark = false; // this.$store.getters["ConfigModule/themeDark"];
   }
 
-  @Watch("$store.getters.message")
-  onSnackbarTextChanged(): void {
-    this.snackbar = true;
-  }
   @Watch("$route", { immediate: true, deep: true })
   onRouteChanged(newRoute: Route): void {
     this.rootRoute = newRoute.matched[0];
@@ -336,6 +332,13 @@ export default class App extends Vue {
     /// retrieve user
     // retrieve user only if not in
     this.getSessionStore();
+
+    this.$store.subscribe((mutation) => {
+      const shouldUpdate = ["storeMessage"];
+      if (shouldUpdate.includes(mutation.type)) {
+        this.snackbar = true;
+      }
+    });
   }
 }
 </script>
