@@ -402,7 +402,7 @@ export default class OverviewProjects extends Vue {
       xAxis: [
         {
           type: "category",
-          data: ["2022", "2023"],
+          data: this.years,
         },
       ],
       yAxis: [
@@ -426,19 +426,25 @@ export default class OverviewProjects extends Vue {
   }
 
   public get organisations(): string[] {
-    if (this.filteredScorecards.length === 0) {
+    if (this.scorecards.length === 0) {
       return [];
     }
     return Array.from(
-      new Set(this.filteredScorecards.map((x) => x.organisation))
+      new Set(this.scorecards.map((x) => x.organisation))
     ).filter((x) => x !== "");
   }
 
   public get projectBarChartOption(): EChartsOption {
     if (this.filteredScorecards.length === 0) {
-      return this.getDefaultBarChart([]);
+      return this.getDefaultBarChart(
+        this.organisations.map<EChartsOption>((organisation: string) => ({
+          name: organisation,
+          type: "bar",
+          stack: "shelter",
+          data: this.years.map(() => 0),
+        }))
+      );
     }
-
     const series = this.organisations.map<EChartsOption>(
       (organisation: string) => {
         const organisationScorecards = this.filteredScorecards.filter(
@@ -448,14 +454,12 @@ export default class OverviewProjects extends Vue {
           name: organisation,
           type: "bar",
           stack: "shelter",
-          data: [
-            organisationScorecards.filter(
-              (scorecard) => scorecard.year === "2022"
-            ).length, // year 2022
-            organisationScorecards.filter(
-              (scorecard) => scorecard.year === "2023"
-            ).length, // year 2023
-          ],
+          data: this.years.map(
+            (year) =>
+              organisationScorecards.filter(
+                (scorecard) => scorecard.year === year
+              ).length
+          ),
         };
       }
     );
@@ -464,7 +468,14 @@ export default class OverviewProjects extends Vue {
 
   public get userBarChartOption(): EChartsOption {
     if (this.filteredScorecards.length === 0) {
-      return this.getDefaultBarChart([]);
+      return this.getDefaultBarChart([
+        {
+          name: "active users",
+          type: "bar",
+          stack: "shelter",
+          data: this.years.map(() => []),
+        },
+      ]);
     }
     const localScorecards = this.filteredScorecards;
     function getUsersPerYear(year: string): number {
@@ -482,10 +493,7 @@ export default class OverviewProjects extends Vue {
         name: "active users",
         type: "bar",
         stack: "shelter",
-        data: [
-          getUsersPerYear("2022"), // year 2022
-          getUsersPerYear("2023"),
-        ],
+        data: this.years.map((year) => getUsersPerYear(year)),
       },
     ]);
   }
