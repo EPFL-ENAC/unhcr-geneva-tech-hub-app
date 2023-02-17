@@ -28,7 +28,7 @@ export interface CouchUser {
   name?: string;
   sub?: string;
   roles?: Roles[];
-  loaded: boolean;
+  loaded?: boolean;
 }
 export interface UserState {
   user: CouchUser;

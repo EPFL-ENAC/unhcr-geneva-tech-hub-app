@@ -13,17 +13,48 @@ declare module "vue/types/vue" {
 }
 
 interface ObjWithUsersField {
-  users: (UserWithSub | string)[];
+  users: (CouchUser | string)[];
   reference?: boolean;
-}
-interface UserWithSub {
-  name: string;
-  sub: string;
 }
 const USER_ADMIN = "admin";
 const DB_ADMIN = "_admin";
 const SPECIALIST = "specialist";
 const USER = "user";
+
+export function checkIfUserExist(
+  user: CouchUser | string,
+  users: (CouchUser | string)[]
+): boolean {
+  // Try for name or sub
+  // filter users with object style
+  const usersObject: CouchUser[] = users.filter(
+    (x) => typeof x === "object" && x !== null
+  ) as CouchUser[];
+  const usersString = users.filter((x) => typeof x == "string");
+  const usersName: string[] = usersObject
+    .map((x) => x?.name)
+    .filter((x) => x !== undefined) as string[];
+  const usersSub: string[] = usersObject
+    .map((x) => x?.sub)
+    .filter((x) => x !== undefined) as string[];
+  const allPossibleUsers = usersString.concat(usersName).concat(usersSub);
+  // BIG warning if name of user contains @unhcr.org the couchdb won't allow them
+  if (typeof user === "string") {
+    return allPossibleUsers.includes(user);
+  }
+  return (
+    allPossibleUsers.includes(user?.name ?? "") ||
+    allPossibleUsers.includes(user?.sub ?? "")
+  );
+}
+
+export function checkUserExists(
+  values: (CouchUser | string)[]
+): (v: string | CouchUser) => boolean | string {
+  return (value: string | CouchUser) => {
+    return !checkIfUserExist(value, values) || "Already exists.";
+  };
+}
 
 export default new (class User {
   public install(Vue: VueConstructor, { store }: { store: Store<CouchUser> }) {
@@ -50,22 +81,7 @@ export default new (class User {
         if (obj?.users === undefined) {
           return false;
         }
-        // Try for name or sub
-        // filter users with object style
-        const usersObject: UserWithSub[] = obj?.users.filter(
-          (x) => typeof x === "object" && x !== null
-        ) as UserWithSub[];
-        const usersString = obj?.users.filter((x) => typeof x == "string");
-        const usersName = usersObject
-          .map((x) => x?.name)
-          .filter((x) => x !== undefined);
-        const usersSub =
-          usersObject.map((x) => x?.sub).filter((x) => x !== undefined) ?? [];
-        const AllPossibleUsers = usersString.concat(usersName).concat(usersSub);
-        // BIG warning if name of user contains @unhcr.org the couchdb won't allow them
-        const isAuthor =
-          AllPossibleUsers.includes(user.name) ||
-          AllPossibleUsers.includes(user?.sub);
+        const isAuthor = checkIfUserExist(user, obj?.users);
         if (actionName === "edit") {
           if (obj.reference) {
             return false;
