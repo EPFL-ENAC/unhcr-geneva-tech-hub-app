@@ -14,6 +14,9 @@
         "timeout": 86400,
         "same_site": "strict"
     },
+    "jwt_auth": {
+        "required_claims": "exp,iat"
+    },
     "jwt_keys": {
         "rsa:-KI3Q9nNR7bRofxmeZoXqbHZGew": "-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtJL6Wr2JUsxLyNezPQh1\\nJ6zn6wSoDAhgRYSDkaMuEHy75VikiB8wg25WuR96gdMpookdlRvh7SnRvtjQN9b5\\nm4zJCMpSRcJ5DuXl4mcd7Cg3Zp1C5+JmMq8J7m7OS9HpUQbA1yhtCHqP7XA4UnQI\\n28J+TnGiAa3viPLlq0663Cq6hQw7jYo5yNjdJcV5+FS+xNV7UHR4zAMRruMUHxte\\n1IZJzbJmxjKoEjJwDTtcd6DkI3yrkmYt8GdQmu0YBHTJSZiz+M10CY3LbvLzf+tb\\nBNKQ/gfnGGKF7MvRCmPA/YF/APynrIG7p4vPDRXhpG3/CIt317NyvGoIwiv0At83\\nkQIDAQAB\\n-----END PUBLIC KEY-----\\n",
         "rsa:2ZQpJ3UpbjAYXYGaXEJl8lV0TOI": "-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwEMMJtj9yMQd8QS6Vnm5\\n38K5GN1Pr/I31/LUl9+OCYu+9/DrDvPGjViQK9kOiCjBfyqoAL+pBecn9+XXaS+C\\n4xZTn1ZRw++GELabuo0u+U6r3TKj42xFDEP+/R5RpOGshoC95lrKiU5teuhn4fBM\\n3XfR2GB0dVMcpzN3h4+0OMvBK//Zr9tkQCU/KzXTbNCjyA7ybtbr83NF9k3KjpTy\\nOyY2S+qvFbY+AoqMhL9Rp8r2HBj/vrsr6RX6GeiSxxjbEzDFA2VIcSKbSHvbNBEe\\nW2KjLXkz6QG2LjKz5XsYLp6kv/+k9lPQBy/V7Ci4ZkhAN+6j1S1Kcq58aLbp0wDN\\nKQIDAQAB\\n-----END PUBLIC KEY-----\\n",

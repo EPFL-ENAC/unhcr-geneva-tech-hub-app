@@ -66,6 +66,11 @@ Pour un UPDATE -> newDoc and OldDoc existe et pas de _deleted
 Pour un READ -> on ne passe pas dans la fonction update
 
 
+## JWT
+### Refresh tokens
+- https://learn.microsoft.com/en-us/azure/energy-data-services/how-to-generate-refresh-token
+- https://learn.microsoft.com/en-us/azure/energy-data-services/how-to-convert-segy-to-zgy
+
 
 ## examples of _design/shelter/updates directory (addUser.js, removeUser.js and shelter.js)
 Cf couchdb documentation: https://guide.couchdb.org/draft/validation.html
