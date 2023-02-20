@@ -147,7 +147,7 @@
         fluid
         fill-height
       >
-        <v-flex xs12 sm8 md4>
+        <v-flex xs10 sm8 md6 lg4>
           <login-component />
         </v-flex>
       </v-layout>
