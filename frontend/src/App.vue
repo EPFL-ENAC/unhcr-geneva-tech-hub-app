@@ -1,5 +1,21 @@
 <template>
   <v-app>
+    <header class="justify-space-between align-center d-none d-print-flex ma-4">
+      <h4 class="font-weight-bold primary--text pa-4">
+        {{ rootRouteTitle }}
+        <span v-if="currentRouteId">: {{ currentRouteId }}</span>
+      </h4>
+      <figure class="pa-4">
+        <img
+          :src="unhcr_logo.imgPath"
+          :height="unhcr_logo.height || '40px'"
+          alt="UNHCR LOGO"
+        />
+      </figure>
+    </header>
+    <hr
+      class="d-none d-print-flex font-weight-bold justify-space-between align-center primary"
+    />
     <v-app-bar app dense>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-tabs>
@@ -138,7 +154,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-main v-if="$userIs('LoggedOut')">
+    <v-main v-if="$userIs('LoggedOut')" class="unhcr-main">
       <v-layout
         v-if="$router.currentRoute.name !== 'Login'"
         align-center
@@ -154,7 +170,7 @@
       <router-view name="Login" />
     </v-main>
 
-    <v-main v-else>
+    <v-main v-else class="unhcr-main">
       <reference-data />
       <overview-data />
       <v-fade-transition mode="out-in">
@@ -190,6 +206,7 @@
 </template>
 
 <script lang="ts">
+import { unhcr_logo } from "@/components/commons/logos";
 import LoginComponent from "@/components/LoginComponent.vue";
 import OverviewData from "@/components/OverviewData.vue";
 import ReferenceData from "@/components/ReferenceData.vue";
@@ -237,6 +254,7 @@ export default class App extends Vue {
   snackbar = false;
   // TODO: use meta.title for apps name
   apps = Apps;
+  unhcr_logo = unhcr_logo;
 
   rootRoute = {} as RouteRecordPublic;
   currentRouteName = "";
@@ -359,15 +377,25 @@ export default class App extends Vue {
   .v-application .v-navigation-drawer {
     display: none;
   }
+  .v-application .unhcr-main {
+    padding: 0px !important;
+  }
 
   @page {
     size: A4;
     margin: -1em;
-    padding: 0;
+    padding: 20px;
     width: 100%;
   }
   .pagebreak {
     page-break-before: always;
+  }
+  .project__header,
+  .project__h3 {
+    font-size: 1.5rem;
+  }
+  .container {
+    padding: 6px !important;
   }
 }
 

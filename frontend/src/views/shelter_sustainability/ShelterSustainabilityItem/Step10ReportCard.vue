@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col class="d-flex">
-        <h2 class="d-flex align-center text-h4 project__h3 font-weight-medium">
+        <h2 class="d-flex align-center project__h3 font-weight-medium">
           {{ infoTooltipText[$route.name].title }}
         </h2>
         <info-tooltip>
@@ -20,7 +20,7 @@
         >
       </v-col>
     </v-row>
-    <step-1-project-information :shelter="shelter" />
+    <step-1-project-information :value="shelter" />
     <step-2-geometry :shelter="shelter" />
     <step-3-bill-of-quantities :shelter="shelter" />
   </v-container>

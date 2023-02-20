@@ -167,12 +167,12 @@
       </v-col>
     </v-row>
 
-    <v-row>
+    <v-row class="d-print-none">
       <v-col>
         <v-divider></v-divider>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row class="d-print-none">
       <v-col class="d-flex justify-center">
         <v-btn
           class="my-4"
@@ -197,7 +197,7 @@
         />
       </v-col>
     </v-row>
-    <v-row>
+    <v-row class="d-print-none">
       <v-col>
         <template v-for="image in localShelter.images">
           <v-card :key="image.url" class="my-4" color="white">
@@ -432,9 +432,9 @@ export default class Step1 extends Vue {
         this.$set(
           this.localShelter,
           "images",
-          this.localShelter.images.filter(
+          this.localShelter?.images.filter(
             (image: ImageShelter) => !assetUrlsFiltered.includes(image.url)
-          )
+          ) ?? []
         );
         this.updateFormInput();
         this.$store.dispatch(
@@ -556,6 +556,9 @@ export default class Step1 extends Vue {
           );
         })
         .then((data) => {
+          if (this.localShelter.images === undefined) {
+            this.localShelter.images = [];
+          }
           this.localShelter.images.push(...data.filenames);
           // add files  instead of replacing them
           this.updateFormInput();

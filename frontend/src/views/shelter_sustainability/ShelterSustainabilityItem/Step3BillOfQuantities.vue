@@ -3,8 +3,12 @@
     <v-row v-if="$router.currentRoute.name === 'ShelterSustainabilityStep3'">
       <v-col class="d-flex justify-space-between">
         <div class="d-flex flex-row">
-          <h2 class="text-h4 project__h3 font-weight-medium">
+          <h2 class="project__h3 font-weight-medium">
             {{ infoTooltipText[$route.name].title }}
+            <span class="d-none d-print-inline-block"
+              >(number of individual shelters:
+              {{ items_individual_shelter }})</span
+            >
           </h2>
           <info-tooltip>
             {{ infoTooltipText[$route.name].text }}
@@ -20,12 +24,12 @@
         >
       </v-col>
     </v-row>
-    <v-row>
+    <v-row class="d-print-none">
       <v-col>
         <v-divider></v-divider>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row class="d-print-none">
       <v-col>
         <v-banner>
           <h2 class="py-3">Scope</h2>
@@ -63,7 +67,7 @@
                 <v-btn
                   color="primary"
                   dark
-                  class="mb-2"
+                  class="d-print-none mb-2"
                   @click="openNewItemDialog"
                 >
                   New item
@@ -357,7 +361,7 @@ export default class Step3Materials extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .shelter__boq tfoot {
   font-weight: bold;
 }
@@ -369,5 +373,10 @@ export default class Step3Materials extends Vue {
   // * {
   //   font-size: 7px;
   // }
+  .elevation-1 > .v-data-table__wrapper > table > thead > tr > th,
+  .elevation-1 > .v-data-table__wrapper > table > tbody > tr > td,
+  .elevation-1 > .v-data-table__wrapper > table > tfoot > tr > td {
+    height: 24px;
+  }
 }
 </style>

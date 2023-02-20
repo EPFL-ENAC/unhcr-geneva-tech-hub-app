@@ -1,13 +1,5 @@
 <template>
   <v-container fluid class="project">
-    <header class="justify-space-between align-center d-none d-print-flex">
-      <h2 class="font-weight-bold primary--text text-h4">
-        {{ shelter.name }}
-      </h2>
-    </header>
-    <hr
-      class="d-none d-print-flex font-weight-bold justify-space-between align-center primary my-4"
-    />
     <v-tabs
       class="fixed-tabs-bar d-flex d-print-none"
       centered
@@ -141,11 +133,6 @@ export default class ProjectItem extends Vue {
         text: "Scorecard",
         tooltipDisabledText: `Scorecard requires completion of other sections<br/> <br/><ul>${scorecardErrorText}</ul>`,
         to: "ShelterSustainabilityStep9",
-      },
-      {
-        icon: "$mdiFilePdfBox",
-        text: "Assessment report",
-        to: "ShelterReportStep10",
       },
     ];
   }
