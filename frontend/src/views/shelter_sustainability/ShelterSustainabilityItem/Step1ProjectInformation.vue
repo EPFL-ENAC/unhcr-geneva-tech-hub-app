@@ -307,8 +307,8 @@
                       v-if="toggledImage != image.url"
                       class="mr-8"
                       color="red"
-                      :loading="uploadLoading === image.url"
-                      :disabled="uploadLoading === image.url"
+                      :loading="uploadLoadingUrl === image.url"
+                      :disabled="uploadLoadingUrl === image.url"
                       icon
                       big
                       @click="removeAsset(image)"
@@ -399,6 +399,7 @@ export default class Step1 extends Vue {
   shelterTypes = listOfShelterType;
   imageShelterTypes = imageShelterTypes;
   uploadDialog = false;
+  uploadLoadingUrl = "";
   uploadLoading: string | boolean = false;
   toggledImage = "";
   public toggleImage(url: string): void {
@@ -406,7 +407,7 @@ export default class Step1 extends Vue {
   }
   public removeAsset(asset: ImageShelter): void {
     // call delete
-    this.uploadLoading = asset.url;
+    this.uploadLoadingUrl = asset.url;
     const assetUrlsFiltered = [asset.url, asset.origin_url].filter(
       (x) => x !== undefined
     );
@@ -447,7 +448,7 @@ export default class Step1 extends Vue {
         this.$store.dispatch("notifyUser", `Could not delete assets ${error}`);
       })
       .finally(() => {
-        this.uploadLoading = false;
+        this.uploadLoadingUrl = "";
       });
   }
 
