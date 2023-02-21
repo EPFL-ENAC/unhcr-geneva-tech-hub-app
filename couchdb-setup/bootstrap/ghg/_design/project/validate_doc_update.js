@@ -1,7 +1,20 @@
 function (newDoc, oldDoc, userCtx, secObj) {
-    var isDBAdmin = userCtx.roles.indexOf('_admin') !== -1;
-    var isAdmin = userCtx.roles.indexOf('admin') !== -1;
+    function checkIfAdmin(userCtx)
+    {
+        // either we have the role 'admin' or '_admin'
+        // or we are in a custom list of unhcr users sub
+        var unhcrAdmins = [
+            "TBxz7Wb3aSrQGeFx1EbBtrtaKPht-4M87pznkWC2BYE", // nimri
+            "ZClxS-3mzvYkIq5kO8ULO37PaSFV-d9Z0Oml1CVoVeQ", // testtss
+        ];
+        var isDBAdmin = userCtx.roles.indexOf('_admin') !== -1;
+        var isAdmin = userCtx.roles.indexOf('admin') !== -1;
+
+        return isAdmin || isDBAdmin || unhcrAdmins.includes(userCtx.name || "");
+    }
+    var isAdmin = checkIfAdmin(userCtx);
     var isSpecialist = userCtx.roles.indexOf('specialist') !== -1;
+
 
     if (!oldDoc) {
         if (!newDoc.users) {
@@ -25,18 +38,18 @@ function (newDoc, oldDoc, userCtx, secObj) {
       {
         // Try for name or sub
         // filter users with object style
-        const usersObject = // : CouchUser[]
+        var usersObject = // : CouchUser[]
             users.filter(
           (x) => typeof x === "object" && x !== null
         );
-        const usersString = users.filter((x) => typeof x == "string");
-        const usersName = usersObject
+        var usersString = users.filter((x) => typeof x == "string");
+        var usersName = usersObject
           .map((x) => x.name)
           .filter((x) => x !== undefined);
-        const usersSub = usersObject
+        var usersSub = usersObject
           .map((x) => x.sub)
           .filter((x) => x !== undefined);
-        const allPossibleUsers = usersString.concat(usersName).concat(usersSub);
+        var allPossibleUsers = usersString.concat(usersName).concat(usersSub);
         if (typeof userCtx === "string") {
           return allPossibleUsers.includes(userCtx);
         }
@@ -48,7 +61,7 @@ function (newDoc, oldDoc, userCtx, secObj) {
 
     if (!!newDoc && !!oldDoc && !newDoc._deleted) {
         var isUser = checkIfUserExist(userCtx, oldDoc.users);
-        if (isUser || isSpecialist || isAdmin || isDBAdmin) {
+        if (isUser || isSpecialist || isAdmin) {
             log("unhcr-tss:couchdb:ghg:project -> UPDATE DOCUMENT SUCCESS");
             return;
         } else {
@@ -60,7 +73,7 @@ function (newDoc, oldDoc, userCtx, secObj) {
     }
     if (newDoc._deleted) {
         var isUser = checkIfUserExist(userCtx, oldDoc.users);
-        if (isUser || isSpecialist || isAdmin || isDBAdmin) {
+        if (isUser || isSpecialist || isAdmin) {
             log("unhcr-tss:couchdb:ghg:project -> DELETE DOCUMENT SUCCESS");
             return;
         } else {

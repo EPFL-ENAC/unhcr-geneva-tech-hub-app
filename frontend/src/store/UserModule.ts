@@ -16,10 +16,11 @@ import { RootState } from ".";
 
 /** Config store */
 
-enum Roles {
-  "user",
-  "admin",
-  "specialist",
+export enum Roles {
+  user = "user",
+  admin = "admin",
+  _admin = "_admin", // dbAdmin
+  specialist = "specialist",
   // "author" // does not exist, it's in the document if user is in the users field
 }
 

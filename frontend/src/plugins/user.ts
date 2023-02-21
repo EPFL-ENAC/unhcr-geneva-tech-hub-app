@@ -1,4 +1,4 @@
-import { CouchUser, GUEST_NAME } from "@/store/UserModule";
+import { CouchUser, GUEST_NAME, Roles } from "@/store/UserModule";
 import { VueConstructor } from "vue";
 import { Store } from "vuex";
 
@@ -21,6 +21,28 @@ const USER_ADMIN = "admin";
 const DB_ADMIN = "_admin";
 const SPECIALIST = "specialist";
 const USER = "user";
+
+export function checkIfAdmin(user: CouchUser) {
+  // either we have the role 'admin' or '_admin'
+  // or we are in a custom list of unhcr users sub
+  const unhcrAdmins = [
+    "TBxz7Wb3aSrQGeFx1EbBtrtaKPht-4M87pznkWC2BYE", // nimri
+    "ZClxS-3mzvYkIq5kO8ULO37PaSFV-d9Z0Oml1CVoVeQ", // testtss
+  ];
+  const isDBAdmin = user.roles?.includes(Roles[Roles._admin]) ?? false;
+  const isAdmin = user.roles?.includes(Roles[Roles.admin]) ?? false;
+
+  let isUNHCRAdmins = false;
+  if (typeof user === "string") {
+    isUNHCRAdmins = unhcrAdmins.includes(user);
+  } else {
+    isUNHCRAdmins =
+      unhcrAdmins.includes(user?.name ?? "") ||
+      unhcrAdmins.includes(user?.sub ?? "");
+  }
+  debugger;
+  return isAdmin || isDBAdmin || isUNHCRAdmins;
+}
 
 export function checkIfUserExist(
   user: CouchUser | string,
@@ -66,10 +88,8 @@ export default new (class User {
       // return false or true
       const user = store.getters["UserModule/user"];
       if (user.loaded) {
-        const isAdmin =
-          user.roles.indexOf(USER_ADMIN) >= 0 ||
-          user.roles.indexOf(DB_ADMIN) >= 0;
-
+        const isAdmin = checkIfAdmin(user);
+        debugger;
         if (actionName === "admin") {
           return isAdmin;
         }
