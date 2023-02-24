@@ -40,7 +40,6 @@ export function checkIfAdmin(user: CouchUser) {
       unhcrAdmins.includes(user?.name ?? "") ||
       unhcrAdmins.includes(user?.sub ?? "");
   }
-  debugger;
   return isAdmin || isDBAdmin || isUNHCRAdmins;
 }
 
@@ -89,7 +88,6 @@ export default new (class User {
       const user = store.getters["UserModule/user"];
       if (user.loaded) {
         const isAdmin = checkIfAdmin(user);
-        debugger;
         if (actionName === "admin") {
           return isAdmin;
         }
