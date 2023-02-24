@@ -26,7 +26,7 @@ export enum Roles {
 
 export const GUEST_NAME = "guest";
 export interface CouchUser {
-  name?: string;
+  name?: string | null;
   sub?: string;
   roles?: Roles[];
   loaded?: boolean;
@@ -69,7 +69,7 @@ const mutations: MutationTree<UserState> = {
     }
   ) {
     state.user = {
-      name: value.name ?? "",
+      name: value.name ?? null,
       sub: value.sub,
       roles: value.roles ? (value.roles as unknown as Roles[]) : [],
       loaded: false,
@@ -87,7 +87,7 @@ const mutations: MutationTree<UserState> = {
 
 /** Action */
 const actions: ActionTree<UserState, RootState> = {
-  login: (
+  login: async (
     context: ActionContext<UserState, RootState>,
     credentials: UserCouchCredentials
   ) => {
@@ -101,21 +101,26 @@ const actions: ActionTree<UserState, RootState> = {
         context.commit("SET_USER", axiosResponse.data);
         return axiosResponse;
       })
-      .catch((error) => {
-        throw error;
-      })
       .finally(() => {
         context.commit("UNSET_USER_LOADING");
       });
   },
   loginToken: async (
     context: ActionContext<UserState, RootState>,
-    token: string
+    { token, byPassLoading }
   ) => {
-    context.commit("SET_USER_LOADING");
+    if (!byPassLoading) {
+      context.commit("SET_USER_LOADING");
+    }
     return loginJWT(token)
       .then((response) => {
         context.commit("SET_USER", response.data);
+        return response;
+      })
+      .catch((response: unknown) => {
+        context.dispatch("notifyUser", response, { root: true });
+        // should remove token also!!
+        context.commit("SET_USER", generateEmptyUser());
         return response;
       })
       .finally(() => {
@@ -149,16 +154,40 @@ const actions: ActionTree<UserState, RootState> = {
       context.commit("UNSET_USER_LOADING");
     }
   },
-  getSession: (context: ActionContext<UserState, RootState>) => {
+  getSession: (
+    context: ActionContext<UserState, RootState>,
+    { byPassLoading }
+  ) => {
     // if user logged in as guest no session needed!
     const currentUser: CouchUser = context.getters["user"];
-    const token = sessionStorage.getItem(SessionStorageKey.Token);
-    if (token) {
+    // check session only if currentUser is loaded true
+    if (
+      currentUser.loaded === false ||
+      currentUser.name === null ||
+      currentUser.name === undefined ||
+      currentUser.name === "" // legacy could happen when initializing a user
+    ) {
+      // no name: no authentication do nothing
+      return;
+    }
+
+    const sessionStorageToken = sessionStorage.getItem(SessionStorageKey.Token);
+    if (sessionStorageToken) {
       // we're a oauth user
-      return context.dispatch("loginToken", token);
-    } else if (currentUser.name !== GUEST_NAME) {
+      return context.dispatch("loginToken", {
+        token: sessionStorageToken,
+        byPassLoading,
+      });
+    }
+
+    if (
+      typeof currentUser.name === "string" &&
+      currentUser.name !== GUEST_NAME
+    ) {
       // we're not a guest user nor a oauth user but a normal user (couchdb user)
-      context.commit("SET_USER_LOADING");
+      if (!byPassLoading) {
+        context.commit("SET_USER_LOADING");
+      }
       return getSessionWithCookie()
         .then((response) => {
           const user = response.data;
@@ -168,6 +197,7 @@ const actions: ActionTree<UserState, RootState> = {
           context.commit("UNSET_USER_LOADING");
         });
     }
+    return; // probably guest
   },
 };
 

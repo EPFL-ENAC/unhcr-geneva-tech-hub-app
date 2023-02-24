@@ -1,6 +1,7 @@
 import { ExistingDocument } from "@/models/couchdbModel";
+// import store from "@/store";
 import { SessionStorageKey } from "@/utils/storage";
-import axios, { AxiosPromise, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosPromise, AxiosResponse } from "axios";
 import { JwtPayload } from "jsonwebtoken";
 import PouchDB from "pouchdb";
 import qs from "qs";
@@ -63,17 +64,48 @@ export function loginDefault(username: string, password: string): AxiosPromise {
 }
 
 export async function loginJWT(token: string): Promise<AxiosResponse> {
-  // TODO: find a way to use the .exp field of the jwt as a + security++
-  sessionStorage.removeItem(SessionStorageKey.Token);
-  const response = await getSessionWithBearer(token);
   sessionStorage.setItem(SessionStorageKey.Token, token);
-
   // parse the jwt, and update userCTX with custom email claim
   const payload = parseJwt(token);
+  if (!payload.exp) {
+    sessionStorage.removeItem(SessionStorageKey.Token);
+    throw new Error("no exp field in JWT token payload");
+  }
+  const expiredDate = new Date(payload.exp * 1000).getTime();
+  const expiredInHowManySecond = parseInt(
+    ((expiredDate - new Date().getTime()) / 1000).toFixed(0),
+    10
+  );
+  const hasExpired = expiredInHowManySecond <= 0;
+  if (hasExpired) {
+    sessionStorage.removeItem(SessionStorageKey.Token);
+    throw new Error(
+      "UNHCR Azure authentication has expired: JWT token payload exp field has expired"
+    );
+  }
+
+  let response: AxiosResponse;
+  try {
+    response = await getSessionWithBearer(token);
+  } catch (error: AxiosError | unknown) {
+    if (axios.isAxiosError(error)) {
+      switch (error?.response?.status) {
+        case 401:
+          console.log(error);
+          break;
+        default:
+          console.log("default", error);
+      }
+    }
+    sessionStorage.removeItem(SessionStorageKey.Token);
+    throw error;
+  }
+
   const userFromCouchDB = response.data.userCtx;
   userFromCouchDB.sub = payload.sub;
   // we don't want to have an undefined name, since it is equal to not logged in user
   userFromCouchDB.name = payload.email ?? userFromCouchDB.name;
+  userFromCouchDB.loaded = true;
   response.data = userFromCouchDB;
   return response;
 }

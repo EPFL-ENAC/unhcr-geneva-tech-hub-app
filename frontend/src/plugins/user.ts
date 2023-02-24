@@ -118,14 +118,17 @@ export default new (class User {
 
     Vue.prototype.$userIs = (isStatus: string): boolean => {
       const user = store.getters["UserModule/user"];
+      const LoggedOutName =
+        user.name === null || user.name === undefined || user.name === "";
+      const LoggedInName = user.name !== "" && typeof user.name === "string";
       const rights = {
         UserAdmin: user.loaded && user.roles.indexOf(USER_ADMIN) >= 0,
         DBAdmin: user.loaded && user.roles.indexOf(DB_ADMIN) >= 0,
         Specialist: user.loaded && user.roles.indexOf(SPECIALIST) >= 0,
         User: user.loaded && user.roles.indexOf(USER) >= 0,
         Guest: user.loaded && user.name === GUEST_NAME,
-        LoggedIn: user.loaded && user.name.length > 0,
-        LoggedOut: user.loaded && user.name.length == 0,
+        LoggedIn: user.loaded && LoggedInName,
+        LoggedOut: user.loaded && LoggedOutName,
       } as Record<string, boolean>;
       return rights[isStatus];
     };

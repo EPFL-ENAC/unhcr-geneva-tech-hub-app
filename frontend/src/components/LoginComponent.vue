@@ -78,7 +78,7 @@ export default class LoginComponent extends Vue {
   error = "";
   login!: (doc: UserCouchCredentials) => AxiosPromise;
   loginAsGuest!: () => AxiosPromise;
-  loginToken!: (token: string) => AxiosPromise;
+  loginToken!: ({ token }: Record<string, string | boolean>) => AxiosPromise;
 
   async created(): Promise<void> {
     const params = new URLSearchParams(window.location.hash.substring(1));
@@ -86,7 +86,7 @@ export default class LoginComponent extends Vue {
     // todo : maybe broadcast an event
     if (idToken) {
       await logoutCookie();
-      this.loginToken(idToken)
+      this.loginToken({ token: idToken })
         .then(() => {
           // push to current route if not current route
           if (this.$route.name !== this.destinationRouteName) {
