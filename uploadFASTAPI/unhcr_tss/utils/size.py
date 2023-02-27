@@ -16,4 +16,5 @@ async def size_checker(files: list[UploadFile]):
     for file in files:
         content = await file.read()
         await file_size_checker(content)
+        await file.seek(0)
     return files

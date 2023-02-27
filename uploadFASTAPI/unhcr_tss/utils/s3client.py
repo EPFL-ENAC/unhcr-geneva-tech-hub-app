@@ -9,6 +9,7 @@ from unhcr_tss.config import settings
 from unhcr_tss.utils.mimetype import image_mimetypes, pdf_mimetypes
 from fastapi.datastructures import UploadFile
 import os
+import urllib.parse
 
 
 class S3_SERVICE(object):
@@ -37,7 +38,8 @@ class S3_SERVICE(object):
         split_file_name = os.path.splitext(filename)
         ext = ext if ext != "" else split_file_name[1]
         name = split_file_name[0]
-        return (f"{unique_name}{split_file_name[0]}{ext}", name)
+        uri_component_encoded = split_file_name[0]
+        return (f"{unique_name}{uri_component_encoded}{ext}", name)
 
     async def upload_image(self, uploadFile: UploadFile):
         (data, origin_data) = await self.convert_image(uploadFile)
@@ -64,8 +66,8 @@ class S3_SERVICE(object):
             s3_origin_url = f"{self.prefix}{key_origin}"
             # response http to be used by the frontend
             return {
-                "url": s3_url,
-                "origin_url": s3_origin_url,
+                "url": urllib.parse.quote(s3_url),
+                "origin_url": urllib.parse.quote(s3_origin_url),
                 "name": name,
                 "type": "Image"
             }
@@ -86,7 +88,7 @@ class S3_SERVICE(object):
         if uploads3:
             s3_url = f"{self.prefix}{key}"
             # response http to be used by the frontend
-            return {"url": s3_url, "name": name, "type": type}
+            return {"url": urllib.parse.quote(s3_url), "name": name, "type": type}
         else:
             raise HTTPException(
                 status_code=500,

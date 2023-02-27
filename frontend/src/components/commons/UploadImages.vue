@@ -61,7 +61,8 @@
 </template>
 
 <script>
-const max_size = 10485760;
+// # 10 MB in binary
+const max_size = 10 * 1024 * 1024;
 export default {
   name: "UploadImages",
 

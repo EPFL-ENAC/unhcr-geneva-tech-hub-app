@@ -9,6 +9,8 @@ from unhcr_tss.utils.s3client import S3_SERVICE
 from fastapi import Depends, APIRouter
 
 from unhcr_tss.utils.auth import authorization_checker
+from unhcr_tss.utils.size import size_checker
+
 from pydantic import BaseModel
 
 
@@ -26,7 +28,7 @@ s3_client = S3_SERVICE(settings.S3_ACCESS_KEY_ID,
 @router.post("/files",
              status_code=200,
              description="-- Upload jpg/png/pdf or any assets to S3 --",
-             dependencies=[Depends(authorization_checker)])
+             dependencies=[Depends(authorization_checker), Depends(size_checker)])
 async def PostUpload(
         files: list[UploadFile] = File(description="multiple file upload")):
     return {"filenames": [await s3_client.upload_file(file) for file in files]}
