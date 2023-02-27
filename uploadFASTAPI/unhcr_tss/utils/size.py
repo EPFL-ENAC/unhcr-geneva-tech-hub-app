@@ -2,7 +2,7 @@ from fastapi.exceptions import HTTPException
 from fastapi.datastructures import UploadFile
 
 # 10 MB in binary
-max_size = 10485760
+max_size = 10 * 1024 * 1024
 
 
 async def file_size_checker(content: bytes | str):
