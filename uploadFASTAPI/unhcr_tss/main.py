@@ -11,7 +11,7 @@ from unhcr_tss import __version__
 from unhcr_tss.config import CORS_ENABLED, root_path
 from unhcr_tss.routers import ping
 from unhcr_tss.routers import root
-from unhcr_tss.routers import upload
+from unhcr_tss.routers import files
 
 app = FastAPI(
     title=title,
@@ -36,4 +36,4 @@ else:
 
 app.include_router(root.router)
 app.include_router(ping.router)
-app.include_router(upload.router)
+app.include_router(files.router)

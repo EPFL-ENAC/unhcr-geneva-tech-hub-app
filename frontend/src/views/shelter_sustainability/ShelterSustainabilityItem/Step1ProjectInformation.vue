@@ -422,7 +422,7 @@ export default class Step1 extends Vue {
         "Content-Type": "application/json",
       },
     };
-    fetch("/api/upload", options)
+    fetch("/api/files", options)
       .then(async (response) => {
         if (response.ok && response.status === 204) {
           return response;
@@ -541,7 +541,7 @@ export default class Step1 extends Vue {
           Authorization: `Bearer ${this.$store.getters["UserModule/token"]}`,
         },
       };
-      fetch("/api/upload", options)
+      fetch("/api/files", options)
         .then(async (response) => {
           let responseJson;
           try {

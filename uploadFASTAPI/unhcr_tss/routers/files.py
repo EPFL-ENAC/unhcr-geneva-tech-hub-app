@@ -23,7 +23,7 @@ s3_client = S3_SERVICE(settings.S3_ACCESS_KEY_ID,
                        settings.S3_SECRET_ACCESS_KEY, settings.S3_REGION)
 
 
-@router.post("/upload",
+@router.post("/files",
              status_code=200,
              description="-- Upload jpg/png/pdf or any assets to S3 --",
              dependencies=[Depends(authorization_checker)])
@@ -32,7 +32,7 @@ async def PostUpload(
     return {"filenames": [await s3_client.upload_file(file) for file in files]}
 
 
-@router.delete("/upload",
+@router.delete("/files",
                status_code=204,
                description="-- Delete assest present in S3 --",
                dependencies=[Depends(authorization_checker)]
