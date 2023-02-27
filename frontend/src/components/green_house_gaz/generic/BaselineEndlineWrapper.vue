@@ -29,6 +29,7 @@
 </template>
 
 <script lang="ts">
+import { SelectOption, SelectValue } from "@/components/commons/FormItem";
 import BaselineCard from "@/components/green_house_gaz/generic/BaselineCard.vue";
 import { computeChangeInEmission } from "@/components/green_house_gaz/generic/changeInEmission";
 import EndlineCard from "@/components/green_house_gaz/generic/EndlineCard.vue";
@@ -276,26 +277,33 @@ export default class BaselineEndlineWrapper<
     this.closeDBGhg();
   }
 }
-export interface SurveyTableHeader {
-  text: string; //.e.g "Intervention" description or text to display for input or table header
-  value: string; // name of the field to use for table
-  type: string; // number etc for text-field
-  items: string[];
-  isInput: boolean;
+export interface SurveyTableHeader extends EasySurveyTableHeader {
   key: string; // key of input or computed inside input field
+  suffix: string; // "l", //if we need to have a suffix displayed in table or input
+  align: string; // "start"; // only for table
+  sortable: boolean; // false,
+}
+export interface EasySurveyTableHeader {
+  text: string | ((v: SurveyInput) => string); //.e.g "Intervention" description or text to display for input or table header
+  value: string; // name of the field to use for table
+  type: string; // number etc for text-field type of value in formatter by the way
+  items: string[] | string;
+  options: SelectOption<SelectValue>[];
+  isInput: boolean;
   label?: string;
+  tooltipInfo?: string;
   category?: string; // example increment
   classFormatter?: (v: unknown) => string;
-  customEventInput?: (v: SurveyInputValue, localInput: SurveyInput) => unknown;
-  formatter?: (v: unknown) => unknown;
-  conditional_value: string; // e.g "LITRES",
-  conditional: string; // based on other SurveyTableHeader field "US_UNI", needs to have conditional_value set
-  suffix: string; // "l", //if we need to have a suffix displayed in table or input
+  customEventInput?: (
+    v: SurveyInputValue,
+    localInput: SurveyInput
+  ) => SurveyInput;
+  formatter?: (v: unknown) => string;
+  conditional_value: SurveyInputValue; // e.g "LITRES",
+  conditional: string | string[]; // based on other SurveyTableHeader field "US_UNI", needs to have conditional_value set
   endlineOnly?: boolean; // show only for enldine table true,
   baselineOnly?: boolean;
   hideFooterContent: boolean; // default to true only for table
-  align: string; // "start"; // only for table
-  sortable: boolean; // false,
   computeResults: boolean; // false,
 }
 </script>

@@ -36,11 +36,9 @@
                     <v-text-field
                       v-model="localItem.description"
                       label="Intervention description"
-                      required
-                      :rules="rules"
                     ></v-text-field>
                   </v-col>
-                  <diesel-generator-without-litres
+                  <diesel-generators
                     :facility.sync="localItem"
                     select-text="New generator"
                   />
@@ -54,16 +52,17 @@
                       label="kWh used per year (national grid)"
                     />
                   </v-col>
-                  <v-col cols="12" sm="6" md="6">
-                    <v-text-field
-                      v-model.number="localItem.renewablePower"
-                      type="number"
-                      required
-                      :rules="rules"
-                      :min="0"
-                      label="Total kW of solar installed per year"
-                    />
+                  <v-col cols="12">
+                    <span>
+                      Previous consumption for this facility was:
+                      {{ previousPower }} kWh/yr
+                    </span>
                   </v-col>
+                  <renewable-energy
+                    :authorized-reverse="true"
+                    :facility.sync="localItem"
+                    :country-code="countryCode"
+                  />
                 </v-row>
               </v-col>
             </v-row>
@@ -102,7 +101,10 @@ import {
   computeCO2Cost,
   computeDieselPower,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
+import DieselGenerators from "@/components/green_house_gaz/energy/DieselGenerators.vue";
+
 import DieselGeneratorWithoutLitres from "@/components/green_house_gaz/energy/DieselGeneratorWithoutLitres.vue";
+import RenewableEnergy from "@/components/green_house_gaz/energy/RenewableEnergy.vue";
 import { computeChangeInEmission } from "@/components/green_house_gaz/generic/changeInEmission";
 
 import {
@@ -141,6 +143,8 @@ import { mapActions, mapGetters } from "vuex";
   },
   components: {
     DieselGeneratorWithoutLitres,
+    RenewableEnergy,
+    DieselGenerators,
   },
 })
 export default class InterventionDialog extends Vue {
@@ -157,6 +161,8 @@ export default class InterventionDialog extends Vue {
 
   @Prop({ type: Array, default: () => [] })
   readonly facilities!: EnergyFacilityItem[];
+  @Prop({ type: String, required: true, default: "" })
+  readonly countryCode!: string;
 
   $refs!: {
     form: VForm;
@@ -192,6 +198,17 @@ export default class InterventionDialog extends Vue {
 
   set isOpen(value: boolean) {
     this.$emit("update:dialogOpen", value);
+  }
+  public get previousFacility(): EnergyFacilityItem {
+    return (
+      this.facilities.find(
+        (item: EnergyFacilityItem) => item.name === this.localItem?.name
+      ) ?? ({} as EnergyFacilityItem)
+    );
+  }
+  public get previousPower(): number {
+    const { gridPower, dieselPower, renewablePower } = this.previousFacility;
+    return (gridPower ?? 0) + (dieselPower ?? 0) + (renewablePower ?? 0);
   }
   public selectFacility(facilityName: string): void {
     this.selectedFacility =

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="256">
+  <v-dialog v-model="dialog" max-width="400">
     <template #activator="{ attrs, on }">
       <slot :attrs="attrs" :on="on">
         <v-btn v-bind="attrs" icon v-on="on">
@@ -9,12 +9,20 @@
     </template>
     <v-card>
       <v-card-title>Users</v-card-title>
+      <v-card-subtitle>
+        <v-alert type="warning"
+          >You can only add app users or UNHCR users if you know their 'sub' id
+          <br />
+          Adding username@unhcr.org won't work unless it's been registered by a
+          developper with a specific password
+        </v-alert>
+      </v-card-subtitle>
       <v-card-text>
         <v-list>
-          <v-list-item v-for="(item, index) in users" :key="item">
+          <v-list-item v-for="(item, index) in users" :key="index">
             <v-list-item-content>
               <v-list-item-title>
-                {{ item }}
+                {{ item?.name ?? item }}
               </v-list-item-title>
             </v-list-item-content>
             <v-list-item-action
@@ -28,10 +36,10 @@
         </v-list>
         <v-form v-if="$can('edit', { users })" ref="form" @submit="submit">
           <v-text-field
-            v-model="user"
+            v-model="userName"
             append-outer-icon="$mdiPlus"
             hide-details="auto"
-            label="Username"
+            label="Username or UNHCR sub"
             :rules="rules"
             @click:append-outer="addUser"
           >
@@ -49,7 +57,10 @@
 </template>
 
 <script lang="ts">
-import { checkExists, checkRequired, Rule } from "@/utils/rules";
+import { checkUserExists } from "@/plugins/user";
+import { CouchUser } from "@/store/UserModule";
+import { checkRequired, Rule } from "@/utils/rules";
+
 import { VForm } from "@/utils/vuetify";
 import "vue-class-component/hooks";
 import { Component, Ref, VModel, Vue, Watch } from "vue-property-decorator";
@@ -58,17 +69,21 @@ import { Component, Ref, VModel, Vue, Watch } from "vue-property-decorator";
 export default class UserManager extends Vue {
   readonly username = this.$userName();
 
-  @VModel({ type: Array as () => string[] })
-  users!: string[];
+  @VModel({ type: Array as () => (string | CouchUser)[] })
+  users!: (string | CouchUser)[];
 
-  user = "";
+  userName = "";
   dialog = false;
 
   @Ref()
   readonly form: VForm | undefined;
 
-  get rules(): Rule[] {
-    return [checkRequired, checkExists(this.users)];
+  get rules(): (Rule | unknown)[] {
+    // TODO: add check UNHCR to circumvent the problem
+    // WARNING: if username is for instance testtss@unhcr.org it will match real unhcr users
+    // but because we can only add couchdb USER, we should probably add a warning for unhcr users
+    // saying that they cannot add unhcr users
+    return [checkRequired, checkUserExists(this.users)];
   }
 
   @Watch("dialog")
@@ -82,7 +97,8 @@ export default class UserManager extends Vue {
 
   addUser(): void {
     if (this.form?.validate()) {
-      this.users.push(this.user);
+      this.users.push({ name: this.userName });
+      this.userName = "";
       this.form.reset();
       this.onChange();
     }

@@ -52,6 +52,8 @@ import { v4 as uuidv4 } from "uuid";
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
+
+import { logoutCookie } from "@/utils/couchdb";
 @Component({
   computed: {
     ...mapGetters("UserModule", ["user"]),
@@ -78,26 +80,26 @@ export default class LoginComponent extends Vue {
   loginAsGuest!: () => AxiosPromise;
   loginToken!: (token: string) => AxiosPromise;
 
-  created(): void {
-    if (this.$route.hash) {
-      const params = new URLSearchParams(this.$route.hash.substring(1));
-      const idToken = params.get("id_token");
-      if (idToken) {
-        this.loginToken(idToken)
-          .then(() => {
-            // push to current route if not current route
-            if (this.$route.name !== this.destinationRouteName) {
-              this.$router.push({ name: this.destinationRouteName });
-            }
-          })
-          .catch((error: Error) => {
-            if (this.jwtPattern.test(idToken)) {
-              this.error = `${error} AND Invalid token: ${idToken}`;
-            } else {
-              this.error = `Invalid token format or other: ${error}`;
-            }
-          });
-      }
+  async created(): Promise<void> {
+    const params = new URLSearchParams(window.location.hash.substring(1));
+    const idToken = params.get("id_token");
+    // todo : maybe broadcast an event
+    if (idToken) {
+      await logoutCookie();
+      this.loginToken(idToken)
+        .then(() => {
+          // push to current route if not current route
+          if (this.$route.name !== this.destinationRouteName) {
+            this.$router.push({ name: this.destinationRouteName });
+          }
+        })
+        .catch((error: Error) => {
+          if (this.jwtPattern.test(idToken)) {
+            this.error = `${error} AND Invalid token: ${idToken}`;
+          } else {
+            this.error = `Invalid token format or other: ${error}`;
+          }
+        });
     }
   }
 

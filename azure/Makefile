@@ -1,8 +1,6 @@
-.PHONY: install clean convert add_to_config
+.PHONY: all install clean convert add_to_config
 
-all: finale
-
-finale: add_to_config
+all: add_to_config
 	make clean
 
 import: clean

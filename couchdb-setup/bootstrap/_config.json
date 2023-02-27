@@ -11,7 +11,11 @@
     "chttpd_auth": {
         "require_valid_user": false,
         "allow_persistent_cookies": true,
-        "timeout": 86400
+        "timeout": 86400,
+        "same_site": "strict"
+    },
+    "jwt_auth": {
+        "required_claims": "exp,iat"
     },
     "jwt_keys": {
         "rsa:-KI3Q9nNR7bRofxmeZoXqbHZGew": "-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtJL6Wr2JUsxLyNezPQh1\\nJ6zn6wSoDAhgRYSDkaMuEHy75VikiB8wg25WuR96gdMpookdlRvh7SnRvtjQN9b5\\nm4zJCMpSRcJ5DuXl4mcd7Cg3Zp1C5+JmMq8J7m7OS9HpUQbA1yhtCHqP7XA4UnQI\\n28J+TnGiAa3viPLlq0663Cq6hQw7jYo5yNjdJcV5+FS+xNV7UHR4zAMRruMUHxte\\n1IZJzbJmxjKoEjJwDTtcd6DkI3yrkmYt8GdQmu0YBHTJSZiz+M10CY3LbvLzf+tb\\nBNKQ/gfnGGKF7MvRCmPA/YF/APynrIG7p4vPDRXhpG3/CIt317NyvGoIwiv0At83\\nkQIDAQAB\\n-----END PUBLIC KEY-----\\n",

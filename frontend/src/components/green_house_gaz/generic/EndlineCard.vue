@@ -14,6 +14,7 @@
           :headers="headers"
           :sort-by="sortBy"
           :name="name"
+          :diff-dimension="diffDimension"
           @update:items="updateEndlineInputs"
         />
       </v-card-text>
@@ -146,7 +147,7 @@ export default class EndlineCard extends Vue {
 
   public get diffDimensionText(): string {
     return (
-      this.headers.find((header) => header.key === this.diffDimension)?.text ??
+      this.headers.find((header) => header.key === this.diffDimension)?.label ??
       "no dimension selected"
     );
   }

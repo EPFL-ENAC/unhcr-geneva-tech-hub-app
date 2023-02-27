@@ -54,13 +54,8 @@
             />
           </v-col>
           <v-col class="d-flex align-center">
-            <v-btn
-              class="d-print-none"
-              @click="
-                window.print();
-                return false;
-              "
-              >Export Scorecard pdf</v-btn
+            <v-btn class="d-print-none" :to="{ name: 'ShelterReportStep10' }"
+              >Assessment report</v-btn
             >
           </v-col>
         </v-row>

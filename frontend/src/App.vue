@@ -1,11 +1,31 @@
 <template>
   <v-app>
+    <header class="justify-space-between align-center d-none d-print-flex ma-4">
+      <h4 class="font-weight-bold primary--text pa-4">
+        {{ rootRouteTitle }}
+        <span v-if="currentRouteId">: {{ currentRouteId }}</span>
+      </h4>
+      <figure class="pa-4">
+        <img
+          :src="unhcr_logo.imgPath"
+          :height="unhcr_logo.height || '40px'"
+          alt="UNHCR LOGO"
+        />
+      </figure>
+    </header>
+    <hr
+      class="d-none d-print-flex font-weight-bold justify-space-between align-center primary"
+    />
     <v-app-bar app dense>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-tabs>
-        <v-tab v-if="rootRoute" :to="{ name: rootRoute.name }">{{
-          rootRouteTitle
-        }}</v-tab>
+        <v-tab
+          v-if="rootRoute"
+          :to="{ name: rootRoute.name }"
+          class="shelter-title-tab"
+          >{{ rootRouteTitle }}
+          <span v-if="currentRouteId">: {{ currentRouteId }}</span>
+        </v-tab>
       </v-tabs>
       <v-spacer />
       <v-btn
@@ -115,7 +135,7 @@
             <v-list-item-title>About</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-if="$user('isLoggedOut')" @click="login">
+        <v-list-item v-if="$userIs('LoggedOut')" @click="login">
           <v-list-item-icon>
             <v-icon> $mdiLogin </v-icon>
           </v-list-item-icon>
@@ -123,7 +143,7 @@
             <v-list-item-title>Login</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-if="$user('isLoggedIn')" @click="logout">
+        <v-list-item v-if="$userIs('LoggedIn')" @click="logout">
           <v-list-item-icon>
             <v-icon>$mdiLogout </v-icon>
           </v-list-item-icon>
@@ -134,7 +154,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-main v-if="$user('isLoggedOut')">
+    <v-main v-if="$userIs('LoggedOut')" class="unhcr-main">
       <v-layout
         v-if="$router.currentRoute.name !== 'Login'"
         align-center
@@ -143,14 +163,14 @@
         fluid
         fill-height
       >
-        <v-flex xs12 sm8 md4>
+        <v-flex xs10 sm8 md6 lg4>
           <login-component />
         </v-flex>
       </v-layout>
       <router-view name="Login" />
     </v-main>
 
-    <v-main v-else>
+    <v-main v-else class="unhcr-main">
       <reference-data />
       <overview-data />
       <v-fade-transition mode="out-in">
@@ -186,6 +206,7 @@
 </template>
 
 <script lang="ts">
+import { unhcr_logo } from "@/components/commons/logos";
 import LoginComponent from "@/components/LoginComponent.vue";
 import OverviewData from "@/components/OverviewData.vue";
 import ReferenceData from "@/components/ReferenceData.vue";
@@ -233,10 +254,15 @@ export default class App extends Vue {
   snackbar = false;
   // TODO: use meta.title for apps name
   apps = Apps;
+  unhcr_logo = unhcr_logo;
 
   rootRoute = {} as RouteRecordPublic;
   currentRouteName = "";
   rootRouteTitle = "";
+
+  get currentRouteId(): string | undefined {
+    return this.$store.getters?.["ShelterModule/shelter"]?.name;
+  }
 
   get snackbarText(): string {
     return this.$store.getters.message;
@@ -266,10 +292,6 @@ export default class App extends Vue {
     this.$vuetify.theme.dark = false; // this.$store.getters["ConfigModule/themeDark"];
   }
 
-  @Watch("$store.getters.message")
-  onSnackbarTextChanged(): void {
-    this.snackbar = true;
-  }
   @Watch("$route", { immediate: true, deep: true })
   onRouteChanged(newRoute: Route): void {
     this.rootRoute = newRoute.matched[0];
@@ -326,7 +348,15 @@ export default class App extends Vue {
     this.$vuetify.theme.dark = false; //this.$store.getters["ConfigModule/themeDark"];
     document.title = this.title;
     /// retrieve user
+    // retrieve user only if not in
     this.getSessionStore();
+
+    this.$store.subscribe((mutation) => {
+      const shouldUpdate = ["storeMessage"];
+      if (shouldUpdate.includes(mutation.type)) {
+        this.snackbar = true;
+      }
+    });
   }
 }
 </script>
@@ -347,15 +377,25 @@ export default class App extends Vue {
   .v-application .v-navigation-drawer {
     display: none;
   }
+  .v-application .unhcr-main {
+    padding: 0px !important;
+  }
 
   @page {
     size: A4;
     margin: -1em;
-    padding: 0;
+    padding: 20px;
     width: 100%;
   }
   .pagebreak {
     page-break-before: always;
+  }
+  .project__header,
+  .project__h3 {
+    font-size: 1.5rem;
+  }
+  .container {
+    padding: 6px !important;
   }
 }
 
@@ -382,5 +422,12 @@ export default class App extends Vue {
 
 .account-color > svg {
   fill: #c5c5c5;
+}
+</style>
+
+<style lang="scss" scoped>
+.shelter-title-tab {
+  max-width: 100%;
+  justify-content: left;
 }
 </style>

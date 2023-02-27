@@ -40,6 +40,15 @@ const mutations: MutationTree<ShelterState> = {
     state.localCouch?.cancel();
   },
   SET_SHELTERS(state, value) {
+    value.sort(function (a: Shelter, b: Shelter) {
+      const nameA = a.name.toLowerCase(),
+        nameB = b.name.toLowerCase();
+      if (nameA < nameB)
+        //sort string ascending
+        return -1;
+      if (nameA > nameB) return 1;
+      return 0; //default return value (no sorting)
+    });
     state.shelters = value;
   },
   SET_SCORECARDS(state, value) {
@@ -59,6 +68,9 @@ const mutations: MutationTree<ShelterState> = {
   },
   SET_SHELTER(state, newShelter) {
     state.shelter = newShelter;
+  },
+  UNSET_SHELTER(state) {
+    state.shelter = {} as Shelter;
   },
   ADD_DOC(state, value) {
     state.shelters.push(value);
@@ -217,18 +229,33 @@ const actions: ActionTree<ShelterState, RootState> = {
         context.commit("SET_SHELTER_LOADING");
         try {
           const response = await remoteDB.put(computedShelter);
-          const newValue = await context.dispatch("getDoc", response.id);
-          context.commit("SET_SHELTER", newValue);
+          computedShelter._rev = response.rev;
+          // we were calling the get Doc too many times
+          // const newValue = await context.dispatch("getDoc", response.id);
+
+          context.commit("SET_SHELTER", computedShelter);
           context.commit("UNSET_SHELTER_LOADING");
           /* eslint-disable-next-line */
         } catch (e: any) {
           if (e.error === "conflict") {
-            console.log("conflict error");
+            console.error(
+              `updateDoc in ShelterModule: conflict error ${JSON.stringify(e)}`
+            );
 
             // TODO: rerun dispatch updateDoc but only once
             // let newValue = await context.dispatch("getDoc", computedShelter._id);
             // computedShelter._rev = newValue._rev;
             // try again with latest revision
+          } else {
+            console.error(
+              `updateDoc in ShelterModule: error ${JSON.stringify(e)}`
+            );
+            // TODO: notifyUser should trigger everytime we call it
+            context.dispatch(
+              "notifyUser",
+              `${e.error}: ${e.message} ( ${e.status} )`,
+              { root: true }
+            );
           }
           context.commit("UNSET_SHELTER_LOADING");
         }
@@ -242,27 +269,29 @@ const actions: ActionTree<ShelterState, RootState> = {
     const result = computeShelter(value);
     context.commit("SET_SHELTER", result);
   },
-  getDoc: (context: ActionContext<ShelterState, RootState>, id) => {
-    const remoteDB = context.state.localCouch?.remoteDB;
-    if (remoteDB) {
-      return remoteDB.get(id).then(function (result: Shelter) {
-        result = computeShelter(result);
-        context.commit("SET_SHELTER", result);
-        context.dispatch(
-          "ShelterBillOfQuantitiesModule/setItems",
-          context.state.shelter.items,
-          { root: true }
-        );
-        context.dispatch(
-          "ShelterBillOfQuantitiesModule/setItemsIndividualShelter",
-          context.state.shelter.items_individual_shelter,
-          { root: true }
-        );
-        return context.state.shelter;
-      });
+  getDoc: async (context: ActionContext<ShelterState, RootState>, id) => {
+    let result: Shelter | undefined =
+      await context.state.localCouch?.localDB.get(id);
+    if (result) {
+      result = computeShelter(result);
+      context.commit("SET_SHELTER", result);
+      await context.dispatch(
+        "ShelterBillOfQuantitiesModule/setItems",
+        context.state.shelter.items,
+        { root: true }
+      );
+      await context.dispatch(
+        "ShelterBillOfQuantitiesModule/setItemsIndividualShelter",
+        context.state.shelter.items_individual_shelter,
+        { root: true }
+      );
+      return result;
     } else {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
+  },
+  resetDoc(context: ActionContext<ShelterState, RootState>) {
+    context.commit("UNSET_SHELTER");
   },
 };
 

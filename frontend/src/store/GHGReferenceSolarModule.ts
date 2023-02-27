@@ -1,4 +1,4 @@
-import axios, { AxiosPromise } from "axios";
+import { SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
   ActionTree,
@@ -13,6 +13,7 @@ interface GHGSolarState {
   items: GHGSolar[];
   paginate: Paginate;
   itemsLength: number;
+  localCouch: SyncDatabase<GHGSolarState> | null;
 }
 
 export interface Paginate {
@@ -30,11 +31,13 @@ export interface Paginate {
   Stone
 */
 export interface GHGSolar {
-  iso: string; // 'iso two letters'
-  s: number; // number of hours
+  _id: string; // 'iso two letters'
+  c: number; // number of hours
 }
 
 const MSG_COULD_NOT_FIND_ITEM = "Could not find item with this id";
+const DB_NAME = "solar_averaged";
+const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 
 /** Default Configure state value */
 function generateState(): GHGSolarState {
@@ -46,6 +49,7 @@ function generateState(): GHGSolarState {
       skip: 0,
     },
     itemsLength: 0,
+    localCouch: null,
   };
 }
 
@@ -59,6 +63,12 @@ const getters: GetterTree<GHGSolarState, RootState> = {
 
 /** Mutations */
 const mutations: MutationTree<GHGSolarState> = {
+  INIT_DB(state) {
+    state.localCouch = new SyncDatabase(DB_NAME);
+  },
+  CLOSE_DB(state) {
+    state.localCouch?.cancel();
+  },
   SET_ITEM(state, value) {
     state.item = value;
   },
@@ -75,38 +85,44 @@ const mutations: MutationTree<GHGSolarState> = {
 
 /** Action */
 const actions: ActionTree<GHGSolarState, RootState> = {
-  getDoc: (
-    context: ActionContext<GHGSolarState, RootState>,
-    id: string
-  ): GHGSolar | undefined => {
-    const foundItem = context.state.items.find((item) => item.iso === id);
-    if (foundItem) {
-      context.commit("SET_ITEM", foundItem);
-    } else {
-      console.log(MSG_COULD_NOT_FIND_ITEM);
-    }
-    return foundItem;
+  syncDB: (context: ActionContext<GHGSolarState, RootState>) => {
+    context.commit("INIT_DB");
+    const localCouch = context.state.localCouch;
+
+    localCouch?.onChange(function () {
+      // todo: we should throttle this to avoid 10000 calls
+      context.dispatch("getAllDocs");
+    });
   },
-  getAllDocs: (
-    context: ActionContext<GHGSolarState, RootState>
-  ): AxiosPromise<(GHGSolar | void)[]> => {
-    return axios({
-      method: "get",
-      url: `${process.env.BASE_URL}shelter/transports.json`,
-      transformResponse: (data) => JSON.parse(data),
-    })
-      .then((response) => {
-        context.commit("SET_ITEMS", response.data);
-        return response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  closeDB: (context: ActionContext<GHGSolarState, RootState>) => {
+    context.commit("CLOSE_DB");
+  },
+  getAllDocs: async (context: ActionContext<GHGSolarState, RootState>) => {
+    const db = context.state.localCouch?.db;
+    if (db) {
+      try {
+        const result = await db.allDocs({
+          include_docs: true,
+          limit: 250,
+          skip: 0,
+        });
+
+        context.commit("SET_ITEMS_LENGTH", result.total_rows);
+        context.commit(
+          "SET_ITEMS",
+          result.rows.map((x) => x.doc)
+        );
+      } catch (err) {
+        throw new Error(MSG_COULD_NOT_FIND_ITEM);
+      }
+    } else {
+      throw new Error(MSG_DB_DOES_NOT_EXIST);
+    }
   },
 };
 
 /** VuexStore */
-const ShelterMaterialsModule: Module<GHGSolarState, RootState> = {
+const GhgReferenceSolarModule: Module<GHGSolarState, RootState> = {
   namespaced: true,
   state: generateState(),
   getters,
@@ -114,4 +130,4 @@ const ShelterMaterialsModule: Module<GHGSolarState, RootState> = {
   actions,
 };
 
-export default ShelterMaterialsModule;
+export default GhgReferenceSolarModule;

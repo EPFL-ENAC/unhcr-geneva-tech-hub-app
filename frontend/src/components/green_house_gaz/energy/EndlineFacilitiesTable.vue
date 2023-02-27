@@ -17,6 +17,7 @@
             :facilities="facilities"
             :item-index.sync="itemIndex"
             :item="localItem"
+            :country-code="countryCode"
             @update:item="updateWithItem"
           />
           <duplicate-intervention-dialog
@@ -186,6 +187,9 @@ export default class EndlineFacilitiesTable extends Vue {
   @Prop({ type: Array, default: () => [] })
   readonly facilities!: EnergyFacilityItem[];
 
+  @Prop({ type: String, required: true, default: "" })
+  readonly countryCode!: string;
+
   localItems: EnergyFacilityInterventionItem[] = [];
   dialogs = {} as Record<string, boolean>;
   defaultItem = {};
@@ -210,7 +214,7 @@ export default class EndlineFacilitiesTable extends Vue {
     },
     { text: "Total diesel used (litres/yr)", value: "dieselLiters" },
     { text: "Grid power (kWh/yr)", value: "gridPower" },
-    { text: "Solar (kW installed per yr)", value: "renewablePower" },
+    { text: "Solar (kWh/yr)", value: "renewablePower" },
     { text: "CO2 Emissions", value: "totalCO2Emission" },
     { text: "Change in Emissions", value: "changeInEmission" },
     { text: "", value: "actions", sortable: false, hideFooterContent: true },

@@ -53,10 +53,10 @@
       <v-col :cols="12">
         <v-text-field
           :value="localFacility.generatorLoad"
-          type="number"
-          suffix="%"
           required
           :rules="rules"
+          suffix="%"
+          type="number"
           min="0"
           max="100"
           step="10"
@@ -93,7 +93,7 @@ export default class DieselGenerators extends Vue {
   @Prop({
     type: String,
     required: false,
-    default: "I don't know total litres of diesel used",
+    default: "Number of litres of diesel NOT known",
   })
   selectText!: string;
 

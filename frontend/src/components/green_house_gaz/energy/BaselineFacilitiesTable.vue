@@ -24,6 +24,7 @@
           :item-index="itemIndex"
           :item="localItem"
           :facilities-name="facilitiesName"
+          :country-code="countryCode"
           @update:item="updateWithItem"
         />
         <duplicate-facility-dialog
@@ -159,7 +160,10 @@
 </template>
 
 <script lang="ts">
-import { getLitres } from "@/components/green_house_gaz/energy/computeCO2cost";
+import {
+  countryIrradianceKeys,
+  getLitres,
+} from "@/components/green_house_gaz/energy/computeCO2cost";
 import DeleteFacilityDialog from "@/components/green_house_gaz/energy/DeleteFacilityDialog.vue";
 import DuplicateFacilityDialog from "@/components/green_house_gaz/energy/DuplicateFacilityDialog.vue";
 import { facilityTypes } from "@/components/green_house_gaz/energy/Facility";
@@ -189,6 +193,8 @@ export default class BaselineFacilitiesTable extends Vue {
 
   @Prop({ type: Boolean, default: false })
   readonly disabled!: boolean;
+  @Prop({ type: String, required: true, default: "" })
+  readonly countryCode!: countryIrradianceKeys;
 
   ghgMapRef!: ItemReferencesMap;
   localItems: EnergyFacilityItem[] = [];
@@ -209,7 +215,7 @@ export default class BaselineFacilitiesTable extends Vue {
     { text: "Powered by", value: "facilityType", hideFooterContent: true },
     { text: "Total diesel used (litres/yr)", value: "dieselLiters" },
     { text: "Grid power (kWh/yr)", value: "gridPower" },
-    { text: "Solar (kW installed per yr)", value: "renewablePower" },
+    { text: "Solar (kWh/yr)", value: "renewablePower" },
     { text: "CO2 Emissions", value: "totalCO2Emission" },
     { text: "", value: "actions", sortable: false, hideFooterContent: true },
   ];

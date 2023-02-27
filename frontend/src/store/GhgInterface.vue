@@ -1,5 +1,7 @@
 <script lang="ts">
 import { WashTruckingSurvey } from "@/components/green_house_gaz/wash/Trucking.vue";
+import { ShelterRegions } from "@/store/ShelterInterface";
+import { CouchUser } from "./UserModule";
 // import { Material } from "@/store/ShelterInterface";
 export type CountriesInfoMap = Record<string, CountryInfo>;
 export interface Country {
@@ -10,6 +12,7 @@ export interface Country {
 export interface CountryInfo {
   name: string;
   code: string;
+  region: ShelterRegions;
   lat: number;
   lon: number;
 }
@@ -17,8 +20,8 @@ export interface Site {
   id: string; // site unique identitier (name as first)
   name: string; // site name // location
   country_code: CountryCode;
-  created_by: Email;
-  users: Email[];
+  created_by: Email | string;
+  users: (CouchUser | Email | string)[];
   lat?: number;
   lon?: number;
 }
@@ -33,9 +36,12 @@ export interface GreenHouseGaz {
   latitude: number;
   longitude: number;
   surveys: Survey[];
-  users: string[];
+  users: (CouchUser | Email | string)[];
+  solar?: number;
+  population?: number;
   created_by: string;
   created_at: string;
+  isUNHCR?: boolean;
 }
 
 export interface SurveyForms {
@@ -116,7 +122,7 @@ export interface FormSurveyResultWithBalance extends FormSurveyResult {
 }
 
 // GENERIC START
-export type SurveyInputValue = number | string | boolean;
+export type SurveyInputValue = number | string | boolean | string[] | undefined;
 export type SurveyInput = Record<string, SurveyInputValue>;
 export type SurveyResultValue = number | boolean;
 export type SurveyResult = Record<string, SurveyResultValue>;
@@ -174,13 +180,16 @@ type FacilityType =
   | "HybridMix"
   | "NotPowered";
 
-export interface EnergyItem {
-  gridPower: number;
-  dieselLiters: number;
+export interface DieselItem {
+  dieselLiters?: number;
   disableDieselLiters?: boolean;
   generatorSize?: number; // replace the diesel liter
   operatingHours?: number; // replace the diesel liter
   generatorLoad?: number; // load of generator (should be default to 60%)
+}
+
+export interface EnergyItem extends DieselItem {
+  gridPower: number;
   dieselPower?: number;
   renewablePower: number;
 }

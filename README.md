@@ -106,20 +106,53 @@ ansible-playbook -v -i inventory/unhcr-tss.epfl.ch.yml  playbooks/deploy-app.yml
 
 
 ## Create a new user
+There is two way of doing this: first one using curl; second one using couchdb-bootstrap
 
-add a new file in `couchdb-setup/bootstrap/_users/new_username.json` with the following content:
+### Using curl
+1. Follow: https://docs.couchdb.org/en/stable/intro/security.html#creating-a-new-user
+```
+curl -X PUT http://localhost:5984/_users/org.couchdb.user:newuser@epfl.ch \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json" \
+     -d '{"name": "newuser@epfl.ch", "password": "plain_text_password_that_will_be_encrypted", "roles": [], "type": "user"}'
+```
+2. retrieve the inserted documented
+```
+ curl -X GET http://admin:couchdb@localhost:5984/_users/org.couchdb.user:newuser@epfl.ch \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json"
+
+{"_id":"org.couchdb.user:newuser@epfl.ch","_rev":"1-xxxx","name":"newuser@epfl.ch","roles":[],"type":"user","password_scheme":"pbkdf2","iterations":10,"derived_key":"917a923abd865bc82feadd5659a1d0d55318ca49","salt":"83f9a989d48e31b7a5e99c28df8a989c"}
+```
+3. add the result json from above inside
+add the above json result as new file in `couchdb-setup/bootstrap/_users/newuser@epfl.ch.json` :
+3.a you can remove the _rev field
 
 ```json
 {
-  "_id": "org.couchdb.user:new_username",
+  "_id": "org.couchdb.user:newuser@epfl.ch",
+  "name": "newuser@epfl.ch",
+  "roles": [],
   "type": "user",
-  "roles": ["user"],
-  "name": "new_username",
-  "password": "plain-password"
+  "password_scheme": "pbkdf2",
+  "iterations": 10,
+  "derived_key": "917a923abd865bc82feadd5659a1d0d55318ca49",
+  "salt": "83f9a989d48e31b7a5e99c28df8a989c"
 }
 ```
 
-run the following command:
+### Using couchdb bootstrap
+- add a new file inside couchdb-setup/bootstrap/_users with
+```json
+{
+  "_id": "org.couchdb.user:newuser@epfl.ch",
+  "name": "newuser@epfl.ch",
+  "roles": [],
+  "type": "user",
+  "password": "plain_text_that_will_be_hash_by_couchdb",
+}
+```
+- run the following command:
 
 ```bash
 make setup-database

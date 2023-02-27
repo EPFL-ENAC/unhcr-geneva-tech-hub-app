@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <v-data-table
     v-if="items"
@@ -26,6 +27,7 @@
           :headers="headers"
           :reference-items="referenceItems"
           :intervention="intervention"
+          :diff-dimension="diffDimension"
           :name="name"
           @update:item="updateWithItem"
         />
@@ -55,16 +57,15 @@
             item
           )
         "
-      >
-        {{
+        v-html="
           tableHeader.formatter(
             get(item, tableHeader.value),
             tableHeader,
             item,
             items
           )
-        }}
-      </div>
+        "
+      ></div>
     </template>
     <template #[`item.actions`]="{ item }">
       <v-tooltip bottom>
@@ -144,7 +145,11 @@ import { SurveyTableHeader } from "@/components/green_house_gaz/generic/Baseline
 import DeleteSurveyItemDialog from "@/components/green_house_gaz/generic/DeleteSurveyItemDialog.vue";
 import DuplicateSurveyItemDialog from "@/components/green_house_gaz/generic/DuplicateSurveyItemDialog.vue";
 import SurveyItemDialog from "@/components/green_house_gaz/generic/SurveyItemDialog.vue";
-import { SurveyItem, SurveyResult } from "@/store/GhgInterface.vue";
+import {
+  SurveyInput,
+  SurveyItem,
+  SurveyResult,
+} from "@/store/GhgInterface.vue";
 import { cloneDeep, get, maxBy } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
@@ -183,6 +188,9 @@ export default class BaselineTable extends Vue {
 
   @Prop([Array])
   readonly headers!: SurveyTableHeader[];
+
+  @Prop([String])
+  readonly diffDimension!: keyof SurveyInput;
 
   localItems: SurveyItem[] = [];
   localItem: SurveyItem = {} as SurveyItem;

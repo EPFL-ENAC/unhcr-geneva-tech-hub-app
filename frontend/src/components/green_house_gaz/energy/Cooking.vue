@@ -12,10 +12,21 @@
 </template>
 
 <script lang="ts">
-import BaselineEndlineWrapper from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
+import BaselineEndlineWrapper, {
+  SurveyTableHeader,
+} from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
+
+import {
+  computeDieselPower,
+  computeKWHPerDayPerCountry,
+  computeLitresPerDayDiesel,
+  countryIrradianceKeys,
+} from "@/components/green_house_gaz/energy/computeCO2cost";
 import { formatNumber } from "@/plugins/filters";
 import {
+  DieselItem,
+  EnergyItem,
   GenericFormSurvey,
   SurveyInput,
   SurveyItem,
@@ -23,6 +34,7 @@ import {
 } from "@/store/GhgInterface.vue";
 import { get as _get } from "lodash";
 
+import { Survey } from "@/store/GhgInterface.vue";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -32,159 +44,136 @@ const fuelTypes = {
   CHC: "Charcoal",
   PLTS: "Pellets",
   BRQ: "Briquette",
-  ETH: "ETHANOL",
-  KRS: "KEROSENE",
-  ELE: "Electric", // no eff
+  ETH: "Ethanol/alcohol",
+  KRS: "Kerosene/paraffin",
+  PET: "Petrol", // same as wash
+  DIES: "Diesel", // same as facilities for diesel gen
+  ELE_DIES: "Diesel generators",
+  ELE_GRID: "National Grid",
+  ELE_SOLAR: "Solar Energy", // no eff
+  ELE_HYB: "Hybrid Mix",
+  ELE_NONE: "Not powered",
   THE: "Thermal solar", // no eff
-  CNDL: "candle", // no use
   LPG: "LPG",
   BGS: "BIOGASS",
-  UNK: "UNKNOWN",
+  PNG: "Piped Natural Gas",
 };
-// TODO: findout if it's ever used ?
-const cookstoveTypes = {
-  UNK: "UNKNOWN",
-  CONV: "CONVENTIONAL",
-  IMPR: "IMPROVED",
-  TRAD: "Traditional",
-};
+// Emission factor for CO2 [ton/ton of fuel] from IPCC
+// should be from the GHG_REFERENCE FACTOR
+// const fuelFactors = {
+//   FWD: 1.8948,
+//   CHC: 3.477,
+//   PLTS: 1.2697,
+//   BRQ: 1.2697,
+//   ETH: 1.2391,
+//   KRS: 2.5595,
+//   PET: 0, // same as wash
+//   DIES: 0, // same as facilities for diesel gen
+//   ELE_SOLAR: 0, // no eff
+//   ELE_GRID: 0,
+//   ELE_DIES: 0,
+//   ELE_HYB: 0,
+//   THE: 0, // no eff
+//   LPG: 1.616,
+//   BGS: 2.4842,
+//   PNG: 2.4842,
+// };
 
 // no appliances for now
 // const COOK_APP_Pressure = "Pressure cooke";
 // const COOK_APP_Heat = "Heat retaining basket";
 // const COOK_APP_Other = "Other";
 
-const cookstoveTECHs = [
+const biomassFuels = ["FWD", "CHC", "BRQ", "PLTS"];
+const biomassFulesWithoutCHC = ["FWD", "BRQ", "PLTS"];
+const liquidFuels = ["ETH", "PET", "DIES", "KRS"];
+const gasFuels = ["LPG", "BGS", "PNG"];
+const electricFuels = [
+  "ELE_DIES",
+  "ELE_GRID",
+  "ELE_SOLAR",
+  "ELE_HYB",
+  "ELE_NONE",
+];
+const thermalFuels = ["THE"];
+
+const allFuelsButElectric = biomassFuels
+  .concat(liquidFuels)
+  .concat(gasFuels)
+  .concat(thermalFuels);
+
+interface CookstoveTech {
+  _id: string;
+  fuelTypes: string[];
+  text: string;
+  image: string | undefined;
+}
+
+const cookstoveTECHs: CookstoveTech[] = [
   {
     _id: "1",
+    fuelTypes: [],
     text: "Without any access (no possibility to cook)",
     image: undefined,
-    fuelType: "UNK",
-    type: "UNK",
   },
   {
     _id: "2",
-    text: "Using firewood traditional (three stone)",
+    fuelTypes: biomassFuels,
+    text: "Traditional three stone fire",
     image: "/images/energy/cookstoves/traditional-wood.png",
-    fuelType: "FWD",
-    type: "TRAD",
   },
   {
     _id: "3",
-    text: "Using charcoal (traditional)",
-    image: undefined,
-    fuelType: "CHC",
-    type: "TRAD",
+    fuelTypes: biomassFuels,
+    text: "Traditional cookstove with solid biomass fuel",
+    image: "/images/energy/cookstoves/traditional-bricket.jpg",
   },
   {
     _id: "4",
-    text: "Using firewood improved cookstove",
-    image: undefined,
-    fuelType: "FWD",
-    type: "IMPR",
+    fuelTypes: biomassFuels,
+    text: "Improved cookstove with solid biomass fuel",
+    image: "/images/energy/cookstoves/improved-bricket.jpg",
   },
   {
     _id: "5",
-    text: "Using charcoal improved cookstove",
-    image: undefined,
-    fuelType: "CHC",
-    type: "IMPR",
+    fuelTypes: biomassFulesWithoutCHC,
+    text: "Gasifier stove",
+    image: "/images/energy/cookstoves/gasifier.png",
   },
   {
     _id: "6",
-    text: "Using briquettes and improved cookstove",
-    image: undefined,
-    fuelType: "BRQ",
-    type: "IMPR",
+    fuelTypes: liquidFuels,
+    text: "Liquid fuel cookstove",
+    image: "/images/energy/cookstoves/kerosene.png",
   },
   {
     _id: "7",
-    text: "Using pelets and improved cookstove",
-    image: "/images/energy/cookstoves/gasifier.png",
-    fuelType: "PLTS",
-    type: "IMPR",
+    fuelTypes: gasFuels,
+    text: "Gas powered cookstove",
+    image: "/images/energy/cookstoves/lpg.png",
   },
   {
     _id: "8",
-    text: "Using firewood with gasifier",
-    image: undefined,
-    fuelType: "FWD",
-    type: "IMPR",
+    fuelTypes: electricFuels,
+    text: "Electric cookstove",
+    image: "/images/energy/cookstoves/induction.png",
   },
   {
     _id: "9",
-    text: "Using charcoal with gasifier",
-    image: undefined,
-    fuelType: "CHC",
-    type: "IMPR",
-  },
-  {
-    _id: "10",
-    text: "Using briquette with gasifier",
-    image: undefined,
-    fuelType: "BRQ",
-    type: "IMPR",
-  },
-  {
-    _id: "11",
-    text: "Using ethanol",
-    image: "/images/energy/cookstoves/ethanol.png",
-    fuelType: "ETH",
-    type: "CONV",
-  },
-  {
-    _id: "12",
-    text: "Using LPG",
-    image: "/images/energy/cookstoves/biogas.png",
-    fuelType: "LPG",
-    type: "CONV",
-  },
-  {
-    _id: "13",
-    text: "Using biogas",
-    image: undefined,
-    fuelType: "BGS",
-    type: "CONV",
-  },
-  {
-    _id: "14",
-    text: "Using kerosene",
-    image: undefined,
-    fuelType: "KRS",
-    type: "CONV",
-  },
-  {
-    _id: "15",
-    text: "Connected to the national grid",
-    image: undefined,
-    fuelType: "ELE",
-    type: "CONV",
-  },
-  {
-    _id: "16",
-    text: "Using electricity from diesel generators",
-    image: undefined,
-    fuelType: "ELE", // TODO fixme with new fuel type ?
-    type: "CONV",
-  },
-  {
-    _id: "17",
-    text: "Using electricity from 100% renewable minigrid (solar PV + batteries)",
-    image: "/images/energy/cookstoves/solar-box.png",
-    fuelType: "ELE", // TODO fixme with new fuel type efficiency ?
-    type: "CONV",
-  },
-  {
-    _id: "18",
-    text: "Using electricity from hybrid micro-grid (DG+Solar PV+ grid)",
-    image: undefined,
-    fuelType: "ELE",
-    type: "CONV",
+    fuelTypes: thermalFuels,
+    text: "Solar cooker",
+    image: "/images/energy/cookstoves/solar-parabolic.png",
   },
 ];
+
+const cookstoveTECHsWithAccess = cookstoveTECHs.slice(1);
+const cookstoveIdsTECHsWithAccess = cookstoveTECHsWithAccess.map(
+  (cookstove) => cookstove._id
+);
+const cookstoveIdWithoutAccess = "1";
 const APPLIANCE_EFFICIENCY = 1;
 const REF_DRY_WOOD = 0.85; // weird; we're missing information
-const fNRB = 1;
+const fNRB = 1; // should be from GHG_RFERENCE TABLE
 
 @Component({
   components: {
@@ -198,6 +187,12 @@ export default class Trucking extends Vue {
 
   @Prop({ type: [Object, Array] })
   readonly form!: EnergyCookingSurvey;
+
+  @Prop([Object, Array])
+  readonly survey: Survey | undefined;
+
+  @Prop({ type: String, required: true, default: "" })
+  readonly countryCode!: countryIrradianceKeys;
 
   diffDimension: keyof EnergyCookingItemInput = "numberOfCookstove";
   name = "cookstove";
@@ -231,8 +226,8 @@ export default class Trucking extends Vue {
      **    / 1000 [kg/t]
      */
     const totalCO2Emission =
-      (numberOfCookstove * // NEED FORMULA
-        fuelUsage * // use selection
+      ((numberOfCookstove ?? 0) * // TODO: NEED FORMULA to be implemented
+        (fuelUsage ?? 0) * // use selection --> there wiill be a type of formula oer type of fuel
         365.25 *
         ghgMapRef?.[`REF_EFF_${fuelType}`]?.value ??
         1 *
@@ -257,158 +252,472 @@ export default class Trucking extends Vue {
     return s;
   }
 
-  readonly headers = [
-    {
-      text: "#", // unique name === dropdown of existant facilities
-      value: "increment",
-      type: "number",
-      hideFooterContent: false,
-      baselineOnly: true,
-      formatter: this.n2sFormatter,
-    },
-    {
-      text: "#", // unique name === dropdown of existant facilities
-      value: "originIncrement",
-      endlineOnly: true,
-      type: "number",
-      hideFooterContent: false,
-      formatter: (
-        v: number,
-        _: unknown,
-        item: SurveyItem,
-        items: SurveyItem[]
-      ) => {
-        const increment: number = _get(item, "increment");
-        // todo finish custom increment function
-        const increments = items
-          .filter((item: SurveyItem) => item.originIncrement === v)
-          .map((item: SurveyItem) => item.increment);
-        const indexOf = increments.indexOf(increment);
-        return `${this.n2sFormatter(v)}${"'".repeat(indexOf)}`;
-      },
-      formatterOrigin: (v: number) => {
-        return `${this.n2sFormatter(v)}`;
-      },
-    },
-    {
-      text: "Cookstove",
-      value: "input.cookstove",
-      type: "select",
-      style: {
-        cols: "12",
-      },
-      hideFooterContent: false,
-      items: cookstoveTECHs,
-      customEventInput: (cookstoveId: string, localInput: SurveyInput) => {
-        console.log(cookstoveId, localInput);
-        // does not work with reference ?
-        localInput.fuelType = "CHC";
-        return localInput;
-      },
-    },
-    {
-      text: "Fuel per day (kg/day for biomass)",
-      value: "input.fuelUsage",
-      conditional_value: "",
-      conditional: "cookstove",
-      style: {
-        cols: "12",
-      },
-      type: "number",
-    },
+  resetSurveyInput(localInput: EnergyCookingItemInput): EnergyCookingItemInput {
+    delete localInput.fuelType;
+    delete localInput.numberOfCookstove; // percentage of percentage
+    return this.resetSurveyFuelOption(localInput);
+  }
 
-    {
-      text: "Number of cookstove",
-      computeResults: true,
-      value: "input.numberOfCookstove",
-      conditional_value: "",
-      conditional: "fuelUsage",
-      style: {
-        cols: "12",
+  resetSurveyFuelOption(
+    localInput: EnergyCookingItemInput
+  ): EnergyCookingItemInput {
+    delete localInput.fuelUsage;
+    delete localInput.sustainablySourced;
+    localInput.chcProcessingFactor = 6; // default factor of 6.
+    delete localInput.dryWood;
+    delete localInput.carbonized;
+    delete localInput.appliance;
+
+    delete localInput.disableDieselLiters; // do I know the total litres of diesels
+    localInput.generatorLoad = 0.6; // default factor of 60%
+    delete localInput.generatorSize;
+    delete localInput.operatingHours;
+    delete localInput.dieselLiters;
+
+    delete localInput.solarInstalled;
+
+    return localInput;
+  }
+  // should be a getter so it may be reactive for fuelTypes
+  public get headers(): SurveyTableHeader[] {
+    // public get headers(): any {
+    const countryCode = this.countryCode;
+    return [
+      {
+        text: "#", // unique name === dropdown of existant facilities
+        value: "increment",
+        type: "number",
+        hideFooterContent: false,
+        baselineOnly: true,
+        formatter: this.n2sFormatter,
       },
-      type: "number",
-    },
-    {
-      text: "Cookstove fuel",
-      value: "input.fuelType",
-      formatter: (v: keyof typeof fuelTypes) => {
-        return fuelTypes[v];
+      {
+        text: "#", // unique name === dropdown of existant facilities
+        value: "originIncrement",
+        endlineOnly: true,
+        type: "number",
+        hideFooterContent: false,
+        formatter: (
+          v: number,
+          _: unknown,
+          item: SurveyItem,
+          items: SurveyItem[]
+        ) => {
+          const increment: number = _get(item, "increment");
+          // todo finish custom increment function
+          const increments = items
+            .filter((item: SurveyItem) => item.originIncrement === v)
+            .map((item: SurveyItem) => item.increment);
+          const indexOf = increments.indexOf(increment);
+          return `${this.n2sFormatter(v)}${"'".repeat(indexOf)}`;
+        },
+        formatterOrigin: (v: number) => {
+          return `${this.n2sFormatter(v)}`;
+        },
       },
-      isInput: false,
-      type: "select",
-      hideFooterContent: false,
-      items: [],
-    },
-    {
-      text: "Total CO2 Emissions (tCO2e/year)",
-      value: "computed.totalCO2Emission",
-      hideFooterContent: false,
-      formatter: (v: number, { ...args }) => {
-        return formatNumber(v, { suffix: args.suffix });
-      },
-      computeResults: true,
-      type: "number",
-      disabled: true,
-    },
-    {
-      text: "Change in Emissions",
-      value: "computed.changeInEmission",
-      type: "number",
-      hideFooterContent: false,
-      disable: true,
-      readonly: true,
-      endlineOnly: true,
-      formatter: (v: number) => {
-        return formatNumber(v, { style: "percent", signDisplay: "exceptZero" });
-      },
-      classFormatter: (v: number): string => {
-        const classes: string[] = [];
-        v > 0 ? classes.push("item-positive") : void 0;
-        v < 0 ? classes.push("item-negative") : void 0;
-        v === 0 ? classes.push("bold-table-content") : void 0;
-        return classes.join(" ");
-      },
-    },
-    {
-      text: "",
-      value: "actions",
-      hidden: true,
-      hideFooterContent: false,
-      width: "140px",
-    },
-  ].map((item) => {
-    const [category, key] = item.value.split(".");
-    const isInput = item?.isInput ?? category === "input";
-    return {
-      align: "start",
-      sortable: false,
-      hideFooterContent: item.hideFooterContent ?? true,
-      label: item.text, // for form-item-component
-      key, // for form-item-component
-      isInput,
-      category, // input or computed,
-      formatter: (value: unknown) => value,
-      classFormatter: () => "",
-      options:
-        item?.items?.map((item) => {
-          if (typeof item === "string") {
-            return { text: item, value: item };
+      {
+        text: "Cookstove",
+        value: "input.cookstove",
+        type: "select",
+        image: true,
+        style: {
+          cols: "12",
+        },
+        hideFooterContent: false,
+        items: cookstoveTECHs,
+        formatter: (_id: string) => {
+          const cookStove =
+            cookstoveTECHs.find((cookstove) => cookstove._id === _id) ??
+            ({
+              text: "Unknown",
+            } as CookstoveTech);
+          const name = cookStove?.text ?? "Unknown";
+
+          return `
+          <div class="d-flex justify-left align-center">
+            ${
+              cookStove?.image
+                ? `<img width="64px" height="64px" src='${
+                    cookStove?.image ?? ""
+                  }'/>`
+                : `<span class="ml-16"></span>`
+            }
+            <span class="ml-4">${name}</span>
+          </div>
+          `;
+        },
+        customEventInput: (
+          cookstoveId: string,
+          localInput: EnergyCookingItemInput
+        ) => {
+          const currentStove = cookstoveTECHs.find(
+            (cookstove) => cookstove._id === cookstoveId
+          );
+
+          // // find cooktstove
+          if (currentStove) {
+            localInput.image = currentStove.image;
+            localInput.fuelTypes = currentStove.fuelTypes;
           }
-          return {
-            text: item?.text,
-            value: item?._id,
-          };
-        }) ?? undefined,
-      ...item,
-    };
-  });
+          this.resetSurveyInput(localInput);
+          return localInput;
+        },
+      },
+      {
+        conditional_value: cookstoveIdsTECHsWithAccess,
+        conditional: "cookstove",
+        items: "input.fuelTypes",
+        style: {
+          cols: "12",
+        },
+        text: "Cookstove fuel",
+        value: "input.fuelType",
+        formatter: (v: keyof typeof fuelTypes) => {
+          return fuelTypes[v];
+        },
+        customEventInput: (
+          fuelType: string,
+          localInput: EnergyCookingItemInput
+        ) => {
+          this.resetSurveyFuelOption(localInput);
+          return localInput;
+        },
+        isInput: true,
+        type: "select",
+        hideFooterContent: false,
+      },
+      {
+        text: (localInput: EnergyCookingItemInput) => {
+          let result = "Fuel per day (kg/day for biomass)";
+          // original text: "Fuel per day (kg/day for biomass)"
+          const biomassFuelsText =
+            "Biomass used per HH per day (kg/day for biomass)";
+          const liquidFuelsText = "Fuel use per HH per day  (L/day)";
+          const gasFuelsText = "Fuel use per HH per day (m3/day)";
+          const electricFuelsText = "Estimated Kwh/day/HH";
+          const thermalFuelsText = "Estimated Kwh/day/HH";
+
+          const refTexts = [
+            { fuelTypes: biomassFuels, text: biomassFuelsText },
+            { fuelTypes: liquidFuels, text: liquidFuelsText },
+            { fuelTypes: gasFuels, text: gasFuelsText },
+            { fuelTypes: electricFuels, text: electricFuelsText },
+            { fuelTypes: thermalFuels, text: thermalFuelsText },
+          ];
+          refTexts.every((refText) => {
+            if (refText.fuelTypes.includes(localInput.fuelType ?? "")) {
+              result = refText.text;
+              return false;
+            }
+            return true;
+          });
+          return result;
+        },
+        value: "input.fuelUsage",
+        conditional_value: allFuelsButElectric,
+        conditional: "fuelType",
+        style: {
+          cols: "12",
+        },
+        type: "number",
+      },
+      // beginning of diesel generators
+      {
+        value: "input.disableDieselLiters",
+        conditional_value: ["ELE_DIES", "ELE_HYB"],
+        text: "Number of litres of diesel known",
+        conditional: "fuelType",
+        style: {
+          cols: "12",
+        },
+        options: {
+          false: "yes",
+          true: "no",
+        },
+        type: "boolean",
+      },
+      {
+        value: "input.dieselLiters", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        conditional_value: false,
+        conditional: "disableDieselLiters",
+        text: "Total litres of diesel used per day",
+        suffix: "l",
+        style: {
+          cols: "12",
+        },
+        type: "number",
+      },
+      {
+        value: "input.generatorSize", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        conditional_value: true,
+        conditional: "disableDieselLiters",
+        text: "generator size (kW)",
+        tooltipInfo: "read from nameplate",
+        suffix: "kW",
+        min: 0,
+        style: {
+          cols: "12",
+        },
+        type: "number",
+        customEventInput: (_: number, localInput: EnergyCookingItemInput) => {
+          localInput.dieselLiters = computeLitresPerDayDiesel(localInput);
+          localInput.dieselPower = computeDieselPower(
+            localInput as EnergyItem,
+            { value: 4, description: "", _id: "GHG" } // fake data TODO: fixme when formula is here
+          ); //
+          return localInput;
+        },
+      },
+      {
+        value: "input.generatorLoad", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        conditional_value: true,
+        conditional: "disableDieselLiters",
+        text: "generator load (percentage)",
+        tooltipInfo:
+          "default average load of 60% per year will be used if not overwritten",
+        style: {
+          cols: "12",
+        },
+        type: "number",
+        subtype: "percent",
+      },
+      {
+        value: "input.operatingHours", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        conditional_value: true,
+        conditional: "disableDieselLiters",
+        text: "operating hours (hrs/day)",
+        tooltipInfo:
+          "from daily log and application will extrapolate this information to be annual",
+        suffix: "hrs/day",
+        min: 0,
+        style: {
+          cols: "12",
+        },
+        type: "number",
+      },
+      // end of diesel generators
+      // begingin og national grid
+      {
+        value: "input.gridPower", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        conditional_value: ["ELE_GRID", "ELE_HYB"],
+        conditional: "fuelType",
+        text: "Estimated Kwh/day/HH for national grid",
+        suffix: "Kwh/day/HH",
+        style: {
+          cols: "12",
+        },
+        type: "number",
+      },
+      // end of national grid
+      // begingin of solar
+      {
+        value: "input.solarInstalled", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        conditional_value: ["ELE_SOLAR", "ELE_HYB"],
+        conditional: "fuelType",
+        customEventInput: (
+          solarInstalled: number,
+          localInput: EnergyCookingItemInput
+        ) => {
+          localInput.renewablePower = computeKWHPerDayPerCountry(
+            solarInstalled,
+            countryCode
+          );
+          return localInput;
+        },
+        text: "Total kW of solar installed per HH",
+        suffix: "Kw/HH",
+        style: {
+          cols: "12",
+        },
+        type: "number",
+      },
+      {
+        value: "input.renewablePower", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        conditional_value: ["ELE_SOLAR", "ELE_HYB"],
+        disabled: true,
+        text: "Total kWh/day produced (estimated)",
+        conditional: "fuelType",
+        suffix: "Kwh/day/HH",
+        style: {
+          cols: "12",
+        },
+        type: "number",
+      },
+      // end of solar
+      {
+        conditional_value: biomassFulesWithoutCHC,
+        conditional: "fuelType",
+        text: "Sustainably sourced biomass",
+        style: {
+          cols: "12",
+        },
+        value: "input.sustainablySourced",
+        type: "boolean",
+      },
+      {
+        conditional_value: "CHC",
+        conditional: "fuelType",
+        text: "Processing factor for charcoal",
+        style: {
+          cols: "12",
+        },
+        default_value: "6", // TODO implement default_value in reset function
+        value: "input.chcProcessingFactor",
+        type: "number",
+      },
+      {
+        conditional_value: "FWD",
+        conditional: "fuelType",
+        text: "Dry wood",
+        style: {
+          cols: "12",
+        },
+        value: "input.dryWood",
+        type: "boolean",
+      },
+      {
+        conditional_value: "BRQ",
+        conditional: "fuelType",
+        text: "carbonized or non-carbonized", // toggle button ?
+        value: "input.carbonized",
+        options: {
+          true: "carbonized",
+          false: "non-carbonized",
+        },
+        type: "boolean",
+      },
+      {
+        conditional_value: "",
+        conditional: ["fuelUsage", "dieselLiters"],
+        text: "Cookstove appliance",
+        value: "input.appliance",
+        items: ["default", "Pressure cooker", "Heat retaining basket"],
+        style: {
+          cols: "12",
+        },
+        type: "select",
+      },
+      {
+        text: "Percentage of total cookstoves",
+        computeResults: true,
+        value: "input.numberOfCookstove",
+        conditional_value: ["", cookstoveIdWithoutAccess],
+        conditional: ["appliance", "cookstove"],
+        style: {
+          cols: "12",
+        },
+        max: 100,
+        subtype: "percent",
+        type: "number",
+        hideFooterContent: false,
+        formatter: (v: number) => {
+          return formatNumber(v, {
+            style: "percent",
+            maximumFractionDigits: 0,
+          });
+        },
+      },
+      {
+        text: "Total CO2 Emissions (tCO2e/year)",
+        value: "computed.totalCO2Emission",
+        hideFooterContent: false,
+        formatter: (v: number, { ...args }) => {
+          return formatNumber(v, { suffix: args.suffix });
+        },
+        computeResults: true,
+        type: "number",
+        disabled: true,
+      },
+      {
+        text: "Change in Emissions",
+        value: "computed.changeInEmission",
+        type: "number",
+        hideFooterContent: false,
+        disable: true,
+        readonly: true,
+        endlineOnly: true,
+        formatter: (v: number) => {
+          return formatNumber(v, {
+            style: "percent",
+            signDisplay: "exceptZero",
+          });
+        },
+        classFormatter: (v: number): string => {
+          const classes: string[] = [];
+          v > 0 ? classes.push("item-positive") : void 0;
+          v < 0 ? classes.push("item-negative") : void 0;
+          v === 0 ? classes.push("bold-table-content") : void 0;
+          return classes.join(" ");
+        },
+      },
+      {
+        text: "",
+        value: "actions",
+        hidden: true,
+        hideFooterContent: false,
+        width: "140px",
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ].map((item: any) => {
+      const [category, key] = item.value.split(".");
+      const isInput = item?.isInput ?? category === "input";
+      return {
+        align: "start",
+        sortable: false,
+        hideFooterContent: item.hideFooterContent ?? true,
+        label: item.text, // for form-item-component
+        key, // for form-item-component
+        isInput,
+        category, // input or computed,
+        formatter: (value: unknown) => value,
+        classFormatter: () => "",
+        options: (() => {
+          if (item.options) {
+            return item.options;
+          }
+          const items = item?.items;
+          if (typeof items === "string") {
+            // todo find another thing.
+            return [];
+          }
+          return (
+            items?.map((item: string | SelectCustom<string>) => {
+              if (typeof item === "string") {
+                return { text: item, value: item };
+              }
+              return {
+                text: item?.text,
+                value: item?._id,
+              };
+            }) ?? undefined
+          );
+        })(),
+        ...item,
+      } as SurveyTableHeader;
+    });
+  }
 }
 
-export interface EnergyCookingItemInput extends SurveyInput {
-  numberOfCookstove: number; // computed based on % of HH and stuffs
-  fuelUsage: number; // [kg or L/day]
-  cookTechno: string;
-  fuelType: string; // key
+export interface SelectCustom<V> {
+  text: string;
+  _id: V;
+}
+
+export interface EnergyCookingItemInput
+  extends SurveyInput,
+    DieselItem,
+    EnergyItem {
+  numberOfCookstove?: number; // computed based on % of HH and stuffs
+  cookstove: string; // type fo cookstove
+  image?: string; // image of cookstove
+  fuelUsage?: number; // [kg or L/day]
+  fuelType?: string; // key
+  fuelTypes?: string[]; // used only as a reference // TODO should not be stored in input
+  appliance?: string; // type of appliance heating retaining basket for instance
+  carbonized?: boolean;
+  sustainablySourced?: boolean;
+  chcProcessingFactor?: number; // default to 6
+  dryWood?: boolean;
 }
 
 export interface EnergyCookingItemResults extends SurveyResult {

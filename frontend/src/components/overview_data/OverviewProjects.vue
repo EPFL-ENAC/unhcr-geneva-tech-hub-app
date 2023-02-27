@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <v-container>
     <v-row>
@@ -56,6 +57,8 @@
 
 <script lang="ts">
 import BarChartOverview from "@/components/overview_data/BarChartOverview.vue";
+import { isoToRegion } from "@/utils/countriesAsList";
+
 import {
   listOfRegions,
   listOfShelterType,
@@ -284,33 +287,33 @@ export default class OverviewProjects extends Vue {
   }
 
   public get shelterOverviewConfigs(): any[] {
-    if (this.scorecards.length === 0) {
+    if (this.filteredScorecards.length === 0) {
       return [];
     }
     return [
       {
         title: "Habitability",
-        option: this.getboxplotConfig("habitability", this.scorecards),
+        option: this.getboxplotConfig("habitability", this.filteredScorecards),
       },
       {
         title: "Affordability",
-        option: this.getboxplotConfig("affordability", this.scorecards),
+        option: this.getboxplotConfig("affordability", this.filteredScorecards),
       },
       {
         title: "Technical Performance",
-        option: this.getboxplotConfig("techPerf", this.scorecards),
+        option: this.getboxplotConfig("techPerf", this.filteredScorecards),
       },
       {
         title: "Environmental impact <br/> Embodied water",
-        option: this.getboxplotConfig("h2o", this.scorecards),
+        option: this.getboxplotConfig("h2o", this.filteredScorecards),
       },
       {
         title: "Environmental impact <br/> Embodied CO2",
-        option: this.getboxplotConfig("co2", this.scorecards),
+        option: this.getboxplotConfig("co2", this.filteredScorecards),
       },
       {
         title: "Environmental impact <br/> Material efficiency",
-        option: this.getboxplotConfig("weight", this.scorecards),
+        option: this.getboxplotConfig("weight", this.filteredScorecards),
       },
     ];
   }
@@ -399,7 +402,7 @@ export default class OverviewProjects extends Vue {
       xAxis: [
         {
           type: "category",
-          data: ["2022", "2023"],
+          data: this.years,
         },
       ],
       yAxis: [
@@ -409,6 +412,17 @@ export default class OverviewProjects extends Vue {
       ],
       series,
     };
+  }
+
+  public get filteredScorecards(): any[] {
+    if (this.shelterFilters.selectedRegions.includes("All")) {
+      return this.scorecards;
+    }
+    return this.scorecards.filter((x) =>
+      this.shelterFilters.selectedRegions.includes(
+        isoToRegion[x.location_country]
+      )
+    );
   }
 
   public get organisations(): string[] {
@@ -421,27 +435,31 @@ export default class OverviewProjects extends Vue {
   }
 
   public get projectBarChartOption(): EChartsOption {
-    if (this.scorecards.length === 0) {
-      return this.getDefaultBarChart([]);
+    if (this.filteredScorecards.length === 0) {
+      return this.getDefaultBarChart(
+        this.organisations.map<EChartsOption>((organisation: string) => ({
+          name: organisation,
+          type: "bar",
+          stack: "shelter",
+          data: this.years.map(() => 0),
+        }))
+      );
     }
-
     const series = this.organisations.map<EChartsOption>(
       (organisation: string) => {
-        const organisationScorecards = this.scorecards.filter(
+        const organisationScorecards = this.filteredScorecards.filter(
           (scorecard) => scorecard.organisation === organisation
         );
         return {
           name: organisation,
           type: "bar",
           stack: "shelter",
-          data: [
-            organisationScorecards.filter(
-              (scorecard) => scorecard.year === "2022"
-            ).length, // year 2022
-            organisationScorecards.filter(
-              (scorecard) => scorecard.year === "2023"
-            ).length, // year 2023
-          ],
+          data: this.years.map(
+            (year) =>
+              organisationScorecards.filter(
+                (scorecard) => scorecard.year === year
+              ).length
+          ),
         };
       }
     );
@@ -449,10 +467,17 @@ export default class OverviewProjects extends Vue {
   }
 
   public get userBarChartOption(): EChartsOption {
-    if (this.scorecards.length === 0) {
-      return this.getDefaultBarChart([]);
+    if (this.filteredScorecards.length === 0) {
+      return this.getDefaultBarChart([
+        {
+          name: "active users",
+          type: "bar",
+          stack: "shelter",
+          data: this.years.map(() => []),
+        },
+      ]);
     }
-    const localScorecards = this.scorecards;
+    const localScorecards = this.filteredScorecards;
     function getUsersPerYear(year: string): number {
       return Array.from(
         new Set(
@@ -468,10 +493,7 @@ export default class OverviewProjects extends Vue {
         name: "active users",
         type: "bar",
         stack: "shelter",
-        data: [
-          getUsersPerYear("2022"), // year 2022
-          getUsersPerYear("2023"),
-        ],
+        data: this.years.map((year) => getUsersPerYear(year)),
       },
     ]);
   }

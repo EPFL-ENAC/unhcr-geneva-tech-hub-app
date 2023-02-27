@@ -1,4 +1,5 @@
 import { FormItem } from "@/components/commons/FormItem";
+import { CouchUser } from "@/store/UserModule";
 import { SyncDatabase } from "@/utils/couchdb";
 
 export interface ShelterState {
@@ -20,37 +21,39 @@ export type ShelterType = "Emergency" | "Transitional" | "Durable" | "";
 
 export const listOfRegions: ShelterRegions[] = [
   "All",
-  "East and Horn of Africa and the Great Lakes",
-  "Southern Africa",
-  "West and Central Africa",
-  "The Americas",
   "Asia and the Pacific",
   "Europe",
   "Middle East and North Africa",
+  "Southern Africa",
+  "The Americas",
+  "West and Central Africa",
+  "East and Horn of Africa",
 ];
 
 export type ShelterRegions =
   | "All"
-  | "East and Horn of Africa and the Great Lakes"
+  | "East and Horn of Africa"
   | "Southern Africa"
   | "West and Central Africa"
   | "The Americas"
   | "Asia and the Pacific"
   | "Europe"
-  | "Middle East and North Africa";
-// 1) Image, 2) drawings - floor plan, 3) drawings, roof plan, 4) drawing - section, 5) drawing - elevation
+  | "Middle East and North Africa"
+  | "Unknown";
+
+// update --> Image / Drawing / Report / Other
 export const imageShelterTypes = [
   "Image",
-  "drawings - floor plan",
-  "drawings - roof plan",
-  "drawing - section",
-  "drawing - elevation",
-  "pdf",
+  "Drawing",
+  "Report",
+  "Other",
 ] as const;
 export type ImageShelterType = typeof imageShelterTypes[number];
 
 export interface ImageShelter {
   url: string; // path like /s3/unhcr_tss/xx
+  origin_url?: string; // only for image
+  description?: string;
   name: string;
   type: ImageShelterType;
 }
@@ -80,21 +83,24 @@ export interface Shelter {
   totalEnvPerf: MaterialTree;
 
   habitability: Score;
-  habitability_score: number | undefined;
+  habitability_score: number | undefined; // percentage
+  habitability_score_real?: string | undefined; // helper string
   technical_performance: Score;
-  technical_performance_score: number | undefined;
+  technical_performance_score: number | undefined; // percentage
+  technical_performance_score_real?: string | undefined; // helper string
 
   scorecard: ScoreCard;
   scorecard_errors: string[];
   geometry: Geometry;
 
-  users: string[];
+  users: (string | Email | CouchUser)[];
   created_by: string;
   created_at: string;
   updated_at: string;
   updated_by: string;
 }
 
+export type Email = string;
 export interface ScoreCard {
   affordability: number;
   co2: number;

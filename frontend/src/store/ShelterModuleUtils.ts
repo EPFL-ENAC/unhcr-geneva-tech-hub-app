@@ -13,8 +13,8 @@ import {
 import { cloneDeep, isNumber } from "lodash";
 import { CouchUser } from "./UserModule";
 
-const TOTAL_HAB = 14;
-const TOTAL_TECH_PERF = 42;
+export const TOTAL_HAB = 14;
+export const TOTAL_TECH_PERF = 42;
 export function generateState(): ShelterState {
   return {
     shelter: {} as Shelter,
@@ -51,6 +51,9 @@ export function computeShelter(value: Shelter): Shelter {
   ) as number[];
   if (valuesTech.length) {
     const score = valuesTech.reduce((acc, el) => acc + el);
+    resultShelter.technical_performance_score_real = `${score} / ${
+      TOTAL_TECH_PERF - nonApplicableTech
+    }`;
     resultShelter.technical_performance_score =
       score / (TOTAL_TECH_PERF - nonApplicableTech);
   } else {
@@ -68,6 +71,9 @@ export function computeShelter(value: Shelter): Shelter {
   ) as number[];
   if (valuesHab.length) {
     const score = valuesHab.reduce((acc, el) => acc + el);
+    resultShelter.habitability_score_real = `${score} / ${
+      TOTAL_HAB - nonApplicableTech
+    }`;
     resultShelter.habitability_score = score / (TOTAL_HAB - nonApplicableHab);
   } else {
     resultShelter.habitability_score = 0;
@@ -287,7 +293,7 @@ export function generateNewShelter(name: string, user: CouchUser): Shelter {
       totalEnvPerf: getTotalEnvPerf([], []),
       scorecard: getDefaultScoreCard(),
       scorecard_errors: [],
-      users: [user.name],
+      users: [user],
       created_by: user.name,
       created_at: currentDate,
       updated_at: currentDate,

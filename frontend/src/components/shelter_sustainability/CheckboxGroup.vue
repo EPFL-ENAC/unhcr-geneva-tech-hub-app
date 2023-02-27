@@ -30,6 +30,7 @@
                 v-for="(child, $index) in form.children"
                 :key="$index"
                 :readonly="!child.description"
+                class="unhcr-expansion-panel"
               >
                 <v-expansion-panel-header :hide-actions="!child.description">
                   <v-checkbox
@@ -44,6 +45,27 @@
                       {{ child.label }}
                     </template>
                   </v-checkbox>
+
+                  <v-checkbox
+                    class="unhcr-checkbox-group-non-applicable__checkbox"
+                    :input-value="checkbox[child._id + 'na']"
+                    :disabled="child.disabled"
+                    hide-details
+                    @mousedown.stop.prevent
+                    @click.stop.prevent
+                    @change="
+                      (v) => {
+                        updateValue(child._id + 'na', v, child._id);
+                      }
+                    "
+                  >
+                    <template #label>
+                      <span
+                        class="unhcr-checkbox-group-non-applicable__checkbox__label"
+                        >not applicable
+                      </span>
+                    </template>
+                  </v-checkbox>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content v-if="!!child.description">
                   <!-- eslint-disable-next-line vue/no-v-html -->
@@ -51,21 +73,7 @@
                   <p
                     v-if="!child.disabled"
                     class="d-flex justify-between align-center"
-                  >
-                    <v-checkbox
-                      :input-value="checkbox[child._id + 'na']"
-                      :disabled="child.disabled"
-                      hide-details
-                      @mousedown.stop.prevent
-                      @click.stop.prevent
-                      @change="
-                        (v) => {
-                          updateValue(child._id + 'na', v, child._id);
-                        }
-                      "
-                    />
-                    <span class="mt-4 pt-1"> Non Applicable </span>
-                  </p>
+                  ></p>
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
@@ -146,3 +154,27 @@ export default class CheckboxGroup extends Vue {
 
 type CheckboxScore = Record<string, boolean>;
 </script>
+
+<style lang="scss" scoped>
+:deep(.unhcr-checkbox-group-non-applicable__checkbox) {
+  .v-input__control {
+    .v-input__slot {
+      flex-direction: row-reverse;
+      .v-label {
+        flex-direction: row-reverse;
+      }
+    }
+  }
+}
+:deep(.unhcr-expansion-panel) {
+  .v-expansion-panel-header {
+    .v-input--selection-controls {
+      margin-top: 0px;
+      padding-top: 0px;
+    }
+  }
+}
+.unhcr-checkbox-group-non-applicable__checkbox__label {
+  margin-right: 4px;
+}
+</style>

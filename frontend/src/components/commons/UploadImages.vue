@@ -7,44 +7,62 @@
       @dragenter.prevent="dragover = true"
       @dragleave.prevent="dragover = false"
     >
-      <v-card-text>
-        <v-row class="d-flex flex-column" dense align="center" justify="center">
-          <v-icon :class="[dragover ? 'mt-2, mb-6' : 'mt-5']" size="60">
-            mdi-cloud-upload
-          </v-icon>
-          <p>Drop your file(s) here</p>
-        </v-row>
-      </v-card-text>
-      <v-card-text>
-        Or
-        <v-file-input
-          v-model="uploadedFiles"
-          :rules="rules"
-          accept="image/png, image/jpeg, image/bmp, image/webp, image/gif, application/pdf"
-          placeholder="Select an image"
-          prepend-icon="mdi-camera"
-          label="Select Images"
-          small-chips
-          multiple
-          show-size
-        ></v-file-input>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-
-        <v-btn icon @click="closeDialog">
-          <v-icon id="close-button">$mdiClose</v-icon>
-        </v-btn>
-
-        <v-btn icon @click.stop="submit">
-          <v-icon id="upload-button">$mdiUpload</v-icon>
-        </v-btn>
-      </v-card-actions>
+      <v-form ref="form" v-model="uploadValid">
+        <v-app-bar>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="closeDialog">
+            <v-icon id="close-button">$mdiClose</v-icon>
+          </v-btn>
+        </v-app-bar>
+        <v-card-text>
+          <v-row
+            class="d-flex flex-column"
+            dense
+            align="center"
+            justify="center"
+          >
+            <v-icon :class="[dragover ? 'mt-2, mb-6' : 'mt-5']" size="60">
+              mdi-cloud-upload
+            </v-icon>
+            <p>Drop your file(s) here</p>
+          </v-row>
+        </v-card-text>
+        <v-card-text>
+          Or
+          <v-file-input
+            v-model="uploadedFiles"
+            :rules="rules"
+            placeholder="Select file(s)"
+            prepend-icon="mdi-camera"
+            label="Select file(s)"
+            small-chips
+            required
+            multiple
+            show-size
+          ></v-file-input>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            :loading="loading"
+            :disabled="loading || !uploadValid"
+            color="blue-grey"
+            class="ma-2 white--text"
+            data-id="upload-button"
+            @click.stop="submit"
+          >
+            <span class="mx-2">Upload</span>
+            <v-icon right dark> $mdiUpload </v-icon>
+          </v-btn>
+        </v-card-actions>
+      </v-form>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+// # 10 MB in binary
+const max_size = 10 * 1024 * 1024;
 export default {
   name: "UploadImages",
 
@@ -52,6 +70,11 @@ export default {
     dialog: {
       type: Boolean,
       required: true,
+    },
+    loading: {
+      type: Boolean,
+      required: true,
+      defaut: false,
     },
     multiple: {
       type: Boolean,
@@ -62,12 +85,18 @@ export default {
   data() {
     return {
       dragover: false,
+      uploadValid: true,
       uploadedFiles: [],
+      // authorized type: Image / Drawing / Report / Other
       rules: [
-        (value) =>
-          !!value ||
-          value.size < 2000000 ||
-          "image size should be less than 2 MB!",
+        (files) => files.length <= 10 || "no more than 10 files",
+        (files) => {
+          const result = true;
+          const allFilesAreGood = files.reduce((acc, file) => {
+            return acc && !!file && file.size < max_size;
+          }, result);
+          return allFilesAreGood || "image size should be less than 10 MB!";
+        },
       ],
     };
   },
@@ -116,9 +145,10 @@ export default {
         this.$store.dispatch("notifyUser", "There are no files to upload");
       } else {
         // Send uploaded files to parent component
+        this.$emit("update:loading", true);
         this.$emit("filesUploaded", this.uploadedFiles);
-        // Close the dialog box
-        this.closeDialog();
+        // reset on sent
+        this.uploadedFiles = [];
       }
     },
   },

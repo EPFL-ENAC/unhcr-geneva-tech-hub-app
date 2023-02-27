@@ -1,6 +1,7 @@
+proxy_cache_path /etc/nginx/cache levels=1:2 keys_zone=s3_server:64M max_size=2G inactive=24h use_temp_path=off;
+
 server {
     listen         5660 default_server;
-    listen         [::]:5660 default_server;
     server_name  localhost;
 
     location /  {
@@ -19,7 +20,7 @@ server {
       proxy_hide_header      Set-Cookie;
       proxy_ignore_headers   Set-Cookie;
       proxy_intercept_errors on;
-      add_header             Cache-Control max-age=31536000;
+      add_header             Cache-Control 'max-age=31536000,stale-while-revalidate=30,stale-if-error=1200';
 
       add_header 'Access-Control-Allow-Origin' '*';
       add_header 'Access-Control-Allow-Credentials' 'true';
@@ -36,6 +37,20 @@ server {
         return 204;
       }
 
+      proxy_cache s3_server;
+
+      proxy_headers_hash_max_size 512;
+      proxy_headers_hash_bucket_size 128; 
+      proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+      add_header X-Proxy-Cache $upstream_cache_status;
+
+      proxy_cache_valid 200 10m;
+      proxy_cache_bypass $arg_should_bypass_cache;
+      proxy_cache_methods GET HEAD;
+      proxy_cache_min_uses 1;
+      proxy_cache_lock on;
+
+      proxy_cache_use_stale error timeout http_500 http_502 http_503 http_504;
       proxy_pass             ${S3_ENDPOINT_PROTOCOL}${S3_ENDPOINT_HOSTNAME}/${S3_BUCKET_NAME}$request_uri;
     }
 }

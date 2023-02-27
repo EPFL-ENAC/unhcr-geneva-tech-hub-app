@@ -47,6 +47,7 @@
                   localItem.facilityType !== notPoweredName
                 "
                 :edit-mode="!isNewMode"
+                :country-code="countryCode"
                 :facilities-name="facilitiesName"
                 :facility.sync="localItem"
               />
@@ -139,6 +140,8 @@ export default class FacilityDialog extends Vue {
   item!: Facility;
   @Prop({ required: true, type: Array, default: () => [] })
   readonly facilitiesName!: string[];
+  @Prop({ type: String, required: true, default: "" })
+  readonly countryCode!: string;
 
   $refs!: {
     form: VForm;

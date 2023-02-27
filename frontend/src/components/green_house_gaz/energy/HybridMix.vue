@@ -31,7 +31,7 @@
         required
         :rules="rules"
         :min="0"
-        label="Total kW of solar installed per year"
+        label="Total kW of solar installed"
         @input="changeRenewablePower"
       />
     </v-col>

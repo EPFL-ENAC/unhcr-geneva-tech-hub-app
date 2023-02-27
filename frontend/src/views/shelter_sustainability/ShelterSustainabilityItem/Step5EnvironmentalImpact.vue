@@ -332,7 +332,7 @@ export default class Step3Materials extends Vue {
   }
 
   public itemMaterialClass(value: MaterialTree): string {
-    return kebabCase(value.materialId) as string;
+    return `material-${kebabCase(value.materialId) as string}`;
   }
   public itemFormClass(value: MaterialTree): string {
     return kebabCase(value.formId) as string;
@@ -780,70 +780,114 @@ interface Info {
   background-color: hsl(96, 20%, 48%);
 }
 
-.aluminium:hover {
-  background-color: hsl(206, 33%, 57%);
+.material-aluminium,
+.material-aluminium:hover {
+  color: #fefefe;
+  background-color: hsl(206, 33%, 57%) !important;
 }
-.bitumen:hover {
-  background-color: hsl(328, 47%, 42%);
+.material-bitumen,
+.material-bitumen:hover {
+  color: #fefefe;
+  background-color: hsl(328, 47%, 42%) !important;
 }
-.bamboo:hover {
-  background-color: hsl(96, 60%, 43%);
+.material-bamboo,
+.material-bamboo:hover {
+  color: #fefefe;
+  background-color: hsl(96, 60%, 43%) !important;
 }
-.cardboard-paper:hover {
-  background-color: hsl(32, 90%, 35%);
+.material-cardboard-paper,
+.material-cardboard-paper:hover {
+  color: #fefefe;
+  background-color: hsl(32, 90%, 35%) !important;
 }
-.cement:hover {
-  background-color: hsl(51, 15%, 36%);
+.material-cement,
+.material-cement:hover {
+  color: #fefefe;
+  background-color: hsl(51, 15%, 36%) !important;
 }
-.clay:hover {
-  background-color: hsl(51, 70%, 36%);
+.material-clay,
+.material-clay:hover {
+  color: #fefefe;
+  background-color: hsl(51, 70%, 36%) !important;
 }
-.concrete:hover {
-  background-color: hsl(51, 5%, 36%);
+.material-concrete,
+.material-concrete:hover {
+  color: #fefefe;
+  background-color: hsl(51, 5%, 36%) !important;
 }
-.earth-soil-mud:hover {
-  background-color: hsl(51, 85%, 36%);
+.material-earth-soil-mud,
+.material-earth-soil-mud:hover {
+  color: #fefefe;
+  background-color: hsl(51, 85%, 36%) !important;
 }
-.glass:hover {
-  background-color: hsl(59, 100%, 32%);
+.material-glass,
+.material-glass:hover {
+  color: #fefefe;
+  background-color: hsl(59, 100%, 32%) !important;
 }
+.grass-straw,
 .grass-straw:hover {
-  background-color: hsl(96, 90%, 23%);
+  color: #fefefe;
+  background-color: hsl(96, 90%, 23%) !important;
 }
-.gypsum:hover {
-  background-color: hsl(51, 60%, 36%);
+.material-gypsum,
+.material-gypsum:hover {
+  color: #fefefe;
+  background-color: hsl(51, 60%, 36%) !important;
 }
-.hemp:hover {
-  background-color: hsl(96, 80%, 13%);
+.material-hemp,
+.material-hemp:hover {
+  color: #fefefe;
+  background-color: hsl(96, 80%, 13%) !important;
 }
-.lime:hover {
-  background-color: hsl(51, 40%, 36%);
+.material-lime,
+.material-lime:hover {
+  color: #fefefe;
+  background-color: hsl(51, 40%, 36%) !important;
 }
-.other:hover {
-  background-color: hsl(0, 0%, 25%);
+.material-other,
+.material-other:hover {
+  color: #fefefe;
+  background-color: hsl(0, 0%, 25%) !important;
 }
-.plastic-polymer:hover {
-  background-color: hsl(328, 87%, 43%);
+.material-plastic-polymer,
+.material-plastic-polymer:hover {
+  color: #fefefe;
+  background-color: hsl(328, 87%, 43%) !important;
 }
-.canvas-polycotton:hover {
-  background-color: hsl(32, 50%, 35%);
+.material-canvas-polycotton,
+.material-canvas-polycotton:hover {
+  color: #fefefe;
+  background-color: hsl(32, 50%, 35%) !important;
 }
-.rubber:hover {
-  background-color: hsl(328, 37%, 62%);
+.material-rubber,
+.material-rubber:hover {
+  color: #fefefe;
+  background-color: hsl(328, 37%, 62%) !important;
 }
-.sand:hover {
-  background-color: hsl(41, 95%, 36%);
+.material-sand,
+.material-sand:hover {
+  color: #fefefe;
+  background-color: hsl(41, 95%, 36%) !important;
 }
-.steel:hover {
-  background-color: hsl(206, 83%, 37%);
+.material-steel,
+.material-steel:hover {
+  color: #fefefe;
+  background-color: hsl(206, 83%, 37%) !important;
 }
-.steel-brass-fixture-fixing:hover {
-  background-color: hsl(206, 43%, 57%);
+.material-steel-brass-fixture-fixing,
+.material-steel-brass-fixture-fixing:hover {
+  color: #fefefe;
+  background-color: hsl(206, 43%, 57%) !important;
 }
-.stone:hover {
-  background-color: hsl(51, 25%, 61%);
+.material-stone,
+.material-stone:hover {
+  color: #fefefe;
+  background-color: hsl(51, 25%, 61%) !important;
 }
-.timber:hover {
-  background-color: hsl(96, 20%, 43%);
+.material-timber,
+.material-timber:hover {
+  color: #fefefe;
+  background-color: hsl(96, 20%, 43%) !important;
 }
 </style>

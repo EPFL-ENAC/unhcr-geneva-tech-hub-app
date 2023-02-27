@@ -45,7 +45,12 @@
     </v-tabs>
     <v-container v-if="shelter.users" fluid>
       <v-form @submit.stop.prevent="">
-        <router-view :shelter="shelter" @update:shelter="submitForm" />
+        <router-view
+          :value="shelter"
+          :shelter="shelter"
+          @input="submitForm"
+          @update:shelter="submitForm"
+        />
       </v-form>
     </v-container>
   </v-container>
@@ -105,14 +110,6 @@ export default class ProjectItem extends Vue {
         to: "ShelterSustainabilityStep3",
       },
       {
-        icon: "$mdiLeaf",
-        text: "Environmental Impact",
-        disabled: !this.shelter?.envPerfItems?.length,
-        tooltipDisabledText:
-          "Bill of quantities needed to assess environmental performance",
-        to: "ShelterSustainabilityStep5",
-      },
-      {
         icon: "$mdiPoll",
         text: "Technical Performance",
         to: "ShelterSustainabilityStep6",
@@ -123,16 +120,19 @@ export default class ProjectItem extends Vue {
         to: "ShelterSustainabilityStep7",
       },
       {
+        icon: "$mdiLeaf",
+        text: "Environmental Impact",
+        disabled: !this.shelter?.envPerfItems?.length,
+        tooltipDisabledText:
+          "Bill of quantities needed to assess environmental performance",
+        to: "ShelterSustainabilityStep5",
+      },
+      {
         icon: "$mdiScoreboard",
         disabled: !!this.shelter?.scorecard_errors?.length,
         text: "Scorecard",
         tooltipDisabledText: `Scorecard requires completion of other sections<br/> <br/><ul>${scorecardErrorText}</ul>`,
         to: "ShelterSustainabilityStep9",
-      },
-      {
-        icon: "$mdiFilePdfBox",
-        text: "Assessment report",
-        to: "ShelterReportStep10",
       },
     ];
   }
@@ -163,6 +163,11 @@ export default class ProjectItem extends Vue {
   destroyed(): void {
     this.closeDB();
     this.changes?.cancel();
+  }
+
+  beforeRouteLeave(to: unknown, from: unknown, next: any): void {
+    this.$store.dispatch("ShelterModule/resetDoc");
+    next();
   }
 }
 

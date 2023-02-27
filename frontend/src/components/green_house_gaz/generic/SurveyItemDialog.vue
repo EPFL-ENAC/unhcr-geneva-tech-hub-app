@@ -33,17 +33,39 @@
               </v-col>
             </v-row>
             <v-row>
-              <template v-for="(surveyItem, $index) in headers">
+              <template v-for="(surveyItem, $index) in dynamicHeaders">
                 <v-col
                   v-if="
                     surveyItem.type &&
                     surveyItem.isInput &&
-                    matchCondition(localInput, surveyItem)
+                    matchConditions(localInput, surveyItem)
                   "
                   :key="$index"
                   :cols="surveyItem?.style?.cols ?? 6"
                   xs="12"
                 >
+                  <span v-if="diffDimension === surveyItem.key">
+                    Previous {{ surveyItem.label }} was:
+                    {{
+                      surveyItem.formatter
+                        ? surveyItem.formatter(
+                            previousItem.input[surveyItem.key]
+                          )
+                        : previousItem.input[surveyItem.key]
+                    }}
+                  </span>
+                  <div
+                    v-if="surveyItem.image"
+                    class="d-flex flex-row justify-center align-center"
+                  >
+                    <v-img
+                      v-if="localInput.image"
+                      max-width="150px"
+                      max-height="150px"
+                      aspect-ratio="1"
+                      :src="localInput.image"
+                    />
+                  </div>
                   <form-item-component
                     :value="localInput[surveyItem.key]"
                     v-bind="surveyItem"
@@ -92,7 +114,7 @@ import {
 } from "@/store/GhgInterface.vue";
 
 import { VForm } from "@/utils/vuetify";
-import { cloneDeep } from "lodash";
+import { cloneDeep, get as _get } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 @Component({
@@ -118,13 +140,19 @@ export default class SurveyItemDialog extends Vue {
   @Prop([Array])
   readonly headers!: SurveyTableHeader[];
 
+  @Prop([String])
+  readonly diffDimension!: keyof SurveyInput;
+
   $refs!: {
     form: VForm;
   };
 
   formValid = false;
+  refreshKey = 0;
+
   localInput: SurveyInput = {} as SurveyInput;
   localItem: SurveyItem = {} as SurveyItem;
+  // previousItem: SurveyItem = {} as SurveyItem;
 
   @Watch("item", { immediate: true, deep: true })
   onItemChange(value: SurveyItem): void {
@@ -144,18 +172,54 @@ export default class SurveyItemDialog extends Vue {
     surveyItem: SurveyTableHeader,
     localInput: SurveyInput
   ): void {
-    localInput = (surveyItem?.customEventInput?.(v, localInput) ??
-      localInput) as SurveyInput;
-    // always
-    localInput[surveyItem.key] = v;
-    // probably use this.$set instead ?
-    this.localInput = localInput;
+    const newLocalInput = (surveyItem?.customEventInput?.(v, localInput) ??
+      cloneDeep(localInput)) as SurveyInput;
+    newLocalInput[surveyItem.key] = v;
+    this.localInput = newLocalInput;
+    this.refreshKey = this.refreshKey + 1;
   }
   public get isNewMode(): boolean {
     return Object.keys(this.item?.input ?? []).length === 0;
   }
   public get title(): string {
     return this.isNewMode ? `New ${this.name}` : `Edit ${this.name}`;
+  }
+
+  public get dynamicHeaders(): SurveyTableHeader[] {
+    this.refreshKey; // Some hack it is: https://stackoverflow.com/questions/48700142/vue-js-force-computed-properties-to-recompute
+    return this.headers.map((header: SurveyTableHeader) => {
+      if (typeof header.items === "string") {
+        // should be lodash get with items as the PATH
+        const [category, key] = header.items.split(".");
+        if (category !== "input") {
+          throw new Error(
+            "items category should be input like so: `input.fuelTypes` for instance"
+          );
+        }
+        const items = _get(this.localInput, key) as string[];
+        if (typeof items === "object" && items.length) {
+          header.options = items.map((x) => ({
+            text: header.formatter?.(x as unknown) ?? x,
+            value: x,
+          }));
+        }
+      }
+      // TODO implement a dynamic way for header.items when it's a function ? cf below
+      if (typeof header.text === "function") {
+        // we don't overide text (dynamic text should not be authorized for table)
+        // only for header in form
+        header.label = header.text(this.localInput);
+      }
+      return header;
+    });
+  }
+
+  public get previousItem(): SurveyItem {
+    return (
+      this.referenceItems?.find(
+        (x) => x.increment === this.localItem.increment
+      ) ?? ({} as SurveyItem)
+    );
   }
 
   public selectOrigin(value: number): void {
@@ -176,15 +240,72 @@ export default class SurveyItemDialog extends Vue {
     this.$emit("update:item", this.localItem);
     this.isOpen = false;
   }
+
+  public matchConditions(
+    localInput: SurveyInput,
+    surveyItem: SurveyTableHeader
+  ) {
+    if (typeof surveyItem.conditional === "undefined") {
+      return true;
+    }
+    if (
+      typeof surveyItem.conditional === "object" &&
+      Array.isArray(surveyItem.conditional)
+    ) {
+      let result = false;
+
+      surveyItem.conditional.every((conditional: string) => {
+        const temp = this.matchCondition(localInput, {
+          ...surveyItem,
+          conditional, // override surveyItem.conditional
+        });
+        if (temp) {
+          result = temp;
+          return false;
+        }
+        return true;
+      });
+      return result;
+    }
+    if (typeof surveyItem.conditional === "string") {
+      return this.matchCondition(localInput, surveyItem);
+    }
+    throw new Error(
+      `Could not match condition in current form: ${JSON.stringify(surveyItem)}`
+    );
+  }
+
   public matchCondition(
     localInput: SurveyInput,
     surveyItem: SurveyTableHeader
   ) {
-    const target = localInput?.[surveyItem.conditional];
-    const objective = surveyItem.conditional_value;
     // if objective is emptystring it means we matched all value, we just need the
     // target to be defined
-    return target === objective || (target && objective == "");
+    if (typeof surveyItem.conditional === "undefined") {
+      return true;
+    }
+    if (typeof surveyItem.conditional_value === "undefined") {
+      return true;
+    }
+    if (typeof surveyItem.conditional === "string") {
+      const target: SurveyInputValue = localInput?.[surveyItem.conditional];
+      const objective: SurveyInputValue = surveyItem.conditional_value;
+      if (typeof objective === "string" || typeof objective === "boolean") {
+        // the trick is to delete the target on input change
+        // so the target may be undefined when necessary
+        return target === objective || (target && objective === "");
+      }
+      if (typeof objective === "object" && Array.isArray(objective)) {
+        if (typeof target === "string" && target) {
+          // TODO: it's weird that includes only works with string
+          return objective.includes(target) || objective.includes("");
+        }
+      }
+      return false;
+    }
+    throw new Error(
+      `conditional ""${surveyItem.conditional}"" should be of type string\n with conditional value: ${surveyItem.conditional_value}\n in surveyTableHeader item: ${surveyItem.value}`
+    );
   }
 }
 

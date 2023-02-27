@@ -1,4 +1,4 @@
-import { CouchUser, GUEST_NAME } from "@/store/UserModule";
+import { CouchUser, GUEST_NAME, Roles } from "@/store/UserModule";
 import { VueConstructor } from "vue";
 import { Store } from "vuex";
 
@@ -6,21 +6,77 @@ declare module "vue/types/vue" {
   // 3. Declare augmentation for Vue
   interface Vue {
     $can: (actionName: string, obj: ObjWithUsersField) => boolean;
-    $user: (isStatus: string) => boolean;
+    $user: () => CouchUser;
+    $userIs: (isStatus: string) => boolean;
     $userName: () => string;
     $userRoles: () => string[];
   }
 }
 
 interface ObjWithUsersField {
-  users: string[];
+  users: (CouchUser | string)[];
   reference?: boolean;
 }
-
 const USER_ADMIN = "admin";
 const DB_ADMIN = "_admin";
 const SPECIALIST = "specialist";
 const USER = "user";
+
+export function checkIfAdmin(user: CouchUser) {
+  // either we have the role 'admin' or '_admin'
+  // or we are in a custom list of unhcr users sub
+  const unhcrAdmins = [
+    "TBxz7Wb3aSrQGeFx1EbBtrtaKPht-4M87pznkWC2BYE", // nimri
+    "ZClxS-3mzvYkIq5kO8ULO37PaSFV-d9Z0Oml1CVoVeQ", // testtss
+  ];
+  const isDBAdmin = user.roles?.includes(Roles[Roles._admin]) ?? false;
+  const isAdmin = user.roles?.includes(Roles[Roles.admin]) ?? false;
+
+  let isUNHCRAdmins = false;
+  if (typeof user === "string") {
+    isUNHCRAdmins = unhcrAdmins.includes(user);
+  } else {
+    isUNHCRAdmins =
+      unhcrAdmins.includes(user?.name ?? "") ||
+      unhcrAdmins.includes(user?.sub ?? "");
+  }
+  return isAdmin || isDBAdmin || isUNHCRAdmins;
+}
+
+export function checkIfUserExist(
+  user: CouchUser | string,
+  users: (CouchUser | string)[]
+): boolean {
+  // Try for name or sub
+  // filter users with object style
+  const usersObject: CouchUser[] = users.filter(
+    (x) => typeof x === "object" && x !== null
+  ) as CouchUser[];
+  const usersString = users.filter((x) => typeof x == "string");
+  const usersName: string[] = usersObject
+    .map((x) => x?.name)
+    .filter((x) => x !== undefined) as string[];
+  const usersSub: string[] = usersObject
+    .map((x) => x?.sub)
+    .filter((x) => x !== undefined) as string[];
+  const allPossibleUsers = usersString.concat(usersName).concat(usersSub);
+  // BIG warning if name of user contains @unhcr.org the couchdb won't allow them
+  if (typeof user === "string") {
+    return allPossibleUsers.includes(user);
+  }
+  return (
+    allPossibleUsers.includes(user?.name ?? "") ||
+    allPossibleUsers.includes(user?.sub ?? "")
+  );
+}
+
+export function checkUserExists(
+  values: (CouchUser | string)[]
+): (v: string | CouchUser) => boolean | string {
+  return (value: string | CouchUser) => {
+    return !checkIfUserExist(value, values) || "Already exists.";
+  };
+}
 
 export default new (class User {
   public install(Vue: VueConstructor, { store }: { store: Store<CouchUser> }) {
@@ -31,10 +87,7 @@ export default new (class User {
       // return false or true
       const user = store.getters["UserModule/user"];
       if (user.loaded) {
-        const isAdmin =
-          user.roles.indexOf(USER_ADMIN) >= 0 ||
-          user.roles.indexOf(DB_ADMIN) >= 0;
-
+        const isAdmin = checkIfAdmin(user);
         if (actionName === "admin") {
           return isAdmin;
         }
@@ -44,16 +97,18 @@ export default new (class User {
         if (actionName === "create") {
           return isUser;
         }
-        const userIndex = obj?.users?.indexOf(user.name) ?? -1;
-        const isAuthor = userIndex >= 0;
-        if (actionName === "edit" && obj?.users) {
+        if (obj?.users === undefined) {
+          return false;
+        }
+        const isAuthor = checkIfUserExist(user, obj?.users);
+        if (actionName === "edit") {
           if (obj.reference) {
             return false;
           }
           return isAuthor || isAdmin;
         }
 
-        if (actionName === "delete" && obj?.users) {
+        if (actionName === "delete") {
           return isAuthor || isAdmin;
         }
       }
@@ -61,28 +116,26 @@ export default new (class User {
       return false;
     };
 
-    Vue.prototype.$user = (isStatus: string): boolean => {
+    Vue.prototype.$userIs = (isStatus: string): boolean => {
       const user = store.getters["UserModule/user"];
       const rights = {
-        isUserAdmin: user.loaded && user.roles.indexOf(USER_ADMIN) >= 0,
-        isDBAdmin: user.loaded && user.roles.indexOf(DB_ADMIN) >= 0,
-        isSpecialist: user.loaded && user.roles.indexOf(SPECIALIST) >= 0,
-        isUser: user.loaded && user.roles.indexOf(USER) >= 0,
-        isGuest: user.loaded && user.name === GUEST_NAME,
-        isLoggedIn: user.loaded && user.name.length > 0,
-        isLoggedOut: user.loaded && user.name.length == 0,
+        UserAdmin: user.loaded && user.roles.indexOf(USER_ADMIN) >= 0,
+        DBAdmin: user.loaded && user.roles.indexOf(DB_ADMIN) >= 0,
+        Specialist: user.loaded && user.roles.indexOf(SPECIALIST) >= 0,
+        User: user.loaded && user.roles.indexOf(USER) >= 0,
+        Guest: user.loaded && user.name === GUEST_NAME,
+        LoggedIn: user.loaded && user.name.length > 0,
+        LoggedOut: user.loaded && user.name.length == 0,
       } as Record<string, boolean>;
       return rights[isStatus];
     };
 
-    Vue.prototype.$userName = (): string => {
-      const user = store.getters["UserModule/user"];
-      return user.name;
-    };
+    Vue.prototype.$userName = (): string =>
+      store.getters["UserModule/user"].name;
 
-    Vue.prototype.$userRoles = (): string[] => {
-      const user = store.getters["UserModule/user"];
-      return user.roles;
-    };
+    Vue.prototype.$user = (): string => store.getters["UserModule/user"];
+
+    Vue.prototype.$userRoles = (): string[] =>
+      store.getters["UserModule/user"].roles;
   }
 })();

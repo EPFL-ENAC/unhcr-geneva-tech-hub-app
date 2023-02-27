@@ -1,7 +1,13 @@
 <template>
   <v-container fluid>
-    <v-row v-if="form.title">
-      <v-col :cols="depth > 0 ? 11 : 12" class="d-flex">
+    <v-row
+      v-if="form.title"
+      :class="{
+        'v-tabs fixed-tabs-bar d-flex d-print-none v-tabs--centered v-tabs--grow theme--light':
+          depth == 0,
+      }"
+    >
+      <v-col :cols="depth > 0 ? 11 : 12" class="d-flex v-tabs-bar">
         <component
           :is="`h${depth + 2}`"
           :class="`text-h${depth + 4} project__h${
@@ -9,9 +15,18 @@
           }  font-weight-medium`"
           >{{ form.title }}</component
         >
+
         <info-tooltip v-if="infoTooltipText[$route.name] && depth === 0">
           {{ infoTooltipText[$route.name].text }}
         </info-tooltip>
+        <span
+          v-if="result"
+          :class="`text-h${depth + 5} project__h${
+            depth + 3
+          }  font-weight-medium`"
+        >
+          ({{ result }})
+        </span>
       </v-col>
       <v-col v-if="depth > 0" cols="1" class="d-flex justify-end align-center">
         <v-btn icon @click="toggle">
@@ -71,6 +86,10 @@ import { Component, Vue } from "vue-property-decorator";
     },
     value: {
       type: Object as () => Score,
+    },
+    result: {
+      type: String,
+      default: "",
     },
     depth: {
       type: Number,

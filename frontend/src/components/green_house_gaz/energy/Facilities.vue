@@ -1,7 +1,6 @@
 <template>
   <v-container fluid>
     <survey-item-title :title-key="title" />
-
     <v-row>
       <v-col>
         <v-card elevation="2" rounded>
@@ -12,6 +11,7 @@
             <baseline-facilities-table
               :items.sync="facilityForm.baseline.inputs"
               :results="facilityForm.baseline.results"
+              :country-code="countryCode"
               :disabled="!baselineMode"
               @update:items="computeBaselineResults"
             />
@@ -63,6 +63,7 @@
                 :facilities="facilityForm.baseline.inputs"
                 :items.sync="facilityForm.endline.inputs"
                 :results="facilityForm.endline.results"
+                :country-code="countryCode"
                 :disabled="baselineMode"
                 @update:items="computeEndlineResults"
               />
@@ -73,6 +74,12 @@
                   <v-alert v-if="diffInTotalKwh" dense outlined type="error">
                     This comparison is not valid because baseline and endline
                     have different energy demands.
+                    <br />
+                    Baseline:
+                    {{ facilityForm.baseline.results.totalPower }} kWh/yr
+                    <br />
+                    Endline:
+                    {{ facilityForm.endline.results.totalPower }} kWh/yr
                   </v-alert>
                 </v-col>
               </v-row>
@@ -140,6 +147,7 @@
 
 <script lang="ts">
 import BaselineFacilitiesTable from "@/components/green_house_gaz/energy/BaselineFacilitiesTable.vue";
+import { countryIrradianceKeys } from "@/components/green_house_gaz/energy/computeCO2cost";
 import EndlineFacilitiesTable from "@/components/green_house_gaz/energy/EndlineFacilitiesTable.vue";
 import FacilitiesPieChart from "@/components/green_house_gaz/energy/FacilitiesPieChart.vue";
 import { computeChangeInEmission } from "@/components/green_house_gaz/generic/changeInEmission";
@@ -175,6 +183,8 @@ export default class Facilities extends Vue {
   readonly form: EnergyFacilitySurvey | undefined;
   @Prop({ type: String, required: true, default: "" })
   readonly titleKey!: string;
+  @Prop({ type: String, required: true, default: "" })
+  readonly countryCode!: countryIrradianceKeys;
 
   ghgMapRef!: ItemReferencesMap;
   baselineMode = true;
@@ -258,8 +268,8 @@ export default class Facilities extends Vue {
     // sum all rows into one object
     const endlineResults: EnergyFacilityInterventionItemResult = {
       gridPower: sumBy(inputs, (el) => el.gridPower),
-      dieselPower: sumBy(inputs, (el) => el.dieselPower ?? 0),
-      dieselLiters: sumBy(inputs, (el) => el.dieselLiters),
+      dieselPower: sumBy(inputs, (el) => el?.dieselPower ?? 0),
+      dieselLiters: sumBy(inputs, (el) => el?.dieselLiters ?? 0),
       renewablePower: sumBy(inputs, (el) => el.renewablePower),
       totalCO2Emission: sumBy(inputs, (el) => el.totalCO2Emission),
       changeInEmission: 0, // need to compute totalCO2 first
@@ -328,8 +338,8 @@ export default class Facilities extends Vue {
     const inputs: EnergyFacilityItem[] = baselineInputs; // this.facilityForm.baseline.inputs;
     const results: EnergyFacilityItemResult = {
       gridPower: sumBy(inputs, (el) => el.gridPower),
-      dieselPower: sumBy(inputs, (el) => el.dieselPower ?? 0),
-      dieselLiters: sumBy(inputs, (el) => el.dieselLiters),
+      dieselPower: sumBy(inputs, (el) => el?.dieselPower ?? 0),
+      dieselLiters: sumBy(inputs, (el) => el?.dieselLiters ?? 0),
       renewablePower: sumBy(inputs, (el) => el.renewablePower),
       totalCO2Emission: sumBy(inputs, (el) => el.totalCO2Emission),
     };

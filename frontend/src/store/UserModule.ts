@@ -1,11 +1,10 @@
 import {
-  getSession as getSessionTool,
-  login as loginTool,
-  loginToken as loginTokenTool,
-  logout as logoutTool,
+  getSessionWithCookie,
+  loginDefault,
+  loginJWT,
+  logoutCookie,
 } from "@/utils/couchdb";
 import { SessionStorageKey } from "@/utils/storage";
-import { JwtPayload } from "jsonwebtoken";
 import {
   ActionContext,
   ActionTree,
@@ -17,27 +16,12 @@ import { RootState } from ".";
 
 /** Config store */
 
-enum Roles {
-  "user",
-  "admin",
-  "specialist",
+export enum Roles {
+  user = "user",
+  admin = "admin",
+  _admin = "_admin", // dbAdmin
+  specialist = "specialist",
   // "author" // does not exist, it's in the document if user is in the users field
-}
-
-export function parseJwt(token: string): JwtPayload {
-  const base64Url = token.split(".")[1];
-  const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-  const jsonPayload = decodeURIComponent(
-    window
-      .atob(base64)
-      .split("")
-      .map(function (c) {
-        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-      })
-      .join("")
-  );
-
-  return JSON.parse(jsonPayload);
 }
 
 export const GUEST_NAME = "guest";
@@ -45,7 +29,7 @@ export interface CouchUser {
   name?: string;
   sub?: string;
   roles?: Roles[];
-  loaded: boolean;
+  loaded?: boolean;
 }
 export interface UserState {
   user: CouchUser;
@@ -71,6 +55,7 @@ function generateState(): UserState {
 /** Getters */
 const getters: GetterTree<UserState, RootState> = {
   user: (s): CouchUser => s.user,
+  token: () => sessionStorage.getItem(SessionStorageKey.Token),
 };
 
 /** Mutations */
@@ -107,9 +92,11 @@ const actions: ActionTree<UserState, RootState> = {
     credentials: UserCouchCredentials
   ) => {
     context.commit("SET_USER_LOADING");
+    // removeItem: idea was to remove azure authentication info
+    // it is biased: we trigger a warning and logout for azure first
     sessionStorage.removeItem(SessionStorageKey.Token);
     const { username, password } = credentials;
-    return loginTool(username, password)
+    return loginDefault(username, password)
       .then((axiosResponse) => {
         context.commit("SET_USER", axiosResponse.data);
         return axiosResponse;
@@ -121,45 +108,32 @@ const actions: ActionTree<UserState, RootState> = {
         context.commit("UNSET_USER_LOADING");
       });
   },
-  loginToken: (context: ActionContext<UserState, RootState>, token: string) => {
+  loginToken: async (
+    context: ActionContext<UserState, RootState>,
+    token: string
+  ) => {
     context.commit("SET_USER_LOADING");
-    sessionStorage.removeItem(SessionStorageKey.Token);
-    return loginTokenTool(token)
-      .then((axiosResponse) => {
-        // parse again the jwt, and update userCTX with custom email claim
-        const payload = parseJwt(token);
-        const userFromCouchDB = axiosResponse.data.userCtx;
-        userFromCouchDB.sub = userFromCouchDB.name;
-        if (payload.email) {
-          // we don't want to have an undefined name, since it is equal to not logged in user
-          userFromCouchDB.name = payload.email;
-        }
-        context.commit("SET_USER", userFromCouchDB);
-        return axiosResponse;
-      })
-      .catch((error) => {
-        throw error;
+    return loginJWT(token)
+      .then((response) => {
+        context.commit("SET_USER", response.data);
+        return response;
       })
       .finally(() => {
         context.commit("UNSET_USER_LOADING");
       });
   },
-  loginAsGuest: (context: ActionContext<UserState, RootState>) => {
+  loginAsGuest: async (context: ActionContext<UserState, RootState>) => {
     // force logout, just in case user already logged via the /db interface
     context.commit("SET_USER_LOADING");
     sessionStorage.removeItem(SessionStorageKey.Token);
-    logoutTool()
-      .then(() => {
-        context.commit("SET_USER", {
-          name: GUEST_NAME,
-          roles: [GUEST_NAME],
-        });
-      })
-      .finally(() => {
-        context.commit("UNSET_USER_LOADING");
-      });
+    await logoutCookie();
+    context.commit("SET_USER", {
+      name: GUEST_NAME,
+      roles: [GUEST_NAME],
+    });
+    context.commit("UNSET_USER_LOADING");
   },
-  logout: (context: ActionContext<UserState, RootState>) => {
+  logout: async (context: ActionContext<UserState, RootState>) => {
     context.commit("SET_USER_LOADING");
     sessionStorage.removeItem(SessionStorageKey.Token);
     if (context.getters.user.sub) {
@@ -170,13 +144,9 @@ const actions: ActionTree<UserState, RootState> = {
       window.location.href =
         "https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=https%3A%2F%2Funhcr-tss.epfl.ch";
     } else {
-      logoutTool()
-        .then(() => {
-          context.commit("SET_USER", generateEmptyUser());
-        })
-        .finally(() => {
-          context.commit("UNSET_USER_LOADING");
-        });
+      await logoutCookie();
+      context.commit("SET_USER", generateEmptyUser());
+      context.commit("UNSET_USER_LOADING");
     }
   },
   getSession: (context: ActionContext<UserState, RootState>) => {
@@ -189,7 +159,7 @@ const actions: ActionTree<UserState, RootState> = {
     } else if (currentUser.name !== GUEST_NAME) {
       // we're not a guest user nor a oauth user but a normal user (couchdb user)
       context.commit("SET_USER_LOADING");
-      return getSessionTool()
+      return getSessionWithCookie()
         .then((response) => {
           const user = response.data;
           context.commit("SET_USER", user.userCtx);

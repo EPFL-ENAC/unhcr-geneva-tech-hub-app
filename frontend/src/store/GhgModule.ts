@@ -20,6 +20,7 @@ const MSG_USER_NOT_PRESENT = "Could not find user information";
 interface ProjectsState {
   projects: GreenHouseGaz[];
   project: GreenHouseGaz;
+  projectLoading: boolean;
   countries: Array<Country>;
   sites: Site[];
   localCouch: SyncDatabase<GreenHouseGaz> | null;
@@ -31,6 +32,7 @@ function generateState(): ProjectsState {
   return {
     projects: [],
     project: {} as GreenHouseGaz,
+    projectLoading: false,
     countries: [],
     sites: [],
     localCouch: null,
@@ -48,7 +50,7 @@ function generateNewProject(
     return {
       ...newGhg,
       _id: newGhg.name,
-      users: [user.name],
+      users: [user],
       created_by: user.name,
     };
   }
@@ -57,6 +59,7 @@ function generateNewProject(
 const getters: GetterTree<ProjectsState, RootState> = {
   projects: (s): Array<GreenHouseGaz> => s.projects,
   project: (s): GreenHouseGaz | null => s.project,
+  projectLoading: (s): boolean | null => s.projectLoading,
   project_REF_GRD: (
     _state,
     getters,
@@ -93,6 +96,9 @@ const mutations: MutationTree<ProjectsState> = {
   },
   SET_PROJECT(state, value) {
     state.project = value;
+  },
+  SET_PROJECT_LOADING(state, value) {
+    state.projectLoading = value;
   },
   SET_COUNTRIES(state, countries) {
     state.countries = countries;
@@ -149,9 +155,7 @@ function getGenericCountries(
 const actions: ActionTree<ProjectsState, RootState> = {
   syncDB: (context: ActionContext<ProjectsState, RootState>) => {
     context.commit("INIT_DB");
-    const localCouch = context.state.localCouch;
-
-    localCouch?.onChange(function () {
+    context.state.localCouch?.onChange(function () {
       context.dispatch("getCountries");
     });
   },
@@ -186,6 +190,7 @@ const actions: ActionTree<ProjectsState, RootState> = {
     const value = generateNewProject(newGhg, user);
     const remoteDB = context.state.localCouch?.remoteDB;
     if (remoteDB) {
+      delete value.isUNHCR;
       return remoteDB.post(value).then(() => {
         // set new rev
         return context.dispatch("getDoc", value._id);
@@ -206,22 +211,43 @@ const actions: ActionTree<ProjectsState, RootState> = {
         console.log(err);
       });
   },
+  setDoc: (
+    context: ActionContext<ProjectsState, RootState>,
+    value: GreenHouseGaz
+  ) => {
+    const user = context.rootGetters["UserModule/user"] as CouchUser;
+    if (!user) {
+      throw new Error(MSG_USER_NOT_PRESENT);
+    }
+    const newValue = updateMetaFieldsForUpdate(value, user);
+    context.commit("SET_PROJECT", newValue);
+  },
   getDoc: (context: ActionContext<ProjectsState, RootState>, id) => {
     const db = context.state.localCouch?.remoteDB;
     if (db) {
-      db.get(id)
+      context.commit("SET_PROJECT_LOADING", true);
+      return db
+        .get(id)
         .then(function (result) {
           context.commit("SET_PROJECT", result);
+          return result;
         })
         .catch(function (err: Error) {
-          console.log(err);
+          // context.dispatch("resetDoc");
+          context.commit("SET_PROJECT_LOADING", false);
+          throw new Error(err?.message + id);
+        })
+        .finally(() => {
+          context.commit("SET_PROJECT_LOADING", false);
         });
     } else {
+      context.commit("SET_PROJECT_LOADING", false);
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
   },
   resetDoc: (context: ActionContext<ProjectsState, RootState>) => {
     context.commit("SET_PROJECT", {} as GreenHouseGaz);
+    context.commit("SET_PROJECT_LOADING", false);
   },
   updateDoc: async (
     context: ActionContext<ProjectsState, RootState>,
@@ -232,7 +258,9 @@ const actions: ActionTree<ProjectsState, RootState> = {
       throw new Error(MSG_USER_NOT_PRESENT);
     }
     const newValue = updateMetaFieldsForUpdate(value, user);
+    delete newValue.isUNHCR;
     context.commit("SET_PROJECT", newValue);
+    context.commit("SET_PROJECT_LOADING", true);
     const db = context.state.localCouch?.remoteDB;
     if (db) {
       return await db
@@ -243,10 +271,14 @@ const actions: ActionTree<ProjectsState, RootState> = {
         })
         .catch((response) => {
           // because error, we need to dispatch doc again
+          context.commit("SET_PROJECT_LOADING", false);
           context.dispatch("getDoc", response.id);
-          console.log("error", response);
+        })
+        .finally(() => {
+          context.commit("SET_PROJECT_LOADING", false);
         });
     } else {
+      context.commit("SET_PROJECT_LOADING", false);
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
   },
