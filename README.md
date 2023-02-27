@@ -130,6 +130,13 @@ make setup-database
 - save the document by deplacing `couchdb-setup/bootstrap/_users/new_username.json`
 - remove the `'_rev'` field and commit the file
 
+## Update public keys for unhcr azure server
+- run make azure
+```bash
+make azure
+```
+- then copy the content of the json `azure/jwt_keys.json` at the proper place inside couchdb-setup/bootstrap/_config.json
+- verify that the json is valid
 
 ## file uploads
 - 2 services necessary

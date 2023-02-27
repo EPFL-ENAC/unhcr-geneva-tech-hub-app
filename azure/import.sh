@@ -1,5 +1,6 @@
 #!/bin/sh
 
+
 # have tenand-id in env
 # get json from https://login.microsoftonline.com/<tenant-id>/discovery/v2.0/keys
 APP_AUTH_TENANT_ID=$(cat ../frontend/.env  | grep TENANT | sed -e 's/^[A-Z_=]*//g')
@@ -13,4 +14,3 @@ cat /${temp_file} | python -c 'import sys, json; keys = json.load(sys.stdin)["ke
 
 ## cleaning tmp files
 rm ${temp_file}
-./add_to_config_ini.sh
