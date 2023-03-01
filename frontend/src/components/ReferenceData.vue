@@ -30,6 +30,7 @@
 <script lang="ts">
 import EnergyCooking from "@/components/reference_data/EnergyCooking.vue";
 import GHG from "@/components/reference_data/GHG.vue";
+import GHGfNRB from "@/components/reference_data/GHGfNRB.vue";
 import GHGSolarModule from "@/components/reference_data/GHGSolarModule.vue";
 import IgesGrid from "@/components/reference_data/IgesGrid.vue";
 import Materials from "@/components/reference_data/Materials.vue";
@@ -48,6 +49,7 @@ import { mapActions, mapGetters } from "vuex";
   components: {
     MaterialsTransport,
     GHG,
+    GHGfNRB,
     Materials,
     IgesGrid,
     EnergyCooking,
@@ -76,6 +78,7 @@ export default class App extends Vue {
     { tab: "GHG", componentName: "GHG" },
     { tab: "UNHCR Locations", componentName: "UNHCRLocation" },
     { tab: "GHG Solar average", componentName: "GHGSolarModule" },
+    { tab: "GHG fNRB", componentName: "GHGfNRB" },
     { tab: "Materials", componentName: "Materials" },
     {
       tab: "Materials transport",

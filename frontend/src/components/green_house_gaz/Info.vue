@@ -213,12 +213,15 @@ export default class GhgInfo extends Vue {
         key: "pp_per_hh",
         label: "Ave. People per HH",
         min: 0,
+        max: 10,
       },
       {
         type: "number",
+        subtype: "percent",
         key: "hh",
         label: "% of HHs using cookstove",
         min: 0,
+        max: 100,
       },
     ];
   }
@@ -233,6 +236,17 @@ export default class GhgInfo extends Vue {
       const previousName = this.survey.name;
       const nextName = this.localProject.surveys[this.surveyIndex].name;
 
+      const { population, hh, pp_per_hh } = value;
+      if (
+        population == undefined ||
+        hh == undefined ||
+        pp_per_hh == undefined
+      ) {
+        throw new Error(
+          "population information and cookstove information not complete"
+        );
+      }
+      value.totalCookstoves = (population / pp_per_hh) * hh;
       await this.updateDoc(value);
       // check current survey name and change route in case of change
       if (previousName !== nextName) {

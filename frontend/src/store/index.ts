@@ -1,6 +1,7 @@
 import ConfigModule from "@/store/ConfigModule";
 import EnergyModule from "@/store/EnergyModule";
 import GhgModule from "@/store/GhgModule";
+import GHGReferencefNRB from "@/store/GHGReferencefNRB";
 import GhgReferenceIgesGridModule from "@/store/GhgReferenceIgesGridModule";
 import GhgReferenceModule from "@/store/GhgReferenceModule";
 import GhgReferenceSolarModule from "@/store/GHGReferenceSolarModule";
@@ -206,6 +207,7 @@ const store: StoreOptions<RootState> = {
     GhgReferenceModule,
     GhgReferenceIgesGridModule,
     GhgReferenceSolarModule,
+    GHGReferencefNRB,
     UNHCRLocation,
     UserModule,
     energy: EnergyModule,

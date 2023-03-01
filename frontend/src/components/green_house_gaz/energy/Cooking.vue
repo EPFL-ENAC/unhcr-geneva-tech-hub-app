@@ -34,10 +34,12 @@ import {
 } from "@/store/GhgInterface.vue";
 import { get as _get } from "lodash";
 
-import { Survey } from "@/store/GhgInterface.vue";
+import { GreenHouseGaz, Survey } from "@/store/GhgInterface.vue";
+import { GHGfNRB } from "@/store/GHGReferencefNRB";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { mapActions, mapGetters } from "vuex";
 
 const fuelTypes = {
   FWD: "Wood",
@@ -172,13 +174,26 @@ const cookstoveIdsTECHsWithAccess = cookstoveTECHsWithAccess.map(
 );
 const cookstoveIdWithoutAccess = "1";
 const APPLIANCE_EFFICIENCY = 1;
-const REF_DRY_WOOD = 0.85; // weird; we're missing information
-const fNRB = 1; // should be from GHG_RFERENCE TABLE
+const REF_DRY_WOOD = 0.15; // 15% more efficient\
+const REF_SUSTAINED_WOOD = 0.077; // fNRB of sustained
+const default_fNRB = 0.85; // 0.76; // default value should be from GHG_RFERENCE TABLE
 
 @Component({
   components: {
     SurveyItemTitle,
     BaselineEndlineWrapper,
+  },
+  computed: {
+    ...mapGetters("GhgModule", ["project"]),
+    ...mapGetters("GHGReferencefNRB", ["items"]),
+  },
+  methods: {
+    ...mapActions("GHGReferencefNRB", [
+      "syncDB",
+      "getAllDocs",
+      "updateDoc",
+      "closeDB",
+    ]),
   },
 })
 export default class Trucking extends Vue {
@@ -194,6 +209,7 @@ export default class Trucking extends Vue {
   @Prop({ type: String, required: true, default: "" })
   readonly countryCode!: countryIrradianceKeys;
 
+  project!: GreenHouseGaz;
   diffDimension: keyof EnergyCookingItemInput = "numberOfCookstove";
   name = "cookstove";
 
@@ -212,29 +228,105 @@ export default class Trucking extends Vue {
     localItemInput: EnergyCookingItemInput,
     ghgMapRef: ItemReferencesMap
   ): EnergyCookingItemResults {
-    const { numberOfCookstove, fuelUsage, fuelType } = localItemInput;
-    /*
-     **  CO2 Emissions =
-     **      Number_of_Cookstove
-     **    * FUEL_USAGE [kg or L/day]
-     **    * 365,25 [Days/Yr]
-     **    * REF_EF_{FUEL} // TODO have a matching table between fuel type and REF_EFF
-     **    * TIME_EFFICIENCY
-     **    * fNRB
-     **    * REF_DRY_WOOD
-     **    * (IF CHARCOAL=YES : Wood_to_charcoal factor a.k.a 6)
-     **    / 1000 [kg/t]
-     */
-    const totalCO2Emission =
-      ((numberOfCookstove ?? 0) * // TODO: NEED FORMULA to be implemented
-        (fuelUsage ?? 0) * // use selection --> there wiill be a type of formula oer type of fuel
-        365.25 *
-        ghgMapRef?.[`REF_EFF_${fuelType}`]?.value ??
-        1 *
-          APPLIANCE_EFFICIENCY * // should be 1 for now (1 - 0.7 or 0.3 depending on appliances)
-          fNRB * // country or default value of 0.76 or 0.85 who knows or 1 if not in list of fuel
-          REF_DRY_WOOD * // should be 1 for now
-          (fuelType === "CHC" ? 6 : 1)) / 1000;
+    if (this.project === undefined) {
+      throw new Error("project undefined");
+    }
+    const {
+      numberOfCookstove: percentageOfTotalCookstove,
+      fuelUsage,
+      fuelType,
+    } = localItemInput;
+    if (!fuelType) {
+      throw new Error("fuel type not defined");
+    }
+    if (!fuelUsage) {
+      throw new Error("fuel usage not defined");
+    }
+    if (!percentageOfTotalCookstove) {
+      throw new Error("number of cooktsove not defined");
+    }
+    const hhUsingTheFuel =
+      percentageOfTotalCookstove * this.project.totalCookstoves; // number of cookstoves
+    let totalCO2Emission = 0;
+    const fuelEfficiency = ghgMapRef?.[`REF_EFF_${fuelType}`]?.value ?? 1;
+    switch (true) {
+      /*
+      solid fuels "FWD", "CHC", "BRQ", "PLTS"
+        Firewood (3 stone with biomass) FWD
+        Charcoal traditional CHC
+        Improved wood FWD
+        Improved charcoal CHC
+        Briquettes BRQ
+        Pellets PLTS
+        Gasifier with firewood FWD
+        Gasifier with charcoal CHC
+        Gasifier with briquette BRQ
+      */
+      case biomassFuels.includes(fuelType): {
+        /*
+         **  CO2 Emissions =
+         **      Number of hhUsingTheFuel
+         **    * FUEL_USAGE [kg or L/day]
+         **    * 365,25 [Days/Yr]
+         **    * REF_EF_{FUEL} // TODO have a matching table between fuel type and REF_EFF
+         **    * TIME_EFFICIENCY
+         **    * fNRB
+         **    * (IF CHARCOAL=YES : Wood_to_charcoal factor a.k.a 6)
+         **    / 1000 [kg/t]
+         ** TODO:
+          - [ ] fNRB by country
+          - [ ] dyamic drywood factor
+          - [ ] dynamic appliance efficiency
+          - [ ] dynamic chc factor of 6
+         */
+        const countryfNRB = this.items.find(
+          (x) => x._id === this.project.country_code
+        );
+        let localFNRB = countryfNRB?.value ?? default_fNRB;
+        if (localItemInput.dryWood) {
+          localFNRB = localFNRB - REF_DRY_WOOD;
+        }
+        if (localItemInput.sustainablySourced) {
+          localFNRB = REF_SUSTAINED_WOOD;
+        }
+        let app_eff = 1;
+        switch (localItemInput.appliance) {
+          case "Pressure cooker":
+            app_eff = app_eff - 0.7;
+            break;
+          case "Heat retaining basket":
+            app_eff = app_eff - 0.3;
+            break;
+          default:
+            break;
+        }
+        totalCO2Emission =
+          hhUsingTheFuel *
+          fuelUsage * // fuel consumed in kg / day
+          0.001 * // 1t/1000kg
+          365.25 * // days/yr
+          localFNRB * // in percentage country or default value of 0.76 or 0.85 who knows or 1 if not in list of fuel
+          fuelEfficiency *
+          app_eff * // should be 1 for now (1 - 0.7 or 0.3 depending on appliances)
+          (fuelType === "CHC" ? localItemInput.chcProcessingFactor ?? 6 : 1);
+        break;
+        /*
+        liquid fuels
+          Ethanol
+          LPG
+          Kerosene 
+    */
+      }
+      case liquidFuels.includes(fuelType):
+        break;
+      /* gaz fuels Biogas*/
+      case gasFuels.includes(fuelType):
+        break;
+      case electricFuels.includes(fuelType):
+        break;
+      default:
+        throw new Error(`unknown fuel type ${fuelType}`);
+    }
     return {
       totalCO2Emission,
     };
@@ -362,6 +454,17 @@ export default class Trucking extends Vue {
           this.resetSurveyInput(localInput);
           return localInput;
         },
+      },
+      {
+        conditional_value: "",
+        conditional: ["fuelUsage", "dieselLiters"],
+        text: "Cookstove appliance",
+        value: "input.appliance",
+        items: ["default", "Pressure cooker", "Heat retaining basket"],
+        style: {
+          cols: "12",
+        },
+        type: "select",
       },
       {
         conditional_value: cookstoveIdsTECHsWithAccess,
@@ -587,17 +690,6 @@ export default class Trucking extends Vue {
         type: "boolean",
       },
       {
-        conditional_value: "",
-        conditional: ["fuelUsage", "dieselLiters"],
-        text: "Cookstove appliance",
-        value: "input.appliance",
-        items: ["default", "Pressure cooker", "Heat retaining basket"],
-        style: {
-          cols: "12",
-        },
-        type: "select",
-      },
-      {
         text: "Percentage of total cookstoves",
         computeResults: true,
         value: "input.numberOfCookstove",
@@ -695,6 +787,19 @@ export default class Trucking extends Vue {
         ...item,
       } as SurveyTableHeader;
     });
+  }
+
+  syncDB!: () => null;
+  closeDB!: () => Promise<null>;
+  getAllDocs!: () => Promise<GHGfNRB[]>;
+  items!: GHGfNRB[];
+  mounted(): void {
+    this.syncDB();
+    this.getAllDocs();
+  }
+
+  destroyed(): void {
+    this.closeDB();
   }
 }
 
