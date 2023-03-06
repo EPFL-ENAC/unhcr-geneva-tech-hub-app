@@ -169,7 +169,8 @@ export default class LoginComponent extends Vue {
 
     url.searchParams.append("code_challenge", challenge);
     url.searchParams.append("code_challenge_method", "S256");
-    url.searchParams.append("redirect_uri", window.location.origin);
+    const suffix = window.location.hostname === "localhost" ? "" : "/auth";
+    url.searchParams.append("redirect_uri", window.location.origin + suffix);
 
     window.location.href = url.href;
   }

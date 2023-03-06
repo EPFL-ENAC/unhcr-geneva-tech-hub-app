@@ -135,6 +135,7 @@ const actions: ActionTree<UserState, RootState> = {
     const state = sessionStorage.getItem("state") ?? "";
 
     try {
+      const suffix = window.location.hostname === "localhost" ? "" : "/auth";
       const response = await axios.post(
         `https://login.microsoftonline.com/${process.env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/token`,
         new URLSearchParams({
@@ -143,7 +144,7 @@ const actions: ActionTree<UserState, RootState> = {
           code,
           code_verifier, // web_message ?
           state,
-          redirect_uri: window.location.origin,
+          redirect_uri: window.location.origin + suffix,
         }),
         {
           headers: {
@@ -209,13 +210,14 @@ const actions: ActionTree<UserState, RootState> = {
     }
     // not working because response_type id_token, token was not allowed;
     try {
+      const suffix = window.location.hostname === "localhost" ? "" : "/auth";
       const url: URL = new URL(
         `https://login.microsoftonline.com/${process.env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/authorize`
       );
       url.searchParams.append("client_id", process.env.VUE_APP_AUTH_CLIENT_ID);
       url.searchParams.append("nonce", uuidv4());
       url.searchParams.append("response_type", "token id_token");
-      url.searchParams.append("redirect_uri", window.location.origin);
+      url.searchParams.append("redirect_uri", window.location.origin + suffix);
       const state = uuidv4();
       url.searchParams.append("state", state);
       sessionStorage.setItem("state", state);
