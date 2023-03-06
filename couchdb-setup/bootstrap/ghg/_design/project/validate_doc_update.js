@@ -1,4 +1,9 @@
 function (newDoc, oldDoc, userCtx, secObj) {
+    if (userCtx.name === null) {
+        throw ({
+            unauthorized: 'unhcr-tss:couchdb:ghg:project -> user ctx has no name: probably no authentication provided'
+        })
+    }
     function checkIfAdmin(userCtx)
     {
         // either we have the role 'admin' or '_admin'

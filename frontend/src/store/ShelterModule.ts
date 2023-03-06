@@ -246,11 +246,15 @@ const actions: ActionTree<ShelterState, RootState> = {
             // let newValue = await context.dispatch("getDoc", computedShelter._id);
             // computedShelter._rev = newValue._rev;
             // try again with latest revision
+          } else if (e.error === "unauthorized") {
+            // if guest it should not have happened because of line 220:     if (user.name) {
+            console.error(
+              `updateDoc in ShelterModule: error ${JSON.stringify(e)}`
+            );
           } else {
             console.error(
               `updateDoc in ShelterModule: error ${JSON.stringify(e)}`
             );
-            // TODO: notifyUser should trigger everytime we call it
             context.dispatch(
               "notifyUser",
               `${e.error}: ${e.message} ( ${e.status} )`,

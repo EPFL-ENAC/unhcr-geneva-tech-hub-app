@@ -243,7 +243,9 @@ export default class App extends Vue {
   toggleReferenceData!: () => AxiosPromise;
   // probably vuex Promise and not AxiosPromise
   logoutStore!: () => AxiosPromise;
-  getSessionStore!: () => AxiosPromise;
+  getSessionStore!: ({
+    byPassLoading,
+  }: Record<string, boolean>) => AxiosPromise;
   user!: CouchUser;
   md5Function: (v: string) => string = md5;
   title = "UNHCR-TSS"; // use env variable,
@@ -255,6 +257,7 @@ export default class App extends Vue {
   // TODO: use meta.title for apps name
   apps = Apps;
   unhcr_logo = unhcr_logo;
+  intervalId!: number;
 
   rootRoute = {} as RouteRecordPublic;
   currentRouteName = "";
@@ -331,7 +334,10 @@ export default class App extends Vue {
       .catch((error: AxiosError) => {
         switch (error.response?.status) {
           case 401:
-            this.$store.dispatch("setGlobalError", "Invalid credentials");
+            this.$store.dispatch(
+              "setGlobalError",
+              "Invalid credentials / Not authenticated"
+            );
             break;
           default:
             this.$store.dispatch("setGlobalError", error.message);
@@ -349,14 +355,21 @@ export default class App extends Vue {
     document.title = this.title;
     /// retrieve user
     // retrieve user only if not in
-    this.getSessionStore();
+    this.getSessionStore({ byPassLoading: true });
 
+    // TODO: check if offline
+    this.intervalId = window.setInterval(() => {
+      this.getSessionStore({ byPassLoading: true });
+    }, 1000 * 60 * 5); // check every 5 minutes: 1000 * 60 * 5
     this.$store.subscribe((mutation) => {
       const shouldUpdate = ["storeMessage"];
       if (shouldUpdate.includes(mutation.type)) {
         this.snackbar = true;
       }
     });
+  }
+  beforeDestroy(): void {
+    clearInterval(this.intervalId);
   }
 }
 </script>
