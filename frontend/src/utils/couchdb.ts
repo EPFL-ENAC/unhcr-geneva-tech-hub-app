@@ -63,25 +63,26 @@ export function loginDefault(username: string, password: string): AxiosPromise {
   });
 }
 
+function expireTokenAndError(message: string): void {
+  sessionStorage.removeItem(SessionStorageKey.Token);
+  throw new Error(message);
+}
+
 export async function loginJWT(token: string): Promise<AxiosResponse> {
   sessionStorage.setItem(SessionStorageKey.Token, token);
   // parse the jwt, and update userCTX with custom email claim
   const payload = parseJwt(token);
   if (!payload.exp) {
-    sessionStorage.removeItem(SessionStorageKey.Token);
-    throw new Error("no exp field in JWT token payload");
+    throw expireTokenAndError("no exp field in JWT token payload");
   }
   const expiredDate = new Date(payload.exp * 1000).getTime();
-  const expiredInHowManySecond = parseInt(
+  const ttlSeconds = parseInt(
     ((expiredDate - new Date().getTime()) / 1000).toFixed(0),
     10
   );
-  const hasExpired = expiredInHowManySecond <= 0;
+  const hasExpired = ttlSeconds <= 0;
   if (hasExpired) {
-    sessionStorage.removeItem(SessionStorageKey.Token);
-    throw new Error(
-      "UNHCR Azure authentication has expired: JWT token payload exp field has expired"
-    );
+    throw expireTokenAndError("Authentication has expired: exp not in future");
   }
 
   let response: AxiosResponse;
@@ -89,13 +90,13 @@ export async function loginJWT(token: string): Promise<AxiosResponse> {
     response = await getSessionWithBearer(token);
   } catch (error: AxiosError | unknown) {
     if (axios.isAxiosError(error)) {
-      switch (error?.response?.status) {
-        case 401:
-          console.log(error);
-          break;
-        default:
-          console.log("default", error);
-      }
+      // 401 Unauthorized or other
+      // {"error":"unauthorized","reason":"exp not in future"}
+      throw expireTokenAndError(
+        `Authentication failed: ${error?.response?.status} ${JSON.stringify(
+          error?.response?.data ?? "unknown message"
+        )}`
+      );
     }
     sessionStorage.removeItem(SessionStorageKey.Token);
     throw error;
