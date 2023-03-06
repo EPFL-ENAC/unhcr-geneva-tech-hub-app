@@ -227,6 +227,7 @@ import { mapActions, mapGetters } from "vuex";
     ...mapActions("UserModule", {
       logoutStore: "logout",
       getSessionStore: "getSession",
+      refreshToken: "refreshToken",
     }),
     ...mapActions(["toggleReferenceData", "toggleOverviewData"]),
   },
@@ -246,6 +247,8 @@ export default class App extends Vue {
   getSessionStore!: ({
     byPassLoading,
   }: Record<string, boolean>) => AxiosPromise;
+
+  refreshToken!: () => AxiosPromise;
   user!: CouchUser;
   md5Function: (v: string) => string = md5;
   title = "UNHCR-TSS"; // use env variable,
@@ -350,17 +353,15 @@ export default class App extends Vue {
   }
 
   /** Run once. */
-  mounted(): void {
+  async mounted(): Promise<void> {
     this.$vuetify.theme.dark = false; //this.$store.getters["ConfigModule/themeDark"];
     document.title = this.title;
-    /// retrieve user
-    // retrieve user only if not in
     this.getSessionStore({ byPassLoading: true });
 
-    // TODO: check if offline
     this.intervalId = window.setInterval(() => {
       this.getSessionStore({ byPassLoading: true });
-    }, 1000 * 60 * 5); // check every 5 minutes: 1000 * 60 * 5
+      this.refreshToken();
+    }, 1000 * 60 * 5); // check every 10 minutes: 1000 * 60 * 5
     this.$store.subscribe((mutation) => {
       const shouldUpdate = ["storeMessage"];
       if (shouldUpdate.includes(mutation.type)) {

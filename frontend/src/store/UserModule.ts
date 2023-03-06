@@ -5,6 +5,10 @@ import {
   logoutCookie,
 } from "@/utils/couchdb";
 import { SessionStorageKey } from "@/utils/storage";
+
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { v4 as uuidv4 } from "uuid";
+
 import {
   ActionContext,
   ActionTree,
@@ -22,6 +26,14 @@ export enum Roles {
   _admin = "_admin", // dbAdmin
   specialist = "specialist",
   // "author" // does not exist, it's in the document if user is in the users field
+}
+interface AzureError {
+  correlation_id: string;
+  error: string;
+  error_codes: number[];
+  error_description: string;
+  timestamp: string;
+  trade_id: string;
 }
 
 export const GUEST_NAME = "guest";
@@ -52,6 +64,17 @@ function generateState(): UserState {
   };
 }
 
+function setuptokens(response: AxiosResponse): void {
+  const { id_token, refresh_token, access_token } = response.data;
+  sessionStorage.setItem(SessionStorageKey.Token, id_token);
+  sessionStorage.setItem(SessionStorageKey.Refresh, refresh_token);
+  sessionStorage.setItem(SessionStorageKey.Access, access_token);
+
+  // clean verifier, challenge and state
+  sessionStorage.removeItem("state");
+  sessionStorage.removeItem("verifier");
+  sessionStorage.removeItem("challenge");
+}
 /** Getters */
 const getters: GetterTree<UserState, RootState> = {
   user: (s): CouchUser => s.user,
@@ -105,6 +128,118 @@ const actions: ActionTree<UserState, RootState> = {
         context.commit("UNSET_USER_LOADING");
       });
   },
+  verifyCode: async (
+    context: ActionContext<UserState, RootState>,
+    { code, code_verifier }
+  ) => {
+    const state = sessionStorage.getItem("state") ?? "";
+
+    try {
+      const response = await axios.post(
+        `https://login.microsoftonline.com/${process.env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/token`,
+        new URLSearchParams({
+          client_id: process.env.VUE_APP_AUTH_CLIENT_ID,
+          grant_type: "authorization_code",
+          code,
+          code_verifier, // web_message ?
+          state,
+          redirect_uri: window.location.origin,
+        }),
+        {
+          headers: {
+            Accept: "application/x-www-form-urlencoded",
+          },
+          withCredentials: false,
+        }
+      );
+      setuptokens(response);
+      return response;
+    } catch (error: AxiosError<unknown, unknown> | unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        const data: AzureError = error?.response?.data as AzureError;
+        context.dispatch(
+          "notifyUser",
+          `${error.message}: ${
+            data?.error_description ?? "unknown error_description"
+          }`,
+          { root: true }
+        );
+      }
+      throw new Error("token failed" + JSON.stringify(error));
+    }
+  },
+  refreshToken: async (context: ActionContext<UserState, RootState>) => {
+    try {
+      const response = await axios.post(
+        `https://login.microsoftonline.com/${process.env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/token`,
+        new URLSearchParams({
+          client_id: process.env.VUE_APP_AUTH_CLIENT_ID,
+          grant_type: "refresh_token",
+          refresh_token:
+            sessionStorage.getItem(SessionStorageKey.Refresh) ?? "",
+        }),
+        {
+          headers: {
+            Accept: "application/x-www-form-urlencoded",
+          },
+          withCredentials: false,
+        }
+      );
+      setuptokens(response);
+    } catch (error: AxiosError<unknown, unknown> | unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        const data: AzureError = error?.response?.data as AzureError;
+        context.dispatch(
+          "notifyUser",
+          `${error.message}: ${
+            data?.error_description ?? "unknown error_description"
+          }`,
+          { root: true }
+        );
+      }
+      throw new Error("token failed" + JSON.stringify(error));
+    }
+  },
+  silentLoginToken: async (
+    context: ActionContext<UserState, RootState>,
+    { byPassLoading }
+  ) => {
+    if (!byPassLoading) {
+      context.commit("SET_USER_LOADING");
+    }
+    // not working because response_type id_token, token was not allowed;
+    try {
+      const url: URL = new URL(
+        `https://login.microsoftonline.com/${process.env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/authorize`
+      );
+      url.searchParams.append("client_id", process.env.VUE_APP_AUTH_CLIENT_ID);
+      url.searchParams.append("nonce", uuidv4());
+      url.searchParams.append("response_type", "token id_token");
+      url.searchParams.append("redirect_uri", window.location.origin);
+      const state = uuidv4();
+      url.searchParams.append("state", state);
+      sessionStorage.setItem("state", state);
+      url.searchParams.append("scope", "openid email profile offline_access");
+      url.searchParams.append("response_mode", "web_message"); // web_message ?
+      url.searchParams.append("prompt", "none");
+      const response = await axios.get(url.href);
+
+      setuptokens(response);
+      return response;
+    } catch (error: AxiosError<unknown, unknown> | unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        const data: AzureError = error?.response?.data as AzureError;
+        context.dispatch(
+          "notifyUser",
+          `${error.message}: ${
+            data?.error_description ?? "unknown error_description"
+          }`,
+          { root: true }
+        );
+      }
+      throw new Error("token failed" + JSON.stringify(error));
+    }
+  },
   loginToken: async (
     context: ActionContext<UserState, RootState>,
     { token, byPassLoading }
@@ -146,8 +281,8 @@ const actions: ActionTree<UserState, RootState> = {
       // if unhcr logout does not work at least, our ux will show as unlogged
       context.commit("SET_USER", generateEmptyUser());
       context.commit("UNSET_USER_LOADING");
-      window.location.href =
-        "https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=https%3A%2F%2Funhcr-tss.epfl.ch";
+      const redirectURI = encodeURIComponent(window.location.origin);
+      window.location.href = `https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=${redirectURI}`;
     } else {
       await logoutCookie();
       context.commit("SET_USER", generateEmptyUser());
