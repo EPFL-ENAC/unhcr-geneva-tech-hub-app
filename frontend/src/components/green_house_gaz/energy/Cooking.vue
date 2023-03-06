@@ -173,7 +173,7 @@ const cookstoveIdsTECHsWithAccess = cookstoveTECHsWithAccess.map(
   (cookstove) => cookstove._id
 );
 const cookstoveIdWithoutAccess = "1";
-const APPLIANCE_EFFICIENCY = 1;
+const APPLIANCE_EFFICIENCY = 1; // todo fix me
 const REF_DRY_WOOD = 0.15; // 15% more efficient\
 const REF_SUSTAINED_WOOD = 0.077; // fNRB of sustained
 const default_fNRB = 0.85; // 0.76; // default value should be from GHG_RFERENCE TABLE
@@ -283,8 +283,10 @@ export default class Trucking extends Vue {
           (x) => x._id === this.project.country_code
         );
         let localFNRB = countryfNRB?.value ?? default_fNRB;
-        if (localItemInput.dryWood) {
-          localFNRB = localFNRB - REF_DRY_WOOD;
+        if (!localItemInput.dryWood) {
+          // FIX: ADD NEW FACTOR for DRY_WOOD/WET_WOOD exclusively
+          // only for wood
+          localFNRB = localFNRB + REF_DRY_WOOD;
         }
         if (localItemInput.sustainablySourced) {
           localFNRB = REF_SUSTAINED_WOOD;
@@ -303,11 +305,11 @@ export default class Trucking extends Vue {
         totalCO2Emission =
           hhUsingTheFuel *
           fuelUsage * // fuel consumed in kg / day
+          app_eff * // should be 1 for now (1 - 0.7 or 0.3 depending on appliances)
           0.001 * // 1t/1000kg
           365.25 * // days/yr
           localFNRB * // in percentage country or default value of 0.76 or 0.85 who knows or 1 if not in list of fuel
           fuelEfficiency *
-          app_eff * // should be 1 for now (1 - 0.7 or 0.3 depending on appliances)
           (fuelType === "CHC" ? localItemInput.chcProcessingFactor ?? 6 : 1);
         break;
         /*

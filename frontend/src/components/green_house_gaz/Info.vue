@@ -239,7 +239,7 @@ export default class GhgInfo extends Vue {
       const { population, hh, pp_per_hh } = value;
       if (
         population == undefined ||
-        hh == undefined ||
+        hh == undefined || // hh c'est le pourcentage de hh qui ont un cookstove
         pp_per_hh == undefined
       ) {
         throw new Error(

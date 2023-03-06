@@ -13,7 +13,7 @@ REF_EFF_CHC,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Charcoal,4.9
 REF_EFF_BRQ,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Briquette,1.97028,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
 REF_EFF_PLTS,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Pellets,1.97028,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
 REF_EFF_CNDL,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) candle (paraffin),3.3718,https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/3_Volume3/V3_5_Ch5_Non_Energy_Products.pdf
-REF_EFF_ETH,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L or m3 for biogas) ETHANOL,1.23910872,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_EFF_LPG,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L or m3 for biogas) LPG,1.615952943,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_EFF_BGS,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L or m3 for biogas) BIOGASS,2.48420844,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_EFF_KRS,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L or m3 for biogas) KEROSENE,2.559489354,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
+REF_EFF_ETH,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L) ETHANOL,1.23910872,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
+REF_EFF_LPG,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) LPG,1.615952943,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
+REF_EFF_BGS,number,Energy,Energy - Cookstove - Efficiency (kgCO2e/m3 for biogas) BIOGASS,2.48420844,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
+REF_EFF_KRS,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L) KEROSENE,2.559489354,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
