@@ -91,7 +91,7 @@ export default new (class User {
         if (actionName === "admin") {
           return isAdmin;
         }
-        const isUser = user.roles.indexOf(GUEST_NAME) == -1;
+        const isUser = user.roles?.includes(GUEST_NAME) ?? false;
         // only guest are not allowed to create!
         // if roles is empty it means it's a unhcr account
         if (actionName === "create") {
@@ -122,10 +122,10 @@ export default new (class User {
         user.name === null || user.name === undefined || user.name === "";
       const LoggedInName = user.name !== "" && typeof user.name === "string";
       const rights = {
-        UserAdmin: user.loaded && user.roles.indexOf(USER_ADMIN) >= 0,
-        DBAdmin: user.loaded && user.roles.indexOf(DB_ADMIN) >= 0,
-        Specialist: user.loaded && user.roles.indexOf(SPECIALIST) >= 0,
-        User: user.loaded && user.roles.indexOf(USER) >= 0,
+        UserAdmin: user.loaded && (user.roles?.includes(USER_ADMIN) ?? false),
+        DBAdmin: user.loaded && (user.roles?.includes(DB_ADMIN) ?? false),
+        Specialist: user.loaded && (user.roles?.includes(SPECIALIST) ?? false),
+        User: user.loaded && (user.roles?.includes(USER) ?? false),
         Guest: user.loaded && user.name === GUEST_NAME,
         LoggedIn: user.loaded && LoggedInName,
         LoggedOut: user.loaded && LoggedOutName,
