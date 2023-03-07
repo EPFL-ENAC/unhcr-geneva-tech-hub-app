@@ -27,7 +27,7 @@ export function checkIfAdmin(user: CouchUser) {
   // or we are in a custom list of unhcr users sub
   const unhcrAdmins = [
     "TBxz7Wb3aSrQGeFx1EbBtrtaKPht-4M87pznkWC2BYE", // nimri
-    "ZClxS-3mzvYkIq5kO8ULO37PaSFV-d9Z0Oml1CVoVeQ", // testtss
+    // "ZClxS-3mzvYkIq5kO8ULO37PaSFV-d9Z0Oml1CVoVeQ", // testtss
   ];
   const isDBAdmin = user.roles?.includes(Roles[Roles._admin]) ?? false;
   const isAdmin = user.roles?.includes(Roles[Roles.admin]) ?? false;

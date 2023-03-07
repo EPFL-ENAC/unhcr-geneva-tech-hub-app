@@ -1,7 +1,8 @@
 <template>
   <v-form
-    v-model="formValid"
     v-bind="$attrs"
+    ref="form"
+    v-model="formValid"
     @submit.prevent="() => submitForm(localProject)"
   >
     <v-container v-if="project.users" fluid>
@@ -11,10 +12,8 @@
             color="primary"
             :disabled="!formValid || $attrs.readonly"
             type="submit"
+            ><v-icon left>$mdiContentSave</v-icon>Save</v-btn
           >
-            <v-icon left>$mdiContentSave</v-icon>
-            Save
-          </v-btn>
         </v-col>
       </v-row>
       <v-row>
@@ -98,6 +97,7 @@ import {
   defaultZoom,
   urlMap,
 } from "@/utils/mapWorld";
+import { VForm } from "@/utils/vuetify";
 import { LatLngExpression } from "leaflet";
 import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
@@ -136,7 +136,9 @@ export default class GhgInfo extends Vue {
   project!: GreenHouseGaz;
   user!: CouchUser;
   localProject = {} as GreenHouseGaz;
-
+  $refs!: {
+    form: VForm;
+  };
   textRules = [
     (v: string): boolean | string => !!v || `is required`,
     (v: string): boolean | string =>
@@ -292,6 +294,9 @@ export default class GhgInfo extends Vue {
 
   created(): void {
     this.syncLocalShelter();
+  }
+  mounted(): void {
+    this.$refs.form.validate();
   }
 }
 </script>
