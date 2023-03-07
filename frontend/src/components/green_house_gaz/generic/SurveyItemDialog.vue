@@ -4,12 +4,7 @@
     max-width="500px"
     @keypress.enter="() => submitFn()"
   >
-    <v-form
-      ref="form"
-      v-model="formValid"
-      :lazy-validation="false"
-      @submit.prevent="() => submitFn()"
-    >
+    <v-form ref="form" v-model="formValid" @submit.prevent="() => submitFn()">
       <v-card>
         <v-card-title>
           <span class="text-h5">{{ title }} </span>
@@ -158,6 +153,10 @@ export default class SurveyItemDialog extends Vue {
   onItemChange(value: SurveyItem): void {
     this.localItem = cloneDeep(value);
     this.localInput = cloneDeep(value.input);
+  }
+  @Watch("formValid", { immediate: true, deep: true })
+  onFormValid(): void {
+    this.$refs?.form?.validate();
   }
 
   get isOpen(): boolean {
