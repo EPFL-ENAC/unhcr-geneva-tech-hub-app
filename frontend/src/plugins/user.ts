@@ -91,7 +91,7 @@ export default new (class User {
         if (actionName === "admin") {
           return isAdmin;
         }
-        const isUser = user.roles?.includes(GUEST_NAME) ?? false;
+        const isUser = !user.roles?.includes(GUEST_NAME) ?? false;
         // only guest are not allowed to create!
         // if roles is empty it means it's a unhcr account
         if (actionName === "create") {
