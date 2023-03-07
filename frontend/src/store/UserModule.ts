@@ -187,6 +187,10 @@ const actions: ActionTree<UserState, RootState> = {
         }
       );
       setuptokens(response);
+      context.dispatch("loginToken", {
+        token: response.data.id_token,
+        byPassLoading: true,
+      });
     } catch (error: AxiosError<unknown, unknown> | unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const data: AzureError = error?.response?.data as AzureError;

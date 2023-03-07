@@ -357,6 +357,7 @@ export default class App extends Vue {
     this.$vuetify.theme.dark = false; //this.$store.getters["ConfigModule/themeDark"];
     document.title = this.title;
     this.getSessionStore({ byPassLoading: true });
+    this.refreshToken();
 
     this.intervalId = window.setInterval(() => {
       this.getSessionStore({ byPassLoading: true });
