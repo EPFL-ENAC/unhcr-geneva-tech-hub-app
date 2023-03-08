@@ -88,6 +88,16 @@ export async function loginJWT(token: string): Promise<AxiosResponse> {
   let response: AxiosResponse;
   try {
     response = await getSessionWithBearer(token);
+    // CATCH
+    // should be "info":{"authentication_handlers":["jwt","cookie","default"],"authenticated":"jwt"}
+    if (
+      !response.data?.info?.authentication_handlers?.includes("jwt") ||
+      response.data?.info?.authenticated !== "jwt"
+    ) {
+      throw new Error(
+        `Authentication failed: JWT authentication should be enabled on Database; restart database with proper config`
+      );
+    }
   } catch (error: AxiosError | unknown) {
     if (axios.isAxiosError(error)) {
       // 401 Unauthorized or other
