@@ -47,7 +47,7 @@ import {
   ItemReferencesMap,
   ReferenceItemInterface,
 } from "@/store/GhgReferenceModule";
-import { cloneDeep, get, maxBy, sumBy } from "lodash";
+import { cloneDeep, get, isError, maxBy, sumBy } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -213,7 +213,22 @@ export default class BaselineEndlineWrapper<
 
   private computeItems(items: SurveyItem[]): SurveyItem[] {
     return items.map((item: SurveyItem) => {
-      item.computed = this.computeItem(item.input, this.ghgMapRef);
+      try {
+        item.computed = this.computeItem(item.input, this.ghgMapRef);
+      } catch (e: Error | unknown) {
+        let stack;
+        let message = e;
+        if (isError(e)) {
+          stack = e.stack;
+          message = e.message;
+        }
+        this.$store.dispatch("notifyUser", {
+          title: `compute CO2 line failed`,
+          message,
+          stack,
+          type: "error",
+        });
+      }
       return item;
     });
   }
