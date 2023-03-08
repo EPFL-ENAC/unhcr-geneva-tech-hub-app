@@ -199,7 +199,7 @@ const actions: ActionTree<UserState, RootState> = {
         "notifyUser",
         {
           title: `refresh token:`,
-          message: `Successfully refresh token for user: ${JSON.stringify(
+          message: `Successfully refreshed token for user: ${JSON.stringify(
             context.getters?.user?.name
           )}`,
           type: "info",
