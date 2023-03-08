@@ -380,7 +380,10 @@ export default class SurveyList extends Vue {
         throw new Error("please fill the new Name");
       }
     } else {
-      this.$store.dispatch("notifyUser", "You're on read only mode");
+      this.$store.dispatch("notifyUser", {
+        message: "You're on read only mode",
+        type: "info",
+      });
       this.updateLocalStore(value);
     }
   }

@@ -445,7 +445,10 @@ export default class Step1 extends Vue {
         // just to be sure purge nginx cache of the previous location!
       })
       .catch((error: Error) => {
-        this.$store.dispatch("notifyUser", `Could not delete assets ${error}`);
+        this.$store.dispatch("notifyUser", {
+          message: `Could not delete assets ${error}`,
+          type: "error",
+        });
       })
       .finally(() => {
         this.uploadLoadingUrl = "";
@@ -563,20 +566,26 @@ export default class Step1 extends Vue {
           this.localShelter.images.push(...data.filenames);
           // add files  instead of replacing them
           this.updateFormInput();
-          this.$store.dispatch("notifyUser", "Successful upload to server");
+          this.$store.dispatch("notifyUser", {
+            message: "Successful upload to server",
+            type: "info",
+          });
         })
         .catch((error: Error) => {
-          this.$store.dispatch(
-            "notifyUser",
-            `Could not upload images ${error}`
-          );
+          this.$store.dispatch("notifyUser", {
+            type: "error",
+            message: `Could not upload images ${error}`,
+          });
         })
         .finally(() => {
           this.uploadDialog = false;
           this.uploadLoading = false;
         });
     } else {
-      this.$store.dispatch("notifyUser", "No file to upload");
+      this.$store.dispatch("notifyUser", {
+        message: "No file to upload",
+        type: "warning",
+      });
       this.uploadDialog = false;
       this.uploadLoading = false;
     }

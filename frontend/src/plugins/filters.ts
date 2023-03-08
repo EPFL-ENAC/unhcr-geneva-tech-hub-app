@@ -3,13 +3,22 @@ import { VueConstructor } from "vue";
 export default {
   install(Vue: VueConstructor): void {
     Vue.filter("formatNumber", formatNumber);
-
-    Vue.filter("formatDate", (date: string): string => {
-      if (date === undefined) {
-        return "—";
+    const defaultFormatDate: Intl.DateTimeFormatOptions = {
+      dateStyle: "short",
+    };
+    Vue.filter(
+      "formatDate",
+      (date: string, { ...options } = defaultFormatDate): string => {
+        if (date === undefined) {
+          return "—";
+        }
+        const finalOptions = {
+          ...defaultFormatDate,
+          ...options,
+        };
+        return Intl.DateTimeFormat("fr", finalOptions).format(new Date(date));
       }
-      return Intl.DateTimeFormat("fr").format(new Date(date));
-    });
+    );
   },
 };
 

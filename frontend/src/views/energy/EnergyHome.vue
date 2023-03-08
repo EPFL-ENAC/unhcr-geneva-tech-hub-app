@@ -401,7 +401,10 @@ export default class EnergyHome extends Vue {
     this.loading = true;
     promise
       .catch((reason) => {
-        this.$store.dispatch("notifyUser", reason.message ?? reason);
+        this.$store.dispatch("notifyUser", {
+          message: reason.message ?? reason,
+          type: "error",
+        });
         console.error(reason);
       })
       .finally(() => (this.loading = false));

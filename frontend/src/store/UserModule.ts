@@ -159,10 +159,13 @@ const actions: ActionTree<UserState, RootState> = {
       if (axios.isAxiosError(error) && error.response) {
         const data: AzureError = error?.response?.data as AzureError;
         context.dispatch(
-          "notifyUser",
-          `${error.message}: ${
-            data?.error_description ?? "unknown error_description"
-          }`,
+          {
+            title: `${error.message}:`,
+            message: `${
+              data?.error_description ?? "unknown error_description"
+            }`,
+            type: "error",
+          },
           { root: true }
         );
       }
@@ -191,14 +194,30 @@ const actions: ActionTree<UserState, RootState> = {
         token: response.data.id_token,
         byPassLoading: true,
       });
+
+      context.dispatch(
+        "notifyUser",
+        {
+          title: `refresh token:`,
+          message: `Successfully refresh token for user: ${JSON.stringify(
+            context.getters?.user?.name
+          )}`,
+          type: "info",
+        },
+        { root: true }
+      );
     } catch (error: AxiosError<unknown, unknown> | unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const data: AzureError = error?.response?.data as AzureError;
         context.dispatch(
           "notifyUser",
-          `${error.message}: ${
-            data?.error_description ?? "unknown error_description"
-          }`,
+          {
+            title: `${error.message}:`,
+            message: `${
+              data?.error_description ?? "unknown error_description"
+            }`,
+            type: "error",
+          },
           { root: true }
         );
       }
@@ -237,9 +256,13 @@ const actions: ActionTree<UserState, RootState> = {
         const data: AzureError = error?.response?.data as AzureError;
         context.dispatch(
           "notifyUser",
-          `${error.message}: ${
-            data?.error_description ?? "unknown error_description"
-          }`,
+          {
+            title: `${error.message}:`,
+            message: `${
+              data?.error_description ?? "unknown error_description"
+            }`,
+            type: "error",
+          },
           { root: true }
         );
       }
@@ -259,7 +282,14 @@ const actions: ActionTree<UserState, RootState> = {
         return response;
       })
       .catch((response: unknown) => {
-        context.dispatch("notifyUser", response, { root: true });
+        context.dispatch(
+          "notifyUser",
+          {
+            message: response,
+            type: "error",
+          },
+          { root: true }
+        );
         // should remove token also!!
         context.commit("SET_USER", generateEmptyUser());
         return response;

@@ -8,6 +8,7 @@ import {
   mdiAccountHardHat,
   mdiAccountMultiple,
   mdiArrowLeftCircle,
+  mdiBellOutline,
   mdiBriefcase,
   mdiChartBarStacked,
   mdiChartBox,
@@ -153,6 +154,7 @@ export default new Vuetify({
       mdiWaterPump,
       mdiWizardHat,
       mdiWrench,
+      mdiBellOutline,
     },
   },
   theme: {

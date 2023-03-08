@@ -257,7 +257,11 @@ const actions: ActionTree<ShelterState, RootState> = {
             );
             context.dispatch(
               "notifyUser",
-              `${e.error}: ${e.message} ( ${e.status} )`,
+              {
+                title: `${e.error}:`,
+                message: `${e.message} ( ${e.status} )`,
+                type: "error",
+              },
               { root: true }
             );
           }
