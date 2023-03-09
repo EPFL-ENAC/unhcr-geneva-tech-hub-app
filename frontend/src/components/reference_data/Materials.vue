@@ -27,7 +27,7 @@
                 <v-icon>$mdiInformation</v-icon>
               </v-btn>
             </template>
-            <span>{{ props.item.density_ref | formatNumber }}</span>
+            <span>{{ props.item.density_ref }}</span>
           </v-tooltip>
         </template>
         <template #[`item.embodied_water`]="props">
