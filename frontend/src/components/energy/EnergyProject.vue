@@ -434,7 +434,9 @@ export default class EnergyProject extends Vue {
         console.debug(`document ${this.document?._id} updated`);
       })
       .catch((reason) => {
-        this.$store.dispatch("notifyUser", reason.message ?? reason);
+        this.$store.dispatch("notifyUser", {
+          message: reason.message ?? reason,
+        });
         console.error(reason);
         this.resetDocument();
       });

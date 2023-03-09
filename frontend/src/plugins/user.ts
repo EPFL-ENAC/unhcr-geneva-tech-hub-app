@@ -27,7 +27,7 @@ export function checkIfAdmin(user: CouchUser) {
   // or we are in a custom list of unhcr users sub
   const unhcrAdmins = [
     "TBxz7Wb3aSrQGeFx1EbBtrtaKPht-4M87pznkWC2BYE", // nimri
-    "ZClxS-3mzvYkIq5kO8ULO37PaSFV-d9Z0Oml1CVoVeQ", // testtss
+    // "ZClxS-3mzvYkIq5kO8ULO37PaSFV-d9Z0Oml1CVoVeQ", // testtss
   ];
   const isDBAdmin = user.roles?.includes(Roles[Roles._admin]) ?? false;
   const isAdmin = user.roles?.includes(Roles[Roles.admin]) ?? false;
@@ -128,7 +128,7 @@ export default new (class User {
         User: user.loaded && (user.roles?.includes(USER) ?? false),
         Guest: user.loaded && user.name === GUEST_NAME,
         LoggedIn: user.loaded && LoggedInName,
-        LoggedOut: user.loaded && LoggedOutName,
+        LoggedOut: (user.loaded && LoggedOutName) || user.loaded == false,
       } as Record<string, boolean>;
       return rights[isStatus];
     };

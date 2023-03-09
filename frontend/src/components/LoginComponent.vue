@@ -8,6 +8,7 @@
         <v-text-field
           id="username"
           v-model="username"
+          autocomplete="username"
           outlined
           label="Login"
           prepend-icon="$mdiAccount"
@@ -86,8 +87,8 @@ export default class LoginComponent extends Vue {
     code_verifier,
   }: Record<string, string>) => AxiosPromise;
 
-  public tokenFlow(token: string): void {
-    this.loginToken({ token })
+  public tokenFlow(token: string): Promise<void> {
+    return this.loginToken({ token })
       .then(() => {
         // push to current route if not current route
         if (this.$route.name !== this.destinationRouteName) {

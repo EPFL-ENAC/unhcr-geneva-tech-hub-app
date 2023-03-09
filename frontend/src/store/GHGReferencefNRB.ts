@@ -8,12 +8,12 @@ import {
 } from "vuex";
 import { RootState } from ".";
 
-export interface GHGSolarState {
-  item: GHGSolar;
-  items: GHGSolar[];
+interface GHGfNRBState {
+  item: GHGfNRB;
+  items: GHGfNRB[];
   paginate: Paginate;
   itemsLength: number;
-  localCouch: SyncDatabase<GHGSolarState> | null;
+  localCouch: SyncDatabase<GHGfNRBState> | null;
 }
 
 export interface Paginate {
@@ -22,27 +22,21 @@ export interface Paginate {
   startkey?: string;
 }
 
-/*
-** Local materials as defined by André Ullal @epfl.ch
-  Clay
-  Earth, soil, clay, mud
-  Grass, straw
-  Sand
-  Stone
-*/
-export interface GHGSolar {
+export interface GHGfNRB {
   _id: string; // 'iso two letters'
-  c: number; // number of hours
+  country: string; // full name
+  value: number;
+  index: number;
 }
 
 const MSG_COULD_NOT_FIND_ITEM = "Could not find item with this id";
-const DB_NAME = "solar_averaged";
+const DB_NAME = "ghg_fnrb";
 const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 
 /** Default Configure state value */
-function generateState(): GHGSolarState {
+function generateState(): GHGfNRBState {
   return {
-    item: {} as GHGSolar,
+    item: {} as GHGfNRB,
     items: [],
     paginate: {
       limit: 10,
@@ -54,15 +48,15 @@ function generateState(): GHGSolarState {
 }
 
 /** Getters */
-const getters: GetterTree<GHGSolarState, RootState> = {
-  item: (s): GHGSolar => s.item,
-  items: (s): GHGSolar[] => s.items,
+const getters: GetterTree<GHGfNRBState, RootState> = {
+  item: (s): GHGfNRB => s.item,
+  items: (s): GHGfNRB[] => s.items,
   paginate: (s): Paginate => s.paginate,
   itemsLength: (s): number => s.itemsLength,
 };
 
 /** Mutations */
-const mutations: MutationTree<GHGSolarState> = {
+const mutations: MutationTree<GHGfNRBState> = {
   INIT_DB(state) {
     state.localCouch = new SyncDatabase(DB_NAME);
   },
@@ -84,8 +78,8 @@ const mutations: MutationTree<GHGSolarState> = {
 };
 
 /** Action */
-const actions: ActionTree<GHGSolarState, RootState> = {
-  syncDB: (context: ActionContext<GHGSolarState, RootState>) => {
+const actions: ActionTree<GHGfNRBState, RootState> = {
+  syncDB: (context: ActionContext<GHGfNRBState, RootState>) => {
     context.commit("INIT_DB");
     const localCouch = context.state.localCouch;
 
@@ -94,10 +88,10 @@ const actions: ActionTree<GHGSolarState, RootState> = {
       context.dispatch("getAllDocs");
     });
   },
-  closeDB: (context: ActionContext<GHGSolarState, RootState>) => {
+  closeDB: (context: ActionContext<GHGfNRBState, RootState>) => {
     context.commit("CLOSE_DB");
   },
-  getAllDocs: async (context: ActionContext<GHGSolarState, RootState>) => {
+  getAllDocs: async (context: ActionContext<GHGfNRBState, RootState>) => {
     const db = context.state.localCouch?.db;
     if (db) {
       try {
@@ -122,7 +116,7 @@ const actions: ActionTree<GHGSolarState, RootState> = {
 };
 
 /** VuexStore */
-const GhgReferenceSolarModule: Module<GHGSolarState, RootState> = {
+const GHGReferencefNRB: Module<GHGfNRBState, RootState> = {
   namespaced: true,
   state: generateState(),
   getters,
@@ -130,4 +124,4 @@ const GhgReferenceSolarModule: Module<GHGSolarState, RootState> = {
   actions,
 };
 
-export default GhgReferenceSolarModule;
+export default GHGReferencefNRB;

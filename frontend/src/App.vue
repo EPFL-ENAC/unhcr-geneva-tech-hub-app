@@ -29,6 +29,21 @@
       </v-tabs>
       <v-spacer />
       <v-btn
+        v-if="notificationsLength"
+        icon
+        aria-label="notification-center"
+        @click.stop="toggleNotificationCenter"
+      >
+        <v-badge
+          :content="notificationsLength"
+          :value="notificationsLength"
+          color="red"
+          overlap
+        >
+          <v-icon> $mdiBellOutline </v-icon>
+        </v-badge>
+      </v-btn>
+      <v-btn
         v-if="'ShelterSustainabilityList' === $router.currentRoute.name"
         icon
         aria-label="dataset-overview-table"
@@ -155,6 +170,7 @@
     </v-navigation-drawer>
 
     <v-main v-if="$userIs('LoggedOut')" class="unhcr-main">
+      <notification-center />
       <v-layout
         v-if="$router.currentRoute.name !== 'Login'"
         align-center
@@ -173,6 +189,7 @@
     <v-main v-else class="unhcr-main">
       <reference-data />
       <overview-data />
+      <notification-center />
       <v-fade-transition mode="out-in">
         <router-view />
         <router-view name="Login" />
@@ -189,7 +206,7 @@
       timeout="5000"
       transition="scroll-y-transition"
     >
-      {{ snackbarText }}
+      {{ snackbarText?.message }}
       <template #action="{ attrs }">
         <v-btn
           aria-label="close-snakbar"
@@ -208,8 +225,10 @@
 <script lang="ts">
 import { unhcr_logo } from "@/components/commons/logos";
 import LoginComponent from "@/components/LoginComponent.vue";
+import NotificationCenter from "@/components/NotificationCenter.vue";
 import OverviewData from "@/components/OverviewData.vue";
 import ReferenceData from "@/components/ReferenceData.vue";
+
 import { CouchUser } from "@/store/UserModule";
 import Apps from "@/utils/apps";
 import md5 from "@/utils/md5";
@@ -217,11 +236,17 @@ import { AxiosError, AxiosPromise } from "axios";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { Route, RouteRecordPublic } from "vue-router";
 import { mapActions, mapGetters } from "vuex";
+import { UnhcrNotification } from "./store";
 
 @Component({
   computed: {
     ...mapGetters("UserModule", ["user"]),
-    ...mapGetters(["referenceDataDrawer", "overviewDataDrawer"]),
+    ...mapGetters([
+      "referenceDataDrawer",
+      "overviewDataDrawer",
+      "notificationDialog",
+      "notificationsLength",
+    ]),
   },
   methods: {
     ...mapActions("UserModule", {
@@ -229,19 +254,26 @@ import { mapActions, mapGetters } from "vuex";
       getSessionStore: "getSession",
       refreshToken: "refreshToken",
     }),
-    ...mapActions(["toggleReferenceData", "toggleOverviewData"]),
+    ...mapActions([
+      "toggleReferenceData",
+      "toggleOverviewData",
+      "toggleNotificationCenter",
+    ]),
   },
   components: {
     LoginComponent,
     ReferenceData,
     OverviewData,
+    NotificationCenter,
   },
 })
 /** ProjectList */
 export default class App extends Vue {
   referenceDataDrawer!: boolean;
   overviewDataDrawer!: boolean;
+  notificationDialog!: boolean;
   toggleReferenceData!: () => AxiosPromise;
+  toggleNotificationCenter!: () => void;
   // probably vuex Promise and not AxiosPromise
   logoutStore!: () => AxiosPromise;
   getSessionStore!: ({
@@ -270,8 +302,8 @@ export default class App extends Vue {
     return this.$store.getters?.["ShelterModule/shelter"]?.name;
   }
 
-  get snackbarText(): string {
-    return this.$store.getters.message;
+  get snackbarText(): UnhcrNotification {
+    return this.$store.getters.notifications[0];
   }
   get progress(): number {
     return this.$store.getters.progress;
@@ -357,6 +389,7 @@ export default class App extends Vue {
     this.$vuetify.theme.dark = false; //this.$store.getters["ConfigModule/themeDark"];
     document.title = this.title;
     this.getSessionStore({ byPassLoading: true });
+    this.refreshToken();
 
     this.intervalId = window.setInterval(() => {
       this.getSessionStore({ byPassLoading: true });

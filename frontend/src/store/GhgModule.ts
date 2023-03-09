@@ -69,7 +69,7 @@ const getters: GetterTree<ProjectsState, RootState> = {
     const ghgMapRef = rootGetters["GhgReferenceModule/ghgMapRef"];
     const iges_grid = rootGetters["GhgReferenceIgesGridModule/iges_grid"];
     if (!ghgMapRef || !iges_grid) {
-      return null;
+      throw new Error("GhgMapRef or igesGrid is not defined");
     }
     const REF_GRD = ghgMapRef.REF_GRD;
     const iges_grid_match = iges_grid.find(

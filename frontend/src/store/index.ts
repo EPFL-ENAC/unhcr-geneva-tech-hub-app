@@ -1,6 +1,7 @@
 import ConfigModule from "@/store/ConfigModule";
 import EnergyModule from "@/store/EnergyModule";
 import GhgModule from "@/store/GhgModule";
+import GHGReferencefNRB from "@/store/GHGReferencefNRB";
 import GhgReferenceIgesGridModule from "@/store/GhgReferenceIgesGridModule";
 import GhgReferenceModule from "@/store/GhgReferenceModule";
 import GhgReferenceSolarModule from "@/store/GHGReferenceSolarModule";
@@ -9,8 +10,8 @@ import ShelterModule from "@/store/ShelterModule";
 import SheltersMaterialModule from "@/store/SheltersMaterialModule";
 import SheltersTransportModule from "@/store/SheltersTransportModule";
 import UNHCRLocation from "@/store/UNHCRLocation";
-
 import UserModule from "@/store/UserModule";
+import { throttle } from "lodash";
 import Vue from "vue";
 import Vuex, {
   ActionContext,
@@ -35,9 +36,20 @@ export interface RootState {
   message?: string;
   /** Error Message */
   error?: string;
+  /** hold notifications with an expiration */
+  notifications: UnhcrNotification[];
   /** Hold value that say if referenceDataDrawer is open or not */
   referenceDataDrawer: boolean;
   overviewDataDrawer: boolean;
+  notificationDialog: boolean;
+}
+
+export interface UnhcrNotification {
+  title?: string;
+  message: string;
+  date?: string; // as new Date(),
+  type?: string; // error/warning/info;
+  expire?: number; // timestamp in ms in the future (new Date()).getTime() + 5000)
 }
 
 /** State Default value */
@@ -45,19 +57,24 @@ const state: RootState = {
   loading: false,
   progress: 0,
   message: undefined,
+  notifications: [],
   error: undefined,
   referenceDataDrawer: false,
   overviewDataDrawer: false,
+  notificationDialog: false,
 };
 
 /** Getters */
 const getters: GetterTree<RootState, RootState> = {
   loading: (s): boolean => s.loading,
   progress: (s): number => s.progress,
-  message: (s): string | undefined => s.message,
+  notifications: (s): UnhcrNotification[] => s.notifications,
+  notificationsLength: (s): number => s.notifications.length,
+  message: (s): string | undefined => s.notifications?.[0]?.message,
   error: (s): string | undefined => s.error,
   referenceDataDrawer: (s): boolean => s.referenceDataDrawer,
   overviewDataDrawer: (s): boolean => s.overviewDataDrawer,
+  notificationDialog: (s): boolean => s.notificationDialog,
 };
 
 /** Mutations */
@@ -87,8 +104,8 @@ const mutations: MutationTree<RootState> = {
    * @param s - Vuex state
    * @param message - Payload
    */
-  storeMessage(s, message: string) {
-    s.message = message;
+  storeMessage(s, notification: UnhcrNotification) {
+    s.notifications.unshift(notification);
   },
   /**
    * Store error message
@@ -111,6 +128,13 @@ const mutations: MutationTree<RootState> = {
   storeOverviewDataDrawer(s, value: boolean) {
     s.overviewDataDrawer = value;
   },
+  storeNotificationDialog(s, value: boolean) {
+    s.notificationDialog = value;
+  },
+  clearNotifications(s) {
+    s.notifications = [];
+  },
+  // TODO add stack to notification center
 };
 
 /** Actions */
@@ -139,11 +163,31 @@ const actions: ActionTree<RootState, RootState> = {
    * @param context - Vuex Context
    * @param message - Message text
    */
-  notifyUser(
+  notifyUser: throttle(
+    (
+      context: ActionContext<RootState, RootState>,
+      notification: UnhcrNotification
+    ) => {
+      context.dispatch("realnotifyUser", notification);
+    },
+    150,
+    { leading: true, trailing: false }
+  ),
+
+  realnotifyUser(
     context: ActionContext<RootState, RootState>,
-    message: string | undefined = undefined
+    notification: UnhcrNotification
   ) {
-    context.commit("storeMessage", message);
+    if (!notification.expire) {
+      notification.expire = new Date().getTime() + 5000;
+    }
+    if (!notification.date) {
+      notification.date = new Date().toISOString();
+    }
+    if (!notification.type) {
+      notification.type = "warning";
+    }
+    context.commit("storeMessage", notification);
   },
   /**
    * Set Error message
@@ -167,6 +211,12 @@ const actions: ActionTree<RootState, RootState> = {
   ) {
     context.commit("storeOverviewDataDrawer", overviewDataDrawer);
   },
+  setNotificationDialog(
+    context: ActionContext<RootState, RootState>,
+    notificationDialog = false
+  ) {
+    context.commit("storeOverviewDataDrawer", notificationDialog);
+  },
   /**
    * toggleReferenceData
    */
@@ -184,6 +234,15 @@ const actions: ActionTree<RootState, RootState> = {
       "storeOverviewDataDrawer",
       !context.state.overviewDataDrawer
     );
+  },
+  toggleNotificationCenter(context: ActionContext<RootState, RootState>) {
+    context.commit(
+      "storeNotificationDialog",
+      !context.state.notificationDialog
+    );
+  },
+  clearNotifications(context: ActionContext<RootState, RootState>) {
+    context.commit("clearNotifications");
   },
 };
 
@@ -206,6 +265,7 @@ const store: StoreOptions<RootState> = {
     GhgReferenceModule,
     GhgReferenceIgesGridModule,
     GhgReferenceSolarModule,
+    GHGReferencefNRB,
     UNHCRLocation,
     UserModule,
     energy: EnergyModule,

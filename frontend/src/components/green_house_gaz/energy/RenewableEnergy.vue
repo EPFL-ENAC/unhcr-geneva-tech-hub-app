@@ -34,6 +34,8 @@ export default class RenewableEnergy extends Vue {
   facility!: Facility;
   @Prop({ type: String, required: true, default: "" })
   readonly countryCode!: countryIrradianceKeys;
+  @Prop({ type: String, required: true, default: "" })
+  readonly irradiance!: number;
 
   @Prop({ type: Boolean, required: false, default: false })
   readonly authorizedReverse!: boolean;
@@ -54,7 +56,11 @@ export default class RenewableEnergy extends Vue {
       renewablePower: _temp,
     };
     change.renewableKiloWattInstalled =
-      computeKWInstalledWithKwhPerYearPerCountry(_temp, this.countryCode);
+      computeKWInstalledWithKwhPerYearPerCountry(
+        _temp,
+        this.countryCode,
+        this.irradiance
+      );
     this.localFacility = change;
   }
   public changeRenewablePower(value: string): void {
@@ -66,7 +72,8 @@ export default class RenewableEnergy extends Vue {
     };
     change.renewablePower = computeKWHPerYearPerCountry(
       _temp,
-      this.countryCode
+      this.countryCode,
+      this.irradiance
     );
     this.localFacility = change;
   }

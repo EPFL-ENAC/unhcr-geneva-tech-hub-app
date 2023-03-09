@@ -159,10 +159,13 @@ const actions: ActionTree<UserState, RootState> = {
       if (axios.isAxiosError(error) && error.response) {
         const data: AzureError = error?.response?.data as AzureError;
         context.dispatch(
-          "notifyUser",
-          `${error.message}: ${
-            data?.error_description ?? "unknown error_description"
-          }`,
+          {
+            title: `${error.message}:`,
+            message: `${
+              data?.error_description ?? "unknown error_description"
+            }`,
+            type: "error",
+          },
           { root: true }
         );
       }
@@ -171,13 +174,26 @@ const actions: ActionTree<UserState, RootState> = {
   },
   refreshToken: async (context: ActionContext<UserState, RootState>) => {
     try {
+      const refresh_token =
+        sessionStorage.getItem(SessionStorageKey.Refresh) ?? undefined;
+      if (refresh_token === undefined) {
+        context.dispatch(
+          "notifyUser",
+          {
+            title: `no refresh token:`,
+            message: `Please login again, you're not logged in anymore}`,
+            type: "info",
+          },
+          { root: true }
+        );
+        return;
+      }
       const response = await axios.post(
         `https://login.microsoftonline.com/${process.env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/token`,
         new URLSearchParams({
           client_id: process.env.VUE_APP_AUTH_CLIENT_ID,
           grant_type: "refresh_token",
-          refresh_token:
-            sessionStorage.getItem(SessionStorageKey.Refresh) ?? "",
+          refresh_token,
         }),
         {
           headers: {
@@ -187,14 +203,34 @@ const actions: ActionTree<UserState, RootState> = {
         }
       );
       setuptokens(response);
+      context.dispatch("loginToken", {
+        token: response.data.id_token,
+        byPassLoading: true,
+      });
+
+      context.dispatch(
+        "notifyUser",
+        {
+          title: `refresh token:`,
+          message: `Successfully refreshed token for user: ${JSON.stringify(
+            context.getters?.user?.name
+          )}`,
+          type: "info",
+        },
+        { root: true }
+      );
     } catch (error: AxiosError<unknown, unknown> | unknown) {
       if (axios.isAxiosError(error) && error.response) {
         const data: AzureError = error?.response?.data as AzureError;
         context.dispatch(
           "notifyUser",
-          `${error.message}: ${
-            data?.error_description ?? "unknown error_description"
-          }`,
+          {
+            title: `${error.message}:`,
+            message: `${
+              data?.error_description ?? "unknown error_description"
+            }`,
+            type: "error",
+          },
           { root: true }
         );
       }
@@ -233,9 +269,13 @@ const actions: ActionTree<UserState, RootState> = {
         const data: AzureError = error?.response?.data as AzureError;
         context.dispatch(
           "notifyUser",
-          `${error.message}: ${
-            data?.error_description ?? "unknown error_description"
-          }`,
+          {
+            title: `${error.message}:`,
+            message: `${
+              data?.error_description ?? "unknown error_description"
+            }`,
+            type: "error",
+          },
           { root: true }
         );
       }
@@ -255,7 +295,14 @@ const actions: ActionTree<UserState, RootState> = {
         return response;
       })
       .catch((response: unknown) => {
-        context.dispatch("notifyUser", response, { root: true });
+        context.dispatch(
+          "notifyUser",
+          {
+            message: response,
+            type: "error",
+          },
+          { root: true }
+        );
         // should remove token also!!
         context.commit("SET_USER", generateEmptyUser());
         return response;

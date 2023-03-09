@@ -62,6 +62,7 @@
                     :authorized-reverse="true"
                     :facility.sync="localItem"
                     :country-code="countryCode"
+                    :irradiance="solar"
                   />
                 </v-row>
               </v-col>
@@ -199,6 +200,9 @@ export default class InterventionDialog extends Vue {
   set isOpen(value: boolean) {
     this.$emit("update:dialogOpen", value);
   }
+  public get solar(): number {
+    return this.project?.solar ?? 0;
+  }
   public get previousFacility(): EnergyFacilityItem {
     return (
       this.facilities.find(
@@ -237,7 +241,7 @@ export default class InterventionDialog extends Vue {
     );
     this.localItem.dieselPower = computeDieselPower(
       this.localItem,
-      this.ghgMapRef?.REF_EFF_DIES
+      this.ghgMapRef?.REF_EFF_DIES_L
     );
     // it's all done in parent component Facilities
     this.selectFacility(this.localItem.name);

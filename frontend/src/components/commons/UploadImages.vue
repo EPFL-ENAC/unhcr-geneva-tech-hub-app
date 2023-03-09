@@ -127,10 +127,9 @@ export default {
 
       // If user has uploaded multiple files but the component is not multiple throw error
       if (!this.multiple && Array.from(e.dataTransfer.files).length > 1) {
-        this.$store.dispatch(
-          "notifyUser",
-          "Only one file can be uploaded at a time.."
-        );
+        this.$store.dispatch("notifyUser", {
+          message: "Only one file can be uploaded at a time..",
+        });
       }
       // Add each file to the array of uploaded files
       else
@@ -142,7 +141,9 @@ export default {
     submit() {
       // If there aren't any files to be uploaded throw error
       if (!this.uploadedFiles.length > 0) {
-        this.$store.dispatch("notifyUser", "There are no files to upload");
+        this.$store.dispatch("notifyUser", {
+          message: "There are no files to upload",
+        });
       } else {
         // Send uploaded files to parent component
         this.$emit("update:loading", true);
