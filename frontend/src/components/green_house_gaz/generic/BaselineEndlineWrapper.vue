@@ -43,10 +43,12 @@ import {
   SurveyItem,
   SurveyResult,
 } from "@/store/GhgInterface.vue";
+import { IgesItemInterface } from "@/store/GhgReferenceIgesGridModule";
 import {
   ItemReferencesMap,
   ReferenceItemInterface,
 } from "@/store/GhgReferenceModule";
+
 import { cloneDeep, get, isError, maxBy, sumBy } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import "vue-class-component/hooks";
@@ -62,6 +64,11 @@ import { mapActions, mapGetters } from "vuex";
       syncDBGhg: "syncDB",
       closeDBGhg: "closeDB",
       getAllDocsGhg: "getAllDocs",
+    }),
+    ...mapActions("GhgReferenceIgesGridModule", {
+      syncDBGhgIgesGrid: "syncDB",
+      closeDBGhgIgesGrid: "closeDB",
+      getAllDocsGhgIgesGrid: "getAllDocs",
     }),
   },
   components: {
@@ -98,6 +105,10 @@ export default class BaselineEndlineWrapper<
   syncDBGhg!: () => null;
   closeDBGhg!: () => Promise<null>;
   getAllDocsGhg!: () => Promise<ReferenceItemInterface[]>;
+
+  syncDBGhgIgesGrid!: () => null;
+  closeDBGhgIgesGrid!: () => Promise<null>;
+  getAllDocsGhgIgesGrid!: () => Promise<IgesItemInterface[]>;
 
   ghgMapRef!: ItemReferencesMap;
 
@@ -286,10 +297,14 @@ export default class BaselineEndlineWrapper<
   public mounted(): void {
     this.syncDBGhg();
     this.getAllDocsGhg();
+
+    this.syncDBGhgIgesGrid();
+    this.getAllDocsGhgIgesGrid();
   }
 
   public destroyed(): void {
     this.closeDBGhg();
+    this.closeDBGhgIgesGrid();
   }
 }
 export interface SurveyTableHeader extends EasySurveyTableHeader {

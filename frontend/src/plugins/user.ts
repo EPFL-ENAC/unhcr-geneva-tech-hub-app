@@ -128,7 +128,7 @@ export default new (class User {
         User: user.loaded && (user.roles?.includes(USER) ?? false),
         Guest: user.loaded && user.name === GUEST_NAME,
         LoggedIn: user.loaded && LoggedInName,
-        LoggedOut: user.loaded && LoggedOutName,
+        LoggedOut: (user.loaded && LoggedOutName) || user.loaded == false,
       } as Record<string, boolean>;
       return rights[isStatus];
     };

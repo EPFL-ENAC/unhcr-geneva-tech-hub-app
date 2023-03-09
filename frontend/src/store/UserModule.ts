@@ -174,13 +174,26 @@ const actions: ActionTree<UserState, RootState> = {
   },
   refreshToken: async (context: ActionContext<UserState, RootState>) => {
     try {
+      const refresh_token =
+        sessionStorage.getItem(SessionStorageKey.Refresh) ?? undefined;
+      if (refresh_token === undefined) {
+        context.dispatch(
+          "notifyUser",
+          {
+            title: `no refresh token:`,
+            message: `Please login again, you're not logged in anymore}`,
+            type: "info",
+          },
+          { root: true }
+        );
+        return;
+      }
       const response = await axios.post(
         `https://login.microsoftonline.com/${process.env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/token`,
         new URLSearchParams({
           client_id: process.env.VUE_APP_AUTH_CLIENT_ID,
           grant_type: "refresh_token",
-          refresh_token:
-            sessionStorage.getItem(SessionStorageKey.Refresh) ?? "",
+          refresh_token,
         }),
         {
           headers: {

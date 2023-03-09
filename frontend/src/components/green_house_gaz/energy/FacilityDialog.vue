@@ -214,7 +214,7 @@ export default class FacilityDialog extends Vue {
     );
     this.localItem.dieselPower = computeDieselPower(
       this.localItem,
-      this.ghgMapRef?.REF_EFF_DIES
+      this.ghgMapRef?.REF_EFF_DIES_L
     );
     this.$emit("update:item", this.localItem);
     this.isOpen = false;

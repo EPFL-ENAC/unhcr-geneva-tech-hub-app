@@ -22,7 +22,7 @@ module.exports = {
     // ipc: true,
     proxy: {
       "^/db": {
-        target: "http://127.0.0.1:5984/",
+        target: "http://localhost:5984/",
         pathRewrite: {
           "^/db": "", // remove base path
         },
@@ -34,14 +34,14 @@ module.exports = {
         secure: false,
       },
       "^/api": {
-        target: "http://127.0.0.1:5050/",
+        target: "http://localhost:5050/",
         pathRewrite: {
           "^/api": "", // remove base path
         },
         secure: false,
       },
       "^/s3": {
-        target: "http://127.0.0.1:5660/",
+        target: "http://localhost:5660/",
         pathRewrite: {
           "^/s3": "",
         },

@@ -8,7 +8,7 @@ import {
 } from "vuex";
 import { RootState } from ".";
 
-interface GHGSolarState {
+export interface GHGSolarState {
   item: GHGSolar;
   items: GHGSolar[];
   paginate: Paginate;
