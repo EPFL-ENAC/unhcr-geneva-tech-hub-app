@@ -72,7 +72,7 @@ export function computeShelter(value: Shelter): Shelter {
   if (valuesHab.length) {
     const score = valuesHab.reduce((acc, el) => acc + el);
     resultShelter.habitability_score_real = `${score} / ${
-      TOTAL_HAB - nonApplicableTech
+      TOTAL_HAB - nonApplicableHab
     }`;
     resultShelter.habitability_score = score / (TOTAL_HAB - nonApplicableHab);
   } else {

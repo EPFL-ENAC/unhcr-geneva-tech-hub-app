@@ -155,22 +155,25 @@ export default class CheckboxGroup extends Vue {
 type CheckboxScore = Record<string, boolean>;
 </script>
 
-<style lang="scss" scoped>
-:deep(.unhcr-checkbox-group-non-applicable__checkbox) {
-  .v-input__control {
-    .v-input__slot {
-      flex-direction: row-reverse;
-      .v-label {
-        flex-direction: row-reverse;
-      }
-    }
-  }
-}
-:deep(.unhcr-expansion-panel) {
+<style lang="scss">
+.unhcr-expansion-panel {
   .v-expansion-panel-header {
     .v-input--selection-controls {
       margin-top: 0px;
       padding-top: 0px;
+      width: 100%;
+    }
+    .unhcr-checkbox-group-non-applicable__checkbox {
+      margin-top: 0px;
+      padding-top: 0px;
+      .v-input__control {
+        .v-input__slot {
+          flex-direction: row-reverse;
+          .v-label {
+            flex-direction: row-reverse;
+          }
+        }
+      }
     }
   }
 }
