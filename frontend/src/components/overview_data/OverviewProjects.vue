@@ -45,10 +45,13 @@
         <v-card>
           <v-card-title>
             <span v-html="config.title"></span>
-            <v-card-text>
-              <bar-chart-overview :option="config.option" />
-            </v-card-text>
           </v-card-title>
+          <v-card-subtitle v-if="config.subtitle">
+            <span v-html="config.subtitle"></span>
+          </v-card-subtitle>
+          <v-card-text>
+            <bar-chart-overview :option="config.option" />
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -68,6 +71,9 @@ import {
   ShelterRegions,
 } from "@/store/ShelterInterface";
 import { SyncDatabase } from "@/utils/couchdb";
+import { affordabilities } from "@/views/shelter_sustainability/ShelterSustainabilityItem/affordabilities";
+import { constructionImpacts } from "@/views/shelter_sustainability/ShelterSustainabilityItem/constructionImpacts";
+import { environmentalImpacts } from "@/views/shelter_sustainability/ShelterSustainabilityItem/environmentalImpacts";
 import {
   shelterColors,
   shelterIcons,
@@ -75,6 +81,7 @@ import {
 import { CallbackDataParams, EChartsOption } from "echarts/types/dist/shared";
 import { map, mean, sum } from "lodash";
 import PouchDB from "pouchdb";
+
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
@@ -293,26 +300,32 @@ export default class OverviewProjects extends Vue {
     return [
       {
         title: "Habitability",
+        subtitle: constructionImpacts[1].unit,
         option: this.getboxplotConfig("habitability", this.filteredScorecards),
       },
       {
         title: "Affordability",
+        subtitle: affordabilities[0].unit,
         option: this.getboxplotConfig("affordability", this.filteredScorecards),
       },
       {
         title: "Technical Performance",
+        subtitle: constructionImpacts[0].unit,
         option: this.getboxplotConfig("techPerf", this.filteredScorecards),
       },
       {
         title: "Environmental impact <br/> Embodied water",
+        subtitle: environmentalImpacts[1].unit,
         option: this.getboxplotConfig("h2o", this.filteredScorecards),
       },
       {
         title: "Environmental impact <br/> Embodied CO2",
+        subtitle: environmentalImpacts[0].unit,
         option: this.getboxplotConfig("co2", this.filteredScorecards),
       },
       {
         title: "Environmental impact <br/> Material efficiency",
+        subtitle: environmentalImpacts[2].unit,
         option: this.getboxplotConfig("weight", this.filteredScorecards),
       },
     ];

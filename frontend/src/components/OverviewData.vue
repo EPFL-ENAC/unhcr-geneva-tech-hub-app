@@ -21,7 +21,6 @@
 <script lang="ts">
 import OverviewProjects from "@/components/overview_data/OverviewProjects.vue";
 import OverviewUsers from "@/components/overview_data/OverviewUsers.vue";
-
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
