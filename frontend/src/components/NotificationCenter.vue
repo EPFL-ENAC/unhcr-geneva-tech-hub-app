@@ -30,7 +30,7 @@
           <div v-if="notification.date" class="text-caption">
             {{ notification.date | formatDate({ timeStyle: "medium" }) }}
           </div>
-          <v-expansion-panels v-if="notification.stack">
+          <v-expansion-panels v-if="notification.stack" style="width: 400px">
             <v-expansion-panel>
               <v-expansion-panel-header disable-icon-rotate>
                 Error details:

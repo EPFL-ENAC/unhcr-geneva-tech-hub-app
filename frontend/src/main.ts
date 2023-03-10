@@ -28,9 +28,15 @@ axios.interceptors.response.use(undefined, function (error: AxiosError) {
       if (!error.response) {
         return (error as any).originalMessage;
       }
-      return `${error?.response?.status}: ${
-        error?.response?.statusText
-      } : ${JSON.stringify(error.response.data)}`;
+      return `${error?.response?.status}: ${error?.response?.statusText}`;
+    },
+  });
+  Object.defineProperty(error, "stack", {
+    get: function () {
+      if (!error.response) {
+        return (error as any).originalMessage;
+      }
+      return `${JSON.stringify(error.response.data)}`;
     },
   });
   return Promise.reject(error);
@@ -52,11 +58,10 @@ window.addEventListener("unhandledrejection", function (event) {
   //handle error here
   //event.promise contains the promise object
   //event.reason contains the reason for the rejection
-
   store.dispatch("notifyUser", {
-    title: "unhandled rejection",
-    message: event.reason,
-    stack: JSON.stringify(event.promise),
+    title: event.reason?.title ?? "unhandled rejection",
+    message: event.reason?.message ?? event.reason,
+    stack: event.reason?.stack ?? JSON.stringify(event.promise),
     type: "error",
   });
 });

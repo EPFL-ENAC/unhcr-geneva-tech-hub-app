@@ -16,7 +16,29 @@ import {
   Module,
   MutationTree,
 } from "vuex";
-import { RootState } from ".";
+import { RootState, UnhcrNotification } from ".";
+
+export class UnhcrNotificationError extends Error {
+  constructor(m: UnhcrNotification) {
+    super(m.message);
+    this.title = m.title;
+    this.date = m.date;
+    this.type = m.type;
+    this.stack = m.stack;
+    this.expire = m.expire;
+    this.message = m.message;
+    this.name = m.name;
+    Object.setPrototypeOf(this, Error.prototype); // restore prototype chain
+  }
+
+  title?: string | undefined;
+  message: string;
+  date?: string | undefined; // as new Date(),
+  type?: string | undefined; // error/warning/info;
+  stack?: string | undefined;
+  expire?: number | undefined; // timestamp in ms in the future (new Date()).getTime() + 5000)
+  name: string;
+}
 
 /** Config store */
 
@@ -108,6 +130,26 @@ const mutations: MutationTree<UserState> = {
   },
 };
 
+function handleAzureError(
+  context: ActionContext<UserState, RootState>,
+  error: AxiosError<unknown, unknown> | unknown
+): void {
+  if (axios.isAxiosError(error) && error.response?.data) {
+    const data: AzureError = error?.response?.data as AzureError;
+    context.dispatch(
+      "notifyUser",
+      {
+        title: `${data.error}`,
+        message: `${data?.error_description ?? "unknown error_description"}`,
+        stack: JSON.stringify(data),
+        type: "error",
+      },
+      { root: true }
+    );
+  }
+  throw error;
+}
+
 /** Action */
 const actions: ActionTree<UserState, RootState> = {
   login: async (
@@ -133,7 +175,6 @@ const actions: ActionTree<UserState, RootState> = {
     { code, code_verifier }
   ) => {
     const state = sessionStorage.getItem("state") ?? "";
-
     try {
       const suffix = window.location.hostname === "localhost" ? "" : "/auth";
       const response = await axios.post(
@@ -156,20 +197,7 @@ const actions: ActionTree<UserState, RootState> = {
       setuptokens(response);
       return response;
     } catch (error: AxiosError<unknown, unknown> | unknown) {
-      if (axios.isAxiosError(error) && error.response) {
-        const data: AzureError = error?.response?.data as AzureError;
-        context.dispatch(
-          {
-            title: `${error.message}:`,
-            message: `${
-              data?.error_description ?? "unknown error_description"
-            }`,
-            type: "error",
-          },
-          { root: true }
-        );
-      }
-      throw new Error("token failed" + JSON.stringify(error));
+      handleAzureError(context, error);
     }
   },
   refreshToken: async (context: ActionContext<UserState, RootState>) => {
@@ -220,21 +248,7 @@ const actions: ActionTree<UserState, RootState> = {
         { root: true }
       );
     } catch (error: AxiosError<unknown, unknown> | unknown) {
-      if (axios.isAxiosError(error) && error.response) {
-        const data: AzureError = error?.response?.data as AzureError;
-        context.dispatch(
-          "notifyUser",
-          {
-            title: `${error.message}:`,
-            message: `${
-              data?.error_description ?? "unknown error_description"
-            }`,
-            type: "error",
-          },
-          { root: true }
-        );
-      }
-      throw new Error("token failed" + JSON.stringify(error));
+      handleAzureError(context, error);
     }
   },
   silentLoginToken: async (
@@ -265,21 +279,7 @@ const actions: ActionTree<UserState, RootState> = {
       setuptokens(response);
       return response;
     } catch (error: AxiosError<unknown, unknown> | unknown) {
-      if (axios.isAxiosError(error) && error.response) {
-        const data: AzureError = error?.response?.data as AzureError;
-        context.dispatch(
-          "notifyUser",
-          {
-            title: `${error.message}:`,
-            message: `${
-              data?.error_description ?? "unknown error_description"
-            }`,
-            type: "error",
-          },
-          { root: true }
-        );
-      }
-      throw new Error("token failed" + JSON.stringify(error));
+      handleAzureError(context, error);
     }
   },
   loginToken: async (

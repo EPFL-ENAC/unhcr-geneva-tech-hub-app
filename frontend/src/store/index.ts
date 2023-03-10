@@ -45,11 +45,13 @@ export interface RootState {
 }
 
 export interface UnhcrNotification {
-  title?: string;
+  title?: string | undefined;
   message: string;
-  date?: string; // as new Date(),
-  type?: string; // error/warning/info;
-  expire?: number; // timestamp in ms in the future (new Date()).getTime() + 5000)
+  date?: string | undefined; // as new Date(),
+  type?: string | undefined; // error/warning/info;
+  stack?: string | undefined;
+  expire?: number | undefined; // timestamp in ms in the future (new Date()).getTime() + 5000)
+  name: string;
 }
 
 /** State Default value */
