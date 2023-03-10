@@ -1,7 +1,9 @@
 <template>
   <v-app>
-    <header class="justify-space-between align-center d-none d-print-flex ma-4">
-      <h4 class="font-weight-bold primary--text pa-4">
+    <header
+      class="justify-space-between align-center d-none d-print-flex ml-4 mr-4 mt-4"
+    >
+      <h4 class="font-weight-bold primary--text pl-2 pr-2 pt-4">
         {{ rootRouteTitle }}
         <span v-if="currentRouteId">: {{ currentRouteId }}</span>
       </h4>
@@ -430,8 +432,8 @@ export default class App extends Vue {
 
   @page {
     size: A4;
-    margin: -1em;
-    padding: 20px;
+    margin: 0.1rem;
+    padding: 5px;
     width: 100%;
   }
   .pagebreak {
@@ -439,7 +441,7 @@ export default class App extends Vue {
   }
   .project__header,
   .project__h3 {
-    font-size: 1.5rem;
+    font-size: 1rem;
   }
   .container {
     padding: 6px !important;
