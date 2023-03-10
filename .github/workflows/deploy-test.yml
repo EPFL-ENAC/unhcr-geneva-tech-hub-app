@@ -1,0 +1,16 @@
+# https://github.com/EPFL-ENAC/github-actions-runner#readme
+name: deploy-test
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, deploy, test]
+    steps:
+      - uses: EPFL-ENAC/epfl-enac-deploy-action@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+

@@ -1,0 +1,16 @@
+# https://github.com/EPFL-ENAC/github-actions-runner#readme
+name: deploy-prod
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, deploy, prod]
+    steps:
+      - uses: EPFL-ENAC/epfl-enac-deploy-action@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
