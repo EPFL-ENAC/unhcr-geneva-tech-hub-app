@@ -170,8 +170,8 @@ const actions: ActionTree<RootState, RootState> = {
     ) => {
       context.dispatch("realnotifyUser", notification);
     },
-    150,
-    { leading: true, trailing: false }
+    30,
+    { leading: true, trailing: true }
   ),
 
   realnotifyUser(

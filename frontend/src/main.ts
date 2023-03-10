@@ -2,6 +2,7 @@ import filters from "@/plugins/filters";
 import "@/plugins/leaflet";
 import User from "@/plugins/user";
 import "@/styles/unhcr.scss";
+import axios, { AxiosError } from "axios";
 import "leaflet/dist/leaflet.css";
 import Vue from "vue";
 import CountryFlag from "vue-country-flag";
@@ -19,6 +20,21 @@ Vue.prototype.window = window;
 Vue.use(User, { store });
 Vue.use(filters);
 Vue.component("CountryFlag", CountryFlag);
+
+axios.interceptors.response.use(undefined, function (error: AxiosError) {
+  (error as any).originalMessage = error.message;
+  Object.defineProperty(error, "message", {
+    get: function () {
+      if (!error.response) {
+        return (error as any).originalMessage;
+      }
+      return `${error?.response?.status}: ${
+        error?.response?.statusText
+      } : ${JSON.stringify(error.response.data)}`;
+    },
+  });
+  return Promise.reject(error);
+});
 
 Vue.config.errorHandler = function (err, vm, info) {
   // handle error
