@@ -45,3 +45,4 @@ run:
 	docker-compose pull
 	docker-compose build --parallel --no-cache
 	docker-compose up -d --remove-orphans
+	docker-compose restart couchdb
