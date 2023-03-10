@@ -73,7 +73,7 @@ export interface Shelter {
   latitude: number;
   longitude: number;
   images: ImageShelter[]; // uploaded images to custom s3
-
+  image?: ImageShelter | undefined;
   risk_flood: string;
   risk_seismic: string;
 

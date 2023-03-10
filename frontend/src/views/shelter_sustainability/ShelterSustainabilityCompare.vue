@@ -41,18 +41,30 @@
             :key="shelter._id"
             :cols="Math.floor(9 / shelters.length)"
           >
-            <v-row>
-              <v-col class="d-flex justify-center">
-                {{ shelter.name }}
-              </v-col>
+            <v-row class="justify-center">
+              <v-avatar
+                v-if="shelter.image?.url"
+                class="profile"
+                color="grey"
+                size="64"
+                tile
+              >
+                <v-img :src="shelter.image?.url"></v-img>
+              </v-avatar>
             </v-row>
             <v-row>
               <v-col class="d-flex justify-center">
+                <h2>{{ shelter.name }}</h2>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="d-flex justify-center flex-column align-center">
                 <v-icon
                   :class="`c-${shelterColors[shelter.shelter_type].name}`"
                 >
                   {{ shelterIcons[shelter.shelter_type] }}
                 </v-icon>
+                <span class="text-body">{{ shelter.shelter_type }}</span>
               </v-col>
             </v-row>
           </v-col>
@@ -151,27 +163,24 @@
         </v-row>
         <!-- END OF SHELTER INFO -->
         <!-- BEGIN CONSTRUCTION -->
-        <v-row
-          ><v-col><b>CONSTRUCTION</b></v-col></v-row
-        >
+        <!-- <v-row
+          ><v-col><b>CONSTRUCTION</b></v-col>
+          </v-row
+        > -->
         <v-row>
           <v-col>
             <v-row>
               <v-col cols="3" class="ml-screen-4 col col-3 d-flex align-center"
-                >Shape</v-col
+                >Geometry</v-col
               >
               <v-col
                 v-for="shelter in shelters"
                 :key="shelter._id"
-                class="d-flex justify-center"
+                class="d-flex justify-center flex-column align-center"
                 :cols="Math.floor(9 / shelters.length)"
               >
                 <v-img
                   v-if="shelter.geometry.shelter_geometry_type"
-                  max-width="150px"
-                  max-height="150px"
-                  aspect-ratio="1"
-                  class="d-flex justify-center white-background"
                   :src="
                     geometriesUrl[
                       shelter.geometry.shelter_geometry_type
@@ -183,6 +192,22 @@
                   "
                 >
                 </v-img>
+                <span>{{
+                  geometriesName[shelter.geometry.shelter_geometry_type]
+                }}</span>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="3" class="ml-screen-4">Floor area</v-col>
+              <v-col
+                v-for="shelter in shelters"
+                :key="shelter._id"
+                class="d-flex justify-center"
+                :cols="Math.floor(9 / shelters.length)"
+              >
+                <div>
+                  {{ shelter.geometry.floorArea | formatNumber }} m<sup>2</sup>
+                </div>
               </v-col>
             </v-row>
             <v-row>
@@ -194,7 +219,6 @@
                 :cols="Math.floor(9 / shelters.length)"
               >
                 <div>
-                  {{ shelter.geometry.floorArea | formatNumber }} m<sup>2</sup>,
                   {{ shelter.geometry.volume | formatNumber }} m<sup>3</sup>
                 </div>
               </v-col>
@@ -292,15 +316,18 @@
                 <v-row>
                   <v-col
                     cols="12"
-                    class="text-center d-flex justify-center align-center"
+                    class="text-center d-flex justify-center align-center flex-column"
                   >
-                    <span>
+                    <div>
                       {{
                         shelter.scorecard[environmentalImpact.id] |
                           formatNumber()
                       }}
+                    </div>
+
+                    <div>
                       {{ environmentalImpact.unit }}
-                    </span>
+                    </div>
                   </v-col>
                 </v-row>
                 <v-row>
@@ -327,7 +354,11 @@
 </template>
 
 <script lang="ts">
-import { ScoreCardWithShelterInfo, Shelter } from "@/store/ShelterInterface";
+import {
+  ImageShelter,
+  ScoreCardWithShelterInfo,
+  Shelter,
+} from "@/store/ShelterInterface";
 import { Component, Vue } from "vue-property-decorator";
 
 import InfoTooltip from "@/components/commons/InfoTooltip.vue";
@@ -373,6 +404,19 @@ use([
   TooltipComponent,
   MarkPointComponent,
 ]);
+
+function findShelterImage(images: ImageShelter[]): ImageShelter | undefined {
+  if (!images || typeof images !== "object" || !Array.isArray(images)) {
+    return;
+  }
+  const firstImage = images.find(function (image) {
+    return image.type === "Image";
+  });
+  if (!firstImage) {
+    return;
+  }
+  return firstImage;
+}
 
 @Component({
   computed: {
@@ -459,11 +503,15 @@ export default class ShelterSustainabilityCompare extends Vue {
         const resolvedPromises = promises.filter(
           ({ status }: { status: string }) => status === "fulfilled"
         );
-        this.shelters = resolvedPromises.map(
-          (p: PromiseSettledResult<Shelter>) =>
-            (p as PromiseFulfilledResult<Shelter>).value
-        );
-        // TODO: we have a cache problem;
+        this.shelters = resolvedPromises
+          .map(
+            (p: PromiseSettledResult<Shelter>) =>
+              (p as PromiseFulfilledResult<Shelter>).value
+          )
+          .map((shelter: Shelter) => {
+            shelter.image = findShelterImage(shelter.images) ?? undefined;
+            return shelter;
+          });
         await this.getAllDocsSheltersMaterial();
         await this.getScorecards(shelterIds);
       }
