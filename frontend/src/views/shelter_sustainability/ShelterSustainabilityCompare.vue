@@ -18,7 +18,7 @@
             window.print();
             return false;
           "
-          >Export Comparison pdf</v-btn
+          >Export Comparison report</v-btn
         >
       </v-col>
     </v-row>
@@ -51,10 +51,13 @@
               >
                 <v-img :src="shelter.image?.url"></v-img>
               </v-avatar>
+              <v-avatar v-else class="profile" color="grey" size="64" tile>
+                <v-card-title class="white--text"></v-card-title>
+              </v-avatar>
             </v-row>
             <v-row>
               <v-col class="d-flex justify-center">
-                <h2>{{ shelter.name }}</h2>
+                <h2 class="text-center">{{ shelter.name }}</h2>
               </v-col>
             </v-row>
             <v-row>
@@ -64,7 +67,9 @@
                 >
                   {{ shelterIcons[shelter.shelter_type] }}
                 </v-icon>
-                <span class="text-body">{{ shelter.shelter_type }}</span>
+                <span class="text-body"
+                  >{{ shelter.shelter_type }} shelter</span
+                >
               </v-col>
             </v-row>
           </v-col>
@@ -192,7 +197,7 @@
                   "
                 >
                 </v-img>
-                <span>{{
+                <span class="text-center">{{
                   geometriesName[shelter.geometry.shelter_geometry_type]
                 }}</span>
               </v-col>
@@ -230,7 +235,8 @@
               <v-col cols="3" class="ml-screen-4">
                 <v-row>
                   <v-col>
-                    {{ constructionImpact.title }}:
+                    <b class="text-uppercase">{{ constructionImpact.title }}</b
+                    >:
                     <info-tooltip right :max-width="300" :bottom="false"
                       >{{ constructionImpact.description }}
                     </info-tooltip>
@@ -275,7 +281,9 @@
 
         <!-- BEGIN ENVIRONMENTAL IMPACT -->
         <v-row class="pagebreak"
-          ><v-col><b>ENVIRONMENTAL IMPACT</b></v-col></v-row
+          ><v-col
+            ><b class="text-uppercase">ENVIRONMENTAL IMPACT</b></v-col
+          ></v-row
         >
         <v-row>
           <v-col>
@@ -336,7 +344,7 @@
                       max-height="150px"
                       min-height="150px"
                       :selected-field="environmentalImpact.selectedField"
-                      graph-type="sunburst"
+                      graph-type="treemap"
                       :unit-name="environmentalImpact.selectedFieldUnit"
                       :items="shelter.envPerfItems"
                     />
@@ -550,4 +558,12 @@ export default class ShelterSustainabilityCompare extends Vue {
   color: var(--c-grey);
   fill: var(--c-grey);
 }
+// @media print {
+//   * {
+//     font-size: 7pt;
+//   }
+
+//   @page {
+//   }
+// }
 </style>

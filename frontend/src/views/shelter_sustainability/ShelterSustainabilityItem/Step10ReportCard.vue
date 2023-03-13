@@ -20,9 +20,50 @@
         >
       </v-col>
     </v-row>
-    <step-1-project-information :value="shelter" />
-    <step-2-geometry :shelter="shelter" />
-    <step-3-bill-of-quantities :shelter="shelter" />
+    <!-- <step-1-project-information :value="shelter" /> -->
+    <v-row>
+      <v-col :cols="6">
+        <v-row>
+          <v-col>{{ shelter.shelter_type }} shelter</v-col>
+        </v-row>
+        <v-row>
+          <v-col>{{ shelter.shelter_occupants }} intented occupants</v-col>
+        </v-row>
+        <v-row>
+          <v-col
+            >{{ shelter.shelter_lifespan }} year intentended lifespan</v-col
+          >
+        </v-row>
+        <v-row>
+          <v-col>{{ shelter.setup_people }} people for setup</v-col>
+        </v-row>
+        <v-row>
+          <v-col>{{ shelter.setup_time }} days for setup</v-col>
+        </v-row>
+        <v-row>
+          <v-col>{{ shelter.risk_flood }} local flood risk</v-col>
+        </v-row>
+        <v-row>
+          <v-col>{{ shelter.risk_seismic }} local seismic risk</v-col>
+        </v-row>
+      </v-col>
+      <v-col :cols="6">
+        <v-row> country-map </v-row>
+        <v-row>
+          <v-col> shelter image if any </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+    <step-9-score-card :shelter="shelter" />
+    <step-5-environmental-impact :shelter="shelter" />
+    <step-6-technical-performance :shelter="shelter" />
+    <step-7-habitability :shelter="shelter" />
+    <!-- <v-row>
+      <v-col :cols="6">
+      </v-col>
+      <v-col :cols="6">
+      </v-col>
+    </v-row> -->
   </v-container>
 </template>
 
@@ -33,7 +74,10 @@ import { Shelter } from "@/store/ShelterInterface";
 import Step1ProjectInformation from "@/views/shelter_sustainability/ShelterSustainabilityItem/Step1ProjectInformation.vue";
 
 import Step2Geometry from "@/views/shelter_sustainability/ShelterSustainabilityItem/Step2Geometry.vue";
-import Step3BillOfQuantities from "@/views/shelter_sustainability/ShelterSustainabilityItem/Step3BillOfQuantities.vue";
+import Step5EnvironmentalImpact from "@/views/shelter_sustainability/ShelterSustainabilityItem/Step5EnvironmentalImpact.vue";
+import Step6TechnicalPerformance from "@/views/shelter_sustainability/ShelterSustainabilityItem/Step6TechnicalPerformance.vue";
+import Step7Habitability from "@/views/shelter_sustainability/ShelterSustainabilityItem/Step7Habitability.vue";
+import Step9ScoreCard from "@/views/shelter_sustainability/ShelterSustainabilityItem/Step9ScoreCard.vue";
 
 import { Component, Prop, Vue } from "vue-property-decorator";
 
@@ -41,7 +85,10 @@ import { Component, Prop, Vue } from "vue-property-decorator";
   components: {
     Step1ProjectInformation,
     Step2Geometry,
-    Step3BillOfQuantities,
+    Step6TechnicalPerformance,
+    Step7Habitability,
+    Step5EnvironmentalImpact,
+    Step9ScoreCard,
     InfoTooltip,
   },
 })
@@ -56,7 +103,7 @@ export default class Step10ReportCard extends Vue {
 <style lang="scss" scoped>
 @media print {
   @page {
-    size: landscape;
+    size: portrait;
   }
 }
 </style>

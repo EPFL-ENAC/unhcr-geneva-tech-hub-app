@@ -6,20 +6,14 @@
           <h2 class="project__h3 font-weight-medium">
             {{ infoTooltipText[$route.name].title }}
             <span class="d-none d-print-inline-block"
-              >(number of individual shelters:
-              {{ items_individual_shelter }})</span
+              >( Number of shelters: {{ items_individual_shelter }} )</span
             >
           </h2>
           <info-tooltip>
             {{ infoTooltipText[$route.name].text }}
           </info-tooltip>
         </div>
-        <v-btn
-          class="d-print-none"
-          @click="
-            window.print();
-            return false;
-          "
+        <v-btn class="d-print-none" @click="printFunction()"
           >Export Bill of Quantities pdf</v-btn
         >
       </v-col>
@@ -296,6 +290,11 @@ export default class Step3Materials extends Vue {
       this.setItemsIndividualShelter(valueInteger);
     }
   }
+  public printFunction(): boolean {
+    document.title = " ";
+    window.print();
+    return false;
+  }
   readonly UnitsRef = UnitsRef;
   countriesMap = countriesMap;
   infoTooltipText = infoTooltipText;
@@ -309,10 +308,20 @@ export default class Step3Materials extends Vue {
     { text: "Origin", value: "source" },
     { text: "Material", value: "materialId" },
     { text: "Form", value: "formId" },
-    { text: "Quantity", value: "quantity", align: "right" },
-    { text: "Unit", value: "unit" },
-    { text: "Unit cost (USD)", value: "unitCost", align: "right" },
-    { text: "Item cost (USD)", value: "totalCost", align: "right" },
+    { text: "Quantity", value: "quantity", align: "right", sortable: false },
+    { text: "Unit", value: "unit", sortable: false },
+    {
+      text: "Unit cost (USD)",
+      value: "unitCost",
+      align: "right",
+      sortable: false,
+    },
+    {
+      text: "Item cost (USD)",
+      value: "totalCost",
+      align: "right",
+      sortable: false,
+    },
     {
       text: "",
       class: "d-print-none",

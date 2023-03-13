@@ -4,7 +4,7 @@
       <v-toolbar-title>Welcome!</v-toolbar-title>
     </v-toolbar>
     <v-form v-model="formValid" @submit.prevent="loginCouchdb">
-      <v-card-text>
+      <v-card-text v-show="showForm">
         <v-text-field
           id="username"
           v-model="username"
@@ -36,11 +36,19 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn text @click="loginGuest">Login as guest</v-btn>
-        <v-btn color="primary" text @click="loginUnhcr">UNHCR Login</v-btn>
-        <v-btn color="primary" :disabled="!formValid" type="submit">
-          Login
+        <v-btn v-show="!showForm" @click="loginGuest">Guest user</v-btn>
+        <v-btn
+          v-show="!showForm"
+          :disabled="!formValid"
+          @click="showForm = true"
+        >
+          Registered user
         </v-btn>
+        <v-btn v-show="showForm" @click="showForm = false">Cancel</v-btn>
+        <v-btn v-show="showForm" type="submit" color="primary">Login</v-btn>
+        <v-btn v-show="!showForm" color="primary" @click="loginUnhcr"
+          >UNHCR user</v-btn
+        >
       </v-card-actions>
     </v-form>
   </v-card>
@@ -79,6 +87,7 @@ export default class LoginComponent extends Vue {
   username = "";
   password = "";
   error = "";
+  showForm = false;
   login!: (doc: UserCouchCredentials) => AxiosPromise;
   loginAsGuest!: () => AxiosPromise;
   loginToken!: ({ token }: Record<string, string | boolean>) => AxiosPromise;

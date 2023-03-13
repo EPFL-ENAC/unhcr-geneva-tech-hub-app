@@ -3,9 +3,11 @@
     <header
       class="justify-space-between align-center d-none d-print-flex ml-4 mr-4 mt-4"
     >
-      <h4 class="font-weight-bold primary--text pl-2 pr-2 pt-4">
-        {{ rootRouteTitle }}
-        <span v-if="currentRouteId">: {{ currentRouteId }}</span>
+      <h4 class="font-weight-bold primary--text pl-2 pr-2 pt-2">
+        <span v-if="$route.name === 'ShelterSustainabilityCompare'"
+          >Shelter Comparison Report</span
+        >
+        <span v-else-if="currentRouteId">{{ currentRouteId }}</span>
       </h4>
       <figure class="pa-4">
         <img
@@ -436,8 +438,11 @@ export default class App extends Vue {
 
   @page {
     size: A4;
-    margin: 0.1rem;
+    margin: 1cm;
     padding: 5px;
+    // margin-left: 1cm;
+    // margin-right: 1cm;
+    // margin-top: 1cm;
     width: 100%;
   }
   .pagebreak {

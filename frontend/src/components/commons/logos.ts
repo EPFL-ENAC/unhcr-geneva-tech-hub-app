@@ -31,23 +31,23 @@ export const logos = [
     label: "essential tech",
     urlDescription: "https://essentialtech.center/hth/",
   },
-  {
-    imgPath: "/app_logo_new/gnasounougroup1.jpg",
-    label: "energy planning lab",
-    urlDescription: "https://www.epfl.ch/labs/bpe/",
-  },
-  {
-    imgPath: "/app_logo_new/SLL-LOGO-SQUARE-RVB.png",
-    label: "smart living lab",
-    urlDescription: "https://www.smartlivinglab.ch/fr/",
-    height: "60px",
-  },
-  {
-    imgPath: "/app_logo_new/Logo_FAR.webp",
-    label: "FAR",
-    urlDescription: "https://www.epfl.ch/labs/far/",
-    height: "60px",
-  },
+  // {
+  //   imgPath: "/app_logo_new/gnasounougroup1.jpg",
+  //   label: "energy planning lab",
+  //   urlDescription: "https://www.epfl.ch/labs/bpe/",
+  // },
+  // {
+  //   imgPath: "/app_logo_new/SLL-LOGO-SQUARE-RVB.png",
+  //   label: "smart living lab",
+  //   urlDescription: "https://www.smartlivinglab.ch/fr/",
+  //   height: "60px",
+  // },
+  // {
+  //   imgPath: "/app_logo_new/Logo_FAR.webp",
+  //   label: "FAR",
+  //   urlDescription: "https://www.epfl.ch/labs/far/",
+  //   height: "60px",
+  // },
   {
     imgPath: "/app_logo_new/enac-it4r.png",
     label: "enac-it4r",

@@ -266,6 +266,15 @@ export default class OverviewProjects extends Vue {
       yAxis: {
         type: "value",
         // name: "Value",
+        axisLabel: {
+          // formatter: function (value: any) {
+          //   return value * 100;
+          // },
+        },
+
+        axisPointer: {
+          snap: true,
+        },
         min: 0,
         splitArea: {
           show: false,

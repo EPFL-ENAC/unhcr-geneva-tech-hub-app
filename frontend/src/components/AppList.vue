@@ -12,7 +12,7 @@
             class="mx-auto d-flex flex-column"
             outlined
             min-height="250px"
-            max-width="500px"
+            max-width="100%"
             :elevation="hover ? 12 : 2"
             :class="{ 'on-hover': hover }"
             :to="{ name: app.to }"
@@ -37,7 +37,7 @@
                   </v-icon>
                 </v-list-item-avatar>
                 <v-card-actions class="app-action">
-                  <v-btn
+                  <!-- <v-btn
                     v-if="app.link"
                     outlined
                     rounded
@@ -47,7 +47,7 @@
                     @click.stop=""
                   >
                     report
-                  </v-btn>
+                  </v-btn> -->
                   <v-btn outlined rounded text :to="{ name: app.to }">
                     Access
                   </v-btn>
