@@ -1,5 +1,5 @@
 <template>
-  <v-responsive :aspect-ratio="aspectRatio" max-height="600px">
+  <v-responsive :aspect-ratio="aspectRatio" max-height="100%">
     <l-map
       :center="defaultCoordinates"
       class="territory"

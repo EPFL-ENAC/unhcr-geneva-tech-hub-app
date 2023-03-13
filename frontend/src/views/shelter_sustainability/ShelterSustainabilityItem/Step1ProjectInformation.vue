@@ -27,7 +27,7 @@
         <v-sheet v-if="localShelter" elevation="2" rounded>
           <v-container fluid>
             <v-row>
-              <v-col cols="4">
+              <!-- <v-col cols="4">
                 <v-row>
                   <v-col class=""> Select location </v-col>
                 </v-row>
@@ -39,8 +39,8 @@
                     />
                   </v-col>
                 </v-row>
-              </v-col>
-              <v-col class="about-first-column" cols="4">
+              </v-col> -->
+              <v-col class="about-first-column" cols="6">
                 <v-text-field
                   v-model="localShelter.name"
                   name="name"
@@ -89,8 +89,17 @@
                   :rules="textRules"
                   @change="updateFormInput"
                 />
+
+                <v-row>
+                  <v-col class="d-flex info-map">
+                    <territory-map
+                      :value="latLng"
+                      @update:value="updateLatLng"
+                    />
+                  </v-col>
+                </v-row>
               </v-col>
-              <v-col class="about-second-column" cols="4">
+              <v-col class="about-second-column" cols="6">
                 <v-text-field
                   v-model.number="localShelter.shelter_total"
                   name="shelter_total"
@@ -665,5 +674,8 @@ export default class Step1 extends Vue {
 /* Firefox */
 ::v-deep input[type="number"] {
   -moz-appearance: textfield;
+}
+.info-map {
+  height: 317px;
 }
 </style>
