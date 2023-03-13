@@ -86,16 +86,26 @@ function generateState(): UserState {
   };
 }
 
+function removeJwtTempTokens(): void {
+  // clean verifier, challenge and state
+  sessionStorage.removeItem("state");
+  sessionStorage.removeItem("verifier");
+  sessionStorage.removeItem("challenge");
+}
+
+function removeAllOauthTokens(): void {
+  removeJwtTempTokens();
+  sessionStorage.removeItem(SessionStorageKey.Token);
+  sessionStorage.removeItem(SessionStorageKey.Refresh);
+  sessionStorage.removeItem(SessionStorageKey.Access);
+}
+
 function setuptokens(response: AxiosResponse): void {
   const { id_token, refresh_token, access_token } = response.data;
   sessionStorage.setItem(SessionStorageKey.Token, id_token);
   sessionStorage.setItem(SessionStorageKey.Refresh, refresh_token);
   sessionStorage.setItem(SessionStorageKey.Access, access_token);
-
-  // clean verifier, challenge and state
-  sessionStorage.removeItem("state");
-  sessionStorage.removeItem("verifier");
-  sessionStorage.removeItem("challenge");
+  removeJwtTempTokens();
 }
 /** Getters */
 const getters: GetterTree<UserState, RootState> = {
@@ -146,6 +156,8 @@ function handleAzureError(
       },
       { root: true }
     );
+    // remove token because of error
+    removeAllOauthTokens();
   }
   throw error;
 }
@@ -159,7 +171,7 @@ const actions: ActionTree<UserState, RootState> = {
     context.commit("SET_USER_LOADING");
     // removeItem: idea was to remove azure authentication info
     // it is biased: we trigger a warning and logout for azure first
-    sessionStorage.removeItem(SessionStorageKey.Token);
+    removeAllOauthTokens();
     const { username, password } = credentials;
     return loginDefault(username, password)
       .then((axiosResponse) => {
@@ -205,15 +217,6 @@ const actions: ActionTree<UserState, RootState> = {
       const refresh_token =
         sessionStorage.getItem(SessionStorageKey.Refresh) ?? undefined;
       if (refresh_token === undefined) {
-        context.dispatch(
-          "notifyUser",
-          {
-            title: `no refresh token:`,
-            message: `Please login again, you're not logged in anymore}`,
-            type: "info",
-          },
-          { root: true }
-        );
         return;
       }
       const response = await axios.post(
@@ -231,12 +234,12 @@ const actions: ActionTree<UserState, RootState> = {
         }
       );
       setuptokens(response);
-      context.dispatch("loginToken", {
+      await context.dispatch("loginToken", {
         token: response.data.id_token,
         byPassLoading: true,
       });
 
-      context.dispatch(
+      await context.dispatch(
         "notifyUser",
         {
           title: `refresh token:`,
@@ -314,7 +317,7 @@ const actions: ActionTree<UserState, RootState> = {
   loginAsGuest: async (context: ActionContext<UserState, RootState>) => {
     // force logout, just in case user already logged via the /db interface
     context.commit("SET_USER_LOADING");
-    sessionStorage.removeItem(SessionStorageKey.Token);
+    removeAllOauthTokens();
     await logoutCookie();
     context.commit("SET_USER", {
       name: GUEST_NAME,
@@ -324,7 +327,7 @@ const actions: ActionTree<UserState, RootState> = {
   },
   logout: async (context: ActionContext<UserState, RootState>) => {
     context.commit("SET_USER_LOADING");
-    sessionStorage.removeItem(SessionStorageKey.Token);
+    removeAllOauthTokens();
     if (context.getters.user.sub) {
       // force local state to empty then redirect to unhcr
       // if unhcr logout does not work at least, our ux will show as unlogged
@@ -338,7 +341,7 @@ const actions: ActionTree<UserState, RootState> = {
       context.commit("UNSET_USER_LOADING");
     }
   },
-  getSession: (
+  getSession: async (
     context: ActionContext<UserState, RootState>,
     { byPassLoading }
   ) => {
@@ -358,7 +361,7 @@ const actions: ActionTree<UserState, RootState> = {
     const sessionStorageToken = sessionStorage.getItem(SessionStorageKey.Token);
     if (sessionStorageToken) {
       // we're a oauth user
-      return context.dispatch("loginToken", {
+      return await context.dispatch("loginToken", {
         token: sessionStorageToken,
         byPassLoading,
       });
@@ -372,7 +375,7 @@ const actions: ActionTree<UserState, RootState> = {
       if (!byPassLoading) {
         context.commit("SET_USER_LOADING");
       }
-      return getSessionWithCookie()
+      return await getSessionWithCookie()
         .then((response) => {
           const user = response.data;
           context.commit("SET_USER", user.userCtx);

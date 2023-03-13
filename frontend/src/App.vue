@@ -386,17 +386,21 @@ export default class App extends Vue {
     this.mini = !this.mini;
   }
 
+  public async checkAndRefresh(): Promise<void> {
+    await this.getSessionStore({ byPassLoading: true });
+    if (this.$userIs("OauthAuthenticated")) {
+      await this.refreshToken();
+    }
+  }
   /** Run once. */
   async mounted(): Promise<void> {
     this.$vuetify.theme.dark = false; //this.$store.getters["ConfigModule/themeDark"];
     document.title = this.title;
-    this.getSessionStore({ byPassLoading: true });
-    this.refreshToken();
-
+    this.checkAndRefresh();
     this.intervalId = window.setInterval(() => {
-      this.getSessionStore({ byPassLoading: true });
-      this.refreshToken();
+      this.checkAndRefresh();
     }, 1000 * 60 * 5); // check every 10 minutes: 1000 * 60 * 5
+
     this.$store.subscribe((mutation) => {
       const shouldUpdate = ["storeMessage"];
       if (shouldUpdate.includes(mutation.type)) {
