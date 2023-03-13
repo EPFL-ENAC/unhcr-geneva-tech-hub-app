@@ -297,12 +297,13 @@ const actions: ActionTree<UserState, RootState> = {
         context.commit("SET_USER", response.data);
         return response;
       })
-      .catch((response: unknown) => {
+      .catch((response: Error) => {
         context.dispatch(
           "notifyUser",
           {
             message: response,
             type: "error",
+            stack: response.stack,
           },
           { root: true }
         );

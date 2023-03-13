@@ -1,4 +1,5 @@
 import { CouchUser, GUEST_NAME, Roles } from "@/store/UserModule";
+import { SessionStorageKey } from "@/utils/storage";
 import { VueConstructor } from "vue";
 import { Store } from "vuex";
 
@@ -126,7 +127,8 @@ export default new (class User {
         DBAdmin: user.loaded && (user.roles?.includes(DB_ADMIN) ?? false),
         Specialist: user.loaded && (user.roles?.includes(SPECIALIST) ?? false),
         User: user.loaded && (user.roles?.includes(USER) ?? false),
-        OauthAuthenticated: user.loaded && user.sub !== undefined,
+        OauthHasRefreshToken:
+          sessionStorage.getItem(SessionStorageKey.Refresh) !== undefined,
         Guest: user.loaded && user.name === GUEST_NAME,
         LoggedIn: user.loaded && LoggedInName,
         LoggedOut: (user.loaded && LoggedOutName) || user.loaded == false,

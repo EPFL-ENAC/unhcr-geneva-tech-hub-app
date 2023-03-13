@@ -390,7 +390,7 @@ export default class App extends Vue {
 
   public async checkAndRefresh(): Promise<void> {
     await this.getSessionStore({ byPassLoading: true });
-    if (this.$userIs("OauthAuthenticated")) {
+    if (this.$userIs("OauthHasRefreshToken")) {
       await this.refreshToken();
     }
   }
