@@ -447,10 +447,10 @@ export default class Step1 extends Vue {
           ) ?? []
         );
         this.updateFormInput();
-        this.$store.dispatch(
-          "notifyUser",
-          "Successfull deletion of assets from server"
-        );
+        this.$store.dispatch("notifyUser", {
+          message: "Successfull deletion of assets from server",
+          type: "success",
+        });
         // just to be sure purge nginx cache of the previous location!
       })
       .catch((error: Error) => {
