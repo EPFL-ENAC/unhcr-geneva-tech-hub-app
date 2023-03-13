@@ -2,6 +2,20 @@ import enacitGhg from "@/components/icons/enacitGhg.vue";
 import enacitShelter from "@/components/icons/enacitShelter.vue";
 // TODO: move icons to each component instead of loading globally
 // It's like this for legacy reasons (we moved away from the custom font paradigm)
+
+export const themeColor = {
+  // https://www.ungm.org/UNUser/Documents/DownloadPublicDocument?docId=782892
+  light: {
+    primary: "#0072BC",
+    secondary: "#000000",
+    accent: "#FAEB00",
+    error: "#FF5252",
+    info: "#2196F3",
+    success: "#4CAF50",
+    warning: "#FFC107",
+  },
+};
+
 import {
   mdiAccount,
   mdiAccountCircle,
@@ -29,6 +43,7 @@ import {
   mdiDownload,
   mdiFilePdfBox,
   mdiFlash,
+  mdiHelpCircleOutline,
   mdiHome,
   mdiHomeCity,
   mdiHomeGroup,
@@ -119,6 +134,7 @@ export default new Vuetify({
       mdiLogout,
       mdiChartBox,
       mdiClipboardTextMultiple,
+      mdiHelpCircleOutline,
       mdiHome,
       mdiHomeVariantOutline,
       mdiHomeOutline,
@@ -170,18 +186,7 @@ export default new Vuetify({
         },
       },
     },
-    themes: {
-      // https://www.ungm.org/UNUser/Documents/DownloadPublicDocument?docId=782892
-      light: {
-        primary: "#0072BC",
-        secondary: "#000000",
-        accent: "#FAEB00",
-        error: "#FF5252",
-        info: "#2196F3",
-        success: "#4CAF50",
-        warning: "#FFC107",
-      },
-    },
+    themes: themeColor,
   },
 });
 

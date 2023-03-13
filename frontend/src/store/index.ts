@@ -1,3 +1,4 @@
+import { themeColor } from "@/plugins/vuetify";
 import ConfigModule from "@/store/ConfigModule";
 import EnergyModule from "@/store/EnergyModule";
 import GhgModule from "@/store/GhgModule";
@@ -73,6 +74,34 @@ const getters: GetterTree<RootState, RootState> = {
   notifications: (s): UnhcrNotification[] => s.notifications,
   notificationsLength: (s): number => s.notifications.length,
   message: (s): string | undefined => s.notifications?.[0]?.message,
+  notificationsStatusColor: (s): string => {
+    const colorDefault = "grey";
+    const numberOfError = s.notifications.filter(
+      (notification) => notification.type === "error"
+    ).length;
+    const numberOfWarning = s.notifications.filter(
+      (notification) => notification.type === "warning"
+    ).length;
+    const numberOfInfo = s.notifications.filter(
+      (notification) => notification.type === "info"
+    ).length;
+    const numberOfSuccess = s.notifications.filter(
+      (notification) => notification.type === "success"
+    ).length;
+    if (numberOfError) {
+      return themeColor.light.error;
+    }
+    if (numberOfWarning) {
+      return themeColor.light.warning;
+    }
+    if (numberOfSuccess) {
+      return themeColor.light.success;
+    }
+    if (numberOfInfo) {
+      return themeColor.light.info;
+    }
+    return colorDefault;
+  },
   error: (s): string | undefined => s.error,
   referenceDataDrawer: (s): boolean => s.referenceDataDrawer,
   overviewDataDrawer: (s): boolean => s.overviewDataDrawer,

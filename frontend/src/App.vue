@@ -32,23 +32,24 @@
         </v-tab>
       </v-tabs>
       <v-spacer />
+      <v-menu v-if="$router.currentRoute.name?.includes('Shelter')" offset-y>
+        <template #activator="{ on, attrs }">
+          <v-btn icon v-bind="attrs" aria-label="shelter-help" v-on="on">
+            <v-icon> $mdiHelpCircleOutline </v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item
+            v-for="(item, index) in [{ title: 'a' }, { title: 'b' }]"
+            :key="index"
+          >
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
       <v-btn
-        v-if="notificationsLength"
-        icon
-        aria-label="notification-center"
-        @click.stop="toggleNotificationCenter"
-      >
-        <v-badge
-          :content="notificationsLength"
-          :value="notificationsLength"
-          color="red"
-          overlap
-        >
-          <v-icon> $mdiBellOutline </v-icon>
-        </v-badge>
-      </v-btn>
-      <v-btn
-        v-if="'ShelterSustainabilityList' === $router.currentRoute.name"
+        v-if="$router.currentRoute.name?.includes('Shelter')"
         icon
         aria-label="dataset-overview-table"
         @click.stop="toggleOverviewData"
@@ -169,6 +170,26 @@
           <v-list-item-content>
             <v-list-item-title>Logout </v-list-item-title>
           </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item>
+          <v-btn
+            v-if="notificationsLength"
+            icon
+            small
+            style="width: 24px; height: 24px"
+            aria-label="notification-center"
+            @click.stop="toggleNotificationCenter"
+          >
+            <v-badge
+              :content="notificationsLength"
+              :value="notificationsLength"
+              :color="notificationColor"
+              overlap
+            >
+              <v-icon> $mdiBellOutline </v-icon>
+            </v-badge>
+          </v-btn>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -309,6 +330,9 @@ export default class App extends Vue {
   get snackbarText(): UnhcrNotification {
     return this.$store.getters.notifications[0];
   }
+  get notificationColor(): string {
+    return this.$store.getters.notificationsStatusColor;
+  }
   get progress(): number {
     return this.$store.getters.progress;
   }
@@ -326,7 +350,6 @@ export default class App extends Vue {
   }
   get themeDark(): boolean {
     return false;
-    // return this.$store.getters["ConfigModule/themeDark"];
   }
 
   @Watch("themeDark")
