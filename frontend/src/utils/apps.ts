@@ -10,7 +10,7 @@ export const shelter = {
   title: "Shelter and Sustainability",
   to: "ShelterSustainability",
   logoIcon: "$vuetify.icon.shelter",
-  link: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2022-04-11/houses_new.pdf",
+  link: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-10/Shelter.Sustainability.Manual.pdf",
   linkName:
     "A technical and environmental comparative overview of common shelter typologies found in settlements across UNHCR operations",
   description:

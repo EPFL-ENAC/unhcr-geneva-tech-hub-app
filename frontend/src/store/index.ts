@@ -43,6 +43,8 @@ export interface RootState {
   referenceDataDrawer: boolean;
   overviewDataDrawer: boolean;
   notificationDialog: boolean;
+  helper?: Record<string, string>;
+  helperDialog: boolean;
 }
 
 export interface UnhcrNotification {
@@ -62,9 +64,11 @@ const state: RootState = {
   message: undefined,
   notifications: [],
   error: undefined,
+  helper: undefined,
   referenceDataDrawer: false,
   overviewDataDrawer: false,
   notificationDialog: false,
+  helperDialog: false,
 };
 
 /** Getters */
@@ -106,6 +110,8 @@ const getters: GetterTree<RootState, RootState> = {
   referenceDataDrawer: (s): boolean => s.referenceDataDrawer,
   overviewDataDrawer: (s): boolean => s.overviewDataDrawer,
   notificationDialog: (s): boolean => s.notificationDialog,
+  helperDialog: (s): boolean => s.helperDialog,
+  helper: (s): Record<string, string> | undefined => s.helper,
 };
 
 /** Mutations */
@@ -165,7 +171,12 @@ const mutations: MutationTree<RootState> = {
   clearNotifications(s) {
     s.notifications = [];
   },
-  // TODO add stack to notification center
+  storeHelperDialog(s, value: boolean) {
+    s.helperDialog = value;
+  },
+  storeHelper(s, value: Record<string, string>) {
+    s.helper = value;
+  },
 };
 
 /** Actions */
@@ -274,6 +285,22 @@ const actions: ActionTree<RootState, RootState> = {
   },
   clearNotifications(context: ActionContext<RootState, RootState>) {
     context.commit("clearNotifications");
+  },
+  toggleHelperCenter(context: ActionContext<RootState, RootState>) {
+    context.commit("storeHelperDialog", !context.getters.helperDialog);
+  },
+  setHelperDialog(
+    context: ActionContext<RootState, RootState>,
+    helperDialog = false
+  ) {
+    context.commit("storeHelperDialog", helperDialog);
+  },
+  setHelper(
+    context: ActionContext<RootState, RootState>,
+    helper: Record<string, string>
+  ) {
+    context.commit("storeHelperDialog", true);
+    context.commit("storeHelper", helper);
   },
 };
 
