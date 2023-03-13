@@ -333,10 +333,6 @@ export default class Step3Materials extends Vue {
     this.localShelter = Object.assign({}, this.localShelter);
   }
 
-  public rowClasses(value: any): string {
-    console.log(value);
-    return "test";
-  }
   public autoSubmit(): void {
     this.$store.subscribe((mutation) => {
       const shouldUpdate = [
