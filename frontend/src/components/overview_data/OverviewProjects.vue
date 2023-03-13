@@ -40,6 +40,7 @@
       <v-col
         v-for="(config, $key) in shelterOverviewConfigs"
         :key="$key"
+        :cols="12"
         :lg="4"
       >
         <v-card>
