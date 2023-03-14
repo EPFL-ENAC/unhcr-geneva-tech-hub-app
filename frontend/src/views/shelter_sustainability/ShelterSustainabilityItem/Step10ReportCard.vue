@@ -58,12 +58,6 @@
     <step-5-environmental-impact :shelter="shelter" />
     <step-6-technical-performance :shelter="shelter" />
     <step-7-habitability :shelter="shelter" />
-    <!-- <v-row>
-      <v-col :cols="6">
-      </v-col>
-      <v-col :cols="6">
-      </v-col>
-    </v-row> -->
   </v-container>
 </template>
 

@@ -1,18 +1,18 @@
 <template>
-  <v-container fluid>
+  <v-container fluid :class="`group-col-container__h${depth + 3}`">
     <v-row
       v-if="form.title"
       :class="{
-        'v-tabs fixed-tabs-bar d-flex d-print-none v-tabs--centered v-tabs--grow theme--light':
+        'unhcr-form-group v-tabs fixed-tabs-bar d-flex v-tabs--centered v-tabs--grow theme--light':
           depth == 0,
       }"
     >
       <v-col :cols="depth > 0 ? 11 : 12" class="d-flex v-tabs-bar">
         <component
           :is="`h${depth + 2}`"
-          :class="`text-h${depth + 4} project__h${
-            depth + 3
-          }  font-weight-medium`"
+          :class="`project__h${depth + 3}  font-weight-medium text-h${
+            depth + 4
+          } `"
           >{{ form.title }}</component
         >
 
@@ -21,14 +21,18 @@
         </info-tooltip>
         <span
           v-if="result"
-          :class="`text-h${depth + 5} project__h${
-            depth + 3
-          }  font-weight-medium`"
+          :class="`project__h${depth + 3}  font-weight-medium text-h${
+            depth + 5
+          } `"
         >
-          ({{ result }})
+          &nbsp;({{ result }})
         </span>
       </v-col>
-      <v-col v-if="depth > 0" cols="1" class="d-flex justify-end align-center">
+      <v-col
+        v-if="depth > 0"
+        cols="1"
+        class="d-print-none d-flex justify-end align-center"
+      >
         <v-btn icon @click="toggle">
           <v-icon :class="{ 'chevron-rotate': !showSubPanel }"
             >$mdiChevronDown</v-icon
@@ -38,15 +42,15 @@
     </v-row>
 
     <v-expand-transition>
-      <v-form v-show="showSubPanel">
-        <v-row>
+      <v-form v-show="showSubPanel" class="col">
+        <v-row class="d-print-none">
           <v-col>
             <v-divider></v-divider>
           </v-col>
         </v-row>
         <v-spacer />
         <v-row v-for="(child, $index) in form.children" :key="$index">
-          <v-col>
+          <v-col class="group-col-container">
             <v-sheet elevation="2" rounded>
               <component
                 :is="child.type"
@@ -122,5 +126,40 @@ export default class FormGroup extends Vue {
 <style lang="scss" scoped>
 .chevron-rotate {
   transform: rotate(180deg);
+}
+@media print {
+  @page {
+    size: portrait;
+  }
+  .group-col-container {
+    padding: 0 !important;
+    page-break-before: auto;
+    page-break-inside: avoid;
+    .elevation-2 {
+      box-shadow: none !important;
+    }
+  }
+  .group-col-container__h3 {
+    page-break-before: auto;
+    page-break-inside: avoid;
+  }
+  .project__h3 {
+    font-size: 0.9rem !important;
+    line-height: 1.1rem;
+  }
+  .project__h4 {
+    font-size: 0.8rem !important;
+    line-height: 1rem;
+  }
+  .project__h5 {
+    font-size: 0.7rem !important;
+    line-height: 0.9rem;
+  }
+  .unhcr-form-group {
+    position: inherit;
+    .v-tabs-bar {
+      padding-left: 0px;
+    }
+  }
 }
 </style>

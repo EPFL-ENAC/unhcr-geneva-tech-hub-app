@@ -2,16 +2,16 @@
   <v-sheet elevation="2" rounded>
     <v-container fluid>
       <v-row v-if="form.title">
-        <v-col>
+        <v-col cols="11" class="group-title">
           <component
             :is="`h${depth + 2}`"
-            :class="`text-h${depth + 4} project-shelter__h${
-              depth + 3
-            }  font-weight-medium`"
+            :class="`project-shelter__h${depth + 3}  font-weight-medium text-h${
+              depth + 4
+            } `"
             >{{ form.title }}</component
           >
         </v-col>
-        <v-col class="d-flex justify-end align-center">
+        <v-col class="d-print-none d-flex justify-end align-center">
           <v-btn icon @click="toggle">
             <v-icon :class="{ 'chevron-rotate': !show }"
               >$mdiChevronDown</v-icon
@@ -20,12 +20,18 @@
         </v-col>
       </v-row>
       <v-row v-show="show">
-        <v-divider />
+        <v-col class="d-print-none">
+          <v-divider />
+        </v-col>
       </v-row>
       <v-expand-transition>
         <v-row v-show="show">
-          <v-col cols="12">
-            <v-expansion-panels accordion :focusable="false">
+          <v-col cols="12" class="pt-0">
+            <v-expansion-panels
+              class="checkbox-group-panels"
+              accordion
+              :focusable="false"
+            >
               <v-expansion-panel
                 v-for="(child, $index) in form.children"
                 :key="$index"
@@ -160,6 +166,10 @@ export default class RadioGroup extends Vue {
 <style lang="scss">
 .unhcr-expansion-panel {
   .v-expansion-panel-header {
+    display: grid;
+    grid-auto-columns: 1;
+    grid-auto-flow: column;
+    grid-template-columns: auto max-content min-content;
     .v-input--selection-controls {
       margin-top: 0px;
       padding-top: 0px;
@@ -181,5 +191,49 @@ export default class RadioGroup extends Vue {
 }
 .unhcr-checkbox-group-non-applicable__checkbox__label {
   margin-right: 4px;
+}
+@media print {
+  @page {
+    size: portrait;
+  }
+
+  .checkbox-group-panels {
+    z-index: auto;
+  }
+  .unhcr-expansion-panel {
+    .v-expansion-panel-header {
+      min-height: 24px;
+      padding: 0;
+      margin: 0;
+      .v-input__control {
+        .v-input__slot {
+          padding: 0;
+          margin: 0;
+          .v-input--selection-controls__input {
+            height: 10px;
+            width: 10px;
+            padding: 0px;
+          }
+          .v-label {
+            font-size: 8px;
+          }
+        }
+      }
+      .v-expansion-panel-header__icon {
+        display: none;
+      }
+    }
+  }
+  .group-title {
+    padding-bottom: 0px;
+    .project-shelter__h4 {
+      font-size: 0.8rem !important;
+      line-height: 1rem;
+    }
+    .project-shelter__h5 {
+      font-size: 0.7rem !important;
+      line-height: 0.9rem;
+    }
+  }
 }
 </style>
