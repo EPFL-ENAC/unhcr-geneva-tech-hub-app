@@ -88,6 +88,39 @@
                 />
               </v-col>
             </v-row>
+
+            <v-row>
+              <!-- add new shelter -->
+              <v-col>
+                <v-row>
+                  <v-col class="d-flex align-center justify-end">
+                    <v-btn
+                      class="float-right"
+                      color="primary"
+                      :disabled="!$can('create')"
+                      text
+                      @click="addProject"
+                    >
+                      <v-icon left>$mdiPlusBox</v-icon>
+                      New shelter
+                    </v-btn>
+                    <v-btn
+                      :disabled="selectedShelters.length === 0"
+                      class="float-right"
+                      color="primary"
+                      text
+                      :to="{
+                        name: 'ShelterSustainabilityCompare',
+                        query: { ids: selectedShelters.join('|') },
+                      }"
+                    >
+                      <v-icon left>$mdiScale</v-icon>
+                      Compare shelter
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
           </v-col>
           <v-col>
             <div class="separator"></div>
@@ -103,39 +136,6 @@
       </v-container>
     </v-sheet>
     <v-sheet>
-      <v-row>
-        <!-- add new shelter -->
-        <v-col>
-          <v-row>
-            <v-col class="d-flex align-center justify-end">
-              <v-btn
-                class="float-right"
-                color="primary"
-                :disabled="!$can('create')"
-                text
-                @click="addProject"
-              >
-                <v-icon left>$mdiPlusBox</v-icon>
-                New shelter
-              </v-btn>
-              <v-btn
-                :disabled="selectedShelters.length === 0"
-                class="float-right"
-                color="primary"
-                text
-                :to="{
-                  name: 'ShelterSustainabilityCompare',
-                  query: { ids: selectedShelters.join('|') },
-                }"
-              >
-                <v-icon left>$mdiScale</v-icon>
-                Compare shelter
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
-
       <v-row>
         <v-col justify="center">
           <v-row>
@@ -191,7 +191,7 @@
                     <v-card-title>
                       {{ project.name }}
                     </v-card-title>
-                    <v-card-subtitle class="pb-0">
+                    <v-card-subtitle class="pb-0 ma-0">
                       <span v-if="project.location_name">
                         {{ project.location_name }}
                       </span>
@@ -536,7 +536,7 @@ interface ShelterFilters {
 }
 
 .map-countries {
-  height: 218px;
+  height: 400px;
   grid-area: c;
   z-index: 1;
 }
