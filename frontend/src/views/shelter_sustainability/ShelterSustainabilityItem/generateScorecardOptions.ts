@@ -2,6 +2,8 @@ import { formatNumber } from "@/plugins/filters";
 import { ScoreCardWithShelterInfo } from "@/store/ShelterInterface";
 import { ShelterColors } from "@/views/shelter_sustainability/shelterTypeColors";
 import { EChartsOption } from "echarts/types/dist/shared";
+import { cloneDeep } from "lodash";
+
 export interface ScorecardConfig {
   id: string;
   min?: number;
@@ -16,6 +18,7 @@ export interface ScorecardConfig {
     primary: string;
     secondary: string;
   };
+  gridLeft?: number;
   seltectedFieldUnit?: string | undefined;
 }
 
@@ -54,7 +57,7 @@ export function generateScorecardOptions(
       coordinateSystem: "singleAxis",
       type: "scatter",
       data:
-        scorecards?.map((item: ScoreCardWithShelterInfo) => {
+        cloneDeep(scorecards)?.map((item: ScoreCardWithShelterInfo) => {
           const scor = item as ScoreCardScatter;
           const key = config.id as ScoreCardsKey;
           const shelter_type = scor.shelter_type as colorType;

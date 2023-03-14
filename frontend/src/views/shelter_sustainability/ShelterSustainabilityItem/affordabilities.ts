@@ -1,3 +1,4 @@
+import { ScoreCardWithShelterInfo } from "@/store/ShelterInterface";
 import { ScorecardConfig } from "@/views/shelter_sustainability/ShelterSustainabilityItem/generateScorecardOptions";
 import { alpha } from "@/views/shelter_sustainability/shelterTypeColors";
 
@@ -13,5 +14,11 @@ export const affordabilities: ScorecardConfig[] = [
       primary: `rgba(248, 228, 210, 1)`, // seconday colour 5
       secondary: `rgba(248, 228, 210, ${alpha})`,
     },
+    gridLeft: 40,
   },
 ];
+
+export const affordabilitiesByKey = affordabilities.reduce(
+  (acc, x) => ({ ...acc, [x.id as keyof ScoreCardWithShelterInfo]: x }),
+  {}
+);
