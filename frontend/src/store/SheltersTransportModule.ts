@@ -11,6 +11,7 @@ import { RootState } from ".";
 interface SheltersTransportState {
   item: ShelterTransport;
   items: ShelterTransport[];
+  itemsLoading: boolean;
   paginate: Paginate;
   itemsLength: number;
 }
@@ -41,6 +42,7 @@ const MSG_COULD_NOT_FIND_ITEM = "Could not find item with this id";
 function generateState(): SheltersTransportState {
   return {
     item: {} as ShelterTransport,
+    itemsLoading: false,
     items: [],
     paginate: {
       limit: 10,
@@ -54,6 +56,7 @@ function generateState(): SheltersTransportState {
 const getters: GetterTree<SheltersTransportState, RootState> = {
   item: (s): ShelterTransport => s.item,
   items: (s): ShelterTransport[] => s.items,
+  itemsLoading: (s): boolean => s.itemsLoading,
   paginate: (s): Paginate => s.paginate,
   itemsLength: (s): number => s.itemsLength,
 };
@@ -71,6 +74,9 @@ const mutations: MutationTree<SheltersTransportState> = {
   },
   SET_ITEMS_LENGTH(state, value) {
     state.itemsLength = value;
+  },
+  SET_LOADING(state, value) {
+    state.itemsLoading = value;
   },
 };
 
@@ -91,6 +97,7 @@ const actions: ActionTree<SheltersTransportState, RootState> = {
   getAllDocs: (
     context: ActionContext<SheltersTransportState, RootState>
   ): AxiosPromise<(ShelterTransport | void)[]> => {
+    context.commit("SET_LOADING", true);
     return axios({
       method: "get",
       url: `${process.env.BASE_URL}shelter/transports.json`,
@@ -102,6 +109,9 @@ const actions: ActionTree<SheltersTransportState, RootState> = {
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        context.commit("SET_LOADING", false);
       });
   },
 };

@@ -34,8 +34,7 @@
         />
         <span class="error--text">{{ error }}</span>
       </v-card-text>
-      <v-card-actions>
-        <v-spacer />
+      <v-card-actions class="justify-center">
         <v-btn v-show="!showForm" @click="loginGuest">Guest user</v-btn>
         <v-btn
           v-show="!showForm"

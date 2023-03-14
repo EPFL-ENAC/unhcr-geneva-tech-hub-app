@@ -1,7 +1,7 @@
 <template>
   <v-card flat>
     <v-card-text v-if="iges_grid">
-      <v-data-table :headers="headers" :items="iges_grid">
+      <v-data-table dense :headers="headers" :items="iges_grid">
         <template #[`item.value`]="props">
           <span>{{ props.item.value | formatNumber }}</span>
         </template>
@@ -70,7 +70,7 @@ export default class IgesGrid extends Vue {
         sortable: false,
         value: "name",
       },
-      { text: "value", value: "value" },
+      { text: "value", value: "value", width: "100px" },
     ];
   }
 
@@ -99,6 +99,7 @@ interface HeaderInterface {
   align?: string;
   sortable?: boolean;
   value: string;
+  width?: string;
 }
 </script>
 

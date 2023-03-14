@@ -1,9 +1,11 @@
 <template>
-  <v-navigation-drawer v-model="drawer" absolute width="80%" right temporary>
+  <v-navigation-drawer v-model="drawer" app width="80%" right temporary>
     <v-list-item>
       <v-list-item-content>
         <v-list-item-title class="d-flex justify-space-between">
-          <h2 class="text-h4 project__h3 font-weight-medium">Overview data</h2>
+          <h2 class="text-h4 project__h3 font-weight-medium sticky">
+            Overview data
+          </h2>
           <v-btn icon @click="toggleOverviewData">
             <v-icon>$mdiClose</v-icon>
           </v-btn>

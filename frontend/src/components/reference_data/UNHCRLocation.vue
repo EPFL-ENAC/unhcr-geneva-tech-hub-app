@@ -9,12 +9,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-data-table
-            :headers="headers"
-            :items="items"
-            hide-default-footer
-            :items-per-page="-1"
-          >
+          <v-data-table :headers="headers" :items="items" dense>
             <template #[`item.Country`]="props">
               <span :title="props.item.Country"
                 >{{ countriesMap[props.item.Country].name }}
