@@ -237,6 +237,7 @@
 
     <v-snackbar
       v-model="snackbar"
+      class="d-print-none"
       app
       timeout="5000"
       transition="scroll-y-transition"
@@ -513,15 +514,13 @@ export default class App extends Vue {
   }
   .v-application .unhcr-main {
     padding: 0px !important;
+    padding-top: 20px !important;
   }
 
   @page {
     size: A4;
     margin: 1cm;
     padding: 5px;
-    // margin-left: 1cm;
-    // margin-right: 1cm;
-    // margin-top: 1cm;
     width: 100%;
   }
   .pagebreak {
@@ -532,7 +531,15 @@ export default class App extends Vue {
     font-size: 1rem;
   }
   .container {
-    padding: 6px !important;
+    padding: 0px !important;
+  }
+  .v-application .elevation-1,
+  .v-application .elevation-2 {
+    z-index: 0;
+    box-shadow: none !important;
+  }
+  :deep(.v-sheet.v-card) {
+    box-shadow: none !important;
   }
 }
 

@@ -19,8 +19,8 @@
           </v-btn>
         </v-col>
       </v-row>
-      <v-row v-show="show">
-        <v-col class="d-print-none">
+      <v-row v-show="show" class="d-print-none">
+        <v-col>
           <v-divider />
         </v-col>
       </v-row>
@@ -171,8 +171,8 @@ export default class RadioGroup extends Vue {
     grid-auto-flow: column;
     grid-template-columns: auto max-content min-content;
     .v-input--selection-controls {
-      margin-top: 0px;
-      padding-top: 0px;
+      // margin-top: 0px;
+      // padding-top: 0px;
       width: 100%;
     }
     .unhcr-checkbox-group-non-applicable__checkbox {
@@ -204,7 +204,12 @@ export default class RadioGroup extends Vue {
     .v-expansion-panel-header {
       min-height: 24px;
       padding: 0;
-      margin: 0;
+      // margin: 0;
+      .v-input--selection-controls {
+        margin-top: 0px;
+        padding-top: 0px;
+        width: 100%;
+      }
       .v-input__control {
         .v-input__slot {
           padding: 0;

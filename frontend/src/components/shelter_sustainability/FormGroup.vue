@@ -10,7 +10,7 @@
       <v-col :cols="depth > 0 ? 11 : 12" class="d-flex v-tabs-bar">
         <component
           :is="`h${depth + 2}`"
-          :class="`project__h${depth + 3}  font-weight-medium text-h${
+          :class="`project-shelter__h${depth + 3}  font-weight-medium text-h${
             depth + 4
           } `"
           >{{ form.title }}</component
@@ -21,7 +21,7 @@
         </info-tooltip>
         <span
           v-if="result"
-          :class="`project__h${depth + 3}  font-weight-medium text-h${
+          :class="`project-shelter__h${depth + 3}  font-weight-medium text-h${
             depth + 5
           } `"
         >
@@ -143,22 +143,30 @@ export default class FormGroup extends Vue {
     page-break-before: auto;
     page-break-inside: avoid;
   }
-  .project__h3 {
+  .project-shelter__h3 {
     font-size: 0.9rem !important;
     line-height: 1.1rem;
   }
-  .project__h4 {
+  .project-shelter__h4 {
     font-size: 0.8rem !important;
     line-height: 1rem;
   }
-  .project__h5 {
+  .project-shelter__h5 {
     font-size: 0.7rem !important;
     line-height: 0.9rem;
   }
   .unhcr-form-group {
     position: inherit;
+    position: inherit;
+    height: 53px;
+    padding-left: 11px;
+    page-break-before: always;
+    page-break-inside: avoid;
     .v-tabs-bar {
       padding-left: 0px;
+      // padding-top: 0;
+      padding-bottom: 0;
+      // height: 2.1rem;
     }
   }
 }
