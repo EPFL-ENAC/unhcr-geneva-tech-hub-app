@@ -1,5 +1,5 @@
 <template>
-  <v-sheet elevation="2" rounded class="group-col-container">
+  <v-sheet elevation="2" rounded class="group-info-col-container">
     <v-container fluid>
       <v-row>
         <v-col cols="11" class="group-title">
@@ -70,7 +70,7 @@ interface Info {
   @page {
     size: auto;
   }
-  .group-col-container {
+  .group-info-col-container {
     padding: 0 !important;
     page-break-before: auto;
     page-break-inside: avoid;

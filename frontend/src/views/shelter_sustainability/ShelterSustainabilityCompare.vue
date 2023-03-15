@@ -32,7 +32,7 @@
         </v-alert>
       </v-col>
     </v-row>
-    <v-row v-else>
+    <v-row v-else class="shelter-page-compare">
       <v-col>
         <v-row>
           <v-col cols="3"> </v-col>
@@ -186,6 +186,8 @@
               >
                 <v-img
                   v-if="shelter.geometry.shelter_geometry_type"
+                  height="40px"
+                  contain
                   :src="
                     geometriesUrl[
                       shelter.geometry.shelter_geometry_type
@@ -280,7 +282,7 @@
         <!-- END OF CONSTRUCTION -->
 
         <!-- BEGIN ENVIRONMENTAL IMPACT -->
-        <v-row class="pagebreak"
+        <v-row class=""
           ><v-col
             ><b class="text-uppercase">ENVIRONMENTAL IMPACT</b></v-col
           ></v-row
@@ -290,7 +292,7 @@
             <v-row
               v-for="(environmentalImpact, idx) in environmentalImpacts"
               :key="environmentalImpact.id"
-              style="border-bottom: 1px solid grey"
+              class="envronmentalImpactRows"
             >
               <v-col
                 cols="3"
@@ -341,8 +343,8 @@
                 <v-row>
                   <v-col cols="12" class="d-flex justify-center align-center">
                     <graph-tree
-                      max-height="150px"
-                      min-height="150px"
+                      max-height="110px"
+                      min-height="110px"
                       :selected-field="environmentalImpact.selectedField"
                       graph-type="treemap"
                       :unit-name="environmentalImpact.selectedFieldUnit"
@@ -544,6 +546,22 @@ export default class ShelterSustainabilityCompare extends Vue {
 </script>
 
 <style scoped lang="scss">
+.envronmentalImpactRows {
+  border-bottom: 1px solid grey;
+  &:last-of-type {
+    border-bottom: 0px;
+  }
+}
+@media print {
+  .shelter-page-compare {
+    font-size: 3mm;
+    .col {
+      padding-top: 4px;
+      padding-bottom: 4px;
+      align-items: center;
+    }
+  }
+}
 ::v-deep .c-blue {
   color: var(--c-blue);
   fill: var(--c-blue);

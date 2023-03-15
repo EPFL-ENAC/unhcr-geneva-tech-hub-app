@@ -45,8 +45,7 @@ export function generateScorecardOptions(
       left: 10,
       type: "value",
       boundaryGap: false,
-      height: "40%",
-      bottom: 10,
+      height: "10%",
       axisLabel: {
         interval: 2,
         lineHeight: 4,

@@ -339,8 +339,8 @@ interface ShelterFilters {
       box-shadow: none !important;
     }
     .scorecard-responsive-container {
-      min-height: 22px;
-      max-height: 22px;
+      min-height: 32px;
+      max-height: 32px;
     }
     .scorecard-title-with-value {
       font-size: 0.7rem;

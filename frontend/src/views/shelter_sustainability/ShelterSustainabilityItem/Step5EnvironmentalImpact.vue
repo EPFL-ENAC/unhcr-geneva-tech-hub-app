@@ -1,6 +1,6 @@
 <template>
-  <v-container v-if="shelter" fluid class="group-col-container">
-    <v-row>
+  <v-container v-if="shelter" fluid class="shelter-step-5-container">
+    <v-row v-if="$route.name === 'ShelterSustainabilityStep5'">
       <v-col class="d-flex">
         <h2 class="text-h4 project__h3 font-weight-medium">
           {{ infoTooltipText[$route.name].title }}
@@ -10,7 +10,7 @@
         </info-tooltip>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row class="d-no-print">
       <v-col>
         <v-divider></v-divider>
       </v-col>
@@ -553,29 +553,32 @@ interface Info {
   ::v-deep .v-sheet.v-card:not(.v-sheet--outlined) {
     box-shadow: none !important;
   }
+
+  .shelter-step-5-container {
+    padding: 0 !important;
+    // page-break-before: avoid;
+    // page-break-inside: avoid;
+  }
   .environmental-info-group {
     page-break-before: always;
-    page-break-inside: avoid;
+    page-break-inside: auto;
   }
   .project-shelter__h4 {
     font-size: 0.8rem !important;
     line-height: 1rem;
   }
-  .shelter-environmental-graphs-container {
-    page-break-before: avoid;
-    page-break-inside: avoid;
-  }
   .shelter-environmental-graphs-container__col {
-    flex: 0 0 70% !important;
-    max-width: 70% !important;
     justify-content: start;
     align-content: start;
+    max-height: 150px !important;
+    min-height: 150px !important;
     .v-responsive {
-      min-height: 200px !important;
+      max-height: 150px !important;
+      min-height: 150px !important;
     }
   }
   @page {
-    size: landscape;
+    size: portrait;
   }
 }
 </style>

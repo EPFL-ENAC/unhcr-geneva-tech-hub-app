@@ -1,15 +1,13 @@
 <template>
   <v-app>
-    <header
-      class="justify-space-between align-center d-none d-print-flex ml-4 mr-4 mt-4"
-    >
-      <h4 class="font-weight-bold primary--text pl-2 pr-2 pt-2">
+    <header class="justify-space-between align-center d-none d-print-flex">
+      <h4 class="font-weight-bold primary--text">
         <span v-if="$route.name === 'ShelterSustainabilityCompare'"
           >Shelter Comparison Report</span
         >
         <span v-else-if="currentRouteId">{{ currentRouteId }}</span>
       </h4>
-      <figure class="pa-4">
+      <figure>
         <img
           :src="unhcr_logo.imgPath"
           :height="unhcr_logo.height || '40px'"
