@@ -62,7 +62,6 @@ import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
-import { logoutCookie } from "@/utils/couchdb";
 @Component({
   computed: {
     ...mapGetters("UserModule", ["user"]),
@@ -88,6 +87,7 @@ export default class LoginComponent extends Vue {
   error = "";
   showForm = false;
   login!: (doc: UserCouchCredentials) => AxiosPromise;
+  logout!: () => AxiosPromise;
   loginAsGuest!: () => AxiosPromise;
   loginToken!: ({ token }: Record<string, string | boolean>) => AxiosPromise;
   verifyCode!: ({
@@ -117,7 +117,7 @@ export default class LoginComponent extends Vue {
     const idToken = hashParams.get("id_token");
     // todo : maybe broadcast an event
     if (idToken) {
-      await logoutCookie();
+      await this.logout();
       // implicit flow (DEPRECATED)
       this.tokenFlow(idToken);
     }
@@ -125,9 +125,12 @@ export default class LoginComponent extends Vue {
     const queryParams = new URLSearchParams(window.location.search);
     const code = queryParams.get("code");
     const code_verifier = sessionStorage.getItem("verifier");
-    if (code && code_verifier) {
+    if (code || code_verifier) {
+      if (!code || !code_verifier) {
+        throw new Error("code or code_verifier missing");
+      }
       // code flow with PKCE (new authorization mode 6th march 2022)
-      await logoutCookie();
+      await this.logout();
       const response = await this.verifyCode({ code, code_verifier });
       this.tokenFlow(response.data.id_token);
     }
@@ -200,6 +203,7 @@ export default class LoginComponent extends Vue {
           default:
             this.error = error.message;
         }
+        throw error;
       });
   }
 }

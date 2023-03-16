@@ -203,8 +203,9 @@
 
     <v-main v-if="$userIs('LoggedOut')" class="unhcr-main">
       <notification-center />
+      <router-view v-if="$route.name === 'About'" />
       <v-layout
-        v-if="$router.currentRoute.name !== 'Login'"
+        v-else-if="$router.currentRoute.name !== 'Login'"
         align-center
         justify-center
         class="login"
@@ -215,7 +216,7 @@
           <login-component />
         </v-flex>
       </v-layout>
-      <router-view name="Login" />
+      <router-view v-else name="Login" />
     </v-main>
 
     <v-main v-else class="unhcr-main">

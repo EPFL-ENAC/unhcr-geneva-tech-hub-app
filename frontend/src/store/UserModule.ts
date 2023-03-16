@@ -319,12 +319,20 @@ const actions: ActionTree<UserState, RootState> = {
     // force logout, just in case user already logged via the /db interface
     context.commit("SET_USER_LOADING");
     removeAllOauthTokens();
-    await logoutCookie();
-    context.commit("SET_USER", {
-      name: GUEST_NAME,
-      roles: [GUEST_NAME],
-    });
-    context.commit("UNSET_USER_LOADING");
+    // try catch await in case of problem
+    try {
+      await logoutCookie();
+      context.commit("SET_USER", {
+        name: GUEST_NAME,
+        roles: [GUEST_NAME],
+      });
+    } catch (e) {
+      context.commit("SET_USER", generateEmptyUser());
+      context.commit("UNSET_USER_LOADING");
+      throw e;
+    } finally {
+      context.commit("UNSET_USER_LOADING");
+    }
   },
   logout: async (context: ActionContext<UserState, RootState>) => {
     context.commit("SET_USER_LOADING");
@@ -337,9 +345,15 @@ const actions: ActionTree<UserState, RootState> = {
       const redirectURI = encodeURIComponent(window.location.origin);
       window.location.href = `https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=${redirectURI}`;
     } else {
-      await logoutCookie();
-      context.commit("SET_USER", generateEmptyUser());
-      context.commit("UNSET_USER_LOADING");
+      try {
+        await logoutCookie();
+        context.commit("SET_USER", generateEmptyUser());
+      } catch (e) {
+        context.commit("SET_USER", generateEmptyUser());
+        throw e;
+      } finally {
+        context.commit("UNSET_USER_LOADING");
+      }
     }
   },
   getSession: async (
@@ -367,7 +381,6 @@ const actions: ActionTree<UserState, RootState> = {
         byPassLoading,
       });
     }
-
     if (
       typeof currentUser.name === "string" &&
       currentUser.name !== GUEST_NAME
