@@ -225,9 +225,6 @@ export default class InterventionDialog extends Vue {
   public get title(): string {
     return this.itemIndex === -1 ? "New Intervention" : "Edit Intervention";
   }
-  public updateField(value: string | number, fieldName: string): void {
-    console.log(value, fieldName);
-  }
 
   public async submitFn(): Promise<void> {
     if (!this.localItem || !this.localItem.name) {

@@ -462,10 +462,6 @@ export default class App extends Vue {
     this.mini = !this.mini;
   }
 
-  openHelperDialog(item: Record<string, string>): void {
-    console.log(item);
-  }
-
   public async checkAndRefresh(): Promise<void> {
     await this.getSessionStore({ byPassLoading: true });
     if (this.$userIs("OauthHasRefreshToken")) {
