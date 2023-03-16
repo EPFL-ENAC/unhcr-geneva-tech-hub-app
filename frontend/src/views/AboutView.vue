@@ -4,8 +4,7 @@
       <v-card-text>
         <h2 class="mx-8">Disclaimer</h2>
         <p class="mx-10">
-          This Web Application is under active development. The current version
-          is only available as a proof of concept. Please report any bugs
+          Please report any bugs
           <a
             href="https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues"
             >here</a
@@ -15,33 +14,22 @@
       <v-divider />
       <v-card-text>
         <p class="mx-10">
-          In the context of ongoing work with UNHCR Geneva Technical Hub,
-          EssentialTech, FAR and BPE aim to develop web application building on
-          various data sources (mostly Excel sheets and web source) and user
-          inputs, to improve sustainability practices, through GHG emmissions
-          estimates, shelter sustainability scores and improved energy planning
-          in refugee camps. The overaching project is composed of 3 different
-          tools, each with distinct specifications and functionalities - but
-          developed jointly to foster synergies and integration wherever
-          possible.
-        </p>
-        <p class="mx-10">
-          The proposed tools will enable UNHCR to address its goal of 'greening'
-          its operations and will support UNHCR to respond to Objective 3 of its
-          Strategic Framework for Climate Action: *Objective 3: Improve UNHCR's
-          environmental sustainability by reducing greenhouse gas emissions and
-          minimizing negative impacts on the environment.*
+          The GHG Emission Calculator and Sustainable Shelter Calculator have
+          been developed at EPFL through a collaboration with the UNHCR Geneva
+          Technical Hub and SDC. At EPFL the project was coordinated by the
+          EssentialTech Centre. Scientific contributions were provided by the
+          FAR and Smart Living laboratories, IT4Research and EssentialTech.
         </p>
 
         <p class="mx-10">
-          Through UNHCR's Global Strategy for Sustainable Energy 2019-2024,
-          UNHCR is undertaking ambitious action to avoid or reduce negative
-          environmental impacts. Over 90 percent of refugees living in
-          settlements have no access to electricity or clean sources of energy.
-          Sustainable energy solutions benefit both displaced and host
-          countries' national and local energy plans in line with SDG 7 on
-          ensuring access to affordable, reliable, sustainable and modern energy
-          for all.
+          The goal of the tools is to enable UNHCR to 'green' its operations by
+          informing its strategies and activity planning with concrete and
+          evidence-based recommendations. These elements are made available
+          directly and in a user-friendly way to humanitarian practitioners
+          working in the field. It will support UNHCR to align with the Pillar 2
+          of its Strategic Framework for Climate Action. The tools also support
+          actions toward achieving UNHCR's Operational Strategy for Climate
+          Resilience and Environmental Sustainability 2021-2025.
         </p>
       </v-card-text>
       <v-card-text>
