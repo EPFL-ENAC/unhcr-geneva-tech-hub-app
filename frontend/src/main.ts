@@ -10,6 +10,7 @@ import Vue from "vue";
 import CountryFlag from "vue-country-flag";
 import App from "./App.vue";
 import i18n from "./i18n";
+import "./plugins/gtag";
 import vuetify from "./plugins/vuetify";
 import "./registerComponentHooks";
 import "./registerServiceWorker";

@@ -30,6 +30,7 @@
     "vue-class-component": "^7.2.3",
     "vue-country-flag": "^2.3.2",
     "vue-echarts": "^6.0.2",
+    "vue-gtag": "^1.16.1",
     "vue-i18n": "^8.26.3",
     "vue-property-decorator": "^9.1.2",
     "vue-router": "^3.2.0",
