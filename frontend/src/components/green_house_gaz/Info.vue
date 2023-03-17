@@ -207,7 +207,7 @@ export default class GhgInfo extends Vue {
       {
         type: "number",
         key: "solar",
-        label: "GHI/Daily_solar_peak_hours",
+        label: "Daily solar peak hours",
         min: 0,
       },
       {

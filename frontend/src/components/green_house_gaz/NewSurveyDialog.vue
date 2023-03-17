@@ -257,7 +257,6 @@ export default class ProjectList extends Vue {
       });
   }
 
-  // TODO: replace username by user
   get unhcrSites(): Sites {
     const result = this.unhcrLocations.map((x) => ({
       id: x._id, // site unique identitier (name as first)
