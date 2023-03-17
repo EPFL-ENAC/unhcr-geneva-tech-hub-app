@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.6.0...v0.7.0) (2023-03-17)
+
+
+### Features
+
+* **about-page:** update logos and description [#212](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/212) ([78d7e5f](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/78d7e5f1d01d94c7bc9bfda80f0e23f5872f9292))
+* **backup:** add a way to retrieve data from prod and to deploy to test and local servers ([7f8480b](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/7f8480b4ab8b1e6f38e44897a9afd21729421302))
+* **backup:** remove unnecessary commands ([410776c](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/410776c0670f9b0358e1b9d83f091e72ef1d0320)), closes [#136](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/136)
+* **e2e:** add first draft of e2e test ([8589b96](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/8589b96125cdb083fed2c0066a51a88838501b81))
+* **e2e:** add login test ([d091685](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d091685394dfc6cf71ca609c341903843605fc33))
+* **gtag:** add gtag and epfl notice for cookie ([74c082d](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/74c082ddb2040d0c8e1ec98719f0f503f945caaa))
+* **monitoring:** add sentry for tests purposes ([a2ee156](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/a2ee15644026961c732091311e8f5bdad1cb7165))
+* **shelter:** add helper menu and dialog for video and pdf ([e66ef25](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/e66ef253a978135f1cfe28922e3d57c0e1c2309c))
+* **shelter:** better boq printing [#85](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/85) ([0bda858](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/0bda858f5e66f517d2c210b906cbec649e7400f7))
+* **shelter:** move notification center and add helper center [#232](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/232) ([72c7074](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/72c70748cc421a65d29a8c1c3a8be1eedf536a62))
+
+
+### Bug Fixes
+
+* **authentication:** call refresh only if refresh token present [#246](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/246) ([c741656](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c7416565218d67be896e7a774d0452cfbd38b878))
+* **common:** intercept and throw error in authentication process [#246](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/246) ([2047d8e](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/2047d8ee7aeda17f466a06bd23bd14c87f7ddfb6))
+* **commons:** add pagination to all tables to avoid scroll problem [#59](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/59) ([c00af07](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c00af07f8eb1ed74deb1c9cee5d38aa844f8ee0a))
+* **commons:** remove dead code ([cbfba29](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/cbfba2917805320f262764056fda914db591d402))
+* **notifications:** typo for type notification ([c560e3e](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c560e3e16798624bf7b55652a7d75f215f14d29f))
+* **oauth:** avoid conflict with authentication mode [#246](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/246) ([46bc818](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/46bc818278a5b5848bd813b239628dc17ca41ab8))
+* **shelter:** add better interface than Record&lt;string,string&gt; ([b5bb2f4](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/b5bb2f4346770c085d783f22f4ece9cb5e99720a))
+* **shelter:** add better printing css for first page report [#85](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/85) ([89d3ce8](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/89d3ce8e914c73fddebc4771ae071d88c86309ca))
+* **shelter:** add better printing css for scorecard [#85](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/85) ([cec5c3b](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/cec5c3bf47e7f3846fbe3db4eee8470481c69d85))
+* **shelter:** add legend for shelter overview [#232](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/232) ([53a9e22](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/53a9e22f252b84f9d1d384ea4b6b20286bcf6346))
+* **shelter:** add non-applicable to radio group + fix dynamic score ([553c9a7](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/553c9a7eb77b681803323409352ed993c31fb1d3)), closes [#234](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/234)
+* **shelter:** better printing for assessment report [#85](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/85) ([c1d39a5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c1d39a5ebd406ad99d33ef8ddcfe23a9c491ede9))
+* **shelter:** better responsiveness for overview stats [#232](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/232) ([174c386](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/174c386a901c287c0b9ddb669bea8cf3471680ed))
+* **shelter:** change territory-map behavior for info and list [#232](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/232) ([2a7691b](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/2a7691b4c8de546cca37d01bb3380ddc60440528))
+* **shelter:** complete compare view fixes [#197](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/197) ([a39becc](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/a39becc3fd78f2fe9c6921d2e340176046c1d971))
+* **shelter:** correct listing map height [#232](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/232) ([35f75c5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/35f75c5d503e01a392c35954766b11183953120b))
+* **shelter:** edit shelter and global layout for release 1.0 [#232](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/232) ([0ebb62d](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/0ebb62dca8c8aac36e6ad923d67a780c0d270bcf))
+* **shelter:** remove dead code ([325df9d](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/325df9d23afa3ed0fd56862f305d5524b0eb8690))
+* **shelter:** remove deadcode ([f38471c](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f38471cb29d499b606420ef93a9c662d107a1a71))
+* **shelter:** remove deadcode ([e20ccc8](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/e20ccc8dc5e57cfb19c49680831ef29522d4241a))
+* **users:** create new password and remove old users ([51206be](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/51206be6f020e8b35cf29982552caef23f550820))
+
 ## [0.6.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.5.4...v0.6.0) (2023-03-10)
 
 
