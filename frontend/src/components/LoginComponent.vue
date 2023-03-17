@@ -35,9 +35,12 @@
         <span class="error--text">{{ error }}</span>
       </v-card-text>
       <v-card-actions class="justify-center">
-        <v-btn v-show="!showForm" @click="loginGuest">Guest user</v-btn>
+        <v-btn v-show="!showForm" data-cy="guest-user-login" @click="loginGuest"
+          >Guest user</v-btn
+        >
         <v-btn
           v-show="!showForm"
+          data-cy="registered-user"
           :disabled="!formValid"
           @click="showForm = true"
         >
@@ -45,7 +48,11 @@
         </v-btn>
         <v-btn v-show="showForm" @click="showForm = false">Cancel</v-btn>
         <v-btn v-show="showForm" type="submit" color="primary">Login</v-btn>
-        <v-btn v-show="!showForm" color="primary" @click="loginUnhcr"
+        <v-btn
+          v-show="!showForm"
+          data-cy="unhcr-user-login"
+          color="primary"
+          @click="loginUnhcr"
           >UNHCR user</v-btn
         >
       </v-card-actions>
