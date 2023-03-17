@@ -27,19 +27,6 @@
         <v-sheet v-if="localShelter" elevation="2" rounded>
           <v-container fluid>
             <v-row>
-              <!-- <v-col cols="4">
-                <v-row>
-                  <v-col class=""> Select location </v-col>
-                </v-row>
-                <v-row class="d-flex" style="height: 100%; width: 100%">
-                  <v-col class="d-flex">
-                    <territory-map
-                      :value="latLng"
-                      @update:value="updateLatLng"
-                    />
-                  </v-col>
-                </v-row>
-              </v-col> -->
               <v-col class="about-first-column" cols="6">
                 <v-text-field
                   v-model="localShelter.name"

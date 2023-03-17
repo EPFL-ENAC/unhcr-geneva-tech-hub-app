@@ -117,7 +117,6 @@
                 class="d-flex justify-center"
                 :cols="Math.floor(9 / shelters.length)"
               >
-                <!-- todo: use filter for plural for day(s) -->
                 {{ shelter.setup_people }} ppl x {{ shelter.setup_time }} day(s)
               </v-col>
             </v-row>
@@ -168,10 +167,6 @@
         </v-row>
         <!-- END OF SHELTER INFO -->
         <!-- BEGIN CONSTRUCTION -->
-        <!-- <v-row
-          ><v-col><b>CONSTRUCTION</b></v-col>
-          </v-row
-        > -->
         <v-row>
           <v-col>
             <v-row>
@@ -576,12 +571,4 @@ export default class ShelterSustainabilityCompare extends Vue {
   color: var(--c-grey);
   fill: var(--c-grey);
 }
-// @media print {
-//   * {
-//     font-size: 7pt;
-//   }
-
-//   @page {
-//   }
-// }
 </style>

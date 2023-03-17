@@ -163,16 +163,14 @@ export default class RadioGroup extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .unhcr-expansion-panel {
-  .v-expansion-panel-header {
+  ::v-deep .v-expansion-panel-header {
     display: grid;
     grid-auto-columns: 1;
     grid-auto-flow: column;
     grid-template-columns: auto max-content min-content;
     .v-input--selection-controls {
-      // margin-top: 0px;
-      // padding-top: 0px;
       width: 100%;
     }
     .unhcr-checkbox-group-non-applicable__checkbox {
@@ -201,10 +199,9 @@ export default class RadioGroup extends Vue {
     z-index: auto;
   }
   .unhcr-expansion-panel {
-    .v-expansion-panel-header {
+    ::v-deep .v-expansion-panel-header {
       min-height: 24px;
       padding: 0;
-      // margin: 0;
       .v-input--selection-controls {
         margin-top: 0px;
         padding-top: 0px;

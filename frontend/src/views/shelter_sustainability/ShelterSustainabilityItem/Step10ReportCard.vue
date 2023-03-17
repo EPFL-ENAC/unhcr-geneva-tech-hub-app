@@ -127,18 +127,13 @@
         </v-row>
         <v-row>
           <v-col class="d-flex justify-center align-center">
-            <!-- https://unhcr-tss.epfl.ch/s3/unhcr-tss/1676877993678386Dadaab_A_1.jpg -->
-            <!-- 
-              v-if="shelterWithImage?.image?.url" -->
             <v-img
+              v-if="shelterWithImage?.image?.url"
               height="5cm"
               width="100%"
-              src="https://unhcr-tss.epfl.ch/s3/unhcr-tss/1676877993678386Dadaab_A_1.jpg"
+              :src="shelterWithImage?.image?.url"
               aspect-ratio="3/2"
             ></v-img>
-            <!--
-              :src="shelterWithImage?.image?.url"
-              <v-img :src="shelterWithImage?.image?.url" aspect-ratio="2/3"></v-img> -->
           </v-col>
         </v-row>
       </v-col>
@@ -234,10 +229,6 @@ export default class Step10ReportCard extends Vue {
   :deep(.leaflet-control-zoom) {
     display: none;
   }
-  // .info-map {
-  //   // min-width: 8cm;
-  //   // min-height: 8cm;
-  // }
   .first-page-content {
     font-size: 3mm;
     .col {

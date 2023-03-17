@@ -65,7 +65,7 @@ interface Info {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @media print {
   @page {
     size: auto;
