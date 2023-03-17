@@ -75,7 +75,12 @@
       />
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" app :mini-variant.sync="mini">
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      :mini-variant.sync="mini"
+      permanent
+    >
       <v-list>
         <v-list-item
           v-if="user.name"
