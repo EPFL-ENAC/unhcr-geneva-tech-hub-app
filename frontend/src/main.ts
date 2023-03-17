@@ -2,6 +2,8 @@ import filters from "@/plugins/filters";
 import "@/plugins/leaflet";
 import User from "@/plugins/user";
 import "@/styles/unhcr.scss";
+import { BrowserTracing } from "@sentry/tracing";
+import * as Sentry from "@sentry/vue";
 import axios, { AxiosError } from "axios";
 import "leaflet/dist/leaflet.css";
 import Vue from "vue";
@@ -20,6 +22,26 @@ Vue.prototype.window = window;
 Vue.use(User, { store });
 Vue.use(filters);
 Vue.component("CountryFlag", CountryFlag);
+
+Sentry.init({
+  Vue,
+  dsn: "https://3b1d1325e5234f7a99ca6e735673f0aa@o4504854111387648.ingest.sentry.io/4504854113288192",
+  integrations: [
+    new BrowserTracing({
+      routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+      tracePropagationTargets: [
+        "localhost",
+        "unhcr-tss-test.epfl.ch",
+        "unhcr-tss.epfl.ch",
+        /^\//,
+      ],
+    }),
+  ],
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
+});
 
 axios.interceptors.response.use(undefined, function (error: AxiosError) {
   (error as any).originalMessage = error.message;
