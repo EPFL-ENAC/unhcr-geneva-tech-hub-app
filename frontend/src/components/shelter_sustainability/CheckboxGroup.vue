@@ -2,7 +2,7 @@
   <v-sheet elevation="2" rounded>
     <v-container fluid>
       <v-row>
-        <v-col cols="11">
+        <v-col cols="11" class="group-title">
           <component
             :is="`h${depth + 2}`"
             :class="`text-h${depth + 4} project-shelter__h${
@@ -11,7 +11,7 @@
             >{{ form.title }}</component
           >
         </v-col>
-        <v-col cols="1" class="d-flex justify-end align-center">
+        <v-col cols="1" class="d-flex justify-end align-center d-print-none">
           <v-btn icon @click="toggle">
             <v-icon :class="{ 'chevron-rotate': !expandPanel }"
               >$mdiChevronDown</v-icon
@@ -19,13 +19,19 @@
           </v-btn>
         </v-col>
       </v-row>
-      <v-row v-show="expandPanel">
-        <v-divider />
+      <v-row v-show="expandPanel" class="d-print-none">
+        <v-col>
+          <v-divider />
+        </v-col>
       </v-row>
       <v-expand-transition>
         <v-row v-show="expandPanel">
-          <v-col cols="12">
-            <v-expansion-panels accordion :focusable="false">
+          <v-col cols="12" class="pt-0">
+            <v-expansion-panels
+              accordion
+              :focusable="false"
+              class="checkbox-group-panels"
+            >
               <v-expansion-panel
                 v-for="(child, $index) in form.children"
                 :key="$index"
@@ -155,12 +161,14 @@ export default class CheckboxGroup extends Vue {
 type CheckboxScore = Record<string, boolean>;
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .unhcr-expansion-panel {
-  .v-expansion-panel-header {
+  ::v-deep .v-expansion-panel-header {
+    display: grid;
+    grid-auto-columns: 1;
+    grid-auto-flow: column;
+    grid-template-columns: auto max-content min-content;
     .v-input--selection-controls {
-      margin-top: 0px;
-      padding-top: 0px;
       width: 100%;
     }
     .unhcr-checkbox-group-non-applicable__checkbox {
@@ -179,5 +187,53 @@ type CheckboxScore = Record<string, boolean>;
 }
 .unhcr-checkbox-group-non-applicable__checkbox__label {
   margin-right: 4px;
+}
+
+@media print {
+  @page {
+    size: portrait;
+  }
+  .checkbox-group-panels {
+    z-index: auto;
+  }
+  .unhcr-expansion-panel {
+    ::v-deep .v-expansion-panel-header {
+      min-height: 24px;
+      padding: 0;
+      .v-input--selection-controls {
+        margin-top: 0px;
+        padding-top: 0px;
+        width: 100%;
+      }
+      .v-input__control {
+        .v-input__slot {
+          padding: 0;
+          margin: 0;
+          .v-input--selection-controls__input {
+            height: 10px;
+            width: 10px;
+            padding: 0px;
+          }
+          .v-label {
+            font-size: 8px;
+          }
+        }
+      }
+      .v-expansion-panel-header__icon {
+        display: none;
+      }
+    }
+  }
+  .group-title {
+    padding-bottom: 0px;
+    .project-shelter__h4 {
+      font-size: 0.8rem !important;
+      line-height: 1rem;
+    }
+    .project-shelter__h5 {
+      font-size: 0.7rem !important;
+      line-height: 0.9rem;
+    }
+  }
 }
 </style>

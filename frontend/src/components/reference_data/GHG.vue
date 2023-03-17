@@ -1,12 +1,7 @@
 <template>
   <v-card flat>
     <v-card-text v-if="items">
-      <v-data-table
-        :headers="headers"
-        :items="items"
-        hide-default-footer
-        :items-per-page="-1"
-      >
+      <v-data-table :headers="headers" :items="items" dense>
         <template #[`item.value`]="props">
           <span :title="props.item._id">{{
             props.item.value |
@@ -66,8 +61,9 @@ export default class Energy extends Vue {
         align: "start",
         sortable: false,
         value: "description",
+        width: "400px",
       },
-      { text: "value", value: "value" },
+      { text: "value", value: "value", width: "50px" },
       { text: "source", value: "source" },
     ];
   }
@@ -78,6 +74,7 @@ interface HeaderInterface {
   align?: string;
   sortable?: boolean;
   value: string;
+  width?: string;
 }
 </script>
 

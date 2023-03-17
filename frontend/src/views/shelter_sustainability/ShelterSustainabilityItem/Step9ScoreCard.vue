@@ -1,6 +1,6 @@
 <template>
-  <v-container v-if="shelter" fluid>
-    <v-row>
+  <v-container v-if="shelter" fluid class="step-9-scorecard">
+    <v-row v-if="$route.name === 'ShelterSustainabilityStep9'">
       <v-col class="d-flex">
         <h2 class="d-flex align-center text-h4 project__h3 font-weight-medium">
           {{ infoTooltipText[$route.name].title }}
@@ -76,8 +76,10 @@
               </v-col>
             </v-row>
             <v-row v-for="(option, idx) in options" :key="idx">
-              <v-col :cols="3">
-                <v-layout class="align-center">
+              <v-col :cols="3" class="scorecard-first-column">
+                <v-layout
+                  class="align-center justify-space-between scorecard-title-with-value"
+                >
                   <span v-if="option.config.subpart" class="ml-4">
                     {{ option.config.title }}:</span
                   >
@@ -111,8 +113,14 @@
                   </v-tooltip>
                 </v-layout>
               </v-col>
-              <v-col class="about-first-column d-flex justify-center" :cols="9">
-                <v-responsive aspect-ratio="5" min-height="20" max-height="120">
+              <v-col
+                class="scorecard-second-column d-flex justify-center"
+                :cols="9"
+              >
+                <v-responsive
+                  aspect-ratio="5"
+                  class="scorecard-responsive-container"
+                >
                   <v-chart autoresize :option="options[idx]"></v-chart>
                 </v-responsive>
               </v-col>
@@ -313,9 +321,38 @@ interface ShelterFilters {
 </script>
 
 <style lang="scss" scoped>
+.scorecard-responsive-container {
+  min-height: 20px;
+  max-height: 120px;
+}
 @media print {
   @page {
     size: landscape;
+  }
+  .step-9-scorecard {
+    h2 {
+      font-size: 1rem;
+    }
+    page-break-before: avoid;
+    page-break-inside: auto;
+    .elevation-2 {
+      box-shadow: none !important;
+    }
+    .scorecard-responsive-container {
+      min-height: 32px;
+      max-height: 32px;
+    }
+    .scorecard-title-with-value {
+      font-size: 0.7rem;
+    }
+    .scorecard-second-column {
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
+    .scorecard-first-column {
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
   }
 }
 </style>

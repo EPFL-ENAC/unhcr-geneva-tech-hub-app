@@ -1,11 +1,13 @@
 <template>
   <v-app>
-    <header class="justify-space-between align-center d-none d-print-flex ma-4">
-      <h4 class="font-weight-bold primary--text pa-4">
-        {{ rootRouteTitle }}
-        <span v-if="currentRouteId">: {{ currentRouteId }}</span>
+    <header class="justify-space-between align-center d-none d-print-flex">
+      <h4 class="font-weight-bold primary--text">
+        <span v-if="$route.name === 'ShelterSustainabilityCompare'"
+          >Shelter Comparison Report</span
+        >
+        <span v-else-if="currentRouteId">{{ currentRouteId }}</span>
       </h4>
-      <figure class="pa-4">
+      <figure>
         <img
           :src="unhcr_logo.imgPath"
           :height="unhcr_logo.height || '40px'"
@@ -28,23 +30,28 @@
         </v-tab>
       </v-tabs>
       <v-spacer />
+      <v-menu v-if="$router.currentRoute.name?.includes('Shelter')" offset-y>
+        <template #activator="{ on, attrs }">
+          <v-btn icon v-bind="attrs" aria-label="shelter-help" v-on="on">
+            <v-icon> $mdiHelpCircleOutline </v-icon>
+          </v-btn>
+        </template>
+        <v-list class="helper-menu">
+          <v-list-item
+            v-for="(item, index) in shelterHelpers"
+            :key="index"
+            @click="setHelper(item)"
+          >
+            <v-list-item-action>
+              <v-icon>${{ item.icon }}</v-icon></v-list-item-action
+            >
+            <v-list-item-content>{{ item.title }}</v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
       <v-btn
-        v-if="notificationsLength"
-        icon
-        aria-label="notification-center"
-        @click.stop="toggleNotificationCenter"
-      >
-        <v-badge
-          :content="notificationsLength"
-          :value="notificationsLength"
-          color="red"
-          overlap
-        >
-          <v-icon> $mdiBellOutline </v-icon>
-        </v-badge>
-      </v-btn>
-      <v-btn
-        v-if="'ShelterSustainabilityList' === $router.currentRoute.name"
+        v-if="$router.currentRoute.name?.includes('Shelter')"
         icon
         aria-label="dataset-overview-table"
         @click.stop="toggleOverviewData"
@@ -166,6 +173,31 @@
             <v-list-item-title>Logout </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
+        <v-list-item>
+          <v-list-item-icon>
+            <v-btn
+              v-if="notificationsLength"
+              icon
+              small
+              style="width: 24px; height: 24px"
+              aria-label="notification-center"
+              @click.stop="toggleNotificationCenter"
+            >
+              <v-badge
+                :content="notificationsLength"
+                :value="notificationsLength"
+                :color="notificationColor"
+                overlap
+              >
+                <v-icon> $mdiBellOutline </v-icon>
+              </v-badge>
+            </v-btn>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Notifications </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
@@ -190,6 +222,7 @@
       <reference-data />
       <overview-data />
       <notification-center />
+      <helper-center />
       <v-fade-transition mode="out-in">
         <router-view />
         <router-view name="Login" />
@@ -202,6 +235,7 @@
 
     <v-snackbar
       v-model="snackbar"
+      class="d-print-none"
       app
       timeout="5000"
       transition="scroll-y-transition"
@@ -224,6 +258,7 @@
 
 <script lang="ts">
 import { unhcr_logo } from "@/components/commons/logos";
+import HelperCenter from "@/components/HelperCenter.vue";
 import LoginComponent from "@/components/LoginComponent.vue";
 import NotificationCenter from "@/components/NotificationCenter.vue";
 import OverviewData from "@/components/OverviewData.vue";
@@ -258,6 +293,7 @@ import { UnhcrNotification } from "./store";
       "toggleReferenceData",
       "toggleOverviewData",
       "toggleNotificationCenter",
+      "setHelper",
     ]),
   },
   components: {
@@ -265,6 +301,7 @@ import { UnhcrNotification } from "./store";
     ReferenceData,
     OverviewData,
     NotificationCenter,
+    HelperCenter,
   },
 })
 /** ProjectList */
@@ -274,6 +311,8 @@ export default class App extends Vue {
   notificationDialog!: boolean;
   toggleReferenceData!: () => AxiosPromise;
   toggleNotificationCenter!: () => void;
+  setHelper!: () => void;
+
   // probably vuex Promise and not AxiosPromise
   logoutStore!: () => AxiosPromise;
   getSessionStore!: ({
@@ -305,6 +344,9 @@ export default class App extends Vue {
   get snackbarText(): UnhcrNotification {
     return this.$store.getters.notifications[0];
   }
+  get notificationColor(): string {
+    return this.$store.getters.notificationsStatusColor;
+  }
   get progress(): number {
     return this.$store.getters.progress;
   }
@@ -322,7 +364,42 @@ export default class App extends Vue {
   }
   get themeDark(): boolean {
     return false;
-    // return this.$store.getters["ConfigModule/themeDark"];
+  }
+  get shelterHelpers(): ShelterHelpers[] {
+    return [
+      {
+        title: "Instruction manual",
+        icon: "mdiFileDocumentOutline",
+        type: "pdf",
+        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-15/Shelter & Sustainability Manual_230312.pdf",
+      },
+      {
+        title: "Viewing existing projects",
+        icon: "mdiPlayCircle",
+        type: "video",
+        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-10/20210610_montage-homepage.mp4",
+      },
+      { title: "Creating new projects", icon: "mdiPlayCircle" },
+      { title: "Entering project information", icon: "mdiPlayCircle" },
+      {
+        title: "Uploading and downloading project files",
+        icon: "mdiPlayCircle",
+      },
+      { title: "Entering geometry information", icon: "mdiPlayCircle" },
+      {
+        title: "Entering Bill of Quantities information",
+        icon: "mdiPlayCircle",
+      },
+      {
+        title: "Assessing technical performance criteria",
+        icon: "mdiPlayCircle",
+      },
+      { title: "Assessing habitability criteria", icon: "mdiPlayCircle" },
+      { title: "Comparing projects", icon: "mdiPlayCircle" },
+      { title: "Exporting reports", icon: "mdiPlayCircle" },
+      { title: "Viewing overview data", icon: "mdiPlayCircle" },
+      { title: "Viewing reference data", icon: "mdiPlayCircle" },
+    ];
   }
 
   @Watch("themeDark")
@@ -384,17 +461,21 @@ export default class App extends Vue {
     this.mini = !this.mini;
   }
 
+  public async checkAndRefresh(): Promise<void> {
+    await this.getSessionStore({ byPassLoading: true });
+    if (this.$userIs("OauthHasRefreshToken")) {
+      await this.refreshToken();
+    }
+  }
   /** Run once. */
   async mounted(): Promise<void> {
     this.$vuetify.theme.dark = false; //this.$store.getters["ConfigModule/themeDark"];
     document.title = this.title;
-    this.getSessionStore({ byPassLoading: true });
-    this.refreshToken();
-
+    this.checkAndRefresh();
     this.intervalId = window.setInterval(() => {
-      this.getSessionStore({ byPassLoading: true });
-      this.refreshToken();
+      this.checkAndRefresh();
     }, 1000 * 60 * 5); // check every 10 minutes: 1000 * 60 * 5
+
     this.$store.subscribe((mutation) => {
       const shouldUpdate = ["storeMessage"];
       if (shouldUpdate.includes(mutation.type)) {
@@ -405,6 +486,13 @@ export default class App extends Vue {
   beforeDestroy(): void {
     clearInterval(this.intervalId);
   }
+}
+
+interface ShelterHelpers {
+  title: string;
+  icon?: string;
+  type?: string;
+  href?: string;
 }
 </script>
 
@@ -426,12 +514,13 @@ export default class App extends Vue {
   }
   .v-application .unhcr-main {
     padding: 0px !important;
+    padding-top: 20px !important;
   }
 
   @page {
     size: A4;
-    margin: -1em;
-    padding: 20px;
+    margin: 1cm;
+    padding: 5px;
     width: 100%;
   }
   .pagebreak {
@@ -439,10 +528,18 @@ export default class App extends Vue {
   }
   .project__header,
   .project__h3 {
-    font-size: 1.5rem;
+    font-size: 1rem;
   }
   .container {
-    padding: 6px !important;
+    padding: 0px !important;
+  }
+  .v-application .elevation-1,
+  .v-application .elevation-2 {
+    z-index: 0;
+    box-shadow: none !important;
+  }
+  :deep(.v-sheet.v-card) {
+    box-shadow: none !important;
   }
 }
 
@@ -469,6 +566,23 @@ export default class App extends Vue {
 
 .account-color > svg {
   fill: #c5c5c5;
+}
+
+.helper-menu {
+  font-size: 0.85rem;
+  .v-list-item {
+    min-height: 24px;
+    &:hover {
+      background-color: #c5c5c5;
+      cursor: pointer;
+    }
+  }
+  .v-list-item__action {
+    margin: 2px 0;
+  }
+  .v-list-item__content {
+    padding: 2px 0;
+  }
 }
 </style>
 

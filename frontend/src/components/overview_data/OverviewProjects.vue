@@ -40,6 +40,7 @@
       <v-col
         v-for="(config, $key) in shelterOverviewConfigs"
         :key="$key"
+        :cols="12"
         :lg="4"
       >
         <v-card>
@@ -71,9 +72,9 @@ import {
   ShelterRegions,
 } from "@/store/ShelterInterface";
 import { SyncDatabase } from "@/utils/couchdb";
-import { affordabilities } from "@/views/shelter_sustainability/ShelterSustainabilityItem/affordabilities";
-import { constructionImpacts } from "@/views/shelter_sustainability/ShelterSustainabilityItem/constructionImpacts";
-import { environmentalImpacts } from "@/views/shelter_sustainability/ShelterSustainabilityItem/environmentalImpacts";
+import { affordabilitiesByKey } from "@/views/shelter_sustainability/ShelterSustainabilityItem/affordabilities";
+import { constructionImpactsByKey } from "@/views/shelter_sustainability/ShelterSustainabilityItem/constructionImpacts";
+import { environmentalImpactsByKey } from "@/views/shelter_sustainability/ShelterSustainabilityItem/environmentalImpacts";
 import {
   shelterColors,
   shelterIcons,
@@ -82,6 +83,8 @@ import { CallbackDataParams, EChartsOption } from "echarts/types/dist/shared";
 import { map, mean, sum } from "lodash";
 import PouchDB from "pouchdb";
 
+import { ScorecardConfig } from "@/views/shelter_sustainability/ShelterSustainabilityItem/generateScorecardOptions";
+import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
@@ -246,7 +249,7 @@ export default class OverviewProjects extends Vue {
         shelterColors.Durable.primary,
       ],
       grid: {
-        left: "10%",
+        left: this.descriptions[field].gridLeft ?? "10%",
         top: "20%",
         right: "10%",
         bottom: "15%",
@@ -265,6 +268,20 @@ export default class OverviewProjects extends Vue {
       yAxis: {
         type: "value",
         // name: "Value",
+        axisLabel: {
+          formatter: (value: number): string => {
+            if (this.descriptions[field].unit === "%") {
+              return `${value}${this.descriptions[field].unit}`;
+            }
+            return `${value}`;
+          },
+          fontSize: 8,
+          margin: 4,
+        },
+
+        axisPointer: {
+          snap: true,
+        },
         min: 0,
         splitArea: {
           show: false,
@@ -292,43 +309,26 @@ export default class OverviewProjects extends Vue {
       ],
     };
   }
+  public get descriptions(): Record<string, ScorecardConfig> {
+    return {
+      ...constructionImpactsByKey,
+      ...affordabilitiesByKey,
+      ...environmentalImpactsByKey,
+    };
+  }
 
   public get shelterOverviewConfigs(): any[] {
     if (this.filteredScorecards.length === 0) {
       return [];
     }
-    return [
-      {
-        title: "Habitability",
-        subtitle: constructionImpacts[1].unit,
-        option: this.getboxplotConfig("habitability", this.filteredScorecards),
-      },
-      {
-        title: "Affordability",
-        subtitle: affordabilities[0].unit,
-        option: this.getboxplotConfig("affordability", this.filteredScorecards),
-      },
-      {
-        title: "Technical Performance",
-        subtitle: constructionImpacts[0].unit,
-        option: this.getboxplotConfig("techPerf", this.filteredScorecards),
-      },
-      {
-        title: "Environmental impact <br/> Embodied water",
-        subtitle: environmentalImpacts[1].unit,
-        option: this.getboxplotConfig("h2o", this.filteredScorecards),
-      },
-      {
-        title: "Environmental impact <br/> Embodied CO2",
-        subtitle: environmentalImpacts[0].unit,
-        option: this.getboxplotConfig("co2", this.filteredScorecards),
-      },
-      {
-        title: "Environmental impact <br/> Material efficiency",
-        subtitle: environmentalImpacts[2].unit,
-        option: this.getboxplotConfig("weight", this.filteredScorecards),
-      },
-    ];
+    return Object.entries(this.descriptions).map(([key, value]) => ({
+      title: value.title,
+      subtitle: value.unit,
+      option: this.getboxplotConfig(
+        key as ScoreCardWithShelterInfoKeys,
+        this.filteredScorecards
+      ),
+    }));
   }
 
   public getRawDatasets(
@@ -428,14 +428,20 @@ export default class OverviewProjects extends Vue {
   }
 
   public get filteredScorecards(): any[] {
-    if (this.shelterFilters.selectedRegions.includes("All")) {
-      return this.scorecards;
+    let newScorecards = cloneDeep(this.scorecards);
+    if (!this.shelterFilters.selectedRegions.includes("All")) {
+      newScorecards = this.scorecards.filter((x) =>
+        this.shelterFilters.selectedRegions.includes(
+          isoToRegion[x.location_country]
+        )
+      );
     }
-    return this.scorecards.filter((x) =>
-      this.shelterFilters.selectedRegions.includes(
-        isoToRegion[x.location_country]
-      )
-    );
+    // correct ratio to percentage
+    return newScorecards?.map((item: ScoreCardWithShelterInfo) => {
+      item.habitability = item.habitability * 100;
+      item.techPerf = item.techPerf * 100;
+      return item;
+    });
   }
 
   public get organisations(): string[] {

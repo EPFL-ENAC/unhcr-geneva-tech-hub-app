@@ -6,12 +6,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-data-table
-            :headers="headers"
-            :items="items"
-            hide-default-footer
-            :items-per-page="-1"
-          >
+          <v-data-table :headers="headers" :items="items" dense>
             <template #[`item.c`]="props">
               <span :title="props.item.value"
                 >{{

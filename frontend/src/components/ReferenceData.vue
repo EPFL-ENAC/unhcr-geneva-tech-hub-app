@@ -1,5 +1,12 @@
 <template>
-  <v-navigation-drawer v-model="drawer" absolute width="80%" right temporary>
+  <v-navigation-drawer
+    v-model="drawer"
+    app
+    absolute
+    width="80%"
+    right
+    temporary
+  >
     <v-list-item>
       <v-list-item-content>
         <v-list-item-title class="d-flex justify-space-between">
@@ -28,7 +35,6 @@
 </template>
 
 <script lang="ts">
-import EnergyCooking from "@/components/reference_data/EnergyCooking.vue";
 import GHG from "@/components/reference_data/GHG.vue";
 import GHGfNRB from "@/components/reference_data/GHGfNRB.vue";
 import GHGSolarModule from "@/components/reference_data/GHGSolarModule.vue";
@@ -52,7 +58,6 @@ import { mapActions, mapGetters } from "vuex";
     GHGfNRB,
     Materials,
     IgesGrid,
-    EnergyCooking,
     UNHCRLocation,
     GHGSolarModule,
   },
@@ -69,7 +74,6 @@ export default class App extends Vue {
   get drawer(): boolean {
     return this.referenceDataDrawer;
   }
-
   readonly menuItems: MenuSurveyItem[] = [
     {
       tab: "iges_grid",
@@ -83,10 +87,6 @@ export default class App extends Vue {
     {
       tab: "Materials transport",
       componentName: "MaterialsTransport",
-    },
-    {
-      tab: "Energy Cooking",
-      componentName: "EnergyCooking",
     },
   ];
   tab = 1;

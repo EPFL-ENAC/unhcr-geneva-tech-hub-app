@@ -1,11 +1,12 @@
 <template>
-  <v-responsive :aspect-ratio="aspectRatio" max-height="600px">
+  <v-responsive :aspect-ratio="aspectRatio" height="100%">
     <l-map
       :center="defaultCoordinates"
       class="territory"
       :class="{
         'crosshair-cursor-enabled': value.length > 0,
       }"
+      style="height: 100%; width: 100%"
       :zoom="defaultZoom"
       :min-zoom="2"
       :max-zoom="16"
@@ -134,16 +135,6 @@ export default class TerritoryMap extends Vue {
     return defaultCoordinates;
   }
 
-  // public get currentZoom(): number {
-  //   if (this.value.length > 0) {
-  //     const [lat, lng] = this.value as number[];
-  //     if (lat === 0 && lng === 0) {
-  //       return defaultZoom;
-  //     }
-  //     return this.selectedZoomFactor;
-  //   }
-  //   return defaultZoom;
-  // }
   public get internalCoordinates(): (number | string)[][] {
     if (this.value.length > 0) {
       return this.coordinates.concat([this.value]);

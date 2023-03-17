@@ -57,6 +57,9 @@ export function computeShelter(value: Shelter): Shelter {
     resultShelter.technical_performance_score =
       score / (TOTAL_TECH_PERF - nonApplicableTech);
   } else {
+    resultShelter.technical_performance_score_real = `0 / ${
+      TOTAL_TECH_PERF - nonApplicableTech
+    }`;
     resultShelter.technical_performance_score = 0;
   }
 
@@ -76,6 +79,9 @@ export function computeShelter(value: Shelter): Shelter {
     }`;
     resultShelter.habitability_score = score / (TOTAL_HAB - nonApplicableHab);
   } else {
+    resultShelter.habitability_score_real = `0 / ${
+      TOTAL_HAB - nonApplicableHab
+    }`;
     resultShelter.habitability_score = 0;
   }
   const { scorecard, errors } = getScoreCard(resultShelter);

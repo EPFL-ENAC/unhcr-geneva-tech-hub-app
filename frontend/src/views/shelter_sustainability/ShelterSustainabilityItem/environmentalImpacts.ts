@@ -19,6 +19,7 @@ export const environmentalImpacts: ScorecardConfig[] = [
       primary: `rgba(84,84,86,1)`, // secondary colour 1
       secondary: `rgba(84,84,86,${alpha})`,
     },
+    gridLeft: 70,
   },
   {
     id: "h2o",
@@ -37,6 +38,7 @@ export const environmentalImpacts: ScorecardConfig[] = [
       primary: `rgba(32,135,200,1)`, // primary colour
       secondary: `rgba(32,135,200,${alpha})`,
     },
+    gridLeft: 40,
   },
 
   {
@@ -56,5 +58,11 @@ export const environmentalImpacts: ScorecardConfig[] = [
       primary: `rgba(157,72,56,1)`, // secondary colour 2
       secondary: `rgba(157,72,56,${alpha})`,
     },
+    gridLeft: 45,
   },
 ];
+
+export const environmentalImpactsByKey = environmentalImpacts.reduce(
+  (acc, x) => ({ ...acc, [x.id]: x }),
+  {}
+);

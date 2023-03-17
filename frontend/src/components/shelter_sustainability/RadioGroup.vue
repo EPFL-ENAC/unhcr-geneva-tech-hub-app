@@ -2,16 +2,16 @@
   <v-sheet elevation="2" rounded>
     <v-container fluid>
       <v-row v-if="form.title">
-        <v-col>
+        <v-col cols="11" class="group-title">
           <component
             :is="`h${depth + 2}`"
-            :class="`text-h${depth + 4} project-shelter__h${
-              depth + 3
-            }  font-weight-medium`"
+            :class="`project-shelter__h${depth + 3}  font-weight-medium text-h${
+              depth + 4
+            } `"
             >{{ form.title }}</component
           >
         </v-col>
-        <v-col class="d-flex justify-end align-center">
+        <v-col class="d-print-none d-flex justify-end align-center">
           <v-btn icon @click="toggle">
             <v-icon :class="{ 'chevron-rotate': !show }"
               >$mdiChevronDown</v-icon
@@ -19,17 +19,24 @@
           </v-btn>
         </v-col>
       </v-row>
-      <v-row v-show="show">
-        <v-divider />
+      <v-row v-show="show" class="d-print-none">
+        <v-col>
+          <v-divider />
+        </v-col>
       </v-row>
       <v-expand-transition>
         <v-row v-show="show">
-          <v-col cols="12">
-            <v-expansion-panels accordion :focusable="false">
+          <v-col cols="12" class="pt-0">
+            <v-expansion-panels
+              class="checkbox-group-panels"
+              accordion
+              :focusable="false"
+            >
               <v-expansion-panel
                 v-for="(child, $index) in form.children"
                 :key="$index"
                 :readonly="!child.description"
+                class="unhcr-expansion-panel"
               >
                 <v-expansion-panel-header :hide-actions="!child.description">
                   <v-checkbox
@@ -44,20 +51,31 @@
                       {{ child.label }}
                     </template>
                   </v-checkbox>
+
+                  <v-checkbox
+                    class="unhcr-checkbox-group-non-applicable__checkbox"
+                    :input-value="checkbox[child._id + 'na']"
+                    :disabled="child.disabled"
+                    hide-details
+                    @mousedown.stop.prevent
+                    @click.stop.prevent
+                    @change="
+                      (v) => {
+                        updateValue(child._id + 'na', v, child._id);
+                      }
+                    "
+                  >
+                    <template #label>
+                      <span
+                        class="unhcr-checkbox-group-non-applicable__checkbox__label"
+                        >not applicable
+                      </span>
+                    </template>
+                  </v-checkbox>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content v-if="!!child.description">
                   <!-- eslint-disable-next-line vue/no-v-html -->
                   <p v-html="child.description"></p>
-                  <p class="d-flex justify-between align-center">
-                    <v-checkbox
-                      :input-value="checkbox[child._id + 'na']"
-                      hide-details
-                      @mousedown.stop.prevent
-                      @click.stop.prevent
-                      @change="(v) => updateValue(child._id + 'na', v)"
-                    />
-                    <span class="mt-4 pt-1"> Non Applicable </span>
-                  </p>
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
@@ -144,3 +162,80 @@ export default class RadioGroup extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.unhcr-expansion-panel {
+  ::v-deep .v-expansion-panel-header {
+    display: grid;
+    grid-auto-columns: 1;
+    grid-auto-flow: column;
+    grid-template-columns: auto max-content min-content;
+    .v-input--selection-controls {
+      width: 100%;
+    }
+    .unhcr-checkbox-group-non-applicable__checkbox {
+      margin-top: 0px;
+      padding-top: 0px;
+      .v-input__control {
+        .v-input__slot {
+          flex-direction: row-reverse;
+          .v-label {
+            flex-direction: row-reverse;
+          }
+        }
+      }
+    }
+  }
+}
+.unhcr-checkbox-group-non-applicable__checkbox__label {
+  margin-right: 4px;
+}
+@media print {
+  @page {
+    size: portrait;
+  }
+
+  .checkbox-group-panels {
+    z-index: auto;
+  }
+  .unhcr-expansion-panel {
+    ::v-deep .v-expansion-panel-header {
+      min-height: 24px;
+      padding: 0;
+      .v-input--selection-controls {
+        margin-top: 0px;
+        padding-top: 0px;
+        width: 100%;
+      }
+      .v-input__control {
+        .v-input__slot {
+          padding: 0;
+          margin: 0;
+          .v-input--selection-controls__input {
+            height: 10px;
+            width: 10px;
+            padding: 0px;
+          }
+          .v-label {
+            font-size: 8px;
+          }
+        }
+      }
+      .v-expansion-panel-header__icon {
+        display: none;
+      }
+    }
+  }
+  .group-title {
+    padding-bottom: 0px;
+    .project-shelter__h4 {
+      font-size: 0.8rem !important;
+      line-height: 1rem;
+    }
+    .project-shelter__h5 {
+      font-size: 0.7rem !important;
+      line-height: 0.9rem;
+    }
+  }
+}
+</style>

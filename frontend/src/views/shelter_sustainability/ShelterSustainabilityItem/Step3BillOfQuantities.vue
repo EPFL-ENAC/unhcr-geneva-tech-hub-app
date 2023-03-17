@@ -1,25 +1,19 @@
 <template>
   <v-container fluid class="shelter__boq">
     <v-row v-if="$router.currentRoute.name === 'ShelterSustainabilityStep3'">
-      <v-col class="d-flex justify-space-between">
+      <v-col class="d-flex justify-space-between boq-custom-title">
         <div class="d-flex flex-row">
           <h2 class="project__h3 font-weight-medium">
             {{ infoTooltipText[$route.name].title }}
             <span class="d-none d-print-inline-block"
-              >(number of individual shelters:
-              {{ items_individual_shelter }})</span
+              >( Number of shelters: {{ items_individual_shelter }} )</span
             >
           </h2>
           <info-tooltip>
             {{ infoTooltipText[$route.name].text }}
           </info-tooltip>
         </div>
-        <v-btn
-          class="d-print-none"
-          @click="
-            window.print();
-            return false;
-          "
+        <v-btn class="d-print-none" @click="printFunction()"
           >Export Bill of Quantities pdf</v-btn
         >
       </v-col>
@@ -60,7 +54,7 @@
             :items-per-page="-1"
           >
             <template #top>
-              <v-toolbar flat>
+              <v-toolbar flat class="d-print-none">
                 <v-toolbar-title>Items</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
@@ -146,7 +140,7 @@
                   <v-btn
                     v-bind="attrs"
                     icon
-                    class="better-click mr-2"
+                    class="better-click mr-2 d-print-none"
                     small
                     v-on="on"
                     @click.stop="() => openEditItemDialog(item)"
@@ -162,7 +156,7 @@
                   <v-btn
                     v-bind="attrs"
                     icon
-                    class="better-click mr-2"
+                    class="better-click mr-2 d-print-none"
                     small
                     v-on="on"
                     @click.stop="() => duplicate(item)"
@@ -179,7 +173,7 @@
                   <v-btn
                     v-bind="attrs"
                     icon
-                    class="better-click mr-2"
+                    class="better-click mr-2 d-print-none"
                     small
                     v-on="on"
                     @click.stop="() => deleteItem(item)"
@@ -296,6 +290,11 @@ export default class Step3Materials extends Vue {
       this.setItemsIndividualShelter(valueInteger);
     }
   }
+  public printFunction(): boolean {
+    document.title = " ";
+    window.print();
+    return false;
+  }
   readonly UnitsRef = UnitsRef;
   countriesMap = countriesMap;
   infoTooltipText = infoTooltipText;
@@ -309,11 +308,28 @@ export default class Step3Materials extends Vue {
     { text: "Origin", value: "source" },
     { text: "Material", value: "materialId" },
     { text: "Form", value: "formId" },
-    { text: "Quantity", value: "quantity", align: "right" },
-    { text: "Unit", value: "unit" },
-    { text: "Unit cost (USD)", value: "unitCost", align: "right" },
-    { text: "Item cost (USD)", value: "totalCost", align: "right" },
-    { text: "", value: "actions", sortable: false, width: "140px" },
+    { text: "Quantity", value: "quantity", align: "right", sortable: false },
+    { text: "Unit", value: "unit", sortable: false },
+    {
+      text: "Unit cost (USD)",
+      value: "unitCost",
+      align: "right",
+      sortable: false,
+    },
+    {
+      text: "Item cost (USD)",
+      value: "totalCost",
+      align: "right",
+      sortable: false,
+    },
+    {
+      text: "",
+      class: "d-print-none",
+      cellClass: "d-print-none",
+      value: "actions",
+      sortable: false,
+      width: "140px",
+    },
   ];
 
   public submitForm(): void {
@@ -370,13 +386,23 @@ export default class Step3Materials extends Vue {
   @page {
     size: landscape;
   }
-  // * {
-  //   font-size: 7px;
-  // }
   .elevation-1 > .v-data-table__wrapper > table > thead > tr > th,
   .elevation-1 > .v-data-table__wrapper > table > tbody > tr > td,
   .elevation-1 > .v-data-table__wrapper > table > tfoot > tr > td {
-    height: 24px;
+    height: 20px;
+    font-size: 6pt;
+  }
+  .boq-custom-title {
+    padding-bottom: 0px;
+    padding-top: 0px;
+  }
+  // https://stackoverflow.com/questions/274149/repeat-table-headers-in-print-mode
+  thead {
+    display: table-header-group;
+  }
+  tfoot {
+    display: table-footer-group;
+    break-inside: auto;
   }
 }
 </style>

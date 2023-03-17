@@ -1,6 +1,6 @@
 <template>
-  <v-container v-if="shelter" fluid>
-    <v-row>
+  <v-container v-if="shelter" fluid class="shelter-step-5-container">
+    <v-row v-if="$route.name === 'ShelterSustainabilityStep5'">
       <v-col class="d-flex">
         <h2 class="text-h4 project__h3 font-weight-medium">
           {{ infoTooltipText[$route.name].title }}
@@ -10,7 +10,7 @@
         </info-tooltip>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row class="d-no-print">
       <v-col>
         <v-divider></v-divider>
       </v-col>
@@ -182,7 +182,11 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col md="12" lg="1" class="shelter-graph-button__container">
+              <v-col
+                md="12"
+                lg="1"
+                class="shelter-graph-button__container d-print-none"
+              >
                 <div class="d-flex justify-center">View</div>
                 <div class="d-flex justify-center">
                   <v-radio-group v-model="selectedGraph" mandatory>
@@ -205,11 +209,16 @@
                   </v-radio-group>
                 </div>
               </v-col>
-              <v-col lg="11" md="12">
+              <v-col
+                lg="11"
+                md="12"
+                class="shelter-environmental-graphs-container"
+              >
                 <v-row>
                   <v-col
                     v-for="(option, $idx) in graphTreeOptions"
                     :key="$idx"
+                    class="shelter-environmental-graphs-container__col"
                     :md="12"
                     :lg="4"
                   >
@@ -224,11 +233,11 @@
                 </v-row>
               </v-col>
             </v-row>
-            <v-row>
+            <v-row class="environmental-info-group">
               <v-col :sm="12" :md="6">
-                <v-card>
+                <v-card class="">
                   <v-card-title>
-                    <h2 class="text-h5 project-shelter__h4 font-weight-medium">
+                    <h2 class="project-shelter__h4 font-weight-mediumt text-h5">
                       Habitat risks
                     </h2>
                   </v-card-title>
@@ -245,7 +254,7 @@
               <v-col :sm="12" :md="6">
                 <v-card>
                   <v-card-title>
-                    <h2 class="text-h5 project-shelter__h4 font-weight-medium">
+                    <h2 class="project-shelter__h4 font-weight-medium text-h5">
                       Reuse and recyle considerations
                     </h2>
                   </v-card-title>
@@ -539,6 +548,63 @@ interface Info {
 .center-table {
   vertical-align: middle;
   text-align: center;
+}
+@media print {
+  ::v-deep .v-sheet.v-card:not(.v-sheet--outlined) {
+    box-shadow: none !important;
+  }
+
+  .shelter-step-5-container {
+    padding: 0 !important;
+    // page-break-before: avoid;
+    // page-break-inside: avoid;
+  }
+  .environmental-info-group {
+    page-break-before: always;
+    page-break-inside: auto;
+  }
+  .project-shelter__h4 {
+    font-size: 0.8rem !important;
+    line-height: 1rem;
+  }
+  .shelter-environmental-graphs-container__col {
+    justify-content: start;
+    align-content: start;
+    max-height: 150px !important;
+    min-height: 150px !important;
+    .v-responsive {
+      max-height: 150px !important;
+      min-height: 150px !important;
+    }
+  }
+  @page {
+    size: portrait;
+  }
+}
+</style>
+<style lang="scss">
+@media print {
+  .elevation-1 > .v-data-table__wrapper > table > thead > tr > th,
+  .elevation-1 > .v-data-table__wrapper > table > tbody > tr > td,
+  .elevation-1 > .v-data-table__wrapper > table > tfoot > tr > td {
+    height: 20px;
+    font-size: 6pt;
+    button {
+      display: none;
+    }
+  }
+  .boq-custom-title {
+    padding-bottom: 0px;
+    padding-top: 0px;
+  }
+  // https://stackoverflow.com/questions/274149/repeat-table-headers-in-print-mode
+  thead {
+    display: table-header-group;
+  }
+  tfoot {
+    display: table-footer-group;
+    break-inside: auto;
+  }
 }
 </style>
 <style>

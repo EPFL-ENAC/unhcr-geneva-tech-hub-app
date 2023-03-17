@@ -7,10 +7,10 @@ export const ghg = {
 };
 
 export const shelter = {
-  title: "Shelter sustainability",
+  title: "Shelter and Sustainability",
   to: "ShelterSustainability",
   logoIcon: "$vuetify.icon.shelter",
-  link: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2022-04-11/houses_new.pdf",
+  link: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-10/Shelter.Sustainability.Manual.pdf",
   linkName:
     "A technical and environmental comparative overview of common shelter typologies found in settlements across UNHCR operations",
   description:
@@ -26,7 +26,7 @@ export const energy = {
     "This Decision Support Tool assesses from a sustainability perspective, multi-year comparative performances of energy interventions for refugee camps. The boundaries of the energy system is Scope 1, i.e. activities in the camps. The energy system is composed of the following sub-systems: Household, Community, Production of goods and services, Central energy supply. The results encompass energy demand and supply, environmental and economic performances of the interventions under various (up to three) scenarios of the future.",
 };
 
-export default [shelter, ghg, energy] as {
+export default [shelter, ghg] as {
   title: string;
   to: string;
   logoIcon: string;

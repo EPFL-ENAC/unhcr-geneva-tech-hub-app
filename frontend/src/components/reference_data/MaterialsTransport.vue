@@ -1,7 +1,7 @@
 <template>
   <v-card flat>
     <v-card-text>
-      <v-row>
+      <v-row class="transport-header">
         <v-col>
           <p>
             A simplified calculation of transport-related embodied carbon is
@@ -115,7 +115,12 @@
           </ol>
         </v-col>
       </v-row>
-      <v-data-table :headers="headers" :items="items">
+      <v-data-table
+        :headers="headers"
+        :items="items"
+        dense
+        :loading="itemsLoading"
+      >
         <template #[`item.source`]="slotProps">
           {{ getText(slotProps.item._id.split("_")[0]) }}
           <country-flag
@@ -147,7 +152,12 @@ import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("SheltersTransportModule", ["items", "item", "itemsLength"]),
+    ...mapGetters("SheltersTransportModule", [
+      "items",
+      "item",
+      "itemsLength",
+      "itemsLoading",
+    ]),
   },
   methods: {
     ...mapActions("SheltersTransportModule", ["getAllDocs"]),
@@ -160,7 +170,6 @@ export default class MaterialsTransport extends Vue {
   mounted(): void {
     this.getAllDocs();
   }
-
   public getSourceCountry(key: string): Record<string, string> {
     const [source, destination] = key.split("_");
     return { source, destination };
@@ -184,10 +193,12 @@ export default class MaterialsTransport extends Vue {
       {
         text: "Transport embodied carbon  kgCO2/kg (i.e. local materials)",
         value: "t",
+        width: "200px",
       },
       {
-        text: "Transport   embodied carbon  kgCO2/kg (all others materials)",
+        text: "Transport embodied carbon  kgCO2/kg (all others materials)",
         value: "o",
+        width: "200px",
       },
     ];
   }
@@ -198,7 +209,14 @@ interface HeaderInterface {
   align?: string;
   sortable?: boolean;
   value: string;
+  width?: string;
 }
 </script>
 
-<style></style>
+<style>
+.transport-header {
+  height: 160px;
+  overflow: auto;
+  margin-bottom: 10px;
+}
+</style>

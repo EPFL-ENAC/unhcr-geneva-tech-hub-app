@@ -28,3 +28,8 @@ export const constructionImpacts: ScorecardConfig[] = [
     },
   },
 ];
+
+export const constructionImpactsByKey = constructionImpacts.reduce(
+  (acc, x) => ({ ...acc, [x.id]: x }),
+  {}
+);

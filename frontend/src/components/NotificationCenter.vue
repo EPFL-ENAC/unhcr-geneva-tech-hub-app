@@ -75,8 +75,7 @@ import { mapActions, mapGetters } from "vuex";
     ]),
   },
 })
-/** ProjectList */
-export default class App extends Vue {
+export default class NotificationCenter extends Vue {
   notificationDialog!: boolean;
   toggleNotificationCenter!: () => Promise<void>;
   setNotificationDialog!: (value: boolean) => void;

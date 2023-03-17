@@ -21,7 +21,7 @@
 
         <v-row>
           <!-- search name and custom check-boxese-->
-          <v-col cols="9">
+          <v-col cols="6">
             <v-row>
               <v-col>
                 <v-text-field
@@ -88,208 +88,208 @@
                 />
               </v-col>
             </v-row>
+
+            <v-row>
+              <!-- add new shelter -->
+              <v-col>
+                <v-row>
+                  <v-col class="d-flex align-center justify-end">
+                    <v-btn
+                      class="float-right"
+                      color="primary"
+                      :disabled="!$can('create')"
+                      text
+                      @click="addProject"
+                    >
+                      <v-icon left>$mdiPlusBox</v-icon>
+                      New shelter
+                    </v-btn>
+                    <v-btn
+                      :disabled="selectedShelters.length === 0"
+                      class="float-right"
+                      color="primary"
+                      text
+                      :to="{
+                        name: 'ShelterSustainabilityCompare',
+                        query: { ids: selectedShelters.join('|') },
+                      }"
+                    >
+                      <v-icon left>$mdiScale</v-icon>
+                      Compare shelter
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
           </v-col>
-          <!-- add new shelter -->
           <v-col>
-            <v-row>
-              <v-col class="d-flex align-center justify-end">
-                <v-btn
-                  class="float-right"
-                  color="primary"
-                  :disabled="!$can('create')"
-                  text
-                  @click="addProject"
-                >
-                  <v-icon left>$mdiPlusBox</v-icon>
-                  New shelter
-                </v-btn>
-                <v-btn
-                  :disabled="selectedShelters.length === 0"
-                  class="float-right"
-                  color="primary"
-                  text
-                  :to="{
-                    name: 'ShelterSustainabilityCompare',
-                    query: { ids: selectedShelters.join('|') },
-                  }"
-                >
-                  <v-icon left>$mdiScale</v-icon>
-                  Compare shelter
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col justify="center">
-            <v-row>
-              <v-col v-for="project in projects" :key="project._id" cols="12">
-                <v-card
-                  :to="{
-                    name: 'ShelterSustainabilityEdit',
-                    params: { id: encodeURIComponent(project._id) },
-                  }"
-                  class="project"
-                  min-width="100%"
-                  hover
-                  outlined
-                  :class="{
-                    'project--editable': $can('edit', project),
-                    'project--readonly': !$can('edit', project),
-                  }"
-                >
-                  <v-row>
-                    <v-col cols="1" class="d-flex justify-center align-center">
-                      <v-icon
-                        :class="`c-${shelterColors[project.shelter_type].name}`"
-                        class="pa-8"
-                      >
-                        {{ shelterIcons[project.shelter_type] }}
-                      </v-icon>
-                      <div class="d-none project__hidden-child float-right">
-                        <span v-if="$can('edit', project)">Read and write</span>
-                        <span v-else>Read only</span>
-                      </div>
-                    </v-col>
-                    <v-col class="d-flex justify-center align-center">
-                      <v-avatar
-                        v-if="project.image?.url"
-                        class="profile"
-                        color="grey"
-                        size="64"
-                        tile
-                      >
-                        <v-img :src="project.image?.url"></v-img>
-                      </v-avatar>
-                      <v-avatar
-                        v-else
-                        class="profile"
-                        color="grey"
-                        size="64"
-                        tile
-                      >
-                        <v-card-title class="white--text"></v-card-title>
-                      </v-avatar>
-                    </v-col>
-                    <v-col cols="4" class="d-flex justify-start align-center">
-                      <v-card-title>
-                        {{ project.name }}
-                      </v-card-title>
-                      <v-card-subtitle class="pb-0">
-                        <span v-if="project.location_name">
-                          {{ project.location_name }}
-                        </span>
-                        <span
-                          v-if="
-                            project.location_name && project.location_country
-                          "
-                          >,</span
-                        >
-                        <span v-if="project.location_country">
-                          {{ countriesMap[project.location_country].name }}
-                        </span>
-                      </v-card-subtitle>
-                    </v-col>
-                    <v-col cols="4 justify-center align-center d-flex">
-                      <v-row class="align-center d-flex">
-                        <v-col cols="4" class="text-caption">
-                          Created: {{ project.created_at | formatDate }}
-                        </v-col>
-                        <v-col cols="4" class="text-caption">
-                          Updated: {{ project.updated_at | formatDate }}
-                        </v-col>
-                        <v-col
-                          cols="4"
-                          class="text-caption align-center d-flex font-italic"
-                        >
-                          Created by: {{ project.created_by }}
-                        </v-col>
-                      </v-row>
-                    </v-col>
-
-                    <v-col cols="1">
-                      <v-row>
-                        <v-col
-                          :cols="12"
-                          class="d-flex align-center justify-end"
-                        >
-                          <v-tooltip bottom>
-                            <template #activator="{ on, attrs }">
-                              <v-btn
-                                v-bind="attrs"
-                                icon
-                                class="better-click mr-2"
-                                small
-                                v-on="on"
-                                @click.stop.prevent="
-                                  () => duplicateDoc(project)
-                                "
-                              >
-                                <v-icon small class="better-click">
-                                  $mdiContentCopy
-                                </v-icon>
-                              </v-btn>
-                            </template>
-                            <span>Duplicate shelter</span>
-                          </v-tooltip>
-                          <v-tooltip bottom>
-                            <template #activator="{ on, attrs }">
-                              <v-btn
-                                v-if="$can('delete', project)"
-                                v-bind="attrs"
-                                icon
-                                class="better-click mr-2"
-                                small
-                                v-on="on"
-                                @click.stop.prevent="
-                                  () => deleteItem(project._id)
-                                "
-                              >
-                                <v-icon small class="better-click">
-                                  $mdiDelete
-                                </v-icon>
-                              </v-btn>
-                            </template>
-                            <span>Delete shelter</span>
-                          </v-tooltip>
-                          <v-tooltip bottom>
-                            <template #activator="{ on, attrs }">
-                              <v-checkbox
-                                v-model="selectedShelters"
-                                :readonly="
-                                  selectedShelters.length >= 3 &&
-                                  !selectedShelters.includes(project._id)
-                                "
-                                :value="project._id"
-                                v-bind="attrs"
-                                class="better-click"
-                                @change="updateQueryIds"
-                                @click.stop.prevent=""
-                                v-on="on"
-                              ></v-checkbox>
-                            </template>
-                            <span>Select shelter for comparison</span>
-                          </v-tooltip>
-                        </v-col>
-                      </v-row>
-                    </v-col>
-                  </v-row>
-                </v-card>
-              </v-col>
-            </v-row>
+            <div class="separator"></div>
+            <div class="map-countries">
+              <territory-map
+                :coordinates="coordinates"
+                :default-zoom="2"
+                @click:item="goToShelter"
+              />
+            </div>
           </v-col>
         </v-row>
       </v-container>
     </v-sheet>
-    <div class="separator"></div>
-    <div class="map-countries">
-      <territory-map
-        :coordinates="coordinates"
-        :default-zoom="2"
-        @click:item="goToShelter"
-      />
-    </div>
+    <v-sheet>
+      <v-row>
+        <v-col justify="center">
+          <v-row>
+            <v-col v-for="project in projects" :key="project._id" cols="12">
+              <v-card
+                :to="{
+                  name: 'ShelterSustainabilityEdit',
+                  params: { id: encodeURIComponent(project._id) },
+                }"
+                class="project"
+                min-width="100%"
+                hover
+                outlined
+                :class="{
+                  'project--editable': $can('edit', project),
+                  'project--readonly': !$can('edit', project),
+                }"
+              >
+                <v-row>
+                  <v-col cols="1" class="d-flex justify-center align-center">
+                    <v-icon
+                      :class="`c-${shelterColors[project.shelter_type].name}`"
+                      class="pa-8"
+                    >
+                      {{ shelterIcons[project.shelter_type] }}
+                    </v-icon>
+                    <div class="d-none project__hidden-child float-right">
+                      <span v-if="$can('edit', project)">Read and write</span>
+                      <span v-else>Read only</span>
+                    </div>
+                  </v-col>
+                  <v-col class="d-flex justify-center align-center">
+                    <v-avatar
+                      v-if="project.image?.url"
+                      class="profile"
+                      color="grey"
+                      size="64"
+                      tile
+                    >
+                      <v-img :src="project.image?.url"></v-img>
+                    </v-avatar>
+                    <v-avatar
+                      v-else
+                      class="profile"
+                      color="grey"
+                      size="64"
+                      tile
+                    >
+                      <v-card-title class="white--text"></v-card-title>
+                    </v-avatar>
+                  </v-col>
+                  <v-col cols="4" class="d-flex justify-start align-center">
+                    <v-card-title>
+                      {{ project.name }}
+                    </v-card-title>
+                    <v-card-subtitle class="pb-0 ma-0">
+                      <span v-if="project.location_name">
+                        {{ project.location_name }}
+                      </span>
+                      <span
+                        v-if="project.location_name && project.location_country"
+                        >,</span
+                      >
+                      <span v-if="project.location_country">
+                        {{ countriesMap[project.location_country].name }}
+                      </span>
+                    </v-card-subtitle>
+                  </v-col>
+                  <v-col cols="4 justify-center align-center d-flex">
+                    <v-row class="align-center d-flex">
+                      <v-col cols="4" class="text-caption">
+                        Created: {{ project.created_at | formatDate }}
+                      </v-col>
+                      <v-col cols="4" class="text-caption">
+                        Updated: {{ project.updated_at | formatDate }}
+                      </v-col>
+                      <v-col
+                        cols="4"
+                        class="text-caption align-center d-flex font-italic"
+                      >
+                        Created by: {{ project.created_by }}
+                      </v-col>
+                    </v-row>
+                  </v-col>
+
+                  <v-col cols="1">
+                    <v-row>
+                      <v-col :cols="12" class="d-flex align-center justify-end">
+                        <v-tooltip bottom>
+                          <template #activator="{ on, attrs }">
+                            <v-btn
+                              v-bind="attrs"
+                              icon
+                              class="better-click mr-2"
+                              small
+                              v-on="on"
+                              @click.stop.prevent="() => duplicateDoc(project)"
+                            >
+                              <v-icon small class="better-click">
+                                $mdiContentCopy
+                              </v-icon>
+                            </v-btn>
+                          </template>
+                          <span>Duplicate shelter</span>
+                        </v-tooltip>
+                        <v-tooltip bottom>
+                          <template #activator="{ on, attrs }">
+                            <v-btn
+                              v-if="$can('delete', project)"
+                              v-bind="attrs"
+                              icon
+                              class="better-click mr-2"
+                              small
+                              v-on="on"
+                              @click.stop.prevent="
+                                () => deleteItem(project._id)
+                              "
+                            >
+                              <v-icon small class="better-click">
+                                $mdiDelete
+                              </v-icon>
+                            </v-btn>
+                          </template>
+                          <span>Delete shelter</span>
+                        </v-tooltip>
+                        <v-tooltip bottom>
+                          <template #activator="{ on, attrs }">
+                            <v-checkbox
+                              v-model="selectedShelters"
+                              :readonly="
+                                selectedShelters.length >= 3 &&
+                                !selectedShelters.includes(project._id)
+                              "
+                              :value="project._id"
+                              v-bind="attrs"
+                              class="better-click"
+                              @change="updateQueryIds"
+                              @click.stop.prevent=""
+                              v-on="on"
+                            ></v-checkbox>
+                          </template>
+                          <span>Select shelter for comparison</span>
+                        </v-tooltip>
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                </v-row>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-sheet>
+
     <new-shelter-dialog :open.sync="shelterDialog" />
   </main>
 </template>
@@ -502,12 +502,7 @@ interface ShelterFilters {
 <style lang="scss" scoped>
 .shelter__list {
   $header_height: 64px;
-  display: grid;
-  grid-template-rows: calc(100vh - #{$header_height});
-  grid-template-columns: 60% 25px 40%;
-  grid-template-areas: "a b c";
-
-  flex: 1 1 auto;
+  display: block;
 }
 
 .country-list {
@@ -541,6 +536,7 @@ interface ShelterFilters {
 }
 
 .map-countries {
+  height: 400px;
   grid-area: c;
   z-index: 1;
 }

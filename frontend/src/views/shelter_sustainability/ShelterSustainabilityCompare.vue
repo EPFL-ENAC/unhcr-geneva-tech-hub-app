@@ -18,7 +18,7 @@
             window.print();
             return false;
           "
-          >Export Comparison pdf</v-btn
+          >Export Comparison report</v-btn
         >
       </v-col>
     </v-row>
@@ -32,7 +32,7 @@
         </v-alert>
       </v-col>
     </v-row>
-    <v-row v-else>
+    <v-row v-else class="shelter-page-compare">
       <v-col>
         <v-row>
           <v-col cols="3"> </v-col>
@@ -41,18 +41,35 @@
             :key="shelter._id"
             :cols="Math.floor(9 / shelters.length)"
           >
-            <v-row>
-              <v-col class="d-flex justify-center">
-                {{ shelter.name }}
-              </v-col>
+            <v-row class="justify-center">
+              <v-avatar
+                v-if="shelter.image?.url"
+                class="profile"
+                color="grey"
+                size="64"
+                tile
+              >
+                <v-img :src="shelter.image?.url"></v-img>
+              </v-avatar>
+              <v-avatar v-else class="profile" color="grey" size="64" tile>
+                <v-card-title class="white--text"></v-card-title>
+              </v-avatar>
             </v-row>
             <v-row>
               <v-col class="d-flex justify-center">
+                <h2 class="text-center">{{ shelter.name }}</h2>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="d-flex justify-center flex-column align-center">
                 <v-icon
                   :class="`c-${shelterColors[shelter.shelter_type].name}`"
                 >
                   {{ shelterIcons[shelter.shelter_type] }}
                 </v-icon>
+                <span class="text-body"
+                  >{{ shelter.shelter_type }} shelter</span
+                >
               </v-col>
             </v-row>
           </v-col>
@@ -100,7 +117,6 @@
                 class="d-flex justify-center"
                 :cols="Math.floor(9 / shelters.length)"
               >
-                <!-- todo: use filter for plural for day(s) -->
                 {{ shelter.setup_people }} ppl x {{ shelter.setup_time }} day(s)
               </v-col>
             </v-row>
@@ -151,27 +167,22 @@
         </v-row>
         <!-- END OF SHELTER INFO -->
         <!-- BEGIN CONSTRUCTION -->
-        <v-row
-          ><v-col><b>CONSTRUCTION</b></v-col></v-row
-        >
         <v-row>
           <v-col>
             <v-row>
               <v-col cols="3" class="ml-screen-4 col col-3 d-flex align-center"
-                >Shape</v-col
+                >Geometry</v-col
               >
               <v-col
                 v-for="shelter in shelters"
                 :key="shelter._id"
-                class="d-flex justify-center"
+                class="d-flex justify-center flex-column align-center"
                 :cols="Math.floor(9 / shelters.length)"
               >
                 <v-img
                   v-if="shelter.geometry.shelter_geometry_type"
-                  max-width="150px"
-                  max-height="150px"
-                  aspect-ratio="1"
-                  class="d-flex justify-center white-background"
+                  height="40px"
+                  contain
                   :src="
                     geometriesUrl[
                       shelter.geometry.shelter_geometry_type
@@ -183,6 +194,22 @@
                   "
                 >
                 </v-img>
+                <span class="text-center">{{
+                  geometriesName[shelter.geometry.shelter_geometry_type]
+                }}</span>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="3" class="ml-screen-4">Floor area</v-col>
+              <v-col
+                v-for="shelter in shelters"
+                :key="shelter._id"
+                class="d-flex justify-center"
+                :cols="Math.floor(9 / shelters.length)"
+              >
+                <div>
+                  {{ shelter.geometry.floorArea | formatNumber }} m<sup>2</sup>
+                </div>
               </v-col>
             </v-row>
             <v-row>
@@ -194,7 +221,6 @@
                 :cols="Math.floor(9 / shelters.length)"
               >
                 <div>
-                  {{ shelter.geometry.floorArea | formatNumber }} m<sup>2</sup>,
                   {{ shelter.geometry.volume | formatNumber }} m<sup>3</sup>
                 </div>
               </v-col>
@@ -206,7 +232,8 @@
               <v-col cols="3" class="ml-screen-4">
                 <v-row>
                   <v-col>
-                    {{ constructionImpact.title }}:
+                    <b class="text-uppercase">{{ constructionImpact.title }}</b
+                    >:
                     <info-tooltip right :max-width="300" :bottom="false"
                       >{{ constructionImpact.description }}
                     </info-tooltip>
@@ -250,15 +277,17 @@
         <!-- END OF CONSTRUCTION -->
 
         <!-- BEGIN ENVIRONMENTAL IMPACT -->
-        <v-row class="pagebreak"
-          ><v-col><b>ENVIRONMENTAL IMPACT</b></v-col></v-row
+        <v-row class=""
+          ><v-col
+            ><b class="text-uppercase">ENVIRONMENTAL IMPACT</b></v-col
+          ></v-row
         >
         <v-row>
           <v-col>
             <v-row
               v-for="(environmentalImpact, idx) in environmentalImpacts"
               :key="environmentalImpact.id"
-              style="border-bottom: 1px solid grey"
+              class="envronmentalImpactRows"
             >
               <v-col
                 cols="3"
@@ -292,24 +321,27 @@
                 <v-row>
                   <v-col
                     cols="12"
-                    class="text-center d-flex justify-center align-center"
+                    class="text-center d-flex justify-center align-center flex-column"
                   >
-                    <span>
+                    <div>
                       {{
                         shelter.scorecard[environmentalImpact.id] |
                           formatNumber()
                       }}
+                    </div>
+
+                    <div>
                       {{ environmentalImpact.unit }}
-                    </span>
+                    </div>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col cols="12" class="d-flex justify-center align-center">
                     <graph-tree
-                      max-height="150px"
-                      min-height="150px"
+                      max-height="110px"
+                      min-height="110px"
                       :selected-field="environmentalImpact.selectedField"
-                      graph-type="sunburst"
+                      graph-type="treemap"
                       :unit-name="environmentalImpact.selectedFieldUnit"
                       :items="shelter.envPerfItems"
                     />
@@ -327,7 +359,11 @@
 </template>
 
 <script lang="ts">
-import { ScoreCardWithShelterInfo, Shelter } from "@/store/ShelterInterface";
+import {
+  ImageShelter,
+  ScoreCardWithShelterInfo,
+  Shelter,
+} from "@/store/ShelterInterface";
 import { Component, Vue } from "vue-property-decorator";
 
 import InfoTooltip from "@/components/commons/InfoTooltip.vue";
@@ -373,6 +409,19 @@ use([
   TooltipComponent,
   MarkPointComponent,
 ]);
+
+function findShelterImage(images: ImageShelter[]): ImageShelter | undefined {
+  if (!images || typeof images !== "object" || !Array.isArray(images)) {
+    return;
+  }
+  const firstImage = images.find(function (image) {
+    return image.type === "Image";
+  });
+  if (!firstImage) {
+    return;
+  }
+  return firstImage;
+}
 
 @Component({
   computed: {
@@ -459,11 +508,15 @@ export default class ShelterSustainabilityCompare extends Vue {
         const resolvedPromises = promises.filter(
           ({ status }: { status: string }) => status === "fulfilled"
         );
-        this.shelters = resolvedPromises.map(
-          (p: PromiseSettledResult<Shelter>) =>
-            (p as PromiseFulfilledResult<Shelter>).value
-        );
-        // TODO: we have a cache problem;
+        this.shelters = resolvedPromises
+          .map(
+            (p: PromiseSettledResult<Shelter>) =>
+              (p as PromiseFulfilledResult<Shelter>).value
+          )
+          .map((shelter: Shelter) => {
+            shelter.image = findShelterImage(shelter.images) ?? undefined;
+            return shelter;
+          });
         await this.getAllDocsSheltersMaterial();
         await this.getScorecards(shelterIds);
       }
@@ -488,6 +541,22 @@ export default class ShelterSustainabilityCompare extends Vue {
 </script>
 
 <style scoped lang="scss">
+.envronmentalImpactRows {
+  border-bottom: 1px solid grey;
+  &:last-of-type {
+    border-bottom: 0px;
+  }
+}
+@media print {
+  .shelter-page-compare {
+    font-size: 3mm;
+    .col {
+      padding-top: 4px;
+      padding-bottom: 4px;
+      align-items: center;
+    }
+  }
+}
 ::v-deep .c-blue {
   color: var(--c-blue);
   fill: var(--c-blue);

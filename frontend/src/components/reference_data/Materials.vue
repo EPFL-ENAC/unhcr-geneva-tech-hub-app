@@ -13,12 +13,7 @@
           </v-col>
         </v-row>
       </v-card-text>
-      <v-data-table
-        :headers="headers"
-        :items="items"
-        :items-per-page="-1"
-        hide-default-footer
-      >
+      <v-data-table :headers="headers" :items="items" dense>
         <template #[`item.density`]="props">
           <v-tooltip right>
             <template #activator="{ on, attrs }">
