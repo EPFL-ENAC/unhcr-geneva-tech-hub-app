@@ -7,3 +7,4 @@ node_modules
 .vscode/targets.log
 
 .env
+unhcr-tss_couchdb_data_docker_volume
