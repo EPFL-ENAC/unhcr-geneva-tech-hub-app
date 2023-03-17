@@ -402,6 +402,9 @@ export default class OverviewProjects extends Vue {
     return {
       tooltip: {
         trigger: "axis",
+        renderMode: "html",
+        confine: false,
+        appendToBody: true,
         axisPointer: {
           type: "shadow",
         },
