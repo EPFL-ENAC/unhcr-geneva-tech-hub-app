@@ -54,7 +54,7 @@ export default class Energy extends Vue {
   }
 
   public get headers(): HeaderInterface[] {
-    //     _id: string; // "Abazar : Point",
+    // _id: string; // "Abazar : Point",
     // Country: string; // "IR",
     // Population: number;
     // "Location id": number;
