@@ -20,6 +20,15 @@ yarn build
 yarn test:unit
 ```
 
+
+### Run your e2e tests
+```
+yarn test:e2e
+```
+
+Add username and password to cypress.env.json
+
+
 ### Lints and fixes files
 ```
 yarn lint

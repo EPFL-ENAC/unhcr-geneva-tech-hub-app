@@ -1,7 +1,7 @@
 <template>
   <v-card class="elevation-12">
     <v-toolbar dark color="primary">
-      <v-toolbar-title>Welcome!</v-toolbar-title>
+      <v-toolbar-title data-cy="loginWelcome">Welcome!</v-toolbar-title>
     </v-toolbar>
     <v-form v-model="formValid" @submit.prevent="loginCouchdb">
       <v-card-text v-show="showForm">
@@ -22,7 +22,7 @@
           id="current-password"
           v-model="password"
           outlined
-          name="current-password"
+          name="password"
           autocomplete="current-password"
           label="Password"
           placeholder=" "
@@ -35,9 +35,12 @@
         <span class="error--text">{{ error }}</span>
       </v-card-text>
       <v-card-actions class="justify-center">
-        <v-btn v-show="!showForm" @click="loginGuest">Guest user</v-btn>
+        <v-btn v-show="!showForm" data-cy="guest-user-login" @click="loginGuest"
+          >Guest user</v-btn
+        >
         <v-btn
           v-show="!showForm"
+          data-cy="registered-user"
           :disabled="!formValid"
           @click="showForm = true"
         >
@@ -45,7 +48,11 @@
         </v-btn>
         <v-btn v-show="showForm" @click="showForm = false">Cancel</v-btn>
         <v-btn v-show="showForm" type="submit" color="primary">Login</v-btn>
-        <v-btn v-show="!showForm" color="primary" @click="loginUnhcr"
+        <v-btn
+          v-show="!showForm"
+          data-cy="unhcr-user-login"
+          color="primary"
+          @click="loginUnhcr"
           >UNHCR user</v-btn
         >
       </v-card-actions>
@@ -62,7 +69,6 @@ import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
-import { logoutCookie } from "@/utils/couchdb";
 @Component({
   computed: {
     ...mapGetters("UserModule", ["user"]),
@@ -88,6 +94,7 @@ export default class LoginComponent extends Vue {
   error = "";
   showForm = false;
   login!: (doc: UserCouchCredentials) => AxiosPromise;
+  logout!: () => AxiosPromise;
   loginAsGuest!: () => AxiosPromise;
   loginToken!: ({ token }: Record<string, string | boolean>) => AxiosPromise;
   verifyCode!: ({
@@ -117,7 +124,7 @@ export default class LoginComponent extends Vue {
     const idToken = hashParams.get("id_token");
     // todo : maybe broadcast an event
     if (idToken) {
-      await logoutCookie();
+      await this.logout();
       // implicit flow (DEPRECATED)
       this.tokenFlow(idToken);
     }
@@ -125,9 +132,12 @@ export default class LoginComponent extends Vue {
     const queryParams = new URLSearchParams(window.location.search);
     const code = queryParams.get("code");
     const code_verifier = sessionStorage.getItem("verifier");
-    if (code && code_verifier) {
+    if (code || code_verifier) {
+      if (!code || !code_verifier) {
+        throw new Error("code or code_verifier missing");
+      }
       // code flow with PKCE (new authorization mode 6th march 2022)
-      await logoutCookie();
+      await this.logout();
       const response = await this.verifyCode({ code, code_verifier });
       this.tokenFlow(response.data.id_token);
     }
@@ -200,6 +210,7 @@ export default class LoginComponent extends Vue {
           default:
             this.error = error.message;
         }
+        throw error;
       });
   }
 }
