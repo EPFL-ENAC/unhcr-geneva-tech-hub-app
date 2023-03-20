@@ -26,6 +26,7 @@ Vue.component("CountryFlag", CountryFlag);
 
 Sentry.init({
   Vue,
+  enabled: process.env.NODE_ENV === "production",
   dsn: "https://3b1d1325e5234f7a99ca6e735673f0aa@o4504854111387648.ingest.sentry.io/4504854113288192",
   integrations: [
     new BrowserTracing({
@@ -41,7 +42,7 @@ Sentry.init({
   // Set tracesSampleRate to 1.0 to capture 100%
   // of transactions for performance monitoring.
   // We recommend adjusting this value in production
-  tracesSampleRate: 1.0,
+  tracesSampleRate: 0.25,
 });
 
 axios.interceptors.response.use(undefined, function (error: AxiosError) {
