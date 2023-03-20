@@ -166,7 +166,7 @@ import {
 } from "@/components/green_house_gaz/energy/computeCO2cost";
 import DeleteFacilityDialog from "@/components/green_house_gaz/energy/DeleteFacilityDialog.vue";
 import DuplicateFacilityDialog from "@/components/green_house_gaz/energy/DuplicateFacilityDialog.vue";
-import { facilityTypes } from "@/components/green_house_gaz/energy/Facility";
+import { facilityTypesOld } from "@/components/green_house_gaz/energy/Facility";
 import FacilityDialog from "@/components/green_house_gaz/energy/FacilityDialog.vue";
 import { EnergyFacilityItem } from "@/store/GhgInterface.vue";
 import { cloneDeep } from "lodash";
@@ -221,7 +221,7 @@ export default class BaselineFacilitiesTable extends Vue {
 
   public get facilityTypesMap(): Record<string, string> {
     const acc: Record<string, string> = {};
-    return facilityTypes.reduce(
+    return facilityTypesOld.reduce(
       (acc: Record<string, string>, item: Record<string, string>) => {
         acc[item.componentName] = item.name;
         return acc;

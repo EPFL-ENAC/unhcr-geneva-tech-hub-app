@@ -112,6 +112,7 @@
 import UserManager from "@/components/commons/UserManager.vue";
 import Cooking from "@/components/green_house_gaz/energy/Cooking.vue";
 import Facilities from "@/components/green_house_gaz/energy/Facilities.vue";
+import FacilitiesOld from "@/components/green_house_gaz/energy/FacilitiesOld.vue";
 import Lighting from "@/components/green_house_gaz/energy/Lighting.vue";
 import Pumping from "@/components/green_house_gaz/energy/Pumping.vue";
 import Info from "@/components/green_house_gaz/Info.vue";
@@ -147,6 +148,7 @@ import { mapActions, mapGetters } from "vuex";
   components: {
     Cooking,
     Facilities,
+    FacilitiesOld,
     Lighting,
     Pumping,
     CRI,
@@ -178,6 +180,11 @@ export default class SurveyList extends Vue {
           icon: "$mdiShower",
           text: "Facilities",
           to: "Facilities",
+        },
+        {
+          icon: "$mdiShower",
+          text: "FacilitiesOld",
+          to: "FacilitiesOld",
         },
         { icon: "$mdiStove", text: "Cooking", to: "Cooking" },
         {

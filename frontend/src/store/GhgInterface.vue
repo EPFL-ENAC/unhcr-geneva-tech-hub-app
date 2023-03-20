@@ -192,9 +192,10 @@ export interface DieselItem {
 }
 
 export interface EnergyItem extends DieselItem {
-  gridPower: number;
+  // power is optional
+  gridPower?: number;
   dieselPower?: number;
-  renewablePower: number;
+  renewablePower?: number;
 }
 
 export interface EnergyFacilityItem extends EnergyItem {

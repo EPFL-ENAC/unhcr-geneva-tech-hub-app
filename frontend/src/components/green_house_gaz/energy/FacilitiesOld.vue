@@ -1,0 +1,542 @@
+<template>
+  <v-container fluid>
+    <survey-item-title :title-key="title" />
+    <v-row>
+      <v-col>
+        <v-card elevation="2" rounded>
+          <v-card-title>
+            <h3 class="baseline-title font-weight-medium">Baseline</h3>
+          </v-card-title>
+          <v-card-text>
+            <baseline-facilities-table
+              :items.sync="facilityForm.baseline.inputs"
+              :results="facilityForm.baseline.results"
+              :country-code="countryCode"
+              :disabled="!baselineMode"
+              @update:items="computeBaselineResults"
+            />
+          </v-card-text>
+          <v-card-actions>
+            <v-container class="d-flex flex-column" fluid>
+              <v-row>
+                <v-col cols="8" class="d-flex justify-end">
+                  <facilities-pie-chart
+                    :option="getChartOption(facilityForm.baseline.results)"
+                  />
+                </v-col>
+                <v-col cols="4">
+                  <v-row>
+                    <v-col class="d-flex justify-end mx-2 mb-2">
+                      <h3>
+                        Total CO2 Emissions:
+                        {{
+                          facilityForm.baseline.results.totalCO2Emission |
+                            formatNumber
+                        }}
+                        (tCO2e/year)
+                      </h3>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="d-flex justify-end mx-2 mb-2">
+                      <v-btn @click="toggleBaselineMode">
+                        {{ baselineSwitchText }}
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-card elevation="2" rounded>
+          <v-card-title>
+            <h3 class="endline-title font-weight-medium">Endline</h3>
+          </v-card-title>
+          <div v-if="showEndLines">
+            <v-card-text>
+              <endline-facilities-table
+                :facilities="facilityForm.baseline.inputs"
+                :items.sync="facilityForm.endline.inputs"
+                :results="facilityForm.endline.results"
+                :country-code="countryCode"
+                :disabled="baselineMode"
+                @update:items="computeEndlineResults"
+              />
+            </v-card-text>
+            <v-container class="d-flex flex-column" fluid>
+              <v-row>
+                <v-col>
+                  <v-alert v-if="diffInTotalKwh" dense outlined type="error">
+                    This comparison is not valid because baseline and endline
+                    have different energy demands.
+                    <br />
+                    Baseline:
+                    {{ facilityForm.baseline.results.totalPower }} kWh/yr
+                    <br />
+                    Endline:
+                    {{ facilityForm.endline.results.totalPower }} kWh/yr
+                  </v-alert>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="5" class="d-flex justify-end">
+                  <facilities-pie-chart
+                    :option="getChartOption(facilityForm.endline.results)"
+                  />
+                </v-col>
+                <v-col cols="7">
+                  <v-row>
+                    <v-col class="d-flex justify-end">
+                      <h3>
+                        Total CO2 Emissions:
+                        {{
+                          facilityForm.endline.results.totalCO2Emission |
+                            formatNumber
+                        }}
+                        (tCO2e/year)
+                        <span
+                          :class="{
+                            'facilities-positive': changeInEmissionPositive,
+                            'facilities-negative': changeInEmissionNegative,
+                          }"
+                        >
+                          <v-icon :class="iconClass" :color="color">
+                            $mdiTriangle
+                          </v-icon>
+                          {{
+                            facilityForm.endline.results.changeInEmission |
+                              formatNumber({
+                                style: "percent",
+                                signDisplay: "exceptZero",
+                                maximumFractionDigits: 0,
+                              })
+                          }}
+
+                          ({{
+                            (facilityForm.endline.results.totalCO2Emission -
+                              facilityForm.baseline.results.totalCO2Emission) |
+                              formatNumber
+                          }}
+                          tCO2e/year)
+                        </span>
+                      </h3>
+                    </v-col>
+                  </v-row>
+                </v-col>
+              </v-row>
+            </v-container>
+          </div>
+
+          <div v-else>
+            <v-row>
+              <v-col class="d-flex justify-end mx-2 mb-2">
+                <h3>{{ endlineText }}</h3>
+              </v-col>
+            </v-row>
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script lang="ts">
+import BaselineFacilitiesTable from "@/components/green_house_gaz/energy/BaselineFacilitiesTable.vue";
+import { countryIrradianceKeys } from "@/components/green_house_gaz/energy/computeCO2cost";
+import EndlineFacilitiesTable from "@/components/green_house_gaz/energy/EndlineFacilitiesTable.vue";
+import FacilitiesPieChart from "@/components/green_house_gaz/energy/FacilitiesPieChart.vue";
+import { computeChangeInEmission } from "@/components/green_house_gaz/generic/changeInEmission";
+import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
+import { cccmColors } from "@/plugins/vuetify";
+import {
+  EnergyFacilityInterventionItem,
+  EnergyFacilityInterventionItemResult,
+  EnergyFacilityItem,
+  EnergyFacilityItemResult,
+  EnergyFacilitySurvey,
+} from "@/store/GhgInterface.vue";
+import { ItemReferencesMap } from "@/store/GhgReferenceModule";
+import { EChartsOption } from "echarts/types/dist/shared";
+import { cloneDeep, sumBy } from "lodash";
+import "vue-class-component/hooks";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { mapGetters } from "vuex";
+
+@Component({
+  computed: {
+    ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
+  },
+  components: {
+    BaselineFacilitiesTable,
+    EndlineFacilitiesTable,
+    SurveyItemTitle,
+    FacilitiesPieChart,
+  },
+})
+export default class Facilities extends Vue {
+  @Prop([Object, Array])
+  readonly form: EnergyFacilitySurvey | undefined;
+  @Prop({ type: String, required: true, default: "" })
+  readonly titleKey!: string;
+  @Prop({ type: String, required: true, default: "" })
+  readonly countryCode!: countryIrradianceKeys;
+
+  ghgMapRef!: ItemReferencesMap;
+  baselineMode = true;
+
+  public get title(): string {
+    return this.titleKey;
+  }
+
+  public get facilityForm(): EnergyFacilitySurvey {
+    return this.form || this.generateNewFacilitiesForm();
+  }
+
+  public set facilityForm(newForm: EnergyFacilitySurvey) {
+    this.$emit("update:form", newForm);
+  }
+
+  public get showEndLines(): boolean {
+    return this.facilityForm.baseline.inputs.length > 0 && !this.baselineMode;
+  }
+
+  public get baselineSwitchText(): string {
+    return this.baselineMode ? "Save baseline" : "Edit baseline";
+  }
+
+  public get endlineText(): string {
+    if (this.baselineMode) {
+      return "Save baseline to edit Endline";
+    }
+    if (this.facilityForm.baseline.inputs.length == 0) {
+      return "Please add facilities to baseline to edit Endline";
+    }
+    return "Please edit baseline to edit Endline";
+  }
+
+  public toggleBaselineMode(): void {
+    this.baselineMode = !this.baselineMode;
+  }
+
+  public computeEndlineChangeInEmission(): void {
+    /// for every item
+    if (this.facilityForm) {
+      const endlineInputs = this.facilityForm.endline.inputs;
+      const baselineInputs = this.facilityForm.baseline.inputs;
+
+      // modifying outside variable form.endline.inputs
+      this.facilityForm.endline.inputs = endlineInputs.map(
+        (endlineInput: EnergyFacilityInterventionItem) => {
+          const baselineInput =
+            baselineInputs.find(
+              (baselineInput: EnergyFacilityItem) =>
+                baselineInput.name === endlineInput.name
+            ) ?? null;
+          let changeInEmission: number | null = null;
+          if (baselineInput) {
+            // FAC_TCOT_E
+            const endline = endlineInput.totalCO2Emission;
+            // FAC_TCOT_B
+            const baseline = baselineInput.totalCO2Emission;
+            //
+            changeInEmission = computeChangeInEmission(baseline, endline);
+          }
+          return {
+            ...endlineInput,
+            changeInEmission,
+          };
+        }
+      );
+    }
+
+    // compute endline results after modifying endline inputs
+  }
+  public computeEndlineResults(): void {
+    // compute changeInEmission again
+    this.computeEndlineChangeInEmission();
+    // alias
+    const inputs: EnergyFacilityInterventionItem[] =
+      this.facilityForm.endline.inputs;
+
+    const baselineResults: EnergyFacilityItemResult =
+      this.facilityForm.baseline.results;
+    // sum all rows into one object
+    const endlineResults: EnergyFacilityInterventionItemResult = {
+      gridPower: sumBy(inputs, (el) => el?.gridPower ?? 0),
+      dieselPower: sumBy(inputs, (el) => el?.dieselPower ?? 0),
+      dieselLiters: sumBy(inputs, (el) => el?.dieselLiters ?? 0),
+      renewablePower: sumBy(inputs, (el) => el?.renewablePower ?? 0),
+      totalCO2Emission: sumBy(inputs, (el) => el.totalCO2Emission),
+      changeInEmission: 0, // need to compute totalCO2 first
+    };
+    endlineResults.totalPower =
+      (endlineResults?.gridPower ?? 0) +
+      (endlineResults?.dieselPower ?? 0) +
+      (endlineResults?.renewablePower ?? 0);
+    endlineResults.totalPower = parseFloat(
+      endlineResults.totalPower.toFixed(0)
+    );
+    const changeInEmission = computeChangeInEmission(
+      baselineResults.totalCO2Emission,
+      endlineResults.totalCO2Emission
+    );
+    endlineResults.changeInEmission = changeInEmission;
+    this.facilityForm.endline.results = endlineResults;
+    this.facilityForm = Object.assign({}, this.facilityForm);
+  }
+
+  public get changeInEmissionPositive(): boolean {
+    if (this.facilityForm.endline.results.changeInEmission)
+      return this.facilityForm.endline.results.changeInEmission > 0;
+    return false;
+  }
+
+  public get changeInEmissionNegative(): boolean {
+    if (this.facilityForm.endline.results.changeInEmission)
+      return this.facilityForm.endline.results.changeInEmission < 0;
+    return false;
+  }
+  public get changeInEmissionSign(): string {
+    // minus sign is already shown
+    return this.changeInEmissionPositive ? "+" : "";
+  }
+
+  get iconClass(): string {
+    const change = this.facilityForm.endline.results.changeInEmission;
+    if (change == null) {
+      return "rotate-90";
+    }
+    if (change > 0) {
+      return "";
+    } else if (change < 0) {
+      return " rotate-180";
+    } else {
+      return "rotate-90";
+    }
+  }
+
+  get color(): string {
+    const change = this.facilityForm.endline.results.changeInEmission;
+    if (change == null) {
+      return "black";
+    }
+    if (change > 0) {
+      return "red";
+    } else if (change < 0) {
+      return "green";
+    } else {
+      return "black";
+    }
+  }
+
+  public computeBaselineResults(baselineInputs: EnergyFacilityItem[]): void {
+    const inputs: EnergyFacilityItem[] = baselineInputs; // this.facilityForm.baseline.inputs;
+    const results: EnergyFacilityItemResult = {
+      gridPower: sumBy(inputs, (el) => el?.gridPower ?? 0),
+      dieselPower: sumBy(inputs, (el) => el?.dieselPower ?? 0),
+      dieselLiters: sumBy(inputs, (el) => el?.dieselLiters ?? 0),
+      renewablePower: sumBy(inputs, (el) => el?.renewablePower ?? 0),
+      totalCO2Emission: sumBy(inputs, (el) => el.totalCO2Emission),
+    };
+
+    results.totalPower =
+      (results?.gridPower ?? 0) +
+      (results?.dieselPower ?? 0) +
+      (results?.renewablePower ?? 0);
+    results.totalPower = parseFloat(results.totalPower.toFixed(0));
+    this.facilityForm.baseline.results = results;
+    this.facilityForm.endline.inputs = this.copyBaselineToEndline();
+    /// compute endline results
+    this.computeEndlineResults();
+    this.facilityForm = Object.assign({}, this.facilityForm);
+  }
+
+  public getFacilitiesName(
+    inputs: (EnergyFacilityItem | EnergyFacilityInterventionItem)[]
+  ): string[] {
+    return inputs.map(
+      (item: EnergyFacilityItem | EnergyFacilityInterventionItem) =>
+        item.name ?? ""
+    );
+  }
+
+  private copyBaselineToEndline(): EnergyFacilityInterventionItem[] {
+    let results: EnergyFacilityInterventionItem[] = [];
+    if (this.facilityForm) {
+      const baselineInputsName = this.getFacilitiesName(
+        this.facilityForm.baseline.inputs
+      );
+      const endlineInputsName = this.getFacilitiesName(
+        this.facilityForm.endline.inputs
+      );
+      const newEndlineInputs = this.facilityForm.baseline.inputs
+        .filter(
+          (baselineInput: EnergyFacilityItem) =>
+            endlineInputsName.indexOf(baselineInput.name) === -1
+        )
+        .map((input: EnergyFacilityItem) => {
+          const newEndlineInput: EnergyFacilityInterventionItem = {
+            ...cloneDeep(input),
+            description: "",
+            changeInEmission: 0, // recompute
+          };
+          return newEndlineInput;
+        });
+      // filter out removed baseline inputs in results
+      results = this.facilityForm.endline.inputs.filter(
+        (endlineInput: EnergyFacilityInterventionItem) =>
+          baselineInputsName.indexOf(endlineInput.name) !== -1
+      );
+      // add to endline inputs new baseline inputs copy
+      results = results.concat(newEndlineInputs);
+    }
+
+    return results;
+  }
+  private generateNewFacilitiesForm(): EnergyFacilitySurvey {
+    return {
+      baseline: {
+        inputs: [],
+        results: {
+          gridPower: 0,
+          dieselPower: 0,
+          dieselLiters: 0,
+          renewablePower: 0,
+          totalCO2Emission: 0,
+        },
+      },
+      endline: {
+        inputs: [],
+        results: {
+          gridPower: 0,
+          dieselPower: 0,
+          dieselLiters: 0,
+          renewablePower: 0,
+          totalCO2Emission: 0,
+          changeInEmission: 0,
+        },
+      },
+    };
+  }
+
+  public get diffInTotalKwh() {
+    const baselineKWh = this.facilityForm.baseline.results.totalPower ?? 0;
+    const endlineKWh = this.facilityForm.endline.results.totalPower ?? 0;
+    return baselineKWh - endlineKWh !== 0;
+  }
+
+  private kwhDataFacilities(
+    item: EnergyFacilityItemResult | EnergyFacilityInterventionItemResult
+  ): EchartDataSerie[] {
+    const data: EchartDataSerie[] = [];
+    if (item.gridPower) {
+      data.push({
+        id: "gridPower",
+        name: "Grid",
+        value: item.gridPower,
+        colorBy: "series",
+        itemStyle: {
+          color: cccmColors.primary(),
+        },
+      });
+    }
+    if (item.dieselPower) {
+      data.push({
+        id: "dieselLiters",
+        name: "Diesel",
+        value: item.dieselPower,
+        colorBy: "series",
+        itemStyle: {
+          color: cccmColors.secondary1(),
+        },
+      });
+    }
+    if (item.renewablePower) {
+      data.push({
+        id: "renewablePower",
+        name: "Solar",
+        value: item.renewablePower,
+        colorBy: "series",
+        color: cccmColors.green(),
+        itemStyle: {
+          color: cccmColors.green(),
+        },
+      });
+    }
+    return data;
+  }
+
+  public getChartOption(
+    item: EnergyFacilityItemResult | EnergyFacilityInterventionItemResult
+  ): EChartsOption {
+    // "Distribution of tCO2e/year per facilities"
+    const data = this.kwhDataFacilities(item);
+    // energy mix
+    return {
+      title: {
+        text: `Energy Mix (${this.$options.filters?.formatNumber(
+          item.totalPower
+        )} kWh)`, //"Distribution of tCO2e/year per facilities",
+        textStyle: {
+          fontSize: 12,
+          width: "500px",
+          lineHeight: 12,
+        },
+        top: "auto",
+        padding: 0,
+        left: "center",
+      },
+
+      tooltip: {
+        trigger: "item",
+      },
+      series: [
+        {
+          type: "pie",
+          radius: "60%",
+          tooltip: {
+            valueFormatter: (value) =>
+              this.$options.filters?.formatNumber(value) + " (kWh)",
+          },
+          label: {
+            overflow: "break",
+          },
+          data,
+        },
+      ],
+    };
+  }
+}
+
+interface EchartDataSerie {
+  id: string;
+  name: string;
+  value: number;
+  color?: string;
+  colorBy?: string;
+  itemStyle?: {
+    color: string;
+  };
+}
+</script>
+
+<style lang="scss" scoped>
+.baseline-title {
+  color: rgba(32, 135, 200, 1); // blue unhcr
+}
+.endline-title {
+  color: rgba(32, 135, 200, 1);
+}
+
+::v-deep .facilities-negative {
+  color: green;
+}
+::v-deep .facilities-positive {
+  color: red;
+}
+</style>
