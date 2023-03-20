@@ -44,6 +44,7 @@ import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 
+// START LEGACY -- moved to ~/components/ghg/fuelTypes.ts
 const fuelTypes = {
   FWD: "Wood",
   CHC: "Charcoal",
@@ -107,6 +108,7 @@ const allFuelsButElectric = biomassFuels
   .concat(gasFuels)
   .concat(thermalFuels);
 
+// end legacy -- TODO import
 interface CookstoveTech {
   _id: string;
   fuelTypes: string[];

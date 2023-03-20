@@ -155,11 +155,13 @@ export function getLitres(localItem: DieselItem): number {
   }
 }
 
+/// TODO: remove duplicate of GhgInterface
 interface EnergyItem extends DieselItem {
-  gridPower: number;
+  gridPower?: number;
   dieselPower?: number;
-  renewablePower: number;
+  renewablePower?: number;
 }
+
 export function computeCO2Cost(
   localItem: EnergyItem,
   REF_DIES_L: ReferenceItemInterface | undefined,
@@ -172,13 +174,11 @@ export function computeCO2Cost(
   if (REF_GRD?.value === undefined) {
     throw new Error("REF_GRD value is undefined");
   }
-  if (REF_GRD && localItem.gridPower) {
-    // FYI, some countries are not in the IGES_GRID in MWH should be KWH
-    // kwh * (tcO2/MWh) / 1000 == tco2e
-    // because if 1 ton per megahw then we will have 1 ton per 1000kwh
-    // then 1/1000 ton per kwh
-    result += (localItem.gridPower * REF_GRD.value) / 1000;
-  }
+  // FYI, some countries are not in the IGES_GRID in MWH should be KWH
+  // kwh * (tcO2/MWh) / 1000 == tco2e
+  // because if 1 ton per megahw then we will have 1 ton per 1000kwh
+  // then 1/1000 ton per kwh
+  result += ((localItem?.gridPower ?? 0) * REF_GRD.value) / 1000;
   return result;
 }
 

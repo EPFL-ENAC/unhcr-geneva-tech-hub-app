@@ -17,7 +17,7 @@
               <v-col>
                 <v-select
                   v-model="localItem.facilityType"
-                  :items="facilityTypes"
+                  :items="facilityTypesOld"
                   label="Facility type"
                   name="type"
                   type="string"
@@ -90,7 +90,7 @@ import {
 import DieselGenerators from "@/components/green_house_gaz/energy/DieselGenerators.vue";
 import {
   Facility,
-  facilityTypes,
+  facilityTypesOld,
   notPoweredName,
 } from "@/components/green_house_gaz/energy/Facility";
 import HybridMix from "@/components/green_house_gaz/energy/HybridMix.vue";
@@ -148,7 +148,7 @@ export default class FacilityDialog extends Vue {
   }
 
   notPoweredName = notPoweredName;
-  facilityTypes = facilityTypes;
+  facilityTypesOld = facilityTypesOld;
 
   rules = [(v: string): boolean | string => !!v || `Required`];
 

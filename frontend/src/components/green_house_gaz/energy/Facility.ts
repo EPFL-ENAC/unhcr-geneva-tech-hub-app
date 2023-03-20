@@ -1,6 +1,6 @@
 export const notPoweredName = "NotPowered";
-type notPowered = "NotPowered";
-type FacilityType =
+export type notPowered = "NotPowered";
+export type FacilityTypeOld =
   | "DieselGenerators"
   | "NationalGrid"
   | "RenewableEnergy"
@@ -8,25 +8,26 @@ type FacilityType =
   | notPowered;
 
 // duplicate of export interface EnergyItem {
+// TODO: decomission this interface.
 export interface Facility {
   name: string;
-  facilityType: FacilityType;
-  gridPower: number;
+  facilityType: FacilityTypeOld;
   // diesel configuration
   dieselLiters: number;
   disableDieselLiters: boolean;
   generatorSize: number; // replace the diesel liter
   operatingHours: number; // replace the diesel liter
   generatorLoad?: number; // replace the diesel factor
-  dieselPower: number; // computed based on litres and REF_DIES_EFF
   // end of diesela
-  renewablePower: number;
+  gridPower?: number;
+  dieselPower?: number; // computed based on litres and REF_DIES_EFF
+  renewablePower?: number;
   renewableKiloWattInstalled: number;
   // computed
   totalCO2Emission: number;
 }
 
-export const facilityTypes = [
+export const facilityTypesOld = [
   { name: "Diesel generators", componentName: "DieselGenerators" },
   { name: "National Grid", componentName: "NationalGrid" },
   { name: "Solar Energy", componentName: "RenewableEnergy" },
@@ -34,7 +35,7 @@ export const facilityTypes = [
   { name: "Not powered", componentName: notPoweredName },
 ];
 
-export interface FacilityTypeItem {
+export interface FacilityTypeItemOld {
   name: string;
-  componentName: FacilityType;
+  componentName: FacilityTypeOld;
 }
