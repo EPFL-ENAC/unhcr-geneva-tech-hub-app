@@ -181,7 +181,7 @@ export default class Trucking extends Vue {
   ): EnergyFacilityItemInput {
     delete localInput.fuelUsage;
 
-    localInput.disableDieselLiters = false; // do I know the total litres of diesels
+    delete localInput.disableDieselLiters; // = false; // do I know the total litres of diesels
     localInput.generatorLoad = 0.6; // default factor of 60%
     delete localInput.generatorSize;
     delete localInput.operatingHours;
@@ -257,11 +257,17 @@ export default class Trucking extends Vue {
         },
         customEventInput: (_: string, localInput: EnergyFacilityItemInput) => {
           this.resetSurveyInput(localInput);
+          if (
+            localInput.fuelType === "ELE_DIES" ||
+            localInput.fuelType === "ELE_HYB"
+          ) {
+            localInput.disableDieselLiters = false;
+          }
           return localInput;
         },
       },
       {
-        text: "Total diesel (kWh/yr)",
+        text: "Diesel (kWh/yr) estimated",
         computeResults: true,
         value: "input.dieselPower",
         hideFooterContent: false,
@@ -273,14 +279,14 @@ export default class Trucking extends Vue {
         computeResults: true,
         hideFooterContent: false,
         conditional: "fuelType",
-        // text: "Total kWh used per year",
-        text: "Grid power (kWh/yr)",
+        // text: "Total kWh used per yr",
+        text: "Grid (kWh/yr)",
         suffix: "kWh/yr",
         style: {
           cols: "12",
         },
-        formatter: (v: number, { ...args }) => {
-          return formatNumber(v, { suffix: args.suffix });
+        formatter: (v: number) => {
+          return formatNumber(v);
         },
         type: "number",
       },
@@ -312,7 +318,7 @@ export default class Trucking extends Vue {
         value: "input.solarPower", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
         conditional_value: ["ELE_SOLAR", "ELE_HYB"],
         disabled: true,
-        text: "Solar kWh/yr produced (estimated)",
+        text: "Solar (kWh/yr) estimated",
         // text: "Solar (kWh/yr)",
         conditional: "fuelType",
         suffix: "Kwh/yr",
@@ -325,7 +331,7 @@ export default class Trucking extends Vue {
       },
       // end of solar
       {
-        text: "Total Power (kWh/yr)",
+        text: "Total (kWh/yr)",
         value: "computed.totalPower",
         hideFooterContent: false,
         formatter: (v: number, { ...args }) => {
@@ -354,7 +360,7 @@ export default class Trucking extends Vue {
         value: "input.dieselLiters", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
         conditional_value: false,
         conditional: "disableDieselLiters",
-        text: "Litres of diesel used per year",
+        text: "Litres of diesel used year",
         suffix: "l",
         style: {
           cols: "12",
@@ -392,7 +398,7 @@ export default class Trucking extends Vue {
         conditional: "disableDieselLiters",
         text: "generator load (percentage)",
         tooltipInfo:
-          "default average load of 60% per year will be used if not overwritten",
+          "default average load of 60% per yr will be used if not overwritten",
         style: {
           cols: "12",
         },
@@ -415,7 +421,7 @@ export default class Trucking extends Vue {
       },
       // end of diesel generators
       {
-        text: "Total CO2 Emissions (tCO2e/year)",
+        text: "Total CO2 Emissions (tCO2e/yr)",
         value: "computed.totalCO2Emission",
         hideFooterContent: false,
         formatter: (v: number, { ...args }) => {
@@ -526,7 +532,7 @@ export interface EnergyFacilityItemInput
   extends SurveyInput,
     DieselItem,
     EnergyItem {
-  fuelUsage?: number; // [L/year] // dieselLiters: 0,
+  fuelUsage?: number; // [L/yr] // dieselLiters: 0,
   fuelType?: ElectricFuel; // key
 }
 
