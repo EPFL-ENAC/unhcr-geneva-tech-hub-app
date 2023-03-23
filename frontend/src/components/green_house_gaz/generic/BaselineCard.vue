@@ -16,10 +16,14 @@
     <v-card-actions>
       <v-container class="d-flex flex-column" fluid>
         <v-row v-if="baseline.results.totalCO2Emission !== undefined">
-          <v-col cols="8" class="d-flex justify-end">
-            <!-- <facilities-pie-chart :option="getChartOption(baseline.results)" /> -->
+          <v-col cols="6" class="d-flex justify-end">
+            <instance-pie-chart
+              v-if="activatePie"
+              :diff-dimension="diffDimension"
+              :results="baseline.results"
+            />
           </v-col>
-          <v-col cols="4">
+          <v-col cols="6">
             <v-row>
               <v-col class="d-flex justify-end mx-2 mb-2">
                 <h3>
@@ -49,8 +53,9 @@
 
 <script lang="ts">
 import { SurveyTableHeader } from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
+import InstancePieChart from "@/components/green_house_gaz/generic/InstancePieChart.vue";
 import InstanceTable from "@/components/green_house_gaz/generic/InstanceTable.vue";
-import { SurveyItem } from "@/store/GhgInterface.vue";
+import { SurveyInput, SurveyItem } from "@/store/GhgInterface.vue";
 import Vue from "vue";
 import "vue-class-component/hooks";
 import { Component, Prop } from "vue-property-decorator";
@@ -58,6 +63,7 @@ import { Component, Prop } from "vue-property-decorator";
 @Component({
   components: {
     InstanceTable,
+    InstancePieChart,
   },
 })
 export default class BaselineCard extends Vue {
@@ -66,9 +72,13 @@ export default class BaselineCard extends Vue {
   @Prop([Boolean])
   readonly baselineMode!: boolean;
   @Prop([String])
+  readonly diffDimension!: keyof SurveyInput;
+  @Prop([String])
   readonly name!: string;
   @Prop([Array])
   readonly headers!: SurveyTableHeader;
+  @Prop({ type: Boolean, default: false })
+  readonly activatePie!: boolean;
 
   public toggleBaselineMode(): void {
     this.$emit("update:baselineMode", !this.baselineMode);

@@ -4,6 +4,7 @@
     <baseline-endline-wrapper
       v-model="localForm"
       :headers="headers"
+      :activate-pie="true"
       :diff-dimension="diffDimension"
       :compute-item="computeItem"
       :name="name"
@@ -18,12 +19,13 @@ import BaselineEndlineWrapper, {
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
-import { GHGSolarState } from "@/store/GHGReferenceSolarModule";
 
 import {
   computeCO2Cost,
+  computedieselLitersFromPower,
   computeDieselPower,
   computeKWHPerDayPerCountry,
+  computeKWInstalledWithKwhPerDayPerCountry,
   computeLitresPerDayDiesel,
   countryIrradianceKeys,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
@@ -45,11 +47,10 @@ import {
 } from "@/components/green_house_gaz/fuelTypes";
 
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface.vue";
-import { GHGfNRB } from "@/store/GHGReferencefNRB";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 
 @Component({
   components: {
@@ -58,21 +59,6 @@ import { mapActions, mapGetters } from "vuex";
   },
   computed: {
     ...mapGetters("GhgModule", ["project", "project_REF_GRD"]),
-    ...mapGetters("GHGReferencefNRB", ["items"]),
-  },
-  methods: {
-    ...mapActions("GHGReferencefNRB", [
-      "syncDB",
-      "getAllDocs",
-      "updateDoc",
-      "closeDB",
-    ]),
-    ...mapActions("GhgReferenceSolarModule", {
-      syncSolarDB: "syncDB",
-      getSolarAllDocs: "getAllDocs",
-      updateSolarDoc: "updateDoc",
-      closeSolarDB: "closeDB",
-    }),
   },
 })
 export default class Trucking extends Vue {
@@ -189,8 +175,15 @@ export default class Trucking extends Vue {
 
     delete localInput.solarInstalled;
 
+    delete localInput.totalPower;
+    delete localInput.dieselPower;
+    delete localInput.renewablePower;
     delete localInput.gridPower;
 
+    delete localInput.dieselPowerEstimated;
+    delete localInput.dieselLitersEstimated;
+    delete localInput.renewablePowerEstimated;
+    delete localInput.solarInstalledEstimated;
     return localInput;
   }
 
@@ -255,7 +248,11 @@ export default class Trucking extends Vue {
           const name = electricFuel?.text ?? "Unknown";
           return `${name}`;
         },
-        customEventInput: (_: string, localInput: EnergyFacilityItemInput) => {
+        customEventInput: (
+          fuelType: ElectricFuel,
+          localInput: EnergyFacilityItemInput
+        ) => {
+          localInput.fuelType = fuelType;
           this.resetSurveyInput(localInput);
           if (
             localInput.fuelType === "ELE_DIES" ||
@@ -272,14 +269,32 @@ export default class Trucking extends Vue {
         value: "input.dieselPower",
         hideFooterContent: false,
         formatter: (
-          _id: string,
+          dieselPower: number,
           __: SurveyTableHeader,
-          item: EnergyFacilityItem
+          item: SurveyItem
         ) => {
-          if (item?.input?.dieselPower) {
-            return `${item?.input?.dieselPower} (${item?.input?.dieselLiters}L)`;
+          if (typeof dieselPower === "number") {
+            return `${
+              item?.input?.dieselPowerEstimated ? "~" : ""
+            }${dieselPower} (${
+              item?.input?.dieselLitersEstimated ? "~" : ""
+            }${formatNumber(item?.input?.dieselLiters as number)}L) `;
           }
-          return _id;
+          return dieselPower;
+        },
+        customEventInput: (
+          dieselPower: number,
+          localInput: EnergyFacilityItemInput,
+          ghgMapRef: ItemReferencesMap
+        ) => {
+          localInput.dieselPower = dieselPower;
+          localInput.dieselLiters = computedieselLitersFromPower(
+            localInput,
+            ghgMapRef?.REF_EFF_DIES_L
+          );
+          localInput.dieselPowerEstimated = false;
+          localInput.dieselLitersEstimated = true;
+          return localInput;
         },
         conditional_value: ["ELE_DIES", "ELE_HYB"],
         disabled: false,
@@ -305,9 +320,10 @@ export default class Trucking extends Vue {
         type: "boolean",
       },
       {
-        value: "input.dieselLiters", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        value: "input.dieselLiters", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
         conditional_value: false,
         conditional: "disableDieselLiters",
+        computeResults: true,
         text: "Litres of diesel used year",
         suffix: "l",
         style: {
@@ -315,19 +331,22 @@ export default class Trucking extends Vue {
         },
         type: "number",
         customEventInput: (
-          _: number,
+          dieselLiters: number,
           localInput: EnergyFacilityItemInput,
           ghgMapRef: ItemReferencesMap
         ) => {
+          localInput.dieselLiters = dieselLiters;
           localInput.dieselPower = computeDieselPower(
             localInput as EnergyItem,
             ghgMapRef?.REF_EFF_DIES_L
           );
+          localInput.dieselPowerEstimated = true;
+          localInput.dieselLitersEstimated = false;
           return localInput;
         },
       },
       {
-        value: "input.generatorSize", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        value: "input.generatorSize", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
         conditional_value: true,
         conditional: "disableDieselLiters",
         text: "generator size (kW)",
@@ -338,21 +357,23 @@ export default class Trucking extends Vue {
           cols: "12",
         },
         type: "number",
-        customEventInput: (_: number, localInput: EnergyFacilityItemInput) => {
+        customEventInput: (
+          generatorSize: number,
+          localInput: EnergyFacilityItemInput,
+          ghgMapRef: ItemReferencesMap
+        ) => {
+          localInput.generatorSize = generatorSize;
           localInput.dieselLiters = computeLitresPerDayDiesel(localInput);
           localInput.dieselPower = computeDieselPower(
             localInput as EnergyItem,
-            {
-              value: 0.267,
-              description: "fake (kWh/litre),",
-              _id: "REF_EFF_DIES_L",
-            }
+            ghgMapRef?.REF_EFF_DIES_L
           );
           return localInput;
         },
       },
       {
-        value: "input.generatorLoad", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        // TODO: custom Event input generic for the three operating/generatorLoad/GeneratorSize
+        value: "input.generatorLoad", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
         conditional_value: true,
         conditional: "disableDieselLiters",
         text: "generator load (percentage)",
@@ -365,7 +386,7 @@ export default class Trucking extends Vue {
         subtype: "percent",
       },
       {
-        value: "input.operatingHours", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        value: "input.operatingHours", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
         conditional_value: true,
         conditional: "disableDieselLiters",
         text: "operating hours (hrs/day)",
@@ -381,7 +402,7 @@ export default class Trucking extends Vue {
       // end of diesel generators
       // begingin og national grid
       {
-        value: "input.gridPower", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        value: "input.gridPower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
         conditional_value: ["ELE_GRID", "ELE_HYB"],
         computeResults: true,
         hideFooterContent: false,
@@ -400,14 +421,14 @@ export default class Trucking extends Vue {
       // end of national grid
       // begingin of solar
       {
-        value: "input.solarInstalled", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        value: "input.solarInstalled", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
         conditional_value: ["ELE_SOLAR", "ELE_HYB"],
         conditional: "fuelType",
         customEventInput: (
           solarInstalled: number,
           localInput: EnergyFacilityItemInput
         ) => {
-          localInput.solarPower = computeKWHPerDayPerCountry(
+          localInput.renewablePower = computeKWHPerDayPerCountry(
             solarInstalled,
             countryCode,
             this.project.solar
@@ -422,11 +443,21 @@ export default class Trucking extends Vue {
         type: "number",
       },
       {
-        value: "input.solarPower", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        value: "input.renewablePower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
         conditional_value: ["ELE_SOLAR", "ELE_HYB"],
-        disabled: true,
+        disabled: false,
         text: "Solar (kWh/yr) estimated",
-        // text: "Solar (kWh/yr)",
+        customEventInput: (
+          renewablePower: number,
+          localInput: EnergyFacilityItemInput
+        ) => {
+          localInput.solarInstalled = computeKWInstalledWithKwhPerDayPerCountry(
+            renewablePower,
+            countryCode,
+            this.project.solar
+          );
+          return localInput;
+        },
         conditional: "fuelType",
         suffix: "Kwh/yr",
         style: {
@@ -532,27 +563,6 @@ export default class Trucking extends Vue {
       } as SurveyTableHeader;
     });
   }
-
-  syncDB!: () => null;
-  closeDB!: () => Promise<null>;
-  getAllDocs!: () => Promise<GHGfNRB[]>;
-
-  syncSolarDB!: () => null;
-  closeSolarDB!: () => Promise<null>;
-  getSolarAllDocs!: () => Promise<GHGSolarState[]>;
-  items!: GHGfNRB[];
-  mounted(): void {
-    this.syncDB();
-    this.getAllDocs();
-
-    this.syncSolarDB();
-    this.getSolarAllDocs();
-  }
-
-  destroyed(): void {
-    this.closeDB();
-    this.closeSolarDB();
-  }
 }
 
 export interface SelectCustom<V> {
@@ -561,9 +571,9 @@ export interface SelectCustom<V> {
 }
 
 export interface EnergyFacilityItemInput
-  extends SurveyInput,
-    DieselItem,
-    EnergyItem {
+  extends DieselItem,
+    EnergyItem,
+    SurveyInput {
   fuelUsage?: number; // [L/yr] // dieselLiters: 0,
   fuelType?: ElectricFuel; // key
 }

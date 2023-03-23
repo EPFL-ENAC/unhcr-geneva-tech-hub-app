@@ -5,6 +5,8 @@
         <baseline-card
           :baseline="localValue.baseline"
           :baseline-mode.sync="baselineMode"
+          :activate-pie="activatePie"
+          :diff-dimension="diffDimension"
           :name="name"
           :headers="baselineHeaders"
           @update:baseline="updateBaseline"
@@ -18,6 +20,7 @@
           :endline="localValue.endline"
           :baseline-mode.sync="baselineMode"
           sort-by="originIncrement"
+          :activate-pie="activatePie"
           :diff-dimension="diffDimension"
           :name="name"
           :headers="endlineHeaders"
@@ -33,6 +36,7 @@ import { SelectOption, SelectValue } from "@/components/commons/FormItem";
 import BaselineCard from "@/components/green_house_gaz/generic/BaselineCard.vue";
 import { computeChangeInEmission } from "@/components/green_house_gaz/generic/changeInEmission";
 import EndlineCard from "@/components/green_house_gaz/generic/EndlineCard.vue";
+
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import {
   GenericBaseline,
@@ -78,6 +82,9 @@ export default class BaselineEndlineWrapper<
 
   @Prop([String])
   readonly diffDimension!: keyof SurveyInput;
+
+  @Prop({ type: Boolean, default: false })
+  readonly activatePie!: boolean;
 
   @Prop([Function])
   readonly computeItem!: (
@@ -228,7 +235,6 @@ export default class BaselineEndlineWrapper<
         acc[el.key] = el.value;
         return acc;
       }, {});
-
     return Object.entries(keysToSumBy).reduce(
       (acc: SurveyResult, [key, value]) => {
         acc[key] = sumBy(
@@ -269,6 +275,7 @@ export default class BaselineEndlineWrapper<
         (baselineItem.computed?.[this.diffDimension] as number);
       const ratio: number =
         interventionDiffDimension / baselineItemDiffDimension;
+      // TODO see if it's make sense for facilities
       intervention.computed.changeInEmission = totalChangeInEmission * ratio;
     });
     return interventions;

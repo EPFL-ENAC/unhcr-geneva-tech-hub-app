@@ -17,8 +17,8 @@ module.exports = {
   devServer: {
     // https://github.com/webpack/webpack-dev-server/issues/1850#issuecomment-490926569
     // host: "127.0.0.1",
-    hot: false,
-    liveReload: false,
+    hot: true,
+    liveReload: true,
     // ipc: true,
     proxy: {
       "^/db": {
