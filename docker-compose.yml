@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   reverse-proxy:
-    image: traefik:v2.5
+    image: traefik:v2.9
     command:
       - "--providers.docker"
       - "--providers.file.directory=/configuration/"
@@ -18,7 +18,7 @@ services:
       - "443:443"
     restart: unless-stopped
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik.yaml:/configuration/traefik.yml
       - /etc/ssl:/etc/ssl
   frontend:
@@ -39,6 +39,8 @@ services:
       - "traefik.http.routers.couchdb.middlewares=couchdb-stripprefix"
       - "traefik.http.middlewares.couchdb-stripprefix.stripprefix.prefixes=/db"
       - "traefik.http.services.couchdb.loadbalancer.server.port=5984"
+      - "traefik.http.routers.couchdb.middlewares=test-compress"
+      - "traefik.http.middlewares.test-compress.compress=true"
     ports:
       - '5984:5984'
     restart: unless-stopped
