@@ -131,7 +131,14 @@
               tableHeader.classFormatter(results[tableHeader.key], tableHeader)
             "
           >
-            {{ tableHeader.formatter(results[tableHeader.key], tableHeader) }}
+            {{
+              tableHeader.formatter(
+                results[tableHeader.key],
+                tableHeader,
+                { input: results },
+                items
+              )
+            }}
           </span>
           <span v-else-if="!tableHeader.hidden"> – </span>
         </td>

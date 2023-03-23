@@ -168,9 +168,9 @@ export function computeCO2Cost(
   REF_GRD: ReferenceItemInterface | undefined
 ): number {
   let result = 0;
-  const dieselLitres = getLitres(localItem);
+  const dieselLiters = getLitres(localItem);
   // l * kgCO2/l / 1000  === tCO2e
-  result += (dieselLitres * (REF_DIES_L?.value ?? 0)) / 1000;
+  result += (dieselLiters * (REF_DIES_L?.value ?? 0)) / 1000;
   if (REF_GRD?.value === undefined) {
     throw new Error("REF_GRD value is undefined");
   }
@@ -189,6 +189,18 @@ export function computeDieselPower(
   if (REF_EFF_DIES_L?.value) {
     const result = (localItem?.dieselLiters ?? 0) / REF_EFF_DIES_L?.value;
     return parseFloat(result.toFixed(0));
+  }
+  return 0;
+}
+
+export function computedieselLitersFromPower(
+  localItem: EnergyItem,
+  REF_EFF_DIES_L: ReferenceItemInterface | undefined
+): number {
+  if (REF_EFF_DIES_L?.value) {
+    // power = litres / EFF_DIES_L THEN litres = power * EFF_DIES
+    const litres = (localItem?.dieselPower ?? 0) * REF_EFF_DIES_L?.value;
+    return parseFloat(litres.toFixed(0));
   }
   return 0;
 }

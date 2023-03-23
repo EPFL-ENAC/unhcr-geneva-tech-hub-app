@@ -227,9 +227,10 @@ export default class SurveyItemDialog extends Vue {
   }
 
   public get previousItem(): SurveyItem {
+    // small bug when using multiple item we show the previous kwh
     return (
       this.referenceItems?.find(
-        (x) => x.increment === this.localItem.increment
+        (x) => x.increment === this.localItem.originIncrement
       ) ?? ({} as SurveyItem)
     );
   }

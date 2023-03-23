@@ -22,17 +22,12 @@
         <v-row>
           <v-col cols="12">
             <v-row>
-              <v-col :cols="6" class="d-flex justify-start">
-                <v-alert v-if="!isDiffNull" dense outlined type="error">
-                  This comparison is not valid because baseline and endline have
-                  different {{ diffDimensionText }}.
-                  <br />
-                  Baseline:
-                  {{ baseline.results[diffDimension] }} {{ diffDimensionText }}
-                  <br />
-                  Endline:
-                  {{ endline.results[diffDimension] }} {{ diffDimensionText }}
-                </v-alert>
+              <v-col cols="6" class="d-flex justify-end">
+                <instance-pie-chart
+                  v-if="activatePie"
+                  :diff-dimension="diffDimension"
+                  :results="endline.results"
+                />
               </v-col>
               <v-col :cols="6" class="d-flex justify-end">
                 <h3>
@@ -67,6 +62,19 @@
                   </span>
                 </h3>
               </v-col>
+
+              <v-col :cols="12" class="d-flex justify-start">
+                <v-alert v-if="!isDiffNull" dense outlined type="error">
+                  This comparison is not valid because baseline and endline have
+                  different {{ diffDimensionText }}.
+                  <br />
+                  Baseline:
+                  {{ baseline.results[diffDimension] }} {{ diffDimensionText }}
+                  <br />
+                  Endline:
+                  {{ endline.results[diffDimension] }} {{ diffDimensionText }}
+                </v-alert>
+              </v-col>
             </v-row>
           </v-col>
         </v-row>
@@ -85,6 +93,7 @@
 
 <script lang="ts">
 import { SurveyTableHeader } from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
+import InstancePieChart from "@/components/green_house_gaz/generic/InstancePieChart.vue";
 import InstanceTable from "@/components/green_house_gaz/generic/InstanceTable.vue";
 
 import {
@@ -101,6 +110,7 @@ import { Component, Prop } from "vue-property-decorator";
 @Component({
   components: {
     InstanceTable,
+    InstancePieChart,
   },
 })
 export default class EndlineCard extends Vue {
@@ -116,6 +126,8 @@ export default class EndlineCard extends Vue {
   readonly headers!: SurveyTableHeader[];
   @Prop([String])
   readonly diffDimension!: keyof SurveyInput;
+  @Prop({ type: Boolean, default: false })
+  readonly activatePie!: boolean;
 
   @Prop({ type: String, default: "increment" })
   readonly sortBy!: string;
@@ -198,40 +210,6 @@ export default class EndlineCard extends Vue {
       return "black";
     }
   }
-
-  readonly washBalanceResultsPart1 = [
-    {
-      description: "Change in number of trucks used",
-      code: "TR_NUM_DIFF",
-      type: "percentage",
-      suffix: "%",
-      disabled: true,
-    },
-    {
-      description: "Change in total distance travelled",
-      code: "TR_DIST_DIFF",
-      suffix: "%",
-      type: "percentage",
-      disabled: true,
-    },
-  ];
-
-  readonly washBalanceResultsPart2 = [
-    {
-      description: "Total change in CO2 emissions (in tCO2e/year)",
-      code: "totalCO2Emission",
-      type: "number",
-      formatType: "decimal",
-      disabled: true,
-    },
-    {
-      description: "Percentage change in emissions",
-      code: "changeInEmission",
-      type: "percentage",
-      formatType: "percent",
-      disabled: true,
-    },
-  ];
 }
 </script>
 
