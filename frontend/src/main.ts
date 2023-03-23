@@ -63,6 +63,7 @@ axios.interceptors.response.use(undefined, function (error: AxiosError) {
       return `${JSON.stringify(error.response.data)}`;
     },
   });
+  console.trace(error);
   return Promise.reject(error);
 });
 
@@ -70,6 +71,7 @@ Vue.config.errorHandler = function (err, vm, info) {
   // handle error
   // `info` is a Vue-specific error info, e.g. which lifecycle hook
   // the error was found in. Only available in 2.2.0+
+  console.trace(err.stack);
   store.dispatch("notifyUser", {
     title: info,
     message: err.message,
@@ -82,6 +84,7 @@ window.addEventListener("unhandledrejection", function (event) {
   //handle error here
   //event.promise contains the promise object
   //event.reason contains the reason for the rejection
+  console.trace(event.reason?.stack ?? JSON.stringify(event.promise));
   store.dispatch("notifyUser", {
     title: event.reason?.title ?? "unhandled rejection",
     message: event.reason?.message ?? event.reason,
@@ -92,6 +95,7 @@ window.addEventListener("unhandledrejection", function (event) {
 
 window.onerror = function (msg, url, line, col, error) {
   //code to handle or report error goes here
+  console.trace(error?.stack);
   store.dispatch("notifyUser", {
     title: msg,
     message: (error?.message ?? "") + url + line + col,
