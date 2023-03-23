@@ -90,7 +90,7 @@ export default class Trucking extends Vue {
 
   project!: GreenHouseGaz;
   project_REF_GRD!: ReferenceItemInterface;
-  diffDimension: keyof EnergyFacilityItemInput = "kWh";
+  diffDimension: keyof EnergyFacilityItemInput = "totalPower";
   name = "Facility";
 
   public get title(): string {
@@ -181,7 +181,7 @@ export default class Trucking extends Vue {
   ): EnergyFacilityItemInput {
     delete localInput.fuelUsage;
 
-    delete localInput.disableDieselLiters; // = false; // do I know the total litres of diesels
+    delete localInput.disableDieselLiters; // do I know the total litres of diesels
     localInput.generatorLoad = 0.6; // default factor of 60%
     delete localInput.generatorSize;
     delete localInput.operatingHours;
@@ -271,7 +271,114 @@ export default class Trucking extends Vue {
         computeResults: true,
         value: "input.dieselPower",
         hideFooterContent: false,
+        formatter: (
+          _id: string,
+          __: SurveyTableHeader,
+          item: EnergyFacilityItem
+        ) => {
+          if (item?.input?.dieselPower) {
+            return `${item?.input?.dieselPower} (${item?.input?.dieselLiters}L)`;
+          }
+          return _id;
+        },
+        conditional_value: ["ELE_DIES", "ELE_HYB"],
+        disabled: false,
+        conditional: "fuelType",
+        style: {
+          cols: "12",
+        },
+        type: "number",
       },
+      // beginning of diesel generators
+      {
+        value: "input.disableDieselLiters",
+        conditional_value: ["ELE_DIES", "ELE_HYB"],
+        text: "Number of litres of diesel known",
+        conditional: "fuelType",
+        style: {
+          cols: "12",
+        },
+        options: {
+          false: "yes",
+          true: "no",
+        },
+        type: "boolean",
+      },
+      {
+        value: "input.dieselLiters", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        conditional_value: false,
+        conditional: "disableDieselLiters",
+        text: "Litres of diesel used year",
+        suffix: "l",
+        style: {
+          cols: "12",
+        },
+        type: "number",
+        customEventInput: (
+          _: number,
+          localInput: EnergyFacilityItemInput,
+          ghgMapRef: ItemReferencesMap
+        ) => {
+          localInput.dieselPower = computeDieselPower(
+            localInput as EnergyItem,
+            ghgMapRef?.REF_EFF_DIES_L
+          );
+          return localInput;
+        },
+      },
+      {
+        value: "input.generatorSize", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        conditional_value: true,
+        conditional: "disableDieselLiters",
+        text: "generator size (kW)",
+        tooltipInfo: "read from nameplate",
+        suffix: "kW",
+        min: 0,
+        style: {
+          cols: "12",
+        },
+        type: "number",
+        customEventInput: (_: number, localInput: EnergyFacilityItemInput) => {
+          localInput.dieselLiters = computeLitresPerDayDiesel(localInput);
+          localInput.dieselPower = computeDieselPower(
+            localInput as EnergyItem,
+            {
+              value: 0.267,
+              description: "fake (kWh/litre),",
+              _id: "REF_EFF_DIES_L",
+            }
+          );
+          return localInput;
+        },
+      },
+      {
+        value: "input.generatorLoad", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        conditional_value: true,
+        conditional: "disableDieselLiters",
+        text: "generator load (percentage)",
+        tooltipInfo:
+          "default average load of 60% per yr will be used if not overwritten",
+        style: {
+          cols: "12",
+        },
+        type: "number",
+        subtype: "percent",
+      },
+      {
+        value: "input.operatingHours", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        conditional_value: true,
+        conditional: "disableDieselLiters",
+        text: "operating hours (hrs/day)",
+        tooltipInfo:
+          "from daily log and application will extrapolate this information to be annual",
+        suffix: "hrs/day",
+        min: 0,
+        style: {
+          cols: "12",
+        },
+        type: "number",
+      },
+      // end of diesel generators
       // begingin og national grid
       {
         value: "input.gridPower", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
@@ -334,6 +441,8 @@ export default class Trucking extends Vue {
         text: "Total (kWh/yr)",
         value: "computed.totalPower",
         hideFooterContent: false,
+        hideInput: true, // so we can only display diffWarning in endline
+        isInput: true,
         formatter: (v: number, { ...args }) => {
           return formatNumber(v, { suffix: args.suffix });
         },
@@ -341,85 +450,7 @@ export default class Trucking extends Vue {
         type: "number",
         disabled: true,
       },
-      // beginning of diesel generators
-      {
-        value: "input.disableDieselLiters",
-        conditional_value: ["ELE_DIES", "ELE_HYB"],
-        text: "Number of litres of diesel known",
-        conditional: "fuelType",
-        style: {
-          cols: "12",
-        },
-        options: {
-          false: "yes",
-          true: "no",
-        },
-        type: "boolean",
-      },
-      {
-        value: "input.dieselLiters", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
-        conditional_value: false,
-        conditional: "disableDieselLiters",
-        text: "Litres of diesel used year",
-        suffix: "l",
-        style: {
-          cols: "12",
-        },
-        type: "number",
-      },
-      {
-        value: "input.generatorSize", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
-        conditional_value: true,
-        conditional: "disableDieselLiters",
-        text: "generator size (kW)",
-        tooltipInfo: "read from nameplate",
-        suffix: "kW",
-        min: 0,
-        style: {
-          cols: "12",
-        },
-        type: "number",
-        customEventInput: (_: number, localInput: EnergyFacilityItemInput) => {
-          localInput.dieselLiters = computeLitresPerDayDiesel(localInput);
-          localInput.dieselPower = computeDieselPower(
-            localInput as EnergyItem,
-            {
-              value: 0.267,
-              description: "fake (kWh/litre),",
-              _id: "REF_EFF_DIES_L",
-            }
-          );
-          return localInput;
-        },
-      },
-      {
-        value: "input.generatorLoad", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
-        conditional_value: true,
-        conditional: "disableDieselLiters",
-        text: "generator load (percentage)",
-        tooltipInfo:
-          "default average load of 60% per yr will be used if not overwritten",
-        style: {
-          cols: "12",
-        },
-        type: "number",
-        subtype: "percent",
-      },
-      {
-        value: "input.operatingHours", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
-        conditional_value: true,
-        conditional: "disableDieselLiters",
-        text: "operating hours (hrs/day)",
-        tooltipInfo:
-          "from daily log and application will extrapolate this information to be annual",
-        suffix: "hrs/day",
-        min: 0,
-        style: {
-          cols: "12",
-        },
-        type: "number",
-      },
-      // end of diesel generators
+
       {
         text: "Total CO2 Emissions (tCO2e/yr)",
         value: "computed.totalCO2Emission",
@@ -469,6 +500,7 @@ export default class Trucking extends Vue {
         align: "start",
         sortable: false,
         hideFooterContent: item.hideFooterContent ?? true,
+        hideInput: item.hideInput ?? false,
         label: item.text, // for form-item-component
         key, // for form-item-component
         isInput,
