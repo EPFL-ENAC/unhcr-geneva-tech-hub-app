@@ -18,15 +18,10 @@
 <script lang="ts">
 import DieselGeneratorWithoutLitres from "@/components/green_house_gaz/energy/DieselGeneratorWithoutLitres.vue";
 import { Facility } from "@/components/green_house_gaz/energy/Facility";
-import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { checkRequired, Rule } from "@/utils/rules";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { mapGetters } from "vuex";
 
 @Component({
-  computed: {
-    ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
-  },
   components: {
     DieselGeneratorWithoutLitres,
   },
@@ -34,9 +29,6 @@ import { mapGetters } from "vuex";
 export default class DieselGenerators extends Vue {
   @Prop({ type: Object, required: true, default: () => ({}) })
   facility!: Facility;
-
-  ghgMapRef!: ItemReferencesMap;
-
   rules: Rule[] = [checkRequired];
 
   public get localFacility(): Facility {

@@ -324,7 +324,7 @@ import { mapActions, mapGetters } from "vuex";
       "setEditDialog",
       "setItem",
     ]),
-    ...mapActions("SheltersTransportModule", ["getAllDocs", "getDoc"]),
+    ...mapActions("SheltersTransportModule", ["getDoc"]),
   },
   components: {
     CountrySelect,

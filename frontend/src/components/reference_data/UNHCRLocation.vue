@@ -24,34 +24,20 @@
 </template>
 
 <script lang="ts">
-import { UNHCRLocation } from "@/store/UNHCRLocation";
+import { UNHCRLocation } from "@/store/UNHCRLocationModule";
 import { countriesMap } from "@/utils/countriesAsList";
 import { Component, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("UNHCRLocation", ["items"]),
+    ...mapGetters("UNHCRLocationModule", ["items"]),
     ...mapGetters(["referenceDataDrawer"]),
-  },
-  methods: {
-    ...mapActions("UNHCRLocation", ["syncDB", "getAllDocs", "closeDB"]),
   },
 })
 export default class Energy extends Vue {
-  syncDB!: () => null;
-  closeDB!: () => Promise<null>;
-  getAllDocs!: () => Promise<UNHCRLocation>;
   items!: UNHCRLocation[];
   countriesMap = countriesMap;
-  mounted(): void {
-    this.syncDB();
-    this.getAllDocs();
-  }
-
-  destroyed(): void {
-    this.closeDB();
-  }
 
   public get headers(): HeaderInterface[] {
     // _id: string; // "Abazar : Point",

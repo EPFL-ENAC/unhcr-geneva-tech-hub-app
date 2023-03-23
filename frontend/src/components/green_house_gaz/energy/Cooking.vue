@@ -18,7 +18,6 @@ import BaselineEndlineWrapper, {
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
-import { GHGSolarState } from "@/store/GHGReferenceSolarModule";
 
 import {
   computeCO2Cost,
@@ -43,7 +42,7 @@ import { GHGfNRB } from "@/store/GHGReferencefNRB";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 
 const fuelTypes = {
   FWD: "Wood",
@@ -191,20 +190,6 @@ const REF_SUSTAINED_WOOD = 0; // fNRB of sustained
     ...mapGetters("GhgModule", ["project", "project_REF_GRD"]),
     ...mapGetters("GHGReferencefNRB", ["items"]),
   },
-  methods: {
-    ...mapActions("GHGReferencefNRB", [
-      "syncDB",
-      "getAllDocs",
-      "updateDoc",
-      "closeDB",
-    ]),
-    ...mapActions("GhgReferenceSolarModule", {
-      syncSolarDB: "syncDB",
-      getSolarAllDocs: "getAllDocs",
-      updateSolarDoc: "updateDoc",
-      closeSolarDB: "closeDB",
-    }),
-  },
 })
 export default class Trucking extends Vue {
   @Prop({ type: String, required: true, default: "" })
@@ -286,6 +271,7 @@ export default class Trucking extends Vue {
             this.project_REF_GRD
           ) *
           hhUsingTheFuel *
+          applianceEff *
           365.25;
         break;
       case "ELE_SOLAR":
@@ -894,26 +880,7 @@ export default class Trucking extends Vue {
     });
   }
 
-  syncDB!: () => null;
-  closeDB!: () => Promise<null>;
-  getAllDocs!: () => Promise<GHGfNRB[]>;
-
-  syncSolarDB!: () => null;
-  closeSolarDB!: () => Promise<null>;
-  getSolarAllDocs!: () => Promise<GHGSolarState[]>;
   items!: GHGfNRB[];
-  mounted(): void {
-    this.syncDB();
-    this.getAllDocs();
-
-    this.syncSolarDB();
-    this.getSolarAllDocs();
-  }
-
-  destroyed(): void {
-    this.closeDB();
-    this.closeSolarDB();
-  }
 }
 
 export interface SelectCustom<V> {

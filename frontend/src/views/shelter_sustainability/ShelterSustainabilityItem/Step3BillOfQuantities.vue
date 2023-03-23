@@ -250,11 +250,7 @@ import { mapActions, mapGetters } from "vuex";
       "openEditItemDialog",
       "deleteItem",
     ]),
-    ...mapActions("SheltersMaterialModule", [
-      "syncDB",
-      "getAllDocs",
-      "closeDB",
-    ]),
+    ...mapActions("SheltersMaterialModule", ["getAllDocs"]),
   },
   components: {
     DeleteItemDialog,
@@ -273,8 +269,6 @@ export default class Step3Materials extends Vue {
   setItemsIndividualShelter!: (v: number) => void;
   updateDoc!: (doc: Shelter) => void;
   duplicate!: (item: Item) => void;
-  syncDB!: () => null;
-  closeDB!: () => Promise<null>;
   getAllDocs!: () => Promise<null>;
 
   public get localShelter(): Shelter {
@@ -368,11 +362,7 @@ export default class Step3Materials extends Vue {
   }
 
   mounted(): void {
-    this.syncDB();
     this.getAllDocs();
-  }
-  destroyed(): void {
-    this.closeDB();
   }
 }
 </script>

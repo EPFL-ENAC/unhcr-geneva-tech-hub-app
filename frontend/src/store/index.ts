@@ -10,7 +10,7 @@ import ShelterBillOfQuantitiesModule from "@/store/ShelterBillOfQuantitiesModule
 import ShelterModule from "@/store/ShelterModule";
 import SheltersMaterialModule from "@/store/SheltersMaterialModule";
 import SheltersTransportModule from "@/store/SheltersTransportModule";
-import UNHCRLocation from "@/store/UNHCRLocation";
+import UNHCRLocationModule from "@/store/UNHCRLocationModule";
 import UserModule from "@/store/UserModule";
 import { throttle } from "lodash";
 import Vue from "vue";
@@ -324,7 +324,7 @@ const store: StoreOptions<RootState> = {
     GhgReferenceIgesGridModule,
     GhgReferenceSolarModule,
     GHGReferencefNRB,
-    UNHCRLocation,
+    UNHCRLocationModule,
     UserModule,
     energy: EnergyModule,
   },

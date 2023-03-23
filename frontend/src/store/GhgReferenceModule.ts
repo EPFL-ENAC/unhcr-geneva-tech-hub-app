@@ -1,4 +1,4 @@
-import { SyncDatabase } from "@/utils/couchdb";
+import ghg_reference from "@/assets/references/ghg_reference.json";
 import {
   ActionContext,
   ActionTree,
@@ -11,39 +11,35 @@ import { RootState } from ".";
 export type ItemReferencesMap = Record<string, ReferenceItemInterface>;
 export type referenceType = "number" | "percentage";
 export interface ReferenceItemInterface {
+  _id: string;
   description: string;
   value: number;
-  type?: referenceType;
-  source?: string;
-  _id: string;
+  type?: string; // number or percentage
+  source?: string | null;
+  category?: string;
+  index?: number;
 }
 
-interface GhgReferenceState {
-  items: ReferenceItemInterface[] | null;
-  itemsLength: number;
-  localCouch: SyncDatabase<ReferenceItemInterface> | null;
+interface GhgReferenceModuleState {
+  item: ReferenceItemInterface;
 }
-
-const DB_NAME = "ghg_reference";
-const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 
 /** Default Configure state value */
-function generateState(): GhgReferenceState {
+function generateState(): GhgReferenceModuleState {
   return {
-    items: null,
-    itemsLength: 0,
-    localCouch: null,
+    item: {} as ReferenceItemInterface,
   };
 }
+const MSG_COULD_NOT_FIND_ITEM = "Could not find item with this id";
 
 /** Getters */
-const getters: GetterTree<GhgReferenceState, RootState> = {
-  items: (s): ReferenceItemInterface[] | null => s.items,
+const getters: GetterTree<GhgReferenceModuleState, RootState> = {
+  items: (): ReferenceItemInterface[] | null => ghg_reference,
   ghgMapRef: (s): ItemReferencesMap | undefined => {
-    if (!s.items) {
+    if (!ghg_reference) {
       return undefined;
     }
-    return s.items.reduce(
+    return ghg_reference.reduce(
       (acc: ItemReferencesMap, item: ReferenceItemInterface) => {
         acc[item._id] = item;
         return acc;
@@ -54,65 +50,30 @@ const getters: GetterTree<GhgReferenceState, RootState> = {
 };
 
 /** Mutations */
-const mutations: MutationTree<GhgReferenceState> = {
-  INIT_DB(state) {
-    state.localCouch = new SyncDatabase(DB_NAME);
-  },
-  CLOSE_DB(state) {
-    state.localCouch?.cancel();
-  },
-  SET_ITEMS(state, value) {
-    state.items = value;
-  },
-  SET_ITEMS_LENGTH(state, value) {
-    state.itemsLength = value;
+const mutations: MutationTree<GhgReferenceModuleState> = {
+  SET_ITEM(state, value) {
+    state.item = value;
   },
 };
 
 /** Action */
-const actions: ActionTree<GhgReferenceState, RootState> = {
-  syncDB: (context: ActionContext<GhgReferenceState, RootState>) => {
-    context.commit("INIT_DB");
-    const localCouch = context.state.localCouch;
-
-    localCouch?.onChange(function () {
-      context.dispatch("getAllDocs");
-    });
-  },
-  closeDB: (context: ActionContext<GhgReferenceState, RootState>) => {
-    context.commit("CLOSE_DB");
-  },
-  getAllDocs: (context: ActionContext<GhgReferenceState, RootState>) => {
-    const db = context.state.localCouch?.db;
-    if (db) {
-      db.query("configuration/list")
-        .then(function (result) {
-          context.commit("SET_ITEMS_LENGTH", result.total_rows);
-          context.commit(
-            "SET_ITEMS",
-            result.rows.map((x) => x.value)
-          );
-        })
-        .catch(function (err: Error) {
-          console.log(err);
-        });
+const actions: ActionTree<GhgReferenceModuleState, RootState> = {
+  getDoc: (
+    context: ActionContext<GhgReferenceModuleState, RootState>,
+    id: string
+  ): ReferenceItemInterface | undefined => {
+    const foundItem = ghg_reference.find((item) => item._id === id);
+    if (foundItem) {
+      context.commit("SET_ITEM", foundItem);
     } else {
-      throw new Error(MSG_DB_DOES_NOT_EXIST);
+      console.log(MSG_COULD_NOT_FIND_ITEM);
     }
-  },
-  updateDoc: (context: ActionContext<GhgReferenceState, RootState>, value) => {
-    context.commit("SET_ITEMS", value);
-    const db = context.state.localCouch?.db;
-    if (db) {
-      db.put(value);
-    } else {
-      throw new Error(MSG_DB_DOES_NOT_EXIST);
-    }
+    return foundItem;
   },
 };
 
 /** VuexStore */
-const GhgReferenceModule: Module<GhgReferenceState, RootState> = {
+const GhgReferenceModule: Module<GhgReferenceModuleState, RootState> = {
   namespaced: true,
   state: generateState(),
   getters,

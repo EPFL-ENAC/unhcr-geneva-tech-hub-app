@@ -40,39 +40,20 @@
 </template>
 
 <script lang="ts">
-import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
+import { GHGSolar } from "@/store/GHGReferenceSolarModule";
 import { countriesMap } from "@/utils/countriesAsList";
 import { Component, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 
 @Component({
   computed: {
     ...mapGetters("GhgReferenceSolarModule", ["items"]),
     ...mapGetters(["referenceDataDrawer"]),
   },
-  methods: {
-    ...mapActions("GhgReferenceSolarModule", [
-      "syncDB",
-      "getAllDocs",
-      "updateDoc",
-      "closeDB",
-    ]),
-  },
 })
 export default class Energy extends Vue {
-  syncDB!: () => null;
-  closeDB!: () => Promise<null>;
-  getAllDocs!: () => Promise<ReferenceItemInterface>;
-  items!: ReferenceItemInterface[];
+  items!: GHGSolar[];
   countriesMap = countriesMap;
-  mounted(): void {
-    this.syncDB();
-    this.getAllDocs();
-  }
-
-  destroyed(): void {
-    this.closeDB();
-  }
 
   public get headers(): HeaderInterface[] {
     return [

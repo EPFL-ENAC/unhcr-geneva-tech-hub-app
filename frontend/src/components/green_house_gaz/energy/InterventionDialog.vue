@@ -113,7 +113,6 @@ import {
   EnergyFacilityItem,
   GreenHouseGaz,
 } from "@/store/GhgInterface.vue";
-import { IgesItemInterface } from "@/store/GhgReferenceIgesGridModule";
 import {
   ItemReferencesMap,
   ReferenceItemInterface,
@@ -122,25 +121,12 @@ import { checkRequired, Rule } from "@/utils/rules";
 import { VForm } from "@/utils/vuetify";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 
 @Component({
   computed: {
     ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
-    ...mapGetters("GhgReferenceIgesGridModule", ["iges_grid"]),
     ...mapGetters("GhgModule", ["project", "project_REF_GRD"]),
-  },
-  methods: {
-    ...mapActions("GhgReferenceModule", {
-      syncDBGhg: "syncDB",
-      closeDBGhg: "closeDB",
-      getAllDocsGhg: "getAllDocs",
-    }),
-    ...mapActions("GhgReferenceIgesGridModule", {
-      syncDBGhgIgesGrid: "syncDB",
-      closeDBGhgIgesGrid: "closeDB",
-      getAllDocsGhgIgesGrid: "getAllDocs",
-    }),
   },
   components: {
     DieselGeneratorWithoutLitres,
@@ -171,16 +157,7 @@ export default class InterventionDialog extends Vue {
 
   project!: GreenHouseGaz;
   project_REF_GRD!: ReferenceItemInterface;
-  syncDBGhg!: () => null;
-  closeDBGhg!: () => Promise<null>;
-  getAllDocsGhg!: () => Promise<ReferenceItemInterface[]>;
-
-  syncDBGhgIgesGrid!: () => null;
-  closeDBGhgIgesGrid!: () => Promise<null>;
-  getAllDocsGhgIgesGrid!: () => Promise<IgesItemInterface[]>;
-
   ghgMapRef!: ItemReferencesMap;
-  iges_grid!: IgesItemInterface[];
 
   formValid = false;
   localItem: EnergyFacilityInterventionItem | null = null;
@@ -262,19 +239,6 @@ export default class InterventionDialog extends Vue {
   }
   public resetValidation(): void {
     this.$refs.form.resetValidation();
-  }
-
-  public mounted(): void {
-    this.syncDBGhg();
-    this.getAllDocsGhg();
-
-    this.syncDBGhgIgesGrid();
-    this.getAllDocsGhgIgesGrid();
-  }
-
-  public destroyed(): void {
-    this.closeDBGhg();
-    this.closeDBGhgIgesGrid();
   }
 }
 </script>
