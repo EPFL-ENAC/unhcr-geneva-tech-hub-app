@@ -24,6 +24,7 @@ services:
   frontend:
     build: ./frontend
     labels:
+      - "traefik.http.routers.frontend.priority=100"
       - "traefik.http.routers.frontend.tls=true"
       - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
     restart: unless-stopped
@@ -34,13 +35,13 @@ services:
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
       - COUCHDB_HOST=couchdb
     labels:
+      - "traefik.http.routers.couchdb.priority=1000"
       - "traefik.http.routers.couchdb.tls=true"
       - "traefik.http.routers.couchdb.rule=PathPrefix(`/db`)"
-      - "traefik.http.routers.couchdb.middlewares=couchdb-stripprefix"
+      - "traefik.http.routers.couchdb.middlewares=couchdb-stripprefix,test-compress"
       - "traefik.http.middlewares.couchdb-stripprefix.stripprefix.prefixes=/db"
       - "traefik.http.middlewares.couchdb-stripprefix.stripprefix.forceSlash=false"
       - "traefik.http.services.couchdb.loadbalancer.server.port=5984"
-      - "traefik.http.routers.couchdb.middlewares=test-compress"
       - "traefik.http.middlewares.test-compress.compress=true"
     ports:
       - '5984:5984'
@@ -58,6 +59,8 @@ services:
       - COUCHDB_USER=${COUCHDB_USER}
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
       - COUCHDB_HOST=couchdb
+    labels:
+      - "traefik.http.services.couchdb-setup.loadbalancer.server.port=9999"
     build: ./couchdb-setup
     depends_on:
       - couchdb
@@ -75,6 +78,7 @@ services:
     ports:
       - '5050:5050'
     labels:
+      - "traefik.http.routers.uploadFASTAPI.priority=1001"
       - "traefik.http.routers.uploadFASTAPI.tls=true"
       - "traefik.http.routers.uploadFASTAPI.rule=PathPrefix(`/api`)"
       - "traefik.http.services.uploadFASTAPI.loadbalancer.server.port=5050"
@@ -92,6 +96,7 @@ services:
       - S3_ENDPOINT_PROTOCOL=${S3_ENDPOINT_PROTOCOL}
       - S3_BUCKET_NAME=${S3_Bucket}
     labels:
+      - "traefik.http.routers.s3Server.priority=1002"
       - "traefik.http.routers.s3Server.tls=true"
       - "traefik.http.routers.s3Server.rule=PathPrefix(`/s3`)"
       - "traefik.http.routers.s3Server.middlewares=s3Server-stripprefix"
