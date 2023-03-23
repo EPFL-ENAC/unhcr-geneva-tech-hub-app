@@ -658,6 +658,17 @@ export default class Trucking extends Vue {
           cols: "12",
         },
         type: "number",
+        customEventInput: (
+          _: number,
+          localInput: EnergyCookingItemInput,
+          ghgMapRef: ItemReferencesMap
+        ) => {
+          localInput.dieselPower = computeDieselPower(
+            localInput as EnergyItem,
+            ghgMapRef?.REF_EFF_DIES_L
+          );
+          return localInput;
+        },
       },
       {
         value: "input.generatorSize", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
@@ -671,15 +682,15 @@ export default class Trucking extends Vue {
           cols: "12",
         },
         type: "number",
-        customEventInput: (_: number, localInput: EnergyCookingItemInput) => {
+        customEventInput: (
+          _: number,
+          localInput: EnergyCookingItemInput,
+          ghgMapRef: ItemReferencesMap
+        ) => {
           localInput.dieselLiters = computeLitresPerDayDiesel(localInput);
           localInput.dieselPower = computeDieselPower(
             localInput as EnergyItem,
-            {
-              value: 0.267,
-              description: "fake (kWh/litre),",
-              _id: "REF_EFF_DIES_L",
-            }
+            ghgMapRef?.REF_EFF_DIES_L
           );
           return localInput;
         },

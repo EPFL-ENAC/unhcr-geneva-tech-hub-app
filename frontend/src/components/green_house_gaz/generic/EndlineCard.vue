@@ -26,6 +26,12 @@
                 <v-alert v-if="!isDiffNull" dense outlined type="error">
                   This comparison is not valid because baseline and endline have
                   different {{ diffDimensionText }}.
+                  <br />
+                  Baseline:
+                  {{ baseline.results[diffDimension] }} {{ diffDimensionText }}
+                  <br />
+                  Endline:
+                  {{ endline.results[diffDimension] }} {{ diffDimensionText }}
                 </v-alert>
               </v-col>
               <v-col :cols="6" class="d-flex justify-end">

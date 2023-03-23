@@ -261,10 +261,14 @@ export default class BaselineEndlineWrapper<
         baselineCO2,
         endlineCO2
       );
+      const interventionDiffDimension =
+        (intervention.input?.[this.diffDimension] as number) ??
+        (intervention.computed?.[this.diffDimension] as number);
+      const baselineItemDiffDimension =
+        (baselineItem.input?.[this.diffDimension] as number) ??
+        (baselineItem.computed?.[this.diffDimension] as number);
       const ratio: number =
-        (intervention.input[this.diffDimension] as number) /
-        (baselineItem.input[this.diffDimension] as number);
-
+        interventionDiffDimension / baselineItemDiffDimension;
       intervention.computed.changeInEmission = totalChangeInEmission * ratio;
     });
     return interventions;
@@ -289,7 +293,8 @@ export interface EasySurveyTableHeader {
   classFormatter?: (v: unknown) => string;
   customEventInput?: (
     v: SurveyInputValue,
-    localInput: SurveyInput
+    localInput: SurveyInput,
+    ghgMapRef?: ItemReferencesMap
   ) => SurveyInput;
   formatter?: (v: unknown) => string;
   conditional_value: SurveyInputValue; // e.g "LITRES",
