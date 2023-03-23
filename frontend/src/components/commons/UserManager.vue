@@ -91,7 +91,7 @@ export default class UserManager extends Vue {
     this.form?.reset();
   }
 
-  private onChange(): void {
+  private onChangeUsers(): void {
     this.$emit("change");
   }
 
@@ -100,13 +100,13 @@ export default class UserManager extends Vue {
       this.users.push({ name: this.userName });
       this.userName = "";
       this.form.reset();
-      this.onChange();
+      this.onChangeUsers();
     }
   }
 
   removeUser(index: number): void {
     this.users.splice(index, 1);
-    this.onChange();
+    this.onChangeUsers();
   }
 
   submit(event: Event): void {

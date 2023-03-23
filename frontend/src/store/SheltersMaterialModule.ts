@@ -1,6 +1,7 @@
+import materialsReference from "@/assets/references/materials.json";
 import { MaterialShape } from "@/store/ShelterInterface";
-import { SyncDatabase } from "@/utils/couchdb";
 import { materialColors } from "@/utils/materialColors";
+
 import {
   ActionContext,
   ActionTree,
@@ -13,7 +14,6 @@ import { RootState } from ".";
 interface SheltersMaterialState {
   item: ShelterMaterial;
   items: ShelterMaterial[];
-  localCouch: SyncDatabase<ShelterMaterial> | null;
   paginate: Paginate;
   itemsLength: number;
 
@@ -46,9 +46,6 @@ export interface ShelterMaterial {
   _id: string; // "ALU-CPA_"
 }
 
-const DB_NAME = "shelters_materials";
-const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
-
 /** Default Configure state value */
 function generateState(): SheltersMaterialState {
   return {
@@ -59,7 +56,6 @@ function generateState(): SheltersMaterialState {
     materialForms: {},
     materialMap: {},
 
-    localCouch: null,
     paginate: {
       limit: 10,
       skip: 0,
@@ -81,12 +77,6 @@ const getters: GetterTree<SheltersMaterialState, RootState> = {
 
 /** Mutations */
 const mutations: MutationTree<SheltersMaterialState> = {
-  INIT_DB(state) {
-    state.localCouch = new SyncDatabase(DB_NAME);
-  },
-  CLOSE_DB(state) {
-    state.localCouch?.cancel();
-  },
   SET_ITEM(state, value) {
     state.item = value;
   },
@@ -112,61 +102,10 @@ const mutations: MutationTree<SheltersMaterialState> = {
 
 /** Action */
 const actions: ActionTree<SheltersMaterialState, RootState> = {
-  syncDB: (context: ActionContext<SheltersMaterialState, RootState>) => {
-    context.commit("INIT_DB");
-    const localCouch = context.state.localCouch;
-    localCouch?.onChange(function () {
-      context.dispatch("getAllDocs");
-    });
-  },
-  closeDB: (context: ActionContext<SheltersMaterialState, RootState>) => {
-    context.commit("CLOSE_DB");
-  },
-  getDoc: (context: ActionContext<SheltersMaterialState, RootState>, id) => {
-    const db = context.state.localCouch?.db;
-    if (db) {
-      db.get(id)
-        .then(function (result) {
-          context.commit("SET_ITEM", result);
-        })
-        .catch(function (err: Error) {
-          console.log(err);
-        });
-    } else {
-      throw new Error(MSG_DB_DOES_NOT_EXIST);
-    }
-  },
-  changePaginate: (
-    context: ActionContext<SheltersMaterialState, RootState>,
-    paginate: Paginate
-  ) => {
-    // compage paginate and current paginate to avoid infinite loop.
-    const hasSameLimit = paginate.limit === context.state.paginate.limit;
-    const hasSameSkip = paginate.skip === context.state.paginate.skip;
-    if (hasSameLimit && hasSameSkip) {
-      return;
-    }
-    context.commit("SET_PAGINATE", paginate);
-    return context.dispatch("getAllDocs");
-  },
-  // we need pagination for this; not ready for startKey/endKey with vuetify
-  //https://pouchdb.com/2014/04/14/pagination-strategies-with-pouchdb.html
   getAllDocs: (context: ActionContext<SheltersMaterialState, RootState>) => {
-    const db = context.state.localCouch?.db;
-    if (db) {
-      db.query("configuration/list")
-        .then(function (result) {
-          context.commit("SET_ITEMS_LENGTH", result.total_rows);
-          const materials = result.rows.map((x) => x.value);
-          context.commit("SET_ITEMS", materials);
-          context.dispatch("setMaterialForm", materials);
-        })
-        .catch(function (err: Error) {
-          console.log(err);
-        });
-    } else {
-      throw new Error(MSG_DB_DOES_NOT_EXIST);
-    }
+    context.commit("SET_ITEMS_LENGTH", materialsReference.length);
+    context.commit("SET_ITEMS", materialsReference);
+    context.dispatch("setMaterialForm", materialsReference);
   },
 
   setMaterialForm: (
@@ -208,18 +147,6 @@ const actions: ActionTree<SheltersMaterialState, RootState> = {
         {} as Record<string, ShelterMaterial>
       );
       context.commit("SET_MATERIAL_MAP", formIdMap);
-    }
-  },
-
-  updateDoc: (
-    context: ActionContext<SheltersMaterialState, RootState>,
-    value
-  ) => {
-    const db = context.state.localCouch?.db;
-    if (db) {
-      db.put(value);
-    } else {
-      throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
   },
 };

@@ -297,11 +297,7 @@ import { mapActions, mapGetters } from "vuex";
     ...mapGetters("SheltersMaterialModule", ["materialMap", "materials"]),
   },
   methods: {
-    ...mapActions("SheltersMaterialModule", [
-      "syncDB",
-      "getAllDocs",
-      "closeDB",
-    ]),
+    ...mapActions("SheltersMaterialModule", ["getAllDocs"]),
   },
   components: {
     InfoGroup,
@@ -311,8 +307,6 @@ import { mapActions, mapGetters } from "vuex";
 })
 /** Project */
 export default class Step3Materials extends Vue {
-  syncDB!: () => null;
-  closeDB!: () => Promise<null>;
   getAllDocs!: () => Promise<null>;
 
   shelter!: Shelter;
@@ -450,11 +444,7 @@ export default class Step3Materials extends Vue {
   }
 
   mounted(): void {
-    this.syncDB();
     this.getAllDocs();
-  }
-  destroyed(): void {
-    this.closeDB();
   }
 
   graphTreeOptions = [

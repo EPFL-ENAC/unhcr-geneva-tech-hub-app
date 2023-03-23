@@ -44,7 +44,6 @@ import { mapActions, mapGetters } from "vuex";
 @Component({
   computed: {
     ...mapGetters("GhgModule", ["project"]),
-    ...mapGetters("GhgReferenceModule", ["reference"]),
   },
   methods: {
     ...mapActions("GhgModule", ["getDoc", "updateDoc"]),

@@ -10,7 +10,7 @@ import {
 } from "vuex";
 import { RootState } from ".";
 import { updateMetaFieldsForUpdate } from "./documentUtils";
-import { IgesItemInterface } from "./GhgReferenceIgesGridModule";
+import { IgesItem } from "./GhgReferenceIgesGridModule";
 import { ReferenceItemInterface } from "./GhgReferenceModule";
 import { CouchUser } from "./UserModule";
 
@@ -67,13 +67,13 @@ const getters: GetterTree<ProjectsState, RootState> = {
     rootGetters
   ): ReferenceItemInterface | null => {
     const ghgMapRef = rootGetters["GhgReferenceModule/ghgMapRef"];
-    const iges_grid = rootGetters["GhgReferenceIgesGridModule/iges_grid"];
+    const iges_grid = rootGetters["GhgReferenceIgesGridModule/items"];
     if (!ghgMapRef || !iges_grid) {
       throw new Error("GhgMapRef or igesGrid is not defined");
     }
     const REF_GRD = ghgMapRef.REF_GRD;
     const iges_grid_match = iges_grid.find(
-      (el: IgesItemInterface) => el._id === getters.project.country_code
+      (el: IgesItem) => el._id === getters.project.country_code
     );
     REF_GRD.value = iges_grid_match?.value ?? REF_GRD.value; // find REF_GRD per country
 
@@ -155,9 +155,9 @@ function getGenericCountries(
 const actions: ActionTree<ProjectsState, RootState> = {
   syncDB: (context: ActionContext<ProjectsState, RootState>) => {
     context.commit("INIT_DB");
-    context.state.localCouch?.onChange(function () {
-      context.dispatch("getCountries");
-    });
+    // context.state.localCouch?.onChange(function () {
+    //   context.dispatch("getCountries");
+    // });
   },
   closeDB: (context: ActionContext<ProjectsState, RootState>) => {
     context.commit("CLOSE_DB");

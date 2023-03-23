@@ -138,19 +138,18 @@ import {
   Sites,
   Survey,
 } from "@/store/GhgInterface.vue";
-import { UNHCRLocation } from "@/store/UNHCRLocation";
+import { UNHCRLocation } from "@/store/UNHCRLocationModule";
 import { cloneDeep, isEmpty } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("UNHCRLocation", ["items"]),
+    ...mapGetters("UNHCRLocationModule", ["items"]),
     ...mapGetters("GhgModule", ["countries", "project"]),
   },
 
   methods: {
-    ...mapActions("UNHCRLocation", ["syncDB", "getAllDocs", "closeDB"]),
     ...mapActions("GhgModule", [
       "addDoc",
       "updateDoc",
@@ -168,9 +167,6 @@ export default class ProjectList extends Vue {
   @Prop({ type: Boolean, default: false })
   readonly open!: boolean;
 
-  syncDB!: () => null;
-  closeDB!: () => Promise<null>;
-  getAllDocs!: () => Promise<UNHCRLocation>;
   items!: UNHCRLocation[];
 
   addDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;
@@ -454,8 +450,6 @@ export default class ProjectList extends Vue {
   }
 
   mounted(): void {
-    this.syncDB();
-    this.getAllDocs();
     this.resetDoc().then(() => {
       this.syncLocalCampSite();
     });
@@ -463,7 +457,6 @@ export default class ProjectList extends Vue {
   }
 
   destroyed(): void {
-    this.closeDB();
     this.resetCampSite();
   }
 }

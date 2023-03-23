@@ -159,19 +159,14 @@ import {
   EnergyFacilityInterventionItem,
   EnergyFacilityItem,
 } from "@/store/GhgInterface.vue";
-import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import { mapGetters } from "vuex";
 
 @Component({
   components: {
     DeleteInterventionDialog,
     InterventionDialog,
     DuplicateInterventionDialog,
-  },
-  computed: {
-    ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
   },
 })
 export default class EndlineFacilitiesTable extends Vue {
@@ -196,7 +191,6 @@ export default class EndlineFacilitiesTable extends Vue {
   localItem: EnergyFacilityInterventionItem =
     {} as EnergyFacilityInterventionItem;
   itemIndex: number | string = -1;
-  ghgMapRef!: ItemReferencesMap;
   readonly getLitres = getLitres;
 
   headers = [

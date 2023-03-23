@@ -169,19 +169,14 @@ import DuplicateFacilityDialog from "@/components/green_house_gaz/energy/Duplica
 import { facilityTypes } from "@/components/green_house_gaz/energy/Facility";
 import FacilityDialog from "@/components/green_house_gaz/energy/FacilityDialog.vue";
 import { EnergyFacilityItem } from "@/store/GhgInterface.vue";
-import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import { mapGetters } from "vuex";
 
 @Component({
   components: {
     DeleteFacilityDialog,
     FacilityDialog,
     DuplicateFacilityDialog,
-  },
-  computed: {
-    ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
   },
 })
 export default class BaselineFacilitiesTable extends Vue {
@@ -196,7 +191,6 @@ export default class BaselineFacilitiesTable extends Vue {
   @Prop({ type: String, required: true, default: "" })
   readonly countryCode!: countryIrradianceKeys;
 
-  ghgMapRef!: ItemReferencesMap;
   localItems: EnergyFacilityItem[] = [];
   dialogs = {} as Record<string, boolean>;
   defaultItem = {};

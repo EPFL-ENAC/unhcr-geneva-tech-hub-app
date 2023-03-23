@@ -64,19 +64,13 @@ import { mapActions, mapGetters } from "vuex";
     ...mapGetters("SheltersMaterialModule", ["items"]),
   },
   methods: {
-    ...mapActions("SheltersMaterialModule", [
-      "syncDB",
-      "getAllDocs",
-      "closeDB",
-    ]),
+    ...mapActions("SheltersMaterialModule", ["getAllDocs"]),
   },
   components: {
     InfoTooltip,
   },
 })
 export default class Materials extends Vue {
-  syncDB!: () => null;
-  closeDB!: () => Promise<null>;
   getAllDocs!: () => Promise<null>;
 
   items!: ShelterMaterial[];
@@ -84,14 +78,7 @@ export default class Materials extends Vue {
   infoTooltipText = infoTooltipText;
 
   mounted(): void {
-    this.syncDB();
     this.getAllDocs();
-  }
-
-  destroyed(): void {
-    this.closeDB().then(() => {
-      console.log("DESTROYED view reference list, closing DB");
-    });
   }
 
   public get headers(): HeaderInterface[] {
