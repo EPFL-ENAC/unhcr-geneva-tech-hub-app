@@ -38,6 +38,7 @@ services:
       - "traefik.http.routers.couchdb.rule=PathPrefix(`/db`)"
       - "traefik.http.routers.couchdb.middlewares=couchdb-stripprefix"
       - "traefik.http.middlewares.couchdb-stripprefix.stripprefix.prefixes=/db"
+      - "traefik.http.middlewares.couchdb-stripprefix.stripprefix.forceSlash=false"
       - "traefik.http.services.couchdb.loadbalancer.server.port=5984"
       - "traefik.http.routers.couchdb.middlewares=test-compress"
       - "traefik.http.middlewares.test-compress.compress=true"
