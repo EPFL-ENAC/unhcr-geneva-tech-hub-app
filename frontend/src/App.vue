@@ -480,7 +480,7 @@ export default class App extends Vue {
     this.checkAndRefresh();
     this.intervalId = window.setInterval(() => {
       this.checkAndRefresh();
-    }, 1000 * 60 * 45); // check every 5 minutes: 1000 * 60 * 5
+    }, 1000 * 60 * 45); // check every 45 minutes: 1000 * 60 * 5
 
     this.$store.subscribe((mutation) => {
       const shouldUpdate = ["storeMessage"];

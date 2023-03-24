@@ -115,60 +115,54 @@ export function computeKWInstalledWithKwhPerYearPerCountry(
   return parseFloat(kWInstalledPerYear.toFixed(1));
 }
 
-export function computeLitresDiesel(localItem: DieselItem): number {
-  const {
-    generatorSize = 0,
-    operatingHours = 0,
-    generatorLoad = 60,
-  } = localItem || {};
-  // generatorLoad in percentage 10% not 0.1
-  const genLoad = (generatorLoad ?? 60) / 100;
-  const DIE_GEN_L_per_kWh = -0.031 * Math.log(genLoad) + 0.2514;
-  const litres =
-    generatorSize *
-    (operatingHours * numberOfWeekPerYear) *
-    DIE_GEN_L_per_kWh *
-    genLoad;
+export function computeLitresDieselPerYear(localItem: DieselItem): number {
+  const litres = computeLitresPerDayDiesel(localItem) * numberOfDaysPerYear;
+  return parseFloat(litres.toFixed(2));
+}
 
-  return parseFloat(litres.toFixed(0));
+export function computeLitresDieselPerWeek(localItem: DieselItem): number {
+  const litres = computeLitresPerDayDiesel(localItem) * numberOfWeekPerYear;
+  return parseFloat(litres.toFixed(2));
 }
 
 export function computeLitresPerDayDiesel(localItem: DieselItem): number {
   const {
     generatorSize = 0,
     operatingHours = 0, // perDay
-    generatorLoad = 60,
+    generatorLoad = 0.6,
   } = localItem || {};
-  // generatorLoad in percentage 10% not 0.1
-  const genLoad = (generatorLoad ?? 60) / 100;
-  const DIE_GEN_L_per_kWh = -0.031 * Math.log(genLoad) + 0.2514;
-  const litres = generatorSize * operatingHours * DIE_GEN_L_per_kWh * genLoad;
+  // TODO check that it is used according per year/week or day
+  const DIE_GEN_L_per_kWh = -0.031 * Math.log(generatorLoad) + 0.2514;
+  const litres =
+    generatorSize * operatingHours * DIE_GEN_L_per_kWh * generatorLoad;
 
-  return parseFloat(litres.toFixed(0));
+  return parseFloat(litres.toFixed(2));
 }
 
-export function getLitres(localItem: DieselItem): number {
+export function getLitresPerYearForGeneratorHoursPerWeek(
+  localItem: DieselItem
+): number {
   if (localItem.disableDieselLiters) {
-    return computeLitresDiesel(localItem);
+    return computeLitresDieselPerWeek(localItem);
   } else {
     return localItem?.dieselLiters ?? 0;
   }
 }
 
-/// TODO: remove duplicate of GhgInterface
+// TODO: remove duplicate of GhgInterface
 interface EnergyItem extends DieselItem {
   gridPower?: number;
   dieselPower?: number;
   renewablePower?: number;
 }
 
-export function computeCO2Cost(
+export function computeCO2CostFacilities(
   localItem: EnergyItem,
   REF_DIES_L: ReferenceItemInterface | undefined,
   REF_GRD: ReferenceItemInterface | undefined
 ): number {
   let result = 0;
-  const dieselLiters = getLitres(localItem);
+  const dieselLiters = getLitresPerYearForGeneratorHoursPerWeek(localItem);
   // l * kgCO2/l / 1000  === tCO2e
   result += (dieselLiters * (REF_DIES_L?.value ?? 0)) / 1000;
   if (REF_GRD?.value === undefined) {

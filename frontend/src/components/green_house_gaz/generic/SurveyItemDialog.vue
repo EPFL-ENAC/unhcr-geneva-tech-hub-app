@@ -69,6 +69,10 @@
                     v-if="!surveyItem.hideInput"
                     :value="localInput[surveyItem.key]"
                     v-bind="surveyItem"
+                    :disabled="
+                      surveyItem.disabled ||
+                      localInput?.[surveyItem.disabledWithConditions]
+                    "
                     @input="(v) => customFormInput(v, surveyItem, localInput)"
                   />
                 </v-col>
