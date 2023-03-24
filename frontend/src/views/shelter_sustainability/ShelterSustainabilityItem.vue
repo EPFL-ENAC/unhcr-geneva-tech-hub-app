@@ -160,12 +160,9 @@ export default class ProjectItem extends Vue {
   mounted(): void {
     this.syncDB();
     this.retrieveData();
-
-    // this.changes = this.db?.onChange(this.retrieveData);
   }
   destroyed(): void {
     this.closeDB();
-    // this.changes?.cancel();
   }
 
   beforeRouteLeave(to: unknown, from: unknown, next: any): void {

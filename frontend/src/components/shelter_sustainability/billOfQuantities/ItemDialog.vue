@@ -348,7 +348,6 @@ export default class DeleteItemDialog extends Vue {
   localItem: Item = {} as Item;
   shelter!: Shelter;
 
-  getAllDocs!: () => Promise<ShelterTransport[]>;
   getDoc!: (id: string) => Promise<ShelterTransport>;
 
   formValid = false;
@@ -484,6 +483,12 @@ export default class DeleteItemDialog extends Vue {
     local: boolean
   ): Promise<number> {
     const shelter = await this.getDoc(id);
+
+    if (shelter === undefined) {
+      throw new Error(
+        "shelter transport country could not be found in reference database"
+      );
+    }
     return local ? shelter.t : shelter.o;
   }
   public get currentItem(): ShelterMaterial | undefined {
@@ -707,10 +712,6 @@ export default class DeleteItemDialog extends Vue {
 
   created(): void {
     this.syncLocalItem();
-  }
-
-  mounted(): void {
-    this.getAllDocs();
   }
 }
 </script>

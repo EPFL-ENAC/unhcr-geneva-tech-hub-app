@@ -434,9 +434,6 @@ function findShelterImage(images: ImageShelter[]): ImageShelter | undefined {
       "syncDB",
       "closeDB",
     ]),
-    ...mapActions("SheltersMaterialModule", {
-      getAllDocsSheltersMaterial: "getAllDocs",
-    }),
   },
   components: {
     VChart,
@@ -450,7 +447,6 @@ export default class ShelterSustainabilityCompare extends Vue {
   getDoc!: (id: string) => Promise<Shelter>;
   closeDB!: () => null;
 
-  getAllDocsSheltersMaterial!: () => Promise<null>;
   $route!: Route;
   db!: SyncDatabase<Shelter> | null;
   scorecards!: ScoreCardWithShelterInfo[];
@@ -513,7 +509,6 @@ export default class ShelterSustainabilityCompare extends Vue {
             shelter.image = findShelterImage(shelter.images) ?? undefined;
             return shelter;
           });
-        await this.getAllDocsSheltersMaterial();
         await this.getScorecards(shelterIds);
       }
       this.loaded = true;

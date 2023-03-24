@@ -289,15 +289,12 @@ import reuseRecycling from "@/views/shelter_sustainability/ShelterSustainability
 import { cloneDeep, kebabCase } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 
 @Component({
   computed: {
     ...mapGetters("ShelterModule", ["shelter"]),
     ...mapGetters("SheltersMaterialModule", ["materialMap", "materials"]),
-  },
-  methods: {
-    ...mapActions("SheltersMaterialModule", ["getAllDocs"]),
   },
   components: {
     InfoGroup,
@@ -307,8 +304,6 @@ import { mapActions, mapGetters } from "vuex";
 })
 /** Project */
 export default class Step3Materials extends Vue {
-  getAllDocs!: () => Promise<null>;
-
   shelter!: Shelter;
   updateDoc!: (doc: Shelter) => void;
   materialMap!: Record<string, ShelterMaterial>;
@@ -441,10 +436,6 @@ export default class Step3Materials extends Vue {
           id: `${localMap.material ?? x.id}—${localMap.form ?? x.id}`,
         };
       });
-  }
-
-  mounted(): void {
-    this.getAllDocs();
   }
 
   graphTreeOptions = [
