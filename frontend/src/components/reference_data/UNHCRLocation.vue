@@ -59,7 +59,7 @@ export default class Energy extends Vue {
       { text: "latitude", value: "latitude" },
       { text: "longitude", value: "longitude" },
       {
-        text: "GHI/Daily_solar_peak_hours",
+        text: "Daily solar peak hours",
         value: "GHI/Daily_solar_peak_hours",
       },
     ];
