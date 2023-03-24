@@ -21,12 +21,12 @@ import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
 
 import {
-  computeCO2Cost,
+  computeCO2CostFacilities,
   computedieselLitersFromPower,
   computeDieselPower,
   computeKWHPerDayPerCountry,
   computeKWInstalledWithKwhPerDayPerCountry,
-  computeLitresPerDayDiesel,
+  computeLitresDieselPerWeek,
   countryIrradianceKeys,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
 import { formatNumber } from "@/plugins/filters";
@@ -61,7 +61,7 @@ import { mapGetters } from "vuex";
     ...mapGetters("GhgModule", ["project", "project_REF_GRD"]),
   },
 })
-export default class Trucking extends Vue {
+export default class Facilities extends Vue {
   @Prop({ type: String, required: true, default: "" })
   readonly titleKey!: string;
 
@@ -99,7 +99,7 @@ export default class Trucking extends Vue {
       case "ELE_GRID":
       case "ELE_DIES":
         totalCO2Emission =
-          computeCO2Cost(
+          computeCO2CostFacilities(
             localItemInput,
             ghgMapRef?.REF_DIES_L,
             this.project_REF_GRD
@@ -187,10 +187,73 @@ export default class Trucking extends Vue {
     return localInput;
   }
 
+  public dieselEstimated(
+    localInput: EnergyFacilityItemInput,
+    PowerEstimated: boolean,
+    LitersEstimated?: boolean
+  ): EnergyFacilityItemInput {
+    localInput.dieselPowerEstimated = PowerEstimated;
+    localInput.dieselLitersEstimated =
+      LitersEstimated !== undefined ? LitersEstimated : !PowerEstimated;
+    return localInput;
+  }
+
+  public computeDieselPowerAndUpdateKey(
+    key: string
+  ): (
+    valueOfKey: number,
+    localInput: EnergyFacilityItemInput,
+    ghgMapRef: ItemReferencesMap
+  ) => EnergyFacilityItemInput {
+    return (
+      valueOfKey: number,
+      localInput: EnergyFacilityItemInput,
+      ghgMapRef: ItemReferencesMap
+    ): EnergyFacilityItemInput => {
+      localInput[key] = valueOfKey;
+      if (key !== "dieselLiters") {
+        localInput.dieselLiters = computeLitresDieselPerWeek(localInput);
+        localInput = this.dieselEstimated(localInput, true, true);
+      } else {
+        localInput = this.dieselEstimated(localInput, true);
+      }
+      localInput.dieselPower = computeDieselPower(
+        localInput as EnergyItem,
+        ghgMapRef?.REF_EFF_DIES_L
+      );
+      return localInput;
+    };
+  }
+
+  public computeDieselLitersFromPowerAndUpdateKey(
+    key: string
+  ): (
+    valueOfKey: number,
+    localInput: EnergyFacilityItemInput,
+    ghgMapRef: ItemReferencesMap
+  ) => EnergyFacilityItemInput {
+    return (
+      valueOfKey: number,
+      localInput: EnergyFacilityItemInput,
+      ghgMapRef: ItemReferencesMap
+    ): EnergyFacilityItemInput => {
+      localInput[key] = valueOfKey;
+      localInput.dieselLiters = computedieselLitersFromPower(
+        localInput as EnergyItem,
+        ghgMapRef?.REF_EFF_DIES_L
+      );
+      localInput = this.dieselEstimated(localInput, false);
+      return localInput;
+    };
+  }
+
   // should be a getter so it may be reactive for fuelTypes
   public get headers(): SurveyTableHeader[] {
     // public get headers(): any {
     const countryCode = this.countryCode;
+    const computeDieselLitersFromPowerAndUpdateKey =
+      this.computeDieselLitersFromPowerAndUpdateKey;
+    const computeDieselPowerAndUpdateKey = this.computeDieselPowerAndUpdateKey;
     return [
       {
         text: "#", // unique name === dropdown of existant facilities
@@ -282,23 +345,13 @@ export default class Trucking extends Vue {
           }
           return dieselPower;
         },
-        customEventInput: (
-          dieselPower: number,
-          localInput: EnergyFacilityItemInput,
-          ghgMapRef: ItemReferencesMap
-        ) => {
-          localInput.dieselPower = dieselPower;
-          localInput.dieselLiters = computedieselLitersFromPower(
-            localInput,
-            ghgMapRef?.REF_EFF_DIES_L
-          );
-          localInput.dieselPowerEstimated = false;
-          localInput.dieselLitersEstimated = true;
-          return localInput;
-        },
+        customEventInput:
+          computeDieselLitersFromPowerAndUpdateKey("dieselPower"),
         conditional_value: ["ELE_DIES", "ELE_HYB"],
-        disabled: false,
         conditional: "fuelType",
+        disabled: false,
+        disabledWithConditions: "disableDieselLiters",
+        disabledWithConditions_value: true,
         style: {
           cols: "12",
         },
@@ -318,6 +371,7 @@ export default class Trucking extends Vue {
           true: "no",
         },
         type: "boolean",
+        customEventInput: computeDieselPowerAndUpdateKey("disableDieselLiters"),
       },
       {
         value: "input.dieselLiters", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
@@ -330,20 +384,7 @@ export default class Trucking extends Vue {
           cols: "12",
         },
         type: "number",
-        customEventInput: (
-          dieselLiters: number,
-          localInput: EnergyFacilityItemInput,
-          ghgMapRef: ItemReferencesMap
-        ) => {
-          localInput.dieselLiters = dieselLiters;
-          localInput.dieselPower = computeDieselPower(
-            localInput as EnergyItem,
-            ghgMapRef?.REF_EFF_DIES_L
-          );
-          localInput.dieselPowerEstimated = true;
-          localInput.dieselLitersEstimated = false;
-          return localInput;
-        },
+        customEventInput: computeDieselPowerAndUpdateKey("dieselLiters"),
       },
       {
         value: "input.generatorSize", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
@@ -357,47 +398,36 @@ export default class Trucking extends Vue {
           cols: "12",
         },
         type: "number",
-        customEventInput: (
-          generatorSize: number,
-          localInput: EnergyFacilityItemInput,
-          ghgMapRef: ItemReferencesMap
-        ) => {
-          localInput.generatorSize = generatorSize;
-          localInput.dieselLiters = computeLitresPerDayDiesel(localInput);
-          localInput.dieselPower = computeDieselPower(
-            localInput as EnergyItem,
-            ghgMapRef?.REF_EFF_DIES_L
-          );
-          return localInput;
-        },
+        customEventInput: computeDieselPowerAndUpdateKey("generatorSize"),
       },
       {
-        // TODO: custom Event input generic for the three operating/generatorLoad/GeneratorSize
-        value: "input.generatorLoad", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
+        value: "input.generatorLoad",
         conditional_value: true,
         conditional: "disableDieselLiters",
         text: "generator load (percentage)",
         tooltipInfo:
-          "default average load of 60% per yr will be used if not overwritten",
+          "default average load of 60% per year will be used if not overwritten. Load on a diesel generator is the power being consumed from the unit. In a household application the load would be the items in a house, such as lights.",
         style: {
           cols: "12",
         },
         type: "number",
         subtype: "percent",
+        customEventInput: computeDieselPowerAndUpdateKey("generatorLoad"),
       },
       {
-        value: "input.operatingHours", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
+        value: "input.operatingHours",
         conditional_value: true,
         conditional: "disableDieselLiters",
-        text: "operating hours (hrs/day)",
+        text: "operating hours (hrs/week)",
         tooltipInfo:
           "from daily log and application will extrapolate this information to be annual",
-        suffix: "hrs/day",
+        suffix: "hrs/week",
         min: 0,
         style: {
           cols: "12",
         },
         type: "number",
+        customEventInput: computeDieselPowerAndUpdateKey("operatingHours"),
       },
       // end of diesel generators
       // begingin og national grid
@@ -424,6 +454,8 @@ export default class Trucking extends Vue {
         value: "input.solarInstalled", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
         conditional_value: ["ELE_SOLAR", "ELE_HYB"],
         conditional: "fuelType",
+        tooltipInfo:
+          "A performance ratio of 80% is included which assumes a 10% loss through the inverter and 10% transmission loss.",
         customEventInput: (
           solarInstalled: number,
           localInput: EnergyFacilityItemInput

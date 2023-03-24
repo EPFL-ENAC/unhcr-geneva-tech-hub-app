@@ -20,7 +20,7 @@ import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
 
 import {
-  computeCO2Cost,
+  computeCO2CostFacilities,
   computeDieselPower,
   computeKWHPerDayPerCountry,
   computeLitresPerDayDiesel,
@@ -193,7 +193,7 @@ const REF_SUSTAINED_WOOD = 0; // fNRB of sustained
     ...mapGetters("GHGReferencefNRB", ["items"]),
   },
 })
-export default class Trucking extends Vue {
+export default class Cooking extends Vue {
   @Prop({ type: String, required: true, default: "" })
   readonly titleKey!: string;
 
@@ -267,7 +267,7 @@ export default class Trucking extends Vue {
       case "ELE_GRID":
       case "ELE_DIES":
         totalCO2Emission =
-          computeCO2Cost(
+          computeCO2CostFacilities(
             localItemInput,
             ghgMapRef?.REF_DIES_L,
             this.project_REF_GRD
