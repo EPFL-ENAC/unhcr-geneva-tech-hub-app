@@ -35,16 +35,16 @@ const MSG_COULD_NOT_FIND_ITEM = "Could not find item with this id";
 function generateState(): SheltersTransportState {
   return {
     item: {} as ShelterTransport,
-    items: [],
+    items: transports,
     itemsLoading: false,
-    itemsLength: 0,
+    itemsLength: transports.length,
   };
 }
 
 /** Getters */
 const getters: GetterTree<SheltersTransportState, RootState> = {
   item: (s): ShelterTransport => s.item,
-  items: (): ShelterTransport[] => transports,
+  items: (s): ShelterTransport[] => s.items,
   itemsLoading: (s): boolean => s.itemsLoading,
   itemsLength: (s): number => s.itemsLength,
 };
@@ -68,12 +68,13 @@ const actions: ActionTree<SheltersTransportState, RootState> = {
     context: ActionContext<SheltersTransportState, RootState>,
     id: string
   ): ShelterTransport | undefined => {
-    const foundItem = context.state.items.find((item) => item._id === id);
-    if (foundItem) {
-      context.commit("SET_ITEM", foundItem);
-    } else {
-      console.log(MSG_COULD_NOT_FIND_ITEM);
+    const foundItem = context.getters.items.find(
+      (item: ShelterTransport) => item._id === id
+    );
+    if (!foundItem) {
+      throw new Error(MSG_COULD_NOT_FIND_ITEM);
     }
+    context.commit("SET_ITEM", foundItem);
     return foundItem;
   },
 };

@@ -250,7 +250,6 @@ import { mapActions, mapGetters } from "vuex";
       "openEditItemDialog",
       "deleteItem",
     ]),
-    ...mapActions("SheltersMaterialModule", ["getAllDocs"]),
   },
   components: {
     DeleteItemDialog,
@@ -269,7 +268,6 @@ export default class Step3Materials extends Vue {
   setItemsIndividualShelter!: (v: number) => void;
   updateDoc!: (doc: Shelter) => void;
   duplicate!: (item: Item) => void;
-  getAllDocs!: () => Promise<null>;
 
   public get localShelter(): Shelter {
     return cloneDeep(this.shelter);
@@ -359,10 +357,6 @@ export default class Step3Materials extends Vue {
 
   created(): void {
     this.autoSubmit();
-  }
-
-  mounted(): void {
-    this.getAllDocs();
   }
 }
 </script>
