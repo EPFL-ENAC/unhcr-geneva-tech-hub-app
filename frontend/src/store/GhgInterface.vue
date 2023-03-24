@@ -161,6 +161,7 @@ export interface GenericEndline<
 > {
   items: EndlineItemType[];
   results: EndlineResultsType;
+  alertDismissed?: boolean;
 }
 
 // GENERIC STOP

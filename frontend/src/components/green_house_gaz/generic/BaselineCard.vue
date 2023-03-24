@@ -39,6 +39,14 @@
             </v-row>
             <v-row>
               <v-col class="d-flex justify-end mx-2 mb-2">
+                <h4>
+                  These calculations are limited to Scope 1 and Scope 2 sources
+                  of emissions for purposes of simplicity.
+                </h4>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="d-flex justify-end mx-2 mb-2">
                 <v-btn @click="toggleBaselineMode">
                   {{ baselineSwitchText }}
                 </v-btn>
