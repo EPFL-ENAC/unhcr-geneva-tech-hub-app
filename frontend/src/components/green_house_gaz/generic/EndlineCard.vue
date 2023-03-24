@@ -62,11 +62,27 @@
                   </span>
                 </h3>
               </v-col>
-
+              <v-col :cols="12" class="d-flex justify-end mx-2 mb-2">
+                <h4>
+                  These calculations are limited to Scope 1 and Scope 2 sources
+                  of emissions for purposes of simplicity.
+                </h4>
+              </v-col>
               <v-col :cols="12" class="d-flex justify-start">
-                <v-alert v-if="!isDiffNull" dense outlined type="error">
-                  This comparison is not valid because baseline and endline have
-                  different {{ diffDimensionText }}.
+                <v-alert
+                  v-if="!isDiffNull"
+                  v-model="endline.alertDismissed"
+                  dense
+                  outlined
+                  border="left"
+                  close-text="Close Alert"
+                  color="error"
+                  dark
+                  dismissible
+                  @input="updateEndlineDismissed"
+                >
+                  Please note that the baseline and endline
+                  {{ diffDimensionText }} do not match.
                   <br />
                   Baseline:
                   {{ baseline.results[diffDimension] }} {{ diffDimensionText }}
@@ -103,6 +119,7 @@ import {
   SurveyItem,
   SurveyResult,
 } from "@/store/GhgInterface.vue";
+import { cloneDeep } from "lodash";
 import Vue from "vue";
 import "vue-class-component/hooks";
 import { Component, Prop } from "vue-property-decorator";
@@ -171,9 +188,14 @@ export default class EndlineCard extends Vue {
   }
 
   public updateEndlineInputs(value: SurveyItem[]) {
-    const newEndline = JSON.parse(JSON.stringify(this.endline));
+    const newEndline = cloneDeep(this.endline);
     newEndline.items = value;
     this.$emit("update:endline", newEndline);
+  }
+
+  public updateEndlineDismissed(value: boolean) {
+    this.endline.alertDismissed = value;
+    this.$emit("update:endline", this.endline);
   }
 
   public get changeInEmissionPositive(): boolean {
