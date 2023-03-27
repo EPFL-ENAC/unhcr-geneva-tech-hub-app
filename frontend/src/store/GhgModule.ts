@@ -267,6 +267,7 @@ const actions: ActionTree<ProjectsState, RootState> = {
           // because error, we need to dispatch doc again
           context.commit("SET_PROJECT_LOADING", false);
           context.dispatch("getDoc", response.id);
+          throw response;
         })
         .finally(() => {
           context.commit("SET_PROJECT_LOADING", false);

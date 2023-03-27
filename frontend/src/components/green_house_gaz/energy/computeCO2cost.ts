@@ -112,7 +112,7 @@ export function computeKWInstalledWithKwhPerYearPerCountry(
       countryTwoLetterCode,
       locationIrradianceValue
     ) / numberOfDaysPerYear;
-  return parseFloat(kWInstalledPerYear.toFixed(1));
+  return parseFloat(kWInstalledPerYear.toFixed(3));
 }
 
 export function computeLitresDieselPerYear(localItem: DieselItem): number {

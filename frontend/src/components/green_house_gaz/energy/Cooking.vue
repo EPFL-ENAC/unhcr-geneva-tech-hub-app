@@ -22,7 +22,6 @@ import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
 import {
   computeCO2CostFacilities,
   computeDieselPower,
-  computeKWHPerDayPerCountry,
   computeLitresPerDayDiesel,
   countryIrradianceKeys,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
@@ -67,6 +66,7 @@ import {
   CookstoveTech,
   cookstoveTECHs,
 } from "@/components/green_house_gaz/energy/CookstoveTech";
+import { solarInputsProducedPer } from "@/components/green_house_gaz/energy/solarInputs";
 
 const COOK_APP_Pressure = "Pressure cooker";
 const COOK_APP_Heat_Retaining = "Heat retaining basket";
@@ -116,7 +116,7 @@ export default class Cooking extends Vue {
     this.$emit("update:form", value);
   }
 
-  private applianceEfficiency(name: string): number {
+  private applianceEfficiency(name?: string): number {
     let app_eff = APPLIANCE_EFFICIENCY;
     switch (name) {
       case COOK_APP_Pressure:
@@ -191,14 +191,9 @@ export default class Cooking extends Vue {
       fuelType,
       appliance,
     } = localItemInput;
-    if (fuelType === undefined) {
-      throw new Error("fuel type not defined");
-    }
+
     if (percentageOfTotalCookstove === undefined) {
       throw new Error("number of cooktsove not defined");
-    }
-    if (appliance === undefined) {
-      throw new Error("appliance not defined");
     }
     if (this.project.totalCookstoves === undefined) {
       throw new Error("Total cookstoves is undefined, please fill info page");
@@ -220,6 +215,7 @@ export default class Cooking extends Vue {
         if (fuelUsage === undefined) {
           throw new Error("fuel usage not defined");
         }
+
         let drynessFactor = REF_DRY_WOOD;
         if (!localItemInput.dryWood && fuelType === "FWD") {
           drynessFactor = drynessFactor + REF_WET_WOOD;
@@ -311,7 +307,9 @@ export default class Cooking extends Vue {
         );
         break;
       default:
-        throw new Error(`unknown fuel type ${fuelType}`);
+        if (localItemInput.cookstove !== cookstoveIdWithoutAccess) {
+          throw new Error(`unknown fuel type ${fuelType}`);
+        }
     }
     if (isNaN(totalCO2Emission)) {
       throw new Error(`totalCO2Emission is NaN`);
@@ -456,7 +454,7 @@ export default class Cooking extends Vue {
         text: "Cookstove fuel",
         value: "input.fuelType",
         formatter: (v: AllFuel) => {
-          return AllFuelsWithTextById[v].text;
+          return AllFuelsWithTextById?.[v]?.text;
         },
         customEventInput: (
           fuelType: AllFuel,
@@ -517,9 +515,6 @@ export default class Cooking extends Vue {
             { fuelTypes: thermalFuels, text: thermalFuelsText },
           ];
 
-          if (!localInput.fuelType) {
-            throw new Error("Fuel type not defined");
-          }
           refTexts.every((refText) => {
             if (refText.fuelTypes.includes(localInput.fuelType)) {
               result = refText.text;
@@ -640,42 +635,7 @@ export default class Cooking extends Vue {
         type: "number",
       },
       // end of national grid
-      // begingin of solar
-      {
-        value: "input.solarInstalled", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
-        conditional_value: ["ELE_SOLAR", "ELE_HYB"],
-        conditional: "fuelType",
-        customEventInput: (
-          solarInstalled: number,
-          localInput: EnergyCookingItemInput
-        ) => {
-          localInput.renewablePower = computeKWHPerDayPerCountry(
-            solarInstalled,
-            countryCode,
-            this.project.solar
-          );
-          return localInput;
-        },
-        text: "Total kW of solar installed per HH",
-        suffix: "Kw/HH",
-        style: {
-          cols: "12",
-        },
-        type: "number",
-      },
-      {
-        value: "input.renewablePower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
-        conditional_value: ["ELE_SOLAR", "ELE_HYB"],
-        disabled: true,
-        text: "Total kWh/day produced (estimated)",
-        conditional: "fuelType",
-        suffix: "Kwh/day/HH",
-        style: {
-          cols: "12",
-        },
-        type: "number",
-      },
-      // end of solar
+      ...solarInputsProducedPer("Year", countryCode, this.project.solar),
       {
         conditional_value: biomassFuelsWithoutCHC,
         conditional: "fuelType",

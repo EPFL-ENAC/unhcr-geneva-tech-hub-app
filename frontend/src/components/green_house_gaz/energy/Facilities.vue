@@ -24,11 +24,11 @@ import {
   computeCO2CostFacilities,
   computedieselLitersFromPower,
   computeDieselPower,
-  computeKWHPerDayPerCountry,
-  computeKWInstalledWithKwhPerDayPerCountry,
   computeLitresDieselPerWeek,
   countryIrradianceKeys,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
+import { solarInputsProducedPer } from "@/components/green_house_gaz/energy/solarInputs";
+
 import { formatNumber } from "@/plugins/filters";
 import {
   DieselItem,
@@ -448,58 +448,8 @@ export default class Facilities extends Vue {
         },
         type: "number",
       },
-      // end of national grid
-      // begingin of solar
-      {
-        value: "input.solarInstalled", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
-        conditional_value: ["ELE_SOLAR", "ELE_HYB"],
-        conditional: "fuelType",
-        tooltipInfo:
-          "A performance ratio of 80% is included which assumes a 10% loss through the inverter and 10% transmission loss.",
-        customEventInput: (
-          solarInstalled: number,
-          localInput: EnergyFacilityItemInput
-        ) => {
-          localInput.renewablePower = computeKWHPerDayPerCountry(
-            solarInstalled,
-            countryCode,
-            this.project.solar
-          );
-          return localInput;
-        },
-        text: "Total kW of solar installed",
-        suffix: "Kw",
-        style: {
-          cols: "12",
-        },
-        type: "number",
-      },
-      {
-        value: "input.renewablePower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
-        conditional_value: ["ELE_SOLAR", "ELE_HYB"],
-        disabled: false,
-        text: "Solar (kWh/yr) estimated",
-        customEventInput: (
-          renewablePower: number,
-          localInput: EnergyFacilityItemInput
-        ) => {
-          localInput.solarInstalled = computeKWInstalledWithKwhPerDayPerCountry(
-            renewablePower,
-            countryCode,
-            this.project.solar
-          );
-          return localInput;
-        },
-        conditional: "fuelType",
-        suffix: "Kwh/yr",
-        style: {
-          cols: "12",
-        },
-        type: "number",
-        computeResults: true,
-        hideFooterContent: false,
-      },
-      // end of solar
+      // end of national grid\
+      ...solarInputsProducedPer("Year", countryCode, this.project.solar),
       {
         text: "Total (kWh/yr)",
         value: "computed.totalPower",
