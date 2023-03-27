@@ -240,7 +240,7 @@ export default class GhgInfo extends Vue {
           "population information and cookstove information not complete"
         );
       }
-      value.totalCookstoves = population / pp_per_hh;
+      value.totalHH = population / pp_per_hh;
       await this.updateDoc(value);
       // check current survey name and change route in case of change
       if (previousName !== nextName) {

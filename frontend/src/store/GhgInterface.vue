@@ -43,7 +43,7 @@ export interface GreenHouseGaz {
   population: number; // total population
   hh: number; // % of hh using cookstove
   pp_per_hh: number; // ave people per hh
-  totalCookstoves: number;
+  totalHH: number;
   created_by: string;
   created_at: string;
   updated_by?: string;
@@ -194,6 +194,8 @@ export interface DieselItem {
   generatorSize?: number; // replace the diesel liter
   operatingHours?: number; // replace the diesel liter
   generatorLoad?: number; // load of generator (should be default to 60%)
+  dieselPowerEstimated?: boolean;
+  dieselLitersEstimated?: boolean;
 }
 
 export interface SolarItem {
