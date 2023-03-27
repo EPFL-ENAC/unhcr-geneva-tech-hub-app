@@ -175,7 +175,7 @@ export default class GhgInfo extends Vue {
         type: "text",
         key: "name",
         label: "Name of the site",
-        disabled: true,
+        disabled: false,
       },
       {
         type: "number",
@@ -217,14 +217,6 @@ export default class GhgInfo extends Vue {
         min: 0,
         max: 10,
       },
-      {
-        type: "number",
-        subtype: "percent",
-        key: "hh",
-        label: "% of HHs using cookstove",
-        min: 0,
-        max: 100,
-      },
     ];
   }
 
@@ -248,7 +240,7 @@ export default class GhgInfo extends Vue {
           "population information and cookstove information not complete"
         );
       }
-      value.totalCookstoves = (population / pp_per_hh) * hh;
+      value.totalCookstoves = population / pp_per_hh;
       await this.updateDoc(value);
       // check current survey name and change route in case of change
       if (previousName !== nextName) {

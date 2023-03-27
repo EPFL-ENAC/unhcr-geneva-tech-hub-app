@@ -251,7 +251,7 @@ export default class BaselineEndlineWrapper<
     items: SurveyItem[],
     interventions: SurveyItem[]
   ): SurveyItem[] {
-    const washItemsByIncrement = items.reduce(
+    const itemsByIncrement = items.reduce(
       (acc: Record<number, SurveyItem>, el: SurveyItem) => {
         acc[el.increment] = el;
         return acc;
@@ -259,24 +259,39 @@ export default class BaselineEndlineWrapper<
       {}
     );
     interventions.forEach((intervention: SurveyItem) => {
-      const baselineItem =
-        washItemsByIncrement[intervention.originIncrement ?? -1];
+      const baselineItem = itemsByIncrement[intervention.originIncrement ?? -1];
+      const interventionsDiffDimensionTotal = interventions
+        .filter((x) => x.originIncrement === intervention.originIncrement)
+        .reduce((acc, el) => {
+          const interventionDiffValue =
+            (el.input?.[this.diffDimension] as number) ??
+            (el.computed?.[this.diffDimension] as number);
+          return acc + interventionDiffValue;
+        }, 0);
       const baselineCO2 = baselineItem.computed.totalCO2Emission as number;
       const endlineCO2 = intervention.computed.totalCO2Emission as number;
-      const totalChangeInEmission = computeChangeInEmission(
-        baselineCO2,
-        endlineCO2
-      );
+
       const interventionDiffDimension =
         (intervention.input?.[this.diffDimension] as number) ??
         (intervention.computed?.[this.diffDimension] as number);
-      const baselineItemDiffDimension =
-        (baselineItem.input?.[this.diffDimension] as number) ??
-        (baselineItem.computed?.[this.diffDimension] as number);
-      const ratio: number =
-        interventionDiffDimension / baselineItemDiffDimension;
-      // TODO see if it's make sense for facilities
-      intervention.computed.changeInEmission = totalChangeInEmission * ratio;
+      const ratioEndline: number =
+        interventionDiffDimension / interventionsDiffDimensionTotal;
+      // if baseline == 0 and endline === 0 then 0%
+      // if baseline == 0 and endline = x then 100%
+      // if baseline == NOT POWERED and endline = x then 100%
+      let changeInEmission = 0;
+      if (baselineCO2 * ratioEndline === 0) {
+        if (endlineCO2 !== 0) {
+          changeInEmission = 1 * ratioEndline;
+        }
+      } else {
+        changeInEmission = computeChangeInEmission(
+          baselineCO2,
+          endlineCO2,
+          ratioEndline
+        );
+      }
+      intervention.computed.changeInEmission = changeInEmission;
     });
     return interventions;
   }

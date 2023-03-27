@@ -44,143 +44,37 @@ import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 
-// START LEGACY -- moved to ~/components/ghg/fuelTypes.ts
-const fuelTypes = {
-  FWD: "Wood",
-  CHC: "Charcoal",
-  PLTS: "Pellets",
-  BRQ: "Briquette",
-  ETH: "Ethanol/alcohol",
-  KRS: "Kerosene/paraffin",
-  PET: "Petrol", // same as wash
-  DIES: "Diesel", // same as facilities for diesel gen
-  ELE_DIES: "Diesel generators",
-  ELE_GRID: "National Grid",
-  ELE_SOLAR: "Solar Energy", // no eff
-  ELE_HYB: "Hybrid Mix",
-  ELE_NONE: "Not powered",
-  THE: "Thermal solar", // no eff
-  LPG: "LPG",
-  BGS: "BIOGASS",
-  PNG: "Piped Natural Gas",
-};
-// default consumption value
-const fuelDefaultConsumption: Record<keyof typeof fuelTypes, number> = {
-  FWD: 8.5,
-  CHC: 4.5,
-  PLTS: 5,
-  BRQ: 5,
-  ETH: 1,
-  KRS: 1,
-  PET: 1,
-  DIES: 1,
-  ELE_SOLAR: 0, // no eff
-  ELE_GRID: 3,
-  ELE_DIES: 1,
-  ELE_HYB: 0,
-  ELE_NONE: 0,
-  THE: 0, // no eff
-  LPG: 0.43,
-  BGS: 0.43,
-  PNG: 0.43,
-};
+import {
+  AllFuel,
+  allFuelsButElectric,
+  AllFuelsWithTextById,
+  BioMassFuel,
+  biomassFuels,
+  biomassFuelsWithoutCHC,
+  ElectricFuel,
+  electricFuels,
+  GasFuel,
+  gasFuels,
+  LiquidFuel,
+  liquidFuels,
+  noAccessFuels,
+  thermalFuels,
+} from "@/components/green_house_gaz/fuelTypes";
 
-// no appliances for now
-// const COOK_APP_Pressure = "Pressure cooke";
-// const COOK_APP_Heat = "Heat retaining basket";
-// const COOK_APP_Other = "Other";
+import {
+  cookstoveIdsTECHsWithAccess,
+  cookstoveIdWithoutAccess,
+  CookstoveTech,
+  cookstoveTECHs,
+} from "@/components/green_house_gaz/energy/CookstoveTech";
 
-const biomassFuels = ["FWD", "CHC", "BRQ", "PLTS"];
-const biomassFulesWithoutCHC = ["FWD", "BRQ", "PLTS"];
-const liquidFuels = ["ETH", "PET", "DIES", "KRS"];
-const gasFuels = ["LPG", "BGS", "PNG"];
-const electricFuels = [
-  "ELE_DIES",
-  "ELE_GRID",
-  "ELE_SOLAR",
-  "ELE_HYB",
-  "ELE_NONE",
-];
-const thermalFuels = ["THE"];
-
-const allFuelsButElectric = biomassFuels
-  .concat(liquidFuels)
-  .concat(gasFuels)
-  .concat(thermalFuels);
-
-// end legacy -- TODO import
-interface CookstoveTech {
-  _id: string;
-  fuelTypes: string[];
-  text: string;
-  image: string | undefined;
-}
-
-const cookstoveTECHs: CookstoveTech[] = [
-  {
-    _id: "1",
-    fuelTypes: [],
-    text: "Without any access (no possibility to cook)",
-    image: undefined,
-  },
-  {
-    _id: "2",
-    fuelTypes: biomassFuels,
-    text: "Traditional three stone fire",
-    image: "/images/energy/cookstoves/traditional-wood.png",
-  },
-  {
-    _id: "3",
-    fuelTypes: biomassFuels,
-    text: "Traditional cookstove with solid biomass fuel",
-    image: "/images/energy/cookstoves/traditional-bricket.jpg",
-  },
-  {
-    _id: "4",
-    fuelTypes: biomassFuels,
-    text: "Improved cookstove with solid biomass fuel",
-    image: "/images/energy/cookstoves/improved-bricket.jpg",
-  },
-  {
-    _id: "5",
-    fuelTypes: biomassFulesWithoutCHC,
-    text: "Gasifier stove",
-    image: "/images/energy/cookstoves/gasifier.png",
-  },
-  {
-    _id: "6",
-    fuelTypes: liquidFuels,
-    text: "Liquid fuel cookstove",
-    image: "/images/energy/cookstoves/kerosene.png",
-  },
-  {
-    _id: "7",
-    fuelTypes: gasFuels,
-    text: "Gas powered cookstove",
-    image: "/images/energy/cookstoves/lpg.png",
-  },
-  {
-    _id: "8",
-    fuelTypes: electricFuels,
-    text: "Electric cookstove",
-    image: "/images/energy/cookstoves/induction.png",
-  },
-  {
-    _id: "9",
-    fuelTypes: thermalFuels,
-    text: "Solar cooker",
-    image: "/images/energy/cookstoves/solar-parabolic.png",
-  },
-];
-
-const cookstoveTECHsWithAccess = cookstoveTECHs.slice(1);
-const cookstoveIdsTECHsWithAccess = cookstoveTECHsWithAccess.map(
-  (cookstove) => cookstove._id
-);
-const cookstoveIdWithoutAccess = "1";
+const COOK_APP_Pressure = "Pressure cooker";
+const COOK_APP_Heat_Retaining = "Heat retaining basket";
+const COOK_APP_Default = "Default";
 const APPLIANCE_EFFICIENCY = 1;
+
 const REF_DRY_WOOD = 1;
-const REF_WET_WOOD = 0.15; // 15% less efficient\
+const REF_WET_WOOD = 0.15; // 15% less efficient
 const REF_SUSTAINED_WOOD = 0; // fNRB of sustained
 
 @Component({
@@ -225,10 +119,10 @@ export default class Cooking extends Vue {
   private applianceEfficiency(name: string): number {
     let app_eff = APPLIANCE_EFFICIENCY;
     switch (name) {
-      case "Pressure cooker":
+      case COOK_APP_Pressure:
         app_eff = app_eff - 0.7;
         break;
-      case "Heat retaining basket":
+      case COOK_APP_Heat_Retaining:
         app_eff = app_eff - 0.3;
         break;
       default:
@@ -316,7 +210,7 @@ export default class Cooking extends Vue {
     const applianceEff = this.applianceEfficiency(appliance);
     switch (true) {
       /* solid fuels "FWD", "CHC", "BRQ", "PLTS" */
-      case biomassFuels.includes(fuelType): {
+      case biomassFuels.includes(fuelType as BioMassFuel): {
         /*
           - Three version for the fnrb factor
             - briket and pellets
@@ -389,8 +283,8 @@ export default class Cooking extends Vue {
           efficiencyFactor;
         break;
       }
-      case liquidFuels.includes(fuelType as string):
-      case gasFuels.includes(fuelType as string): {
+      case liquidFuels.includes(fuelType as LiquidFuel):
+      case gasFuels.includes(fuelType as GasFuel): {
         if (fuelUsage === undefined) {
           throw new Error("fuel usage not defined");
         }
@@ -408,7 +302,7 @@ export default class Cooking extends Vue {
           fuelEfficiency;
         break;
       }
-      case electricFuels.includes(fuelType):
+      case electricFuels.includes(fuelType as ElectricFuel):
         totalCO2Emission = this.computeItemElectric(
           localItemInput,
           ghgMapRef,
@@ -440,7 +334,7 @@ export default class Cooking extends Vue {
   }
 
   resetSurveyInput(localInput: EnergyCookingItemInput): EnergyCookingItemInput {
-    delete localInput.fuelType;
+    localInput.fuelType = "NO_ACCESS";
     delete localInput.numberOfCookstove; // percentage of percentage
     return this.resetSurveyFuelOption(localInput);
   }
@@ -540,9 +434,13 @@ export default class Cooking extends Vue {
           );
 
           // // find cooktstove
-          if (currentStove) {
-            localInput.image = currentStove.image;
-            localInput.fuelTypes = currentStove.fuelTypes;
+          if (!currentStove) {
+            throw new Error("no cookstove matched");
+          }
+          localInput.image = currentStove.image;
+          localInput.fuelTypes = currentStove.fuelTypes as AllFuel[];
+          if (currentStove._id === cookstoveIdWithoutAccess) {
+            localInput.fuelType = noAccessFuels[0];
           }
           this.resetSurveyInput(localInput);
           return localInput;
@@ -557,18 +455,18 @@ export default class Cooking extends Vue {
         },
         text: "Cookstove fuel",
         value: "input.fuelType",
-        formatter: (v: keyof typeof fuelTypes) => {
-          return fuelTypes[v];
+        formatter: (v: AllFuel) => {
+          return AllFuelsWithTextById[v].text;
         },
         customEventInput: (
-          fuelType: string,
+          fuelType: AllFuel,
           localInput: EnergyCookingItemInput
         ) => {
           this.resetSurveyFuelOption(localInput);
-          localInput.appliance = "default";
+          localInput.appliance = COOK_APP_Default;
           // setup default value based on fueltype
           localInput.fuelUsage =
-            fuelDefaultConsumption?.[fuelType as keyof typeof fuelTypes] ?? 0;
+            AllFuelsWithTextById[fuelType]?.defaultValue ?? 0;
 
           return localInput;
         },
@@ -582,7 +480,7 @@ export default class Cooking extends Vue {
         conditional: ["fuelType"],
         text: "Cookstove appliance",
         value: "input.appliance",
-        items: ["default", "Pressure cooker", "Heat retaining basket"],
+        items: [COOK_APP_Default, COOK_APP_Pressure, COOK_APP_Heat_Retaining],
         style: {
           cols: "12",
         },
@@ -601,7 +499,6 @@ export default class Cooking extends Vue {
       {
         text: (localInput: EnergyCookingItemInput) => {
           let result = "Fuel per day (kg/day for biomass)";
-          // original text: "Fuel per day (kg/day for biomass)"
           const biomassFuelsText =
             "Biomass used per HH per day (kg/day for biomass)";
           const liquidFuelsText = "Fuel use per HH per day  (L/day)";
@@ -609,15 +506,22 @@ export default class Cooking extends Vue {
           const electricFuelsText = "Estimated Kwh/day/HH";
           const thermalFuelsText = "Estimated Kwh/day/HH";
 
-          const refTexts = [
+          const refTexts: {
+            readonly fuelTypes: readonly AllFuel[];
+            text: string;
+          }[] = [
             { fuelTypes: biomassFuels, text: biomassFuelsText },
             { fuelTypes: liquidFuels, text: liquidFuelsText },
             { fuelTypes: gasFuels, text: gasFuelsText },
             { fuelTypes: electricFuels, text: electricFuelsText },
             { fuelTypes: thermalFuels, text: thermalFuelsText },
           ];
+
+          if (!localInput.fuelType) {
+            throw new Error("Fuel type not defined");
+          }
           refTexts.every((refText) => {
-            if (refText.fuelTypes.includes(localInput.fuelType ?? "")) {
+            if (refText.fuelTypes.includes(localInput.fuelType)) {
               result = refText.text;
               return false;
             }
@@ -773,7 +677,7 @@ export default class Cooking extends Vue {
       },
       // end of solar
       {
-        conditional_value: biomassFulesWithoutCHC,
+        conditional_value: biomassFuelsWithoutCHC,
         conditional: "fuelType",
         text: "Sustainably sourced biomass",
         style: {
@@ -909,8 +813,8 @@ export interface EnergyCookingItemInput
   cookstove: string; // type fo cookstove
   image?: string; // image of cookstove
   fuelUsage?: number; // [kg or L/day]
-  fuelType?: string; // key
-  fuelTypes?: string[]; // used only as a reference
+  fuelType: AllFuel; // key
+  fuelTypes?: AllFuel[]; // used only as a reference
   appliance?: string; // type of appliance heating retaining basket for instance
   carbonized?: boolean;
   sustainablySourced?: boolean;

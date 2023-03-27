@@ -13,6 +13,7 @@
           <v-container v-if="localInput">
             <v-row v-if="intervention">
               <v-col>
+                <!-- TODO: add rule for makeing this mandatory -->
                 <v-select
                   v-model="localItem.originIncrement"
                   :items="
@@ -22,7 +23,7 @@
                     }))
                   "
                   label="Baseline id"
-                  required
+                  :required="true"
                   @change="selectOrigin"
                 />
               </v-col>

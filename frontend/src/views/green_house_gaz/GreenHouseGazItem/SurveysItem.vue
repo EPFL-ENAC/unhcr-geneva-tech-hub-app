@@ -336,7 +336,8 @@ export default class SurveyList extends Vue {
   public get currentSurveyIndex(): number {
     return (
       this.project.surveys?.findIndex(
-        (el: Survey) => el.name === this.currentSurveyId
+        (el: Survey) =>
+          el.name === this.currentSurveyId || el._id === this.currentSurveyId
       ) ?? -1
     );
   }
