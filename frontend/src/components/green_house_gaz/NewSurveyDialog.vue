@@ -8,9 +8,6 @@
       <v-card>
         <v-card-title>
           <span class="text-h5">New assessment</span>
-          {{ editedItem }}
-          <hr />
-          {{ newCampSite }}
         </v-card-title>
 
         <v-card-text>
