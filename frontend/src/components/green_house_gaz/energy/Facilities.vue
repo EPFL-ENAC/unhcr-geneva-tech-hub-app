@@ -20,14 +20,12 @@ import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
 
+import { computeCO2CostEnergy } from "@/components/green_house_gaz/energy/computeCO2cost";
+import { dieselInputsProducedPer } from "@/components/green_house_gaz/energy/dieselInputs";
 import {
-  computeCO2CostFacilities,
-  computedieselLitersFromPower,
-  computeDieselPower,
-  computeLitresDieselPerWeek,
   countryIrradianceKeys,
-} from "@/components/green_house_gaz/energy/computeCO2cost";
-import { solarInputsProducedPer } from "@/components/green_house_gaz/energy/solarInputs";
+  solarInputsProducedPer,
+} from "@/components/green_house_gaz/energy/solarInputs";
 
 import { formatNumber } from "@/plugins/filters";
 import {
@@ -99,7 +97,7 @@ export default class Facilities extends Vue {
       case "ELE_GRID":
       case "ELE_DIES":
         totalCO2Emission =
-          computeCO2CostFacilities(
+          computeCO2CostEnergy(
             localItemInput,
             ghgMapRef?.REF_DIES_L,
             this.project_REF_GRD
@@ -187,73 +185,10 @@ export default class Facilities extends Vue {
     return localInput;
   }
 
-  public dieselEstimated(
-    localInput: EnergyFacilityItemInput,
-    PowerEstimated: boolean,
-    LitersEstimated?: boolean
-  ): EnergyFacilityItemInput {
-    localInput.dieselPowerEstimated = PowerEstimated;
-    localInput.dieselLitersEstimated =
-      LitersEstimated !== undefined ? LitersEstimated : !PowerEstimated;
-    return localInput;
-  }
-
-  public computeDieselPowerAndUpdateKey(
-    key: string
-  ): (
-    valueOfKey: number,
-    localInput: EnergyFacilityItemInput,
-    ghgMapRef: ItemReferencesMap
-  ) => EnergyFacilityItemInput {
-    return (
-      valueOfKey: number,
-      localInput: EnergyFacilityItemInput,
-      ghgMapRef: ItemReferencesMap
-    ): EnergyFacilityItemInput => {
-      localInput[key] = valueOfKey;
-      if (key !== "dieselLiters") {
-        localInput.dieselLiters = computeLitresDieselPerWeek(localInput);
-        localInput = this.dieselEstimated(localInput, true, true);
-      } else {
-        localInput = this.dieselEstimated(localInput, true);
-      }
-      localInput.dieselPower = computeDieselPower(
-        localInput as EnergyItem,
-        ghgMapRef?.REF_EFF_DIES_L
-      );
-      return localInput;
-    };
-  }
-
-  public computeDieselLitersFromPowerAndUpdateKey(
-    key: string
-  ): (
-    valueOfKey: number,
-    localInput: EnergyFacilityItemInput,
-    ghgMapRef: ItemReferencesMap
-  ) => EnergyFacilityItemInput {
-    return (
-      valueOfKey: number,
-      localInput: EnergyFacilityItemInput,
-      ghgMapRef: ItemReferencesMap
-    ): EnergyFacilityItemInput => {
-      localInput[key] = valueOfKey;
-      localInput.dieselLiters = computedieselLitersFromPower(
-        localInput as EnergyItem,
-        ghgMapRef?.REF_EFF_DIES_L
-      );
-      localInput = this.dieselEstimated(localInput, false);
-      return localInput;
-    };
-  }
-
   // should be a getter so it may be reactive for fuelTypes
   public get headers(): SurveyTableHeader[] {
     // public get headers(): any {
     const countryCode = this.countryCode;
-    const computeDieselLitersFromPowerAndUpdateKey =
-      this.computeDieselLitersFromPowerAndUpdateKey;
-    const computeDieselPowerAndUpdateKey = this.computeDieselPowerAndUpdateKey;
     return [
       {
         text: "#", // unique name === dropdown of existant facilities
@@ -326,110 +261,7 @@ export default class Facilities extends Vue {
           return localInput;
         },
       },
-      {
-        text: "Diesel (kWh/yr) estimated",
-        computeResults: true,
-        value: "input.dieselPower",
-        hideFooterContent: false,
-        formatter: (
-          dieselPower: number,
-          __: SurveyTableHeader,
-          item: SurveyItem
-        ) => {
-          if (typeof dieselPower === "number") {
-            return `${
-              item?.input?.dieselPowerEstimated ? "~" : ""
-            }${dieselPower} (${
-              item?.input?.dieselLitersEstimated ? "~" : ""
-            }${formatNumber(item?.input?.dieselLiters as number)}L) `;
-          }
-          return dieselPower;
-        },
-        customEventInput:
-          computeDieselLitersFromPowerAndUpdateKey("dieselPower"),
-        conditional_value: ["ELE_DIES", "ELE_HYB"],
-        conditional: "fuelType",
-        disabled: false,
-        disabledWithConditions: "disableDieselLiters",
-        disabledWithConditions_value: true,
-        style: {
-          cols: "12",
-        },
-        type: "number",
-      },
-      // beginning of diesel generators
-      {
-        value: "input.disableDieselLiters",
-        conditional_value: ["ELE_DIES", "ELE_HYB"],
-        text: "Number of litres of diesel known",
-        conditional: "fuelType",
-        style: {
-          cols: "12",
-        },
-        options: {
-          false: "yes",
-          true: "no",
-        },
-        type: "boolean",
-        customEventInput: computeDieselPowerAndUpdateKey("disableDieselLiters"),
-      },
-      {
-        value: "input.dieselLiters", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
-        conditional_value: false,
-        conditional: "disableDieselLiters",
-        computeResults: true,
-        text: "Litres of diesel used year",
-        suffix: "l",
-        style: {
-          cols: "12",
-        },
-        type: "number",
-        customEventInput: computeDieselPowerAndUpdateKey("dieselLiters"),
-      },
-      {
-        value: "input.generatorSize", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
-        conditional_value: true,
-        conditional: "disableDieselLiters",
-        text: "generator size (kW)",
-        tooltipInfo: "read from nameplate",
-        suffix: "kW",
-        min: 0,
-        style: {
-          cols: "12",
-        },
-        type: "number",
-        customEventInput: computeDieselPowerAndUpdateKey("generatorSize"),
-      },
-      {
-        value: "input.generatorLoad",
-        conditional_value: true,
-        conditional: "disableDieselLiters",
-        text: "generator load (percentage)",
-        tooltipInfo:
-          "default average load of 60% per year will be used if not overwritten. Load on a diesel generator is the power being consumed from the unit. In a household application the load would be the items in a house, such as lights.",
-        style: {
-          cols: "12",
-        },
-        type: "number",
-        subtype: "percent",
-        customEventInput: computeDieselPowerAndUpdateKey("generatorLoad"),
-      },
-      {
-        value: "input.operatingHours",
-        conditional_value: true,
-        conditional: "disableDieselLiters",
-        text: "operating hours (hrs/week)",
-        tooltipInfo:
-          "from daily log and application will extrapolate this information to be annual",
-        suffix: "hrs/week",
-        min: 0,
-        style: {
-          cols: "12",
-        },
-        type: "number",
-        customEventInput: computeDieselPowerAndUpdateKey("operatingHours"),
-      },
-      // end of diesel generators
+      ...dieselInputsProducedPer("Year", "Week"),
       // begingin og national grid
       {
         value: "input.gridPower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres

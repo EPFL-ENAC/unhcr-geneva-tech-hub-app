@@ -1,22 +1,122 @@
 import {
-  computeKWHPerDayPerCountry,
-  computeKWHPerYearPerCountry,
-  computeKWInstalledWithKwhPerDayPerCountry,
-  computeKWInstalledWithKwhPerYearPerCountry,
-  countryIrradianceKeys,
+  numberOfDaysPerYear,
+  TimePeriod,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
 import { EnergyItem } from "@/store/GhgInterface.vue";
 
-export type TimePeriod = "Day" | "Week" | "Year";
+const countryIrradiance = {
+  IR: 5.540210523,
+  SD: 6.144615357,
+  ET: 5.58995835,
+  NG: 5.048999786,
+  SS: 5.594999909,
+  IQ: 5.144899988,
+  SY: 5.275000095,
+  DJ: 5.999500037,
+  TD: 6.189173947,
+  GH: 4.905750036,
+  TG: 5.423499823,
+  PK: 5.217333158,
+  TH: 4.730999947,
+  CD: 5.191285883,
+  CM: 5.514249981,
+  BY: 2.960749984,
+  CU: 5.421000004,
+  BD: 4.949235285,
+  KE: 5.797000027,
+  IN: 5.351500035,
+  BW: 3.657000065,
+  MW: 5.708000183,
+  NP: 3.720999956,
+  LR: 4.922000051,
+  ZW: 5.741499901,
+  AF: 5.170000076,
+  YE: 5.926000118,
+  SI: 3.513000011,
+  AO: 5.414000034,
+  JO: 5.909666697,
+  ZM: 5.852000078,
+  MZ: 5.338999987,
+  TZ: 5.707000097,
+  NA: 6.465000153,
+  default: 5.317878598,
+};
+
+export type countryIrradianceKeys = keyof typeof countryIrradiance;
+export function computeKWHPerDayPerCountry(
+  kW: number,
+  countryTwoLetterCode: countryIrradianceKeys,
+  locationIrradianceValue: number | undefined
+): number {
+  // return the number of kwh per day
+
+  const performanceRatio = 0.8;
+  const defaultIrradiance = countryIrradiance.default;
+  const irradiance =
+    locationIrradianceValue ??
+    countryIrradiance?.[countryTwoLetterCode] ??
+    defaultIrradiance;
+
+  const kwh = kW * irradiance * performanceRatio;
+  return parseFloat(kwh.toFixed(1));
+}
+
+export function computeKWHPerYearPerCountry(
+  kw: number,
+  countryTwoLetterCode: countryIrradianceKeys,
+  locationIrradianceValue: number | undefined
+): number {
+  const kWhPerYear =
+    computeKWHPerDayPerCountry(
+      kw,
+      countryTwoLetterCode,
+      locationIrradianceValue
+    ) * numberOfDaysPerYear;
+  return parseFloat(kWhPerYear.toFixed(1));
+}
+
+export function computeKWInstalledWithKwhPerDayPerCountry(
+  kWh: number,
+  countryTwoLetterCode: countryIrradianceKeys,
+  locationIrradianceValue: number | undefined
+): number {
+  // return the number of kwh per day
+  const defaultIrradiance = countryIrradiance.default;
+  const performanceRatio = 0.8;
+  const irradiance =
+    locationIrradianceValue ??
+    countryIrradiance?.[countryTwoLetterCode] ??
+    defaultIrradiance;
+  const kw = kWh / (irradiance * performanceRatio);
+
+  // if kwh = kw * h * performanceRatio then
+  // kw = kwh / h * performanceRatio
+  return parseFloat(kw.toFixed(1));
+}
+
+export function computeKWInstalledWithKwhPerYearPerCountry(
+  kwh: number,
+  countryTwoLetterCode: countryIrradianceKeys,
+  locationIrradianceValue: number | undefined
+): number {
+  const kWInstalledPerYear =
+    computeKWInstalledWithKwhPerDayPerCountry(
+      kwh,
+      countryTwoLetterCode,
+      locationIrradianceValue
+    ) / numberOfDaysPerYear;
+  return parseFloat(kWInstalledPerYear.toFixed(3));
+}
+
 export function solarInputsProducedPer(
-  timePerdiod: TimePeriod,
+  timePeriod: TimePeriod,
   countryTwoLetterCode: countryIrradianceKeys,
   locationIrradianceValue: number | undefined
 ): any[] {
   let computeSolarPower: any;
   let computeSolarInstalled: any;
   let suffix: string;
-  switch (timePerdiod) {
+  switch (timePeriod) {
     case "Day":
       computeSolarPower = computeKWHPerDayPerCountry;
       computeSolarInstalled = computeKWInstalledWithKwhPerDayPerCountry;

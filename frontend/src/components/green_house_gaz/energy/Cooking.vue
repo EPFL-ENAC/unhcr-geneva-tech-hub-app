@@ -20,11 +20,10 @@ import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
 
 import {
-  computeCO2CostFacilities,
-  computeDieselPower,
-  computeLitresPerDayDiesel,
-  countryIrradianceKeys,
+  computeCO2CostEnergy,
+  numberOfDaysPerYear,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
+
 import { formatNumber } from "@/plugins/filters";
 import {
   DieselItem,
@@ -49,7 +48,6 @@ import {
   AllFuelsWithTextById,
   BioMassFuel,
   biomassFuels,
-  biomassFuelsWithoutCHC,
   ElectricFuel,
   electricFuels,
   GasFuel,
@@ -66,11 +64,15 @@ import {
   CookstoveTech,
   cookstoveTECHs,
 } from "@/components/green_house_gaz/energy/CookstoveTech";
-import { solarInputsProducedPer } from "@/components/green_house_gaz/energy/solarInputs";
+import { dieselInputsProducedPer } from "@/components/green_house_gaz/energy/dieselInputs";
+import {
+  countryIrradianceKeys,
+  solarInputsProducedPer,
+} from "@/components/green_house_gaz/energy/solarInputs";
 
 const COOK_APP_Pressure = "Pressure cooker";
 const COOK_APP_Heat_Retaining = "Heat retaining basket";
-const COOK_APP_Default = "Default";
+const COOK_APP_Default = "None";
 const APPLIANCE_EFFICIENCY = 1;
 
 const REF_DRY_WOOD = 1;
@@ -161,14 +163,14 @@ export default class Cooking extends Vue {
       case "ELE_GRID":
       case "ELE_DIES":
         totalCO2Emission =
-          computeCO2CostFacilities(
+          computeCO2CostEnergy(
             localItemInput,
             ghgMapRef?.REF_DIES_L,
             this.project_REF_GRD
           ) *
           hhUsingTheFuel *
           applianceEff *
-          365.25;
+          numberOfDaysPerYear;
         break;
       case "ELE_SOLAR":
       case "ELE_NONE":
@@ -195,11 +197,10 @@ export default class Cooking extends Vue {
     if (percentageOfTotalCookstove === undefined) {
       throw new Error("number of cooktsove not defined");
     }
-    if (this.project.totalCookstoves === undefined) {
-      throw new Error("Total cookstoves is undefined, please fill info page");
+    if (this.project.totalHH === undefined) {
+      throw new Error("Total HouseHolds is undefined, please fill info page");
     }
-    const hhUsingTheFuel =
-      percentageOfTotalCookstove * this.project.totalCookstoves; // number of cookstoves
+    const hhUsingTheFuel = percentageOfTotalCookstove * this.project.totalHH; // number of cookstoves
     let totalCO2Emission = 0;
 
     const applianceEff = this.applianceEfficiency(appliance);
@@ -275,7 +276,7 @@ export default class Cooking extends Vue {
           applianceEff * // should be 1 for now (1 - 0.7 or 0.3 depending on appliances)
           drynessFactor * // only for wood but since it's 1 as default it's going to be okay
           0.001 * // 1t/1000kg
-          365.25 * // days/yr
+          numberOfDaysPerYear * // days/yr
           efficiencyFactor;
         break;
       }
@@ -294,7 +295,7 @@ export default class Cooking extends Vue {
           fuelUsage * // fuel consumed in kg / day
           applianceEff * // should be 1 for now (1 - 0.7 or 0.3 depending on appliances)
           0.001 * // 1t/1000kg
-          365.25 * // days/yr
+          numberOfDaysPerYear * // days/yr
           fuelEfficiency;
         break;
       }
@@ -463,6 +464,9 @@ export default class Cooking extends Vue {
           this.resetSurveyFuelOption(localInput);
           localInput.appliance = COOK_APP_Default;
           // setup default value based on fueltype
+          if (fuelType === "FWD") {
+            localInput.dryWood = true;
+          }
           localInput.fuelUsage =
             AllFuelsWithTextById[fuelType]?.defaultValue ?? 0;
 
@@ -493,6 +497,21 @@ export default class Cooking extends Vue {
         },
         value: "input.dryWood",
         type: "boolean",
+        customEventInput: (
+          dryWood: boolean,
+          localInput: EnergyCookingItemInput
+        ) => {
+          if (!localInput.fuelUsage) {
+            return localInput;
+          }
+          if (!dryWood) {
+            localInput.fuelUsage = localInput.fuelUsage * (1 + REF_WET_WOOD);
+          } else {
+            localInput.fuelUsage = localInput.fuelUsage / (1 + REF_WET_WOOD);
+          }
+
+          return localInput;
+        },
       },
       {
         text: (localInput: EnergyCookingItemInput) => {
@@ -501,6 +520,7 @@ export default class Cooking extends Vue {
             "Biomass used per HH per day (kg/day for biomass)";
           const liquidFuelsText = "Fuel use per HH per day  (L/day)";
           const gasFuelsText = "Fuel use per HH per day (m3/day)";
+          const lpgFuelsText = "Fuel use per HH per day (kg/day)";
           const electricFuelsText = "Estimated Kwh/day/HH";
           const thermalFuelsText = "Estimated Kwh/day/HH";
 
@@ -510,7 +530,8 @@ export default class Cooking extends Vue {
           }[] = [
             { fuelTypes: biomassFuels, text: biomassFuelsText },
             { fuelTypes: liquidFuels, text: liquidFuelsText },
-            { fuelTypes: gasFuels, text: gasFuelsText },
+            { fuelTypes: ["BGS", "PNG"], text: gasFuelsText },
+            { fuelTypes: ["LPG"], text: lpgFuelsText },
             { fuelTypes: electricFuels, text: electricFuelsText },
             { fuelTypes: thermalFuels, text: thermalFuelsText },
           ];
@@ -532,97 +553,7 @@ export default class Cooking extends Vue {
         },
         type: "number",
       },
-      // beginning of diesel generators
-      {
-        value: "input.disableDieselLiters",
-        conditional_value: ["ELE_DIES", "ELE_HYB"],
-        text: "Number of litres of diesel known",
-        conditional: "fuelType",
-        style: {
-          cols: "12",
-        },
-        options: {
-          false: "yes",
-          true: "no",
-        },
-        type: "boolean",
-      },
-      {
-        value: "input.dieselLiters", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
-        conditional_value: false,
-        conditional: "disableDieselLiters",
-        text: "Total litres of diesel used per day",
-        suffix: "l",
-        style: {
-          cols: "12",
-        },
-        type: "number",
-        customEventInput: (
-          _: number,
-          localInput: EnergyCookingItemInput,
-          ghgMapRef: ItemReferencesMap
-        ) => {
-          localInput.dieselPower = computeDieselPower(
-            localInput as EnergyItem,
-            ghgMapRef?.REF_EFF_DIES_L
-          );
-          return localInput;
-        },
-      },
-      {
-        value: "input.generatorSize", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
-        conditional_value: true,
-        conditional: "disableDieselLiters",
-        text: "generator size (kW)",
-        tooltipInfo: "read from nameplate",
-        suffix: "kW",
-        min: 0,
-        style: {
-          cols: "12",
-        },
-        type: "number",
-        customEventInput: (
-          _: number,
-          localInput: EnergyCookingItemInput,
-          ghgMapRef: ItemReferencesMap
-        ) => {
-          localInput.dieselLiters = computeLitresPerDayDiesel(localInput);
-          localInput.dieselPower = computeDieselPower(
-            localInput as EnergyItem,
-            ghgMapRef?.REF_EFF_DIES_L
-          );
-          return localInput;
-        },
-      },
-      {
-        value: "input.generatorLoad", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
-        conditional_value: true,
-        conditional: "disableDieselLiters",
-        text: "generator load (percentage)",
-        tooltipInfo:
-          "default average load of 60% per year will be used if not overwritten",
-        style: {
-          cols: "12",
-        },
-        type: "number",
-        subtype: "percent",
-      },
-      {
-        value: "input.operatingHours", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
-        conditional_value: true,
-        conditional: "disableDieselLiters",
-        text: "operating hours (hrs/day)",
-        tooltipInfo:
-          "from daily log and application will extrapolate this information to be annual",
-        suffix: "hrs/day",
-        min: 0,
-        style: {
-          cols: "12",
-        },
-        type: "number",
-      },
-      // end of diesel generators
-      // begingin og national grid
+      ...dieselInputsProducedPer("Day", "Day"),
       {
         value: "input.gridPower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
         conditional_value: ["ELE_GRID", "ELE_HYB"],
@@ -637,7 +568,7 @@ export default class Cooking extends Vue {
       // end of national grid
       ...solarInputsProducedPer("Year", countryCode, this.project.solar),
       {
-        conditional_value: biomassFuelsWithoutCHC,
+        conditional_value: biomassFuels,
         conditional: "fuelType",
         text: "Sustainably sourced biomass",
         style: {
@@ -658,7 +589,7 @@ export default class Cooking extends Vue {
         type: "boolean",
       },
       {
-        text: "Percentage of total cookstoves",
+        text: "Percentage of total households",
         computeResults: true,
         value: "input.numberOfCookstove",
         conditional_value: ["", cookstoveIdWithoutAccess],
