@@ -26,7 +26,7 @@ interface ProjectsState {
   localCouch: SyncDatabase<GreenHouseGaz> | null;
 }
 
-const DB_NAME = "ghg";
+const DB_NAME = "ghg_projects";
 
 function generateState(): ProjectsState {
   return {
