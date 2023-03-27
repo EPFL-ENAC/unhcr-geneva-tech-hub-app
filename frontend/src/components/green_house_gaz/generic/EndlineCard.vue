@@ -29,13 +29,16 @@
                   :results="endline.results"
                 />
               </v-col>
-              <v-col :cols="6" class="d-flex justify-end">
+              <v-col :cols="6" class="d-flex flex-column justify-end">
                 <h3>
                   Total CO2 Emissions:
                   {{
                     endline.results.totalCO2Emission |
                       formatNumber({ suffix: "tCO2e/year" })
                   }}
+                </h3>
+
+                <h3>
                   <span
                     :class="{
                       'item-positive': changeInEmissionPositive,

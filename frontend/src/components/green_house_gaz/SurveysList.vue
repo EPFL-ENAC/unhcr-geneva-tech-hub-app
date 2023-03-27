@@ -156,6 +156,7 @@ import { mapActions, mapGetters } from "vuex";
     ...mapActions("GhgModule", [
       "updateDoc",
       "getDoc",
+      "getSites",
       "removeDoc",
       "syncDB",
       "hasDB",
@@ -178,6 +179,7 @@ export default class ProjectItem extends Vue {
   project!: GreenHouseGaz;
   projectLoading!: boolean;
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
+  getSites!: () => Promise<null>;
 
   localProject = {} as GreenHouseGaz;
   user!: CouchUser;
@@ -212,21 +214,32 @@ export default class ProjectItem extends Vue {
   }
 
   handleClick(item: Survey): void {
-    if (this.localProject._id && this.localProject.country_code) {
-      this.$router.push({
-        name: "GreenHouseGazItemSurveyId",
-        params: {
-          country: encodeURIComponent(this.localProject.country_code),
-          site: encodeURIComponent(this.localProject._id),
-          surveyId: encodeURIComponent(item.name),
-        },
-        query: {
-          category: "Info",
-        },
-      });
-    } else {
-      throw new Error("site id or Country_code non existing");
+    if (
+      !this.localProject._id ||
+      !this.localProject.country_code ||
+      !item._id
+    ) {
+      if (!this.localProject._id) {
+        throw new Error("site _id non existing");
+      }
+      if (!this.localProject.country_code) {
+        throw new Error("site country_code non existing");
+      }
+      if (!item._id) {
+        throw new Error("assessment _id non existing");
+      }
     }
+    this.$router.push({
+      name: "GreenHouseGazItemSurveyId",
+      params: {
+        country: encodeURIComponent(this.localProject.country_code),
+        site: encodeURIComponent(this.localProject._id),
+        surveyId: encodeURIComponent(item._id),
+      },
+      query: {
+        category: "Info",
+      },
+    });
   }
 
   duplicateItem(item: Survey): void {
@@ -256,11 +269,19 @@ export default class ProjectItem extends Vue {
     this.localProject.surveys.splice(this.editedIndex, 1);
     // if surveys === [] empty we want to delete the project!
     if (this.localProject.surveys.length === 0 && this.localProject._id) {
-      await this.removeDoc(this.localProject._id).then((response) => {
-        console.log("success removing doc", response);
+      await this.removeDoc(this.localProject._id).then(() => {
+        this.$store.dispatch("notifyUser", {
+          type: "info",
+          message: `successfuly removing site and its last assessment ${this.localProject.name}`,
+        });
       });
+      await this.getSites();
     } else {
       await this.submitForm(this.localProject);
+      this.$store.dispatch("notifyUser", {
+        type: "info",
+        message: `successfuly removing site and its last assessment ${this.editedItem?.name}`,
+      });
     }
     await this.closeDialog();
   }
@@ -306,13 +327,13 @@ export default class ProjectItem extends Vue {
     } else {
       this.localProject.surveys.push(this.editedItem);
     }
-    const createdName = this.editedItem.name;
+    const created_id = this.editedItem._id;
     await this.submitForm(this.localProject);
     // TODO: should check unicity of name
     if (this.$route.name !== "GreenHouseGazItemSurveyId") {
       await this.$router.push({
         name: "GreenHouseGazItemSurveyId",
-        params: { surveyId: encodeURIComponent(createdName) },
+        params: { surveyId: encodeURIComponent(created_id) },
       });
     }
   }

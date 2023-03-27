@@ -23,9 +23,9 @@ export const electricFuelWithText: FuelTypesItem<ElectricFuel>[] = [
 
 // biomass fuels
 export const biomassFuels = ["FWD", "CHC", "BRQ", "PLTS"] as const;
-export const biomassFuelsWithoutCHC = ["FWD", "BRQ", "PLTS"];
 export type BioMassFuel = typeof biomassFuels[number];
-export const bioMassFuelWithText: FuelTypesItem<BioMassFuel>[] = [
+export const biomassFuelsWithoutCHC: BioMassFuel[] = ["FWD", "BRQ", "PLTS"];
+export const biomassFuelWithText: FuelTypesItem<BioMassFuel>[] = [
   { _id: "FWD", text: "Wood", defaultValue: 8.5 },
   { _id: "CHC", text: "Charcoal", defaultValue: 4.5 },
   { _id: "PLTS", text: "Pellets", defaultValue: 5 },
@@ -62,9 +62,38 @@ export const thermalFuelWithText: FuelTypesItem<ThermalFuel>[] = [
 ];
 // end of thermal fuels
 
+// no access
+export const noAccessFuels = ["NO_ACCESS"] as const;
+export type NoAccessFuel = typeof noAccessFuels[number];
+export const noAcessWithText: FuelTypesItem<NoAccessFuel>[] = [
+  { _id: "NO_ACCESS", text: "No access", defaultValue: 0 },
+];
+// end of thermal fuels
+
 export const allFuelsButElectric = [
   ...biomassFuels,
   ...liquidFuels,
   ...gasFuels,
   ...thermalFuels,
 ];
+// export type AllFuelsButElectric = typeof allFuelsButElectric[number];
+
+export type AllFuel =
+  | ElectricFuel
+  | BioMassFuel
+  | LiquidFuel
+  | GasFuel
+  | ThermalFuel
+  | NoAccessFuel;
+
+export const AllFuelsWithTextById = [
+  ...electricFuelWithText,
+  ...biomassFuelWithText,
+  ...liquidFuelWithText,
+  ...gasFuelWithText,
+  ...thermalFuelWithText,
+  ...noAcessWithText,
+].reduce((acc, el: FuelTypesItem<AllFuel>) => {
+  acc[el._id] = el;
+  return acc;
+}, {} as Record<AllFuel, FuelTypesItem<AllFuel>>);

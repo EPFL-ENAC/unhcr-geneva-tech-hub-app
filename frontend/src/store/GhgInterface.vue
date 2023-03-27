@@ -17,6 +17,7 @@ export interface CountryInfo {
   lon: number;
 }
 export interface Site {
+  _rev?: string;
   id: string; // site unique identitier (name as first)
   name: string; // site name // location
   country_code: CountryCode;
@@ -30,7 +31,8 @@ type Email = string;
 export type Sites = Site[];
 
 export interface GreenHouseGaz {
-  _id?: string | undefined;
+  _rev?: string;
+  _id: string; // uuid4 mandatory
   name: string;
   country_code: string;
   latitude: number;
@@ -44,6 +46,8 @@ export interface GreenHouseGaz {
   totalCookstoves: number;
   created_by: string;
   created_at: string;
+  updated_by?: string;
+  updated_at?: string;
   isUNHCR?: boolean;
 }
 
@@ -59,7 +63,7 @@ export interface SurveyForms {
 export type SurveyCategory = keyof SurveyForms;
 
 export interface Survey extends SurveyForms {
-  _id?: string; // uuid4
+  _id: string; // uuid4
   created_at: string;
   created_by: string;
   updated_by?: string;
