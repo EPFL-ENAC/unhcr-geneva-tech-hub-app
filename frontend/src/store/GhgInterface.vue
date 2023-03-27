@@ -196,7 +196,11 @@ export interface DieselItem {
   generatorLoad?: number; // load of generator (should be default to 60%)
 }
 
-export interface EnergyItem extends DieselItem {
+export interface SolarItem {
+  solarInstalled?: number;
+}
+
+export interface EnergyItem extends DieselItem, SolarItem {
   // power is optional
   gridPower?: number;
   dieselPower?: number;

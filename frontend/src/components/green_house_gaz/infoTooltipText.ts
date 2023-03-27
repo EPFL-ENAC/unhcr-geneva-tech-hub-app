@@ -13,8 +13,8 @@ export const infoTooltipText = {
     title: "Energy - Lighting",
     text: "The Lighting module will enable the user to calculate the emissions from various forms of energy sources used to power lighting at homes and in the settlements. Energy sources considered include firewood, candle, kerosene, solar and the national grid. A hydrid electricity usage will be calculated based on the use of diesel gas, solar PV and the national grid.",
   },
-  "Energy-Pumping": {
-    title: "Energy - Pumping",
+  "WASH-Pumping": {
+    title: "WASH - Pumping",
     ready: false,
     text: "The Pumping module will enable the user to calculate the emissions from pumping water or faecal sludge using either diesel, solar or national grid energy sources or a hybrid mix of these sources.",
   },
