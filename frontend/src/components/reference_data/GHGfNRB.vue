@@ -7,7 +7,7 @@
       <v-row>
         <v-col>
           <v-data-table :headers="headers" :items="items" dense>
-            <template #[`item.c`]="props">
+            <template #[`item.value`]="props">
               <span :title="props.item.value"
                 >{{
                   props.item.value |
@@ -53,7 +53,7 @@ export default class Energy extends Vue {
 
   public get headers(): HeaderInterface[] {
     return [
-      { text: "_id", value: "_id" },
+      { text: "Country", value: "_id" },
       {
         text: "fNRB",
         align: "start",

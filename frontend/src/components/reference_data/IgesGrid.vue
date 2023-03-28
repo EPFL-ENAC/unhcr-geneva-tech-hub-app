@@ -1,11 +1,24 @@
 <template>
   <v-card flat>
     <v-card-text v-if="items">
-      <v-data-table dense :headers="headers" :items="items">
-        <template #[`item.value`]="props">
-          <span>{{ props.item.value | formatNumber }}</span>
-        </template>
-      </v-data-table>
+      <v-row>
+        <v-col>
+          List of Grid Emission Factor from IGES (Institute for Global
+          Environmental Strategies) (2023). Source:
+          <a href="https://www.iges.or.jp/en/pub/list-grid-emission-factor/en"
+            >https://www.iges.or.jp/en/pub/list-grid-emission-factor/en</a
+          >
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-data-table dense :headers="headers" :items="items">
+            <template #[`item.value`]="props">
+              <span>{{ props.item.value | formatNumber }}</span>
+            </template>
+          </v-data-table>
+        </v-col>
+      </v-row>
       <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
         {{ snackText }}
 
@@ -40,12 +53,17 @@ export default class IgesGrid extends Vue {
   public get headers(): HeaderInterface[] {
     return [
       {
-        text: "name",
+        text: "Country",
         align: "start",
         sortable: false,
         value: "name",
       },
-      { text: "value", value: "value", width: "100px" },
+      {
+        text: "Combined Margin Grid Emission Factor (tCO2/MWh)",
+        value: "value",
+        width: "400px",
+        align: "center",
+      },
     ];
   }
 

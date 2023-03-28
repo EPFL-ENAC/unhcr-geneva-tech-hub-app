@@ -17,7 +17,13 @@
         <template #[`item.density`]="props">
           <v-tooltip right>
             <template #activator="{ on, attrs }">
-              {{ props.item.density }} {{ props.item.density_unit }}
+              {{
+                props.item.density |
+                  formatNumber({
+                    maximumFractionDigits: 3,
+                  })
+              }}
+              {{ props.item.density_unit }}
               <v-btn icon v-bind="attrs" v-on="on">
                 <v-icon>$mdiInformation</v-icon>
               </v-btn>

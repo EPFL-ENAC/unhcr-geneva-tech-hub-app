@@ -10,6 +10,22 @@
       <v-row>
         <v-col>
           <v-data-table :headers="headers" :items="items" dense>
+            <template #[`item.Population`]="props">
+              <span :title="props.item.Population">{{
+                props.item.Population |
+                  formatNumber({
+                    maximumFractionDigits: 3,
+                  })
+              }}</span>
+            </template>
+            <template #[`item.solar_peak_hours`]="props">
+              <span :title="props.item.solar_peak_hours">{{
+                props.item.solar_peak_hours |
+                  formatNumber({
+                    maximumFractionDigits: 3,
+                  })
+              }}</span>
+            </template>
             <template #[`item.Country`]="props">
               <span :title="props.item.Country"
                 >{{ countriesMap[props.item.Country].name }}
@@ -46,7 +62,7 @@ export default class Energy extends Vue {
     // "Location id": number;
     // latitude: number; //: 28.978026
     // longitude: number; // : 50.8379918,
-    // "GHI/Daily_solar_peak_hours": number; // 5.607999802,
+    // "solar_peak_hours": number; // 5.607999802,
     return [
       {
         text: "Site name",
@@ -60,7 +76,7 @@ export default class Energy extends Vue {
       { text: "longitude", value: "longitude" },
       {
         text: "Daily solar peak hours",
-        value: "GHI/Daily_solar_peak_hours",
+        value: "solar_peak_hours",
       },
     ];
   }

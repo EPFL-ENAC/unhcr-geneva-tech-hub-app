@@ -198,7 +198,9 @@ export default class Cooking extends Vue {
       throw new Error("number of cooktsove not defined");
     }
     if (this.project.totalHH === undefined) {
-      throw new Error("Total HouseHolds is undefined, please fill info page");
+      throw new Error(
+        "Total House holds is undefined, please fill assessment information page and click on save"
+      );
     }
     const hhUsingTheFuel = percentageOfTotalCookstove * this.project.totalHH; // number of cookstoves
     let totalCO2Emission = 0;

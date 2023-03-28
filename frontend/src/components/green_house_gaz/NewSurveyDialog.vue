@@ -274,7 +274,7 @@ export default class ProjectList extends Vue {
       users: [this.$user()],
       lat: x.latitude,
       lon: x.longitude,
-      solar: x["GHI/Daily_solar_peak_hours"],
+      solar: x.solar_peak_hours,
       population: x.Population,
     }));
     return result;
@@ -288,7 +288,7 @@ export default class ProjectList extends Vue {
           _id: x["Location id"].toFixed(),
           name: x._id, // site unique identitier (name as first)
           country_code: x.Country,
-          solar: x["GHI/Daily_solar_peak_hours"],
+          solar: x.solar_peak_hours,
           population: x.Population,
           created_by: this.$userName(), // hack to avoid rule in v-form
           users: [this.$user()], // hack to avoid rule in v-form
