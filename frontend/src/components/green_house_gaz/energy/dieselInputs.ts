@@ -3,7 +3,7 @@ import {
   numberOfWeekPerYear,
   TimePeriod,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
-import { SurveyTableHeader } from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
+import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import { formatNumber } from "@/plugins/filters";
 import { EnergyItem, SurveyItem } from "@/store/GhgInterface.vue";
 

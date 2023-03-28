@@ -13,6 +13,11 @@
 
 <script lang="ts">
 import BaselineEndlineWrapper from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
+import {
+  ensureSurveyTableHeaders,
+  surveyTableHeaderCO2,
+  surveyTableHeaderIncrements,
+} from "@/components/green_house_gaz/generic/surveyTableHeader";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import { formatNumber } from "@/plugins/filters";
 import {
@@ -23,7 +28,6 @@ import {
 } from "@/store/GhgInterface.vue";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 
-import { get as _get } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
@@ -101,52 +105,10 @@ export default class Trucking extends Vue {
     }
   }
 
-  n2sFormatter(n: number): string {
-    // https://stackoverflow.com/a/30686832
-    let s = "";
-    if (!n) s = "a";
-    else
-      while (n) {
-        s = String.fromCharCode(97 + (n % 26)) + s;
-        n = Math.floor(n / 26);
-      }
-    return s;
-  }
   readonly truckingHeaders = [
     // replace description by label
     // replace code by value
-    {
-      text: "#", // unique name === dropdown of existant facilities
-      value: "increment",
-      type: "number",
-      hideFooterContent: false,
-      baselineOnly: true,
-      formatter: this.n2sFormatter,
-    },
-    {
-      text: "#", // unique name === dropdown of existant facilities
-      value: "originIncrement",
-      endlineOnly: true,
-      type: "number",
-      hideFooterContent: false,
-      formatter: (
-        v: number,
-        _: unknown,
-        item: SurveyItem,
-        items: SurveyItem[]
-      ) => {
-        const increment: number = _get(item, "increment");
-        // todo finish custom increment function
-        const increments = items
-          .filter((item: SurveyItem) => item.originIncrement === v)
-          .map((item: SurveyItem) => item.increment);
-        const indexOf = increments.indexOf(increment);
-        return `${this.n2sFormatter(v)}${"'".repeat(indexOf)}`;
-      },
-      formatterOrigin: (v: number) => {
-        return `${this.n2sFormatter(v)}`;
-      },
-    },
+    ...surveyTableHeaderIncrements,
     {
       text: "Intervention",
       value: "input.description",
@@ -252,61 +214,8 @@ export default class Trucking extends Vue {
       suffix: "km",
       disabled: true,
     },
-    {
-      text: "Total CO2 Emissions (tCO2e/year)",
-      value: "computed.totalCO2Emission",
-      hideFooterContent: false,
-      formatter: (v: number, { ...args }) => {
-        return formatNumber(v, { suffix: args.suffix });
-      },
-      computeResults: true,
-      type: "number",
-      disabled: true,
-    },
-    {
-      text: "Change in Emissions",
-      value: "computed.changeInEmission",
-      type: "number",
-      hideFooterContent: false,
-      disable: true,
-      readonly: true,
-      endlineOnly: true,
-      formatter: (v: number) => {
-        return formatNumber(v, { style: "percent", signDisplay: "exceptZero" });
-      },
-      classFormatter: (v: number): string => {
-        const classes: string[] = [];
-        v > 0 ? classes.push("item-positive") : void 0;
-        v < 0 ? classes.push("item-negative") : void 0;
-        v === 0 ? classes.push("bold-table-content") : void 0;
-        return classes.join(" ");
-      },
-    },
-    {
-      text: "",
-      value: "actions",
-      hidden: true,
-      hideFooterContent: false,
-      width: "140px",
-    },
-  ].map((item) => {
-    const [category, key] = item.value.split(".");
-    const isInput = category === "input";
-    return {
-      align: "start",
-      sortable: false,
-      hideFooterContent: item.hideFooterContent ?? true,
-      label: item.text, // for form-item-component
-      key, // for form-item-component
-      isInput,
-      category, // input or computed,
-      formatter: (v: unknown) => v,
-      classFormatter: () => "",
-      options:
-        item?.items?.map((item) => ({ text: item, value: item })) ?? undefined,
-      ...item,
-    };
-  });
+    ...surveyTableHeaderCO2,
+  ].map(ensureSurveyTableHeaders);
 }
 
 export interface WashTruckingItemInput extends SurveyInput {

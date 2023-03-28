@@ -32,18 +32,17 @@
 </template>
 
 <script lang="ts">
-import { SelectOption, SelectValue } from "@/components/commons/FormItem";
 import BaselineCard from "@/components/green_house_gaz/generic/BaselineCard.vue";
 import { computeChangeInEmission } from "@/components/green_house_gaz/generic/changeInEmission";
 import EndlineCard from "@/components/green_house_gaz/generic/EndlineCard.vue";
 
+import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import {
   GenericBaseline,
   GenericEndline,
   GenericFormSurvey,
   SurveyInput,
-  SurveyInputValue,
   SurveyItem,
   SurveyResult,
 } from "@/store/GhgInterface.vue";
@@ -295,35 +294,5 @@ export default class BaselineEndlineWrapper<
     });
     return interventions;
   }
-}
-export interface SurveyTableHeader extends EasySurveyTableHeader {
-  key: string; // key of input or computed inside input field
-  suffix: string; // "l", //if we need to have a suffix displayed in table or input
-  align: string; // "start"; // only for table
-  sortable: boolean; // false,
-}
-export interface EasySurveyTableHeader {
-  text: string | ((v: SurveyInput) => string); //.e.g "Intervention" description or text to display for input or table header
-  value: string; // name of the field to use for table
-  type: string; // number etc for text-field type of value in formatter by the way
-  items: string[] | string;
-  options: SelectOption<SelectValue>[];
-  isInput: boolean;
-  label?: string;
-  tooltipInfo?: string;
-  category?: string; // example increment
-  classFormatter?: (v: unknown) => string;
-  customEventInput?: (
-    v: SurveyInputValue,
-    localInput: SurveyInput,
-    ghgMapRef?: ItemReferencesMap
-  ) => SurveyInput;
-  formatter?: (v: unknown) => string;
-  conditional_value: SurveyInputValue; // e.g "LITRES",
-  conditional: string | string[]; // based on other SurveyTableHeader field "US_UNI", needs to have conditional_value set
-  endlineOnly?: boolean; // show only for enldine table true,
-  baselineOnly?: boolean;
-  hideFooterContent: boolean; // default to true only for table
-  computeResults: boolean; // false,
 }
 </script>
