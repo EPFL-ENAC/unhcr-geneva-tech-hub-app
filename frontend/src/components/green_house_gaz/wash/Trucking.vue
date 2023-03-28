@@ -173,7 +173,7 @@ export default class Trucking extends Vue {
       },
     },
     {
-      text: `Total volume transported (m3)`,
+      text: `Total volume transported (m3/yr)`,
       value: "input.WACL",
       hideFooterContent: false,
       style: {

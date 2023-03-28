@@ -1,5 +1,5 @@
 export const ghg = {
-  title: "GHG assessment",
+  title: "GHG Emission Calculator",
   to: "GreenHouseGaz",
   logoIcon: "$vuetify.icon.ghg",
   description:
