@@ -2,7 +2,7 @@ import {
   AllFuel,
   biomassFuels,
   biomassFuelsWithoutCHC,
-  electricFuels,
+  electricFuelsForCooking,
   gasFuels,
   liquidFuels,
   noAccessFuels,
@@ -61,7 +61,7 @@ export const cookstoveTECHs: CookstoveTech[] = [
   },
   {
     _id: "8",
-    fuelTypes: electricFuels,
+    fuelTypes: electricFuelsForCooking,
     text: "Electric cookstove",
     image: "/images/energy/cookstoves/induction.png",
   },

@@ -11,6 +11,12 @@ export const electricFuels = [
   "ELE_HYB",
   "ELE_NONE",
 ] as const;
+export const electricFuelsForCooking = [
+  "ELE_DIES",
+  "ELE_GRID",
+  "ELE_SOLAR",
+  "ELE_HYB",
+] as const;
 export type ElectricFuel = typeof electricFuels[number];
 export const electricFuelWithText: FuelTypesItem<ElectricFuel>[] = [
   { _id: "ELE_DIES", text: "Diesel generators", defaultValue: 0 },
