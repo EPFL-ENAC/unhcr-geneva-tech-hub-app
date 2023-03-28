@@ -30,7 +30,13 @@
         </v-tab>
       </v-tabs>
       <v-spacer />
-      <v-menu v-if="$router.currentRoute.name?.includes('Shelter')" offset-y>
+      <v-menu
+        v-if="$router.currentRoute.name?.includes('Shelter')"
+        offset-y
+        bottom
+        min-width="330px"
+        max-width="330px"
+      >
         <template #activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" aria-label="shelter-help" v-on="on">
             <v-icon> $mdiHelpCircleOutline </v-icon>
@@ -43,9 +49,9 @@
             @click="setHelper(item)"
           >
             <v-list-item-action>
-              <v-icon>${{ item.icon }}</v-icon></v-list-item-action
+              <v-icon>${{ item?.icon }}</v-icon></v-list-item-action
             >
-            <v-list-item-content>{{ item.title }}</v-list-item-content>
+            <v-list-item-content>{{ item?.title }}</v-list-item-content>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -151,7 +157,7 @@
             </v-icon>
           </v-list-item-icon>
           <v-list-item-title>
-            {{ app.title }}
+            {{ app?.title }}
           </v-list-item-title>
         </v-list-item>
         <v-list-item link :to="{ name: 'About' }">
@@ -529,7 +535,7 @@ export default class App extends Vue {
   /** Run once. */
   async mounted(): Promise<void> {
     this.$vuetify.theme.dark = false; //this.$store.getters["ConfigModule/themeDark"];
-    document.title = this.title;
+    document.title = this?.title ?? "unknown";
     this.checkAndRefresh();
     this.intervalId = window.setInterval(() => {
       this.checkAndRefresh();

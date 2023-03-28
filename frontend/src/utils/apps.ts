@@ -3,7 +3,7 @@ export const ghg = {
   to: "GreenHouseGaz",
   logoIcon: "$vuetify.icon.ghg",
   description:
-    "This tool is tailored to refugee camps and settlements for calculating greenhouse gas emissions associated with energy, material and transport uses.<br/>The GHG tool only considers Scope 1 and 2 emissions at this stage. The calculations are estimations. For solar in particular, it is assumed that the addition of solar panels will add zero emissions.",
+    "This tool is tailored to refugee camps and settlements for calculating greenhouse gas emissions associated with energy, material and transport uses.<br/>The GHG Emission Calculator only considers Scope 1 and 2 emissions at this stage. The calculations are estimations. For solar in particular, it is assumed that the addition of solar panels will add zero emissions.",
 };
 
 export const shelter = {
