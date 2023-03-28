@@ -193,11 +193,11 @@ export function dieselInputsProducedPer(
         item: SurveyItem
       ) => {
         if (typeof dieselPower === "number") {
-          return `${
-            item?.input?.dieselPowerEstimated ? "~" : ""
-          }${dieselPower} (${
-            item?.input?.dieselLitersEstimated ? "~" : ""
-          }${formatNumber(item?.input?.dieselLiters as number)}L) `;
+          return `${item?.input?.dieselPowerEstimated ? "~" : ""}${formatNumber(
+            dieselPower
+          )} (${item?.input?.dieselLitersEstimated ? "~" : ""}${formatNumber(
+            item?.input?.dieselLiters as number
+          )}L) `;
         }
         return dieselPower;
       },
