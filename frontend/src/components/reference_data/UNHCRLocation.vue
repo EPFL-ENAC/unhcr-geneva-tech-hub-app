@@ -3,8 +3,13 @@
     <v-card-text v-if="items">
       <v-row>
         <v-col>
-          Longterm daily average of solar hours per site (Source: Solar Global
-          Atlas)
+          Daily solar peak hours approximated using the Longterm daily average
+          of global horizontal irradiation (GHI). (GHI data obtained from the
+          Global Solar Atlas 2.0, a free, web-based application developed and
+          operated by the company Solargis s.r.o. on behalf of the World Bank
+          Group, utilizing Solargis data, with funding provided by the Energy
+          Sector Management Assistance Program (ESMAP). For additional
+          information: https://globalsolaratlas.info)
         </v-col>
       </v-row>
       <v-row>
