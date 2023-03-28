@@ -12,6 +12,7 @@
     <v-card>
       <v-card-title>
         <span>Helper</span>
+
         <v-btn color="blue darken-1" text @click="toggleHelperCenter">
           <v-icon>$mdiClose</v-icon>
         </v-btn>
@@ -40,6 +41,8 @@
         </template>
         <template v-if="helper?.type === 'video'">
           <video
+            :key="helper?.title"
+            v-reload="helper?.title"
             controls
             width="100%"
             @enterpictureinpicture="toggleHelperCenter"
@@ -47,7 +50,7 @@
             <source :src="helper?.href" type="video/mp4" />
 
             Download the
-            <a href="helper?.href">MP4</a>
+            <a :href="helper?.href">MP4</a>
             video.
           </video>
         </template>
@@ -67,6 +70,13 @@ import { mapActions, mapGetters } from "vuex";
   },
   methods: {
     ...mapActions(["toggleHelperCenter", "setHelperDialog"]),
+  },
+  directives: {
+    reload(el: any, binding) {
+      if (binding.oldValue !== binding.value) {
+        el.load();
+      }
+    },
   },
 })
 export default class HelperCenter extends Vue {

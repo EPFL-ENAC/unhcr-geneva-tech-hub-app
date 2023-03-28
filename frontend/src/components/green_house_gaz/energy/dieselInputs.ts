@@ -13,13 +13,11 @@ import {
 } from "@/store/GhgReferenceModule";
 
 export function computeLitresDieselPerYear(localItem: EnergyItem): number {
-  const litres = computeLitresPerDayDiesel(localItem) * numberOfDaysPerYear;
-  return parseFloat(litres.toFixed(3));
+  return computeLitresPerDayDiesel(localItem) * numberOfDaysPerYear;
 }
 
 export function computeLitresDieselPerWeek(localItem: EnergyItem): number {
-  const litres = computeLitresPerDayDiesel(localItem) * numberOfWeekPerYear;
-  return parseFloat(litres.toFixed(3));
+  return computeLitresPerDayDiesel(localItem) * numberOfWeekPerYear;
 }
 
 export function computeLitresPerDayDiesel(localItem: EnergyItem): number {
@@ -29,10 +27,7 @@ export function computeLitresPerDayDiesel(localItem: EnergyItem): number {
     generatorLoad = 0.6,
   } = localItem || {};
   const DIE_GEN_L_per_kWh = -0.031 * Math.log(generatorLoad) + 0.2514;
-  const litres =
-    generatorSize * operatingHours * DIE_GEN_L_per_kWh * generatorLoad;
-
-  return parseFloat(litres.toFixed(3));
+  return generatorSize * operatingHours * DIE_GEN_L_per_kWh * generatorLoad;
 }
 
 export function getLitresPerYearForGeneratorHoursPerWeek(
@@ -50,8 +45,7 @@ export function computeDieselPower(
   REF_EFF_DIES_L: ReferenceItemInterface | undefined
 ): number {
   if (REF_EFF_DIES_L?.value) {
-    const result = (localItem?.dieselLiters ?? 0) / REF_EFF_DIES_L?.value;
-    return parseFloat(result.toFixed(3));
+    return (localItem?.dieselLiters ?? 0) / REF_EFF_DIES_L?.value;
   }
   return 0;
 }
@@ -62,8 +56,7 @@ export function computedieselLitersFromPower(
 ): number {
   if (REF_EFF_DIES_L?.value) {
     // power = litres / EFF_DIES_L THEN litres = power * EFF_DIES
-    const litres = (localItem?.dieselPower ?? 0) * REF_EFF_DIES_L?.value;
-    return parseFloat(litres.toFixed(3));
+    return (localItem?.dieselPower ?? 0) * REF_EFF_DIES_L?.value;
   }
   return 0;
 }

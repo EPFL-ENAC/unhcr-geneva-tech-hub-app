@@ -96,12 +96,11 @@ export default class Facilities extends Vue {
       case "ELE_HYB":
       case "ELE_GRID":
       case "ELE_DIES":
-        totalCO2Emission =
-          computeCO2CostEnergy(
-            localItemInput,
-            ghgMapRef?.REF_DIES_L,
-            this.project_REF_GRD
-          ) * 365.25;
+        totalCO2Emission = computeCO2CostEnergy(
+          localItemInput,
+          ghgMapRef?.REF_DIES_L,
+          this.project_REF_GRD
+        );
         break;
       case "ELE_SOLAR":
       case "ELE_NONE":
