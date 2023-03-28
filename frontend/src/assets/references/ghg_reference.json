@@ -40,7 +40,7 @@
     "_id": "REF_EFF_DIES_L",
     "type": "number",
     "category": "ENERGY",
-    "description": "Energy - Electricity - Efficiency - Diesel Generators (kWh/litre)",
+    "description": "Energy - Electricity - Efficiency - Diesel Generators (l/kWh)",
     "value": 0.267,
     "source": "https://plan.sa.gov.au/__data/assets/pdf_file/0007/574531/Appendix-O-Greenhouse-Gas-Calculations.pdf",
     "index": 4
