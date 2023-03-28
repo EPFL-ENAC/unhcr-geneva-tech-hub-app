@@ -76,7 +76,7 @@ export default class App extends Vue {
   }
   readonly menuItems: MenuSurveyItem[] = [
     {
-      tab: "iges_grid",
+      tab: "iges grid",
       componentName: "IgesGrid",
     },
     { tab: "GHG", componentName: "GHG" },

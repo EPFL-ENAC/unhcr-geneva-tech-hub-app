@@ -11,9 +11,22 @@
           }}</span>
         </template>
         <template #[`item.source`]="props">
-          <a :href="props.item.source" target="_blank">{{
-            props.item.source
-          }}</a>
+          <v-tooltip v-if="props.item.ref" right>
+            <template #activator="{ on, attrs }">
+              <a :href="props.item.source" target="_blank">{{
+                props.item.source
+              }}</a>
+              <v-btn icon v-bind="attrs" v-on="on">
+                <v-icon>$mdiInformation</v-icon>
+              </v-btn>
+            </template>
+            <span>{{ props.item.ref }}</span>
+          </v-tooltip>
+          <span v-else>
+            <a :href="props.item.source" target="_blank">{{
+              props.item.source
+            }}</a>
+          </span>
         </template>
       </v-data-table>
     </v-card-text>
