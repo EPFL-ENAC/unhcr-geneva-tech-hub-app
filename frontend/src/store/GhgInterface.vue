@@ -41,8 +41,7 @@ export interface GreenHouseGaz {
   users: (CouchUser | Email | string)[];
   solar?: number;
   population: number; // total population
-  hh: number; // % of hh using cookstove
-  pp_per_hh: number; // ave people per hh
+  pp_per_hh: number; // ave people per hhtotalHH
   totalHH: number;
   created_by: string;
   created_at: string;

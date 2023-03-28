@@ -146,6 +146,8 @@ import { v4 as uuidv4 } from "uuid";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
+export const DEFAULT_PP_PER_HH = 5;
+
 @Component({
   computed: {
     ...mapGetters("UNHCRLocationModule", ["items"]),
@@ -227,8 +229,9 @@ export default class ProjectList extends Vue {
       _id: uuidv4(),
       name: "",
       country_code: "",
-      pp_per_hh: 5, // 4.73 (based on the most recent values for average household size from Database on Household Size and Composition 2022
-      hh: 1,
+      pp_per_hh: DEFAULT_PP_PER_HH, // 4.73 (based on the most recent values for average household size from Database on Household Size and Composition 2022
+      totalHH: 0,
+      // solar: , // TODO: I just noticed that I'm not using the solar average of the country
       created_at: new Date().toISOString(),
       created_by: this.$userName(),
       surveys: [] as Survey[],
@@ -276,6 +279,7 @@ export default class ProjectList extends Vue {
       lon: x.longitude,
       solar: x.solar_peak_hours,
       population: x.Population,
+      totalHH: 0,
     }));
     return result;
   }
@@ -290,6 +294,7 @@ export default class ProjectList extends Vue {
           country_code: x.Country,
           solar: x.solar_peak_hours,
           population: x.Population,
+          totalHH: parseInt((x.Population / DEFAULT_PP_PER_HH).toFixed(0), 10),
           created_by: this.$userName(), // hack to avoid rule in v-form
           users: [this.$user()], // hack to avoid rule in v-form
         } as GreenHouseGaz)
