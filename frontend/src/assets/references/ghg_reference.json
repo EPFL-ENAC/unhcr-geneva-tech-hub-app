@@ -32,7 +32,8 @@
     "category": "ENERGY",
     "description": "Energy - Electricity - Emissions Factor - National Grid [-]",
     "value": 0.6448,
-    "source": "The default grid emission factor is an average of all IGES 2022 emission factors for countries hosting refugees. https://www.iges.or.jp/en/pub/list-grid-emission-factor/en",
+    "ref": "The default grid emission factor is an average of all IGES 2022 emission factors for countries hosting refugees.",
+    "source": "https://www.iges.or.jp/en/pub/list-grid-emission-factor/en",
     "index": 3
   },
   {
