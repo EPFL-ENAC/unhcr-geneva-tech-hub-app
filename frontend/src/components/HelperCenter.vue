@@ -43,6 +43,7 @@
           <video
             :key="helper?.title"
             v-reload="helper?.title"
+            v-close-video="dialog"
             controls
             width="100%"
             @enterpictureinpicture="toggleHelperCenter"
@@ -75,6 +76,11 @@ import { mapActions, mapGetters } from "vuex";
     reload(el: any, binding) {
       if (binding.oldValue !== binding.value) {
         el.load();
+      }
+    },
+    closeVideo(el: any, binding) {
+      if (binding.value === false) {
+        el.pause();
       }
     },
   },
