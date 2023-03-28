@@ -148,10 +148,10 @@
 </template>
 
 <script lang="ts">
-import { SurveyTableHeader } from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
 import DeleteSurveyItemDialog from "@/components/green_house_gaz/generic/DeleteSurveyItemDialog.vue";
 import DuplicateSurveyItemDialog from "@/components/green_house_gaz/generic/DuplicateSurveyItemDialog.vue";
 import SurveyItemDialog from "@/components/green_house_gaz/generic/SurveyItemDialog.vue";
+import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import {
   SurveyInput,
   SurveyItem,

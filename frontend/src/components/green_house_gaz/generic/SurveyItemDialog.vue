@@ -111,7 +111,7 @@
 
 <script lang="ts">
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
-import { SurveyTableHeader } from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
+import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import {
   SurveyInput,
   SurveyInputValue,

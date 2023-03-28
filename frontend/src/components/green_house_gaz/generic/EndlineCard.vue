@@ -111,9 +111,9 @@
 </template>
 
 <script lang="ts">
-import { SurveyTableHeader } from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
 import InstancePieChart from "@/components/green_house_gaz/generic/InstancePieChart.vue";
 import InstanceTable from "@/components/green_house_gaz/generic/InstanceTable.vue";
+import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
 
 import {
   GenericBaseline,
