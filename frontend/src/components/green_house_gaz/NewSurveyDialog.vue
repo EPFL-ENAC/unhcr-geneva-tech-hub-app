@@ -33,8 +33,8 @@
                   "
                   tabindex="0"
                   :items="existingSitesWithUnhcrSites"
-                  item-value="name"
                   item-text="name"
+                  :return-object="true"
                   label="Select an existing site"
                   :rules="rulesSelectExistingSite"
                   @input="onSelectExistingSite"
@@ -135,11 +135,12 @@ import CountrySelect from "@/components/commons/CountrySelect.vue";
 import {
   Country,
   GreenHouseGaz,
+  Site,
   Sites,
   Survey,
 } from "@/store/GhgInterface.vue";
 import { UNHCRLocation } from "@/store/UNHCRLocationModule";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { cloneDeep, isEmpty } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
@@ -192,17 +193,21 @@ export default class ProjectList extends Vue {
     this.$emit("update:open", v);
   }
 
-  public async onSelectExistingSite(site: string): Promise<void> {
+  public async onSelectExistingSite(site: Site): Promise<void> {
     try {
-      await this.getDoc(site);
-    } catch (error: AxiosError<unknown, unknown> | unknown) {
-      if (axios.isAxiosError(error) && (error.status as unknown) !== 404) {
-        throw error;
-      }
+      await this.getDoc(site.id);
+    } catch (error: AxiosError<unknown, any> | unknown) {
+      console.log("the 404 is normal, we check if the site already exist");
+      // TODO make the types working
+      // if (axios.isAxiosError(error) && (error.status as unknown) !== 404) {
+      //   throw error;
+      // } else {
+      // }
+      // }
       // try to find it inside the existingUNHCR and call
       // "GhgModule/SET_PROJECT"; or a new action
       const foundUNHCR = this.unhcrProjects.find(
-        (unhcrProject) => unhcrProject.name === site
+        (unhcrProject) => unhcrProject._id === site.id
       );
       if (!foundUNHCR) {
         throw error;
@@ -254,12 +259,9 @@ export default class ProjectList extends Vue {
   }
 
   get unhcrLocations(): UNHCRLocation[] {
-    return this.items
-      .filter((item) => item.Country === this.newCampSite.country_code)
-      .map((x) => {
-        delete x._rev;
-        return x;
-      });
+    return this.items.filter(
+      (item) => item.Country === this.newCampSite.country_code
+    );
   }
 
   // TODO: for unhcr SITES use location ID // for new site. use uuidv4
@@ -431,8 +433,7 @@ export default class ProjectList extends Vue {
   }
 
   public setLocalCampSite(project: GreenHouseGaz): void {
-    // TODO: clean up _rev here also
-    delete project._rev;
+    // TODO: clean up _rev here also (maybe ?)
     this.newCampSite = project ? cloneDeep(project) : ({} as GreenHouseGaz);
   }
 
