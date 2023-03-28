@@ -2,6 +2,7 @@ import {
   numberOfDaysPerYear,
   TimePeriod,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
+import { formatNumber } from "@/plugins/filters";
 import { EnergyItem } from "@/store/GhgInterface.vue";
 
 const countryIrradiance = {
@@ -147,6 +148,9 @@ export function solarInputsProducedPer(
         );
         return localInput;
       },
+      formatter: (v: number) => {
+        return formatNumber(v);
+      },
       text: "Total kW of solar installed",
       suffix: "Kw",
       style: {
@@ -159,6 +163,9 @@ export function solarInputsProducedPer(
       conditional_value: ["ELE_SOLAR", "ELE_HYB"],
       disabled: false,
       text: `Solar (${suffix}) estimated`,
+      formatter: (v: number) => {
+        return formatNumber(v);
+      },
       customEventInput: (renewablePower: number, localInput: EnergyItem) => {
         // computeKWInstalledWithKwhPerDayPerCountry
         localInput.solarInstalled = computeSolarInstalled(
