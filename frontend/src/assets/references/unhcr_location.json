@@ -1,12 +1,12 @@
 [
   {
     "Country": "AF",
-    "_id": "Khost : Wilayat - Province",
+    "_id": "Khost : Wilayat",
     "Population": 9862,
     "Location id": 22,
     "latitude": 33.333847,
     "longitude": 69.9371673,
-    "GHI/Daily_solar_peak_hours": 5.170000076,
+    "solar_peak_hours": 5.17,
     "index": 0
   },
   {
@@ -16,17 +16,17 @@
     "Location id": 93,
     "latitude": -8.53698,
     "longitude": 19.52739696,
-    "GHI/Daily_solar_peak_hours": 5.414000034,
+    "solar_peak_hours": 5.41,
     "index": 1
   },
   {
     "Country": "BA",
-    "_id": "Federation of Bosnia and Herzegovina : Entity",
+    "_id": "Federation of Bosnia and Herzegovina",
     "Population": 2266,
     "Location id": 293,
     "latitude": 43.88749,
     "longitude": 17.842793,
-    "GHI/Daily_solar_peak_hours": 3.657000065,
+    "solar_peak_hours": 3.66,
     "index": 2
   },
   {
@@ -36,7 +36,7 @@
     "Location id": 4778,
     "latitude": 22.3729,
     "longitude": 91.37659,
-    "GHI/Daily_solar_peak_hours": 0,
+    "solar_peak_hours": 0.0,
     "index": 3
   },
   {
@@ -46,7 +46,7 @@
     "Location id": 3785,
     "latitude": 21.189743,
     "longitude": 92.154259,
-    "GHI/Daily_solar_peak_hours": 4.93599987,
+    "solar_peak_hours": 4.94,
     "index": 4
   },
   {
@@ -56,7 +56,7 @@
     "Location id": 3795,
     "latitude": 21.18276,
     "longitude": 92.155749,
-    "GHI/Daily_solar_peak_hours": 4.934999943,
+    "solar_peak_hours": 4.93,
     "index": 5
   },
   {
@@ -66,7 +66,7 @@
     "Location id": 3796,
     "latitude": 21.179848,
     "longitude": 92.151807,
-    "GHI/Daily_solar_peak_hours": 4.941999912,
+    "solar_peak_hours": 4.94,
     "index": 6
   },
   {
@@ -76,7 +76,7 @@
     "Location id": 3798,
     "latitude": 21.178584,
     "longitude": 92.139856,
-    "GHI/Daily_solar_peak_hours": 4.953000069,
+    "solar_peak_hours": 4.95,
     "index": 7
   },
   {
@@ -86,7 +86,7 @@
     "Location id": 3793,
     "latitude": 21.167026,
     "longitude": 92.144114,
-    "GHI/Daily_solar_peak_hours": 4.956999779,
+    "solar_peak_hours": 4.96,
     "index": 8
   },
   {
@@ -96,7 +96,7 @@
     "Location id": 3782,
     "latitude": 21.160567,
     "longitude": 92.142901,
-    "GHI/Daily_solar_peak_hours": 4.960999966,
+    "solar_peak_hours": 4.96,
     "index": 9
   },
   {
@@ -106,7 +106,7 @@
     "Location id": 3779,
     "latitude": 21.156461,
     "longitude": 92.149144,
-    "GHI/Daily_solar_peak_hours": 4.960999966,
+    "solar_peak_hours": 4.96,
     "index": 10
   },
   {
@@ -116,7 +116,7 @@
     "Location id": 3799,
     "latitude": 21.197513,
     "longitude": 92.142851,
-    "GHI/Daily_solar_peak_hours": 4.943999767,
+    "solar_peak_hours": 4.94,
     "index": 11
   },
   {
@@ -126,7 +126,7 @@
     "Location id": 3786,
     "latitude": 21.188976,
     "longitude": 92.14759,
-    "GHI/Daily_solar_peak_hours": 4.940000057,
+    "solar_peak_hours": 4.94,
     "index": 12
   },
   {
@@ -136,7 +136,7 @@
     "Location id": 3790,
     "latitude": 21.183266,
     "longitude": 92.142411,
-    "GHI/Daily_solar_peak_hours": 4.947999954,
+    "solar_peak_hours": 4.95,
     "index": 13
   },
   {
@@ -146,7 +146,7 @@
     "Location id": 3797,
     "latitude": 21.216533,
     "longitude": 92.15566,
-    "GHI/Daily_solar_peak_hours": 4.933000088,
+    "solar_peak_hours": 4.93,
     "index": 14
   },
   {
@@ -156,7 +156,7 @@
     "Location id": 3791,
     "latitude": 21.21342,
     "longitude": 92.152348,
-    "GHI/Daily_solar_peak_hours": 4.934999943,
+    "solar_peak_hours": 4.93,
     "index": 15
   },
   {
@@ -166,7 +166,7 @@
     "Location id": 3807,
     "latitude": 21.190871,
     "longitude": 92.140296,
-    "GHI/Daily_solar_peak_hours": 4.947000027,
+    "solar_peak_hours": 4.95,
     "index": 16
   },
   {
@@ -176,7 +176,7 @@
     "Location id": 3776,
     "latitude": 21.194559,
     "longitude": 92.13437,
-    "GHI/Daily_solar_peak_hours": 4.953999996,
+    "solar_peak_hours": 4.95,
     "index": 17
   },
   {
@@ -186,7 +186,7 @@
     "Location id": 3811,
     "latitude": 21.132213,
     "longitude": 92.158584,
-    "GHI/Daily_solar_peak_hours": 4.972000122,
+    "solar_peak_hours": 4.97,
     "index": 18
   },
   {
@@ -196,7 +196,7 @@
     "Location id": 3801,
     "latitude": 21.088437,
     "longitude": 92.196866,
-    "GHI/Daily_solar_peak_hours": 4.965000153,
+    "solar_peak_hours": 4.97,
     "index": 19
   },
   {
@@ -206,7 +206,7 @@
     "Location id": 3804,
     "latitude": 20.971724,
     "longitude": 92.247979,
-    "GHI/Daily_solar_peak_hours": 4.984000206,
+    "solar_peak_hours": 4.98,
     "index": 20
   },
   {
@@ -216,7 +216,7 @@
     "Location id": 3802,
     "latitude": 20.980258,
     "longitude": 92.247219,
-    "GHI/Daily_solar_peak_hours": 4.985000134,
+    "solar_peak_hours": 4.99,
     "index": 21
   },
   {
@@ -226,7 +226,7 @@
     "Location id": 3805,
     "latitude": 20.956998,
     "longitude": 92.25436839,
-    "GHI/Daily_solar_peak_hours": 4.980000019,
+    "solar_peak_hours": 4.98,
     "index": 22
   },
   {
@@ -236,7 +236,7 @@
     "Location id": 3803,
     "latitude": 20.936073,
     "longitude": 92.260864,
-    "GHI/Daily_solar_peak_hours": 4.978000164,
+    "solar_peak_hours": 4.98,
     "index": 23
   },
   {
@@ -246,7 +246,7 @@
     "Location id": 3780,
     "latitude": 21.20663,
     "longitude": 92.16436719,
-    "GHI/Daily_solar_peak_hours": 4.929999828,
+    "solar_peak_hours": 4.93,
     "index": 24
   },
   {
@@ -256,7 +256,7 @@
     "Location id": 3794,
     "latitude": 21.208912,
     "longitude": 92.158323,
-    "GHI/Daily_solar_peak_hours": 4.93200016,
+    "solar_peak_hours": 4.93,
     "index": 25
   },
   {
@@ -266,7 +266,7 @@
     "Location id": 3788,
     "latitude": 21.209166,
     "longitude": 92.149164,
-    "GHI/Daily_solar_peak_hours": 4.938000202,
+    "solar_peak_hours": 4.94,
     "index": 26
   },
   {
@@ -276,7 +276,7 @@
     "Location id": 3810,
     "latitude": 21.208249,
     "longitude": 92.142885,
-    "GHI/Daily_solar_peak_hours": 4.94299984,
+    "solar_peak_hours": 4.94,
     "index": 27
   },
   {
@@ -286,7 +286,7 @@
     "Location id": 3809,
     "latitude": 21.206272,
     "longitude": 92.136679,
-    "GHI/Daily_solar_peak_hours": 4.949999809,
+    "solar_peak_hours": 4.95,
     "index": 28
   },
   {
@@ -296,7 +296,7 @@
     "Location id": 3789,
     "latitude": 21.2022,
     "longitude": 92.150814,
-    "GHI/Daily_solar_peak_hours": 4.936999798,
+    "solar_peak_hours": 4.94,
     "index": 29
   },
   {
@@ -304,9 +304,9 @@
     "_id": "Camp 6",
     "Population": 24584,
     "Location id": 3792,
-    "latitude": 21.203955,
+    "latitude": 21.2,
     "longitude": 92.156858,
-    "GHI/Daily_solar_peak_hours": 4.934000015,
+    "solar_peak_hours": 4.93,
     "index": 30
   },
   {
@@ -316,7 +316,7 @@
     "Location id": 3781,
     "latitude": 21.203122,
     "longitude": 92.165297,
-    "GHI/Daily_solar_peak_hours": 4.927999973,
+    "solar_peak_hours": 4.93,
     "index": 31
   },
   {
@@ -326,7 +326,7 @@
     "Location id": 3808,
     "latitude": 21.195558,
     "longitude": 92.164966,
-    "GHI/Daily_solar_peak_hours": 4.928999901,
+    "solar_peak_hours": 4.93,
     "index": 32
   },
   {
@@ -336,7 +336,7 @@
     "Location id": 3787,
     "latitude": 21.19679,
     "longitude": 92.154084,
-    "GHI/Daily_solar_peak_hours": 4.93599987,
+    "solar_peak_hours": 4.94,
     "index": 33
   },
   {
@@ -346,7 +346,7 @@
     "Location id": 3784,
     "latitude": 21.189991,
     "longitude": 92.160313,
-    "GHI/Daily_solar_peak_hours": 4.931000233,
+    "solar_peak_hours": 4.93,
     "index": 34
   },
   {
@@ -356,7 +356,7 @@
     "Location id": 3918,
     "latitude": 21.212083,
     "longitude": 92.163801,
-    "GHI/Daily_solar_peak_hours": 4.929999828,
+    "solar_peak_hours": 4.93,
     "index": 35
   },
   {
@@ -366,7 +366,7 @@
     "Location id": 3917,
     "latitude": 20.957341,
     "longitude": 92.249869,
-    "GHI/Daily_solar_peak_hours": 4.979000092,
+    "solar_peak_hours": 4.98,
     "index": 36
   },
   {
@@ -376,57 +376,57 @@
     "Location id": 4793,
     "latitude": 21.13475,
     "longitude": 92.16139318,
-    "GHI/Daily_solar_peak_hours": 4.967000008,
+    "solar_peak_hours": 4.97,
     "index": 37
   },
   {
     "Country": "BW",
-    "_id": "Dukwi : Point",
+    "_id": "Dukwi",
     "Population": 599,
     "Location id": 299,
     "latitude": -20.586048,
     "longitude": 26.5078971,
-    "GHI/Daily_solar_peak_hours": 6.048999786,
+    "solar_peak_hours": 6.05,
     "index": 38
   },
   {
     "Country": "BY",
-    "_id": "Brest : Oblast - Region",
+    "_id": "Brest : Oblast",
     "Population": 20,
     "Location id": 252,
     "latitude": 52.097621,
     "longitude": 23.7340503,
-    "GHI/Daily_solar_peak_hours": 3.029000044,
+    "solar_peak_hours": 3.03,
     "index": 39
   },
   {
     "Country": "BY",
-    "_id": "Gomel : Oblast - Region",
+    "_id": "Gomel : Oblast",
     "Population": 28,
     "Location id": 253,
     "latitude": 52.441176,
     "longitude": 30.9878462,
-    "GHI/Daily_solar_peak_hours": 3.061000109,
+    "solar_peak_hours": 3.06,
     "index": 40
   },
   {
     "Country": "BY",
-    "_id": "Mogilev : Oblast - Region",
+    "_id": "Mogilev : Oblast",
     "Population": 8,
     "Location id": 257,
     "latitude": 53.900716,
     "longitude": 30.3313598,
-    "GHI/Daily_solar_peak_hours": 2.928999901,
+    "solar_peak_hours": 2.93,
     "index": 41
   },
   {
     "Country": "BY",
-    "_id": "Vitebsk : Oblast - Region",
+    "_id": "Vitebsk : Oblast",
     "Population": 29,
     "Location id": 258,
     "latitude": 55.184806,
     "longitude": 30.201622,
-    "GHI/Daily_solar_peak_hours": 2.823999882,
+    "solar_peak_hours": 2.82,
     "index": 42
   },
   {
@@ -436,7 +436,7 @@
     "Location id": 4113,
     "latitude": 4.557068,
     "longitude": 19.93853624,
-    "GHI/Daily_solar_peak_hours": 5.386000156,
+    "solar_peak_hours": 5.39,
     "index": 43
   },
   {
@@ -446,7 +446,7 @@
     "Location id": 881,
     "latitude": -2.879866,
     "longitude": 23.65637779,
-    "GHI/Daily_solar_peak_hours": 4.853000164,
+    "solar_peak_hours": 4.85,
     "index": 44
   },
   {
@@ -456,7 +456,7 @@
     "Location id": 906,
     "latitude": 4.199184,
     "longitude": 21.0152326,
-    "GHI/Daily_solar_peak_hours": 5.361000061,
+    "solar_peak_hours": 5.36,
     "index": 45
   },
   {
@@ -466,7 +466,7 @@
     "Location id": 4369,
     "latitude": -3.898429,
     "longitude": 29.10078062,
-    "GHI/Daily_solar_peak_hours": 5.175000191,
+    "solar_peak_hours": 5.18,
     "index": 46
   },
   {
@@ -476,7 +476,7 @@
     "Location id": 962,
     "latitude": -2.879866,
     "longitude": 23.65637779,
-    "GHI/Daily_solar_peak_hours": 4.853000164,
+    "solar_peak_hours": 4.85,
     "index": 47
   },
   {
@@ -486,7 +486,7 @@
     "Location id": 967,
     "latitude": 4.136292,
     "longitude": 18.80358112,
-    "GHI/Daily_solar_peak_hours": 5.293000221,
+    "solar_peak_hours": 5.29,
     "index": 48
   },
   {
@@ -496,27 +496,27 @@
     "Location id": 4370,
     "latitude": -4.226263,
     "longitude": 29.0421482,
-    "GHI/Daily_solar_peak_hours": 5.418000221,
+    "solar_peak_hours": 5.42,
     "index": 49
   },
   {
     "Country": "CM",
-    "_id": "Borgop : Point",
+    "_id": "Borgop",
     "Population": 11511,
     "Location id": 426,
     "latitude": 6.915686,
     "longitude": 14.80075262,
-    "GHI/Daily_solar_peak_hours": 5.775000095,
+    "solar_peak_hours": 5.78,
     "index": 50
   },
   {
     "Country": "CM",
-    "_id": "Gado Badzere : Point",
+    "_id": "Gado Badzere",
     "Population": 29162,
     "Location id": 448,
     "latitude": 5.74878,
     "longitude": 14.44108755,
-    "GHI/Daily_solar_peak_hours": 5.517000198,
+    "solar_peak_hours": 5.52,
     "index": 51
   },
   {
@@ -526,17 +526,17 @@
     "Location id": 3735,
     "latitude": 4.278777,
     "longitude": 14.89946055,
-    "GHI/Daily_solar_peak_hours": 5.331999779,
+    "solar_peak_hours": 5.33,
     "index": 52
   },
   {
     "Country": "CM",
-    "_id": "Mbile : Point",
+    "_id": "Mbile",
     "Population": 11031,
     "Location id": 481,
     "latitude": 4.326442,
     "longitude": 14.83967318,
-    "GHI/Daily_solar_peak_hours": 5.31799984,
+    "solar_peak_hours": 5.32,
     "index": 53
   },
   {
@@ -546,7 +546,7 @@
     "Location id": 495,
     "latitude": 10.564918,
     "longitude": 13.85652298,
-    "GHI/Daily_solar_peak_hours": 5.940999985,
+    "solar_peak_hours": 5.94,
     "index": 54
   },
   {
@@ -556,7 +556,7 @@
     "Location id": 3758,
     "latitude": 6.73375,
     "longitude": 14.57014,
-    "GHI/Daily_solar_peak_hours": 5.702000141,
+    "solar_peak_hours": 5.7,
     "index": 55
   },
   {
@@ -566,117 +566,117 @@
     "Location id": 3742,
     "latitude": 3.554363,
     "longitude": 15.05656738,
-    "GHI/Daily_solar_peak_hours": 5.190999985,
+    "solar_peak_hours": 5.19,
     "index": 56
   },
   {
     "Country": "CM",
-    "_id": "Timangolo : Point",
+    "_id": "Timangolo",
     "Population": 7211,
     "Location id": 525,
     "latitude": 4.628767,
     "longitude": 14.54497063,
-    "GHI/Daily_solar_peak_hours": 5.337999821,
+    "solar_peak_hours": 5.34,
     "index": 57
   },
   {
     "Country": "CU",
-    "_id": "Camaguey : Provincia",
+    "_id": "Camaguey",
     "Population": 5,
     "Location id": 811,
     "latitude": 21.4146,
     "longitude": -77.94450378,
-    "GHI/Daily_solar_peak_hours": 5.460999966,
+    "solar_peak_hours": 5.46,
     "index": 58
   },
   {
     "Country": "CU",
-    "_id": "Cienfuegos : Provincia",
+    "_id": "Cienfuegos",
     "Population": 11,
     "Location id": 813,
     "latitude": 22.237978,
     "longitude": -80.365865,
-    "GHI/Daily_solar_peak_hours": 5.506000042,
+    "solar_peak_hours": 5.51,
     "index": 59
   },
   {
     "Country": "CU",
-    "_id": "Holguin : Provincia",
+    "_id": "Holguin",
     "Population": 8,
     "Location id": 819,
     "latitude": 20.887739,
     "longitude": -76.25879669,
-    "GHI/Daily_solar_peak_hours": 5.484000206,
+    "solar_peak_hours": 5.48,
     "index": 60
   },
   {
     "Country": "CU",
-    "_id": "La Habana : Provincia",
+    "_id": "La Habana",
     "Population": 35,
     "Location id": 821,
     "latitude": 23.05407,
     "longitude": -82.345189,
-    "GHI/Daily_solar_peak_hours": 5.298999786,
+    "solar_peak_hours": 5.3,
     "index": 61
   },
   {
     "Country": "CU",
-    "_id": "Las Tunas : Provincia",
+    "_id": "Las Tunas",
     "Population": 7,
     "Location id": 822,
     "latitude": 21.060516,
     "longitude": -76.9182097,
-    "GHI/Daily_solar_peak_hours": 5.426000118,
+    "solar_peak_hours": 5.43,
     "index": 62
   },
   {
     "Country": "CU",
-    "_id": "Matanzas : Provincia",
+    "_id": "Matanzas",
     "Population": 5,
     "Location id": 823,
     "latitude": 22.576712,
     "longitude": -81.3399414,
-    "GHI/Daily_solar_peak_hours": 5.426000118,
+    "solar_peak_hours": 5.43,
     "index": 63
   },
   {
     "Country": "CU",
-    "_id": "Pinar del Rio : Provincia",
+    "_id": "Pinar del Rio",
     "Population": 5,
     "Location id": 825,
     "latitude": 0,
     "longitude": 0,
-    "GHI/Daily_solar_peak_hours": 0,
+    "solar_peak_hours": 0.0,
     "index": 64
   },
   {
     "Country": "CU",
-    "_id": "Villa Clara : Provincia",
+    "_id": "Villa Clara",
     "Population": 23,
     "Location id": 828,
     "latitude": 22.49372,
     "longitude": -79.9192702,
-    "GHI/Daily_solar_peak_hours": 5.34499979,
+    "solar_peak_hours": 5.34,
     "index": 65
   },
   {
     "Country": "DJ",
-    "_id": "Ali-Addeh : Point",
+    "_id": "Ali-Addeh",
     "Population": 17009,
     "Location id": 1014,
     "latitude": 11.825138,
     "longitude": 42.590275,
-    "GHI/Daily_solar_peak_hours": 6.238999844,
+    "solar_peak_hours": 6.24,
     "index": 66
   },
   {
     "Country": "DJ",
-    "_id": "Hol-Hol : Point",
+    "_id": "Hol-Hol",
     "Population": 7852,
     "Location id": 1018,
     "latitude": 11.307877,
     "longitude": 42.9295323,
-    "GHI/Daily_solar_peak_hours": 5.760000229,
+    "solar_peak_hours": 5.76,
     "index": 67
   },
   {
@@ -686,97 +686,97 @@
     "Location id": 3620,
     "latitude": 0,
     "longitude": 0,
-    "GHI/Daily_solar_peak_hours": 0,
+    "solar_peak_hours": 0.0,
     "index": 68
   },
   {
     "Country": "ET",
-    "_id": "Adiharush : Point",
+    "_id": "Adiharush",
     "Population": 14143,
     "Location id": 1098,
     "latitude": 8.626703,
     "longitude": 39.63755417,
-    "GHI/Daily_solar_peak_hours": 6.175000191,
+    "solar_peak_hours": 6.18,
     "index": 69
   },
   {
     "Country": "ET",
-    "_id": "Asaita : Point",
+    "_id": "Asaita",
     "Population": 24726,
     "Location id": 1103,
     "latitude": 11.550586,
     "longitude": 41.4362457,
-    "GHI/Daily_solar_peak_hours": 6.15899992,
+    "solar_peak_hours": 6.16,
     "index": 70
   },
   {
     "Country": "ET",
-    "_id": "Awbarre : Point",
+    "_id": "Awbarre",
     "Population": 12605,
     "Location id": 1105,
     "latitude": 9.785503,
     "longitude": 43.2207073,
-    "GHI/Daily_solar_peak_hours": 6.552999973,
+    "solar_peak_hours": 6.55,
     "index": 71
   },
   {
     "Country": "ET",
-    "_id": "Bambasi Camp : Point",
+    "_id": "Bambasi Camp",
     "Population": 19338,
     "Location id": 1107,
     "latitude": 0,
     "longitude": 0,
-    "GHI/Daily_solar_peak_hours": 0,
+    "solar_peak_hours": 0.0,
     "index": 72
   },
   {
     "Country": "ET",
-    "_id": "Berhale : Point",
+    "_id": "Berhale",
     "Population": 31088,
     "Location id": 1110,
     "latitude": 13.863604,
     "longitude": 40.0210039,
-    "GHI/Daily_solar_peak_hours": 5.840000153,
+    "solar_peak_hours": 5.84,
     "index": 73
   },
   {
     "Country": "ET",
-    "_id": "Bokolmanyo : Point",
+    "_id": "Bokolmanyo",
     "Population": 28548,
     "Location id": 1111,
     "latitude": 4.545546,
     "longitude": 41.5362656,
-    "GHI/Daily_solar_peak_hours": 5.856999874,
+    "solar_peak_hours": 5.86,
     "index": 74
   },
   {
     "Country": "ET",
-    "_id": "Buramino : Point",
+    "_id": "Buramino",
     "Population": 38209,
     "Location id": 1115,
     "latitude": 8.626703,
     "longitude": 39.63755417,
-    "GHI/Daily_solar_peak_hours": 6.175000191,
+    "solar_peak_hours": 6.18,
     "index": 75
   },
   {
     "Country": "ET",
-    "_id": "Gure Shembolla : Point",
+    "_id": "Gure Shembolla",
     "Population": 10331,
     "Location id": 3969,
     "latitude": 9.52616,
     "longitude": 34.49781,
-    "GHI/Daily_solar_peak_hours": 5.353000164,
+    "solar_peak_hours": 5.35,
     "index": 76
   },
   {
     "Country": "ET",
-    "_id": "Hilaweyn : Point",
+    "_id": "Hilaweyn",
     "Population": 40856,
     "Location id": 1126,
     "latitude": 4.364258,
     "longitude": 41.8650435,
-    "GHI/Daily_solar_peak_hours": 5.93900013,
+    "solar_peak_hours": 5.94,
     "index": 77
   },
   {
@@ -786,207 +786,207 @@
     "Location id": 1127,
     "latitude": 8.626703,
     "longitude": 39.63755417,
-    "GHI/Daily_solar_peak_hours": 6.175000191,
+    "solar_peak_hours": 6.18,
     "index": 78
   },
   {
     "Country": "ET",
-    "_id": "Jewi : Point",
+    "_id": "Jewi",
     "Population": 64669,
     "Location id": 3928,
     "latitude": 8.15199,
     "longitude": 34.70351833,
-    "GHI/Daily_solar_peak_hours": 5.282000065,
+    "solar_peak_hours": 5.28,
     "index": 79
   },
   {
     "Country": "ET",
-    "_id": "Kebribeyah : Point",
+    "_id": "Kebribeyah",
     "Population": 16396,
     "Location id": 1132,
     "latitude": 8.626703,
     "longitude": 39.63755417,
-    "GHI/Daily_solar_peak_hours": 6.175000191,
+    "solar_peak_hours": 6.18,
     "index": 80
   },
   {
     "Country": "ET",
-    "_id": "Kobe Camp : Point",
+    "_id": "Kobe Camp",
     "Population": 34169,
     "Location id": 1133,
     "latitude": 4.47747,
     "longitude": 41.7432283,
-    "GHI/Daily_solar_peak_hours": 5.984000206,
+    "solar_peak_hours": 5.98,
     "index": 81
   },
   {
     "Country": "ET",
-    "_id": "Kule : Point",
+    "_id": "Kule",
     "Population": 52334,
     "Location id": 3927,
     "latitude": 8.28338,
     "longitude": 34.25092,
-    "GHI/Daily_solar_peak_hours": 5.268000126,
+    "solar_peak_hours": 5.27,
     "index": 82
   },
   {
     "Country": "ET",
-    "_id": "Mai-Ayni : Point",
+    "_id": "Mai-Ayni",
     "Population": 12920,
     "Location id": 1136,
     "latitude": 8.626703,
     "longitude": 39.63755417,
-    "GHI/Daily_solar_peak_hours": 6.175000191,
+    "solar_peak_hours": 6.18,
     "index": 83
   },
   {
     "Country": "ET",
-    "_id": "Melkadida : Point",
+    "_id": "Melkadida",
     "Population": 37893,
     "Location id": 1137,
     "latitude": 4.518883,
     "longitude": 41.7183345,
-    "GHI/Daily_solar_peak_hours": 5.962999821,
+    "solar_peak_hours": 5.96,
     "index": 84
   },
   {
     "Country": "ET",
-    "_id": "Nguenyyiel : Point",
+    "_id": "Nguenyyiel",
     "Population": 100222,
     "Location id": 3624,
     "latitude": 0,
     "longitude": 0,
-    "GHI/Daily_solar_peak_hours": 0,
+    "solar_peak_hours": 0.0,
     "index": 85
   },
   {
     "Country": "ET",
-    "_id": "Okugo : Point",
+    "_id": "Okugo",
     "Population": 13335,
     "Location id": 1140,
     "latitude": 6.492319,
     "longitude": 35.13235278,
-    "GHI/Daily_solar_peak_hours": 5.329999924,
+    "solar_peak_hours": 5.33,
     "index": 86
   },
   {
     "Country": "ET",
-    "_id": "Pugnido : Point",
+    "_id": "Pugnido",
     "Population": 47474,
     "Location id": 3926,
     "latitude": 7.64825,
     "longitude": 34.26808,
-    "GHI/Daily_solar_peak_hours": 5.250999928,
+    "solar_peak_hours": 5.25,
     "index": 87
   },
   {
     "Country": "ET",
-    "_id": "Pugnido 2 : Point",
+    "_id": "Pugnido 2",
     "Population": 10081,
     "Location id": 3930,
     "latitude": 7.67918,
     "longitude": 34.24729,
-    "GHI/Daily_solar_peak_hours": 5.252999783,
+    "solar_peak_hours": 5.25,
     "index": 88
   },
   {
     "Country": "ET",
-    "_id": "Sheder : Point",
+    "_id": "Sheder",
     "Population": 12748,
     "Location id": 1144,
     "latitude": 9.691027,
     "longitude": 43.1233099,
-    "GHI/Daily_solar_peak_hours": 6.53399992,
+    "solar_peak_hours": 6.53,
     "index": 89
   },
   {
     "Country": "ET",
-    "_id": "Sherkole : Point",
+    "_id": "Sherkole",
     "Population": 11636,
     "Location id": 1145,
     "latitude": 10.6667,
     "longitude": 34.83330154,
-    "GHI/Daily_solar_peak_hours": 5.751999855,
+    "solar_peak_hours": 5.75,
     "index": 90
   },
   {
     "Country": "ET",
-    "_id": "Shimelba (Shire/Shiraro) : Point",
+    "_id": "Shimelba (Shire/Shiraro)",
     "Population": 3919,
     "Location id": 1146,
     "latitude": 14.396963,
     "longitude": 37.77425,
-    "GHI/Daily_solar_peak_hours": 6.258999825,
+    "solar_peak_hours": 6.26,
     "index": 91
   },
   {
     "Country": "ET",
-    "_id": "Tierkidi : Point",
+    "_id": "Tierkidi",
     "Population": 68863,
     "Location id": 3925,
     "latitude": 8.27517,
     "longitude": 34.27598,
-    "GHI/Daily_solar_peak_hours": 5.284999847,
+    "solar_peak_hours": 5.28,
     "index": 92
   },
   {
     "Country": "ET",
-    "_id": "Tongo Camp : Point",
+    "_id": "Tongo Camp",
     "Population": 11824,
     "Location id": 1149,
     "latitude": 34.055,
     "longitude": -118.366389,
-    "GHI/Daily_solar_peak_hours": 5.421999931,
+    "solar_peak_hours": 5.42,
     "index": 93
   },
   {
     "Country": "ET",
-    "_id": "Tsore: Point",
+    "_id": "Tsore",
     "Population": 18414,
     "Location id": 3587,
     "latitude": 0,
     "longitude": 0,
-    "GHI/Daily_solar_peak_hours": 0,
+    "solar_peak_hours": 0.0,
     "index": 94
   },
   {
     "Country": "GH",
-    "_id": "Ampain : Point",
+    "_id": "Ampain",
     "Population": 3594,
     "Location id": 1248,
     "latitude": 4.970577,
     "longitude": -2.424698674,
-    "GHI/Daily_solar_peak_hours": 4.822000027,
+    "solar_peak_hours": 4.82,
     "index": 95
   },
   {
     "Country": "GH",
-    "_id": "Egyeikroum : Point",
+    "_id": "Egyeikroum",
     "Population": 1338,
     "Location id": 1255,
     "latitude": 7.92133,
     "longitude": -1.204386234,
-    "GHI/Daily_solar_peak_hours": 5.15500021,
+    "solar_peak_hours": 5.16,
     "index": 96
   },
   {
     "Country": "GH",
-    "_id": "Fetentaa : Point",
+    "_id": "Fetentaa",
     "Population": 1050,
     "Location id": 1256,
     "latitude": 7.469863,
     "longitude": -2.670541226,
-    "GHI/Daily_solar_peak_hours": 4.748000145,
+    "solar_peak_hours": 4.75,
     "index": 97
   },
   {
     "Country": "GH",
-    "_id": "Krisan : Point",
+    "_id": "Krisan",
     "Population": 797,
     "Location id": 1258,
     "latitude": 4.962999,
     "longitude": -2.4616508,
-    "GHI/Daily_solar_peak_hours": 4.897999763,
+    "solar_peak_hours": 4.9,
     "index": 98
   },
   {
@@ -996,7 +996,7 @@
     "Location id": 1376,
     "latitude": 20.593684,
     "longitude": 78.96288,
-    "GHI/Daily_solar_peak_hours": 5.243999958,
+    "solar_peak_hours": 5.24,
     "index": 99
   },
   {
@@ -1006,7 +1006,7 @@
     "Location id": 1378,
     "latitude": 11.127123,
     "longitude": 78.6568942,
-    "GHI/Daily_solar_peak_hours": 5.459000111,
+    "solar_peak_hours": 5.46,
     "index": 100
   },
   {
@@ -1016,7 +1016,7 @@
     "Location id": 4646,
     "latitude": 36.7354,
     "longitude": 43.8795,
-    "GHI/Daily_solar_peak_hours": 5.118000031,
+    "solar_peak_hours": 5.12,
     "index": 101
   },
   {
@@ -1026,7 +1026,7 @@
     "Location id": 4587,
     "latitude": 35.37637,
     "longitude": 45.6091,
-    "GHI/Daily_solar_peak_hours": 5.245999813,
+    "solar_peak_hours": 5.25,
     "index": 102
   },
   {
@@ -1036,7 +1036,7 @@
     "Location id": 4568,
     "latitude": 36.502242,
     "longitude": 43.58510856,
-    "GHI/Daily_solar_peak_hours": 5.123000145,
+    "solar_peak_hours": 5.12,
     "index": 103
   },
   {
@@ -1046,7 +1046,7 @@
     "Location id": 4593,
     "latitude": 36.49545,
     "longitude": 44.34031,
-    "GHI/Daily_solar_peak_hours": 5.104000092,
+    "solar_peak_hours": 5.1,
     "index": 104
   },
   {
@@ -1056,7 +1056,7 @@
     "Location id": 4590,
     "latitude": 36.47112,
     "longitude": 43.89177,
-    "GHI/Daily_solar_peak_hours": 5.106999874,
+    "solar_peak_hours": 5.11,
     "index": 105
   },
   {
@@ -1066,7 +1066,7 @@
     "Location id": 4595,
     "latitude": 36.7643,
     "longitude": 42.89599,
-    "GHI/Daily_solar_peak_hours": 5.144000053,
+    "solar_peak_hours": 5.14,
     "index": 106
   },
   {
@@ -1076,7 +1076,7 @@
     "Location id": 4594,
     "latitude": 36.7822,
     "longitude": 42.8913,
-    "GHI/Daily_solar_peak_hours": 5.164999962,
+    "solar_peak_hours": 5.16,
     "index": 107
   },
   {
@@ -1086,7 +1086,7 @@
     "Location id": 4592,
     "latitude": 36.3383,
     "longitude": 43.61544,
-    "GHI/Daily_solar_peak_hours": 5.138999939,
+    "solar_peak_hours": 5.14,
     "index": 108
   },
   {
@@ -1096,7 +1096,7 @@
     "Location id": 4591,
     "latitude": 36.34488,
     "longitude": 43.8113,
-    "GHI/Daily_solar_peak_hours": 5.118000031,
+    "solar_peak_hours": 5.12,
     "index": 109
   },
   {
@@ -1106,197 +1106,197 @@
     "Location id": 4589,
     "latitude": 35.98379,
     "longitude": 44.0367,
-    "GHI/Daily_solar_peak_hours": 5.184999943,
+    "solar_peak_hours": 5.18,
     "index": 110
   },
   {
     "Country": "IR",
-    "_id": "Abazar : Point",
+    "_id": "Abazar",
     "Population": 127,
     "Location id": 1430,
     "latitude": 28.978026,
     "longitude": 50.8379918,
-    "GHI/Daily_solar_peak_hours": 5.607999802,
+    "solar_peak_hours": 5.61,
     "index": 111
   },
   {
     "Country": "IR",
-    "_id": "Ardakan : Shahrestan - County",
+    "_id": "Ardakan : Shahrestan",
     "Population": 3221,
     "Location id": 1433,
     "latitude": 32.308221,
     "longitude": 54.0085616,
-    "GHI/Daily_solar_peak_hours": 5.578000069,
+    "solar_peak_hours": 5.58,
     "index": 112
   },
   {
     "Country": "IR",
-    "_id": "Bani Najjar : Point",
+    "_id": "Bani Najjar",
     "Population": 1797,
     "Location id": 1435,
     "latitude": 32.500778,
     "longitude": 54.2942009,
-    "GHI/Daily_solar_peak_hours": 5.651000023,
+    "solar_peak_hours": 5.65,
     "index": 113
   },
   {
     "Country": "IR",
-    "_id": "Bardsir : Shahrestan - County",
+    "_id": "Bardsir : Shahrestan",
     "Population": 4281,
     "Location id": 1436,
     "latitude": 29.938473,
     "longitude": 56.5728597,
-    "GHI/Daily_solar_peak_hours": 5.922999859,
+    "solar_peak_hours": 5.92,
     "index": 114
   },
   {
     "Country": "IR",
-    "_id": "Bezileh : Point",
+    "_id": "Bezileh",
     "Population": 31,
     "Location id": 1437,
     "latitude": 32.500778,
     "longitude": 54.2942009,
-    "GHI/Daily_solar_peak_hours": 5.651000023,
+    "solar_peak_hours": 5.65,
     "index": 115
   },
   {
     "Country": "IR",
-    "_id": "Dalaki : Point",
+    "_id": "Dalaki",
     "Population": 198,
     "Location id": 1439,
     "latitude": 29.42919,
     "longitude": 51.28884888,
-    "GHI/Daily_solar_peak_hours": 5.643000126,
+    "solar_peak_hours": 5.64,
     "index": 116
   },
   {
     "Country": "IR",
-    "_id": "Dilzeh : Point",
+    "_id": "Dilzeh",
     "Population": 14,
     "Location id": 1440,
     "latitude": 35.063702,
     "longitude": 47.96609879,
-    "GHI/Daily_solar_peak_hours": 5.362999916,
+    "solar_peak_hours": 5.36,
     "index": 117
   },
   {
     "Country": "IR",
-    "_id": "Jahrom : Shahrestan - County",
+    "_id": "Jahrom : Shahrestan",
     "Population": 124,
     "Location id": 1449,
     "latitude": 28.517744,
     "longitude": 53.5743866,
-    "GHI/Daily_solar_peak_hours": 6.031000137,
+    "solar_peak_hours": 6.03,
     "index": 118
   },
   {
     "Country": "IR",
-    "_id": "Meybod : Shahrestan - County",
+    "_id": "Meybod : Shahrestan",
     "Population": 1334,
     "Location id": 1462,
     "latitude": 32.248723,
     "longitude": 54.0079341,
-    "GHI/Daily_solar_peak_hours": 5.580999851,
+    "solar_peak_hours": 5.58,
     "index": 119
   },
   {
     "Country": "IR",
-    "_id": "Mohajerin : Point",
+    "_id": "Mohajerin",
     "Population": 3899,
     "Location id": 1463,
     "latitude": 35.0741,
     "longitude": 48.61669922,
-    "GHI/Daily_solar_peak_hours": 5.320000172,
+    "solar_peak_hours": 5.32,
     "index": 120
   },
   {
     "Country": "IR",
-    "_id": "Rafsanjan : Shahrestan - County",
+    "_id": "Rafsanjan : Shahrestan",
     "Population": 6355,
     "Location id": 1468,
     "latitude": 30.354889,
     "longitude": 56.002705,
-    "GHI/Daily_solar_peak_hours": 5.875,
+    "solar_peak_hours": 5.88,
     "index": 121
   },
   {
     "Country": "IR",
-    "_id": "Sarvestan : Shahrestan - County",
+    "_id": "Sarvestan : Shahrestan",
     "Population": 598,
     "Location id": 1470,
     "latitude": 29.2735,
     "longitude": 53.22029877,
-    "GHI/Daily_solar_peak_hours": 6.061999798,
+    "solar_peak_hours": 6.06,
     "index": 122
   },
   {
     "Country": "IR",
-    "_id": "Saveh : Shahrestan - County",
+    "_id": "Saveh : Shahrestan",
     "Population": 4970,
     "Location id": 1471,
     "latitude": 35.023611,
     "longitude": 50.3585065,
-    "GHI/Daily_solar_peak_hours": 5.197000027,
+    "solar_peak_hours": 5.2,
     "index": 123
   },
   {
     "Country": "IR",
-    "_id": "Sonqor : Shahrestan - County",
+    "_id": "Sonqor : Shahrestan",
     "Population": 21,
     "Location id": 1475,
     "latitude": 34.784805,
     "longitude": 47.59115601,
-    "GHI/Daily_solar_peak_hours": 5.421000004,
+    "solar_peak_hours": 5.42,
     "index": 124
   },
   {
     "Country": "IR",
-    "_id": "Sultanieh : Point",
+    "_id": "Sultanieh",
     "Population": 44,
     "Location id": 1477,
     "latitude": 36.434799,
     "longitude": 48.79759979,
-    "GHI/Daily_solar_peak_hours": 5.151000023,
+    "solar_peak_hours": 5.15,
     "index": 125
   },
   {
     "Country": "IR",
-    "_id": "Taft : Shahrestan - County",
+    "_id": "Taft : Shahrestan",
     "Population": 1107,
     "Location id": 1478,
     "latitude": 31.747101,
     "longitude": 54.20880127,
-    "GHI/Daily_solar_peak_hours": 5.697999954,
+    "solar_peak_hours": 5.7,
     "index": 126
   },
   {
     "Country": "IR",
-    "_id": "Torbat e jam : Shahrestan - County",
+    "_id": "Torbat e jam : Shahrestan",
     "Population": 2266,
     "Location id": 1480,
     "latitude": 35.231686,
     "longitude": 60.6401218,
-    "GHI/Daily_solar_peak_hours": 5.329999924,
+    "solar_peak_hours": 5.33,
     "index": 127
   },
   {
     "Country": "IR",
-    "_id": "Varmahang : Point",
+    "_id": "Varmahang",
     "Population": 8,
     "Location id": 1481,
     "latitude": 34.795898,
     "longitude": 46.88489914,
-    "GHI/Daily_solar_peak_hours": 5.426000118,
+    "solar_peak_hours": 5.43,
     "index": 128
   },
   {
     "Country": "IR",
-    "_id": "Ziveh : Point",
+    "_id": "Ziveh",
     "Population": 266,
     "Location id": 1486,
     "latitude": 38.125198,
     "longitude": 48.2580986,
-    "GHI/Daily_solar_peak_hours": 4.755000114,
+    "solar_peak_hours": 4.76,
     "index": 129
   },
   {
@@ -1306,7 +1306,7 @@
     "Location id": 1641,
     "latitude": 32.4186,
     "longitude": 38.3165725,
-    "GHI/Daily_solar_peak_hours": 5.890999794,
+    "solar_peak_hours": 5.89,
     "index": 130
   },
   {
@@ -1316,7 +1316,7 @@
     "Location id": 1644,
     "latitude": 31.751512,
     "longitude": 36.8680791,
-    "GHI/Daily_solar_peak_hours": 5.919000149,
+    "solar_peak_hours": 5.92,
     "index": 131
   },
   {
@@ -1326,47 +1326,47 @@
     "Location id": 1645,
     "latitude": 31.751512,
     "longitude": 36.8680791,
-    "GHI/Daily_solar_peak_hours": 5.919000149,
+    "solar_peak_hours": 5.92,
     "index": 132
   },
   {
     "Country": "KE",
-    "_id": "Dagahaley : Point",
+    "_id": "Dagahaley",
     "Population": 79429,
     "Location id": 1657,
     "latitude": 0.194599,
     "longitude": 40.2879598,
-    "GHI/Daily_solar_peak_hours": 5.659999847,
+    "solar_peak_hours": 5.66,
     "index": 133
   },
   {
     "Country": "KE",
-    "_id": "Hagadera : Point",
+    "_id": "Hagadera",
     "Population": 83481,
     "Location id": 1659,
     "latitude": 0.09258,
     "longitude": 40.3190719,
-    "GHI/Daily_solar_peak_hours": 5.664000034,
+    "solar_peak_hours": 5.66,
     "index": 134
   },
   {
     "Country": "KE",
-    "_id": "Ifo : Point",
+    "_id": "Ifo",
     "Population": 73341,
     "Location id": 1660,
     "latitude": 0.110645,
     "longitude": 40.3162007,
-    "GHI/Daily_solar_peak_hours": 5.678999901,
+    "solar_peak_hours": 5.68,
     "index": 135
   },
   {
     "Country": "KE",
-    "_id": "Kakuma : Point",
+    "_id": "Kakuma",
     "Population": 173742,
     "Location id": 1664,
     "latitude": 3.716764,
     "longitude": 34.8568982,
-    "GHI/Daily_solar_peak_hours": 6.056000233,
+    "solar_peak_hours": 6.06,
     "index": 136
   },
   {
@@ -1376,37 +1376,37 @@
     "Location id": 4449,
     "latitude": 3.76771,
     "longitude": 34.62204,
-    "GHI/Daily_solar_peak_hours": 5.926000118,
+    "solar_peak_hours": 5.93,
     "index": 137
   },
   {
     "Country": "LR",
-    "_id": "Grand Gedeh : County",
+    "_id": "Grand Gedeh",
     "Population": 2319,
     "Location id": 1721,
     "latitude": 5.922208,
     "longitude": -8.2212979,
-    "GHI/Daily_solar_peak_hours": 5.000999928,
+    "solar_peak_hours": 5.0,
     "index": 138
   },
   {
     "Country": "LR",
-    "_id": "Nimba : County",
+    "_id": "Nimba",
     "Population": 5289,
     "Location id": 1740,
     "latitude": 6.842761,
     "longitude": -8.6600586,
-    "GHI/Daily_solar_peak_hours": 4.978000164,
+    "solar_peak_hours": 4.98,
     "index": 139
   },
   {
     "Country": "LR",
-    "_id": "River Ghee : County",
+    "_id": "River Ghee",
     "Population": 639,
     "Location id": 1747,
     "latitude": 5.260489,
     "longitude": -7.87216,
-    "GHI/Daily_solar_peak_hours": 4.875,
+    "solar_peak_hours": 4.88,
     "index": 140
   },
   {
@@ -1416,37 +1416,37 @@
     "Location id": 1753,
     "latitude": 5.49871,
     "longitude": -8.6600586,
-    "GHI/Daily_solar_peak_hours": 4.834000111,
+    "solar_peak_hours": 4.83,
     "index": 141
   },
   {
     "Country": "MR",
-    "_id": "Mbera : Point",
+    "_id": "Mbera",
     "Population": 69149,
     "Location id": 1877,
     "latitude": 0,
     "longitude": 0,
-    "GHI/Daily_solar_peak_hours": 0,
+    "solar_peak_hours": 0.0,
     "index": 142
   },
   {
     "Country": "MW",
-    "_id": "Dzaleka : Point",
+    "_id": "Dzaleka",
     "Population": 52673,
     "Location id": 1806,
     "latitude": -13.662827,
     "longitude": 33.8704301,
-    "GHI/Daily_solar_peak_hours": 5.708000183,
+    "solar_peak_hours": 5.71,
     "index": 143
   },
   {
     "Country": "MZ",
-    "_id": "Maratane : Point",
+    "_id": "Maratane",
     "Population": 9,
     "Location id": 1941,
     "latitude": -16.643101,
     "longitude": 37.16999817,
-    "GHI/Daily_solar_peak_hours": 5.355999947,
+    "solar_peak_hours": 5.36,
     "index": 144
   },
   {
@@ -1456,17 +1456,17 @@
     "Location id": 4448,
     "latitude": -17.875215,
     "longitude": 35.27209439,
-    "GHI/Daily_solar_peak_hours": 5.322000027,
+    "solar_peak_hours": 5.32,
     "index": 145
   },
   {
     "Country": "NA",
-    "_id": "Osire : Point",
+    "_id": "Osire",
     "Population": 5325,
     "Location id": 1981,
     "latitude": -21.067094,
     "longitude": 17.3641866,
-    "GHI/Daily_solar_peak_hours": 6.465000153,
+    "solar_peak_hours": 6.47,
     "index": 146
   },
   {
@@ -1476,17 +1476,17 @@
     "Location id": 3853,
     "latitude": 16.973764,
     "longitude": 7.98647443,
-    "GHI/Daily_solar_peak_hours": 6.30700016,
+    "solar_peak_hours": 6.31,
     "index": 147
   },
   {
     "Country": "NE",
-    "_id": "Camp Abala : Point",
+    "_id": "Camp Abala",
     "Population": 16365,
     "Location id": 2026,
     "latitude": 17.424074,
     "longitude": 9.400633812,
-    "GHI/Daily_solar_peak_hours": 6.412000179,
+    "solar_peak_hours": 6.41,
     "index": 148
   },
   {
@@ -1496,7 +1496,7 @@
     "Location id": 4482,
     "latitude": 7.36167,
     "longitude": 8.799780953,
-    "GHI/Daily_solar_peak_hours": 5.048999786,
+    "solar_peak_hours": 5.05,
     "index": 149
   },
   {
@@ -1506,37 +1506,37 @@
     "Location id": 1990,
     "latitude": 27.330907,
     "longitude": 87.0624261,
-    "GHI/Daily_solar_peak_hours": 3.720999956,
+    "solar_peak_hours": 3.72,
     "index": 150
   },
   {
     "Country": "PK",
-    "_id": "Balochistan : Province",
+    "_id": "Balochistan",
     "Population": 13986,
     "Location id": 2088,
     "latitude": 28.490733,
     "longitude": 65.0957792,
-    "GHI/Daily_solar_peak_hours": 5.897999763,
+    "solar_peak_hours": 5.9,
     "index": 151
   },
   {
     "Country": "PK",
-    "_id": "Khyber Pakhtunkhwa : Province",
+    "_id": "Khyber Pakhtunkhwa",
     "Population": 233451,
     "Location id": 2143,
     "latitude": 34.952621,
     "longitude": 72.331113,
-    "GHI/Daily_solar_peak_hours": 4.850999832,
+    "solar_peak_hours": 4.85,
     "index": 152
   },
   {
     "Country": "PK",
-    "_id": "Punjab : Province",
+    "_id": "Punjab",
     "Population": 6979,
     "Location id": 2182,
     "latitude": 31.170406,
     "longitude": 72.7097161,
-    "GHI/Daily_solar_peak_hours": 4.902999878,
+    "solar_peak_hours": 4.9,
     "index": 153
   },
   {
@@ -1546,17 +1546,17 @@
     "Location id": 3984,
     "latitude": 11.066265,
     "longitude": 26.854147,
-    "GHI/Daily_solar_peak_hours": 6.181000233,
+    "solar_peak_hours": 6.18,
     "index": 154
   },
   {
     "Country": "SD",
-    "_id": "Abuda : Point",
+    "_id": "Abuda",
     "Population": 2367,
     "Location id": 2785,
     "latitude": 14.3525,
     "longitude": 35.8897,
-    "GHI/Daily_solar_peak_hours": 6.218999863,
+    "solar_peak_hours": 6.22,
     "index": 155
   },
   {
@@ -1566,7 +1566,7 @@
     "Location id": 3991,
     "latitude": 11.22495,
     "longitude": 26.00037,
-    "GHI/Daily_solar_peak_hours": 6.217999935,
+    "solar_peak_hours": 6.22,
     "index": 156
   },
   {
@@ -1576,17 +1576,17 @@
     "Location id": 4580,
     "latitude": 11.425112,
     "longitude": 34.697352,
-    "GHI/Daily_solar_peak_hours": 5.849999905,
+    "solar_peak_hours": 5.85,
     "index": 157
   },
   {
     "Country": "SD",
-    "_id": "Fau 5 : Point",
+    "_id": "Fau 5",
     "Population": 836,
     "Location id": 2850,
     "latitude": 14.41875,
     "longitude": 33.939796,
-    "GHI/Daily_solar_peak_hours": 6.206999779,
+    "solar_peak_hours": 6.21,
     "index": 158
   },
   {
@@ -1596,7 +1596,7 @@
     "Location id": 2865,
     "latitude": 14.96632,
     "longitude": 35.922356,
-    "GHI/Daily_solar_peak_hours": 6.243000031,
+    "solar_peak_hours": 6.24,
     "index": 159
   },
   {
@@ -1606,67 +1606,67 @@
     "Location id": 4002,
     "latitude": 11.0853,
     "longitude": 26.12228,
-    "GHI/Daily_solar_peak_hours": 6.208000183,
+    "solar_peak_hours": 6.21,
     "index": 160
   },
   {
     "Country": "SD",
-    "_id": "Kilo 26 : Point",
+    "_id": "Kilo 26",
     "Population": 9862,
     "Location id": 2897,
     "latitude": 15.084714,
     "longitude": 35.764364,
-    "GHI/Daily_solar_peak_hours": 6.236000061,
+    "solar_peak_hours": 6.24,
     "index": 161
   },
   {
     "Country": "SD",
-    "_id": "Mukjar : Point",
+    "_id": "Mukjar",
     "Population": 6,
     "Location id": 2929,
     "latitude": 11.997083,
     "longitude": 25.613171,
-    "GHI/Daily_solar_peak_hours": 6.270999908,
+    "solar_peak_hours": 6.27,
     "index": 162
   },
   {
     "Country": "SD",
-    "_id": "Shagarab 1 : Point",
+    "_id": "Shagarab 1",
     "Population": 38333,
     "Location id": 2963,
     "latitude": 14.7597,
     "longitude": 35.9803,
-    "GHI/Daily_solar_peak_hours": 6.251999855,
+    "solar_peak_hours": 6.25,
     "index": 163
   },
   {
     "Country": "SD",
-    "_id": "Shagarab 2 : Point",
+    "_id": "Shagarab 2",
     "Population": 13082,
     "Location id": 2964,
     "latitude": 14.7381,
     "longitude": 35.9736,
-    "GHI/Daily_solar_peak_hours": 6.248000145,
+    "solar_peak_hours": 6.25,
     "index": 164
   },
   {
     "Country": "SD",
-    "_id": "Shagarab 3 : Point",
+    "_id": "Shagarab 3",
     "Population": 6356,
     "Location id": 2965,
     "latitude": 14.7042,
     "longitude": 35.9722,
-    "GHI/Daily_solar_peak_hours": 6.244999886,
+    "solar_peak_hours": 6.24,
     "index": 165
   },
   {
     "Country": "SD",
-    "_id": "Southern Darfur : Wilayat - State",
+    "_id": "Southern Darfur : Wilayat",
     "Population": 31849,
     "Location id": 2973,
     "latitude": 11.648864,
     "longitude": 24.9042208,
-    "GHI/Daily_solar_peak_hours": 6.288000107,
+    "solar_peak_hours": 6.29,
     "index": 166
   },
   {
@@ -1676,17 +1676,17 @@
     "Location id": 2979,
     "latitude": 13.7544,
     "longitude": 34.3908,
-    "GHI/Daily_solar_peak_hours": 6.137000084,
+    "solar_peak_hours": 6.14,
     "index": 167
   },
   {
     "Country": "SD",
-    "_id": "Um Gargur : Point",
+    "_id": "Um Gargur",
     "Population": 11647,
     "Location id": 2994,
     "latitude": 14.5092,
     "longitude": 35.6361,
-    "GHI/Daily_solar_peak_hours": 6.210000038,
+    "solar_peak_hours": 6.21,
     "index": 168
   },
   {
@@ -1696,17 +1696,17 @@
     "Location id": 2999,
     "latitude": 13.4897,
     "longitude": 35.68,
-    "GHI/Daily_solar_peak_hours": 6.173999786,
+    "solar_peak_hours": 6.17,
     "index": 169
   },
   {
     "Country": "SD",
-    "_id": "Wad Sherife : Point",
+    "_id": "Wad Sherife",
     "Population": 18191,
     "Location id": 3020,
     "latitude": 15.365898,
     "longitude": 36.452404,
-    "GHI/Daily_solar_peak_hours": 6.302999973,
+    "solar_peak_hours": 6.3,
     "index": 170
   },
   {
@@ -1716,7 +1716,7 @@
     "Location id": 4007,
     "latitude": 12.727639,
     "longitude": 32.727244,
-    "GHI/Daily_solar_peak_hours": 6.052999973,
+    "solar_peak_hours": 6.05,
     "index": 171
   },
   {
@@ -1726,7 +1726,7 @@
     "Location id": 3977,
     "latitude": 12.500097,
     "longitude": 32.78025,
-    "GHI/Daily_solar_peak_hours": 6.022999763,
+    "solar_peak_hours": 6.02,
     "index": 172
   },
   {
@@ -1736,7 +1736,7 @@
     "Location id": 3976,
     "latitude": 12.366076,
     "longitude": 32.801976,
-    "GHI/Daily_solar_peak_hours": 6.001999855,
+    "solar_peak_hours": 6.0,
     "index": 173
   },
   {
@@ -1746,7 +1746,7 @@
     "Location id": 3975,
     "latitude": 12.590601,
     "longitude": 32.777445,
-    "GHI/Daily_solar_peak_hours": 6.03399992,
+    "solar_peak_hours": 6.03,
     "index": 174
   },
   {
@@ -1756,7 +1756,7 @@
     "Location id": 3974,
     "latitude": 12.598457,
     "longitude": 32.765813,
-    "GHI/Daily_solar_peak_hours": 6.038000107,
+    "solar_peak_hours": 6.04,
     "index": 175
   },
   {
@@ -1766,7 +1766,7 @@
     "Location id": 3973,
     "latitude": 12.369378,
     "longitude": 32.802193,
-    "GHI/Daily_solar_peak_hours": 6.001999855,
+    "solar_peak_hours": 6.0,
     "index": 176
   },
   {
@@ -1776,7 +1776,7 @@
     "Location id": 3972,
     "latitude": 12.472768,
     "longitude": 32.787378,
-    "GHI/Daily_solar_peak_hours": 6.014999866,
+    "solar_peak_hours": 6.01,
     "index": 177
   },
   {
@@ -1786,7 +1786,7 @@
     "Location id": 4006,
     "latitude": 12.716649,
     "longitude": 32.740752,
-    "GHI/Daily_solar_peak_hours": 6.052000046,
+    "solar_peak_hours": 6.05,
     "index": 178
   },
   {
@@ -1796,17 +1796,17 @@
     "Location id": 3971,
     "latitude": 12.660033,
     "longitude": 32.747302,
-    "GHI/Daily_solar_peak_hours": 6.051000118,
+    "solar_peak_hours": 6.05,
     "index": 179
   },
   {
     "Country": "SI",
-    "_id": "Ljubljana : Obcine - Municipality",
+    "_id": "Ljubljana : Obcine",
     "Population": 552,
     "Location id": 2658,
     "latitude": 46.056947,
     "longitude": 14.5057515,
-    "GHI/Daily_solar_peak_hours": 3.513000011,
+    "solar_peak_hours": 3.51,
     "index": 180
   },
   {
@@ -1816,17 +1816,17 @@
     "Location id": 2701,
     "latitude": 9.935235,
     "longitude": 30.37540818,
-    "GHI/Daily_solar_peak_hours": 5.796999931,
+    "solar_peak_hours": 5.8,
     "index": 181
   },
   {
     "Country": "SS",
-    "_id": "Doro : Point",
+    "_id": "Doro",
     "Population": 73186,
     "Location id": 2706,
     "latitude": 9.978238,
     "longitude": 33.758634,
-    "GHI/Daily_solar_peak_hours": 5.586999893,
+    "solar_peak_hours": 5.59,
     "index": 182
   },
   {
@@ -1836,17 +1836,17 @@
     "Location id": 2711,
     "latitude": 9.9867,
     "longitude": 33.617,
-    "GHI/Daily_solar_peak_hours": 5.610000134,
+    "solar_peak_hours": 5.61,
     "index": 183
   },
   {
     "Country": "SS",
-    "_id": "Gorom : Point",
+    "_id": "Gorom",
     "Population": 2185,
     "Location id": 2712,
     "latitude": 124.717443,
     "longitude": 31.581,
-    "GHI/Daily_solar_peak_hours": 0,
+    "solar_peak_hours": 0.0,
     "index": 184
   },
   {
@@ -1856,27 +1856,27 @@
     "Location id": 2715,
     "latitude": 10.095603,
     "longitude": 33.58351,
-    "GHI/Daily_solar_peak_hours": 5.614999771,
+    "solar_peak_hours": 5.61,
     "index": 185
   },
   {
     "Country": "SS",
-    "_id": "Lasu : Point",
+    "_id": "Lasu",
     "Population": 672,
     "Location id": 2721,
     "latitude": 14.485102,
     "longitude": 121.0232543,
-    "GHI/Daily_solar_peak_hours": 5.120999813,
+    "solar_peak_hours": 5.12,
     "index": 186
   },
   {
     "Country": "SS",
-    "_id": "Makpandu : Point",
+    "_id": "Makpandu",
     "Population": 7935,
     "Location id": 2725,
     "latitude": 4.740058,
     "longitude": 28.678979,
-    "GHI/Daily_solar_peak_hours": 5.625,
+    "solar_peak_hours": 5.63,
     "index": 187
   },
   {
@@ -1886,7 +1886,7 @@
     "Location id": 3752,
     "latitude": 9.918056,
     "longitude": 30.351389,
-    "GHI/Daily_solar_peak_hours": 5.798999786,
+    "solar_peak_hours": 5.8,
     "index": 188
   },
   {
@@ -1896,7 +1896,7 @@
     "Location id": 2757,
     "latitude": 10.0177,
     "longitude": 33.54579926,
-    "GHI/Daily_solar_peak_hours": 5.605999947,
+    "solar_peak_hours": 5.61,
     "index": 189
   },
   {
@@ -1906,47 +1906,47 @@
     "Location id": 3044,
     "latitude": 36.375067,
     "longitude": 41.151031,
-    "GHI/Daily_solar_peak_hours": 5.275000095,
+    "solar_peak_hours": 5.28,
     "index": 190
   },
   {
     "Country": "TD",
-    "_id": "Am Nabak : Point",
+    "_id": "Am Nabak",
     "Population": 27270,
     "Location id": 579,
     "latitude": 14.764035,
     "longitude": 22.33285555,
-    "GHI/Daily_solar_peak_hours": 6.511000156,
+    "solar_peak_hours": 6.51,
     "index": 191
   },
   {
     "Country": "TD",
-    "_id": "Amboko : Point",
+    "_id": "Amboko",
     "Population": 10153,
     "Location id": 582,
     "latitude": 7.937519,
     "longitude": 16.58773232,
-    "GHI/Daily_solar_peak_hours": 5.853000164,
+    "solar_peak_hours": 5.85,
     "index": 192
   },
   {
     "Country": "TD",
-    "_id": "Belome : Point",
+    "_id": "Belome",
     "Population": 30107,
     "Location id": 593,
     "latitude": 10.9372,
     "longitude": 15.43159962,
-    "GHI/Daily_solar_peak_hours": 5.931000233,
+    "solar_peak_hours": 5.93,
     "index": 193
   },
   {
     "Country": "TD",
-    "_id": "Bredjing : Point",
+    "_id": "Bredjing",
     "Population": 49777,
     "Location id": 598,
     "latitude": 13.428607,
     "longitude": 21.69712256,
-    "GHI/Daily_solar_peak_hours": 6.301000118,
+    "solar_peak_hours": 6.3,
     "index": 194
   },
   {
@@ -1956,7 +1956,7 @@
     "Location id": 3954,
     "latitude": 9.21895,
     "longitude": 20.477933,
-    "GHI/Daily_solar_peak_hours": 5.940000057,
+    "solar_peak_hours": 5.94,
     "index": 195
   },
   {
@@ -1966,97 +1966,97 @@
     "Location id": 3953,
     "latitude": 9.489722,
     "longitude": 20.738889,
-    "GHI/Daily_solar_peak_hours": 5.962999821,
+    "solar_peak_hours": 5.96,
     "index": 196
   },
   {
     "Country": "TD",
-    "_id": "Dar Es Salam : Point",
+    "_id": "Dar Es Salam",
     "Population": 16966,
     "Location id": 603,
     "latitude": 13.619263,
     "longitude": 14.29864581,
-    "GHI/Daily_solar_peak_hours": 6.097000122,
+    "solar_peak_hours": 6.1,
     "index": 197
   },
   {
     "Country": "TD",
-    "_id": "Djabal : Point",
+    "_id": "Djabal",
     "Population": 24801,
     "Location id": 606,
     "latitude": 13.933333,
     "longitude": 22.2,
-    "GHI/Daily_solar_peak_hours": 6.399000168,
+    "solar_peak_hours": 6.4,
     "index": 198
   },
   {
     "Country": "TD",
-    "_id": "Doholo : Point",
+    "_id": "Doholo",
     "Population": 12632,
     "Location id": 609,
     "latitude": 9.12337,
     "longitude": 16.24640083,
-    "GHI/Daily_solar_peak_hours": 5.921999931,
+    "solar_peak_hours": 5.92,
     "index": 199
   },
   {
     "Country": "TD",
-    "_id": "Dosseye : Point",
+    "_id": "Dosseye",
     "Population": 14211,
     "Location id": 610,
     "latitude": 8.153723,
     "longitude": 16.48713794,
-    "GHI/Daily_solar_peak_hours": 5.868000031,
+    "solar_peak_hours": 5.87,
     "index": 200
   },
   {
     "Country": "TD",
-    "_id": "Farchana : Point",
+    "_id": "Farchana",
     "Population": 31104,
     "Location id": 612,
     "latitude": 12.4544,
     "longitude": 15.21440029,
-    "GHI/Daily_solar_peak_hours": 5.993999958,
+    "solar_peak_hours": 5.99,
     "index": 201
   },
   {
     "Country": "TD",
-    "_id": "Gaga : Point",
+    "_id": "Gaga",
     "Population": 30462,
     "Location id": 613,
     "latitude": 13.763162,
     "longitude": 21.43895265,
-    "GHI/Daily_solar_peak_hours": 6.322999954,
+    "solar_peak_hours": 6.32,
     "index": 202
   },
   {
     "Country": "TD",
-    "_id": "Gondje : Point",
+    "_id": "Gondje",
     "Population": 9537,
     "Location id": 617,
     "latitude": 7.959575,
     "longitude": 16.55375996,
-    "GHI/Daily_solar_peak_hours": 5.849999905,
+    "solar_peak_hours": 5.85,
     "index": 203
   },
   {
     "Country": "TD",
-    "_id": "Goz Amer : Point",
+    "_id": "Goz Amer",
     "Population": 37393,
     "Location id": 621,
     "latitude": 11.997785,
     "longitude": 21.75284385,
-    "GHI/Daily_solar_peak_hours": 6.190000057,
+    "solar_peak_hours": 6.19,
     "index": 204
   },
   {
     "Country": "TD",
-    "_id": "Iridimi : Point",
+    "_id": "Iridimi",
     "Population": 24630,
     "Location id": 634,
     "latitude": 15.127491,
     "longitude": 22.13658672,
-    "GHI/Daily_solar_peak_hours": 6.512000084,
+    "solar_peak_hours": 6.51,
     "index": 205
   },
   {
@@ -2066,7 +2066,7 @@
     "Location id": 635,
     "latitude": 11.880928,
     "longitude": 21.30252558,
-    "GHI/Daily_solar_peak_hours": 6.181000233,
+    "solar_peak_hours": 6.18,
     "index": 206
   },
   {
@@ -2076,67 +2076,67 @@
     "Location id": 4467,
     "latitude": 13.808278,
     "longitude": 21.18413,
-    "GHI/Daily_solar_peak_hours": 6.309999943,
+    "solar_peak_hours": 6.31,
     "index": 207
   },
   {
     "Country": "TD",
-    "_id": "Kounoungou : Point",
+    "_id": "Kounoungou",
     "Population": 22841,
     "Location id": 641,
     "latitude": 14.463244,
     "longitude": 21.94217601,
-    "GHI/Daily_solar_peak_hours": 6.452000141,
+    "solar_peak_hours": 6.45,
     "index": 208
   },
   {
     "Country": "TD",
-    "_id": "Mile : Point",
+    "_id": "Mile",
     "Population": 23894,
     "Location id": 646,
     "latitude": 14.6,
     "longitude": 21.9,
-    "GHI/Daily_solar_peak_hours": 6.43900013,
+    "solar_peak_hours": 6.44,
     "index": 209
   },
   {
     "Country": "TD",
-    "_id": "Moyo : Point",
+    "_id": "Moyo",
     "Population": 7412,
     "Location id": 650,
     "latitude": 9.919188,
     "longitude": 20.87839613,
-    "GHI/Daily_solar_peak_hours": 6.015999794,
+    "solar_peak_hours": 6.02,
     "index": 210
   },
   {
     "Country": "TD",
-    "_id": "Oure Cassoni : Point",
+    "_id": "Oure Cassoni",
     "Population": 35631,
     "Location id": 654,
     "latitude": 15.72302,
     "longitude": 23.10181395,
-    "GHI/Daily_solar_peak_hours": 6.508999825,
+    "solar_peak_hours": 6.51,
     "index": 211
   },
   {
     "Country": "TD",
-    "_id": "Touloum : Point",
+    "_id": "Touloum",
     "Population": 30247,
     "Location id": 665,
     "latitude": 15.003101,
     "longitude": 22.27245862,
-    "GHI/Daily_solar_peak_hours": 6.489999771,
+    "solar_peak_hours": 6.49,
     "index": 212
   },
   {
     "Country": "TD",
-    "_id": "Treguine : Point",
+    "_id": "Treguine",
     "Population": 23057,
     "Location id": 666,
     "latitude": 13.440408,
     "longitude": 21.68641854,
-    "GHI/Daily_solar_peak_hours": 6.300000191,
+    "solar_peak_hours": 6.3,
     "index": 213
   },
   {
@@ -2146,7 +2146,7 @@
     "Location id": 3172,
     "latitude": 6.16828,
     "longitude": 1.342527815,
-    "GHI/Daily_solar_peak_hours": 5.245999813,
+    "solar_peak_hours": 5.25,
     "index": 214
   },
   {
@@ -2156,97 +2156,97 @@
     "Location id": 3964,
     "latitude": 10.67807,
     "longitude": 0.075346328,
-    "GHI/Daily_solar_peak_hours": 5.600999832,
+    "solar_peak_hours": 5.6,
     "index": 215
   },
   {
     "Country": "TH",
-    "_id": "Ban Don Yang : Point",
+    "_id": "Ban Don Yang",
     "Population": 2440,
     "Location id": 3074,
     "latitude": 15.27107,
     "longitude": 98.301792,
-    "GHI/Daily_solar_peak_hours": 4.81799984,
+    "solar_peak_hours": 4.82,
     "index": 216
   },
   {
     "Country": "TH",
-    "_id": "Ban Mae Surin : Point",
+    "_id": "Ban Mae Surin",
     "Population": 1932,
     "Location id": 3076,
     "latitude": 19.023042,
     "longitude": 97.83126389,
-    "GHI/Daily_solar_peak_hours": 4.649000168,
+    "solar_peak_hours": 4.65,
     "index": 217
   },
   {
     "Country": "TH",
-    "_id": "Mae La : Point",
+    "_id": "Mae La",
     "Population": 34217,
     "Location id": 3083,
     "latitude": 17.130133,
     "longitude": 98.373675,
-    "GHI/Daily_solar_peak_hours": 4.765999794,
+    "solar_peak_hours": 4.77,
     "index": 218
   },
   {
     "Country": "TH",
-    "_id": "Mae La Oon : Point",
+    "_id": "Mae La Oon",
     "Population": 8965,
     "Location id": 3084,
     "latitude": 17.805906,
     "longitude": 97.78283611,
-    "GHI/Daily_solar_peak_hours": 4.828000069,
+    "solar_peak_hours": 4.83,
     "index": 219
   },
   {
     "Country": "TH",
-    "_id": "Mae Ra Ma Luang : Point",
+    "_id": "Mae Ra Ma Luang",
     "Population": 9876,
     "Location id": 3085,
     "latitude": 17.804575,
     "longitude": 97.80838333,
-    "GHI/Daily_solar_peak_hours": 4.632999897,
+    "solar_peak_hours": 4.63,
     "index": 220
   },
   {
     "Country": "TH",
-    "_id": "Mai Nai Soi : Point",
+    "_id": "Mai Nai Soi",
     "Population": 8118,
     "Location id": 3075,
     "latitude": 19.354692,
     "longitude": 97.838819,
-    "GHI/Daily_solar_peak_hours": 4.846000195,
+    "solar_peak_hours": 4.85,
     "index": 221
   },
   {
     "Country": "TH",
-    "_id": "Nu Po : Point",
+    "_id": "Nu Po",
     "Population": 9421,
     "Location id": 3089,
     "latitude": 15.851136,
     "longitude": 98.67281389,
-    "GHI/Daily_solar_peak_hours": 4.916999817,
+    "solar_peak_hours": 4.92,
     "index": 222
   },
   {
     "Country": "TH",
-    "_id": "Tham Hin : Point",
+    "_id": "Tham Hin",
     "Population": 5738,
     "Location id": 3092,
     "latitude": 13.697419,
     "longitude": 99.26630278,
-    "GHI/Daily_solar_peak_hours": 4.757999897,
+    "solar_peak_hours": 4.76,
     "index": 223
   },
   {
     "Country": "TH",
-    "_id": "Umpium : Point",
+    "_id": "Umpium",
     "Population": 10703,
     "Location id": 3093,
     "latitude": 16.391089,
     "longitude": 99.008736,
-    "GHI/Daily_solar_peak_hours": 4.363999844,
+    "solar_peak_hours": 4.36,
     "index": 224
   },
   {
@@ -2256,7 +2256,7 @@
     "Location id": 3423,
     "latitude": -6.16161,
     "longitude": 39.19659042,
-    "GHI/Daily_solar_peak_hours": 5.551000118,
+    "solar_peak_hours": 5.55,
     "index": 225
   },
   {
@@ -2266,17 +2266,17 @@
     "Location id": 3428,
     "latitude": -5.38333,
     "longitude": 34.93330002,
-    "GHI/Daily_solar_peak_hours": 6.032000065,
+    "solar_peak_hours": 6.03,
     "index": 226
   },
   {
     "Country": "TZ",
-    "_id": "Nyarugusu : Point",
+    "_id": "Nyarugusu",
     "Population": 128835,
     "Location id": 3430,
     "latitude": -4.217235,
     "longitude": 30.3867834,
-    "GHI/Daily_solar_peak_hours": 5.538000107,
+    "solar_peak_hours": 5.54,
     "index": 227
   },
   {
@@ -2286,57 +2286,57 @@
     "Location id": 3764,
     "latitude": 12.949357,
     "longitude": 44.17684537,
-    "GHI/Daily_solar_peak_hours": 5.926000118,
+    "solar_peak_hours": 5.93,
     "index": 228
   },
   {
     "Country": "ZM",
-    "_id": "Mantapala : Point",
+    "_id": "Mantapala",
     "Population": 18140,
     "Location id": 3635,
     "latitude": -9.526658,
     "longitude": 28.868964,
-    "GHI/Daily_solar_peak_hours": 5.763999939,
+    "solar_peak_hours": 5.76,
     "index": 229
   },
   {
     "Country": "ZM",
-    "_id": "Mayukwayukwa : Point",
+    "_id": "Mayukwayukwa",
     "Population": 21179,
     "Location id": 3546,
     "latitude": -14.549008,
     "longitude": 24.191094,
-    "GHI/Daily_solar_peak_hours": 5.933000088,
+    "solar_peak_hours": 5.93,
     "index": 230
   },
   {
     "Country": "ZM",
-    "_id": "Meheba : Point",
+    "_id": "Meheba",
     "Population": 34265,
     "Location id": 3547,
     "latitude": -12.497463,
     "longitude": 25.8816,
-    "GHI/Daily_solar_peak_hours": 5.859000206,
+    "solar_peak_hours": 5.86,
     "index": 231
   },
   {
     "Country": "ZW",
-    "_id": "Harare : City",
+    "_id": "Harare",
     "Population": 900,
     "Location id": 3556,
     "latitude": -17.825166,
     "longitude": 31.03351,
-    "GHI/Daily_solar_peak_hours": 5.736999989,
+    "solar_peak_hours": 5.74,
     "index": 232
   },
   {
     "Country": "ZW",
-    "_id": "Manicaland : Province",
+    "_id": "Manicaland",
     "Population": 14895,
     "Location id": 3557,
     "latitude": -18.921639,
     "longitude": 32.174605,
-    "GHI/Daily_solar_peak_hours": 5.745999813,
+    "solar_peak_hours": 5.75,
     "index": 233
   }
 ]
