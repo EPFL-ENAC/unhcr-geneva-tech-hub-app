@@ -81,7 +81,7 @@ export default class App extends Vue {
     },
     { tab: "GHG", componentName: "GHG" },
     { tab: "UNHCR Locations", componentName: "UNHCRLocation" },
-    { tab: "GHG Solar average", componentName: "GHGSolarModule" },
+    // { tab: "GHG Solar average", componentName: "GHGSolarModule" },
     { tab: "GHG fNRB", componentName: "GHGfNRB" },
     { tab: "Materials", componentName: "Materials" },
     {
