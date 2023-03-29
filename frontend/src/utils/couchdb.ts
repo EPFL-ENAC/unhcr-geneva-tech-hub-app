@@ -63,9 +63,18 @@ export function loginDefault(username: string, password: string): AxiosPromise {
   });
 }
 
+export class ExpireError extends Error {
+  type: Record<string, string>;
+  constructor(message: string, options: any) {
+    // Need to pass `options` as the second parameter to install the "cause" property.
+    super(message, options);
+    this.type = options.type;
+  }
+}
+
 function expireTokenAndError(message: string): void {
   sessionStorage.removeItem(SessionStorageKey.Token);
-  throw new Error(message);
+  throw new ExpireError(message, { type: "warning" });
 }
 
 export async function loginJWT(token: string): Promise<AxiosResponse> {

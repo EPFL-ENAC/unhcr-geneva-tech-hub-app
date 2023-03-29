@@ -1,4 +1,5 @@
 import {
+  ExpireError,
   getSessionWithCookie,
   loginDefault,
   loginJWT,
@@ -89,7 +90,7 @@ function generateState(): UserState {
 function removeJwtTempTokens(): void {
   // clean verifier, challenge and state
   sessionStorage.removeItem("state");
-  sessionStorage.removeItem("verifier");
+  // we don't remove verifier, we wait for the user to erase it
   sessionStorage.removeItem("challenge");
 }
 
@@ -121,13 +122,14 @@ const mutations: MutationTree<UserState> = {
       name?: string;
       roles?: string[];
       sub?: string;
+      loaded?: boolean;
     }
   ) {
     state.user = {
       name: value.name ?? null,
       sub: value.sub,
       roles: value.roles ? (value.roles as unknown as Roles[]) : [],
-      loaded: false,
+      loaded: value.loaded ?? false,
     };
   },
   SET_USER_LOADING(state) {
@@ -137,6 +139,9 @@ const mutations: MutationTree<UserState> = {
   UNSET_USER_LOADING(state) {
     state.userLoading = false;
     state.user.loaded = true;
+  },
+  UNSET_USER_LOADING_UNIQUELY(state) {
+    state.userLoading = false;
   },
 };
 
@@ -212,7 +217,10 @@ const actions: ActionTree<UserState, RootState> = {
       handleAzureError(context, error);
     }
   },
-  refreshToken: async (context: ActionContext<UserState, RootState>) => {
+  refreshToken: async (
+    context: ActionContext<UserState, RootState>,
+    { byPassLoading } = { byPassLoading: true }
+  ) => {
     try {
       const refresh_token =
         sessionStorage.getItem(SessionStorageKey.Refresh) ?? undefined;
@@ -246,6 +254,7 @@ const actions: ActionTree<UserState, RootState> = {
           message: `Successfully refreshed token for user: ${JSON.stringify(
             context.getters?.user?.name
           )}`,
+          byPassLoading,
           type: "info",
         },
         { root: true }
@@ -297,19 +306,23 @@ const actions: ActionTree<UserState, RootState> = {
         context.commit("SET_USER", response.data);
         return response;
       })
-      .catch((response: Error) => {
-        context.dispatch(
-          "notifyUser",
-          {
-            message: response,
-            type: "error",
-            stack: response.stack,
-          },
-          { root: true }
-        );
-        // should remove token also!!
+      .catch((response: Error | ExpireError) => {
         context.commit("SET_USER", generateEmptyUser());
-        return response;
+        if (response instanceof ExpireError) {
+          // TODO: should remove token also
+          context.dispatch(
+            "notifyUser",
+            {
+              message: response,
+              // type: response.type ?? "error",
+              stack: response.stack,
+            },
+            { root: true }
+          );
+          return response;
+        } else {
+          throw response;
+        }
       })
       .finally(() => {
         context.commit("UNSET_USER_LOADING");
@@ -392,7 +405,17 @@ const actions: ActionTree<UserState, RootState> = {
       return await getSessionWithCookie()
         .then((response) => {
           const user = response.data;
-          context.commit("SET_USER", user.userCtx);
+          try {
+            // if we bypass, we don't refresh
+            if (byPassLoading) {
+              user.userCtx.loaded = true;
+              context.commit("UNSET_USER_LOADING_UNIQUELY");
+            }
+            // TODO: pass user.info.authenticated (jwt/cookie/default) to userCTX
+            context.commit("SET_USER", user.userCtx);
+          } catch (e: unknown) {
+            console.error(e);
+          }
         })
         .finally(() => {
           context.commit("UNSET_USER_LOADING");

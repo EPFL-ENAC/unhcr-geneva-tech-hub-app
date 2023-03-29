@@ -138,7 +138,17 @@ export default class LoginComponent extends Vue {
       }
       // code flow with PKCE (new authorization mode 6th march 2022)
       await this.logout();
+      sessionStorage.removeItem("verifier");
+      // remove query ?
       const response = await this.verifyCode({ code, code_verifier });
+      // We remove query because we don't want to verify code two times
+      // alternative of ({page: location.pathname}, document.title, window.location.pathname
+      // without any history pushed
+      window.history.replaceState(
+        null,
+        document.title,
+        window.location.pathname
+      );
       this.tokenFlow(response.data.id_token);
     }
   }

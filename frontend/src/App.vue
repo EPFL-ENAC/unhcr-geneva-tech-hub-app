@@ -544,6 +544,9 @@ export default class App extends Vue {
     this.$store.subscribe((mutation) => {
       const shouldUpdate = ["storeMessage"];
       if (shouldUpdate.includes(mutation.type)) {
+        if (mutation.payload.byPassLoading) {
+          return;
+        }
         this.snackbar = true;
       }
     });
