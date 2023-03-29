@@ -46,7 +46,7 @@ export default class Trucking extends Vue {
   @Prop({ type: String, required: true })
   readonly titleKey!: string;
 
-  @Prop({ type: [Object, Array], required: true })
+  @Prop({ type: [Object, Array] })
   readonly form!: WashTruckingSurvey;
 
   diffDimension: keyof WashTruckingItemInput = "WACL";
@@ -185,7 +185,7 @@ export default class Trucking extends Vue {
       type: "number",
     },
     {
-      text: "Volume of one water truck",
+      text: "Volume of one water truck (m3)",
       value: "input.TR_VOL",
       conditional_value: KM,
       conditional: "US_UNI",
