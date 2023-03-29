@@ -81,6 +81,18 @@ Vue.config.errorHandler = function (err, vm, info) {
   });
 };
 
+Vue.config.warnHandler = function (err, vm, info) {
+  // handle warning
+  // `info` is a Vue-specific error info, e.g. which lifecycle hook
+  console.trace(info);
+  store.dispatch("notifyUser", {
+    title: `${vm.$options.name}: ${err.split(":")[0] ?? err}`,
+    message: err,
+    stack: info,
+    type: "warning",
+  });
+};
+
 window.addEventListener("unhandledrejection", function (event) {
   //handle error here
   //event.promise contains the promise object
