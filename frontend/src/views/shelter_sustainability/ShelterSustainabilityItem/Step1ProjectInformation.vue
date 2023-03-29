@@ -335,7 +335,6 @@
 
 <script lang="ts">
 import CountrySelect from "@/components/commons/CountrySelect.vue";
-import download from "downloadjs";
 
 import { FormItem } from "@/components/commons/FormItem";
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
@@ -376,8 +375,6 @@ import { Component, VModel, Vue } from "vue-property-decorator";
 /** Project */
 export default class Step1 extends Vue {
   @VModel({ type: [Object], required: true }) localShelter!: Shelter;
-
-  download = download;
 
   readonly zoom = defaultZoom;
   readonly defaultCoordinates = defaultCoordinates;
