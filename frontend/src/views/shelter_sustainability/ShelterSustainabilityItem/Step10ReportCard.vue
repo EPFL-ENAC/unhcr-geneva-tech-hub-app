@@ -10,12 +10,7 @@
         </info-tooltip>
       </v-col>
       <v-col class="d-flex align-center justify-end">
-        <v-btn
-          class="d-print-none"
-          @click="
-            window.print();
-            return false;
-          "
+        <v-btn class="d-print-none" @click="printOnClick"
           >Export Assessment report</v-btn
         >
       </v-col>
@@ -217,6 +212,17 @@ export default class Step10ReportCard extends Vue {
       return [latitude ?? 0, longitude ?? 0];
     }
     return [0, 0] as LatLngExpression;
+  }
+
+  public printOnClick() {
+    try {
+      // https://stackoverflow.com/questions/31171099/window-print-does-not-work-in-safari
+      if (!document.execCommand("print", false, undefined)) {
+        window.print();
+      }
+    } catch {
+      window.print();
+    }
   }
 }
 </script>
