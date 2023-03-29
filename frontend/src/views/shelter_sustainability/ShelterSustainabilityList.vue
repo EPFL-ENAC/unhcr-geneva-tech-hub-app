@@ -175,7 +175,7 @@
                       size="64"
                       tile
                     >
-                      <v-img :src="project.image?.url"></v-img>
+                      <v-img :src="project.image?.url" @error="onError"></v-img>
                     </v-avatar>
                     <v-avatar
                       v-else
@@ -376,6 +376,13 @@ export default class ProjectList extends Vue {
   deleteItem(id: string): void {
     this.deleteId = id;
     this.dialogDelete = true;
+  }
+  onError(event: UIEvent): void {
+    // https://www.valentinog.com/blog/error/
+    this.$store.dispatch("notifyUser", {
+      type: "warning",
+      message: `Image missing ${event}`,
+    });
   }
 
   async deleteItemConfirm(): Promise<void> {
