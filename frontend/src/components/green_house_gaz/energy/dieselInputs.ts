@@ -211,7 +211,7 @@ export function dieselInputsProducedPer(
     {
       value: "input.disableDieselLiters",
       conditional_value: ["ELE_DIES", "ELE_HYB"],
-      text: "Number of litres of diesel known",
+      text: "Number of liters of diesel known",
       conditional: "fuelType",
       style: {
         cols: "12",
@@ -232,7 +232,7 @@ export function dieselInputsProducedPer(
       conditional_value: false,
       conditional: "disableDieselLiters",
       computeResults: true,
-      text: `Litres of diesel used ${litersSuffix}`,
+      text: `Liters of diesel used ${litersSuffix}`,
       suffix: "l",
       style: {
         cols: "12",

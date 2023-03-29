@@ -31,8 +31,10 @@ import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-export const DIESEL = "DIESEL";
+export const DIESEL = "Diesel";
 export const PETROL = "Petrol / Gaz";
+export const KM = "km";
+export const LITERS = "liters";
 
 @Component({
   components: {
@@ -78,7 +80,7 @@ export default class Trucking extends Vue {
       const volumeCollected = ["WASTEWATER", "FAECAL SLUDGE"].includes(US_TYP)
         ? WACL * (REF_WW_FS?.value ?? 0.85)
         : WACL;
-      if (US_UNI === "KM") {
+      if (US_UNI === KM) {
         const washFactorKM =
           TR_TYP === DIESEL ? REF_WSH_D?.value : REF_WSH_G?.value;
         if (!washFactorKM) {
@@ -91,7 +93,7 @@ export default class Trucking extends Vue {
           (washFactorKM * itemComputed.TR_DIST) / 1000;
       }
 
-      if (US_UNI === "LITRES") {
+      if (US_UNI === LITERS) {
         const washFactorL =
           TR_TYP === DIESEL ? REF_DIES_L?.value : REF_GAZ_L?.value;
         if (!washFactorL) {
@@ -129,7 +131,7 @@ export default class Trucking extends Vue {
       value: "input.US_UNI",
       type: "select",
 
-      items: ["KM", "LITRES"],
+      items: [KM, LITERS],
       hideFooterContent: false,
       customEventInput: (truckId: string, localInput: SurveyInput) => {
         // does not work with reference ?
@@ -145,7 +147,7 @@ export default class Trucking extends Vue {
     {
       text: "Distance between camp and water source",
       value: "input.TOT_WS",
-      conditional_value: "KM",
+      conditional_value: KM,
       conditional: "US_UNI",
       style: {
         cols: "12",
@@ -158,16 +160,16 @@ export default class Trucking extends Vue {
       },
     },
     {
-      text: "Liters of fuel consumed",
+      text: "Liters of fuel consumed per year (l/yr)",
       value: "input.LIT_WS",
-      conditional_value: "LITRES",
+      conditional_value: LITERS,
       conditional: "US_UNI",
       style: {
         cols: "12",
       },
       type: "number",
       hideFooterContent: false,
-      suffix: "l",
+      suffix: "l/yr",
       formatter: (v: number, { ...args }) => {
         return formatNumber(v, { suffix: args.suffix });
       },
@@ -185,7 +187,7 @@ export default class Trucking extends Vue {
     {
       text: "Volume of one water truck",
       value: "input.TR_VOL",
-      conditional_value: "KM",
+      conditional_value: KM,
       conditional: "US_UNI",
       style: {
         cols: "12",
