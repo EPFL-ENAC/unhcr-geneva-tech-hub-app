@@ -133,7 +133,7 @@
         </v-row>
       </v-col>
     </v-row>
-    <step-9-score-card :shelter="shelter" />
+    <step-9-score-card :shelter="shelter" class="shelter-report-score-card" />
     <step-5-environmental-impact :shelter="shelter" />
     <step-6-technical-performance :shelter="shelter" />
     <step-7-habitability :shelter="shelter" />
@@ -228,6 +228,12 @@ export default class Step10ReportCard extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.info-map {
+  height: 317px;
+}
+.shelter-image-report {
+  height: 350px;
+}
 @media print {
   @page {
     size: portrait;
@@ -243,8 +249,15 @@ export default class Step10ReportCard extends Vue {
       align-items: center;
     }
   }
+  .info-map {
+    height: 7cm;
+  }
   .shelter-image-report {
     height: 5cm;
+  }
+  .shelter-report-score-card {
+    page-break-after: always;
+    page-break-inside: auto;
   }
 }
 
@@ -261,11 +274,5 @@ export default class Step10ReportCard extends Vue {
 ::v-deep .c-grey {
   color: var(--c-grey);
   fill: var(--c-grey);
-}
-.info-map {
-  height: 317px;
-}
-.shelter-image-report {
-  height: 300px;
 }
 </style>
