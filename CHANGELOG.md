@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.8.0...v0.8.1) (2023-03-30)
+
+
+### Bug Fixes
+
+* **about:** revert issue url for non-github-users ([afbb642](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/afbb6427ccdcc53deb8a490133967f4731fd823e))
+* **common:** update issue link with proper new issue href ([6168d85](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/6168d856836ee832a6e2825c2aaa92798728c608))
+* **shelter:** change report css for printing + offset for lng map ([eb755fa](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/eb755fab1f36cb1b6e828c139f494949f194eaf1))
+* **shelter:** change report css for printing to add breaking page ([e2ce04c](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/e2ce04c6185ff9c2ac2137a0d4bbe6a2180b7fb5))
+
 ## [0.8.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.7.0...v0.8.0) (2023-03-30)
 
 
