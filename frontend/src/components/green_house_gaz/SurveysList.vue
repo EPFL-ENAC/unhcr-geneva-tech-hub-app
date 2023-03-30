@@ -63,6 +63,9 @@
       <template #[`item.created_at`]="{ item }">
         {{ item.created_at | formatDate }}
       </template>
+      <template #[`item.updated_at`]="{ item }">
+        {{ item.updated_at | formatDate }}
+      </template>
       <template #[`item.actions`]="{ item }">
         <div class="survey-list__actions">
           <v-tooltip bottom>
@@ -186,7 +189,8 @@ export default class ProjectItem extends Vue {
 
   headersSurvey = [
     { text: "Description", value: "name" },
-    { text: "Creation date", value: "created_at" },
+    { text: "Created", value: "created_at" },
+    { text: "Updated", value: "updated_at" },
     {
       text: "Actions",
       value: "actions",
