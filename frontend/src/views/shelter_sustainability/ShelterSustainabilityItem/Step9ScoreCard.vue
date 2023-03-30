@@ -168,7 +168,7 @@ import {
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
 import { EChartsOption } from "echarts/types/dist/shared";
-import PouchDB from "pouchdb";
+import PouchDB from "pouchdb-browser";
 import VChart from "vue-echarts";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
@@ -290,9 +290,9 @@ export default class Step8ScoreCard extends Vue {
     const id = decodeURIComponent(this.$route.params.id);
 
     this.getScorecards(id);
-    this.changes = this.db?.onChange(() => {
-      this.getScorecards(id);
-    });
+    // this.changes = this.db?.onChange(() => {
+    //   this.getScorecards(id);
+    // });
 
     // GET years and GET countries for v-select used by shelterFilters
     this.getYears();
@@ -308,7 +308,7 @@ export default class Step8ScoreCard extends Vue {
   }
 
   destroyed(): void {
-    this.changes?.cancel();
+    // this.changes?.cancel();
   }
 }
 

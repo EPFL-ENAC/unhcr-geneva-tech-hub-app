@@ -1,7 +1,7 @@
 <template>
   <v-card flat>
-    <v-card-text v-if="iges_grid">
-      <v-data-table dense :headers="headers" :items="iges_grid">
+    <v-card-text v-if="items">
+      <v-data-table dense :headers="headers" :items="items">
         <template #[`item.value`]="props">
           <span>{{ props.item.value | formatNumber }}</span>
         </template>
@@ -18,49 +18,24 @@
 </template>
 
 <script lang="ts">
-import { IgesItemInterface } from "@/store/GhgReferenceIgesGridModule";
+import { IgesItem } from "@/store/GhgReferenceIgesGridModule";
 import { Component, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("GhgReferenceIgesGridModule", ["iges_grid"]),
+    ...mapGetters("GhgReferenceIgesGridModule", ["items"]),
     ...mapGetters(["referenceDataDrawer"]),
-  },
-  methods: {
-    ...mapActions("GhgReferenceIgesGridModule", [
-      "syncDB",
-      "getAllDocs",
-      "updateDoc",
-      "closeDB",
-    ]),
   },
 })
 export default class IgesGrid extends Vue {
-  syncDB!: () => null;
-  closeDB!: () => Promise<null>;
-  getAllDocs!: () => Promise<null>;
-
-  updateDoc!: (obj: IgesItemInterface) => PromiseLike<IgesItemInterface>;
-
-  iges_grid!: IgesItemInterface[];
+  items!: IgesItem[];
   snack = false;
   snackColor = "";
   snackText = "";
   max25chars = (v: string): boolean | string =>
     v.length <= 25 || "Input too long!";
   pagination = {};
-
-  mounted(): void {
-    this.syncDB();
-    this.getAllDocs();
-  }
-
-  destroyed(): void {
-    this.closeDB().then(() => {
-      console.log("DESTROYED view reference list, closing DB");
-    });
-  }
 
   public get headers(): HeaderInterface[] {
     return [

@@ -279,7 +279,7 @@ const actions: ActionTree<ShelterState, RootState> = {
   },
   getDoc: async (context: ActionContext<ShelterState, RootState>, id) => {
     let result: Shelter | undefined =
-      await context.state.localCouch?.localDB.get(id);
+      await context.state.localCouch?.remoteDB.get(id);
     if (result) {
       result = computeShelter(result);
       context.commit("SET_SHELTER", result);

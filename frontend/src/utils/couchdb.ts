@@ -3,7 +3,7 @@ import { ExistingDocument } from "@/models/couchdbModel";
 import { SessionStorageKey } from "@/utils/storage";
 import axios, { AxiosError, AxiosPromise, AxiosResponse } from "axios";
 import { JwtPayload } from "jsonwebtoken";
-import PouchDB from "pouchdb";
+import PouchDB from "pouchdb-browser";
 import qs from "qs";
 
 const databaseUrl: string = url(process.env.VUE_APP_COUCHDB_URL);
@@ -183,8 +183,18 @@ export class SyncDatabase<T> {
     this.sync = localDB.sync(
       remoteDB,
       {
+        batch_size: 5,
+        timeout: 30000,
+        batches_limit: 2,
+        since: "now",
         live: true,
         retry: true,
+        back_off_function(delay) {
+          if (delay === 27000 || delay === 0) {
+            return 1000;
+          }
+          return delay * 3;
+        },
       },
       (error, result) => {
         if (error) {
@@ -209,9 +219,12 @@ export class SyncDatabase<T> {
     listener: (value: PouchDB.Core.ChangesResponseChange<T>) => unknown
   ): PouchDB.Core.Changes<T> {
     this.onChangeListener = this.localDB.changes({
+      batch_size: 5,
+      timeout: 30000,
       since: "now",
       live: true,
     });
+
     this.onChangeListener.on("change", listener);
     return this.onChangeListener;
   }

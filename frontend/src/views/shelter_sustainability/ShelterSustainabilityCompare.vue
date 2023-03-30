@@ -394,7 +394,7 @@ import {
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
 import { EChartsOption } from "echarts/types/dist/shared";
-import PouchDB from "pouchdb";
+import PouchDB from "pouchdb-browser";
 import VChart from "vue-echarts";
 import { Route } from "vue-router";
 import { mapActions, mapGetters } from "vuex";
@@ -434,11 +434,6 @@ function findShelterImage(images: ImageShelter[]): ImageShelter | undefined {
       "syncDB",
       "closeDB",
     ]),
-    ...mapActions("SheltersMaterialModule", {
-      syncDBSheltersMaterial: "syncDB",
-      getAllDocsSheltersMaterial: "getAllDocs",
-      closeDBSheltersMaterial: "closeDB",
-    }),
   },
   components: {
     VChart,
@@ -452,9 +447,6 @@ export default class ShelterSustainabilityCompare extends Vue {
   getDoc!: (id: string) => Promise<Shelter>;
   closeDB!: () => null;
 
-  syncDBSheltersMaterial!: () => null;
-  closeDBSheltersMaterial!: () => Promise<null>;
-  getAllDocsSheltersMaterial!: () => Promise<null>;
   $route!: Route;
   db!: SyncDatabase<Shelter> | null;
   scorecards!: ScoreCardWithShelterInfo[];
@@ -517,7 +509,6 @@ export default class ShelterSustainabilityCompare extends Vue {
             shelter.image = findShelterImage(shelter.images) ?? undefined;
             return shelter;
           });
-        await this.getAllDocsSheltersMaterial();
         await this.getScorecards(shelterIds);
       }
       this.loaded = true;
@@ -528,14 +519,12 @@ export default class ShelterSustainabilityCompare extends Vue {
 
   mounted(): void {
     this.syncDB();
-    this.syncDBSheltersMaterial();
     this.retrieveData();
-    this.changes = this.db?.onChange(this.retrieveData);
+    // this.changes = this.db?.onChange(this.retrieveData);
   }
   destroyed(): void {
     this.closeDB();
-    this.closeDBSheltersMaterial();
-    this.changes?.cancel();
+    // this.changes?.cancel();
   }
 }
 </script>

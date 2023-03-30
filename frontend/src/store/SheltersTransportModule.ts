@@ -1,4 +1,4 @@
-import axios, { AxiosPromise } from "axios";
+import transports from "@/assets/references/transports.json";
 import {
   ActionContext,
   ActionTree,
@@ -12,14 +12,7 @@ interface SheltersTransportState {
   item: ShelterTransport;
   items: ShelterTransport[];
   itemsLoading: boolean;
-  paginate: Paginate;
   itemsLength: number;
-}
-
-export interface Paginate {
-  limit: number;
-  skip?: number;
-  startkey?: string;
 }
 
 /*
@@ -42,13 +35,9 @@ const MSG_COULD_NOT_FIND_ITEM = "Could not find item with this id";
 function generateState(): SheltersTransportState {
   return {
     item: {} as ShelterTransport,
+    items: transports,
     itemsLoading: false,
-    items: [],
-    paginate: {
-      limit: 10,
-      skip: 0,
-    },
-    itemsLength: 0,
+    itemsLength: transports.length,
   };
 }
 
@@ -57,7 +46,6 @@ const getters: GetterTree<SheltersTransportState, RootState> = {
   item: (s): ShelterTransport => s.item,
   items: (s): ShelterTransport[] => s.items,
   itemsLoading: (s): boolean => s.itemsLoading,
-  paginate: (s): Paginate => s.paginate,
   itemsLength: (s): number => s.itemsLength,
 };
 
@@ -69,14 +57,8 @@ const mutations: MutationTree<SheltersTransportState> = {
   SET_ITEMS(state, value) {
     state.items = value;
   },
-  SET_PAGINATE(state, value) {
-    state.paginate = value;
-  },
   SET_ITEMS_LENGTH(state, value) {
     state.itemsLength = value;
-  },
-  SET_LOADING(state, value) {
-    state.itemsLoading = value;
   },
 };
 
@@ -86,33 +68,14 @@ const actions: ActionTree<SheltersTransportState, RootState> = {
     context: ActionContext<SheltersTransportState, RootState>,
     id: string
   ): ShelterTransport | undefined => {
-    const foundItem = context.state.items.find((item) => item._id === id);
-    if (foundItem) {
-      context.commit("SET_ITEM", foundItem);
-    } else {
-      console.log(MSG_COULD_NOT_FIND_ITEM);
+    const foundItem = context.getters.items.find(
+      (item: ShelterTransport) => item._id === id
+    );
+    if (!foundItem) {
+      throw new Error(MSG_COULD_NOT_FIND_ITEM);
     }
+    context.commit("SET_ITEM", foundItem);
     return foundItem;
-  },
-  getAllDocs: (
-    context: ActionContext<SheltersTransportState, RootState>
-  ): AxiosPromise<(ShelterTransport | void)[]> => {
-    context.commit("SET_LOADING", true);
-    return axios({
-      method: "get",
-      url: `${process.env.BASE_URL}shelter/transports.json`,
-      transformResponse: (data) => JSON.parse(data),
-    })
-      .then((response) => {
-        context.commit("SET_ITEMS", response.data);
-        return response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        context.commit("SET_LOADING", false);
-      });
   },
 };
 

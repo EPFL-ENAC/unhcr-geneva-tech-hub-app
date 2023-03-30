@@ -81,7 +81,7 @@ import {
 } from "@/views/shelter_sustainability/shelterTypeColors";
 import { CallbackDataParams, EChartsOption } from "echarts/types/dist/shared";
 import { map, mean, sum } from "lodash";
-import PouchDB from "pouchdb";
+import PouchDB from "pouchdb-browser";
 
 import { ScorecardConfig } from "@/views/shelter_sustainability/ShelterSustainabilityItem/generateScorecardOptions";
 import { cloneDeep } from "lodash";
@@ -526,9 +526,9 @@ export default class OverviewProjects extends Vue {
 
     // TODO: correct the getScorecards function to avoid this behavior
     this.getScorecards(id);
-    this.changes = this.db?.onChange(() => {
-      this.getScorecards(id);
-    });
+    // this.changes = this.db?.onChange(() => {
+    //   this.getScorecards(id);
+    // });
 
     // GET years and GET countries for v-select used by shelterFilters
     this.getYears();
@@ -548,7 +548,7 @@ export default class OverviewProjects extends Vue {
     this.syncDB();
     this.retrieveData();
 
-    this.changes = this.db?.onChange(this.retrieveData);
+    // this.changes = this.db?.onChange(this.retrieveData);
   }
   destroyed(): void {
     this.closeDB();

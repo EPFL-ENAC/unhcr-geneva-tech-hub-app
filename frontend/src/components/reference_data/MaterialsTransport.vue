@@ -148,7 +148,7 @@
 import { countriesMap } from "@/utils/countriesAsList";
 import { iso3166_3_to_2 } from "@/utils/iso3166";
 import { Component, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 
 @Component({
   computed: {
@@ -159,17 +159,10 @@ import { mapActions, mapGetters } from "vuex";
       "itemsLoading",
     ]),
   },
-  methods: {
-    ...mapActions("SheltersTransportModule", ["getAllDocs"]),
-  },
 })
 export default class MaterialsTransport extends Vue {
-  getAllDocs!: () => Promise<null>;
   iso3166_3_to_2 = iso3166_3_to_2;
   countriesMap = countriesMap;
-  mounted(): void {
-    this.getAllDocs();
-  }
   public getSourceCountry(key: string): Record<string, string> {
     const [source, destination] = key.split("_");
     return { source, destination };

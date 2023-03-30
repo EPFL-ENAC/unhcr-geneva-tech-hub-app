@@ -57,42 +57,20 @@ import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import { infoTooltipText } from "@/components/shelter_sustainability/infoTooltipText";
 import { ShelterMaterial } from "@/store/SheltersMaterialModule";
 import { Component, Vue } from "vue-property-decorator";
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 
 @Component({
   computed: {
     ...mapGetters("SheltersMaterialModule", ["items"]),
-  },
-  methods: {
-    ...mapActions("SheltersMaterialModule", [
-      "syncDB",
-      "getAllDocs",
-      "closeDB",
-    ]),
   },
   components: {
     InfoTooltip,
   },
 })
 export default class Materials extends Vue {
-  syncDB!: () => null;
-  closeDB!: () => Promise<null>;
-  getAllDocs!: () => Promise<null>;
-
   items!: ShelterMaterial[];
   pagination = {};
   infoTooltipText = infoTooltipText;
-
-  mounted(): void {
-    this.syncDB();
-    this.getAllDocs();
-  }
-
-  destroyed(): void {
-    this.closeDB().then(() => {
-      console.log("DESTROYED view reference list, closing DB");
-    });
-  }
 
   public get headers(): HeaderInterface[] {
     return [

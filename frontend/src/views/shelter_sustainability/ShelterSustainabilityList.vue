@@ -473,7 +473,7 @@ export default class ProjectList extends Vue {
     this.getCountries();
 
     // reload on db change
-    this.db?.onChange(this.getShelters);
+    // this.db?.onChange(this.getShelters);
 
     const queryIds = this.$route.query.ids;
     if (typeof queryIds === "string") {

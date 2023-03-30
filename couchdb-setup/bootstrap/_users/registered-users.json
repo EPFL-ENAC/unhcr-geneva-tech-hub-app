@@ -91,5 +91,18 @@
     "iterations": 10,
     "derived_key": "f2631019653665a54edf1dd2253037078370cf89",
     "salt": "bb38ad00cc58a6f875de698224587342"
+  },
+  {
+    "_id": "org.couchdb.user:natalia.montoyaarevalo@epfl.ch",
+    "name": "natalia.montoyaarevalo@epfl.ch",
+    "roles": [
+      "user",
+      "admin"
+    ],
+    "type": "user",
+    "password_scheme": "pbkdf2",
+    "iterations": 10,
+    "derived_key": "012eae1bec47682d7cffe3781f0a3bbe2b5acaf1",
+    "salt": "7cde8da866014f0860cfed0d17113fac"
   }
 ]
