@@ -8,7 +8,7 @@
           <a
             style="font-weight: bold"
             target="_blank"
-            href="https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/new/choose"
+            href="https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues"
             >here</a
           >
         </p>
