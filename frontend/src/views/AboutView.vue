@@ -3,10 +3,12 @@
     <v-card class="about ma-4" elevation="2">
       <v-card-text>
         <h2 class="mx-8" data-cy="aboutDisclaimer">Disclaimer</h2>
-        <p class="mx-10">
+        <p class="ma-10">
           Please report any bugs
           <a
-            href="https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues"
+            style="font-weight: bold"
+            target="_blank"
+            href="https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/new/choose"
             >here</a
           >
         </p>
