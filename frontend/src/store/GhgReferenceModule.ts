@@ -1,11 +1,5 @@
 import ghg_reference from "@/assets/references/ghg_reference.json";
-import {
-  ActionContext,
-  ActionTree,
-  GetterTree,
-  Module,
-  MutationTree,
-} from "vuex";
+import { GetterTree, Module } from "vuex";
 import { RootState } from ".";
 
 export type ItemReferencesMap = Record<string, ReferenceItemInterface>;
@@ -20,22 +14,10 @@ export interface ReferenceItemInterface {
   index?: number;
 }
 
-interface GhgReferenceModuleState {
-  item: ReferenceItemInterface;
-}
-
-/** Default Configure state value */
-function generateState(): GhgReferenceModuleState {
-  return {
-    item: {} as ReferenceItemInterface,
-  };
-}
-const MSG_COULD_NOT_FIND_ITEM = "Could not find item with this id";
-
 /** Getters */
-const getters: GetterTree<GhgReferenceModuleState, RootState> = {
+const getters: GetterTree<null, RootState> = {
   items: (): ReferenceItemInterface[] | null => ghg_reference,
-  ghgMapRef: (s): ItemReferencesMap | undefined => {
+  ghgMapRef: (): ItemReferencesMap | undefined => {
     if (!ghg_reference) {
       return undefined;
     }
@@ -49,36 +31,13 @@ const getters: GetterTree<GhgReferenceModuleState, RootState> = {
   },
 };
 
-/** Mutations */
-const mutations: MutationTree<GhgReferenceModuleState> = {
-  SET_ITEM(state, value) {
-    state.item = value;
-  },
-};
-
-/** Action */
-const actions: ActionTree<GhgReferenceModuleState, RootState> = {
-  getDoc: (
-    context: ActionContext<GhgReferenceModuleState, RootState>,
-    id: string
-  ): ReferenceItemInterface | undefined => {
-    const foundItem = ghg_reference.find((item) => item._id === id);
-    if (foundItem) {
-      context.commit("SET_ITEM", foundItem);
-    } else {
-      console.log(MSG_COULD_NOT_FIND_ITEM);
-    }
-    return foundItem;
-  },
-};
-
 /** VuexStore */
-const GhgReferenceModule: Module<GhgReferenceModuleState, RootState> = {
+const GhgReferenceModule: Module<null, RootState> = {
   namespaced: true,
-  state: generateState(),
+  state: undefined,
   getters,
-  mutations,
-  actions,
+  mutations: undefined,
+  actions: undefined,
 };
 
 export default GhgReferenceModule;
