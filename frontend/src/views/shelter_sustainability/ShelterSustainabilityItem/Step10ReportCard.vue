@@ -117,14 +117,14 @@
       <v-col :cols="6">
         <v-row>
           <v-col class="d-flex info-map">
-            <territory-map :value="latLng" :default-zoom="2" />
+            <territory-map :value="latLng" :default-zoom="5" />
           </v-col>
         </v-row>
         <v-row>
           <v-col class="d-flex justify-center align-center">
             <v-img
               v-if="shelterWithImage?.image?.url"
-              height="5cm"
+              class="shelter-image-report"
               width="100%"
               :src="shelterWithImage?.image?.url"
               aspect-ratio="3/2"
@@ -243,7 +243,11 @@ export default class Step10ReportCard extends Vue {
       align-items: center;
     }
   }
+  .shelter-image-report {
+    height: 5cm;
+  }
 }
+
 ::v-deep .c-blue {
   color: var(--c-blue);
   fill: var(--c-blue);
@@ -257,5 +261,11 @@ export default class Step10ReportCard extends Vue {
 ::v-deep .c-grey {
   color: var(--c-grey);
   fill: var(--c-grey);
+}
+.info-map {
+  height: 317px;
+}
+.shelter-image-report {
+  height: 300px;
 }
 </style>

@@ -126,11 +126,12 @@ export default class TerritoryMap extends Vue {
   }
   public get defaultCoordinates(): (number | string)[] {
     if (this.value.length > 0) {
-      const [lat, lng] = this.value as number[];
+      const [lat, lng] = this.value as (string | number)[];
       if (lat === 0 && lng === 0) {
         return defaultCoordinates;
       }
-      return this.value;
+      // special offset of 5 lng for printing only
+      return [parseFloat(lat as string), parseFloat(lng as string) + 5];
     }
     return defaultCoordinates;
   }
