@@ -17,6 +17,7 @@ export interface CountryInfo {
   lon: number;
 }
 export interface Site {
+  _rev?: string;
   id: string; // site unique identitier (name as first)
   name: string; // site name // location
   country_code: CountryCode;
@@ -30,7 +31,8 @@ type Email = string;
 export type Sites = Site[];
 
 export interface GreenHouseGaz {
-  _id?: string | undefined;
+  _rev?: string;
+  _id: string; // uuid4 mandatory
   name: string;
   country_code: string;
   latitude: number;
@@ -39,11 +41,12 @@ export interface GreenHouseGaz {
   users: (CouchUser | Email | string)[];
   solar?: number;
   population: number; // total population
-  hh: number; // % of hh using cookstove
-  pp_per_hh: number; // ave people per hh
-  totalCookstoves: number;
+  pp_per_hh: number; // ave people per hhtotalHH
+  totalHH: number;
   created_by: string;
   created_at: string;
+  updated_by?: string;
+  updated_at?: string;
   isUNHCR?: boolean;
 }
 
@@ -59,7 +62,7 @@ export interface SurveyForms {
 export type SurveyCategory = keyof SurveyForms;
 
 export interface Survey extends SurveyForms {
-  _id?: string; // uuid4
+  _id: string; // uuid4
   created_at: string;
   created_by: string;
   updated_by?: string;
@@ -161,6 +164,7 @@ export interface GenericEndline<
 > {
   items: EndlineItemType[];
   results: EndlineResultsType;
+  alertDismissed?: boolean;
 }
 
 // GENERIC STOP
@@ -189,12 +193,19 @@ export interface DieselItem {
   generatorSize?: number; // replace the diesel liter
   operatingHours?: number; // replace the diesel liter
   generatorLoad?: number; // load of generator (should be default to 60%)
+  dieselPowerEstimated?: boolean;
+  dieselLitersEstimated?: boolean;
 }
 
-export interface EnergyItem extends DieselItem {
-  gridPower: number;
+export interface SolarItem {
+  solarInstalled?: number;
+}
+
+export interface EnergyItem extends DieselItem, SolarItem {
+  // power is optional
+  gridPower?: number;
   dieselPower?: number;
-  renewablePower: number;
+  renewablePower?: number;
 }
 
 export interface EnergyFacilityItem extends EnergyItem {

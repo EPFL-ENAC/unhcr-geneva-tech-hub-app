@@ -1,4 +1,3 @@
-import energyRouter from "@/router/energyRouter";
 import ghgRouter from "@/router/ghgRouter";
 import shelterRouter from "@/router/shelterRouter";
 import Apps from "@/views/AppListView.vue";
@@ -62,7 +61,6 @@ const routes: Array<RouteConfig> = [
 ];
 routes.push(ghgRouter);
 routes.push(shelterRouter);
-routes.push(energyRouter);
 
 const router = new VueRouter({
   mode: "history",

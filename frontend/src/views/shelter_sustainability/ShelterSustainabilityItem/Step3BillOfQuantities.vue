@@ -282,11 +282,18 @@ export default class Step3Materials extends Vue {
       this.setItemsIndividualShelter(valueInteger);
     }
   }
-  public printFunction(): boolean {
+  public printFunction() {
     document.title = " ";
-    window.print();
-    return false;
+    try {
+      // https://stackoverflow.com/questions/31171099/window-print-does-not-work-in-safari
+      if (!document.execCommand("print", false, undefined)) {
+        window.print();
+      }
+    } catch {
+      window.print();
+    }
   }
+
   readonly UnitsRef = UnitsRef;
   countriesMap = countriesMap;
   infoTooltipText = infoTooltipText;

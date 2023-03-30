@@ -1,6 +1,7 @@
 export function computeChangeInEmission(
   baseline: number,
-  endline: number
+  endline: number,
+  ratioEndline = 1
 ): number {
-  return (endline - baseline) / baseline;
+  return (endline - baseline * ratioEndline) / baseline;
 }

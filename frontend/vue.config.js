@@ -17,21 +17,21 @@ module.exports = {
   devServer: {
     // https://github.com/webpack/webpack-dev-server/issues/1850#issuecomment-490926569
     // host: "127.0.0.1",
-    hot: false,
-    // liveReload: true,
+    hot: true,
+    liveReload: true,
     // ipc: true,
     proxy: {
       "^/db": {
-        target: "http://localhost:5984/",
+        target: "http://localhost:5984",
         pathRewrite: {
           "^/db": "", // remove base path
         },
-        ws: true,
         changeOrigin: true,
+        secure: false,
+        ws: true,
         headers: {
           Connection: "keep-alive",
         },
-        secure: false,
       },
       "^/api": {
         target: "http://localhost:5050/",

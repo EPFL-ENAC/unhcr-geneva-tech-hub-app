@@ -57,7 +57,7 @@ export default class Energy extends Vue {
 
   public get headers(): HeaderInterface[] {
     return [
-      { text: "_id", value: "_id" },
+      { text: "Country name", value: "_id" },
       {
         text: "Solar average",
         align: "start",

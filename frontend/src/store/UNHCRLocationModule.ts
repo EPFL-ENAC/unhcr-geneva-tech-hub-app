@@ -23,7 +23,7 @@ export interface UNHCRLocation {
   "Location id": number;
   latitude: number; //: 28.978026
   longitude: number; // : 50.8379918,
-  "GHI/Daily_solar_peak_hours": number; // 5.607999802,
+  solar_peak_hours: number; // 5.607999802,
 }
 
 /** Default Configure state value */

@@ -30,7 +30,13 @@
         </v-tab>
       </v-tabs>
       <v-spacer />
-      <v-menu v-if="$router.currentRoute.name?.includes('Shelter')" offset-y>
+      <v-menu
+        v-if="$router.currentRoute.name?.includes('Shelter')"
+        offset-y
+        bottom
+        min-width="330px"
+        max-width="330px"
+      >
         <template #activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" aria-label="shelter-help" v-on="on">
             <v-icon> $mdiHelpCircleOutline </v-icon>
@@ -43,9 +49,9 @@
             @click="setHelper(item)"
           >
             <v-list-item-action>
-              <v-icon>${{ item.icon }}</v-icon></v-list-item-action
+              <v-icon>${{ item?.icon }}</v-icon></v-list-item-action
             >
-            <v-list-item-content>{{ item.title }}</v-list-item-content>
+            <v-list-item-content>{{ item?.title }}</v-list-item-content>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -151,7 +157,7 @@
             </v-icon>
           </v-list-item-icon>
           <v-list-item-title>
-            {{ app.title }}
+            {{ app?.title }}
           </v-list-item-title>
         </v-list-item>
         <v-list-item link :to="{ name: 'About' }">
@@ -371,6 +377,8 @@ export default class App extends Vue {
   get themeDark(): boolean {
     return false;
   }
+
+  // https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/
   get shelterHelpers(): ShelterHelpers[] {
     return [
       {
@@ -383,28 +391,79 @@ export default class App extends Vue {
         title: "Viewing existing projects",
         icon: "mdiPlayCircle",
         type: "video",
-        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-10/20210610_montage-homepage.mp4",
+        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Viewing existing projects.mp4",
       },
-      { title: "Creating new projects", icon: "mdiPlayCircle" },
-      { title: "Entering project information", icon: "mdiPlayCircle" },
+      {
+        title: "Creating new projects",
+        icon: "mdiPlayCircle",
+        type: "video",
+        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Creating new projects.mp4",
+      },
+      {
+        title: "Entering project information",
+        icon: "mdiPlayCircle",
+        type: "video",
+        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Entering project information.mp4",
+      },
       {
         title: "Uploading and downloading project files",
         icon: "mdiPlayCircle",
+        type: "video",
+        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Uploading and downloading project files.mp4",
       },
-      { title: "Entering geometry information", icon: "mdiPlayCircle" },
+      {
+        title: "Entering geometry information",
+        icon: "mdiPlayCircle",
+        type: "video",
+
+        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Entering geometry information.mp4",
+      },
       {
         title: "Entering Bill of Quantities information",
         icon: "mdiPlayCircle",
+        type: "video",
+        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Entering BOQ information.mp4",
       },
       {
         title: "Assessing technical performance criteria",
         icon: "mdiPlayCircle",
+        type: "video",
+        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Assessing technical performance.mp4",
       },
-      { title: "Assessing habitability criteria", icon: "mdiPlayCircle" },
-      { title: "Comparing projects", icon: "mdiPlayCircle" },
-      { title: "Exporting reports", icon: "mdiPlayCircle" },
-      { title: "Viewing overview data", icon: "mdiPlayCircle" },
-      { title: "Viewing reference data", icon: "mdiPlayCircle" },
+      {
+        title: "Assessing habitability criteria",
+        icon: "mdiPlayCircle",
+        type: "video",
+        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Assessing Habitability.mp4",
+      },
+      {
+        title: "Comparing projects",
+        icon: "mdiPlayCircle",
+        type: "video",
+
+        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Comparing projects.mp4",
+      },
+      {
+        title: "Exporting reports",
+        icon: "mdiPlayCircle",
+        type: "video",
+
+        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Exporting reports.mp4",
+      },
+      {
+        title: "Viewing overview data",
+        icon: "mdiPlayCircle",
+        type: "video",
+
+        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Viewing overview data.mp4",
+      },
+      {
+        title: "Viewing reference data",
+        icon: "mdiPlayCircle",
+        type: "video",
+
+        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Viewing reference data.mp4",
+      },
     ];
   }
 
@@ -476,15 +535,18 @@ export default class App extends Vue {
   /** Run once. */
   async mounted(): Promise<void> {
     this.$vuetify.theme.dark = false; //this.$store.getters["ConfigModule/themeDark"];
-    document.title = this.title;
+    document.title = this?.title ?? "unknown";
     this.checkAndRefresh();
     this.intervalId = window.setInterval(() => {
       this.checkAndRefresh();
-    }, 1000 * 60 * 5); // check every 10 minutes: 1000 * 60 * 5
+    }, 1000 * 60 * 45); // check every 45 minutes: 1000 * 60 * 5
 
     this.$store.subscribe((mutation) => {
       const shouldUpdate = ["storeMessage"];
       if (shouldUpdate.includes(mutation.type)) {
+        if (mutation.payload.byPassLoading) {
+          return;
+        }
         this.snackbar = true;
       }
     });

@@ -7,13 +7,18 @@ from typing import Any, List, Optional, Union
 
 def convert(filename: str, output: str):
     print(f"processing {filename} to {output}")
-    folder = os.path.join(output, os.path.splitext(os.path.basename(filename))[0])
+    folder = output
+    # folder = os.path.join(output, os.path.splitext(os.path.basename(filename))[0])
     ids: List[str] = []
     with open(filename, newline="") as file:
         reader = csv.DictReader(file)
         items: List[Any] = []
         for index, row in enumerate(reader):
-            id = row["_id"]
+            try:
+                id = row["_id"]
+            except Exception as inst:
+                print(row, inst)
+                raise inst
             ids.append(id)
             item = {k: mapValue(v) for k, v in row.items()}
             item["index"] = index
@@ -30,6 +35,7 @@ def mapValue(value: str) -> Optional[Union[str, int, float, List[Any]]]:
         return [
             mapValue(v) for v in value.removeprefix("[").removesuffix("]").split(",")
         ]
+    value = value.strip()
     try:
         return int(value)
     except ValueError:

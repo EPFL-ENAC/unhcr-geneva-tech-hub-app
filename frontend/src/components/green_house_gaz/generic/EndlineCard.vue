@@ -22,19 +22,23 @@
         <v-row>
           <v-col cols="12">
             <v-row>
-              <v-col :cols="6" class="d-flex justify-start">
-                <v-alert v-if="!isDiffNull" dense outlined type="error">
-                  This comparison is not valid because baseline and endline have
-                  different {{ diffDimensionText }}.
-                </v-alert>
+              <v-col cols="6" class="d-flex justify-end">
+                <instance-pie-chart
+                  v-if="activatePie"
+                  :diff-dimension="diffDimension"
+                  :results="endline.results"
+                />
               </v-col>
-              <v-col :cols="6" class="d-flex justify-end">
+              <v-col :cols="6" class="d-flex flex-column justify-end">
                 <h3>
                   Total CO2 Emissions:
                   {{
                     endline.results.totalCO2Emission |
                       formatNumber({ suffix: "tCO2e/year" })
                   }}
+                </h3>
+
+                <h3>
                   <span
                     :class="{
                       'item-positive': changeInEmissionPositive,
@@ -61,6 +65,35 @@
                   </span>
                 </h3>
               </v-col>
+              <v-col :cols="12" class="d-flex justify-end mx-2 mb-2">
+                <h4>
+                  These calculations are limited to Scope 1 and Scope 2 sources
+                  of emissions for purposes of simplicity.
+                </h4>
+              </v-col>
+              <v-col :cols="12" class="d-flex justify-start">
+                <v-alert
+                  v-if="!isDiffNull"
+                  v-model="endline.alertDismissed"
+                  dense
+                  outlined
+                  border="left"
+                  close-text="Close Alert"
+                  color="error"
+                  dark
+                  dismissible
+                  @input="updateEndlineDismissed"
+                >
+                  Please note that the baseline and endline
+                  {{ diffDimensionText }} do not match.
+                  <br />
+                  Baseline:
+                  {{ baseline.results[diffDimension] }} {{ diffDimensionText }}
+                  <br />
+                  Endline:
+                  {{ endline.results[diffDimension] }} {{ diffDimensionText }}
+                </v-alert>
+              </v-col>
             </v-row>
           </v-col>
         </v-row>
@@ -78,8 +111,9 @@
 </template>
 
 <script lang="ts">
-import { SurveyTableHeader } from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
+import InstancePieChart from "@/components/green_house_gaz/generic/InstancePieChart.vue";
 import InstanceTable from "@/components/green_house_gaz/generic/InstanceTable.vue";
+import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
 
 import {
   GenericBaseline,
@@ -88,6 +122,7 @@ import {
   SurveyItem,
   SurveyResult,
 } from "@/store/GhgInterface.vue";
+import { cloneDeep } from "lodash";
 import Vue from "vue";
 import "vue-class-component/hooks";
 import { Component, Prop } from "vue-property-decorator";
@@ -95,6 +130,7 @@ import { Component, Prop } from "vue-property-decorator";
 @Component({
   components: {
     InstanceTable,
+    InstancePieChart,
   },
 })
 export default class EndlineCard extends Vue {
@@ -110,6 +146,8 @@ export default class EndlineCard extends Vue {
   readonly headers!: SurveyTableHeader[];
   @Prop([String])
   readonly diffDimension!: keyof SurveyInput;
+  @Prop({ type: Boolean, default: false })
+  readonly activatePie!: boolean;
 
   @Prop({ type: String, default: "increment" })
   readonly sortBy!: string;
@@ -153,9 +191,14 @@ export default class EndlineCard extends Vue {
   }
 
   public updateEndlineInputs(value: SurveyItem[]) {
-    const newEndline = JSON.parse(JSON.stringify(this.endline));
+    const newEndline = cloneDeep(this.endline);
     newEndline.items = value;
     this.$emit("update:endline", newEndline);
+  }
+
+  public updateEndlineDismissed(value: boolean) {
+    this.endline.alertDismissed = value;
+    this.$emit("update:endline", this.endline);
   }
 
   public get changeInEmissionPositive(): boolean {
@@ -192,40 +235,6 @@ export default class EndlineCard extends Vue {
       return "black";
     }
   }
-
-  readonly washBalanceResultsPart1 = [
-    {
-      description: "Change in number of trucks used",
-      code: "TR_NUM_DIFF",
-      type: "percentage",
-      suffix: "%",
-      disabled: true,
-    },
-    {
-      description: "Change in total distance travelled",
-      code: "TR_DIST_DIFF",
-      suffix: "%",
-      type: "percentage",
-      disabled: true,
-    },
-  ];
-
-  readonly washBalanceResultsPart2 = [
-    {
-      description: "Total change in CO2 emissions (in tCO2e/year)",
-      code: "totalCO2Emission",
-      type: "number",
-      formatType: "decimal",
-      disabled: true,
-    },
-    {
-      description: "Percentage change in emissions",
-      code: "changeInEmission",
-      type: "percentage",
-      formatType: "percent",
-      disabled: true,
-    },
-  ];
 }
 </script>
 

@@ -5,6 +5,8 @@
         <baseline-card
           :baseline="localValue.baseline"
           :baseline-mode.sync="baselineMode"
+          :activate-pie="activatePie"
+          :diff-dimension="diffDimension"
           :name="name"
           :headers="baselineHeaders"
           @update:baseline="updateBaseline"
@@ -18,6 +20,7 @@
           :endline="localValue.endline"
           :baseline-mode.sync="baselineMode"
           sort-by="originIncrement"
+          :activate-pie="activatePie"
           :diff-dimension="diffDimension"
           :name="name"
           :headers="endlineHeaders"
@@ -29,17 +32,17 @@
 </template>
 
 <script lang="ts">
-import { SelectOption, SelectValue } from "@/components/commons/FormItem";
 import BaselineCard from "@/components/green_house_gaz/generic/BaselineCard.vue";
 import { computeChangeInEmission } from "@/components/green_house_gaz/generic/changeInEmission";
 import EndlineCard from "@/components/green_house_gaz/generic/EndlineCard.vue";
+
+import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import {
   GenericBaseline,
   GenericEndline,
   GenericFormSurvey,
   SurveyInput,
-  SurveyInputValue,
   SurveyItem,
   SurveyResult,
 } from "@/store/GhgInterface.vue";
@@ -78,6 +81,9 @@ export default class BaselineEndlineWrapper<
 
   @Prop([String])
   readonly diffDimension!: keyof SurveyInput;
+
+  @Prop({ type: Boolean, default: false })
+  readonly activatePie!: boolean;
 
   @Prop([Function])
   readonly computeItem!: (
@@ -228,7 +234,6 @@ export default class BaselineEndlineWrapper<
         acc[el.key] = el.value;
         return acc;
       }, {});
-
     return Object.entries(keysToSumBy).reduce(
       (acc: SurveyResult, [key, value]) => {
         acc[key] = sumBy(
@@ -245,7 +250,7 @@ export default class BaselineEndlineWrapper<
     items: SurveyItem[],
     interventions: SurveyItem[]
   ): SurveyItem[] {
-    const washItemsByIncrement = items.reduce(
+    const itemsByIncrement = items.reduce(
       (acc: Record<number, SurveyItem>, el: SurveyItem) => {
         acc[el.increment] = el;
         return acc;
@@ -253,50 +258,41 @@ export default class BaselineEndlineWrapper<
       {}
     );
     interventions.forEach((intervention: SurveyItem) => {
-      const baselineItem =
-        washItemsByIncrement[intervention.originIncrement ?? -1];
+      const baselineItem = itemsByIncrement[intervention.originIncrement ?? -1];
+      const interventionsDiffDimensionTotal = interventions
+        .filter((x) => x.originIncrement === intervention.originIncrement)
+        .reduce((acc, el) => {
+          const interventionDiffValue =
+            (el.input?.[this.diffDimension] as number) ??
+            (el.computed?.[this.diffDimension] as number);
+          return acc + interventionDiffValue;
+        }, 0);
       const baselineCO2 = baselineItem.computed.totalCO2Emission as number;
       const endlineCO2 = intervention.computed.totalCO2Emission as number;
-      const totalChangeInEmission = computeChangeInEmission(
-        baselineCO2,
-        endlineCO2
-      );
-      const ratio: number =
-        (intervention.input[this.diffDimension] as number) /
-        (baselineItem.input[this.diffDimension] as number);
 
-      intervention.computed.changeInEmission = totalChangeInEmission * ratio;
+      const interventionDiffDimension =
+        (intervention.input?.[this.diffDimension] as number) ??
+        (intervention.computed?.[this.diffDimension] as number);
+      const ratioEndline: number =
+        interventionDiffDimension / interventionsDiffDimensionTotal;
+      // if baseline == 0 and endline === 0 then 0%
+      // if baseline == 0 and endline = x then 100%
+      // if baseline == NOT POWERED and endline = x then 100%
+      let changeInEmission = 0;
+      if (baselineCO2 * ratioEndline === 0) {
+        if (endlineCO2 !== 0) {
+          changeInEmission = 1 * ratioEndline;
+        }
+      } else {
+        changeInEmission = computeChangeInEmission(
+          baselineCO2,
+          endlineCO2,
+          ratioEndline
+        );
+      }
+      intervention.computed.changeInEmission = changeInEmission;
     });
     return interventions;
   }
-}
-export interface SurveyTableHeader extends EasySurveyTableHeader {
-  key: string; // key of input or computed inside input field
-  suffix: string; // "l", //if we need to have a suffix displayed in table or input
-  align: string; // "start"; // only for table
-  sortable: boolean; // false,
-}
-export interface EasySurveyTableHeader {
-  text: string | ((v: SurveyInput) => string); //.e.g "Intervention" description or text to display for input or table header
-  value: string; // name of the field to use for table
-  type: string; // number etc for text-field type of value in formatter by the way
-  items: string[] | string;
-  options: SelectOption<SelectValue>[];
-  isInput: boolean;
-  label?: string;
-  tooltipInfo?: string;
-  category?: string; // example increment
-  classFormatter?: (v: unknown) => string;
-  customEventInput?: (
-    v: SurveyInputValue,
-    localInput: SurveyInput
-  ) => SurveyInput;
-  formatter?: (v: unknown) => string;
-  conditional_value: SurveyInputValue; // e.g "LITRES",
-  conditional: string | string[]; // based on other SurveyTableHeader field "US_UNI", needs to have conditional_value set
-  endlineOnly?: boolean; // show only for enldine table true,
-  baselineOnly?: boolean;
-  hideFooterContent: boolean; // default to true only for table
-  computeResults: boolean; // false,
 }
 </script>

@@ -2,7 +2,7 @@ export const infoTooltipText = {
   "Energy-Facilities": {
     title: "Energy - Facilities",
     ready: true,
-    text: "The Facilities module enables the user to calculate the emissions from facilities such as schools using either diesel, solar or national grid energy sources or a hybrid mix of these sources. <br/> The GHG tool only considers Scope 1 and 2 emissions at this stage. The calculations are estimations. For solar in particular, it is assumed that the addition of solar panels will add zero emissions.",
+    text: "The Facilities module enables the user to calculate the emissions from facilities such as schools using either diesel, solar or national grid energy sources or a hybrid mix of these sources. <br/> The GHG Emission Calculator only considers Scope 1 and 2 emissions at this stage. The calculations are estimations. For solar in particular, it is assumed that the addition of solar panels will add zero emissions.",
   },
   "Energy-Cooking": {
     title: "Energy - Cooking",
@@ -13,8 +13,8 @@ export const infoTooltipText = {
     title: "Energy - Lighting",
     text: "The Lighting module will enable the user to calculate the emissions from various forms of energy sources used to power lighting at homes and in the settlements. Energy sources considered include firewood, candle, kerosene, solar and the national grid. A hydrid electricity usage will be calculated based on the use of diesel gas, solar PV and the national grid.",
   },
-  "Energy-Pumping": {
-    title: "Energy - Pumping",
+  "WASH-Pumping": {
+    title: "WASH - Pumping",
     ready: false,
     text: "The Pumping module will enable the user to calculate the emissions from pumping water or faecal sludge using either diesel, solar or national grid energy sources or a hybrid mix of these sources.",
   },
@@ -47,6 +47,6 @@ export const infoTooltipText = {
   Results: {
     title: "Results",
     ready: true,
-    text: "The GHG tool only considers Scope 1 and 2 emissions at this stage. The calculations are estimations. For solar in particular, it is assumed that the addition of solar panels will add zero emissions.",
+    text: "The GHG Emission Calculator only considers Scope 1 and 2 emissions at this stage. The calculations are estimations. For solar in particular, it is assumed that the addition of solar panels will add zero emissions.",
   },
 };

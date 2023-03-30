@@ -33,7 +33,7 @@
           <v-expansion-panels v-if="notification.stack" style="width: 400px">
             <v-expansion-panel>
               <v-expansion-panel-header disable-icon-rotate>
-                Error details:
+                Details:
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 {{ notification.stack }}

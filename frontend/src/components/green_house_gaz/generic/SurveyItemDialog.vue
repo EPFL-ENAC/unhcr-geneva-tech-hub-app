@@ -13,6 +13,7 @@
           <v-container v-if="localInput">
             <v-row v-if="intervention">
               <v-col>
+                <!-- TODO: add rule for makeing this mandatory -->
                 <v-select
                   v-model="localItem.originIncrement"
                   :items="
@@ -22,7 +23,7 @@
                     }))
                   "
                   label="Baseline id"
-                  required
+                  :required="true"
                   @change="selectOrigin"
                 />
               </v-col>
@@ -44,9 +45,13 @@
                     {{
                       surveyItem.formatter
                         ? surveyItem.formatter(
-                            previousItem.input[surveyItem.key]
+                            previousItem.input?.[surveyItem.key] ??
+                              previousItem.computed?.[surveyItem.key],
+                            surveyItem,
+                            localItem
                           )
-                        : previousItem.input[surveyItem.key]
+                        : previousItem.input?.[surveyItem.key] ??
+                          previousItem.computed?.[surveyItem.key]
                     }}
                   </span>
                   <div
@@ -62,8 +67,13 @@
                     />
                   </div>
                   <form-item-component
+                    v-if="!surveyItem.hideInput"
                     :value="localInput[surveyItem.key]"
                     v-bind="surveyItem"
+                    :disabled="
+                      surveyItem.disabled ||
+                      localInput?.[surveyItem.disabledWithConditions]
+                    "
                     @input="(v) => customFormInput(v, surveyItem, localInput)"
                   />
                 </v-col>
@@ -101,20 +111,25 @@
 
 <script lang="ts">
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
-import { SurveyTableHeader } from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
+import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import {
   SurveyInput,
   SurveyInputValue,
   SurveyItem,
 } from "@/store/GhgInterface.vue";
 
+import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { VForm } from "@/utils/vuetify";
 import { cloneDeep, get as _get } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { mapGetters } from "vuex";
 
 @Component({
   components: {
     FormItemComponent,
+  },
+  computed: {
+    ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
   },
 })
 export default class SurveyItemDialog extends Vue {
@@ -141,6 +156,7 @@ export default class SurveyItemDialog extends Vue {
   $refs!: {
     form: VForm;
   };
+  ghgMapRef!: ItemReferencesMap;
 
   formValid = false;
   refreshKey = 0;
@@ -171,8 +187,11 @@ export default class SurveyItemDialog extends Vue {
     surveyItem: SurveyTableHeader,
     localInput: SurveyInput
   ): void {
-    const newLocalInput = (surveyItem?.customEventInput?.(v, localInput) ??
-      cloneDeep(localInput)) as SurveyInput;
+    const newLocalInput = (surveyItem?.customEventInput?.(
+      v,
+      localInput,
+      this.ghgMapRef
+    ) ?? cloneDeep(localInput)) as SurveyInput;
     newLocalInput[surveyItem.key] = v;
     this.localInput = newLocalInput;
     this.refreshKey = this.refreshKey + 1;
@@ -188,7 +207,6 @@ export default class SurveyItemDialog extends Vue {
     this.refreshKey; // Some hack it is: https://stackoverflow.com/questions/48700142/vue-js-force-computed-properties-to-recompute
     return this.headers.map((header: SurveyTableHeader) => {
       if (typeof header.items === "string") {
-        // should be lodash get with items as the PATH
         const [category, key] = header.items.split(".");
         if (category !== "input") {
           throw new Error(
@@ -214,9 +232,10 @@ export default class SurveyItemDialog extends Vue {
   }
 
   public get previousItem(): SurveyItem {
+    // small bug when using multiple item we show the previous kwh
     return (
       this.referenceItems?.find(
-        (x) => x.increment === this.localItem.increment
+        (x) => x.increment === this.localItem.originIncrement
       ) ?? ({} as SurveyItem)
     );
   }

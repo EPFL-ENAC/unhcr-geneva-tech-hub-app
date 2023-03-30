@@ -26,7 +26,7 @@ interface ProjectsState {
   localCouch: SyncDatabase<GreenHouseGaz> | null;
 }
 
-const DB_NAME = "ghg";
+const DB_NAME = "ghg_projects";
 
 function generateState(): ProjectsState {
   return {
@@ -49,7 +49,6 @@ function generateNewProject(
   } else {
     return {
       ...newGhg,
-      _id: newGhg.name,
       users: [user],
       created_by: user.name,
     };
@@ -132,22 +131,19 @@ function getGenericCountries(
     context: ActionContext<ProjectsState, RootState>
   ) {
     const db = context.state.localCouch?.remoteDB;
-    if (db) {
-      db?.query("project/countries_with_info", queryParams)
-        .then(function (result) {
-          if (result?.rows) {
-            const countries = result.rows.filter((item) => item !== null);
-            context.commit(COMMIT_NAME, countries);
-            return countries;
-          }
-          throw new Error("undefined 'project/countries_with_info' response");
-        })
-        .catch(function (err: Error) {
-          console.log(err);
-        });
-    } else {
+    if (!db) {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
+    db?.query("project/countries_with_info", queryParams).then(function (
+      result
+    ) {
+      if (result?.rows) {
+        const countries = result.rows.filter((item) => item !== null);
+        context.commit(COMMIT_NAME, countries);
+        return countries;
+      }
+      throw new Error("undefined 'project/countries_with_info' response");
+    });
   };
 }
 
@@ -206,9 +202,6 @@ const actions: ActionTree<ProjectsState, RootState> = {
       .get(id)
       .then(function (doc: PouchDB.Core.ExistingDocument<GreenHouseGaz>) {
         return remoteDB.put({ ...doc, _deleted: true });
-      })
-      .catch(function (err) {
-        console.log(err);
       });
   },
   setDoc: (
@@ -235,7 +228,8 @@ const actions: ActionTree<ProjectsState, RootState> = {
         .catch(function (err: Error) {
           // context.dispatch("resetDoc");
           context.commit("SET_PROJECT_LOADING", false);
-          throw new Error(err?.message + id);
+          err.message = `${err?.message} ${id}`;
+          throw err;
         })
         .finally(() => {
           context.commit("SET_PROJECT_LOADING", false);
@@ -272,7 +266,8 @@ const actions: ActionTree<ProjectsState, RootState> = {
         .catch((response) => {
           // because error, we need to dispatch doc again
           context.commit("SET_PROJECT_LOADING", false);
-          context.dispatch("getDoc", response.id);
+          context.dispatch("getDoc", newValue._id);
+          throw response;
         })
         .finally(() => {
           context.commit("SET_PROJECT_LOADING", false);

@@ -12,20 +12,22 @@
 </template>
 
 <script lang="ts">
-import BaselineEndlineWrapper, {
+import BaselineEndlineWrapper from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
+import {
+  ensureSurveyTableHeaders,
   SurveyTableHeader,
-} from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
+  surveyTableHeaderCO2,
+  surveyTableHeaderIncrements,
+} from "@/components/green_house_gaz/generic/surveyTableHeader";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
 
 import {
-  computeCO2Cost,
-  computeDieselPower,
-  computeKWHPerDayPerCountry,
-  computeLitresPerDayDiesel,
-  countryIrradianceKeys,
+  computeCO2CostEnergy,
+  numberOfDaysPerYear,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
+
 import { formatNumber } from "@/plugins/filters";
 import {
   DieselItem,
@@ -35,7 +37,6 @@ import {
   SurveyItem,
   SurveyResult,
 } from "@/store/GhgInterface.vue";
-import { get as _get } from "lodash";
 
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface.vue";
 import { GHGfNRB } from "@/store/GHGReferencefNRB";
@@ -44,141 +45,41 @@ import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 
-const fuelTypes = {
-  FWD: "Wood",
-  CHC: "Charcoal",
-  PLTS: "Pellets",
-  BRQ: "Briquette",
-  ETH: "Ethanol/alcohol",
-  KRS: "Kerosene/paraffin",
-  PET: "Petrol", // same as wash
-  DIES: "Diesel", // same as facilities for diesel gen
-  ELE_DIES: "Diesel generators",
-  ELE_GRID: "National Grid",
-  ELE_SOLAR: "Solar Energy", // no eff
-  ELE_HYB: "Hybrid Mix",
-  ELE_NONE: "Not powered",
-  THE: "Thermal solar", // no eff
-  LPG: "LPG",
-  BGS: "BIOGASS",
-  PNG: "Piped Natural Gas",
-};
-// default consumption value
-const fuelDefaultConsumption: Record<keyof typeof fuelTypes, number> = {
-  FWD: 8.5,
-  CHC: 4.5,
-  PLTS: 5,
-  BRQ: 5,
-  ETH: 1,
-  KRS: 1,
-  PET: 1,
-  DIES: 1,
-  ELE_SOLAR: 0, // no eff
-  ELE_GRID: 3,
-  ELE_DIES: 1,
-  ELE_HYB: 0,
-  ELE_NONE: 0,
-  THE: 0, // no eff
-  LPG: 0.43,
-  BGS: 0.43,
-  PNG: 0.43,
-};
+import {
+  AllFuel,
+  allFuelsButElectric,
+  AllFuelsWithTextById,
+  BioMassFuel,
+  biomassFuels,
+  ElectricFuel,
+  electricFuels,
+  GasFuel,
+  gasFuels,
+  LiquidFuel,
+  liquidFuels,
+  noAccessFuels,
+  thermalFuels,
+} from "@/components/green_house_gaz/fuelTypes";
 
-// no appliances for now
-// const COOK_APP_Pressure = "Pressure cooke";
-// const COOK_APP_Heat = "Heat retaining basket";
-// const COOK_APP_Other = "Other";
+import {
+  cookstoveIdsTECHsWithAccess,
+  cookstoveIdWithoutAccess,
+  CookstoveTech,
+  cookstoveTECHs,
+} from "@/components/green_house_gaz/energy/CookstoveTech";
+import { dieselInputsProducedPer } from "@/components/green_house_gaz/energy/dieselInputs";
+import {
+  countryIrradianceKeys,
+  solarInputsProducedPer,
+} from "@/components/green_house_gaz/energy/solarInputs";
 
-const biomassFuels = ["FWD", "CHC", "BRQ", "PLTS"];
-const biomassFulesWithoutCHC = ["FWD", "BRQ", "PLTS"];
-const liquidFuels = ["ETH", "PET", "DIES", "KRS"];
-const gasFuels = ["LPG", "BGS", "PNG"];
-const electricFuels = [
-  "ELE_DIES",
-  "ELE_GRID",
-  "ELE_SOLAR",
-  "ELE_HYB",
-  "ELE_NONE",
-];
-const thermalFuels = ["THE"];
-
-const allFuelsButElectric = biomassFuels
-  .concat(liquidFuels)
-  .concat(gasFuels)
-  .concat(thermalFuels);
-
-interface CookstoveTech {
-  _id: string;
-  fuelTypes: string[];
-  text: string;
-  image: string | undefined;
-}
-
-const cookstoveTECHs: CookstoveTech[] = [
-  {
-    _id: "1",
-    fuelTypes: [],
-    text: "Without any access (no possibility to cook)",
-    image: undefined,
-  },
-  {
-    _id: "2",
-    fuelTypes: biomassFuels,
-    text: "Traditional three stone fire",
-    image: "/images/energy/cookstoves/traditional-wood.png",
-  },
-  {
-    _id: "3",
-    fuelTypes: biomassFuels,
-    text: "Traditional cookstove with solid biomass fuel",
-    image: "/images/energy/cookstoves/traditional-bricket.jpg",
-  },
-  {
-    _id: "4",
-    fuelTypes: biomassFuels,
-    text: "Improved cookstove with solid biomass fuel",
-    image: "/images/energy/cookstoves/improved-bricket.jpg",
-  },
-  {
-    _id: "5",
-    fuelTypes: biomassFulesWithoutCHC,
-    text: "Gasifier stove",
-    image: "/images/energy/cookstoves/gasifier.png",
-  },
-  {
-    _id: "6",
-    fuelTypes: liquidFuels,
-    text: "Liquid fuel cookstove",
-    image: "/images/energy/cookstoves/kerosene.png",
-  },
-  {
-    _id: "7",
-    fuelTypes: gasFuels,
-    text: "Gas powered cookstove",
-    image: "/images/energy/cookstoves/lpg.png",
-  },
-  {
-    _id: "8",
-    fuelTypes: electricFuels,
-    text: "Electric cookstove",
-    image: "/images/energy/cookstoves/induction.png",
-  },
-  {
-    _id: "9",
-    fuelTypes: thermalFuels,
-    text: "Solar cooker",
-    image: "/images/energy/cookstoves/solar-parabolic.png",
-  },
-];
-
-const cookstoveTECHsWithAccess = cookstoveTECHs.slice(1);
-const cookstoveIdsTECHsWithAccess = cookstoveTECHsWithAccess.map(
-  (cookstove) => cookstove._id
-);
-const cookstoveIdWithoutAccess = "1";
+const COOK_APP_Pressure = "Pressure cooker";
+const COOK_APP_Heat_Retaining = "Heat retaining basket";
+const COOK_APP_Default = "None";
 const APPLIANCE_EFFICIENCY = 1;
+
 const REF_DRY_WOOD = 1;
-const REF_WET_WOOD = 0.15; // 15% less efficient\
+const REF_WET_WOOD = 0.15; // 15% less efficient
 const REF_SUSTAINED_WOOD = 0; // fNRB of sustained
 
 @Component({
@@ -191,7 +92,7 @@ const REF_SUSTAINED_WOOD = 0; // fNRB of sustained
     ...mapGetters("GHGReferencefNRB", ["items"]),
   },
 })
-export default class Trucking extends Vue {
+export default class Cooking extends Vue {
   @Prop({ type: String, required: true, default: "" })
   readonly titleKey!: string;
 
@@ -220,13 +121,13 @@ export default class Trucking extends Vue {
     this.$emit("update:form", value);
   }
 
-  private applianceEfficiency(name: string): number {
+  private applianceEfficiency(name?: string): number {
     let app_eff = APPLIANCE_EFFICIENCY;
     switch (name) {
-      case "Pressure cooker":
+      case COOK_APP_Pressure:
         app_eff = app_eff - 0.7;
         break;
-      case "Heat retaining basket":
+      case COOK_APP_Heat_Retaining:
         app_eff = app_eff - 0.3;
         break;
       default:
@@ -265,14 +166,14 @@ export default class Trucking extends Vue {
       case "ELE_GRID":
       case "ELE_DIES":
         totalCO2Emission =
-          computeCO2Cost(
+          computeCO2CostEnergy(
             localItemInput,
             ghgMapRef?.REF_DIES_L,
             this.project_REF_GRD
           ) *
           hhUsingTheFuel *
           applianceEff *
-          365.25;
+          numberOfDaysPerYear;
         break;
       case "ELE_SOLAR":
       case "ELE_NONE":
@@ -295,26 +196,22 @@ export default class Trucking extends Vue {
       fuelType,
       appliance,
     } = localItemInput;
-    if (fuelType === undefined) {
-      throw new Error("fuel type not defined");
-    }
+
     if (percentageOfTotalCookstove === undefined) {
       throw new Error("number of cooktsove not defined");
     }
-    if (appliance === undefined) {
-      throw new Error("appliance not defined");
+    if (this.project.totalHH === undefined) {
+      throw new Error(
+        "Total House holds is undefined, please fill assessment information page and click on save"
+      );
     }
-    if (this.project.totalCookstoves === undefined) {
-      throw new Error("Total cookstoves is undefined, please fill info page");
-    }
-    const hhUsingTheFuel =
-      percentageOfTotalCookstove * this.project.totalCookstoves; // number of cookstoves
+    const hhUsingTheFuel = percentageOfTotalCookstove * this.project.totalHH; // number of cookstoves
     let totalCO2Emission = 0;
 
     const applianceEff = this.applianceEfficiency(appliance);
     switch (true) {
       /* solid fuels "FWD", "CHC", "BRQ", "PLTS" */
-      case biomassFuels.includes(fuelType): {
+      case biomassFuels.includes(fuelType as BioMassFuel): {
         /*
           - Three version for the fnrb factor
             - briket and pellets
@@ -324,6 +221,7 @@ export default class Trucking extends Vue {
         if (fuelUsage === undefined) {
           throw new Error("fuel usage not defined");
         }
+
         let drynessFactor = REF_DRY_WOOD;
         if (!localItemInput.dryWood && fuelType === "FWD") {
           drynessFactor = drynessFactor + REF_WET_WOOD;
@@ -383,12 +281,12 @@ export default class Trucking extends Vue {
           applianceEff * // should be 1 for now (1 - 0.7 or 0.3 depending on appliances)
           drynessFactor * // only for wood but since it's 1 as default it's going to be okay
           0.001 * // 1t/1000kg
-          365.25 * // days/yr
+          numberOfDaysPerYear * // days/yr
           efficiencyFactor;
         break;
       }
-      case liquidFuels.includes(fuelType as string):
-      case gasFuels.includes(fuelType as string): {
+      case liquidFuels.includes(fuelType as LiquidFuel):
+      case gasFuels.includes(fuelType as GasFuel): {
         if (fuelUsage === undefined) {
           throw new Error("fuel usage not defined");
         }
@@ -402,11 +300,11 @@ export default class Trucking extends Vue {
           fuelUsage * // fuel consumed in kg / day
           applianceEff * // should be 1 for now (1 - 0.7 or 0.3 depending on appliances)
           0.001 * // 1t/1000kg
-          365.25 * // days/yr
+          numberOfDaysPerYear * // days/yr
           fuelEfficiency;
         break;
       }
-      case electricFuels.includes(fuelType):
+      case electricFuels.includes(fuelType as ElectricFuel):
         totalCO2Emission = this.computeItemElectric(
           localItemInput,
           ghgMapRef,
@@ -415,7 +313,9 @@ export default class Trucking extends Vue {
         );
         break;
       default:
-        throw new Error(`unknown fuel type ${fuelType}`);
+        if (localItemInput.cookstove !== cookstoveIdWithoutAccess) {
+          throw new Error(`unknown fuel type ${fuelType}`);
+        }
     }
     if (isNaN(totalCO2Emission)) {
       throw new Error(`totalCO2Emission is NaN`);
@@ -425,20 +325,8 @@ export default class Trucking extends Vue {
     };
   }
 
-  n2sFormatter(n: number): string {
-    // https://stackoverflow.com/a/30686832
-    let s = "";
-    if (!n) s = "a";
-    else
-      while (n) {
-        s = String.fromCharCode(97 + (n % 26)) + s;
-        n = Math.floor(n / 26);
-      }
-    return s;
-  }
-
   resetSurveyInput(localInput: EnergyCookingItemInput): EnergyCookingItemInput {
-    delete localInput.fuelType;
+    localInput.fuelType = "NO_ACCESS";
     delete localInput.numberOfCookstove; // percentage of percentage
     return this.resetSurveyFuelOption(localInput);
   }
@@ -467,37 +355,7 @@ export default class Trucking extends Vue {
     // public get headers(): any {
     const countryCode = this.countryCode;
     return [
-      {
-        text: "#", // unique name === dropdown of existant facilities
-        value: "increment",
-        type: "number",
-        hideFooterContent: false,
-        baselineOnly: true,
-        formatter: this.n2sFormatter,
-      },
-      {
-        text: "#", // unique name === dropdown of existant facilities
-        value: "originIncrement",
-        endlineOnly: true,
-        type: "number",
-        hideFooterContent: false,
-        formatter: (
-          v: number,
-          _: unknown,
-          item: SurveyItem,
-          items: SurveyItem[]
-        ) => {
-          const increment: number = _get(item, "increment");
-          const increments = items
-            .filter((item: SurveyItem) => item.originIncrement === v)
-            .map((item: SurveyItem) => item.increment);
-          const indexOf = increments.indexOf(increment);
-          return `${this.n2sFormatter(v)}${"'".repeat(indexOf)}`;
-        },
-        formatterOrigin: (v: number) => {
-          return `${this.n2sFormatter(v)}`;
-        },
-      },
+      ...surveyTableHeaderIncrements,
       {
         text: "Cookstove",
         value: "input.cookstove",
@@ -538,9 +396,13 @@ export default class Trucking extends Vue {
           );
 
           // // find cooktstove
-          if (currentStove) {
-            localInput.image = currentStove.image;
-            localInput.fuelTypes = currentStove.fuelTypes;
+          if (!currentStove) {
+            throw new Error("no cookstove matched");
+          }
+          localInput.image = currentStove.image;
+          localInput.fuelTypes = currentStove.fuelTypes as AllFuel[];
+          if (currentStove._id === cookstoveIdWithoutAccess) {
+            localInput.fuelType = noAccessFuels[0];
           }
           this.resetSurveyInput(localInput);
           return localInput;
@@ -555,18 +417,21 @@ export default class Trucking extends Vue {
         },
         text: "Cookstove fuel",
         value: "input.fuelType",
-        formatter: (v: keyof typeof fuelTypes) => {
-          return fuelTypes[v];
+        formatter: (v: AllFuel) => {
+          return AllFuelsWithTextById?.[v]?.text;
         },
         customEventInput: (
-          fuelType: string,
+          fuelType: AllFuel,
           localInput: EnergyCookingItemInput
         ) => {
           this.resetSurveyFuelOption(localInput);
-          localInput.appliance = "default";
+          localInput.appliance = COOK_APP_Default;
           // setup default value based on fueltype
+          if (fuelType === "FWD") {
+            localInput.dryWood = true;
+          }
           localInput.fuelUsage =
-            fuelDefaultConsumption?.[fuelType as keyof typeof fuelTypes] ?? 0;
+            AllFuelsWithTextById[fuelType]?.defaultValue ?? 0;
 
           return localInput;
         },
@@ -580,7 +445,7 @@ export default class Trucking extends Vue {
         conditional: ["fuelType"],
         text: "Cookstove appliance",
         value: "input.appliance",
-        items: ["default", "Pressure cooker", "Heat retaining basket"],
+        items: [COOK_APP_Default, COOK_APP_Pressure, COOK_APP_Heat_Retaining],
         style: {
           cols: "12",
         },
@@ -595,27 +460,47 @@ export default class Trucking extends Vue {
         },
         value: "input.dryWood",
         type: "boolean",
+        customEventInput: (
+          dryWood: boolean,
+          localInput: EnergyCookingItemInput
+        ) => {
+          if (!localInput.fuelUsage) {
+            return localInput;
+          }
+          if (!dryWood) {
+            localInput.fuelUsage = localInput.fuelUsage * (1 + REF_WET_WOOD);
+          } else {
+            localInput.fuelUsage = localInput.fuelUsage / (1 + REF_WET_WOOD);
+          }
+
+          return localInput;
+        },
       },
       {
         text: (localInput: EnergyCookingItemInput) => {
           let result = "Fuel per day (kg/day for biomass)";
-          // original text: "Fuel per day (kg/day for biomass)"
           const biomassFuelsText =
             "Biomass used per HH per day (kg/day for biomass)";
           const liquidFuelsText = "Fuel use per HH per day  (L/day)";
           const gasFuelsText = "Fuel use per HH per day (m3/day)";
+          const lpgFuelsText = "Fuel use per HH per day (kg/day)";
           const electricFuelsText = "Estimated Kwh/day/HH";
           const thermalFuelsText = "Estimated Kwh/day/HH";
 
-          const refTexts = [
+          const refTexts: {
+            readonly fuelTypes: readonly AllFuel[];
+            text: string;
+          }[] = [
             { fuelTypes: biomassFuels, text: biomassFuelsText },
             { fuelTypes: liquidFuels, text: liquidFuelsText },
-            { fuelTypes: gasFuels, text: gasFuelsText },
+            { fuelTypes: ["BGS", "PNG"], text: gasFuelsText },
+            { fuelTypes: ["LPG"], text: lpgFuelsText },
             { fuelTypes: electricFuels, text: electricFuelsText },
             { fuelTypes: thermalFuels, text: thermalFuelsText },
           ];
+
           refTexts.every((refText) => {
-            if (refText.fuelTypes.includes(localInput.fuelType ?? "")) {
+            if (refText.fuelTypes.includes(localInput.fuelType)) {
               result = refText.text;
               return false;
             }
@@ -631,88 +516,9 @@ export default class Trucking extends Vue {
         },
         type: "number",
       },
-      // beginning of diesel generators
+      ...dieselInputsProducedPer("Day", "Day"),
       {
-        value: "input.disableDieselLiters",
-        conditional_value: ["ELE_DIES", "ELE_HYB"],
-        text: "Number of litres of diesel known",
-        conditional: "fuelType",
-        style: {
-          cols: "12",
-        },
-        options: {
-          false: "yes",
-          true: "no",
-        },
-        type: "boolean",
-      },
-      {
-        value: "input.dieselLiters", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
-        conditional_value: false,
-        conditional: "disableDieselLiters",
-        text: "Total litres of diesel used per day",
-        suffix: "l",
-        style: {
-          cols: "12",
-        },
-        type: "number",
-      },
-      {
-        value: "input.generatorSize", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
-        conditional_value: true,
-        conditional: "disableDieselLiters",
-        text: "generator size (kW)",
-        tooltipInfo: "read from nameplate",
-        suffix: "kW",
-        min: 0,
-        style: {
-          cols: "12",
-        },
-        type: "number",
-        customEventInput: (_: number, localInput: EnergyCookingItemInput) => {
-          localInput.dieselLiters = computeLitresPerDayDiesel(localInput);
-          localInput.dieselPower = computeDieselPower(
-            localInput as EnergyItem,
-            {
-              value: 0.267,
-              description: "fake (kWh/litre),",
-              _id: "REF_EFF_DIES_L",
-            }
-          );
-          return localInput;
-        },
-      },
-      {
-        value: "input.generatorLoad", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
-        conditional_value: true,
-        conditional: "disableDieselLiters",
-        text: "generator load (percentage)",
-        tooltipInfo:
-          "default average load of 60% per year will be used if not overwritten",
-        style: {
-          cols: "12",
-        },
-        type: "number",
-        subtype: "percent",
-      },
-      {
-        value: "input.operatingHours", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
-        conditional_value: true,
-        conditional: "disableDieselLiters",
-        text: "operating hours (hrs/day)",
-        tooltipInfo:
-          "from daily log and application will extrapolate this information to be annual",
-        suffix: "hrs/day",
-        min: 0,
-        style: {
-          cols: "12",
-        },
-        type: "number",
-      },
-      // end of diesel generators
-      // begingin og national grid
-      {
-        value: "input.gridPower", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
+        value: "input.gridPower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
         conditional_value: ["ELE_GRID", "ELE_HYB"],
         conditional: "fuelType",
         text: "Estimated Kwh/day/HH for national grid",
@@ -723,44 +529,9 @@ export default class Trucking extends Vue {
         type: "number",
       },
       // end of national grid
-      // begingin of solar
+      ...solarInputsProducedPer("Year", countryCode, this.project.solar),
       {
-        value: "input.solarInstalled", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
-        conditional_value: ["ELE_SOLAR", "ELE_HYB"],
-        conditional: "fuelType",
-        customEventInput: (
-          solarInstalled: number,
-          localInput: EnergyCookingItemInput
-        ) => {
-          localInput.renewablePower = computeKWHPerDayPerCountry(
-            solarInstalled,
-            countryCode,
-            this.project.solar
-          );
-          return localInput;
-        },
-        text: "Total kW of solar installed per HH",
-        suffix: "Kw/HH",
-        style: {
-          cols: "12",
-        },
-        type: "number",
-      },
-      {
-        value: "input.renewablePower", // maybe use dieselLitres like in DieselGeneratorWithoutLitres
-        conditional_value: ["ELE_SOLAR", "ELE_HYB"],
-        disabled: true,
-        text: "Total kWh/day produced (estimated)",
-        conditional: "fuelType",
-        suffix: "Kwh/day/HH",
-        style: {
-          cols: "12",
-        },
-        type: "number",
-      },
-      // end of solar
-      {
-        conditional_value: biomassFulesWithoutCHC,
+        conditional_value: biomassFuels,
         conditional: "fuelType",
         text: "Sustainably sourced biomass",
         style: {
@@ -781,7 +552,7 @@ export default class Trucking extends Vue {
         type: "boolean",
       },
       {
-        text: "Percentage of total cookstoves",
+        text: "Percentage of total households",
         computeResults: true,
         value: "input.numberOfCookstove",
         conditional_value: ["", cookstoveIdWithoutAccess],
@@ -800,92 +571,12 @@ export default class Trucking extends Vue {
           });
         },
       },
-      {
-        text: "Total CO2 Emissions (tCO2e/year)",
-        value: "computed.totalCO2Emission",
-        hideFooterContent: false,
-        formatter: (v: number, { ...args }) => {
-          return formatNumber(v, { suffix: args.suffix });
-        },
-        computeResults: true,
-        type: "number",
-        disabled: true,
-      },
-      {
-        text: "Change in Emissions",
-        value: "computed.changeInEmission",
-        type: "number",
-        hideFooterContent: false,
-        disable: true,
-        readonly: true,
-        endlineOnly: true,
-        formatter: (v: number) => {
-          return formatNumber(v, {
-            style: "percent",
-            signDisplay: "exceptZero",
-          });
-        },
-        classFormatter: (v: number): string => {
-          const classes: string[] = [];
-          v > 0 ? classes.push("item-positive") : void 0;
-          v < 0 ? classes.push("item-negative") : void 0;
-          v === 0 ? classes.push("bold-table-content") : void 0;
-          return classes.join(" ");
-        },
-      },
-      {
-        text: "",
-        value: "actions",
-        hidden: true,
-        hideFooterContent: false,
-        width: "140px",
-      },
+      ...surveyTableHeaderCO2,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ].map((item: any) => {
-      const [category, key] = item.value.split(".");
-      const isInput = item?.isInput ?? category === "input";
-      return {
-        align: "start",
-        sortable: false,
-        hideFooterContent: item.hideFooterContent ?? true,
-        label: item.text, // for form-item-component
-        key, // for form-item-component
-        isInput,
-        category, // input or computed,
-        formatter: (value: unknown) => value,
-        classFormatter: () => "",
-        options: (() => {
-          if (item.options) {
-            return item.options;
-          }
-          const items = item?.items;
-          if (typeof items === "string") {
-            // items should not be string.
-            return [];
-          }
-          return (
-            items?.map((item: string | SelectCustom<string>) => {
-              if (typeof item === "string") {
-                return { text: item, value: item };
-              }
-              return {
-                text: item?.text,
-                value: item?._id,
-              };
-            }) ?? undefined
-          );
-        })(),
-        ...item,
-      } as SurveyTableHeader;
-    });
+    ].map(ensureSurveyTableHeaders);
   }
 
   items!: GHGfNRB[];
-}
-
-export interface SelectCustom<V> {
-  text: string;
-  _id: V;
 }
 
 export interface EnergyCookingItemInput
@@ -896,8 +587,8 @@ export interface EnergyCookingItemInput
   cookstove: string; // type fo cookstove
   image?: string; // image of cookstove
   fuelUsage?: number; // [kg or L/day]
-  fuelType?: string; // key
-  fuelTypes?: string[]; // used only as a reference
+  fuelType: AllFuel; // key
+  fuelTypes?: AllFuel[]; // used only as a reference
   appliance?: string; // type of appliance heating retaining basket for instance
   carbonized?: boolean;
   sustainablySourced?: boolean;

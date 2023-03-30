@@ -3,13 +3,34 @@
     <v-card-text v-if="items">
       <v-row>
         <v-col>
-          Longterm daily average of solar hours per site (Source: Solar Global
-          Atlas)
+          Daily solar peak hours approximated using the Longterm daily average
+          of global horizontal irradiation (GHI). (GHI data obtained from the
+          Global Solar Atlas 2.0, a free, web-based application developed and
+          operated by the company Solargis s.r.o. on behalf of the World Bank
+          Group, utilizing Solargis data, with funding provided by the Energy
+          Sector Management Assistance Program (ESMAP). For additional
+          information: https://globalsolaratlas.info)
         </v-col>
       </v-row>
       <v-row>
         <v-col>
           <v-data-table :headers="headers" :items="items" dense>
+            <template #[`item.Population`]="props">
+              <span :title="props.item.Population">{{
+                props.item.Population |
+                  formatNumber({
+                    maximumFractionDigits: 3,
+                  })
+              }}</span>
+            </template>
+            <template #[`item.solar_peak_hours`]="props">
+              <span :title="props.item.solar_peak_hours">{{
+                props.item.solar_peak_hours |
+                  formatNumber({
+                    maximumFractionDigits: 3,
+                  })
+              }}</span>
+            </template>
             <template #[`item.Country`]="props">
               <span :title="props.item.Country"
                 >{{ countriesMap[props.item.Country].name }}
@@ -46,7 +67,7 @@ export default class Energy extends Vue {
     // "Location id": number;
     // latitude: number; //: 28.978026
     // longitude: number; // : 50.8379918,
-    // "GHI/Daily_solar_peak_hours": number; // 5.607999802,
+    // "solar_peak_hours": number; // 5.607999802,
     return [
       {
         text: "Site name",
@@ -59,8 +80,8 @@ export default class Energy extends Vue {
       { text: "latitude", value: "latitude" },
       { text: "longitude", value: "longitude" },
       {
-        text: "GHI/Daily_solar_peak_hours",
-        value: "GHI/Daily_solar_peak_hours",
+        text: "Daily solar peak hours",
+        value: "solar_peak_hours",
       },
     ];
   }

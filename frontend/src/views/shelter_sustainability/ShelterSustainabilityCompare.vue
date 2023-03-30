@@ -12,12 +12,7 @@
         >
           <v-icon>$mdiArrowLeftCircle</v-icon>
         </v-btn>
-        <v-btn
-          class="d-print-none"
-          @click="
-            window.print();
-            return false;
-          "
+        <v-btn class="d-print-none" @click="printFunction"
           >Export Comparison report</v-btn
         >
       </v-col>
@@ -464,6 +459,18 @@ export default class ShelterSustainabilityCompare extends Vue {
   shelterColors = shelterColors;
   shelterIcons = shelterIcons;
   loaded = false;
+
+  public printFunction() {
+    document.title = " ";
+    try {
+      // https://stackoverflow.com/questions/31171099/window-print-does-not-work-in-safari
+      if (!document.execCommand("print", false, undefined)) {
+        window.print();
+      }
+    } catch {
+      window.print();
+    }
+  }
 
   get optionsAffordabilities(): EChartsOption[] {
     return generateScorecardOptions(

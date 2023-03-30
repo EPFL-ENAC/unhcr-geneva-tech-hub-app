@@ -38,6 +38,9 @@
                           v-if="item.key !== 'country_code'"
                           v-model="localProject[item.key]"
                           v-bind="item"
+                          @input="
+                            (v) => item?.customEventInput?.(v, localProject)
+                          "
                         ></form-item-component>
                         <country-select
                           v-else
@@ -169,13 +172,15 @@ export default class GhgInfo extends Vue {
     ];
   }
 
-  get generalItems(): FormItem[] {
+  get generalItems(): (FormItem & {
+    customEventInput?: (v: number, input: GreenHouseGaz) => GreenHouseGaz;
+  })[] {
     return [
       {
         type: "text",
         key: "name",
         label: "Name of the site",
-        disabled: true,
+        disabled: false,
       },
       {
         type: "number",
@@ -203,6 +208,15 @@ export default class GhgInfo extends Vue {
         key: "population",
         label: "Total population",
         min: 0,
+
+        customEventInput: (population: number, localInput: GreenHouseGaz) => {
+          localInput.population = population;
+          localInput.totalHH = parseInt(
+            (population / localInput.pp_per_hh).toFixed(0),
+            10
+          );
+          return localInput;
+        },
       },
       {
         type: "number",
@@ -216,14 +230,20 @@ export default class GhgInfo extends Vue {
         label: "Ave. People per HH",
         min: 0,
         max: 10,
+        customEventInput: (pp_per_hh: number, localInput: GreenHouseGaz) => {
+          localInput.pp_per_hh = pp_per_hh;
+          localInput.totalHH = parseInt(
+            (localInput.population / pp_per_hh).toFixed(0),
+            10
+          );
+          return localInput;
+        },
       },
       {
         type: "number",
-        subtype: "percent",
-        key: "hh",
-        label: "% of HHs using cookstove",
-        min: 0,
-        max: 100,
+        key: "totalHH",
+        label: "total HH",
+        disabled: true,
       },
     ];
   }
@@ -238,17 +258,6 @@ export default class GhgInfo extends Vue {
       const previousName = this.survey.name;
       const nextName = this.localProject.surveys[this.surveyIndex].name;
 
-      const { population, hh, pp_per_hh } = value;
-      if (
-        population == undefined ||
-        hh == undefined || // hh c'est le pourcentage de hh qui ont un cookstove
-        pp_per_hh == undefined
-      ) {
-        throw new Error(
-          "population information and cookstove information not complete"
-        );
-      }
-      value.totalCookstoves = (population / pp_per_hh) * hh;
       await this.updateDoc(value);
       // check current survey name and change route in case of change
       if (previousName !== nextName) {

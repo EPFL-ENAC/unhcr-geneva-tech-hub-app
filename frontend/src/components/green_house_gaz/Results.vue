@@ -15,11 +15,13 @@
           {{ totalBaseline | formatNumber }} (tCO2e/year)
         </h3>
       </v-col>
-      <v-col :cols="6" class="d-flex justify-center">
+      <v-col :cols="6" class="d-flex flex-column justify-center">
         <h3>
           Total Endline CO2 Emissions:
           {{ totalEndline | formatNumber }} (tCO2e/year)
-
+        </h3>
+        <br />
+        <h3>
           <v-icon :class="iconClass" :color="color"> $mdiTriangle </v-icon>
           <span
             :class="{
