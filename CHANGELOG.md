@@ -2,6 +2,60 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.7.0...v0.8.0) (2023-03-30)
+
+
+### Features
+
+* **assets:** update ghg_reference,iges_grid and unhcr_locations json ([9f49373](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/9f493731131070649b708659ebeede0e3220c8f1))
+* **axios:** upgrade to 1.x ([f5ca48d](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f5ca48de3f654c80e04a081d46ba413714f1f348))
+* **chore:** add console.trace to global error catching ([923c3e4](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/923c3e4795286056a37e19c7c9753632a5c24907))
+* **common:** add warning catcher for users ([7a73a00](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/7a73a0074762702c8dcbe49ca49f0c9a15734e1c))
+* **couchdb-setup:** change scripts and rawdata: iges_grid + unhcr locations ([2da28c5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/2da28c5d5f395e25472fab52ce16c9e50ebde0e9))
+* **energy:** remove energy app ([0d8c253](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/0d8c253df9755c12e515ffe1823a266bd86af2ae))
+* **generic:** abstract diesel and solar for Cooking and Facilities ([dce82bf](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/dce82bfdb0074ad1111cbf4f79f2698c4806503f))
+* **ghg:** abstract generic survey table ([6fa1ad9](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/6fa1ad9112976098e87d40fbd2a05927f42b58f8))
+* **ghg:** hide solar average per country ([89a7452](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/89a74525e45a350a180435e2e5ae4d8b269e8e85))
+* **pouchbd:** replace couchdb by couchdb-browser ([077ea28](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/077ea2831a344112452b84e5007a7e4eeacbc9d4))
+* **reference:** update with latest references and better formatNumber ([0f709a0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/0f709a0317f05c8f042479b81680c32025b8a14f))
+
+
+### Bug Fixes
+
+* **common:** avoid double redirect on unhcr login + no refresh flickr ([6b6d113](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/6b6d113964781205908daff0be8450227cf15c78))
+* **database:** update ghg name ([2452385](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/2452385daa817b64f1ae4d777735cdf61938c4af))
+* **dependencies:** upgrade echarts to avoid event listenner warning ([007852b](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/007852b65e11986e9981fe7fa74c555c1ed9b57e))
+* **docker-compose:** add force-slash to strip prefix for couchdb ([0b2edb6](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/0b2edb6d17f4463394eca85592c312e13c727550))
+* **facilities:** correct text for facilities ([6fa97eb](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/6fa97eb193854b387d8749541d7fa4fd00d1c00e))
+* **generic:** fix cookstove and others ([24a5ac3](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/24a5ac30a340faea6b35fca16980e0cdbe51215c))
+* **ghg:** add better text description for ghg ([9c88ebb](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/9c88ebbca34d98fdd495316d328f6ab745b5363c))
+* **ghg:** add new lpg image for cookstove module ([cf6ba37](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/cf6ba37996bac997581005ea93c30a876d494399)), closes [#296](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/296)
+* **ghg:** better generic module for cookstove and facilities ([4456267](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/44562677b161ef50482ba0e5d4ef428636a5adf3))
+* **ghg:** better generic solar ([bb86f64](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/bb86f6490f4579c24f6e8d8974c900230e0d4183))
+* **ghg:** change text for volume of truck ([96bfbcf](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/96bfbcfca8984cc1e6861f7901c149fb18f404d5))
+* **ghg:** correct dimensions for generator reference ([9e31acc](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/9e31acc55ea43b6b327f269532812eb00094b49d))
+* **ghg:** correct generator formula and add hover ([adf9f46](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/adf9f469772ae7beff299b59f7f1907259d5216e)), closes [#258](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/258)
+* **ghg:** correct text and alert behavior for generic module ([44352d9](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/44352d9d5ba6e4bb5b2b06138f0e4fb9471166ad)), closes [#254](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/254)
+* **ghg:** correct typo for trucking and diesel units ([7d27ea2](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/7d27ea2940fa8ff4302f712593bd826d55efb5d9))
+* **ghg:** default values ([824d7c7](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/824d7c7e5f26aebacf19f168a8028b14a849657f))
+* **ghg:** display kwh appropriately for disels and solar ([d3c65fe](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d3c65fe1e8246048054d52592a3051c2575df8a3))
+* **ghg:** ensure ghi proper naming ([a671866](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/a671866761e61b868959436975ea6887a073896e)), closes [#252](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/252)
+* **ghg:** keep _rev ([8d5a7f7](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/8d5a7f72038ad92db696481b3bfab262f53846c6))
+* **ghg:** remove non-powered electric cookstove ([2125601](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/2125601e5536bc13e167955c3fb7a68965afd48f))
+* **ghg:** remove old facilities and complete new generic module for facilities ([78e2e48](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/78e2e4870450cf18229fec4d8b3c24a9620e2c06))
+* **ghg:** remove useless code in vuex for ghg reference ([0f69f2b](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/0f69f2bc0ae4e6c6c809a9bc73864bbf34a9b192))
+* **ghg:** repair diesel generator co2 ([ad84784](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/ad847840690a88289187ffe901438886623cd760))
+* **ghg:** start migrating facilities ([990b572](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/990b572ecec819c63055d5085ed1b1d326b2bbe4))
+* **sentry:** modify enabled field for production only + add sampling ([8461721](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/846172131cd2c139f10524cc74c2949fa3e23953))
+* **shelter:** close video on closing modal ([f2fa71a](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f2fa71a354f3a187bbe8471f3472612e1460b420))
+* **shelter:** enable print for safari ([5ed0db5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/5ed0db54a21bf39056ac8b6765f15f135aa8fec3)), closes [#272](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/272)
+* **shelter:** make tooltip exists outside of canvas ([ad2f685](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/ad2f685154fdb3e74a0aedf10dd4966553023a1f)), closes [#250](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/250)
+* **shelters:** add new videos ([cf92b65](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/cf92b65b1a91afb007b0cfc3334081ed61f30c13))
+* **survey:** fix typo ([d6001e8](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d6001e833f35bf4e287a9e266c4fd23bd3869598))
+* **traefik:** add middleware properly + setup priorities ([7ef26cd](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/7ef26cd4ae530055644ada541d9792c7bbd25cc8))
+* **trucking:** fix typo for m3/yr ([6af7931](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/6af7931adae744e1c40f7b5a4a963b69c8eb4771))
+* **typo:** replace GHI/Daily_solar_peak_hours with “Daily solar peak hours ([2d0140d](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/2d0140d36487f584db203ceb96d24fb56629343f))
+
 ## [0.7.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.6.0...v0.7.0) (2023-03-17)
 
 
