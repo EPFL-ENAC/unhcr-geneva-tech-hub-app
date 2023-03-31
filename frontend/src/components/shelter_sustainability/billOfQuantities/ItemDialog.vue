@@ -116,7 +116,32 @@
                   required
                   :rules="rules"
                   @change="resetUnitAndQuantity"
-                />
+                >
+                  <template #label>
+                    <div
+                      v-if="localItem.formId === 'Other'"
+                      class="v-select__selection v-select__selections"
+                    >
+                      Other
+                    </div>
+                    <div v-else>Form</div>
+                  </template>
+                  <template #append-item>
+                    <v-divider class="mb-2"></v-divider>
+                    <v-list-item
+                      ripple
+                      :class="`${
+                        localItem.formId === 'Other'
+                          ? ' v-list-item primary--text v-list-item--active v-list-item--link theme--light v-list-item--highlighted'
+                          : ''
+                      }`"
+                      @mousedown.prevent
+                      @click="toggleOtherForm"
+                    >
+                      <v-list-item-content> Other </v-list-item-content>
+                    </v-list-item>
+                  </template>
+                </v-select>
               </v-col>
               <v-col
                 v-if="localItem.materialId === 'Other'"
@@ -646,11 +671,10 @@ export default class DeleteItemDialog extends Vue {
     if (this.isMaterial(this.localItem) && this.localItem.materialId) {
       const result = cloneDeep(this.materialForms[this.localItem.materialId]);
       result.sort((a, b) => a.form.localeCompare(b.form));
-      return result;
+      return result.filter((el: ShelterMaterial) => el.form != "Other");
     }
     return [] as ShelterMaterial[];
   }
-
   public resetLocalItemFormId(): void {
     const clone = cloneDeep(this.localItem) as Material;
     clone.formId = "";
@@ -685,6 +709,15 @@ export default class DeleteItemDialog extends Vue {
       localMaterial.materialId = "Other";
       this.localItem = localMaterial;
       this.resetLocalItemFormId();
+    }
+  }
+
+  public toggleOtherForm(): void {
+    if (this.localItem.itemType === "Material") {
+      const localMaterial = this.localItem as Material;
+      localMaterial.formId = "Other";
+      this.localItem = localMaterial;
+      this.resetUnitAndQuantity();
     }
   }
 
