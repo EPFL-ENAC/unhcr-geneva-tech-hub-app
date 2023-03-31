@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.9.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.8.1...v0.9.0) (2023-03-31)
+
+
+### Features
+
+* **common:** merge about and apps and remove drawer ([4c9b185](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/4c9b1854f198a9f3fae989ec78f4f2be70a58a5c))
+* **ghg:** add documentation as pdf in iframe ([670ebce](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/670ebcef7b688fb12474b32f182dad089e73c1e7)), closes [#264](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/264)
+* **ghg:** add wash water pumping module like facility ([f4e45be](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f4e45bea4328a8ad15ac2b5848a2c3bbec7c398d))
+* **ghg:** start implementing lighting module ([a1e75e8](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/a1e75e8a4748c48109350ea8d6110f24034b93fe))
+* **optimization:** change webpack config and externalize shelter transport ([d15592f](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d15592fe99bd47c879b3dcbf31a0c5875455ced2))
+* **optimization:** remove unused solar.json ([6ce85ec](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/6ce85ece0f6a0d17d91abd4ae8ab624155eb8408))
+* **shelter:** add Other at the bottom of the form ([b1a0225](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/b1a02257e6d7912b88b4e9588bd62e05341ed17e))
+
+
+### Bug Fixes
+
+* **ghg:** add suffix for duplicated items ([fe603ee](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/fe603eedf61a1f1c1f335c39431eb094c8e05851)), closes [#309](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/309)
+* **ghg:** add updated_field ([12232bc](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/12232bcff863a489aeed716b92925cfe7a040727)), closes [#12](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/12)
+* **ghg:** display warning all the time ([167e316](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/167e316a0ed5dd29ddea404fb02063b878878d80))
+* **ghg:** fix lighting-module ([e30de33](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/e30de33a1b642e93c034401f954594fc3ae0fbac))
+
 ## [0.8.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.8.0...v0.8.1) (2023-03-30)
 
 
