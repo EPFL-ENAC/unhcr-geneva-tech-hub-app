@@ -116,7 +116,32 @@
                   required
                   :rules="rules"
                   @change="resetUnitAndQuantity"
-                />
+                >
+                  <template #label>
+                    <div
+                      v-if="localItem.formId === 'Other'"
+                      class="v-select__selection v-select__selections"
+                    >
+                      Other
+                    </div>
+                    <div v-else>Form</div>
+                  </template>
+                  <template #append-item>
+                    <v-divider class="mb-2"></v-divider>
+                    <v-list-item
+                      ripple
+                      :class="`${
+                        localItem.formId === 'Other'
+                          ? ' v-list-item primary--text v-list-item--active v-list-item--link theme--light v-list-item--highlighted'
+                          : ''
+                      }`"
+                      @mousedown.prevent
+                      @click="toggleOtherForm"
+                    >
+                      <v-list-item-content> Other </v-list-item-content>
+                    </v-list-item>
+                  </template>
+                </v-select>
               </v-col>
               <v-col
                 v-if="localItem.materialId === 'Other'"
@@ -292,13 +317,17 @@ import {
   UnitsRef,
 } from "@/store/ShelterInterface";
 import { ShelterMaterial } from "@/store/SheltersMaterialModule";
-import { ShelterTransport } from "@/store/SheltersTransportModule";
+import { ShelterTransport } from "@/store/ShelterTransport";
 import { iso3166_2_to_3 } from "@/utils/iso3166";
 import { VForm } from "@/utils/vuetify";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
+const { default: SheltersTransportModule } = await import(
+  /* webpackPrefetch: true */ /* webpackChunkName: "reference-shelter-transports-vuex" */
+  "@/store/SheltersTransportModule"
+);
 @Component({
   computed: {
     ...mapGetters("ShelterModule", ["shelter"]),
@@ -646,11 +675,10 @@ export default class DeleteItemDialog extends Vue {
     if (this.isMaterial(this.localItem) && this.localItem.materialId) {
       const result = cloneDeep(this.materialForms[this.localItem.materialId]);
       result.sort((a, b) => a.form.localeCompare(b.form));
-      return result;
+      return result.filter((el: ShelterMaterial) => el.form != "Other");
     }
     return [] as ShelterMaterial[];
   }
-
   public resetLocalItemFormId(): void {
     const clone = cloneDeep(this.localItem) as Material;
     clone.formId = "";
@@ -688,6 +716,15 @@ export default class DeleteItemDialog extends Vue {
     }
   }
 
+  public toggleOtherForm(): void {
+    if (this.localItem.itemType === "Material") {
+      const localMaterial = this.localItem as Material;
+      localMaterial.formId = "Other";
+      this.localItem = localMaterial;
+      this.resetUnitAndQuantity();
+    }
+  }
+
   private setLocalItem(value: Item) {
     if (value) {
       // thanks typescript
@@ -709,9 +746,18 @@ export default class DeleteItemDialog extends Vue {
       }
     });
   }
-
-  created(): void {
+  created() {
     this.syncLocalItem();
+  }
+
+  beforeCreate() {
+    this.$store.registerModule(
+      "SheltersTransportModule",
+      SheltersTransportModule
+    );
+  }
+  beforeDestroy() {
+    this.$store.unregisterModule("SheltersTransportModule");
   }
 }
 </script>

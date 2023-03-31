@@ -57,7 +57,7 @@ export const cookstoveTECHs: CookstoveTech[] = [
     _id: "7",
     fuelTypes: gasFuels,
     text: "Gas powered cookstove",
-    image: "/images/energy/cookstoves/lpg.png",
+    image: "/images/energy/cookstoves/lpg.webp",
   },
   {
     _id: "8",

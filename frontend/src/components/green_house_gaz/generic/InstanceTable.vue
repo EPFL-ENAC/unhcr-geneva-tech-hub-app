@@ -252,7 +252,11 @@ export default class BaselineTable extends Vue {
       (item: SurveyItem) => item._id === this.localItem?._id
     );
     if (realIndex !== -1 && this.localItem) {
-      this.localItems.splice(realIndex, 0, cloneDeep(this.localItem));
+      const newDuplicate = cloneDeep(this.localItem);
+      if (newDuplicate.input?.name) {
+        newDuplicate.input.name = `${newDuplicate.input.name}_copy`;
+      }
+      this.localItems.splice(realIndex, 0, newDuplicate);
       this.localItems.splice(this.localItems.length); // vue trick
       this.$emit("update:items", this.localItems);
     }

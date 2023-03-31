@@ -3,6 +3,28 @@
     <v-card-title>
       <h3 class="endline-title font-weight-medium">Endline</h3>
     </v-card-title>
+    <v-card-subtitle>
+      <v-col :cols="12" class="d-flex justify-center">
+        <v-alert
+          v-if="!isDiffNull"
+          dense
+          outlined
+          border="left"
+          close-text="Close Alert"
+          color="error"
+          dark
+        >
+          Please note that the baseline and endline
+          {{ diffDimensionText }} do not match.
+          <br />
+          Baseline:
+          {{ baseline.results[diffDimension] }} {{ diffDimensionText }}
+          <br />
+          Endline:
+          {{ endline.results[diffDimension] }} {{ diffDimensionText }}
+        </v-alert>
+      </v-col>
+    </v-card-subtitle>
     <div v-if="showEndLines">
       <v-card-text>
         <instance-table
@@ -70,29 +92,6 @@
                   These calculations are limited to Scope 1 and Scope 2 sources
                   of emissions for purposes of simplicity.
                 </h4>
-              </v-col>
-              <v-col :cols="12" class="d-flex justify-start">
-                <v-alert
-                  v-if="!isDiffNull"
-                  v-model="endline.alertDismissed"
-                  dense
-                  outlined
-                  border="left"
-                  close-text="Close Alert"
-                  color="error"
-                  dark
-                  dismissible
-                  @input="updateEndlineDismissed"
-                >
-                  Please note that the baseline and endline
-                  {{ diffDimensionText }} do not match.
-                  <br />
-                  Baseline:
-                  {{ baseline.results[diffDimension] }} {{ diffDimensionText }}
-                  <br />
-                  Endline:
-                  {{ endline.results[diffDimension] }} {{ diffDimensionText }}
-                </v-alert>
               </v-col>
             </v-row>
           </v-col>

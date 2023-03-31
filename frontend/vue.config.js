@@ -4,7 +4,11 @@
 module.exports = {
   configureWebpack: {
     devtool: "source-map",
+    experiments: {
+      topLevelAwait: true,
+    },
   },
+  productionSourceMap: true,
   pwa: {
     workboxPluginMode: "GenerateSW",
     workboxOptions: {
@@ -12,7 +16,10 @@ module.exports = {
       clientsClaim: true,
     },
   },
-  transpileDependencies: ["vuetify"],
+  css: {
+    sourceMap: true,
+  },
+  transpileDependencies: ["vuetify", "leaflet", "echarts"],
 
   devServer: {
     // https://github.com/webpack/webpack-dev-server/issues/1850#issuecomment-490926569
@@ -57,6 +64,13 @@ module.exports = {
       localeDir: "locales",
       enableInSFC: true,
       enableBridge: false,
+    },
+    webpackBundleAnalyzer: {
+      analyzerMode: "enabled",
+      optimization: {
+        // https://news.shardlabs.io/how-to-drastically-reduce-your-bundle-size-and-load-time-in-vue-js-54370d513fdf
+        splitChunks: "all",
+      },
     },
   },
 };

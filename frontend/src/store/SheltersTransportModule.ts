@@ -1,4 +1,4 @@
-import transports from "@/assets/references/transports.json";
+import { ShelterTransport } from "@/store/ShelterTransport";
 import {
   ActionContext,
   ActionTree,
@@ -15,6 +15,10 @@ interface SheltersTransportState {
   itemsLength: number;
 }
 
+const { default: transports } = await import(
+  /* webpackPrefetch: true */ /* webpackChunkName: "reference-shelter-transports" */
+  "@/assets/references/transports.json"
+);
 /*
 ** Local materials as defined by André Ullal @epfl.ch
   Clay
@@ -23,11 +27,6 @@ interface SheltersTransportState {
   Sand
   Stone
 */
-export interface ShelterTransport {
-  _id: string; // 'AAA_BBB' source country (AAA) / destination country (BBB) in iso3166 3 letters
-  t: number; // Transport   embodied carbon  kgCO2/kg (i.e. local materials)
-  o: number; // Transport   embodied carbon  kgCO2/kg (all others materials)
-}
 
 const MSG_COULD_NOT_FIND_ITEM = "Could not find item with this id";
 
@@ -44,7 +43,7 @@ function generateState(): SheltersTransportState {
 /** Getters */
 const getters: GetterTree<SheltersTransportState, RootState> = {
   item: (s): ShelterTransport => s.item,
-  items: (s): ShelterTransport[] => s.items,
+  items: (): ShelterTransport[] => transports,
   itemsLoading: (s): boolean => s.itemsLoading,
   itemsLength: (s): number => s.itemsLength,
 };
@@ -80,7 +79,7 @@ const actions: ActionTree<SheltersTransportState, RootState> = {
 };
 
 /** VuexStore */
-const ShelterMaterialsModule: Module<SheltersTransportState, RootState> = {
+const SheltersTransportModule: Module<SheltersTransportState, RootState> = {
   namespaced: true,
   state: generateState(),
   getters,
@@ -88,4 +87,4 @@ const ShelterMaterialsModule: Module<SheltersTransportState, RootState> = {
   actions,
 };
 
-export default ShelterMaterialsModule;
+export default SheltersTransportModule;
