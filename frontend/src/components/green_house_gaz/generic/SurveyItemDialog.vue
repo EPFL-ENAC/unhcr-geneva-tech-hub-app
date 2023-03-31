@@ -13,7 +13,6 @@
           <v-container v-if="localInput">
             <v-row v-if="intervention">
               <v-col>
-                <!-- TODO: add rule for makeing this mandatory -->
                 <v-select
                   v-model="localItem.originIncrement"
                   :items="
@@ -118,6 +117,7 @@ import {
   SurveyItem,
 } from "@/store/GhgInterface.vue";
 
+import { SelectCustom } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { VForm } from "@/utils/vuetify";
 import { cloneDeep, get as _get } from "lodash";
@@ -226,6 +226,26 @@ export default class SurveyItemDialog extends Vue {
         // we don't overide text (dynamic text should not be authorized for table)
         // only for header in form
         header.label = header.text(this.localInput);
+      }
+      if (
+        typeof header.items === "object" &&
+        header.items.length &&
+        header.formatter
+      ) {
+        // array we should just check that it's just string.
+        header.options =
+          header.items?.map((item: string| SelectCustom<string>) => {
+            if (typeof item === "string") {
+              return {
+                text: header.formatter?.(item as unknown) ?? item,
+                value: item,
+              };
+            }
+            return {
+              text: item.text,
+              value: item._id,
+            };
+          }) ?? [];
       }
       return header;
     });
