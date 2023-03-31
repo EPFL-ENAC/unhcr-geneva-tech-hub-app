@@ -55,6 +55,31 @@
           </v-list-item>
         </v-list>
       </v-menu>
+      <v-menu
+        v-if="$router.currentRoute.name?.includes('GreenHouseGaz')"
+        offset-y
+        bottom
+        min-width="330px"
+        max-width="330px"
+      >
+        <template #activator="{ on, attrs }">
+          <v-btn icon v-bind="attrs" aria-label="shelter-help" v-on="on">
+            <v-icon> $mdiHelpCircleOutline </v-icon>
+          </v-btn>
+        </template>
+        <v-list class="helper-menu">
+          <v-list-item
+            v-for="(item, index) in GHGHelpers"
+            :key="index"
+            @click="setHelper(item)"
+          >
+            <v-list-item-action>
+              <v-icon>${{ item?.icon }}</v-icon></v-list-item-action
+            >
+            <v-list-item-content>{{ item?.title }}</v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-menu>
 
       <v-btn
         v-if="$router.currentRoute.name?.includes('Shelter')"
@@ -379,7 +404,7 @@ export default class App extends Vue {
   }
 
   // https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/
-  get shelterHelpers(): ShelterHelpers[] {
+  get shelterHelpers(): Helpers[] {
     return [
       {
         title: "Instruction manual",
@@ -467,6 +492,16 @@ export default class App extends Vue {
     ];
   }
 
+  get GHGHelpers(): Helpers[] {
+    return [
+      {
+        title: "Instruction manual",
+        icon: "mdiFileDocumentOutline",
+        type: "pdf",
+        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-30/Guidance Manual GHG tool.pdf",
+      },
+    ];
+  }
   @Watch("themeDark")
   onthemeDarkChange(): void {
     this.$vuetify.theme.dark = false; // this.$store.getters["ConfigModule/themeDark"];
@@ -556,7 +591,7 @@ export default class App extends Vue {
   }
 }
 
-interface ShelterHelpers {
+interface Helpers {
   title: string;
   icon?: string;
   type?: string;
