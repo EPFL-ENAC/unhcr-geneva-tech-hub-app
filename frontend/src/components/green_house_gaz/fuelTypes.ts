@@ -83,6 +83,7 @@ export const allFuelsButElectric = [
   ...thermalFuels,
 ];
 // export type AllFuelsButElectric = typeof allFuelsButElectric[number];
+export const allFuels = [...allFuelsButElectric, ...electricFuels];
 
 export type AllFuel =
   | ElectricFuel
