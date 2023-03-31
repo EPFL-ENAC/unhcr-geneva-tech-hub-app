@@ -1,19 +1,36 @@
 <template>
   <main class="shelter__list" :style="computedGridTemplate">
-    <v-dialog v-model="dialogDelete" max-width="500px">
-      <v-card>
-        <v-card-title class="text-h5"
-          >Confirm deletion of this shelter?</v-card-title
-        >
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="closeDialog">Cancel</v-btn>
-          <v-btn color="blue darken-1" text @click="deleteItemConfirm"
-            >OK</v-btn
+    <v-dialog
+      v-model="dialogDelete"
+      max-width="500px"
+      @keypress.enter="() => deleteItemConfirm()"
+    >
+      <v-form
+        ref="form"
+        v-model="deleteFormValid"
+        @submit.prevent="() => deleteItemConfirm()"
+      >
+        <v-card>
+          <v-card-title class="text-h5"
+            >Confirm deletion of this shelter?</v-card-title
           >
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" tabindex="1" text @click="closeDialog"
+              >Cancel</v-btn
+            >
+            <v-btn
+              color="blue darken-1"
+              type="submit"
+              tabindex="0"
+              text
+              :disabled="!deleteFormValid"
+              >OK</v-btn
+            >
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-form>
     </v-dialog>
     <v-sheet class="country-list overflow-y-auto">
       <v-container fluid>
@@ -360,6 +377,7 @@ export default class ProjectList extends Vue {
   listOfShelterType = listOfShelterType;
   shelterColors = shelterColors;
   createProjectFormValid = true;
+  deleteFormValid = true;
   selectedShelters: string[] = [];
   rules = [
     (v: string): boolean | string => !!v || `A name is required`,

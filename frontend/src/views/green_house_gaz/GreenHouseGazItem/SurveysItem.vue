@@ -361,6 +361,8 @@ export default class SurveyList extends Vue {
     const newProject = cloneDeep(this.project);
     // update array of survey and then submit!
     if (survey) {
+      survey.updated_at = new Date().toISOString();
+      survey.updated_by = this.$user().name ?? "user with no name";
       newProject.surveys.splice(this.currentSurveyIndex, 1, survey);
     } else {
       // in case of undefined remove survey

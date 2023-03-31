@@ -69,6 +69,7 @@
                         <form-item-component
                           v-model="localProject.surveys[surveyIndex][item.key]"
                           v-bind="item"
+                          @input="updateSurveyValues"
                         ></form-item-component>
                       </v-col>
                     </template>
@@ -255,19 +256,25 @@ export default class GhgInfo extends Vue {
       this.surveyIndex !== undefined &&
       this.surveyIndex >= 0
     ) {
-      const previousName = this.survey.name;
-      const nextName = this.localProject.surveys[this.surveyIndex].name;
-
-      await this.updateDoc(value);
-      // check current survey name and change route in case of change
-      if (previousName !== nextName) {
-        await this.$router.push({
-          name: "GreenHouseGazItemSurveyId",
-          params: { surveyId: encodeURIComponent(nextName) },
-        });
+      if (this.surveyIndex !== undefined) {
+        const currentSurvey: Survey = value.surveys[this.surveyIndex];
+        currentSurvey.updated_at = new Date().toISOString();
+        currentSurvey.updated_by = this.$user().name ?? "user with no name";
+        value.surveys[this.surveyIndex] = currentSurvey;
       }
+      await this.updateDoc(value);
     } else {
       throw new Error("please fill the new Name");
+    }
+  }
+
+  public updateSurveyValues(): void {
+    if (this.surveyIndex !== undefined) {
+      const currentSurvey: Survey = this.localProject.surveys[this.surveyIndex];
+      currentSurvey.updated_at = new Date().toISOString();
+      currentSurvey.updated_by = this.$user().name ?? "user with no name";
+      this.localProject.surveys[this.surveyIndex] = currentSurvey;
+      this.localProject = Object.assign({}, this.localProject);
     }
   }
 
