@@ -9,7 +9,6 @@ import GhgReferenceSolarModule from "@/store/GHGReferenceSolarModule";
 import ShelterBillOfQuantitiesModule from "@/store/ShelterBillOfQuantitiesModule";
 import ShelterModule from "@/store/ShelterModule";
 import SheltersMaterialModule from "@/store/SheltersMaterialModule";
-import SheltersTransportModule from "@/store/SheltersTransportModule";
 import UNHCRLocationModule from "@/store/UNHCRLocationModule";
 import UserModule from "@/store/UserModule";
 import { throttle } from "lodash";
@@ -316,7 +315,6 @@ const store: StoreOptions<RootState> = {
   modules: {
     ConfigModule,
     ShelterModule,
-    SheltersTransportModule,
     SheltersMaterialModule,
     ShelterBillOfQuantitiesModule,
     GhgModule,

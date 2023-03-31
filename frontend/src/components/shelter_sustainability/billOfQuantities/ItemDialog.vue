@@ -317,13 +317,17 @@ import {
   UnitsRef,
 } from "@/store/ShelterInterface";
 import { ShelterMaterial } from "@/store/SheltersMaterialModule";
-import { ShelterTransport } from "@/store/SheltersTransportModule";
+import { ShelterTransport } from "@/store/ShelterTransport";
 import { iso3166_2_to_3 } from "@/utils/iso3166";
 import { VForm } from "@/utils/vuetify";
 import { cloneDeep } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
+const { default: SheltersTransportModule } = await import(
+  /* webpackPrefetch: true */ /* webpackChunkName: "reference-shelter-transports-vuex" */
+  "@/store/SheltersTransportModule"
+);
 @Component({
   computed: {
     ...mapGetters("ShelterModule", ["shelter"]),
@@ -742,9 +746,18 @@ export default class DeleteItemDialog extends Vue {
       }
     });
   }
-
-  created(): void {
+  created() {
     this.syncLocalItem();
+  }
+
+  beforeCreate() {
+    this.$store.registerModule(
+      "SheltersTransportModule",
+      SheltersTransportModule
+    );
+  }
+  beforeDestroy() {
+    this.$store.unregisterModule("SheltersTransportModule");
   }
 }
 </script>
