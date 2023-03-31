@@ -115,12 +115,7 @@
           </ol>
         </v-col>
       </v-row>
-      <v-data-table
-        :headers="headers"
-        :items="items"
-        dense
-        :loading="itemsLoading"
-      >
+      <v-data-table :headers="headers" :items="items" dense>
         <template #[`item.source`]="slotProps">
           {{ getText(slotProps.item._id.split("_")[0]) }}
           <country-flag
@@ -145,6 +140,10 @@
 </template>
 
 <script lang="ts">
+const { default: SheltersTransportModule } = await import(
+  /* webpackPrefetch: true */ /* webpackChunkName: "reference-shelter-transports-vuex" */
+  "@/store/SheltersTransportModule"
+);
 import { countriesMap } from "@/utils/countriesAsList";
 import { iso3166_3_to_2 } from "@/utils/iso3166";
 import { Component, Vue } from "vue-property-decorator";
@@ -152,17 +151,23 @@ import { mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("SheltersTransportModule", [
-      "items",
-      "item",
-      "itemsLength",
-      "itemsLoading",
-    ]),
+    ...mapGetters("SheltersTransportModuleREF", ["items"]),
   },
 })
 export default class MaterialsTransport extends Vue {
   iso3166_3_to_2 = iso3166_3_to_2;
   countriesMap = countriesMap;
+
+  beforeCreate() {
+    this.$store.registerModule(
+      "SheltersTransportModuleREF",
+      SheltersTransportModule
+    );
+  }
+  beforeDestroy() {
+    this.$store.unregisterModule("SheltersTransportModuleREF");
+  }
+
   public getSourceCountry(key: string): Record<string, string> {
     const [source, destination] = key.split("_");
     return { source, destination };
