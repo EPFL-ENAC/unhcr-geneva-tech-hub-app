@@ -13,11 +13,6 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
 
-    <link
-      rel="stylesheet"
-      href="https://www.epfl.ch/css/epfl-cookie-consent.css"
-    />
-    <script src="https://www.epfl.ch/js/epfl-cookie-consent.js"></script>
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
@@ -27,5 +22,7 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+    <link rel="prefetch" as="style" href="<%= BASE_URL %>epfl-cookie-consent/epfl-cookie-consent.min.css" onload="this.onload=null;this.rel='stylesheet'">
+    <script async defer src="<%= BASE_URL %>epfl-cookie-consent/epfl-cookie-consent.min.js"></script>
   </body>
 </html>
