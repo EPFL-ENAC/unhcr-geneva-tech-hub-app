@@ -3,13 +3,6 @@ describe("Login component", () => {
     cy.visit("/login");
     cy.get("[data-cy=loginWelcome]").contains("Welcome!").should("be.visible");
   });
-  it("Visits the /about page", () => {
-    cy.visit("/about");
-    // we're not logged in, we should display the about page either way
-    cy.get("[data-cy=aboutDisclaimer]")
-      .contains("Disclaimer")
-      .should("be.visible");
-  });
   it("Visits the /apps page", () => {
     cy.visit("/apps");
     // we're not logged in, we should display the Welcome message with the login

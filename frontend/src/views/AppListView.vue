@@ -1,12 +1,14 @@
 <template>
   <main class="app-list-view">
     <app-list />
+    <about-card />
     <app-logo />
   </main>
 </template>
 
 <script lang="ts">
 import AppList from "@/components/AppList.vue";
+import AboutCard from "@/components/commons/AboutCard.vue";
 import AppLogo from "@/components/commons/AppLogo.vue";
 import Vue from "vue";
 import Component from "vue-class-component";
@@ -15,6 +17,7 @@ import Component from "vue-class-component";
   components: {
     AppList,
     AppLogo,
+    AboutCard,
   },
 })
 export default class AppListView extends Vue {}

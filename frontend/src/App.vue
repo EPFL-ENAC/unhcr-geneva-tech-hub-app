@@ -19,7 +19,66 @@
       class="d-none d-print-flex font-weight-bold justify-space-between align-center primary"
     />
     <v-app-bar app dense>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-menu offset-y bottom min-width="330px" max-width="330px">
+        <template #activator="{ on, attrs }">
+          <v-btn icon v-bind="attrs" aria-label="shelter-help" v-on="on">
+            <v-avatar>
+              <v-icon v-if="$can('admin')" large title="admin"
+                >$mdiShieldAccount</v-icon
+              >
+              <v-icon v-else large class="account-color"
+                >$mdiAccountCircle
+              </v-icon>
+            </v-avatar>
+          </v-btn>
+        </template>
+        <v-list class="helper-menu">
+          <v-list-item v-if="user.name" class="px-2">
+            <v-list-item-title>{{ user.name }} </v-list-item-title>
+          </v-list-item>
+          <v-list-item v-if="$userIs('LoggedOut')" @click="login">
+            <v-list-item-icon>
+              <v-icon> $mdiLogin </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Login</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item v-if="$userIs('LoggedIn')" @click="logout">
+            <v-list-item-icon>
+              <v-icon>$mdiLogout </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Logout </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item v-if="notificationsLength">
+            <v-list-item-icon>
+              <v-btn
+                icon
+                small
+                style="width: 24px; height: 24px"
+                aria-label="notification-center"
+                @click.stop="toggleNotificationCenter"
+              >
+                <v-badge
+                  :content="notificationsLength"
+                  :value="notificationsLength"
+                  :color="notificationColor"
+                  overlap
+                >
+                  <v-icon> $mdiBellOutline </v-icon>
+                </v-badge>
+              </v-btn>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Notifications </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+      <v-app-bar-nav-icon :to="{ name: 'Apps' }" link />
       <v-tabs>
         <v-tab
           v-if="rootRoute"
@@ -105,137 +164,6 @@
         color="primary accent-3"
       />
     </v-app-bar>
-
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-      :mini-variant.sync="mini"
-      permanent
-    >
-      <v-list>
-        <v-list-item
-          v-if="user.name"
-          class="px-2"
-          @click.stop.prevent="() => toggleMini()"
-        >
-          <v-list-item-avatar>
-            <v-avatar>
-              <v-icon v-if="$can('admin')" large title="admin"
-                >$mdiShieldAccount</v-icon
-              >
-              <v-icon v-else large class="account-color"
-                >$mdiAccountCircle
-              </v-icon>
-            </v-avatar>
-          </v-list-item-avatar>
-
-          <v-list-item-title>{{ user.name }} </v-list-item-title>
-
-          <v-btn
-            aria-label="toggle-left-panel"
-            icon
-            @click.stop.prevent="() => toggleMini()"
-          >
-            <v-icon>$mdiChevronLeft </v-icon>
-          </v-btn>
-        </v-list-item>
-        <v-list-item
-          v-else
-          class="px-2"
-          @click.stop.prevent="() => toggleMini()"
-        >
-          <v-btn
-            aria-label="toggle-left-panel"
-            icon
-            @click.stop.prevent="() => toggleMini()"
-          >
-            <v-icon
-              :class="{
-                'rotate-180': mini,
-              }"
-              >$mdiChevronLeft</v-icon
-            >
-          </v-btn>
-        </v-list-item>
-        <v-list-item link :to="{ name: 'Apps' }">
-          <v-list-item-icon>
-            <v-icon color="light"> $mdiBriefcase </v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Apps</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item
-          v-for="(app, i) in apps"
-          :key="i"
-          link
-          :to="{ name: app.to }"
-        >
-          <v-list-item-icon @click.stop>
-            <v-img
-              v-if="app.logoSvg"
-              max-width="24px"
-              :src="app.logoSvg"
-            ></v-img>
-            <v-icon v-if="app.logoIcon">
-              {{ app.logoIcon }}
-            </v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>
-            {{ app?.title }}
-          </v-list-item-title>
-        </v-list-item>
-        <v-list-item link :to="{ name: 'About' }">
-          <v-list-item-icon>
-            <v-icon> $mdiInformation </v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>About</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item v-if="$userIs('LoggedOut')" @click="login">
-          <v-list-item-icon>
-            <v-icon> $mdiLogin </v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Login</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item v-if="$userIs('LoggedIn')" @click="logout">
-          <v-list-item-icon>
-            <v-icon>$mdiLogout </v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Logout </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item>
-          <v-list-item-icon>
-            <v-btn
-              v-if="notificationsLength"
-              icon
-              small
-              style="width: 24px; height: 24px"
-              aria-label="notification-center"
-              @click.stop="toggleNotificationCenter"
-            >
-              <v-badge
-                :content="notificationsLength"
-                :value="notificationsLength"
-                :color="notificationColor"
-                overlap
-              >
-                <v-icon> $mdiBellOutline </v-icon>
-              </v-badge>
-            </v-btn>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Notifications </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
 
     <v-main v-if="$userIs('LoggedOut')" class="unhcr-main">
       <notification-center />
