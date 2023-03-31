@@ -18,89 +18,89 @@
           @update:items="updateEndlineInputs"
         />
       </v-card-text>
-      <v-container class="d-flex flex-column" fluid>
-        <v-row>
-          <v-col cols="12">
-            <v-row>
-              <v-col cols="6" class="d-flex justify-end">
-                <instance-pie-chart
-                  v-if="activatePie"
-                  :diff-dimension="diffDimension"
-                  :results="endline.results"
-                />
-              </v-col>
-              <v-col :cols="6" class="d-flex flex-column justify-end">
-                <h3>
-                  Total CO2 Emissions:
-                  {{
-                    endline.results.totalCO2Emission |
-                      formatNumber({ suffix: "tCO2e/year" })
-                  }}
-                </h3>
-
-                <h3>
-                  <span
-                    :class="{
-                      'item-positive': changeInEmissionPositive,
-                      'item-negative': changeInEmissionNegative,
-                    }"
-                  >
-                    <v-icon :class="iconClass" :color="color">
-                      $mdiTriangle
-                    </v-icon>
-                    {{
-                      endline.results.changeInEmission |
-                        formatNumber({
-                          maximumFractionDigits: 0,
-                          style: "percent",
-                          signDisplay: "exceptZero",
-                        })
-                    }}
-
-                    ({{
-                      (endline.results.totalCO2Emission -
-                        baseline.results.totalCO2Emission) |
-                        formatNumber({ suffix: "tCO2e/year" })
-                    }})
-                  </span>
-                </h3>
-              </v-col>
-              <v-col :cols="12" class="d-flex justify-end mx-2 mb-2">
-                <h4>
-                  These calculations are limited to Scope 1 and Scope 2 sources
-                  of emissions for purposes of simplicity.
-                </h4>
-              </v-col>
-              <v-col :cols="12" class="d-flex justify-start">
-                <v-alert
-                  v-if="!isDiffNull"
-                  v-model="endline.alertDismissed"
-                  dense
-                  outlined
-                  border="left"
-                  close-text="Close Alert"
-                  color="error"
-                  dark
-                  dismissible
-                  @input="updateEndlineDismissed"
-                >
-                  Please note that the baseline and endline
-                  {{ diffDimensionText }} do not match.
-                  <br />
-                  Baseline:
-                  {{ baseline.results[diffDimension] }} {{ diffDimensionText }}
-                  <br />
-                  Endline:
-                  {{ endline.results[diffDimension] }} {{ diffDimensionText }}
-                </v-alert>
-              </v-col>
-            </v-row>
-          </v-col>
-        </v-row>
-      </v-container>
     </div>
 
-    <div v-else class="container container--fluid">
+    <v-container class="d-flex flex-column" fluid>
+      <v-row>
+        <v-col cols="12">
+          <v-row>
+            <v-col cols="6" class="d-flex justify-end">
+              <instance-pie-chart
+                v-if="activatePie"
+                :diff-dimension="diffDimension"
+                :results="endline.results"
+              />
+            </v-col>
+            <v-col :cols="6" class="d-flex flex-column justify-end">
+              <h3>
+                Total CO2 Emissions:
+                {{
+                  endline.results.totalCO2Emission |
+                    formatNumber({ suffix: "tCO2e/year" })
+                }}
+              </h3>
+
+              <h3>
+                <span
+                  :class="{
+                    'item-positive': changeInEmissionPositive,
+                    'item-negative': changeInEmissionNegative,
+                  }"
+                >
+                  <v-icon :class="iconClass" :color="color">
+                    $mdiTriangle
+                  </v-icon>
+                  {{
+                    endline.results.changeInEmission |
+                      formatNumber({
+                        maximumFractionDigits: 0,
+                        style: "percent",
+                        signDisplay: "exceptZero",
+                      })
+                  }}
+
+                  ({{
+                    (endline.results.totalCO2Emission -
+                      baseline.results.totalCO2Emission) |
+                      formatNumber({ suffix: "tCO2e/year" })
+                  }})
+                </span>
+              </h3>
+            </v-col>
+            <v-col :cols="12" class="d-flex justify-end mx-2 mb-2">
+              <h4>
+                These calculations are limited to Scope 1 and Scope 2 sources of
+                emissions for purposes of simplicity.
+              </h4>
+            </v-col>
+            <v-col :cols="12" class="d-flex justify-start">
+              <v-alert
+                v-if="!isDiffNull"
+                v-model="endline.alertDismissed"
+                dense
+                outlined
+                border="left"
+                close-text="Close Alert"
+                color="error"
+                dark
+                dismissible
+                @input="updateEndlineDismissed"
+              >
+                Please note that the baseline and endline
+                {{ diffDimensionText }} do not match.
+                <br />
+                Baseline:
+                {{ baseline.results[diffDimension] }} {{ diffDimensionText }}
+                <br />
+                Endline:
+                {{ endline.results[diffDimension] }} {{ diffDimensionText }}
+              </v-alert>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-container>
+    <div v-if="!showEndLines" class="container container--fluid">
       <v-row>
         <v-col class="d-flex justify-end mx-2 mb-2">
           <h3>{{ endlineText }}</h3>

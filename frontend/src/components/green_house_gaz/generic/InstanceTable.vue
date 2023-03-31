@@ -1,150 +1,166 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <v-data-table
-    v-if="items"
-    :headers="tableHeaders"
-    :items="items"
-    :sort-by="sortBy"
-    class="elevation-1"
-    :hide-default-footer="true"
-    :items-per-page="-1"
-  >
-    <template #top>
-      <v-toolbar v-if="!disabled" flat>
-        <v-spacer></v-spacer>
-        <v-btn
-          color="primary"
-          dark
-          class="mb-2"
-          :disabled="disabled"
-          @click="() => openDialog(newDefaultItem(), 'survey-item-dialog')"
+  <v-expansion-panels v-model="panel" accordion>
+    <v-expansion-panel>
+      <v-expansion-panel-header> </v-expansion-panel-header>
+      <v-expansion-panel-content>
+        <v-data-table
+          v-if="items"
+          :headers="tableHeaders"
+          :items="items"
+          :sort-by="sortBy"
+          class="elevation-1"
+          :hide-default-footer="true"
+          :items-per-page="-1"
         >
-          New {{ name }}
-        </v-btn>
-        <survey-item-dialog
-          :dialog-open.sync="dialogs['survey-item-dialog']"
-          :item="localItem"
-          :headers="headers"
-          :reference-items="referenceItems"
-          :intervention="intervention"
-          :diff-dimension="diffDimension"
-          :name="name"
-          @update:item="updateWithItem"
-        />
-        <duplicate-survey-item-dialog
-          v-if="!intervention"
-          :dialog-open.sync="dialogs['duplicate-survey-item-dialog']"
-          :name="name"
-          @duplicate:item="duplicateItem"
-        />
-        <delete-survey-item-dialog
-          :dialog-open.sync="dialogs['delete-survey-item-dialog']"
-          :name="name"
-          @delete:item="deleteItem"
-        />
-      </v-toolbar>
-    </template>
-    <template
-      v-for="(tableHeader, $tableHeaderIndex) in tableHeaders"
-      #[`item.${tableHeader.value}`]="{ item }"
-    >
-      <div
-        :key="$tableHeaderIndex"
-        :class="
-          tableHeader.classFormatter(
-            get(item, tableHeader.value),
-            tableHeader,
-            item
-          )
-        "
-        v-html="
-          tableHeader.formatter(
-            get(item, tableHeader.value),
-            tableHeader,
-            item,
-            items
-          )
-        "
-      ></div>
-    </template>
-    <template #[`item.actions`]="{ item }">
-      <v-tooltip bottom>
-        <template #activator="{ on, attrs }">
-          <v-btn
-            v-bind="attrs"
-            icon
-            small
-            class="mr-2"
-            :disabled="disabled"
-            v-on="on"
-            @click.stop="() => openDialog(item, 'survey-item-dialog')"
+          <template #top>
+            <v-toolbar v-if="!disabled" flat>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="primary"
+                dark
+                class="mb-2"
+                :disabled="disabled"
+                @click="
+                  () => openDialog(newDefaultItem(), 'survey-item-dialog')
+                "
+              >
+                New {{ name }}
+              </v-btn>
+              <survey-item-dialog
+                :dialog-open.sync="dialogs['survey-item-dialog']"
+                :item="localItem"
+                :headers="headers"
+                :reference-items="referenceItems"
+                :intervention="intervention"
+                :diff-dimension="diffDimension"
+                :name="name"
+                @update:item="updateWithItem"
+              />
+              <duplicate-survey-item-dialog
+                v-if="!intervention"
+                :dialog-open.sync="dialogs['duplicate-survey-item-dialog']"
+                :name="name"
+                @duplicate:item="duplicateItem"
+              />
+              <delete-survey-item-dialog
+                :dialog-open.sync="dialogs['delete-survey-item-dialog']"
+                :name="name"
+                @delete:item="deleteItem"
+              />
+            </v-toolbar>
+          </template>
+          <template
+            v-for="(tableHeader, $tableHeaderIndex) in tableHeaders"
+            #[`item.${tableHeader.value}`]="{ item }"
           >
-            <v-icon small class="better-click"> $mdiPencil </v-icon>
-          </v-btn>
-        </template>
-        <span>Edit</span>
-      </v-tooltip>
-      <v-tooltip v-if="!intervention" bottom>
-        <template #activator="{ on, attrs }">
-          <v-btn
-            v-bind="attrs"
-            icon
-            small
-            class="mr-2"
-            :disabled="disabled"
-            v-on="on"
-            @click.stop="() => openDialog(item, 'duplicate-survey-item-dialog')"
-          >
-            <v-icon small class="better-click"> $mdiContentCopy </v-icon>
-          </v-btn>
-        </template>
-        <span>Duplicate</span>
-      </v-tooltip>
-      <v-tooltip bottom>
-        <template #activator="{ on, attrs }">
-          <v-btn
-            v-bind="attrs"
-            icon
-            small
-            class="mr-2"
-            :disabled="disabled"
-            v-on="on"
-            @click.stop="() => openDialog(item, 'delete-survey-item-dialog')"
-          >
-            <v-icon small class="better-click"> $mdiDelete </v-icon>
-          </v-btn>
-        </template>
-        <span>Delete</span>
-      </v-tooltip>
-    </template>
-    <template #foot="{}">
-      <tr>
-        <td
-          v-for="(tableHeader, $index) in tableHeaders"
-          :key="$index"
-          class="items-footer-like-vuetify"
-        >
-          <span v-if="$index == 0">Total</span>
-          <span
-            v-else-if="results[tableHeader.key]"
-            :class="
-              tableHeader.classFormatter(results[tableHeader.key], tableHeader)
-            "
-          >
-            {{
-              tableHeader.formatter(
-                results[tableHeader.key],
-                tableHeader,
-                { input: results },
-                items
-              )
-            }}
-          </span>
-          <span v-else-if="!tableHeader.hidden"> – </span>
-        </td>
-      </tr>
-    </template>
-  </v-data-table>
+            <div
+              :key="$tableHeaderIndex"
+              :class="
+                tableHeader.classFormatter(
+                  get(item, tableHeader.value),
+                  tableHeader,
+                  item
+                )
+              "
+              v-html="
+                tableHeader.formatter(
+                  get(item, tableHeader.value),
+                  tableHeader,
+                  item,
+                  items
+                )
+              "
+            ></div>
+          </template>
+          <template #[`item.actions`]="{ item }">
+            <v-tooltip bottom>
+              <template #activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  icon
+                  small
+                  class="mr-2"
+                  :disabled="disabled"
+                  v-on="on"
+                  @click.stop="() => openDialog(item, 'survey-item-dialog')"
+                >
+                  <v-icon small class="better-click"> $mdiPencil </v-icon>
+                </v-btn>
+              </template>
+              <span>Edit</span>
+            </v-tooltip>
+            <v-tooltip v-if="!intervention" bottom>
+              <template #activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  icon
+                  small
+                  class="mr-2"
+                  :disabled="disabled"
+                  v-on="on"
+                  @click.stop="
+                    () => openDialog(item, 'duplicate-survey-item-dialog')
+                  "
+                >
+                  <v-icon small class="better-click"> $mdiContentCopy </v-icon>
+                </v-btn>
+              </template>
+              <span>Duplicate</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template #activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  icon
+                  small
+                  class="mr-2"
+                  :disabled="disabled"
+                  v-on="on"
+                  @click.stop="
+                    () => openDialog(item, 'delete-survey-item-dialog')
+                  "
+                >
+                  <v-icon small class="better-click"> $mdiDelete </v-icon>
+                </v-btn>
+              </template>
+              <span>Delete</span>
+            </v-tooltip>
+          </template>
+          <template #foot="{}">
+            <tr>
+              <td
+                v-for="(tableHeader, $index) in tableHeaders"
+                :key="$index"
+                class="items-footer-like-vuetify"
+              >
+                <span v-if="$index == 0">Total</span>
+                <span
+                  v-else-if="results[tableHeader.key]"
+                  :class="
+                    tableHeader.classFormatter(
+                      results[tableHeader.key],
+                      tableHeader
+                    )
+                  "
+                >
+                  {{
+                    tableHeader.formatter(
+                      results[tableHeader.key],
+                      tableHeader,
+                      { input: results },
+                      items
+                    )
+                  }}
+                </span>
+                <span v-else-if="!tableHeader.hidden"> – </span>
+              </td>
+            </tr>
+          </template>
+        </v-data-table>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
+  </v-expansion-panels>
 </template>
 
 <script lang="ts">
@@ -203,6 +219,7 @@ export default class BaselineTable extends Vue {
   localItem: SurveyItem = {} as SurveyItem;
   dialogs = {} as Record<string, boolean>;
 
+  panel = false;
   @Watch("items", { immediate: true, deep: true })
   onItemChange(value: SurveyItem[]): void {
     this.localItems = cloneDeep(value);
