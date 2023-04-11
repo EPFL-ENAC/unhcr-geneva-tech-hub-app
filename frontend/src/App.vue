@@ -199,6 +199,17 @@
     </v-overlay>
 
     <v-snackbar
+      bottom
+      right
+      :value="updateExists"
+      :timeout="-1"
+      color="primary"
+    >
+      An update is available
+      <v-btn text @click="refreshApp"> Update </v-btn>
+    </v-snackbar>
+
+    <v-snackbar
       v-model="snackbar"
       class="d-print-none"
       app
@@ -229,6 +240,7 @@ import NotificationCenter from "@/components/NotificationCenter.vue";
 import OverviewData from "@/components/OverviewData.vue";
 import ReferenceData from "@/components/ReferenceData.vue";
 
+import update from "@/mixins/update.js";
 import { CouchUser } from "@/store/UserModule";
 import Apps from "@/utils/apps";
 import md5 from "@/utils/md5";
@@ -248,6 +260,7 @@ import { UnhcrNotification } from "./store";
       "notificationsLength",
     ]),
   },
+  mixins: [update],
   methods: {
     ...mapActions("UserModule", {
       logoutStore: "logout",
