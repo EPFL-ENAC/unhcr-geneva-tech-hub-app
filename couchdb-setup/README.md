@@ -22,6 +22,11 @@ Since CouchDB 3.x newly created databases have by default the _admin role to pre
 If there are any member names or roles defined for a database, then only authenticated users having a matching name or role are allowed to read documents from the database
 cf [https://docs.couchdb.org/en/3.2.0/api/database/security.html#db-security]
 
+# Config file
+- We used to generate config file in json. But the database was starting without the proper jwt. And that does not work properly without a full restart which takes too much time
+- We decided to translate manually the json to a .ini file in
+`couchdb/config.ini` for now
+
 # **User**
 
 ## definition

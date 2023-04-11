@@ -1,8 +1,0 @@
-{
-  "_id": "kerosene",
-  "name": "Kerosene",
-  "energy": 43.8,
-  "emissionFactorCo2": 3.5,
-  "price": 1.284,
-  "index": 4
-}

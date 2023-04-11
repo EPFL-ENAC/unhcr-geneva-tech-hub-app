@@ -29,7 +29,7 @@ services:
       - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
     restart: unless-stopped
   couchdb:
-    image: couchdb:3.3
+    build: ./couchdb
     environment:
       - COUCHDB_USER=${COUCHDB_USER}
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
@@ -40,7 +40,6 @@ services:
       - "traefik.http.routers.couchdb.rule=PathPrefix(`/db`)"
       - "traefik.http.routers.couchdb.middlewares=couchdb-stripprefix,test-compress"
       - "traefik.http.middlewares.couchdb-stripprefix.stripprefix.prefixes=/db"
-      # - "traefik.http.middlewares.couchdb-stripprefix.stripprefix.forceSlash=false"
       - "traefik.http.services.couchdb.loadbalancer.server.port=5984"
       - "traefik.http.middlewares.test-compress.compress=true"
     ports:

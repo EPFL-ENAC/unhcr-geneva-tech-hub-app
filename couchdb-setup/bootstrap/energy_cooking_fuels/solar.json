@@ -1,8 +1,0 @@
-{
-  "_id": "solar",
-  "name": "Solar",
-  "energy": 1,
-  "emissionFactorCo2": 0,
-  "price": 12,
-  "index": 8
-}

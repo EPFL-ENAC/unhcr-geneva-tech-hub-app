@@ -1,8 +1,0 @@
-{
-  "_id": "lpg",
-  "name": "LPG",
-  "energy": 46,
-  "emissionFactorCo2": 2.5,
-  "price": 2.475,
-  "index": 5
-}

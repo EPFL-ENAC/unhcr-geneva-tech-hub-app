@@ -1,8 +1,0 @@
-{
-  "_id": "wood",
-  "name": "Wood",
-  "energy": 16,
-  "emissionFactorCo2": 1.5,
-  "price": 0.065,
-  "index": 0
-}
