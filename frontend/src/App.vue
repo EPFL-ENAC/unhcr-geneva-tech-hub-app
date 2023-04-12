@@ -205,7 +205,7 @@
       :timeout="-1"
       color="primary"
     >
-      An update is available
+      An update is available, updating will reload the page
       <v-btn text @click="refreshApp"> Update </v-btn>
     </v-snackbar>
 
@@ -515,7 +515,7 @@ export default class App extends Vue {
     this.checkAndRefresh();
     this.intervalId = window.setInterval(() => {
       this.checkAndRefresh();
-    }, 1000 * 60 * 20); // check every 45 minutes: 1000 * 60 * 5
+    }, 1000 * 60 * 15); // check every 15 minutes: 1000 * 60 * 15
 
     this.$store.subscribe((mutation) => {
       const shouldUpdate = ["storeMessage"];
