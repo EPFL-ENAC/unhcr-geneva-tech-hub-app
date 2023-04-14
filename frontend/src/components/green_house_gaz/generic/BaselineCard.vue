@@ -63,7 +63,12 @@
 import InstancePieChart from "@/components/green_house_gaz/generic/InstancePieChart.vue";
 import InstanceTable from "@/components/green_house_gaz/generic/InstanceTable.vue";
 import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
-import { SurveyInput, SurveyItem } from "@/store/GhgInterface.vue";
+import {
+  GenericBaseline,
+  SurveyInput,
+  SurveyItem,
+  SurveyResult,
+} from "@/store/GhgInterface.vue";
 import { cloneDeep } from "lodash";
 import Vue from "vue";
 import "vue-class-component/hooks";
@@ -77,7 +82,7 @@ import { Component, Prop } from "vue-property-decorator";
 })
 export default class BaselineCard extends Vue {
   @Prop([Object, Array])
-  readonly baseline!: SurveyItem[];
+  readonly baseline!: GenericBaseline<SurveyItem, SurveyResult>;
   @Prop([Boolean])
   readonly baselineMode!: boolean;
   @Prop([String])
