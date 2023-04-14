@@ -43,10 +43,10 @@ const countryIrradiance = {
   default: 5.317878598,
 };
 
-export type countryIrradianceKeys = keyof typeof countryIrradiance;
+export type CountryIrradianceKeys = keyof typeof countryIrradiance;
 export function computeKWHPerDayPerCountry(
   kW: number,
-  countryTwoLetterCode: countryIrradianceKeys,
+  countryTwoLetterCode: CountryIrradianceKeys,
   locationIrradianceValue: number | undefined
 ): number {
   // return the number of kwh per day
@@ -64,7 +64,7 @@ export function computeKWHPerDayPerCountry(
 
 export function computeKWHPerYearPerCountry(
   kw: number,
-  countryTwoLetterCode: countryIrradianceKeys,
+  countryTwoLetterCode: CountryIrradianceKeys,
   locationIrradianceValue: number | undefined
 ): number {
   const kWhPerYear =
@@ -78,7 +78,7 @@ export function computeKWHPerYearPerCountry(
 
 export function computeKWInstalledWithKwhPerDayPerCountry(
   kWh: number,
-  countryTwoLetterCode: countryIrradianceKeys,
+  countryTwoLetterCode: CountryIrradianceKeys,
   locationIrradianceValue: number | undefined
 ): number {
   // return the number of kwh per day
@@ -97,7 +97,7 @@ export function computeKWInstalledWithKwhPerDayPerCountry(
 
 export function computeKWInstalledWithKwhPerYearPerCountry(
   kwh: number,
-  countryTwoLetterCode: countryIrradianceKeys,
+  countryTwoLetterCode: CountryIrradianceKeys,
   locationIrradianceValue: number | undefined
 ): number {
   const kWInstalledPerYear =
@@ -111,7 +111,7 @@ export function computeKWInstalledWithKwhPerYearPerCountry(
 
 export function solarInputsProducedPer(
   timePeriod: TimePeriod,
-  countryTwoLetterCode: countryIrradianceKeys,
+  countryTwoLetterCode: CountryIrradianceKeys,
   locationIrradianceValue: number | undefined
 ): any[] {
   let computeSolarPower: any;
