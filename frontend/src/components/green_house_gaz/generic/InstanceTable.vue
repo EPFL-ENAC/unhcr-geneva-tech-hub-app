@@ -256,6 +256,9 @@ export default class BaselineTable extends Vue {
       if (newDuplicate.input?.name) {
         newDuplicate.input.name = `${newDuplicate.input.name}_copy`;
       }
+      // to simulate new element so it can be inserted in endline
+      newDuplicate.increment = (this.maxItem ?? -1) + 1;
+      newDuplicate._id = uuidv4();
       this.localItems.splice(realIndex, 0, newDuplicate);
       this.localItems.splice(this.localItems.length); // vue trick
       this.$emit("update:items", this.localItems);
