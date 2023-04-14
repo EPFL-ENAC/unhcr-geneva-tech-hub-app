@@ -26,6 +26,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 
 import {
+  diffDimension,
   EnergyCookingItemInput,
   EnergyCookingItemResults,
   EnergyCookingSurvey,
@@ -59,7 +60,7 @@ export default class Cooking extends Vue {
 
   project!: GreenHouseGaz;
   project_REF_GRD!: ReferenceItemInterface;
-  diffDimension: keyof EnergyCookingItemInput = "numberOfCookstove";
+  diffDimension = diffDimension;
   name = "cookstove";
 
   public get title(): string {
