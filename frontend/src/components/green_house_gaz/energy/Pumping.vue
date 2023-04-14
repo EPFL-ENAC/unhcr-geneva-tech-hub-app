@@ -22,7 +22,7 @@ import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
 import { computeCO2CostEnergy } from "@/components/green_house_gaz/energy/computeCO2cost";
 import { dieselInputsProducedPer } from "@/components/green_house_gaz/energy/dieselInputs";
 import {
-  countryIrradianceKeys,
+  CountryIrradianceKeys,
   solarInputsProducedPer,
 } from "@/components/green_house_gaz/energy/solarInputs";
 
@@ -77,7 +77,7 @@ export default class Pumping extends Vue {
   readonly survey: Survey | undefined;
 
   @Prop({ type: String, required: true, default: "" })
-  readonly countryCode!: countryIrradianceKeys;
+  readonly countryCode!: CountryIrradianceKeys;
 
   project!: GreenHouseGaz;
   project_REF_GRD!: ReferenceItemInterface;
