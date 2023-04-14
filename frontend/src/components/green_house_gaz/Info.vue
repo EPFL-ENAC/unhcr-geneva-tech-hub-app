@@ -47,6 +47,7 @@
                               $v.localProject[item.key].$touch();
                               $v.localProject.$touch();
                               item?.customEventInput?.(v, localProject);
+                              updateSurveyForm();
                             }
                           "
                         ></form-item-component>
@@ -102,7 +103,25 @@ import CountrySelect from "@/components/commons/CountrySelect.vue";
 import { FormItem } from "@/components/commons/FormItem";
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import TerritoryMap from "@/components/commons/TerritoryMap.vue";
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface.vue";
+import { GHGfNRB } from "@/store/GHGReferencefNRB";
+
+import {
+  diffDimension as cookingDiffDimension,
+  generateComputeItem as cookingGenerateComputeItem,
+  headers as cookingHeaders,
+} from "@/components/green_house_gaz/energy/Cooking";
+import { CountryIrradianceKeys } from "@/components/green_house_gaz/energy/solarInputs";
+import ComputeGenericFormSurveyMixin from "@/components/green_house_gaz/generic/ComputeGenericFormSurveyMixin.vue";
+import {
+  GreenHouseGaz,
+  Survey,
+  SurveyInput,
+  SurveyResult,
+} from "@/store/GhgInterface.vue";
+import {
+  ItemReferencesMap,
+  ReferenceItemInterface,
+} from "@/store/GhgReferenceModule";
 import { CouchUser } from "@/store/UserModule";
 import {
   attributionMap,
@@ -114,7 +133,7 @@ import { VForm } from "@/utils/vuetify";
 import { LatLngExpression } from "leaflet";
 import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
 import { LControlScale, LMap, LMarker, LTileLayer } from "vue2-leaflet";
 import { validationMixin } from "vuelidate";
 import { Validations } from "vuelidate-property-decorators";
@@ -125,9 +144,12 @@ import { mapActions, mapGetters } from "vuex";
 @Component({
   inheritAttrs: true,
   computed: {
-    ...mapGetters("GhgModule", ["project"]),
+    ...mapGetters("GhgModule", ["project", "project_REF_GRD"]),
     ...mapGetters("UserModule", ["user"]),
+    ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
+    ...mapGetters("GHGReferencefNRB", ["items"]),
   },
+
   mixins: [validationMixin],
   methods: {
     ...mapActions("GhgModule", ["updateDoc"]),
@@ -143,7 +165,7 @@ import { mapActions, mapGetters } from "vuex";
   },
 })
 /** ProjectItem */
-export default class GhgInfo extends Vue {
+export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
   @Prop([Object, Array])
   readonly survey: Survey | undefined;
 
@@ -153,6 +175,10 @@ export default class GhgInfo extends Vue {
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
   project!: GreenHouseGaz;
   user!: CouchUser;
+  items!: GHGfNRB[];
+  project_REF_GRD!: ReferenceItemInterface;
+  ghgMapRef!: ItemReferencesMap;
+
   @Validations()
   validations = {
     localProject: {
@@ -350,6 +376,34 @@ export default class GhgInfo extends Vue {
         this.setLocalShelter(mutation.payload);
       }
     });
+  }
+
+  public updateSurveyForm(): void {
+    // TODO: it's working but it seems some variable are not always called
+    //  need to find out why
+    if (this.surveyIndex !== undefined) {
+      // localProject.surveys[surveyIndex].energy.cooking
+      this.localProject.surveys[this.surveyIndex].energy.cooking =
+        this.updateGenericFormSurvey(
+          this.localProject.surveys[this.surveyIndex].energy.cooking,
+          cookingDiffDimension as string,
+          cookingHeaders(
+            this.project.country_code as CountryIrradianceKeys,
+            this.project.solar
+          ),
+          cookingGenerateComputeItem(
+            this.project.country_code,
+            this.project.totalHH,
+            this.items, // being GHGReferencefNRB
+            this.project_REF_GRD
+          ) as unknown as (
+            localItemInput: SurveyInput,
+            ghgMapRef: ItemReferencesMap
+          ) => SurveyResult,
+          this.ghgMapRef
+        );
+      this.updateSurveyValues();
+    }
   }
 
   // hack to force revalidate on open
