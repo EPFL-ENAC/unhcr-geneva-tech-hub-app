@@ -64,6 +64,7 @@ import InstancePieChart from "@/components/green_house_gaz/generic/InstancePieCh
 import InstanceTable from "@/components/green_house_gaz/generic/InstanceTable.vue";
 import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import { SurveyInput, SurveyItem } from "@/store/GhgInterface.vue";
+import { cloneDeep } from "lodash";
 import Vue from "vue";
 import "vue-class-component/hooks";
 import { Component, Prop } from "vue-property-decorator";
@@ -95,7 +96,7 @@ export default class BaselineCard extends Vue {
     return this.baselineMode ? "Save baseline" : "Edit baseline";
   }
   public updateBaselineItems(value: SurveyItem[]) {
-    const newBaseline = JSON.parse(JSON.stringify(this.baseline));
+    const newBaseline = cloneDeep(this.baseline);
     newBaseline.items = value;
     this.$emit("update:baseline", newBaseline);
   }

@@ -134,7 +134,7 @@ export default class BaselineEndlineWrapper<
   public updateBaseline(
     baseline: GenericBaseline<SurveyItem, SurveyResult>
   ): void {
-    const newValue = JSON.parse(JSON.stringify(this.localValue));
+    const newValue = cloneDeep(this.localValue);
     newValue.baseline = baseline;
     newValue.endline.items = this.updateEndlineInstancesWithBaseline(newValue);
     this.updateValue(newValue);
@@ -142,7 +142,7 @@ export default class BaselineEndlineWrapper<
   public updateEndline(
     endline: GenericEndline<SurveyItem, SurveyResult>
   ): void {
-    const newValue = JSON.parse(JSON.stringify(this.localValue));
+    const newValue = cloneDeep(this.localValue);
     newValue.endline = endline;
     this.updateValue(newValue);
   }
@@ -187,7 +187,7 @@ export default class BaselineEndlineWrapper<
   }
 
   private updateValue(value: GenericFormSurvey<A, B, C, D>): void {
-    const newForm = JSON.parse(JSON.stringify(value));
+    const newForm = cloneDeep(value);
     newForm.baseline.items = this.computeItems(newForm.baseline.items);
     newForm.endline.items = this.computeItems(newForm.endline.items);
     newForm.endline.items = this.computeChangeInItemsWithRatio(
