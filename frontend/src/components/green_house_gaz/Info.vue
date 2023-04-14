@@ -1,7 +1,7 @@
 <template>
   <v-form
     v-bind="$attrs"
-    ref="form"
+    ref="formInfo"
     v-model="formValid"
     @submit.prevent="() => submitForm(localProject)"
   >
@@ -10,9 +10,13 @@
         <v-col class="d-flex justify-end">
           <v-btn
             color="primary"
-            :disabled="!formValid || $attrs.readonly"
+            :disabled="
+              !formValid || $attrs.readonly || !$v.$dirty || saveInProgress
+            "
             type="submit"
-            ><v-icon left>$mdiContentSave</v-icon>Save</v-btn
+            :loading="saveInProgress"
+            ><v-icon left>$mdiContentSave</v-icon>
+            {{ $v.$dirty ? "Save" : "Saved" }}</v-btn
           >
         </v-col>
       </v-row>
@@ -39,7 +43,11 @@
                           v-model="localProject[item.key]"
                           v-bind="item"
                           @input="
-                            (v) => item?.customEventInput?.(v, localProject)
+                            (v) => {
+                              $v.localProject[item.key].$touch();
+                              $v.localProject.$touch();
+                              item?.customEventInput?.(v, localProject);
+                            }
                           "
                         ></form-item-component>
                         <country-select
@@ -49,6 +57,7 @@
                           label="Country"
                           type="text"
                           name="location_country"
+                          @input="$v.localProject.$touch"
                           @update:latitude="updateLatitude"
                           @update:longitude="updateLongitude"
                         />
@@ -105,8 +114,12 @@ import { VForm } from "@/utils/vuetify";
 import { LatLngExpression } from "leaflet";
 import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { LControlScale, LMap, LMarker, LTileLayer } from "vue2-leaflet";
+import { validationMixin } from "vuelidate";
+import { Validations } from "vuelidate-property-decorators";
+import { required } from "vuelidate/lib/validators";
+import { Validation } from "vuelidate/vuelidate";
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
@@ -115,6 +128,7 @@ import { mapActions, mapGetters } from "vuex";
     ...mapGetters("GhgModule", ["project"]),
     ...mapGetters("UserModule", ["user"]),
   },
+  mixins: [validationMixin],
   methods: {
     ...mapActions("GhgModule", ["updateDoc"]),
   },
@@ -139,9 +153,26 @@ export default class GhgInfo extends Vue {
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
   project!: GreenHouseGaz;
   user!: CouchUser;
+  @Validations()
+  validations = {
+    localProject: {
+      name: { required },
+      country_code: { required }, //string;
+      latitude: { required }, //number;
+      longitude: { required }, //number;
+      surveys: { required }, //Survey[];
+      solar: { required }, //number;
+      population: { required }, //number; // total population
+      pp_per_hh: { required }, //number; // ave people per hhtotalHH
+      totalHH: { required }, //number;
+      // what about surveys ?? HEELL
+    },
+  };
+
   localProject = {} as GreenHouseGaz;
   $refs!: {
-    form: VForm;
+    formInfo: VForm;
+    $v: Validation;
   };
   textRules = [
     (v: string): boolean | string => !!v || `is required`,
@@ -154,6 +185,8 @@ export default class GhgInfo extends Vue {
   readonly url = urlMap;
   readonly attribution = attributionMap;
   formValid = false;
+
+  saveInProgress = false;
 
   get latLng(): LatLngExpression {
     const { latitude, longitude } = this.localProject;
@@ -224,6 +257,7 @@ export default class GhgInfo extends Vue {
         key: "solar",
         label: "Daily solar peak hours",
         min: 0,
+        max: 12,
       },
       {
         type: "number",
@@ -256,13 +290,19 @@ export default class GhgInfo extends Vue {
       this.surveyIndex !== undefined &&
       this.surveyIndex >= 0
     ) {
+      this.saveInProgress = true;
       if (this.surveyIndex !== undefined) {
         const currentSurvey: Survey = value.surveys[this.surveyIndex];
         currentSurvey.updated_at = new Date().toISOString();
         currentSurvey.updated_by = this.$user().name ?? "user with no name";
         value.surveys[this.surveyIndex] = currentSurvey;
       }
-      await this.updateDoc(value);
+      try {
+        await this.updateDoc(value);
+      } finally {
+        this.$v.$reset();
+        this.saveInProgress = false;
+      }
     } else {
       throw new Error("please fill the new Name");
     }
@@ -275,6 +315,9 @@ export default class GhgInfo extends Vue {
       currentSurvey.updated_by = this.$user().name ?? "user with no name";
       this.localProject.surveys[this.surveyIndex] = currentSurvey;
       this.localProject = Object.assign({}, this.localProject);
+      // no vuelidate for descriptions and custom keys for now
+      // but it works because we're using vuetify and vuelidate form validation
+      this.$v.localProject.$touch();
     }
   }
 
@@ -290,6 +333,7 @@ export default class GhgInfo extends Vue {
     this.localProject.latitude = latLng[0];
     this.localProject.longitude = latLng[1];
     this.localProject = Object.assign({}, this.localProject);
+    this.$v.$touch();
   }
 
   public setLocalShelter(project: GreenHouseGaz): void {
@@ -308,11 +352,17 @@ export default class GhgInfo extends Vue {
     });
   }
 
+  // hack to force revalidate on open
+  @Watch("formValid", { immediate: true, deep: true })
+  onFormValid(): void {
+    this.$refs?.formInfo?.validate();
+  }
+
   created(): void {
     this.syncLocalShelter();
   }
   mounted(): void {
-    this.$refs.form.validate();
+    this.$refs.formInfo.validate();
   }
 }
 </script>
