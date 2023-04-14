@@ -71,7 +71,12 @@ export default class BaselineEndlineWrapper<
   D extends SurveyResult
 > extends Vue {
   @Prop([Object, Array])
-  readonly value!: GenericFormSurvey<A, B, C, D>;
+  readonly value!: GenericFormSurvey<
+    SurveyItem,
+    SurveyResult,
+    SurveyItem,
+    SurveyResult
+  >;
 
   @Prop([Array])
   readonly headers!: SurveyTableHeader[];
@@ -94,7 +99,12 @@ export default class BaselineEndlineWrapper<
   baselineMode = true;
   ghgMapRef!: ItemReferencesMap;
 
-  public get localValue(): GenericFormSurvey<A, B, C, D> {
+  public get localValue(): GenericFormSurvey<
+    SurveyItem,
+    SurveyResult,
+    SurveyItem,
+    SurveyResult
+  > {
     if (!this.value) {
       return this.generateNewValue();
     }
@@ -106,7 +116,12 @@ export default class BaselineEndlineWrapper<
     return this.value;
   }
 
-  private generateNewValue(): GenericFormSurvey<A, B, C, D> {
+  private generateNewValue(): GenericFormSurvey<
+    SurveyItem,
+    SurveyResult,
+    SurveyItem,
+    SurveyResult
+  > {
     return {
       baseline: {
         items: [],
@@ -147,7 +162,7 @@ export default class BaselineEndlineWrapper<
     this.updateValue(newValue);
   }
   private updateEndlineInstancesWithBaseline(
-    value: GenericFormSurvey<A, B, C, D>
+    value: GenericFormSurvey<SurveyItem, SurveyResult, SurveyItem, SurveyResult>
   ): SurveyItem[] {
     let results: SurveyItem[] = [];
     const baselineItems = value.baseline.items;
@@ -186,7 +201,9 @@ export default class BaselineEndlineWrapper<
     return results;
   }
 
-  private updateValue(value: GenericFormSurvey<A, B, C, D>): void {
+  private updateValue(
+    value: GenericFormSurvey<SurveyItem, SurveyResult, SurveyItem, SurveyResult>
+  ): void {
     const newForm = cloneDeep(value);
     newForm.baseline.items = this.computeItems(newForm.baseline.items);
     newForm.endline.items = this.computeItems(newForm.endline.items);
@@ -198,8 +215,8 @@ export default class BaselineEndlineWrapper<
     newForm.baseline.results = this.computeResults(newForm.baseline.items);
     newForm.endline.results = this.computeResults(newForm.endline.items);
     newForm.endline.results.changeInEmission = computeChangeInEmission(
-      newForm.baseline.results.totalCO2Emission,
-      newForm.endline.results.totalCO2Emission
+      newForm.baseline.results.totalCO2Emission as number,
+      newForm.endline.results.totalCO2Emission as number
     );
     this.$emit("input", newForm);
   }
