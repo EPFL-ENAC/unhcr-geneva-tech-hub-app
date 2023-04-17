@@ -235,9 +235,9 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
   }
 
   get defaultSolarPeak(): string {
-    const countrySolar =
-      this.GhgReferenceSolarMap?.[this.localProject?.country_code].c;
-    const defaultSolar = this.GhgReferenceSolarMap.default.c;
+    const key = this.project?.country_code ?? "default";
+    const countrySolar = this.GhgReferenceSolarMap[key]?.c;
+    const defaultSolar = this.GhgReferenceSolarMap?.default?.c;
     return formatNumber(countrySolar ?? defaultSolar);
   }
 
@@ -448,7 +448,7 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
     this.syncLocalShelter();
   }
   mounted(): void {
-    this.$refs.formInfo.validate();
+    this.$refs?.formInfo?.validate();
   }
 }
 </script>
