@@ -41,10 +41,12 @@
         </v-col>
       </v-row>
     </v-card-text>
+    <GHGSolarModule />
   </v-card>
 </template>
 
 <script lang="ts">
+import GHGSolarModule from "@/components/reference_data/GHGSolarModule.vue";
 import { UNHCRLocation } from "@/store/UNHCRLocationModule";
 import { countriesMap } from "@/utils/countriesAsList";
 import { Component, Vue } from "vue-property-decorator";
@@ -54,6 +56,9 @@ import { mapGetters } from "vuex";
   computed: {
     ...mapGetters("UNHCRLocationModule", ["items"]),
     ...mapGetters(["referenceDataDrawer"]),
+  },
+  components: {
+    GHGSolarModule,
   },
 })
 export default class Energy extends Vue {
