@@ -32,7 +32,6 @@
           @update:item="updateWithItem"
         />
         <duplicate-survey-item-dialog
-          v-if="!intervention"
           :dialog-open.sync="dialogs['duplicate-survey-item-dialog']"
           :name="name"
           @duplicate:item="duplicateItem"
@@ -84,7 +83,7 @@
         </template>
         <span>Edit</span>
       </v-tooltip>
-      <v-tooltip v-if="!intervention" bottom>
+      <v-tooltip bottom>
         <template #activator="{ on, attrs }">
           <v-btn
             v-bind="attrs"
@@ -115,6 +114,18 @@
           </v-btn>
         </template>
         <span>Delete</span>
+      </v-tooltip>
+      <v-tooltip v-if="intervention" bottom>
+        <template #activator="{ on, attrs }">
+          <v-simple-checkbox
+            v-bind="attrs"
+            v-model="item.enabled"
+            class="v-size--small"
+            @input="() => updateWithItem(item)"
+            v-on="on"
+          />
+        </template>
+        <span>Enable/Disable</span>
       </v-tooltip>
     </template>
     <template #foot="{}">
@@ -276,7 +287,7 @@ export default class BaselineTable extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .items-footer-like-vuetify {
   font-size: 0.875rem;
   font-weight: bold;
@@ -286,5 +297,17 @@ export default class BaselineTable extends Vue {
 .bold-table-cell-content {
   font-size: 0.875rem;
   font-weight: bold;
+}
+::v-deep .inline-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  align-items: center;
+}
+::v-deep .v-size--small {
+  .v-icon__svg {
+    height: 16px;
+    width: 16px;
+  }
 }
 </style>

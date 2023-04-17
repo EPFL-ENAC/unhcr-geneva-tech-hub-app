@@ -184,6 +184,7 @@ export default class BaselineEndlineWrapper extends Mixins(
         newEndlineItem.origin = newEndlineItem._id;
         newEndlineItem._id = uuidv4();
         newEndlineItem.originIncrement = newEndlineItem.increment;
+        newEndlineItem.enabled = true;
         maxItem = (maxItem ?? -1) + 1; // increment
         newEndlineItem.increment = maxItem;
         return newEndlineItem;

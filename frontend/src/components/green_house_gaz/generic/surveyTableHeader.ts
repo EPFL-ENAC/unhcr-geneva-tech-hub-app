@@ -98,8 +98,9 @@ export const surveyTableHeaderCO2 = [
     text: "",
     value: "actions",
     hidden: true,
+    cellClass: "inline-actions",
     hideFooterContent: false,
-    width: "140px",
+    width: "190px",
   },
 ];
 export const surveyTableHeaderIncrements = [

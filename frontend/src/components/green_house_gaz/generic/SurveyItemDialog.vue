@@ -275,6 +275,9 @@ export default class SurveyItemDialog extends Vue {
     }
     // this.localItem.input = this.localInput;
     this.$set(this.localItem, "input", this.localInput);
+    if (this.intervention) {
+      this.localItem.enabled = true;
+    }
     this.$emit("update:item", this.localItem);
     this.isOpen = false;
   }
