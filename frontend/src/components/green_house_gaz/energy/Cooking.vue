@@ -1,7 +1,8 @@
 <template>
   <v-container fluid>
-    <survey-item-title :title-key="title" />
+    <survey-item-title :title-key="title" :disabled="cookingDisabled" />
     <baseline-endline-wrapper
+      v-if="!cookingDisabled"
       v-model="localForm"
       :headers="headers"
       :diff-dimension="diffDimension"
@@ -72,6 +73,9 @@ export default class Cooking extends Vue {
 
   public set localForm(value: EnergyCookingSurvey) {
     this.$emit("update:form", value);
+  }
+  public get cookingDisabled(): boolean {
+    return this.project.population === undefined;
   }
 
   public get computeItem(): (
