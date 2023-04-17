@@ -47,7 +47,8 @@
       </template>
       <template v-if="tooltipInfo" #prepend>
         <info-tooltip>
-          {{ tooltipInfo ?? label }}
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <span v-html="tooltipInfo ?? label"></span>
         </info-tooltip>
       </template>
     </v-text-field>

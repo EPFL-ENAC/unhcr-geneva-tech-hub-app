@@ -234,6 +234,7 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
   get generalItems(): (FormItem & {
     customEventInput?: (v: number, input: GreenHouseGaz) => GreenHouseGaz;
   })[] {
+    const iconPath = this.$vuetify.icons.values.mdiDatabaseArrowRight;
     return [
       {
         type: "text",
@@ -281,8 +282,18 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
         type: "number",
         key: "solar",
         label: "Daily solar peak hours",
-        tooltipInfo:
-          "If daily solar peak hours is unknown, check the reference data / UNHCR Locations table with solar peak hours per country",
+        tooltipInfo: `If daily solar peak hours is unknown, check the Reference Data <svg
+  version="1.1"
+  viewBox="0 0 26 26"
+  width="18"
+    height="18"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg"
+>
+      <path style="fill: white;"
+      d="${iconPath}"
+    />
+</svg> - UNHCR Locations table with solar peak hours per country`,
         min: 0,
         max: 12,
       },
