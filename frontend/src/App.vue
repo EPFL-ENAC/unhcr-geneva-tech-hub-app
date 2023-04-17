@@ -78,7 +78,11 @@
           </v-list-item>
         </v-list>
       </v-menu>
-      <v-app-bar-nav-icon :to="{ name: 'Apps' }" link />
+      <v-app-bar-nav-icon :to="{ name: 'Apps' }" link>
+        <template #default>
+          <v-icon>$mdiHome</v-icon>
+        </template>
+      </v-app-bar-nav-icon>
       <v-tabs>
         <v-tab
           v-if="rootRoute"
