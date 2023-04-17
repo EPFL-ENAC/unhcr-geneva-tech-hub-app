@@ -2,6 +2,7 @@
   <v-container fluid>
     <survey-item-title :title-key="title" />
     <baseline-endline-wrapper
+      v-if="!disabled"
       v-model="localForm"
       :headers="headers"
       :diff-dimension="diffDimension"
@@ -89,6 +90,9 @@ const REF_SUSTAINED_WOOD = 0; // fNRB of sustained
 export default class Lighting extends Vue {
   @Prop({ type: String, required: true, default: "" })
   readonly titleKey!: string;
+
+  @Prop({ type: Boolean, required: true, default: false })
+  readonly disabled!: boolean;
 
   @Prop({ type: [Object, Array] })
   readonly form!: EnergyCookingSurvey;

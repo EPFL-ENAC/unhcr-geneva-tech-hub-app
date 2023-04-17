@@ -1,4 +1,11 @@
-export const infoTooltipText = {
+interface tooltipInfo {
+  title: string;
+  text: string;
+  ready?: boolean;
+  disabled?: boolean;
+}
+
+export const infoTooltipText: Record<string, tooltipInfo> = {
   "Energy-Facilities": {
     title: "Energy - Facilities",
     ready: true,
@@ -11,11 +18,13 @@ export const infoTooltipText = {
   },
   "Energy-Lighting": {
     ready: false,
+    disabled: true,
     title: "Energy - Lighting",
     text: "The Lighting module will enable the user to calculate the emissions from various forms of energy sources used to power lighting at homes and in the settlements. Energy sources considered include firewood, candle, kerosene, solar and the national grid. A hydrid electricity usage will be calculated based on the use of diesel gas, solar PV and the national grid.",
   },
   "WASH-Pumping": {
     ready: false,
+    disabled: true,
     title: "WASH - Pumping",
     text: "The Pumping module will enable the user to calculate the emissions from pumping water or faecal sludge using either diesel, solar or national grid energy sources or a hybrid mix of these sources.",
   },

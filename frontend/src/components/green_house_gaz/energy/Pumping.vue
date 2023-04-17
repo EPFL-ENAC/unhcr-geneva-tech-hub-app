@@ -1,7 +1,8 @@
 <template>
   <v-container fluid>
-    <survey-item-title :title-key="title" />
+    <survey-item-title :title-key="titleKey" />
     <baseline-endline-wrapper
+      v-if="!disabled"
       v-model="localForm"
       :headers="headers"
       :activate-pie="true"
@@ -66,6 +67,9 @@ export default class Pumping extends Vue {
   @Prop({ type: String, required: true, default: "" })
   readonly titleKey!: string;
 
+  @Prop({ type: Boolean, required: true, default: false })
+  readonly disabled!: boolean;
+
   @Prop({ type: [Object, Array] })
   readonly form!: WashPumpingSurvey;
 
@@ -80,9 +84,6 @@ export default class Pumping extends Vue {
   diffDimension: keyof WashPumpingItemInput = "totalPower";
   name = "Water Pump";
 
-  public get title(): string {
-    return this.titleKey;
-  }
   public get localForm(): WashPumpingSurvey {
     return this.form;
   }

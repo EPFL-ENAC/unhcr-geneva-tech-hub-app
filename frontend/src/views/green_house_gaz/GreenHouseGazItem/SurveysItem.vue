@@ -89,6 +89,7 @@
             <component
               :is="subcategory"
               v-if="subcategory"
+              :disabled="moduleDisabled"
               :form.sync="localFormSurvey"
               :title-key="currentKeyTitle"
               :survey="currentSurvey"
@@ -97,6 +98,7 @@
             <component
               :is="category"
               v-else
+              :disabled="moduleDisabled"
               :readonly="isReadOnly"
               :survey-index="currentSurveyIndex"
               :survey.sync="currentSurvey"
@@ -123,6 +125,7 @@ import Results from "@/components/green_house_gaz/Results.vue";
 import Trucking from "@/components/green_house_gaz/wash/Trucking.vue";
 import Wastewater from "@/components/green_house_gaz/wash/Wastewater.vue";
 
+import { infoTooltipText } from "@/components/green_house_gaz/infoTooltipText";
 import {
   GenericFormSurvey,
   GreenHouseGaz,
@@ -257,6 +260,13 @@ export default class SurveyList extends Vue {
 
   public get currentKeyTitle(): string {
     return `${this.category}-${this.subcategory}`;
+  }
+
+  public get moduleDisabled(): boolean {
+    if (this.currentKeyTitle) {
+      return infoTooltipText[this.currentKeyTitle]?.disabled ?? false;
+    }
+    return false;
   }
 
   public get localFormSurvey():
