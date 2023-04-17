@@ -18,7 +18,7 @@
                   v-model="newCampSite.country_code"
                   :rules="rulesCountry"
                   required
-                  @update="resetCampSiteName"
+                  @update="(v) => resetOnCountrySelect(v)"
                 />
               </v-col>
               <v-col cols="12">
@@ -139,6 +139,7 @@ import {
   Sites,
   Survey,
 } from "@/store/GhgInterface.vue";
+import { countriesMap } from "@/utils/countriesAsList";
 import { UNHCRLocation } from "@/store/UNHCRLocationModule";
 import { AxiosError } from "axios";
 import { cloneDeep, isEmpty } from "lodash";
@@ -185,6 +186,7 @@ export default class ProjectList extends Vue {
   };
 
   countries!: Country[];
+  countriesMap = countriesMap;
   project!: GreenHouseGaz;
   newName = "";
 
@@ -219,9 +221,6 @@ export default class ProjectList extends Vue {
     } finally {
       this.$refs.newAssessmentForm.validate();
     }
-  }
-  public onSelectCountry(): void {
-    this.resetDoc();
   }
 
   private newDefaultCampSite(): GreenHouseGaz {
@@ -315,9 +314,12 @@ export default class ProjectList extends Vue {
     this.newCampSite = this.newDefaultCampSite();
   }
 
-  public resetCampSiteName(): void {
+  public resetOnCountrySelect(countryCode: string): void {
     this.newCampSite._id = uuidv4();
     this.newCampSite.name = "";
+    const selectedCountry = this.countriesMap[countryCode];
+    this.newCampSite.latitude = selectedCountry?.lat ?? 0;
+    this.newCampSite.longitude = selectedCountry?.lon ?? 0;
     this.newName = "";
     this.editedItem._id = uuidv4();
     this.editedItem.name = "";
