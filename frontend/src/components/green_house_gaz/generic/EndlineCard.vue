@@ -18,10 +18,12 @@
           {{ diffDimensionText }} do not match.
           <br />
           Baseline:
-          {{ baseline.results[diffDimension] }} {{ diffDimensionText }}
+          {{ baseline.results[diffDimension] | formatNumber }}
+          {{ diffDimensionText }}
           <br />
           Endline:
-          {{ endline.results[diffDimension] }} {{ diffDimensionText }}
+          {{ endline.results[diffDimension] | formatNumber }}
+          {{ diffDimensionText }}
         </v-alert>
       </v-col>
     </v-card-subtitle>
