@@ -12,6 +12,11 @@ export interface GHGSolar {
 /** Getters */
 const getters: GetterTree<Record<string, never>, RootState> = {
   items: (): GHGSolar[] | null => solar_averaged,
+  itemsMap: (): Record<string, GHGSolar> | null =>
+    solar_averaged.reduce((acc, el) => {
+      acc[el._id] = el;
+      return acc;
+    }, {} as Record<string, GHGSolar>),
 };
 
 /** VuexStore */

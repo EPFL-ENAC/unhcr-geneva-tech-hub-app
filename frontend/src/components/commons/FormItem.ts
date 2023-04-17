@@ -24,6 +24,7 @@ interface AbstractFormItem<K> {
   label?: string;
   hidden?: boolean;
   tooltipInfo?: string;
+  placeholder?: string;
   required?: boolean;
   rules?: Rule[];
   suffix?: string;

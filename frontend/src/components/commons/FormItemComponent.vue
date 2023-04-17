@@ -25,6 +25,7 @@
       hide-details="auto"
       hide-spin-buttons
       required
+      :placeholder="placeholder"
       :messages="messages"
       :suffix="suffix"
       :rules="actualRules"
@@ -215,6 +216,8 @@ export default class FormItemComponent extends Vue {
   readonly rules: Rule[] | undefined;
   @Prop({ type: Boolean, default: false })
   readonly optional!: boolean;
+  @Prop({ type: String, default: "", required: false })
+  readonly placeholder!: string;
   @Prop(Number)
   readonly ratio: number | undefined;
   @Prop(Boolean)

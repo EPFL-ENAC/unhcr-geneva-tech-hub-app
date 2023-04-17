@@ -102,6 +102,7 @@ import CountrySelect from "@/components/commons/CountrySelect.vue";
 import { FormItem } from "@/components/commons/FormItem";
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import TerritoryMap from "@/components/commons/TerritoryMap.vue";
+import { formatNumber } from "@/plugins/filters";
 import { GHGfNRB } from "@/store/GHGReferencefNRB";
 
 import {
@@ -121,6 +122,7 @@ import {
   ItemReferencesMap,
   ReferenceItemInterface,
 } from "@/store/GhgReferenceModule";
+import { GHGSolar } from "@/store/GHGReferenceSolarModule";
 import { CouchUser } from "@/store/UserModule";
 import {
   attributionMap,
@@ -138,6 +140,7 @@ import { validationMixin } from "vuelidate";
 import { Validations } from "vuelidate-property-decorators";
 import { required } from "vuelidate/lib/validators";
 import { Validation } from "vuelidate/vuelidate";
+
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
@@ -147,6 +150,9 @@ import { mapActions, mapGetters } from "vuex";
     ...mapGetters("UserModule", ["user"]),
     ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
     ...mapGetters("GHGReferencefNRB", ["items"]),
+    ...mapGetters("GhgReferenceSolarModule", {
+      GhgReferenceSolarMap: "itemsMap",
+    }),
   },
 
   mixins: [validationMixin],
@@ -175,6 +181,8 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
   project!: GreenHouseGaz;
   user!: CouchUser;
   items!: GHGfNRB[];
+  GhgReferenceSolarMap!: Record<string, GHGSolar>;
+
   project_REF_GRD!: ReferenceItemInterface;
   ghgMapRef!: ItemReferencesMap;
 
@@ -186,7 +194,7 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
       latitude: { required }, //number;
       longitude: { required }, //number;
       surveys: { required }, //Survey[];
-      solar: { required }, //number;
+      solar: {}, //number;
       population: { required }, //number; // total population
       pp_per_hh: { required }, //number; // ave people per hhtotalHH
       totalHH: { required }, //number;
@@ -199,11 +207,6 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
     formInfo: VForm;
     $v: Validation;
   };
-  textRules = [
-    (v: string): boolean | string => !!v || `is required`,
-    (v: string): boolean | string =>
-      v?.length > 1 || `should have a length >= 1`,
-  ];
 
   readonly zoom = defaultZoom;
   readonly defaultCoordinates = defaultCoordinates;
@@ -231,10 +234,18 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
     ];
   }
 
+  get defaultSolarPeak(): string {
+    const countrySolar =
+      this.GhgReferenceSolarMap?.[this.localProject?.country_code].c;
+    const defaultSolar = this.GhgReferenceSolarMap.default.c;
+    return formatNumber(countrySolar ?? defaultSolar);
+  }
+
   get generalItems(): (FormItem & {
     customEventInput?: (v: number, input: GreenHouseGaz) => GreenHouseGaz;
   })[] {
     const iconPath = this.$vuetify.icons.values.mdiDatabaseArrowRight;
+    const solarPeakPlaceholder = this.defaultSolarPeak;
     return [
       {
         type: "text",
@@ -282,7 +293,8 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
         type: "number",
         key: "solar",
         label: "Daily solar peak hours",
-        tooltipInfo: `If daily solar peak hours is unknown, check the Reference Data <svg
+        tooltipInfo: `
+        Solar peak hours, together with the installed solar capacity, are used to calculate the energy delivered by solar panels. If you are not able to assign a value for the solar peak hours, a default value will be assigned from the Reference Table (<svg
   version="1.1"
   viewBox="0 0 26 26"
   width="18"
@@ -293,9 +305,9 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
       <path style="fill: white;"
       d="${iconPath}"
     />
-</svg> - UNHCR Locations table with solar peak hours per country`,
-        min: 0,
-        max: 12,
+</svg>). The solar peak hours value is used in the Energy for Facilities, Energy for Cooking, Lighting and Water Pumping modules.`,
+        optional: true,
+        placeholder: solarPeakPlaceholder,
       },
       {
         type: "number",
