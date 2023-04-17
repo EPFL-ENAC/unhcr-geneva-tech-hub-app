@@ -47,7 +47,6 @@
                               $v.localProject[item.key].$touch();
                               $v.localProject.$touch();
                               item?.customEventInput?.(v, localProject);
-                              updateSurveyForm();
                             }
                           "
                         ></form-item-component>
@@ -323,6 +322,7 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
         currentSurvey.updated_by = this.$user().name ?? "user with no name";
         value.surveys[this.surveyIndex] = currentSurvey;
       }
+      value = this.updateSurveyForm(value, this.surveyIndex);
       try {
         await this.updateDoc(value);
       } finally {
@@ -378,32 +378,36 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
     });
   }
 
-  public updateSurveyForm(): void {
+  public updateSurveyForm(
+    value: GreenHouseGaz,
+    surveyIndex: number
+  ): GreenHouseGaz {
     // TODO: it's working but it seems some variable are not always called
     //  need to find out why
-    if (this.surveyIndex !== undefined) {
+    if (surveyIndex !== undefined) {
       // localProject.surveys[surveyIndex].energy.cooking
-      this.localProject.surveys[this.surveyIndex].energy.cooking =
-        this.updateGenericFormSurvey(
-          this.localProject.surveys[this.surveyIndex].energy.cooking,
-          cookingDiffDimension as string,
-          cookingHeaders(
-            this.project.country_code as CountryIrradianceKeys,
-            this.project.solar
-          ),
-          cookingGenerateComputeItem(
-            this.project.country_code,
-            this.project.totalHH,
-            this.items, // being GHGReferencefNRB
-            this.project_REF_GRD
-          ) as unknown as (
-            localItemInput: SurveyInput,
-            ghgMapRef: ItemReferencesMap
-          ) => SurveyResult,
-          this.ghgMapRef
-        );
-      this.updateSurveyValues();
+      const currentSurvey = value.surveys[surveyIndex];
+      currentSurvey.energy.cooking = this.updateGenericFormSurvey(
+        currentSurvey.energy.cooking,
+        cookingDiffDimension as string,
+        cookingHeaders(
+          value.country_code as CountryIrradianceKeys,
+          value.solar
+        ),
+        cookingGenerateComputeItem(
+          value.country_code,
+          value.totalHH,
+          this.items, // being GHGReferencefNRB
+          this.project_REF_GRD
+        ) as unknown as (
+          localItemInput: SurveyInput,
+          ghgMapRef: ItemReferencesMap
+        ) => SurveyResult,
+        this.ghgMapRef
+      );
+      value.surveys[surveyIndex] = currentSurvey;
     }
+    return value;
   }
 
   // hack to force revalidate on open
