@@ -135,6 +135,7 @@ export type SurveyResult = Record<string, SurveyResultValue>;
 export interface SurveyItem {
   _id: string; // as of uuidv4Type
   increment: number; // increment value in number
+  enabled?: boolean;
   origin?: string; // as of uuidv4Type of an existing item
   originIncrement?: number; // increment value of an existing
   input: SurveyInput;

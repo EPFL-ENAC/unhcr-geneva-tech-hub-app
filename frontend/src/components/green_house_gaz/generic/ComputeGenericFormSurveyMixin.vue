@@ -53,7 +53,8 @@ export default class ComputeGenericFormSurveyMixin extends Vue {
     );
     newForm.endline.results = this.computeResults(
       newForm.endline.items,
-      headers
+      headers,
+      { filterEnabled: true }
     );
     newForm.endline.results.changeInEmission = computeChangeInEmission(
       newForm.baseline.results.totalCO2Emission as number,
@@ -93,7 +94,8 @@ export default class ComputeGenericFormSurveyMixin extends Vue {
 
   private computeResults(
     items: SurveyItem[],
-    headers: SurveyTableHeader[]
+    headers: SurveyTableHeader[],
+    options: ComputeResultsOptions = { filterEnabled: false }
   ): SurveyResult {
     // should look like {key: path}
     const keysToSumBy = headers
@@ -102,10 +104,14 @@ export default class ComputeGenericFormSurveyMixin extends Vue {
         acc[el.key] = el.value;
         return acc;
       }, {});
+    const itemsToSum = options.filterEnabled
+      ? items.filter((intervention: SurveyItem) => intervention.enabled)
+      : items;
     return Object.entries(keysToSumBy).reduce(
       (acc: SurveyResult, [key, value]) => {
         acc[key] = sumBy(
-          items,
+          // filter only for endline
+          itemsToSum,
           (item: SurveyItem) => get(item, value) as number
         );
         return acc;
@@ -163,5 +169,9 @@ export default class ComputeGenericFormSurveyMixin extends Vue {
     });
     return interventions;
   }
+}
+
+interface ComputeResultsOptions {
+  filterEnabled: boolean;
 }
 </script>
