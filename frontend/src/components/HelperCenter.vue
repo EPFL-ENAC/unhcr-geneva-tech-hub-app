@@ -47,6 +47,7 @@
             controls
             width="100%"
             @enterpictureinpicture="toggleHelperCenter"
+            @leavepictureinpicture="toggleHelperCenter"
           >
             <source :src="helper?.href" type="video/mp4" />
 
