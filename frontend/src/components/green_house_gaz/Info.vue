@@ -281,6 +281,8 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
         type: "number",
         key: "solar",
         label: "Daily solar peak hours",
+        tooltipInfo:
+          "If daily solar peak hours is unknown, check the reference data / UNHCR Locations table with solar peak hours per country",
         min: 0,
         max: 12,
       },
