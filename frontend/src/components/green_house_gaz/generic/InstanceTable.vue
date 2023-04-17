@@ -310,4 +310,8 @@ export default class BaselineTable extends Vue {
     width: 16px;
   }
 }
+
+::v-deep .striked {
+  text-decoration: line-through;
+}
 </style>

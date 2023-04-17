@@ -86,11 +86,15 @@ export const surveyTableHeaderCO2 = [
         signDisplay: "exceptZero",
       });
     },
-    classFormatter: (v: number): string => {
+    classFormatter: (v: number, _: SurveyTableHeader,
+      item: SurveyItem): string => {
       const classes: string[] = [];
       v > 0 ? classes.push("item-positive") : void 0;
       v < 0 ? classes.push("item-negative") : void 0;
       v === 0 ? classes.push("bold-table-content") : void 0;
+      if (item?.enabled === false) {
+        classes.push("striked");
+      }
       return classes.join(" ");
     },
   },
