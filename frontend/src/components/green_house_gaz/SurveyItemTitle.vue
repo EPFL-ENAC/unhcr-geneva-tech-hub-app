@@ -11,6 +11,19 @@
         </info-tooltip>
       </v-col>
     </v-row>
+    <v-row v-if="disabled">
+      <v-col>
+        <v-tooltip bottom>
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <span> {{ disabledText }} </span>
+          <template #activator="{ on }">
+            <v-alert type="warning" v-on="on">
+              <i> <span v-text="disabledTitle"></span></i>
+            </v-alert>
+          </template>
+        </v-tooltip>
+      </v-col>
+    </v-row>
     <v-row v-if="!infoTooltipText[titleKey].ready">
       <v-col>
         <v-alert type="warning">
@@ -44,6 +57,24 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class SurveyItemTitle extends Vue {
   @Prop({ type: String, default: "", required: true })
   readonly titleKey!: string;
+  @Prop({
+    type: String,
+    default:
+      "This module is disabled because some fields are missing in 'Information Tab'",
+    required: false,
+  })
+  readonly disabledText!: string;
+
+  @Prop({
+    type: String,
+    default: "This module is disabled",
+
+    required: false,
+  })
+  readonly disabledTitle!: string;
+
+  @Prop({ type: Boolean, default: false, required: false })
+  readonly disabled!: boolean;
 
   infoTooltipText = infoTooltipText;
 }

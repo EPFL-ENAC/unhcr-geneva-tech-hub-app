@@ -387,24 +387,27 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
     if (surveyIndex !== undefined) {
       // localProject.surveys[surveyIndex].energy.cooking
       const currentSurvey = value.surveys[surveyIndex];
-      currentSurvey.energy.cooking = this.updateGenericFormSurvey(
-        currentSurvey.energy.cooking,
-        cookingDiffDimension as string,
-        cookingHeaders(
-          value.country_code as CountryIrradianceKeys,
-          value.solar
-        ),
-        cookingGenerateComputeItem(
-          value.country_code,
-          value.totalHH,
-          this.items, // being GHGReferencefNRB
-          this.project_REF_GRD
-        ) as unknown as (
-          localItemInput: SurveyInput,
-          ghgMapRef: ItemReferencesMap
-        ) => SurveyResult,
-        this.ghgMapRef
-      );
+      if (currentSurvey.energy?.cooking) {
+        currentSurvey.energy.cooking = this.updateGenericFormSurvey(
+          currentSurvey.energy.cooking,
+          cookingDiffDimension as string,
+          cookingHeaders(
+            value.country_code as CountryIrradianceKeys,
+            value.solar
+          ),
+          cookingGenerateComputeItem(
+            value.country_code,
+            value.totalHH,
+            this.items, // being GHGReferencefNRB
+            this.project_REF_GRD
+          ) as unknown as (
+            localItemInput: SurveyInput,
+            ghgMapRef: ItemReferencesMap
+          ) => SurveyResult,
+          this.ghgMapRef
+        );
+      }
+
       value.surveys[surveyIndex] = currentSurvey;
     }
     return value;
