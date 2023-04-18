@@ -19,6 +19,7 @@ import {
 } from "@/components/green_house_gaz/fuelTypes";
 import { GHGfNRB } from "@/store/GHGReferencefNRB";
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
+import { mdiBasketOutline, mdiPotOutline, mdiTree } from "@mdi/js";
 
 import {
   computeCO2CostEnergy,
@@ -64,6 +65,7 @@ export interface EnergyCookingItemInput
   sustainablySourced?: boolean;
   chcProcessingFactor?: number; // default to 6
   dryWood?: boolean;
+  disabledfuelUsage?: boolean;
 }
 
 export interface EnergyCookingItemResults extends SurveyResult {
@@ -118,6 +120,7 @@ export function resetSurveyFuelOption(
   delete localInput.appliance;
 
   delete localInput.disableDieselLiters; // do I know the total litres of diesels
+  localInput.disabledfuelUsage = true;
   localInput.generatorLoad = 0.6; // default factor of 60%
   delete localInput.generatorSize;
   delete localInput.operatingHours;
@@ -130,7 +133,8 @@ export function resetSurveyFuelOption(
 
 export function headers(
   countryCode: CountryIrradianceKeys,
-  projectSolar: number | undefined
+  projectSolar: number | undefined,
+  pp_per_hh: number | undefined
 ) {
   return [
     ...surveyTableHeaderIncrements,
@@ -144,14 +148,26 @@ export function headers(
       },
       hideFooterContent: false,
       items: cookstoveTECHs,
-      formatter: (_id: string) => {
+      formatter: (_id: string, _: unknown, localItem: EnergyCookingItem) => {
         const cookStove =
           cookstoveTECHs.find((cookstove) => cookstove._id === _id) ??
           ({
             text: "Unknown",
           } as CookstoveTech);
         const name = cookStove?.text ?? "Unknown";
+        let defaultAppliance;
+        switch (localItem.input.appliance) {
+          case COOK_APP_Pressure:
+            defaultAppliance = mdiPotOutline;
+              break;
+          case COOK_APP_Heat_Retaining:
+            defaultAppliance = mdiBasketOutline;
+              break;
+          default:
+            defaultAppliance = "";
+            break;
 
+        }
         return `
             <div class="d-flex justify-left align-center">
               ${
@@ -162,6 +178,22 @@ export function headers(
                   : `<span class="ml-16"></span>`
               }
               <span class="ml-4">${name}</span>
+              ${
+                localItem?.input?.appliance
+                  ? `<svg
+              version="1.1"
+              viewBox="0 0 26 26"
+              width="18"
+                height="18"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:svg="http://www.w3.org/2000/svg"
+            >
+                  <path style="fill: black;"
+                  d="${defaultAppliance}"
+                />
+            </svg>`
+                  : ""
+              }
             </div>
             `;
       },
@@ -198,6 +230,33 @@ export function headers(
       formatter: (v: AllFuel) => {
         return AllFuelsWithTextById?.[v]?.text;
       },
+      formatterTable: (
+        v: AllFuel,
+        _: unknown,
+        localItem: EnergyCookingItem
+      ) => {
+        return `
+        <div class="d-flex justify-left align-center">
+          <span class="ml-4"> ${AllFuelsWithTextById?.[v]?.text}</span>
+          ${
+            localItem?.input?.sustainablySourced
+              ? `<svg
+          version="1.1"
+          viewBox="0 0 26 26"
+          width="18"
+            height="18"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:svg="http://www.w3.org/2000/svg"
+        >
+              <path style="fill: green;"
+              d="${mdiTree}"
+            />
+        </svg>`
+              : ""
+          }
+        </div>
+        `;
+      },
       customEventInput: (
         fuelType: AllFuel,
         localInput: EnergyCookingItemInput
@@ -210,7 +269,9 @@ export function headers(
         }
         localInput.fuelUsage =
           AllFuelsWithTextById[fuelType]?.defaultValue ?? 0;
-
+        if (pp_per_hh !== undefined) {
+          localInput.fuelUsage = localInput.fuelUsage * pp_per_hh;
+        }
         return localInput;
       },
       isInput: true,
@@ -218,9 +279,41 @@ export function headers(
       hideFooterContent: false,
     },
     {
-      conditional_value: "",
-      // conditional: ["fuelUsage", "dieselLiters"],
+      value: "input.disabledfuelUsage",
+      text: "Fuel quantity known",
+      conditional_value: biomassFuels,
       conditional: ["fuelType"],
+      style: {
+        cols: "12",
+      },
+      options: {
+        false: "yes",
+        true: "no",
+      },
+      default: true,
+      type: "boolean",
+      customEventInput: (
+        disabledfuelUsage: boolean,
+        localInput: EnergyCookingItemInput
+      ) => {
+        if (!localInput.fuelType) {
+          return localInput;
+        }
+        if (!disabledfuelUsage) {
+          localInput.fuelUsage =
+            AllFuelsWithTextById[localInput.fuelType]?.defaultValue ?? 0;
+          if (pp_per_hh !== undefined) {
+            localInput.fuelUsage = localInput.fuelUsage * pp_per_hh;
+          }
+        }
+
+        return localInput;
+      },
+    },
+    {
+      conditional_value: [[true], cookstoveIdsTECHsWithAccess, biomassFuels],
+      conditional: ["disabledfuelUsage", "cookstove", "fuelType"],
+      conditional_type: "AND",
       text: "Cookstove appliance",
       value: "input.appliance",
       items: [COOK_APP_Default, COOK_APP_Pressure, COOK_APP_Heat_Retaining],
@@ -228,10 +321,30 @@ export function headers(
         cols: "12",
       },
       type: "select",
+      customEventInput: (
+        appliance: string,
+        localInput: EnergyCookingItemInput
+      ) => {
+        if (!localInput.fuelUsage) {
+          return localInput;
+        }
+        const appEff = applianceEfficiency(appliance);
+        localInput.fuelUsage =
+          AllFuelsWithTextById[localInput.fuelType]?.defaultValue ?? 0;
+        localInput.fuelUsage = localInput.fuelUsage * appEff;
+        if (localInput.fuelType === "FWD" && !localInput.dryWood) {
+          localInput.fuelUsage = localInput.fuelUsage * (1 + REF_WET_WOOD);
+        }
+        if (pp_per_hh !== undefined) {
+          localInput.fuelUsage = localInput.fuelUsage * pp_per_hh;
+        }
+        return localInput;
+      },
     },
     {
-      conditional_value: "FWD",
-      conditional: "fuelType",
+      conditional_value: [["FWD"], [true]],
+      conditional: ["fuelType", "disabledfuelUsage"],
+      conditional_type: "AND",
       text: "Dry wood",
       style: {
         cols: "12",
@@ -245,12 +358,16 @@ export function headers(
         if (!localInput.fuelUsage) {
           return localInput;
         }
+        const appEff = applianceEfficiency(localInput.appliance);
+        localInput.fuelUsage =
+          AllFuelsWithTextById[localInput.fuelType]?.defaultValue ?? 0;
+        localInput.fuelUsage = localInput.fuelUsage * appEff;
         if (!dryWood) {
           localInput.fuelUsage = localInput.fuelUsage * (1 + REF_WET_WOOD);
-        } else {
-          localInput.fuelUsage = localInput.fuelUsage / (1 + REF_WET_WOOD);
         }
-
+        if (pp_per_hh !== undefined) {
+          localInput.fuelUsage = localInput.fuelUsage * pp_per_hh;
+        }
         return localInput;
       },
     },
@@ -293,6 +410,8 @@ export function headers(
         cols: "12",
       },
       type: "number",
+      disabledWithConditions: "disabledfuelUsage",
+      disabledWithConditions_value: false,
     },
     ...dieselInputsProducedPer("Day", "Day"),
     {
@@ -328,13 +447,16 @@ export function headers(
         false: "non-carbonized",
       },
       type: "boolean",
+      style: {
+        cols: "12",
+      },
     },
     {
       text: "Percentage of total households",
       computeResults: true,
       value: "input.numberOfCookstove",
-      conditional_value: ["", cookstoveIdWithoutAccess],
-      conditional: ["appliance", "cookstove"],
+      conditional_value: "",
+      conditional: ["cookstove"],
       style: {
         cols: "12",
       },
@@ -437,10 +559,9 @@ export function generateComputeItem(
     const {
       numberOfCookstove: percentageOfTotalCookstove,
       fuelUsage,
-      fuelType,
       appliance,
     } = localItemInput;
-
+    const { fuelType } = localItemInput;
     if (percentageOfTotalCookstove === undefined) {
       throw new Error("number of cooktsove not defined");
     }
@@ -506,9 +627,13 @@ export function generateComputeItem(
             (localFNRB + (1 - localFNRB) * nonCO2FractionC) * fuelEfficiencyC +
             (localFNRB + (1 - localFNRB) * nonCO2FractionP) * fuelEfficiencyP;
         } else {
-          const fuelEfficiency = ghgMapRef?.[`REF_EFF_${fuelType}`]?.value;
+          const fuelTypeEnhanced = `${fuelType}${
+            localItemInput.carbonized ? "_C" : ""
+          }`;
+          const fuelEfficiency =
+            ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}`]?.value;
           if (fuelEfficiency == undefined) {
-            const errorMessage = `there are no emission factor REF_EFF_${fuelType}`;
+            const errorMessage = `there are no emission factor REF_EFF_${fuelTypeEnhanced}`;
             throw new Error(errorMessage);
           }
           const nonCO2Fraction = ghgMapRef?.[`REF_NONCO2_${fuelType}`]?.value;

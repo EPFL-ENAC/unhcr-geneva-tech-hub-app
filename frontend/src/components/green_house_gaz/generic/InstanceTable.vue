@@ -56,15 +56,32 @@
             item
           )
         "
-        v-html="
-          tableHeader.formatter(
-            get(item, tableHeader.value),
-            tableHeader,
-            item,
-            items
-          )
-        "
-      ></div>
+      >
+        <span
+          v-if="tableHeader.formatterTable"
+          v-html="
+            tableHeader.formatterTable(
+              get(item, tableHeader.value),
+              tableHeader,
+              item,
+              items
+            )
+          "
+        >
+        </span>
+        <span
+          v-else
+          v-html="
+            tableHeader.formatter(
+              get(item, tableHeader.value),
+              tableHeader,
+              item,
+              items
+            )
+          "
+        >
+        </span>
+      </div>
     </template>
     <template #[`item.actions`]="{ item }">
       <v-tooltip bottom>
@@ -145,14 +162,26 @@
               tableHeader.classFormatter(results[tableHeader.key], tableHeader)
             "
           >
-            {{
-              tableHeader.formatter(
-                results[tableHeader.key],
-                tableHeader,
-                { input: results },
-                items
-              )
-            }}
+            <span v-if="tableHeader.formatterTable">
+              {{
+                tableHeader.formatterTable(
+                  results[tableHeader.key],
+                  tableHeader,
+                  { input: results },
+                  items
+                )
+              }}
+            </span>
+            <span v-else>
+              {{
+                tableHeader.formatter(
+                  results[tableHeader.key],
+                  tableHeader,
+                  { input: results },
+                  items
+                )
+              }}
+            </span>
           </span>
           <span v-else-if="!tableHeader.hidden"> – </span>
         </td>

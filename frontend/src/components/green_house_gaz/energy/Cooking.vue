@@ -91,7 +91,11 @@ export default class Cooking extends Vue {
   }
   // should be a getter so it may be reactive for fuelTypes
   public get headers(): SurveyTableHeader[] {
-    return headers(this.countryCode, this.project.solar);
+    return headers(
+      this.countryCode,
+      this.project.solar,
+      this.project.pp_per_hh
+    );
   }
 
   items!: GHGfNRB[];

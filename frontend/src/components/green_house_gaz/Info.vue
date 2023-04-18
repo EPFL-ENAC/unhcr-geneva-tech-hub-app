@@ -418,7 +418,8 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
           cookingDiffDimension as string,
           cookingHeaders(
             value.country_code as CountryIrradianceKeys,
-            value.solar
+            value.solar,
+            value.pp_per_hh
           ),
           cookingGenerateComputeItem(
             value.country_code,

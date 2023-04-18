@@ -112,10 +112,19 @@
     "_id": "REF_EFF_BRQ",
     "type": "number",
     "category": "Energy",
-    "description": "Energy - Cookstove - Efficiency (TCO2e/T) Briquette",
+    "description": "Energy - Cookstove - Efficiency (TCO2e/T) Briquette non-carbonized",
     "value": 1.269736,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
     "index": 12
+  },
+  {
+    "_id": "REF_EFF_BRQ_C",
+    "type": "number",
+    "category": "Energy",
+    "description": "Energy - Cookstove - Efficiency (TCO2e/T) Briquette carbonized",
+    "value": 3.477,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
+    "index": 13
   },
   {
     "_id": "REF_EFF_PLTS",
@@ -124,7 +133,7 @@
     "description": "Energy - Cookstove - Efficiency (TCO2e/T) Pellets",
     "value": 1.269736,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
-    "index": 13
+    "index": 14
   },
   {
     "_id": "REF_EFF_CNDL",
@@ -133,7 +142,7 @@
     "description": "Energy - Cookstove - Efficiency (TCO2e/T) candle (paraffin)",
     "value": 2.9643078,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/3_Volume3/V3_5_Ch5_Non_Energy_Products.pdf",
-    "index": 14
+    "index": 15
   },
   {
     "_id": "REF_EFF_ETH",
@@ -142,7 +151,7 @@
     "description": "Energy - Cookstove - Efficiency (kg CO2e/L) ETHANOL",
     "value": 1.23910872,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
-    "index": 15
+    "index": 16
   },
   {
     "_id": "REF_EFF_LPG",
@@ -151,7 +160,7 @@
     "description": "Energy - Cookstove - Efficiency (TCO2e/T) LPG",
     "value": 2.99250545,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
-    "index": 16
+    "index": 17
   },
   {
     "_id": "REF_EFF_BGS",
@@ -160,7 +169,7 @@
     "description": "Energy - Cookstove - Efficiency (kgCO2e/m3 for biogas) BIOGAS",
     "value": 2.48420844,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
-    "index": 17
+    "index": 18
   },
   {
     "_id": "REF_EFF_PET",
@@ -169,7 +178,7 @@
     "description": "Energy - Cookstove - Efficiency (kg CO2e/L) Gasoline/Petrol [-]",
     "value": 2.34,
     "source": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022",
-    "index": 18
+    "index": 19
   },
   {
     "_id": "REF_EFF_PNG",
@@ -178,7 +187,7 @@
     "description": "Energy - Cookstove - Efficiency (kgCO2e/m3 for Piped Natural Gas)",
     "value": 2.13362568,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
-    "index": 19
+    "index": 20
   },
   {
     "_id": "REF_EFF_KRS",
@@ -187,7 +196,7 @@
     "description": "Energy - Cookstove - Efficiency (kg CO2e/L) KEROSENE",
     "value": 2.559489354,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
-    "index": 20
+    "index": 21
   },
   {
     "_id": "REF_EFF_DIES",
@@ -196,7 +205,7 @@
     "description": "Energy - Cookstove - Efficiency (kg CO2e/L) Diesel",
     "value": 2.72440045,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
-    "index": 21
+    "index": 22
   },
   {
     "_id": "REF_NONCO2_FWD",
@@ -205,7 +214,7 @@
     "description": "Energy - Cookstove - Fraction of nonCO2 emissions (%) Wood",
     "value": 0.077885724,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
-    "index": 22
+    "index": 23
   },
   {
     "_id": "REF_NONCO2_CHC_C",
@@ -214,7 +223,7 @@
     "description": "Energy - Cookstove - Fraction of nonCO2 emissions (%) Charcoal combustion",
     "value": 0.049760319,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
-    "index": 23
+    "index": 24
   },
   {
     "_id": "REF_NONCO2_CHC_P",
@@ -223,7 +232,7 @@
     "description": "Energy - Cookstove - Fraction of nonCO2 emissions (%) Charcoal production",
     "value": 0.422709222,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf",
-    "index": 24
+    "index": 25
   },
   {
     "_id": "REF_NONCO2_BRQ",
@@ -232,7 +241,7 @@
     "description": "Energy - Cookstove - Fraction of nonCO2 emissions (%) Briquette",
     "value": 0.086424265,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
-    "index": 25
+    "index": 26
   },
   {
     "_id": "REF_NONCO2_PLTS",
@@ -241,6 +250,6 @@
     "description": "Energy - Cookstove - Fraction of nonCO2 emissions (%) Pellets",
     "value": 0.086424265,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
-    "index": 26
+    "index": 27
   }
 ]

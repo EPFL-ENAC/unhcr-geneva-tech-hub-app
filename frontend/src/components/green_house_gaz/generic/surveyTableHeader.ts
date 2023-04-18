@@ -169,6 +169,7 @@ export interface EasySurveyTableHeader {
     ghgMapRef?: ItemReferencesMap
   ) => SurveyInput;
   formatter?: (v: unknown) => string;
+  conditional_type?: "AND" | "OR";
   conditional_value: SurveyInputValue; // e.g "LITRES",
   conditional: string | string[]; // based on other SurveyTableHeader field "US_UNI", needs to have conditional_value set
   endlineOnly?: boolean; // show only for enldine table true,

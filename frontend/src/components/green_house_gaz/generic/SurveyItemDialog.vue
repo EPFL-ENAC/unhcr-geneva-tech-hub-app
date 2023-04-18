@@ -234,7 +234,7 @@ export default class SurveyItemDialog extends Vue {
       ) {
         // array we should just check that it's just string.
         header.options =
-          header.items?.map((item: string| SelectCustom<string>) => {
+          header.items?.map((item: string | SelectCustom<string>) => {
             if (typeof item === "string") {
               return {
                 text: header.formatter?.(item as unknown) ?? item,
@@ -293,16 +293,38 @@ export default class SurveyItemDialog extends Vue {
       typeof surveyItem.conditional === "object" &&
       Array.isArray(surveyItem.conditional)
     ) {
-      let result = false;
-
-      surveyItem.conditional.every((conditional: string) => {
+      let result!: boolean;
+      const breaker = surveyItem.conditional_type !== "AND";
+      surveyItem.conditional.every((conditional: string, index: number) => {
+        let conditional_value = surveyItem.conditional_value;
+        if (
+          typeof surveyItem.conditional_value === "object" &&
+          Array.isArray(surveyItem.conditional_value) &&
+          Array.isArray(surveyItem.conditional_value[0])
+        ) {
+          conditional_value = surveyItem.conditional_value[index];
+        }
         const temp = this.matchCondition(localInput, {
           ...surveyItem,
+          conditional_value,
           conditional, // override surveyItem.conditional
         });
+        switch (surveyItem.conditional_type) {
+          case "AND":
+            result = (result ?? true) && (temp as boolean);
+            break;
+          case "OR":
+            result = (result ?? false) || (temp as boolean);
+            break;
+          default:
+            result = temp as boolean;
+            break;
+        }
+
         if (temp) {
-          result = temp;
-          return false;
+          if (breaker) {
+            return false;
+          }
         }
         return true;
       });
@@ -330,19 +352,15 @@ export default class SurveyItemDialog extends Vue {
     }
     if (typeof surveyItem.conditional === "string") {
       const target: SurveyInputValue = localInput?.[surveyItem.conditional];
-      const objective: SurveyInputValue = surveyItem.conditional_value;
-      if (typeof objective === "string" || typeof objective === "boolean") {
-        // the trick is to delete the target on input change
-        // so the target may be undefined when necessary
-        return target === objective || (target && objective === "");
+      const objective: SurveyInputValue[] | SurveyInputValue =
+        surveyItem.conditional_value;
+      if (target === undefined) {
+        return false;
       }
-      if (typeof objective === "object" && Array.isArray(objective)) {
-        if (typeof target === "string" && target) {
-          // TODO: it's weird that includes only works with string
-          return objective.includes(target) || objective.includes("");
-        }
+      if (Array.isArray(objective) && !Array.isArray(target)) {
+        return objective.includes(target as string);
       }
-      return false;
+      return target === objective || (target && objective === "");
     }
     throw new Error(
       `conditional ""${surveyItem.conditional}"" should be of type string\n with conditional value: ${surveyItem.conditional_value}\n in surveyTableHeader item: ${surveyItem.value}`
