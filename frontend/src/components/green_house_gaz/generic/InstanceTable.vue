@@ -125,7 +125,10 @@
             v-on="on"
           />
         </template>
-        <span>Enable/Disable</span>
+        <span
+          >Checked means enabled, unchecked means disabled and ignored in
+          calculations.</span
+        >
       </v-tooltip>
     </template>
     <template #foot="{}">
