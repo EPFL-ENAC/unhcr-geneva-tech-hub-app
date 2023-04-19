@@ -13,6 +13,7 @@
 </template>
 
 <script lang="ts">
+import { getDefaultFuel } from "@/components/green_house_gaz/energy/Cooking";
 import BaselineEndlineWrapper from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
 import {
   ensureSurveyTableHeaders,
@@ -21,7 +22,6 @@ import {
   surveyTableHeaderIncrements,
 } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
-
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
 
 import {
@@ -106,7 +106,7 @@ export default class Lighting extends Vue {
   project!: GreenHouseGaz;
   project_REF_GRD!: ReferenceItemInterface;
   diffDimension: keyof EnergyCookingItemInput = "numberOfCookstove";
-  name = "cookstove";
+  name = "lighting";
 
   public get title(): string {
     return this.titleKey;
@@ -193,7 +193,7 @@ export default class Lighting extends Vue {
     } = localItemInput;
 
     if (percentageOfTotalCookstove === undefined) {
-      throw new Error("number of cooktsove not defined");
+      throw new Error("number of lighting not defined");
     }
     if (this.project.totalHH === undefined) {
       throw new Error(
@@ -371,8 +371,8 @@ export default class Lighting extends Vue {
           if (fuelType === "FWD") {
             localInput.dryWood = true;
           }
-          localInput.fuelUsage =
-            AllFuelsWithTextById[fuelType]?.defaultValue ?? 0;
+          // todo improve typing
+          localInput.fuelUsage = getDefaultFuel(localInput, 5);
 
           return localInput;
         },
@@ -533,7 +533,7 @@ export interface EnergyCookingItemInput
     DieselItem,
     EnergyItem {
   numberOfCookstove?: number; // computed based on % of HH
-  // cookstove: string; // type fo cookstove
+  cookstove: string; // type fo cookstove/ TODO: remove
   image?: string; // image of cookstove
   fuelUsage?: number; // [kg or L/day]
   fuelType: AllFuel; // key

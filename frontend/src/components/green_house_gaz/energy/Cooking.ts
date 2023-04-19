@@ -120,7 +120,7 @@ export function resetSurveyFuelOption(
   delete localInput.appliance;
 
   delete localInput.disableDieselLiters; // do I know the total litres of diesels
-  localInput.disabledfuelUsage = true;
+  localInput.disabledfuelUsage = false;
   localInput.generatorLoad = 0.6; // default factor of 60%
   delete localInput.generatorSize;
   delete localInput.operatingHours;
@@ -129,6 +129,34 @@ export function resetSurveyFuelOption(
   delete localInput.solarInstalled;
 
   return localInput;
+}
+
+export function getDefaultFuel(
+  localInput: EnergyCookingItemInput,
+  pp_per_hh: number | undefined
+): number {
+  const currentStove = cookstoveTECHs.find(
+    (cookstove) => cookstove._id === localInput.cookstove
+  );
+  if (!currentStove) {
+    // should be defined, so no error
+    return 0;
+  }
+
+  if (pp_per_hh === undefined) {
+    // should be defined, so no error
+    return 0;
+  }
+  let fuelUsage =
+    (currentStove.defaults?.[localInput.fuelType] ?? 0) * pp_per_hh;
+
+  const appEff = applianceEfficiency(localInput.appliance);
+  fuelUsage = fuelUsage * appEff;
+  if (localInput.fuelType === "FWD" && !localInput.dryWood) {
+    fuelUsage = fuelUsage * (1 + REF_WET_WOOD);
+  }
+
+  return fuelUsage;
 }
 
 export function headers(
@@ -159,14 +187,13 @@ export function headers(
         switch (localItem.input.appliance) {
           case COOK_APP_Pressure:
             defaultAppliance = mdiPotOutline;
-              break;
+            break;
           case COOK_APP_Heat_Retaining:
             defaultAppliance = mdiBasketOutline;
-              break;
+            break;
           default:
             defaultAppliance = "";
             break;
-
         }
         return `
             <div class="d-flex justify-left align-center">
@@ -183,8 +210,8 @@ export function headers(
                   ? `<svg
               version="1.1"
               viewBox="0 0 26 26"
-              width="18"
-                height="18"
+              width="24"
+                height="24"
               xmlns="http://www.w3.org/2000/svg"
               xmlns:svg="http://www.w3.org/2000/svg"
             >
@@ -243,8 +270,8 @@ export function headers(
               ? `<svg
           version="1.1"
           viewBox="0 0 26 26"
-          width="18"
-            height="18"
+          width="24"
+            height="24"
           xmlns="http://www.w3.org/2000/svg"
           xmlns:svg="http://www.w3.org/2000/svg"
         >
@@ -267,11 +294,8 @@ export function headers(
         if (fuelType === "FWD") {
           localInput.dryWood = true;
         }
-        localInput.fuelUsage =
-          AllFuelsWithTextById[fuelType]?.defaultValue ?? 0;
-        if (pp_per_hh !== undefined) {
-          localInput.fuelUsage = localInput.fuelUsage * pp_per_hh;
-        }
+        localInput.fuelType = fuelType;
+        localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
         return localInput;
       },
       isInput: true,
@@ -281,8 +305,9 @@ export function headers(
     {
       value: "input.disabledfuelUsage",
       text: "Fuel quantity known",
-      conditional_value: biomassFuels,
-      conditional: ["fuelType"],
+      conditional_value: [cookstoveIdsTECHsWithAccess, ""],
+      conditional: ["cookstove", "fuelType"],
+      conditional_type: "AND",
       style: {
         cols: "12",
       },
@@ -300,19 +325,15 @@ export function headers(
           return localInput;
         }
         if (!disabledfuelUsage) {
-          localInput.fuelUsage =
-            AllFuelsWithTextById[localInput.fuelType]?.defaultValue ?? 0;
-          if (pp_per_hh !== undefined) {
-            localInput.fuelUsage = localInput.fuelUsage * pp_per_hh;
-          }
+          localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
         }
 
         return localInput;
       },
     },
     {
-      conditional_value: [[true], cookstoveIdsTECHsWithAccess, biomassFuels],
-      conditional: ["disabledfuelUsage", "cookstove", "fuelType"],
+      conditional_value: [[true], cookstoveIdsTECHsWithAccess],
+      conditional: ["disabledfuelUsage", "cookstove"],
       conditional_type: "AND",
       text: "Cookstove appliance",
       value: "input.appliance",
@@ -328,16 +349,8 @@ export function headers(
         if (!localInput.fuelUsage) {
           return localInput;
         }
-        const appEff = applianceEfficiency(appliance);
-        localInput.fuelUsage =
-          AllFuelsWithTextById[localInput.fuelType]?.defaultValue ?? 0;
-        localInput.fuelUsage = localInput.fuelUsage * appEff;
-        if (localInput.fuelType === "FWD" && !localInput.dryWood) {
-          localInput.fuelUsage = localInput.fuelUsage * (1 + REF_WET_WOOD);
-        }
-        if (pp_per_hh !== undefined) {
-          localInput.fuelUsage = localInput.fuelUsage * pp_per_hh;
-        }
+        localInput.appliance = appliance;
+        localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
         return localInput;
       },
     },
@@ -358,16 +371,9 @@ export function headers(
         if (!localInput.fuelUsage) {
           return localInput;
         }
-        const appEff = applianceEfficiency(localInput.appliance);
-        localInput.fuelUsage =
-          AllFuelsWithTextById[localInput.fuelType]?.defaultValue ?? 0;
-        localInput.fuelUsage = localInput.fuelUsage * appEff;
-        if (!dryWood) {
-          localInput.fuelUsage = localInput.fuelUsage * (1 + REF_WET_WOOD);
-        }
-        if (pp_per_hh !== undefined) {
-          localInput.fuelUsage = localInput.fuelUsage * pp_per_hh;
-        }
+
+        localInput.dryWood = dryWood;
+        localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
         return localInput;
       },
     },

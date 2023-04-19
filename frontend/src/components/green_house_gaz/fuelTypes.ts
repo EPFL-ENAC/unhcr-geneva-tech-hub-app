@@ -1,6 +1,5 @@
 interface FuelTypesItem<T> {
   _id: T;
-  defaultValue: number;
   text: string;
 }
 // electric fuels
@@ -19,23 +18,24 @@ export const electricFuelsForCooking = [
 ] as const;
 export type ElectricFuel = typeof electricFuels[number];
 export const electricFuelWithText: FuelTypesItem<ElectricFuel>[] = [
-  { _id: "ELE_DIES", text: "Diesel generators", defaultValue: 0 },
-  { _id: "ELE_GRID", text: "National Grid", defaultValue: 3 },
-  { _id: "ELE_SOLAR", text: "Solar Energy", defaultValue: 1 },
-  { _id: "ELE_HYB", text: "Hybrid Mix", defaultValue: 0 },
-  { _id: "ELE_NONE", text: "Not powered", defaultValue: 0 },
+  { _id: "ELE_DIES", text: "Diesel generators" },
+  { _id: "ELE_GRID", text: "National Grid" },
+  { _id: "ELE_SOLAR", text: "Solar Energy" },
+  { _id: "ELE_HYB", text: "Hybrid Mix" },
+  { _id: "ELE_NONE", text: "Not powered" },
 ];
 // end of electric fuels
 
 // biomass fuels
 export const biomassFuels = ["FWD", "CHC", "BRQ", "PLTS"] as const;
 export type BioMassFuel = typeof biomassFuels[number];
-export const biomassFuelsWithoutCHC: BioMassFuel[] = ["FWD", "BRQ", "PLTS"];
+export const biomassFuelsWithoutCHC = ["FWD", "BRQ", "PLTS"] as const;
+export type BioMassFuelWithoutCHC = typeof biomassFuelsWithoutCHC[number];
 export const biomassFuelWithText: FuelTypesItem<BioMassFuel>[] = [
-  { _id: "FWD", text: "Wood", defaultValue: 8.5 },
-  { _id: "CHC", text: "Charcoal", defaultValue: 4.5 },
-  { _id: "PLTS", text: "Pellets", defaultValue: 5 },
-  { _id: "BRQ", text: "Briquette", defaultValue: 5 },
+  { _id: "FWD", text: "Wood" },
+  { _id: "CHC", text: "Charcoal" },
+  { _id: "PLTS", text: "Pellets" },
+  { _id: "BRQ", text: "Briquette" },
 ];
 // end of biomass fuels
 
@@ -43,10 +43,10 @@ export const biomassFuelWithText: FuelTypesItem<BioMassFuel>[] = [
 export const liquidFuels = ["ETH", "PET", "DIES", "KRS"] as const;
 export type LiquidFuel = typeof liquidFuels[number];
 export const liquidFuelWithText: FuelTypesItem<LiquidFuel>[] = [
-  { _id: "ETH", text: "Ethanol/alcohol", defaultValue: 1 },
-  { _id: "PET", text: "Petrol", defaultValue: 1 }, // same as wash
-  { _id: "DIES", text: "Diesel", defaultValue: 1 }, // same as facilities for diesel gen
-  { _id: "KRS", text: "Kerosene/paraffin", defaultValue: 1 },
+  { _id: "ETH", text: "Ethanol/alcohol" },
+  { _id: "PET", text: "Petrol" }, // same as wash
+  { _id: "DIES", text: "Diesel" }, // same as facilities for diesel gen
+  { _id: "KRS", text: "Kerosene/paraffin" },
 ];
 // end of liquid fuels
 
@@ -54,9 +54,9 @@ export const liquidFuelWithText: FuelTypesItem<LiquidFuel>[] = [
 export const gasFuels = ["LPG", "BGS", "PNG"] as const;
 export type GasFuel = typeof gasFuels[number];
 export const gasFuelWithText: FuelTypesItem<GasFuel>[] = [
-  { _id: "LPG", text: "LPG", defaultValue: 0.43 },
-  { _id: "BGS", text: "BIOGAS", defaultValue: 0 },
-  { _id: "PNG", text: "Piped Natural Gas", defaultValue: 0 },
+  { _id: "LPG", text: "LPG" },
+  { _id: "BGS", text: "BIOGAS" },
+  { _id: "PNG", text: "Piped Natural Gas" },
 ];
 // end of gasFuels fuels
 
@@ -64,7 +64,7 @@ export const gasFuelWithText: FuelTypesItem<GasFuel>[] = [
 export const thermalFuels = ["THE"] as const;
 export type ThermalFuel = typeof thermalFuels[number];
 export const thermalFuelWithText: FuelTypesItem<ThermalFuel>[] = [
-  { _id: "THE", text: "Thermal solar", defaultValue: 0 },
+  { _id: "THE", text: "Thermal solar" },
 ];
 // end of thermal fuels
 
@@ -72,7 +72,7 @@ export const thermalFuelWithText: FuelTypesItem<ThermalFuel>[] = [
 export const noAccessFuels = ["NO_ACCESS"] as const;
 export type NoAccessFuel = typeof noAccessFuels[number];
 export const noAcessWithText: FuelTypesItem<NoAccessFuel>[] = [
-  { _id: "NO_ACCESS", text: "No access", defaultValue: 0 },
+  { _id: "NO_ACCESS", text: "No access" },
 ];
 // end of thermal fuels
 
