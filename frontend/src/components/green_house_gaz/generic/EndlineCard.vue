@@ -177,11 +177,13 @@ export default class EndlineCard extends Vue {
     }
     const baselineResult = this.baseline.results;
     const endlineResult = this.endline.results;
-    return (
-      (baselineResult[this.diffDimension] as number) -
-        (endlineResult[this.diffDimension] as number) ===
-      0
-    );
+    if (baselineResult[this.diffDimension] === undefined) {
+      return true; // no warning for undefined
+    }
+    const baseValue = baselineResult[this.diffDimension] as number;
+    const endValue = endlineResult[this.diffDimension] as number;
+    const precision = 0.001;
+    return Math.abs(baseValue - endValue) <= precision;
   }
 
   public get diffDimensionText(): string {
