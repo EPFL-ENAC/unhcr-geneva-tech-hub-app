@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.10.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.9.0...v0.10.0) (2023-04-25)
+
+
+### Features
+
+* **couchdb:** add config ini at build time ([1f66c24](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/1f66c245e933b9bb0b228b0de6f750adce48dd6f))
+* **ghg:** add info text for solar peak hours referencing database ([156ca1f](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/156ca1f471e05b5928886d31cce06552e961dded))
+* **ghg:** add new _id and increment for duplicate in instanceTable ([6b0dce4](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/6b0dce4f6a05b06384a8941c72762dda7402efdf))
+* **ghg:** add solar average per country as reference data ([b2270e7](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/b2270e7b6db24090a0752a9aa392e78a5b3296f4)), closes [#316](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/316)
+* **ghg:** add strike-through class ([702806c](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/702806cc00a620a03814b52f44520bb3953dffdb))
+* **ghg:** add warning popup on change with bad diff ([6f92857](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/6f928575d4d4992090b17040c86068b97a2190fa))
+* **ghg:** change save button when no changes and disable it (grey) ([4582aab](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/4582aab0ca04dbe0a3fa7cd39e4a8b8b7adc406a))
+* **ghg:** clarify multiple choice ([d664108](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d66410833a355b7db9c81a59ea28e10771a0de35)), closes [#349](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/349)
+* **ghg:** disable cooking module when no population selected ([e443eeb](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/e443eebd26ad88b62d6b13c3961a585501c3c640))
+* **ghg:** make cooking and generic compute survey form into its own module ([433561b](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/433561bc36d36d53293e4d995d1d1f821b58cdc0))
+* **ghg:** recompute cooking when modifying information ([b4bd181](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/b4bd18173187d36dc82b63099e6c8cbfb3301081))
+* **service-worker:** ask user to update to avoid forcing window.reload ([270c1ef](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/270c1efbffcb9698147ef4e2a6e8bff7b63d63f9))
+
+
+### Bug Fixes
+
+* **ghg:** add custom icon in tooltip ([d8ede40](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d8ede4013a81aa1f273ef7d7f3ae7c486313095b))
+* **ghg:** add default gps coordinate for new assessment ([7f4dd22](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/7f4dd2239869e6cbcd5c51e450d827017aec3d9d))
+* **ghg:** add default value per cookstove ([a46aeb5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/a46aeb5bbe323eb2f54cbc1c029356156496326d))
+* **ghg:** add formatNumber for diff message ([145bab1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/145bab19681fb8919236ab023d68db69cb6d39cc)), closes [#326](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/326)
+* **ghg:** add proper place holder with default value for solar peak ([5c766e0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/5c766e0714183c96d66139488b4f6d0fa81a323e))
+* **ghg:** compare dimension with a precision of 0.001 ([337c6cc](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/337c6cc9d11e1a01491aebe581168574be25bcf4))
+* **ghg:** correct multiple issue regarding cooking module ([67beb13](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/67beb1393e27e95925a676421053a188611d1011))
+* **ghg:** correct types for generic baseline endline ([b2318e8](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/b2318e84074a6d716a8b4c6726a671b31f5cf5ec))
+* **ghg:** enable/disable row for comparison ([b49c2f5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/b49c2f5f9e73d9629392cd6d68503d4f9e9647dd))
+* **ghg:** hide lighting and pumping modules ([6bd3a9b](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/6bd3a9b7747665d40a62386c946c1470977b9509)), closes [#327](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/327)
+* **ghg:** put solar as optional and fail safe ([33f27da](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/33f27da755d1dbf225162e7f64882aa8a5e76fe4))
+* **ghg:** replace cloning by JSON.parse by cloneDeep ([c994568](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c994568ce97d6d5eff879db693730bb715aa7325))
+* **ghg:** wip trigger computation on change ([b6a40cd](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/b6a40cdce8b6054d472ec9719a132cfd7faba7e3))
+* **home:** replace burger by home icon ([34f534e](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/34f534e5043395c3116fc542a3d1cdb3b9a914d7))
+* **service-worker:** wip ([75763e7](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/75763e7a541ed0b7dafb5a2946b3ab3b2f97b27f))
+* **shelter:** add event handler for leave in picture video ([096f862](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/096f862d5885e9b8a88d44e96f527685ec97d86f))
+
 ## [0.9.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.8.1...v0.9.0) (2023-03-31)
 
 
