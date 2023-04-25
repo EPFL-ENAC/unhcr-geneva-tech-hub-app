@@ -5,26 +5,19 @@
     </v-card-title>
     <v-card-subtitle>
       <v-col :cols="12" class="d-flex justify-center">
-        <v-alert
-          v-if="!isDiffNull"
-          dense
-          outlined
-          border="left"
-          close-text="Close Alert"
-          color="error"
-          dark
-        >
-          Please note that the baseline and endline
-          {{ diffDimensionText }} do not match.
-          <br />
-          Baseline:
-          {{ baseline.results[diffDimension] | formatNumber }}
-          {{ diffDimensionText }}
-          <br />
-          Endline:
-          {{ endline.results[diffDimension] | formatNumber }}
-          {{ diffDimensionText }}
-        </v-alert>
+        <warning-survey-dialog
+          :dialog-open.sync="dialogs['warning-survey-dialog']"
+          :show="isDiffNull"
+          :text="diffDimensionText"
+          :baseline="baseline.results[diffDimension]"
+          :endline="endline.results[diffDimension]"
+        />
+        <warning-message-alert
+          :show="isDiffNull"
+          :text="diffDimensionText"
+          :baseline="baseline.results[diffDimension]"
+          :endline="endline.results[diffDimension]"
+        />
       </v-col>
     </v-card-subtitle>
     <div v-if="showEndLines">
@@ -115,7 +108,9 @@
 import InstancePieChart from "@/components/green_house_gaz/generic/InstancePieChart.vue";
 import InstanceTable from "@/components/green_house_gaz/generic/InstanceTable.vue";
 import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
+import WarningMessageAlert from "@/components/green_house_gaz/generic/WarningMessageAlert.vue";
 
+import WarningSurveyDialog from "@/components/green_house_gaz/generic/WarningSurveyDialog.vue";
 import {
   GenericBaseline,
   GenericEndline,
@@ -126,12 +121,14 @@ import {
 import { cloneDeep } from "lodash";
 import Vue from "vue";
 import "vue-class-component/hooks";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 
 @Component({
   components: {
     InstanceTable,
     InstancePieChart,
+    WarningMessageAlert,
+    WarningSurveyDialog,
   },
 })
 export default class EndlineCard extends Vue {
@@ -153,6 +150,12 @@ export default class EndlineCard extends Vue {
   @Prop({ type: String, default: "increment" })
   readonly sortBy!: string;
 
+  dialogs = { "warning-survey-dialog": false } as Record<string, boolean>;
+
+  @Watch("isDiffNull", { immediate: false })
+  onDiffNullChange(newIsDiffNull: boolean): void {
+    this.dialogs["warning-survey-dialog"] = !newIsDiffNull;
+  }
   public get showEndLines(): boolean {
     return this.baseline.items.length > 0 && !this.baselineMode;
   }
