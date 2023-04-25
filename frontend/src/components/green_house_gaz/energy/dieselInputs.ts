@@ -232,7 +232,7 @@ export function dieselInputsProducedPer(
       conditional_value: false,
       conditional: "disableDieselLiters",
       computeResults: true,
-      text: `Liters of diesel used ${litersSuffix}`,
+      text: `Liters of diesel ${litersSuffix}`,
       suffix: "l",
       style: {
         cols: "12",

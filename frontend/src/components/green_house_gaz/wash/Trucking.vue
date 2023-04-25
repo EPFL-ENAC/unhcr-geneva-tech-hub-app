@@ -68,8 +68,7 @@ export default class Trucking extends Vue {
   ): WashTruckingItemResults {
     const { US_UNI, US_TYP, WACL, TR_TYP, TOT_WS, TR_VOL, LIT_WS } =
       localItemInput || {};
-    const { REF_WSH_D, REF_WSH_G, REF_DIES_L, REF_GAZ_L, REF_WW_FS } =
-      ghgMapRef;
+    const { REF_WSH_D, REF_WSH_G, REF_DIES_L, REF_GAZ_L } = ghgMapRef;
     try {
       /*
         When wastewater or faecal sludge is checked in the dropdown,
@@ -77,9 +76,10 @@ export default class Trucking extends Vue {
       */
       const itemComputed = {} as WashTruckingItemResults;
 
-      const volumeCollected = ["WASTEWATER", "FAECAL SLUDGE"].includes(US_TYP)
-        ? WACL * (REF_WW_FS?.value ?? 0.85)
-        : WACL;
+      // const volumeCollected = ["WASTEWATER", "FAECAL SLUDGE"].includes(US_TYP)
+      //   ? WACL * (REF_WW_FS?.value ?? 0.85)
+      //   : WACL;
+      const volumeCollected = WACL;
       if (US_UNI === KM) {
         const washFactorKM =
           TR_TYP === DIESEL ? REF_WSH_D?.value : REF_WSH_G?.value;
@@ -145,7 +145,7 @@ export default class Trucking extends Vue {
       },
     },
     {
-      text: "Distance between camp and water source",
+      text: "Distance between water source or treatment",
       value: "input.TOT_WS",
       conditional_value: KM,
       conditional: "US_UNI",

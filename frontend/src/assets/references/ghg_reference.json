@@ -64,15 +64,6 @@
     "index": 6
   },
   {
-    "_id": "REF_WW_FS",
-    "type": "number",
-    "category": "WASH",
-    "description": "WASH - Trucking - Water to Wastewater Conversion Factor",
-    "value": 0.85,
-    "source": null,
-    "index": 7
-  },
-  {
     "_id": "REF_FNRB",
     "type": "number",
     "category": "ENERGY",

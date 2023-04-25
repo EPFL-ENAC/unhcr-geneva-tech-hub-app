@@ -6,7 +6,6 @@ REF_GRD,number,ENERGY,Energy - Electricity - Emissions Factor - National Grid [-
 REF_EFF_DIES_L,number,ENERGY,Energy - Electricity - Efficiency - Diesel Generators (l/kWh),0.267,https://plan.sa.gov.au/__data/assets/pdf_file/0007/574531/Appendix-O-Greenhouse-Gas-Calculations.pdf
 REF_WSH_D,number,WASH,WASH - Trucking - Emissions Factor - Diesel (up to 3.5 tonnes) [kgCO2e/km],0.25213,https://unfccc.int/sites/default/files/resource/GHG_emissions_calculator_ver01.1_web.xlsx
 REF_WSH_G,number,WASH,WASH - Trucking - Emissions Factor - Gasoline (up to 3.5 tonnes) [kgCO2e/km],0.22,https://unfccc.int/sites/default/files/resource/GHG_emissions_calculator_ver01.1_web.xlsx
-REF_WW_FS,number,WASH,WASH - Trucking - Water to Wastewater Conversion Factor,0.85,
 REF_FNRB,number,ENERGY,Energy - Cookstove - Fraction of Non renewable biomass (fNRB),0.85,https://cdm.unfccc.int/DNA/fNRB/index.html
 REF_EFF_FWD,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Wood,1.894776,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
 REF_EFF_CHC_C,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Charcoal combustion,3.4770175,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
