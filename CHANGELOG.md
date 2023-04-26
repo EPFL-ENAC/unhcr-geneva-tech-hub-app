@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.10.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.10.0...v0.10.1) (2023-04-26)
+
+
+### Bug Fixes
+
+* **ghg:** correct typo and remove 0.85 factor ([04536a6](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/04536a6601198635e070482aeede3a2dab43d1f1))
+* **ghg:** do not use ratio for oneline endline ([390d3b7](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/390d3b708fb484995d8f8e028f5b01f84185719c))
+
 ## [0.10.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.9.0...v0.10.0) (2023-04-25)
 
 
