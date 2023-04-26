@@ -134,9 +134,13 @@ export default class ComputeGenericFormSurveyMixin extends Vue {
     );
     interventions.forEach((intervention: SurveyItem) => {
       const baselineItem = itemsByIncrement[intervention.originIncrement ?? -1];
-      const interventionsDiffDimensionTotal = interventions
-        .filter((x) => x.originIncrement === intervention.originIncrement)
-        .reduce((acc, el) => {
+      const interventionsWithSameOrigins = interventions.filter(
+        (x) => x.originIncrement === intervention.originIncrement
+      );
+      const interventionsWithSameOriginsSelectedLength =
+        interventionsWithSameOrigins.filter((x) => x.enabled).length;
+      const interventionsDiffDimensionTotal =
+        interventionsWithSameOrigins.reduce((acc, el) => {
           const interventionDiffValue =
             (el.input?.[diffDimension] as number) ??
             (el.computed?.[diffDimension] as number);
@@ -148,8 +152,13 @@ export default class ComputeGenericFormSurveyMixin extends Vue {
       const interventionDiffDimension =
         (intervention.input?.[diffDimension] as number) ??
         (intervention.computed?.[diffDimension] as number);
-      const ratioEndline: number =
-        interventionDiffDimension / interventionsDiffDimensionTotal;
+      // https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/351
+      // we don't use the ratio when selected endline is 0 or 1
+      let ratioEndline = 1;
+      if (interventionsWithSameOriginsSelectedLength > 1) {
+        ratioEndline =
+          interventionDiffDimension / interventionsDiffDimensionTotal;
+      }
       // if baseline == 0 and endline === 0 then 0%
       // if baseline == 0 and endline = x then 100%
       // if baseline == NOT POWERED and endline = x then 100%
