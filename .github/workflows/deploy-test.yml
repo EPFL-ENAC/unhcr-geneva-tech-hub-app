@@ -12,34 +12,41 @@ jobs:
     steps:
       - name: REST API with curl
         run: |
-          curl -H "Content-Type: application/json" -d '{"key":"$API_CD_TOKEN","name":"$APP_NAME"}' 'https://enac-test-cd-runner.epfl.ch/app-deploy/' -o job.json
+          curl -H "Content-Type: application/json" -d "{\"key\":\"$API_CD_TOKEN\",\"name\":\"$APP_NAME\"}" 'https://enac-test-cd-runner.epfl.ch/app-deploy/' -o job.json
         env:
           API_CD_TOKEN: ${{ secrets.API_CD_TOKEN }}
           APP_NAME: demo-app
       - name: read job id
         id: job
         run: |
-          echo "job_id=$(cat job.json | jq -rc '.job_id ')" >> "$GITHUB_ENV"
+          echo "job_id=$(cat job.json | jq -rc '.job_id ')" >> "$GITHUB_OUTPUT"
 
       - name: print job id
-        run: echo ${{ env.job_id }} && cat job.json
+        run: echo ${{ steps.job.outputs.job_id }} && cat job.json
 
       - name: GET job's status
         run: |
-              curl --location --request GET "https://enac-test-cd-runner.epfl.ch/job-status/?name=demo-app&key=$API_CD_TOKEN&job_id=$job_id" -o job_status.json
+          curl -H "Content-Type: application/json" -d "{\"key\":\"$API_CD_TOKEN\",\"name\":\"$APP_NAME\",\"job_id\":\"$JOB_ID\"}" 'https://enac-test-cd-runner.epfl.ch/job-status/' -o job_status.json
         env:
           API_CD_TOKEN: ${{ secrets.API_CD_TOKEN }}
+          APP_NAME: demo-app
+          JOB_ID: ${{ steps.job.outputs.job_id }}
 
       - name: Set job STATUS
         id: jobapi
         run: echo "status=$(cat job_status.json | jq -rc '.status ')" >> $GITHUB_ENV
 
       - name: Print jobapi status
+        id: print_job_status
         run: echo ${{env.status}} && cat job_status.json
 
       - name: Poll until it's okay
-        uses: EPFL-ENAC/poll_cd_status@0.2.0
+        if: steps.print_job_status.outcome == 'success'
+        uses: EPFL-ENAC/poll_cd_status@0.6.0
         with:
-          url: "https://enac-test-cd-runner.epfl.ch/job-status/?name=demo-app&key=$API_CD_TOKEN&job_id=$job_id"
-          timeout: 20
-          interval: 5
+          url: "https://enac-test-cd-runner.epfl.ch/job-status/"
+          timeout: 60
+          interval: 10
+          API_CD_TOKEN: ${{ secrets.API_CD_TOKEN }}
+          APP_NAME: demo-app
+          JOB_ID: ${{ steps.job.outputs.job_id }}
