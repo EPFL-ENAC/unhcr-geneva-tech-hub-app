@@ -1,6 +1,6 @@
+---
 # https://github.com/EPFL-ENAC/github-actions-runner#readme
 name: deploy-test
-
 on:
   push:
     branches:
@@ -9,24 +9,31 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-      steps:
+    steps:
       - name: REST API with curl
         run: |
-          curl -X GET "https://enac-test-cd-runner.epfl.ch/app-deploy/?name=demo-app&key=${{ secrets.API_CD_TOKEN }}"  -o job.json
+          curl -X GET "https://enac-test-cd-runner.epfl.ch/app-deploy/?name=demo-app&key=$API_CD_TOKEN"  -o job.json
+        env:
+          API_CD_TOKEN: ${{ secrets.API_CD_TOKEN }}
       - name: read job id
         id: job
-        run: echo "::set-output name=id::$(cat job.json | jq -c '.job_id ')"
+        # run: echo "::set-output name=id::$(cat job.json | jq -c '.job_id ')"
+        run: |
+          echo "job_id=$(cat job.json | jq -rc '.job_id ')" >> "$GITHUB_ENV"
 
       - name: print job id
-        run: echo ${{ steps.job.outputs.id }}
+        run: echo ${{ env.job_id }} && cat job.json
 
-      - name: GET api's in workspace
-        run: | 
-              curl --location --request GET ""https://enac-test-cd-runner.epfl.ch/job-status/?name=demo-app&key=${{ secrets.API_CD_TOKEN }}&job_id=${{ steps.workspace.outputs.id }}" -o apis.json
+      - name: GET job's status
+        run: |
+              curl --location --request GET "https://enac-test-cd-runner.epfl.ch/job-status/?name=demo-app&key=$API_CD_TOKEN&job_id=$job_id" -o job_status.json
+        env:
+          API_CD_TOKEN: ${{ secrets.API_CD_TOKEN }}
 
-      - name: Read api id in workspace
-        id: jobapi 
-        run: echo "::set-output name=status::$(cat apis.json | jq -c '.status')"
+      - name: Set job STATUS
+        id: jobapi
+        # run: echo "::set-output name=status::$(cat apis.json | jq -c '.status')"
+        run: echo "status=$(cat job_status.json | jq -rc '.status ')" >> $GITHUB_ENV
 
       - name: Print jobapi status
-        run: echo ${{ steps.jobapi.outputs.status }}
+        run: echo ${{env.status}} && cat job_status.json
