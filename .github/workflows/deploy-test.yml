@@ -39,7 +39,7 @@ jobs:
         run: echo ${{env.status}} && cat job_status.json
 
       - name: Poll until it's okay
-        uses: EPFL-ENAC/poll_cd_status@v0.2.0
+        uses: EPFL-ENAC/poll_cd_status@0.2.0
         with:
           url: "https://enac-test-cd-runner.epfl.ch/job-status/?name=demo-app&key=$API_CD_TOKEN&job_id=$job_id"
           timeout: 20
