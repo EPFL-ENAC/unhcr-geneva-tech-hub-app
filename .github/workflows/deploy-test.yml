@@ -4,13 +4,29 @@ name: deploy-test
 on:
   push:
     branches:
-      - develop
+      - dev
 
 jobs:
   deploy:
-    runs-on: [self-hosted, deploy, test]
-    steps:
-      - uses: EPFL-ENAC/epfl-enac-deploy-action@main
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+    runs-on: ubuntu-latest
+      steps:
+      - name: REST API with curl
+        run: |
+          curl -X GET "https://enac-test-cd-runner.epfl.ch/app-deploy/?name=demo-app&key=${{ secrets.API_CD_TOKEN }}"  -o job.json
+      - name: read job id
+        id: job
+        run: echo "::set-output name=id::$(cat job.json | jq -c '.job_id ')"
 
+      - name: print job id
+        run: echo ${{ steps.job.outputs.id }}
+
+      - name: GET api's in workspace
+        run: | 
+              curl --location --request GET ""https://enac-test-cd-runner.epfl.ch/job-status/?name=demo-app&key=${{ secrets.API_CD_TOKEN }}&job_id=${{ steps.workspace.outputs.id }}" -o apis.json
+
+      - name: Read api id in workspace
+        id: jobapi 
+        run: echo "::set-output name=status::$(cat apis.json | jq -c '.status')"
+
+      - name: Print jobapi status
+        run: echo ${{ steps.jobapi.outputs.status }}
