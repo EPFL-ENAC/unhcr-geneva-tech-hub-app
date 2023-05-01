@@ -12,12 +12,12 @@ jobs:
     steps:
       - name: REST API with curl
         run: |
-          curl -X GET "https://enac-test-cd-runner.epfl.ch/app-deploy/?name=demo-app&key=$API_CD_TOKEN"  -o job.json
+          curl -H "Content-Type: application/json" -d '{"key":"$API_CD_TOKEN","name":"$APP_NAME"}' 'https://enac-test-cd-runner.epfl.ch/app-deploy/' -o job.json
         env:
           API_CD_TOKEN: ${{ secrets.API_CD_TOKEN }}
+          APP_NAME: demo-app
       - name: read job id
         id: job
-        # run: echo "::set-output name=id::$(cat job.json | jq -c '.job_id ')"
         run: |
           echo "job_id=$(cat job.json | jq -rc '.job_id ')" >> "$GITHUB_ENV"
 
@@ -32,7 +32,6 @@ jobs:
 
       - name: Set job STATUS
         id: jobapi
-        # run: echo "::set-output name=status::$(cat apis.json | jq -c '.status')"
         run: echo "status=$(cat job_status.json | jq -rc '.status ')" >> $GITHUB_ENV
 
       - name: Print jobapi status
