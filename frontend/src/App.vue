@@ -443,7 +443,7 @@ export default class App extends Vue {
         title: "Instruction manual",
         icon: "mdiFileDocumentOutline",
         type: "pdf",
-        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-30/Guidance Manual GHG tool.pdf",
+        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-05-02T083700Z/ghg_user_manual.pdf",
       },
     ];
   }
