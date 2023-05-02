@@ -1,18 +1,17 @@
 ---
 # https://github.com/EPFL-ENAC/github-actions-runner#readme
 name: deploy-test
-on:
+"on":
   push:
     branches:
       - dev
 
 jobs:
   deploy:
-    # runs-on: ubuntu-latest
-    runs-on: [self-hosted, deploy, prod]
+    runs-on: ubuntu-latest
     steps:
       - uses: EPFL-ENAC/epfl-enac-deploy-action@dev
         with:
           ENAC_IT4R_CD_environment: "dev"
-          ENAC_IT4R_CD_deployment_secret: ${{ secrets.ENAC_IT4R_CD_deployment_secret }}
-          ENAC_IT4R_CD_deployment_id: ${{ secrets.ENAC_IT4R_CD_deployment_id }}
+          ENAC_IT4R_CD_deployment_secret: ${{ secrets.DEPLOYMENT_SECRET }}
+          ENAC_IT4R_CD_deployment_id: ${{ secrets.DEPLOYMENT_ID }}
