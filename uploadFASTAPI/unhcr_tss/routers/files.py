@@ -21,7 +21,8 @@ class FilePath(BaseModel):
 router = APIRouter()
 
 # Object of S3_SERVICE Class
-s3_client = S3_SERVICE(settings.S3_ACCESS_KEY_ID,
+s3_client = S3_SERVICE(settings.S3_ENDPOINT_PROTOCOL + S3_ENDPOINT_HOSTNAME,
+                       settings.S3_ACCESS_KEY_ID,
                        settings.S3_SECRET_ACCESS_KEY, settings.S3_REGION)
 
 
