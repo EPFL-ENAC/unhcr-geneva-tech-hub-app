@@ -11,6 +11,8 @@ settings = Dynaconf(
     validators=[
         Validator("CORS_ENABLED", default=False),
         Validator("root_path", default=""),
+        Validator("S3_ENDPOINT_HOSTNAME", must_exist=True),
+        Validator("S3_ENDPOINT_PROTOCOL", must_exist=True),
         Validator("S3_ACCESS_KEY_ID", must_exist=True),
         Validator("S3_SECRET_ACCESS_KEY", must_exist=True),
         Validator("S3_REGION", must_exist=True, default="EU"),

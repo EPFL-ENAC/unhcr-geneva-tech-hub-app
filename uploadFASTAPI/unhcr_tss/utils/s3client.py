@@ -14,8 +14,9 @@ import urllib.parse
 
 class S3_SERVICE(object):
 
-    def __init__(self, s3_access_key_id, s3_secret_access_key, region, *args,
+    def __init__(self, s3_endpoint_url, s3_access_key_id, s3_secret_access_key, region, *args,
                  **kwargs):
+        self.s3_endpoint_url = s3_endpoint_url
         self.s3_access_key_id = s3_access_key_id
         self.s3_secret_access_key = s3_secret_access_key
         self.prefix = "/s3/"
@@ -108,7 +109,7 @@ class S3_SERVICE(object):
         async with session.create_client(
                 's3',
                 region_name=self.region,
-                endpoint_url="https://s3.epfl.ch",
+                endpoint_url=self.s3_endpoint_url,
                 aws_secret_access_key=self.s3_secret_access_key,
                 aws_access_key_id=self.s3_access_key_id) as client:
             key = filePath.removeprefix(self.prefix)
@@ -117,7 +118,7 @@ class S3_SERVICE(object):
             if file_delete_response["ResponseMetadata"][
                     "HTTPStatusCode"] == 204:
                 logger.info(
-                    f"File deleted path : https://s3.epfl.ch/{settings.S3_Bucket}/{filePath}")
+                    f"File deleted path : {self.s3_endpoint_url}/{settings.S3_Bucket}/{filePath}")
                 return filePath
         return False
 
@@ -127,7 +128,7 @@ class S3_SERVICE(object):
         async with session.create_client(
                 's3',
                 region_name=self.region,
-                endpoint_url="https://s3.epfl.ch",
+                endpoint_url=self.s3_endpoint_url,
                 aws_secret_access_key=self.s3_secret_access_key,
                 aws_access_key_id=self.s3_access_key_id) as client:
             file_upload_response = await client.put_object(
@@ -140,6 +141,6 @@ class S3_SERVICE(object):
             if file_upload_response["ResponseMetadata"][
                     "HTTPStatusCode"] == 200:
                 logger.info(
-                    f"File uploaded path : https://s3.epfl.ch/{bucket}/{key}")
+                    f"File uploaded path : {self.s3_endpoint_url}/{bucket}/{key}")
                 return True
         return False
