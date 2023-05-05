@@ -104,5 +104,15 @@
     "iterations": 10,
     "derived_key": "012eae1bec47682d7cffe3781f0a3bbe2b5acaf1",
     "salt": "7cde8da866014f0860cfed0d17113fac"
+  },
+  {
+    "_id": "org.couchdb.user:lakwong@berkeley.edu",
+    "name": "lakwong@berkeley.edu",
+    "roles": [],
+    "type": "user",
+    "password_scheme": "pbkdf2",
+    "iterations": 10,
+    "derived_key": "d73f9b1999aa3cab91e5384f0f14407f9f8a15e5",
+    "salt": "0ea3a566c06b8e697dbfd0656a0d39fa"
   }
 ]
