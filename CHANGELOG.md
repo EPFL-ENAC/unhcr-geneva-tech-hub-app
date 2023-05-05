@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.11.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.10.1...v0.11.0) (2023-05-05)
+
+
+### Features
+
+* **actions:** change cd poll version ([a86d3c7](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/a86d3c7901519990a6288d4df00c3a7ad204b2f7))
+* **cd:** add poll until it's okay ([c04aa0d](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c04aa0df946f6b88830c495eb8811c9997b59f9b))
+* **cd:** use ubuntu instead of own runner ([5cbb83a](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/5cbb83a0a2ca5270e2ddf12a0875b07272b5ab37))
+* finalize s3 endpoint url configuration ([80eea01](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/80eea01711198bcbe4e961442038c9fc14c45bed))
+
+
+### Bug Fixes
+
+* **cd:** use proper env secret ([68202cf](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/68202cf29dfd87c2f743b45e90a9a704ecc244ee))
+* **hot-fix:** update manual ([aa9440f](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/aa9440feaf4fab107aae2adb10bb260965f4c74a))
+
 ## [0.10.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.10.0...v0.10.1) (2023-04-26)
 
 
