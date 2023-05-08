@@ -36,7 +36,7 @@
     "Location id": 4778,
     "latitude": 22.3729,
     "longitude": 91.37659,
-    "solar_peak_hours": 0.0,
+    "solar_peak_hours": 4.95,
     "index": 3
   },
   {
@@ -646,7 +646,7 @@
     "Location id": 825,
     "latitude": 0,
     "longitude": 0,
-    "solar_peak_hours": 0.0,
+    "solar_peak_hours": 5.42,
     "index": 64
   },
   {
@@ -686,7 +686,7 @@
     "Location id": 3620,
     "latitude": 0,
     "longitude": 0,
-    "solar_peak_hours": 0.0,
+    "solar_peak_hours": 6,
     "index": 68
   },
   {
@@ -726,7 +726,7 @@
     "Location id": 1107,
     "latitude": 0,
     "longitude": 0,
-    "solar_peak_hours": 0.0,
+    "solar_peak_hours": 5.83,
     "index": 72
   },
   {
@@ -856,7 +856,7 @@
     "Location id": 3624,
     "latitude": 0,
     "longitude": 0,
-    "solar_peak_hours": 0.0,
+    "solar_peak_hours": 5.83,
     "index": 85
   },
   {
@@ -946,7 +946,7 @@
     "Location id": 3587,
     "latitude": 0,
     "longitude": 0,
-    "solar_peak_hours": 0.0,
+    "solar_peak_hours": 5.83,
     "index": 94
   },
   {
@@ -1386,7 +1386,7 @@
     "Location id": 1721,
     "latitude": 5.922208,
     "longitude": -8.2212979,
-    "solar_peak_hours": 5.0,
+    "solar_peak_hours": 5,
     "index": 138
   },
   {
@@ -1426,7 +1426,7 @@
     "Location id": 1877,
     "latitude": 0,
     "longitude": 0,
-    "solar_peak_hours": 0.0,
+    "solar_peak_hours": 0,
     "index": 142
   },
   {
@@ -1736,7 +1736,7 @@
     "Location id": 3976,
     "latitude": 12.366076,
     "longitude": 32.801976,
-    "solar_peak_hours": 6.0,
+    "solar_peak_hours": 6,
     "index": 173
   },
   {
@@ -1766,7 +1766,7 @@
     "Location id": 3973,
     "latitude": 12.369378,
     "longitude": 32.802193,
-    "solar_peak_hours": 6.0,
+    "solar_peak_hours": 6,
     "index": 176
   },
   {
@@ -1846,7 +1846,7 @@
     "Location id": 2712,
     "latitude": 124.717443,
     "longitude": 31.581,
-    "solar_peak_hours": 0.0,
+    "solar_peak_hours": 5.59,
     "index": 184
   },
   {
