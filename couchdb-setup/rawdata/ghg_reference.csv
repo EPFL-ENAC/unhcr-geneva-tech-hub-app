@@ -16,7 +16,7 @@ REF_EFF_PLTS,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Pellets,1.2
 REF_EFF_CNDL,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) candle (paraffin),2.9643078,https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/3_Volume3/V3_5_Ch5_Non_Energy_Products.pdf
 REF_EFF_ETH,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L) ETHANOL,1.23910872,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
 REF_EFF_LPG,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) LPG,2.99250545,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_EFF_BGS,number,Energy,Energy - Cookstove - Efficiency (kgCO2e/m3 for biogas) BIOGAS,2.48420844,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
+REF_EFF_BGS,number,Energy,Energy - Cookstove - Efficiency (kgCO2e/m3 for biogas) BIOGAS,0.0076,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
 REF_EFF_PET,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L) Gasoline/Petrol [-],2.34,https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022
 REF_EFF_PNG,number,Energy,Energy - Cookstove - Efficiency (kgCO2e/m3 for Piped Natural Gas),2.13362568,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
 REF_EFF_KRS,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L) KEROSENE,2.559489354,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html

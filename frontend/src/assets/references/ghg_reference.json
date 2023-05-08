@@ -158,7 +158,7 @@
     "type": "number",
     "category": "Energy",
     "description": "Energy - Cookstove - Efficiency (kgCO2e/m3 for biogas) BIOGAS",
-    "value": 2.48420844,
+    "value": 0.0076,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
     "index": 18
   },
