@@ -15,6 +15,7 @@ import {
   LiquidFuel,
   liquidFuels,
   noAccessFuels,
+  ThermalFuel,
   thermalFuels,
 } from "@/components/green_house_gaz/fuelTypes";
 import { GHGfNRB } from "@/store/GHGReferencefNRB";
@@ -688,6 +689,9 @@ export function generateComputeItem(
           applianceEff,
           project_REF_GRD
         );
+        break;
+      case thermalFuels.includes(fuelType as ThermalFuel):
+        totalCO2Emission = 0;
         break;
       default:
         if (localItemInput.cookstove !== cookstoveIdWithoutAccess) {
