@@ -86,8 +86,11 @@ export const surveyTableHeaderCO2 = [
         signDisplay: "exceptZero",
       });
     },
-    classFormatter: (v: number, _: SurveyTableHeader,
-      item: SurveyItem): string => {
+    classFormatter: (
+      v: number,
+      _: SurveyTableHeader,
+      item: SurveyItem
+    ): string => {
       const classes: string[] = [];
       v > 0 ? classes.push("item-positive") : void 0;
       v < 0 ? classes.push("item-negative") : void 0;
@@ -162,13 +165,32 @@ export interface EasySurveyTableHeader {
   label?: string;
   tooltipInfo?: string;
   category?: string; // example increment
-  classFormatter?: (v: unknown) => string;
+  classFormatter?: (
+    v: unknown,
+    tableHeader?: SurveyTableHeader,
+    item?: SurveyItem
+  ) => string;
   customEventInput?: (
     v: SurveyInputValue,
     localInput: SurveyInput,
     ghgMapRef?: ItemReferencesMap
   ) => SurveyInput;
-  formatter?: (v: unknown) => string;
+  formatter?: (
+    v: unknown,
+    tableHeader?: SurveyTableHeader,
+    item?: SurveyItem,
+    items?: SurveyItem[]
+  ) => string;
+  formatterTable?: (
+    v: unknown,
+    tableHeader?: SurveyTableHeader,
+    item?: SurveyItem
+  ) => string;
+  formatterTableComponent?: (
+    v: unknown,
+    tableHeader?: SurveyTableHeader,
+    item?: SurveyItem
+  ) => string;
   conditional_type?: "AND" | "OR";
   conditional_value: SurveyInputValue; // e.g "LITRES",
   conditional: string | string[]; // based on other SurveyTableHeader field "US_UNI", needs to have conditional_value set

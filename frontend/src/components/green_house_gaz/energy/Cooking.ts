@@ -20,7 +20,6 @@ import {
 } from "@/components/green_house_gaz/fuelTypes";
 import { GHGfNRB } from "@/store/GHGReferencefNRB";
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
-import { mdiBasketOutline, mdiPotOutline, mdiTree } from "@mdi/js";
 
 import {
   computeCO2CostEnergy,
@@ -185,20 +184,8 @@ export function headers(
             text: "Unknown",
           } as CookstoveTech);
         const name = cookStove?.text ?? "Unknown";
-        let defaultAppliance;
-        switch (localItem.input.appliance) {
-          case COOK_APP_Pressure:
-            defaultAppliance = mdiPotOutline;
-            break;
-          case COOK_APP_Heat_Retaining:
-            defaultAppliance = mdiBasketOutline;
-            break;
-          default:
-            defaultAppliance = "";
-            break;
-        }
+
         return `
-            <div class="d-flex justify-left align-center">
               ${
                 cookStove?.image
                   ? `<img width="64px" height="64px" src='${
@@ -207,24 +194,28 @@ export function headers(
                   : `<span class="ml-16"></span>`
               }
               <span class="ml-4">${name}</span>
-              ${
-                localItem?.input?.appliance
-                  ? `<svg
-              version="1.1"
-              viewBox="0 0 26 26"
-              width="24"
-                height="24"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:svg="http://www.w3.org/2000/svg"
-            >
-                  <path style="fill: black;"
-                  d="${defaultAppliance}"
-                />
-            </svg>`
-                  : ""
-              }
-            </div>
             `;
+      },
+      formatterTableComponent: (_id: string, _: unknown, localItem: EnergyCookingItem) => {
+        let defaultAppliance;
+        switch (localItem.input.appliance) {
+          case COOK_APP_Pressure:
+            defaultAppliance = "$mdiPotOutline";
+            break;
+          case COOK_APP_Heat_Retaining:
+            defaultAppliance = "$mdiBasketOutline";
+            break;
+          default:
+            defaultAppliance = "";
+            break;
+        }
+        return [
+          {
+            icon: defaultAppliance,
+            description: localItem.input.appliance,
+            fill: "black",
+          },
+        ];
       },
       customEventInput: (
         cookstoveId: string,
@@ -259,32 +250,14 @@ export function headers(
       formatter: (v: AllFuel) => {
         return AllFuelsWithTextById?.[v]?.text;
       },
-      formatterTable: (
-        v: AllFuel,
-        _: unknown,
-        localItem: EnergyCookingItem
-      ) => {
-        return `
-        <div class="d-flex justify-left align-center">
-          <span class="ml-4"> ${AllFuelsWithTextById?.[v]?.text}</span>
-          ${
-            localItem?.input?.sustainablySourced
-              ? `<svg
-          version="1.1"
-          viewBox="0 0 26 26"
-          width="24"
-            height="24"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:svg="http://www.w3.org/2000/svg"
-        >
-              <path style="fill: green;"
-              d="${mdiTree}"
-            />
-        </svg>`
-              : ""
-          }
-        </div>
-        `;
+      formatterTableComponent: () => {
+        return [
+          {
+            icon: "$mdiTreeOutline",
+            description: "Sustainably sourced biomass",
+            fill: "green",
+          },
+        ];
       },
       customEventInput: (
         fuelType: AllFuel,
