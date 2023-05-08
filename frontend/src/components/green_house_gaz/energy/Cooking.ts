@@ -15,11 +15,11 @@ import {
   LiquidFuel,
   liquidFuels,
   noAccessFuels,
+  ThermalFuel,
   thermalFuels,
 } from "@/components/green_house_gaz/fuelTypes";
 import { GHGfNRB } from "@/store/GHGReferencefNRB";
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
-import { mdiBasketOutline, mdiPotOutline, mdiTree } from "@mdi/js";
 
 import {
   computeCO2CostEnergy,
@@ -39,6 +39,7 @@ import {
 
 import {
   cookstoveIdsTECHsWithAccess,
+  cookstoveIdsTECHsWithBioMass,
   cookstoveIdWithoutAccess,
   CookstoveTech,
   cookstoveTECHs,
@@ -183,20 +184,8 @@ export function headers(
             text: "Unknown",
           } as CookstoveTech);
         const name = cookStove?.text ?? "Unknown";
-        let defaultAppliance;
-        switch (localItem.input.appliance) {
-          case COOK_APP_Pressure:
-            defaultAppliance = mdiPotOutline;
-            break;
-          case COOK_APP_Heat_Retaining:
-            defaultAppliance = mdiBasketOutline;
-            break;
-          default:
-            defaultAppliance = "";
-            break;
-        }
+
         return `
-            <div class="d-flex justify-left align-center">
               ${
                 cookStove?.image
                   ? `<img width="64px" height="64px" src='${
@@ -205,24 +194,28 @@ export function headers(
                   : `<span class="ml-16"></span>`
               }
               <span class="ml-4">${name}</span>
-              ${
-                localItem?.input?.appliance
-                  ? `<svg
-              version="1.1"
-              viewBox="0 0 26 26"
-              width="24"
-                height="24"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:svg="http://www.w3.org/2000/svg"
-            >
-                  <path style="fill: black;"
-                  d="${defaultAppliance}"
-                />
-            </svg>`
-                  : ""
-              }
-            </div>
             `;
+      },
+      formatterTableComponent: (_id: string, _: unknown, localItem: EnergyCookingItem) => {
+        let defaultAppliance;
+        switch (localItem.input.appliance) {
+          case COOK_APP_Pressure:
+            defaultAppliance = "$mdiPotOutline";
+            break;
+          case COOK_APP_Heat_Retaining:
+            defaultAppliance = "$mdiBasketOutline";
+            break;
+          default:
+            defaultAppliance = "";
+            break;
+        }
+        return [
+          {
+            icon: defaultAppliance,
+            description: localItem.input.appliance,
+            fill: "black",
+          },
+        ];
       },
       customEventInput: (
         cookstoveId: string,
@@ -257,32 +250,14 @@ export function headers(
       formatter: (v: AllFuel) => {
         return AllFuelsWithTextById?.[v]?.text;
       },
-      formatterTable: (
-        v: AllFuel,
-        _: unknown,
-        localItem: EnergyCookingItem
-      ) => {
-        return `
-        <div class="d-flex justify-left align-center">
-          <span class="ml-4"> ${AllFuelsWithTextById?.[v]?.text}</span>
-          ${
-            localItem?.input?.sustainablySourced
-              ? `<svg
-          version="1.1"
-          viewBox="0 0 26 26"
-          width="24"
-            height="24"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:svg="http://www.w3.org/2000/svg"
-        >
-              <path style="fill: green;"
-              d="${mdiTree}"
-            />
-        </svg>`
-              : ""
-          }
-        </div>
-        `;
+      formatterTableComponent: () => {
+        return [
+          {
+            icon: "$mdiTreeOutline",
+            description: "Sustainably sourced biomass",
+            fill: "green",
+          },
+        ];
       },
       customEventInput: (
         fuelType: AllFuel,
@@ -444,8 +419,9 @@ export function headers(
       type: "boolean",
     },
     {
-      conditional_value: "BRQ",
-      conditional: "fuelType",
+      conditional_value: [["BRQ"], cookstoveIdsTECHsWithBioMass],
+      conditional: ["fuelType", "cookstove"],
+      conditional_type: "AND",
       text: "carbonized or non-carbonized", // toggle button ?
       value: "input.carbonized",
       options: {
@@ -688,6 +664,9 @@ export function generateComputeItem(
           applianceEff,
           project_REF_GRD
         );
+        break;
+      case thermalFuels.includes(fuelType as ThermalFuel):
+        totalCO2Emission = 0;
         break;
       default:
         if (localItemInput.cookstove !== cookstoveIdWithoutAccess) {

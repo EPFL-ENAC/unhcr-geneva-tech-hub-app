@@ -50,18 +50,40 @@
       <div
         :key="$tableHeaderIndex"
         :class="
-          tableHeader.classFormatter(
-            get(item, tableHeader.value),
+          tableHeader?.classFormatter(
+            _get(item, tableHeader.value),
             tableHeader,
             item
           )
         "
       >
+        <span v-if="tableHeader?.formatterTableComponent">
+          <component
+            :is="TextWithIconsAndPopOverDescription"
+            v-if="tableHeader.formatterTableComponent"
+            :text="
+              tableHeader?.formatter(
+                _get(item, tableHeader.value),
+                tableHeader,
+                item,
+                items
+              )
+            "
+            :configs="
+              tableHeader?.formatterTableComponent(
+                _get(item, tableHeader.value),
+                tableHeader,
+                item,
+                items
+              )
+            "
+          />
+        </span>
         <span
-          v-if="tableHeader.formatterTable"
+          v-else-if="tableHeader?.formatterTable"
           v-html="
             tableHeader.formatterTable(
-              get(item, tableHeader.value),
+              _get(item, tableHeader.value),
               tableHeader,
               item,
               items
@@ -73,7 +95,7 @@
           v-else
           v-html="
             tableHeader.formatter(
-              get(item, tableHeader.value),
+              _get(item, tableHeader.value),
               tableHeader,
               item,
               items
@@ -159,7 +181,7 @@
           <span
             v-else-if="results[tableHeader.key]"
             :class="
-              tableHeader.classFormatter(results[tableHeader.key], tableHeader)
+              tableHeader?.classFormatter(results[tableHeader.key], tableHeader)
             "
           >
             <span v-if="tableHeader.formatterTable">
@@ -195,6 +217,7 @@ import DeleteSurveyItemDialog from "@/components/green_house_gaz/generic/DeleteS
 import DuplicateSurveyItemDialog from "@/components/green_house_gaz/generic/DuplicateSurveyItemDialog.vue";
 import SurveyItemDialog from "@/components/green_house_gaz/generic/SurveyItemDialog.vue";
 import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
+import TextWithIconsAndPopOverDescription from "@/components/green_house_gaz/generic/TextWithIconsAndPopOverDescription.vue";
 import {
   SurveyInput,
   SurveyItem,
@@ -209,9 +232,10 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
     DeleteSurveyItemDialog,
     SurveyItemDialog,
     DuplicateSurveyItemDialog,
+    TextWithIconsAndPopOverDescription,
   },
   methods: {
-    get,
+    _get: get,
   },
 })
 export default class BaselineTable extends Vue {
@@ -245,6 +269,7 @@ export default class BaselineTable extends Vue {
   localItems: SurveyItem[] = [];
   localItem: SurveyItem = {} as SurveyItem;
   dialogs = {} as Record<string, boolean>;
+  TextWithIconsAndPopOverDescription = TextWithIconsAndPopOverDescription;
 
   @Watch("items", { immediate: true, deep: true })
   onItemChange(value: SurveyItem[]): void {

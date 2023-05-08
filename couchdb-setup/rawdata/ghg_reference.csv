@@ -1,28 +1,28 @@
-_id,type,category,description,value,source
-REF_DIES_L,number,ENERGY,Emissions Factor - Diesel (100% mineral diesel) [kg CO2e/l],2.72440045,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_GAZ_L,number,ENERGY,Emissions Factor - Gasoline (100% mineral gasoline) [kg CO2e/l],2.34,https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022
-REF_RNW,number,ENERGY,Energy - Electricity - Solar Emissions Factor [-],0,
-REF_GRD,number,ENERGY,Energy - Electricity - Emissions Factor - National Grid [-],0.6448,The default grid emission factor is an average of all IGES 2022 emission factors for countries hosting refugees. https://www.iges.or.jp/en/pub/list-grid-emission-factor/en
-REF_EFF_DIES_L,number,ENERGY,Energy - Electricity - Efficiency - Diesel Generators (l/kWh),0.267,https://plan.sa.gov.au/__data/assets/pdf_file/0007/574531/Appendix-O-Greenhouse-Gas-Calculations.pdf
-REF_WSH_D,number,WASH,WASH - Trucking - Emissions Factor - Diesel (up to 3.5 tonnes) [kgCO2e/km],0.25213,https://unfccc.int/sites/default/files/resource/GHG_emissions_calculator_ver01.1_web.xlsx
-REF_WSH_G,number,WASH,WASH - Trucking - Emissions Factor - Gasoline (up to 3.5 tonnes) [kgCO2e/km],0.22,https://unfccc.int/sites/default/files/resource/GHG_emissions_calculator_ver01.1_web.xlsx
-REF_FNRB,number,ENERGY,Energy - Cookstove - Fraction of Non renewable biomass (fNRB),0.85,https://cdm.unfccc.int/DNA/fNRB/index.html
-REF_EFF_FWD,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Wood,1.894776,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_EFF_CHC_C,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Charcoal combustion,3.4770175,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_EFF_CHC_P,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Charcoal production,2.7196,https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf
-REF_EFF_BRQ,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Briquette non-carbonized,1.269736,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_EFF_BRQ_C,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Briquette carbonized,3.4770,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_EFF_PLTS,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Pellets,1.269736,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_EFF_CNDL,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) candle (paraffin),2.9643078,https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/3_Volume3/V3_5_Ch5_Non_Energy_Products.pdf
-REF_EFF_ETH,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L) ETHANOL,1.23910872,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_EFF_LPG,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) LPG,2.99250545,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_EFF_BGS,number,Energy,Energy - Cookstove - Efficiency (kgCO2e/m3 for biogas) BIOGAS,2.48420844,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_EFF_PET,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L) Gasoline/Petrol [-],2.34,https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022
-REF_EFF_PNG,number,Energy,Energy - Cookstove - Efficiency (kgCO2e/m3 for Piped Natural Gas),2.13362568,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_EFF_KRS,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L) KEROSENE,2.559489354,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_EFF_DIES,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L) Diesel,2.72440045,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_NONCO2_FWD,number,Energy,Energy - Cookstove - Fraction of nonCO2 emissions (%) Wood,0.077885724,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_NONCO2_CHC_C,number,Energy,Energy - Cookstove - Fraction of nonCO2 emissions (%) Charcoal combustion,0.049760319,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_NONCO2_CHC_P,number,Energy,Energy - Cookstove - Fraction of nonCO2 emissions (%) Charcoal production,0.422709222,https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf
-REF_NONCO2_BRQ,number,Energy,Energy - Cookstove - Fraction of nonCO2 emissions (%) Briquette,0.086424265,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
-REF_NONCO2_PLTS,number,Energy,Energy - Cookstove - Fraction of nonCO2 emissions (%) Pellets,0.086424265,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html
+_id,type,category,description,value,source,ref
+REF_DIES_L,number,ENERGY,Emissions Factor - Diesel (100% mineral diesel) [kg CO2e/l],2.72440045,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html,
+REF_GAZ_L,number,ENERGY,Emissions Factor - Gasoline (100% mineral gasoline) [kg CO2e/l],2.34,https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022,
+REF_RNW,number,ENERGY,Energy - Electricity - Solar Emissions Factor [-],0,,
+REF_GRD,number,ENERGY,Energy - Electricity - Emissions Factor - National Grid [-],0.6448,https://www.iges.or.jp/en/pub/list-grid-emission-factor/en,The default grid emission factor is an average of all IGES 2022 emission factors for countries hosting refugees.
+REF_EFF_DIES_L,number,ENERGY,Energy - Electricity - Efficiency - Diesel Generators (l/kWh),0.267,https://plan.sa.gov.au/__data/assets/pdf_file/0007/574531/Appendix-O-Greenhouse-Gas-Calculations.pdf,
+REF_WSH_D,number,WASH,WASH - Trucking - Emissions Factor - Diesel (up to 3.5 tonnes) [kgCO2e/km],0.25213,https://unfccc.int/sites/default/files/resource/GHG_emissions_calculator_ver01.1_web.xlsx,
+REF_WSH_G,number,WASH,WASH - Trucking - Emissions Factor - Gasoline (up to 3.5 tonnes) [kgCO2e/km],0.22,https://unfccc.int/sites/default/files/resource/GHG_emissions_calculator_ver01.1_web.xlsx,
+REF_FNRB,number,ENERGY,Energy - Cookstove - Fraction of Non renewable biomass (fNRB),0.85,https://cdm.unfccc.int/DNA/fNRB/index.html,
+REF_EFF_FWD,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Wood,1.894776,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html,
+REF_EFF_CHC_C,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Charcoal combustion,3.4770175,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html,
+REF_EFF_CHC_P,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Charcoal production,2.7196,https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf,
+REF_EFF_BRQ,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Briquette non-carbonized,1.269736,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html,
+REF_EFF_BRQ_C,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Briquette carbonized,3.4770,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html,
+REF_EFF_PLTS,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) Pellets,1.269736,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html,
+REF_EFF_CNDL,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) candle (paraffin),2.9643078,https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/3_Volume3/V3_5_Ch5_Non_Energy_Products.pdf,
+REF_EFF_ETH,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L) ETHANOL,1.23910872,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html,
+REF_EFF_LPG,number,Energy,Energy - Cookstove - Efficiency (TCO2e/T) LPG,2.99250545,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html,
+REF_EFF_BGS,number,Energy,Energy - Cookstove - Efficiency (kgCO2e/m3 for biogas) BIOGAS,0.0076,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html,
+REF_EFF_PET,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L) Gasoline/Petrol [-],2.34,https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022,
+REF_EFF_PNG,number,Energy,Energy - Cookstove - Efficiency (kgCO2e/m3 for Piped Natural Gas),2.13362568,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html,
+REF_EFF_KRS,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L) KEROSENE,2.559489354,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html,
+REF_EFF_DIES,number,Energy,Energy - Cookstove - Efficiency (kg CO2e/L) Diesel,2.72440045,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html,
+REF_NONCO2_FWD,number,Energy,Energy - Cookstove - Fraction of nonCO2 emissions (%) Wood,0.077885724,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html,
+REF_NONCO2_CHC_C,number,Energy,Energy - Cookstove - Fraction of nonCO2 emissions (%) Charcoal combustion,0.049760319,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html,
+REF_NONCO2_CHC_P,number,Energy,Energy - Cookstove - Fraction of nonCO2 emissions (%) Charcoal production,0.422709222,https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf,
+REF_NONCO2_BRQ,number,Energy,Energy - Cookstove - Fraction of nonCO2 emissions (%) Briquette,0.086424265,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html,
+REF_NONCO2_PLTS,number,Energy,Energy - Cookstove - Fraction of nonCO2 emissions (%) Pellets,0.086424265,https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html,
