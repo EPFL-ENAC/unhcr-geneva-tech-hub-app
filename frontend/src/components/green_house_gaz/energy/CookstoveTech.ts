@@ -1,7 +1,7 @@
 import {
   AllFuel,
   biomassFuels,
-  biomassFuelsWithoutCHC,
+  biomassFuelsForGasifier,
   electricFuelsForCooking,
   gasFuels,
   liquidFuels,
@@ -67,7 +67,7 @@ export const cookstoveTECHs: CookstoveTech[] = [
   },
   {
     _id: "5",
-    fuelTypes: biomassFuelsWithoutCHC,
+    fuelTypes: biomassFuelsForGasifier,
     text: "Gasifier stove",
     image: "/images/energy/cookstoves/gasifier.png",
     defaults: {
@@ -127,4 +127,10 @@ export const cookstoveTECHsWithAccess = cookstoveTECHs.slice(1);
 export const cookstoveIdsTECHsWithAccess = cookstoveTECHsWithAccess.map(
   (cookstove) => cookstove._id
 );
+export const cookstoveIdsTECHsWithBioMass = cookstoveTECHsWithAccess
+  .filter(
+    (cookstove) =>
+      JSON.stringify(cookstove.fuelTypes) === JSON.stringify(biomassFuels)
+  )
+  .map((cookstove) => cookstove._id);
 export const cookstoveIdWithoutAccess = "1";

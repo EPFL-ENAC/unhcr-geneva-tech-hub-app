@@ -29,8 +29,8 @@ export const electricFuelWithText: FuelTypesItem<ElectricFuel>[] = [
 // biomass fuels
 export const biomassFuels = ["FWD", "CHC", "BRQ", "PLTS"] as const;
 export type BioMassFuel = typeof biomassFuels[number];
-export const biomassFuelsWithoutCHC = ["FWD", "BRQ", "PLTS"] as const;
-export type BioMassFuelWithoutCHC = typeof biomassFuelsWithoutCHC[number];
+export const biomassFuelsForGasifier = ["FWD", "BRQ", "PLTS"] as const;
+export type BioMassFuelWithoutCHC = typeof biomassFuelsForGasifier[number];
 export const biomassFuelWithText: FuelTypesItem<BioMassFuel>[] = [
   { _id: "FWD", text: "Wood" },
   { _id: "CHC", text: "Charcoal" },

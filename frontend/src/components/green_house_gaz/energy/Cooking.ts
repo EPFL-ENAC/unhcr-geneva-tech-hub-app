@@ -40,6 +40,7 @@ import {
 
 import {
   cookstoveIdsTECHsWithAccess,
+  cookstoveIdsTECHsWithBioMass,
   cookstoveIdWithoutAccess,
   CookstoveTech,
   cookstoveTECHs,
@@ -445,8 +446,9 @@ export function headers(
       type: "boolean",
     },
     {
-      conditional_value: "BRQ",
-      conditional: "fuelType",
+      conditional_value: [["BRQ"], cookstoveIdsTECHsWithBioMass],
+      conditional: ["fuelType", "cookstove"],
+      conditional_type: "AND",
       text: "carbonized or non-carbonized", // toggle button ?
       value: "input.carbonized",
       options: {
