@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.12.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.11.0...v0.12.0) (2023-05-09)
+
+
+### Features
+
+* **ghg:** dynamically add icons to generic table based on user selection [#310](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/310) ([fd147fe](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/fd147fe6f6c78c07f31d61c20eebdaac3413b975))
+
+
+### Bug Fixes
+
+* **ghg:** add thermal fuel in equation for solar cooking [#361](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/361) ([cbe9b53](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/cbe9b53efc8a508c590b8096588a020a10851879))
+* **ghg:** remove 'carbonized briquettes option for Gasifier' in cooking module [#357](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/357) ([3b52c06](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/3b52c060e68fc580a1081df54cf313e2ec592fc1))
+* **ghg:** replace reference value of REF_EFF_BGS by 0.0076 [#359](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/359) ([da37f2b](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/da37f2bc7dfb5b572b9de4fabf558644556ff2f0))
+* **unhcr-location:** add Natalia's latest csv changes ([44949a5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/44949a52e02038bb73d1d0ac1d51c121cd910335))
+* **unhcr-location:** replace CRLF by LF ([d6a547c](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d6a547c46c9fb50d4ac8a0e9826ac966b5ce2f56))
+
 ## [0.11.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.10.1...v0.11.0) (2023-05-05)
 
 
