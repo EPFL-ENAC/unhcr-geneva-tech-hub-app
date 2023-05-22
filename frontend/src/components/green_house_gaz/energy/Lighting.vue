@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { getDefaultFuel } from "@/components/green_house_gaz/energy/Cooking";
+import { getDefaultFuel } from "@/components/green_house_gaz/energy/Lighting";
 import BaselineEndlineWrapper from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
 import {
   ensureSurveyTableHeaders,
@@ -62,7 +62,7 @@ import {
   thermalFuels,
 } from "@/components/green_house_gaz/fuelTypes";
 
-import { cookstoveIdWithoutAccess } from "@/components/green_house_gaz/energy/CookstoveTech";
+import { lightingIdWithoutAccess } from "@/components/green_house_gaz/energy/LightingTech";
 import { dieselInputsProducedPer } from "@/components/green_house_gaz/energy/dieselInputs";
 import {
   CountryIrradianceKeys,
@@ -95,7 +95,7 @@ export default class Lighting extends Vue {
   readonly disabled!: boolean;
 
   @Prop({ type: [Object, Array] })
-  readonly form!: EnergyCookingSurvey;
+  readonly form!: EnergyLightingSurvey;
 
   @Prop([Object, Array])
   readonly survey: Survey | undefined;
@@ -105,17 +105,17 @@ export default class Lighting extends Vue {
 
   project!: GreenHouseGaz;
   project_REF_GRD!: ReferenceItemInterface;
-  diffDimension: keyof EnergyCookingItemInput = "numberOfCookstove";
+  diffDimension: keyof EnergyLightingItemInput = "numberOfLighting";
   name = "lighting";
 
   public get title(): string {
     return this.titleKey;
   }
-  public get localForm(): EnergyCookingSurvey {
+  public get localForm(): EnergyLightingSurvey {
     return this.form;
   }
 
-  public set localForm(value: EnergyCookingSurvey) {
+  public set localForm(value: EnergyLightingSurvey) {
     this.$emit("update:form", value);
   }
 
@@ -150,7 +150,7 @@ export default class Lighting extends Vue {
   }
 
   private computeItemElectric(
-    localItemInput: EnergyCookingItemInput,
+    localItemInput: EnergyLightingItemInput,
     ghgMapRef: ItemReferencesMap,
     hhUsingTheFuel: number,
     applianceEff: number
@@ -179,20 +179,20 @@ export default class Lighting extends Vue {
   }
 
   public computeItem(
-    localItemInput: EnergyCookingItemInput,
+    localItemInput: EnergyLightingItemInput,
     ghgMapRef: ItemReferencesMap
-  ): EnergyCookingItemResults {
+  ): EnergyLightingItemResults {
     if (this.project === undefined) {
       throw new Error("project undefined");
     }
     const {
-      numberOfCookstove: percentageOfTotalCookstove,
+      numberOfLighting: percentageOfTotalLighting,
       fuelUsage,
       fuelType,
       appliance,
     } = localItemInput;
 
-    if (percentageOfTotalCookstove === undefined) {
+    if (percentageOfTotalLighting === undefined) {
       throw new Error("number of lighting not defined");
     }
     if (this.project.totalHH === undefined) {
@@ -200,7 +200,7 @@ export default class Lighting extends Vue {
         "Total House holds is undefined, please fill assessment information page and click on save"
       );
     }
-    const hhUsingTheFuel = percentageOfTotalCookstove * this.project.totalHH; // number of cookstoves
+    const hhUsingTheFuel = percentageOfTotalLighting * this.project.totalHH; // number of lightings
     let totalCO2Emission = 0;
 
     const applianceEff = this.applianceEfficiency(appliance);
@@ -308,7 +308,7 @@ export default class Lighting extends Vue {
         );
         break;
       default:
-        if (localItemInput.cookstove !== cookstoveIdWithoutAccess) {
+        if (localItemInput.lighting !== lightingIdWithoutAccess) {
           throw new Error(`unknown fuel type ${fuelType}`);
         }
     }
@@ -320,15 +320,15 @@ export default class Lighting extends Vue {
     };
   }
 
-  resetSurveyInput(localInput: EnergyCookingItemInput): EnergyCookingItemInput {
+  resetSurveyInput(localInput: EnergyLightingItemInput): EnergyLightingItemInput {
     localInput.fuelType = "NO_ACCESS";
-    delete localInput.numberOfCookstove; // percentage of percentage
+    delete localInput.numberOfLighting; // percentage of percentage
     return this.resetSurveyFuelOption(localInput);
   }
 
   resetSurveyFuelOption(
-    localInput: EnergyCookingItemInput
-  ): EnergyCookingItemInput {
+    localInput: EnergyLightingItemInput
+  ): EnergyLightingItemInput {
     delete localInput.fuelUsage;
     delete localInput.sustainablySourced;
     delete localInput.dryWood;
@@ -363,7 +363,7 @@ export default class Lighting extends Vue {
         },
         customEventInput: (
           fuelType: AllFuel,
-          localInput: EnergyCookingItemInput
+          localInput: EnergyLightingItemInput
         ) => {
           this.resetSurveyFuelOption(localInput);
           localInput.appliance = LIGHTING_APP_Default;
@@ -403,7 +403,7 @@ export default class Lighting extends Vue {
         type: "boolean",
         customEventInput: (
           dryWood: boolean,
-          localInput: EnergyCookingItemInput
+          localInput: EnergyLightingItemInput
         ) => {
           if (!localInput.fuelUsage) {
             return localInput;
@@ -418,7 +418,7 @@ export default class Lighting extends Vue {
         },
       },
       {
-        text: (localInput: EnergyCookingItemInput) => {
+        text: (localInput: EnergyLightingItemInput) => {
           let result = "Fuel per day (kg/day for biomass)";
           const biomassFuelsText =
             "Biomass used per HH per day (kg/day for biomass)";
@@ -503,9 +503,9 @@ export default class Lighting extends Vue {
       {
         text: "Percentage of total households",
         computeResults: true,
-        value: "input.numberOfCookstove",
-        conditional_value: ["", cookstoveIdWithoutAccess],
-        conditional: ["appliance", "cookstove"],
+        value: "input.numberOfLighting",
+        conditional_value: ["", lightingIdWithoutAccess],
+        conditional: ["appliance", "lighting"],
         style: {
           cols: "12",
         },
@@ -528,13 +528,13 @@ export default class Lighting extends Vue {
   items!: GHGfNRB[];
 }
 
-export interface EnergyCookingItemInput
+export interface EnergyLightingItemInput
   extends SurveyInput,
     DieselItem,
     EnergyItem {
-  numberOfCookstove?: number; // computed based on % of HH
-  cookstove: string; // type fo cookstove/ TODO: remove
-  image?: string; // image of cookstove
+  numberOfLighting?: number; // computed based on % of HH
+  lighting: string; // type fo lighting/ TODO: remove
+  image?: string; // image of lighting
   fuelUsage?: number; // [kg or L/day]
   fuelType: AllFuel; // key
   fuelTypes?: AllFuel[]; // used only as a reference
@@ -546,26 +546,26 @@ export interface EnergyCookingItemInput
   dryWood?: boolean;
 }
 
-export interface EnergyCookingItemResults extends SurveyResult {
+export interface EnergyLightingItemResults extends SurveyResult {
   totalCO2Emission: number;
 }
-export interface EnergyCookingItem extends SurveyItem {
-  input: EnergyCookingItemInput;
-  computed: EnergyCookingItemResults;
+export interface EnergyLightingItem extends SurveyItem {
+  input: EnergyLightingItemInput;
+  computed: EnergyLightingItemResults;
 }
 
-export interface EnergyCookingItemResultsBalance extends SurveyResult {
+export interface EnergyLightingItemResultsBalance extends SurveyResult {
   totalCO2Emission: number;
   changeInEmission: number;
 }
-export interface EnergyCookingItemResultsWithBalance
-  extends EnergyCookingItemResults,
-    EnergyCookingItemResultsBalance {}
+export interface EnergyLightingItemResultsWithBalance
+  extends EnergyLightingItemResults,
+    EnergyLightingItemResultsBalance {}
 
-export type EnergyCookingSurvey = GenericFormSurvey<
-  EnergyCookingItem,
-  EnergyCookingItemResults,
-  EnergyCookingItem,
-  EnergyCookingItemResultsWithBalance
+export type EnergyLightingSurvey = GenericFormSurvey<
+  EnergyLightingItem,
+  EnergyLightingItemResults,
+  EnergyLightingItem,
+  EnergyLightingItemResultsWithBalance
 >;
 </script>
