@@ -581,27 +581,30 @@ export function generateComputeItem(
         );
 
         let efficiencyFactor = 1;
-        if (fuelType === "CHC") {
-          const fuelEfficiencyC = ghgMapRef?.[`REF_EFF_${fuelType}_C`]?.value;
+        const fuelTypeEnhanced = `${fuelType}${
+          localItemInput.carbonized ? "_C" : ""
+        }`;
+        if (fuelTypeEnhanced === "CHC" || fuelTypeEnhanced === "BRQ_C") {
+          const fuelEfficiencyC = ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}_C`]?.value;
           if (fuelEfficiencyC == undefined) {
-            const errorMessage = `there are no emission factor REF_EFF_${fuelType}_C`;
+            const errorMessage = `there are no emission factor REF_EFF_${fuelTypeEnhanced}_C`;
             throw new Error(errorMessage);
           }
-          const fuelEfficiencyP = ghgMapRef?.[`REF_EFF_${fuelType}_P`]?.value;
+          const fuelEfficiencyP = ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}_P`]?.value;
           if (fuelEfficiencyP == undefined) {
-            const errorMessage = `there are no emission factor REF_EFF_${fuelType}_P`;
+            const errorMessage = `there are no emission factor REF_EFF_${fuelTypeEnhanced}_P`;
             throw new Error(errorMessage);
           }
           const nonCO2FractionC =
-            ghgMapRef?.[`REF_NONCO2_${fuelType}_C`]?.value;
+            ghgMapRef?.[`REF_NONCO2_${fuelTypeEnhanced}_C`]?.value;
           if (nonCO2FractionC == undefined) {
-            const errorMessage = `there are no nonCO2Fraction factor REF_NONCO2_${fuelType}_C`;
+            const errorMessage = `there are no nonCO2Fraction factor REF_NONCO2_${fuelTypeEnhanced}_C`;
             throw new Error(errorMessage);
           }
           const nonCO2FractionP =
-            ghgMapRef?.[`REF_NONCO2_${fuelType}_P`]?.value;
+            ghgMapRef?.[`REF_NONCO2_${fuelTypeEnhanced}_P`]?.value;
           if (nonCO2FractionP == undefined) {
-            const errorMessage = `there are no nonCO2Fraction factor REF_NONCO2_${fuelType}_P`;
+            const errorMessage = `there are no nonCO2Fraction factor REF_NONCO2_${fuelTypeEnhanced}_P`;
             throw new Error(errorMessage);
           }
 
@@ -609,9 +612,6 @@ export function generateComputeItem(
             (localFNRB + (1 - localFNRB) * nonCO2FractionC) * fuelEfficiencyC +
             (localFNRB + (1 - localFNRB) * nonCO2FractionP) * fuelEfficiencyP;
         } else {
-          const fuelTypeEnhanced = `${fuelType}${
-            localItemInput.carbonized ? "_C" : ""
-          }`;
           const fuelEfficiency =
             ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}`]?.value;
           if (fuelEfficiency == undefined) {

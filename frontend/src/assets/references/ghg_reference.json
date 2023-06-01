@@ -120,14 +120,24 @@
     "index": 11
   },
   {
-    "_id": "REF_EFF_BRQ_C",
+    "_id": "REF_EFF_BRQ_C_C",
     "type": "number",
     "category": "Energy",
-    "description": "Energy - Cookstove - Efficiency (TCO2e/T) Briquette carbonized",
-    "value": 3.477,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
+    "description": "Energy - Cookstove - Efficiency (TCO2e/T) Briquette carbonized combustion",
+    "value": 2.0879,
+    "source": "https://www.sciencedirect.com/science/article/pii/S246822761930763X",
     "ref": null,
     "index": 12
+  },
+  {
+    "_id": "REF_EFF_BRQ_C_P",
+    "type": "number",
+    "category": "Energy",
+    "description": "Energy - Cookstove - Efficiency (TCO2e/T) Briquette carbonized production",
+    "value": 2.5836,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf",
+    "ref": null,
+    "index": 13
   },
   {
     "_id": "REF_EFF_PLTS",
@@ -137,7 +147,7 @@
     "value": 1.269736,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
     "ref": null,
-    "index": 13
+    "index": 14
   },
   {
     "_id": "REF_EFF_CNDL",
@@ -147,7 +157,7 @@
     "value": 2.9643078,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/3_Volume3/V3_5_Ch5_Non_Energy_Products.pdf",
     "ref": null,
-    "index": 14
+    "index": 15
   },
   {
     "_id": "REF_EFF_ETH",
@@ -157,7 +167,7 @@
     "value": 1.23910872,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
     "ref": null,
-    "index": 15
+    "index": 16
   },
   {
     "_id": "REF_EFF_LPG",
@@ -167,7 +177,7 @@
     "value": 2.99250545,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
     "ref": null,
-    "index": 16
+    "index": 17
   },
   {
     "_id": "REF_EFF_BGS",
@@ -177,7 +187,7 @@
     "value": 0.0076,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
     "ref": null,
-    "index": 17
+    "index": 18
   },
   {
     "_id": "REF_EFF_PET",
@@ -187,7 +197,7 @@
     "value": 2.34,
     "source": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022",
     "ref": null,
-    "index": 18
+    "index": 19
   },
   {
     "_id": "REF_EFF_PNG",
@@ -197,7 +207,7 @@
     "value": 2.13362568,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
     "ref": null,
-    "index": 19
+    "index": 20
   },
   {
     "_id": "REF_EFF_KRS",
@@ -207,7 +217,7 @@
     "value": 2.559489354,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
     "ref": null,
-    "index": 20
+    "index": 21
   },
   {
     "_id": "REF_EFF_DIES",
@@ -217,7 +227,7 @@
     "value": 2.72440045,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
     "ref": null,
-    "index": 21
+    "index": 22
   },
   {
     "_id": "REF_NONCO2_FWD",
@@ -227,7 +237,7 @@
     "value": 0.077885724,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
     "ref": null,
-    "index": 22
+    "index": 23
   },
   {
     "_id": "REF_NONCO2_CHC_C",
@@ -237,7 +247,7 @@
     "value": 0.049760319,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
     "ref": null,
-    "index": 23
+    "index": 24
   },
   {
     "_id": "REF_NONCO2_CHC_P",
@@ -247,7 +257,7 @@
     "value": 0.422709222,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf",
     "ref": null,
-    "index": 24
+    "index": 25
   },
   {
     "_id": "REF_NONCO2_BRQ",
@@ -257,7 +267,27 @@
     "value": 0.086424265,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
     "ref": null,
-    "index": 25
+    "index": 26
+  },
+  {
+    "_id": "REF_NONCO2_BRQ_C_C",
+    "type": "number",
+    "category": "Energy",
+    "description": "Energy - Cookstove - Fraction of nonCO2 emissions (%) Briquette combustion",
+    "value": 0.1202,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
+    "ref": null,
+    "index": 27
+  },
+  {
+    "_id": "REF_NONCO2_BRQ_C_P",
+    "type": "number",
+    "category": "Energy",
+    "description": "Energy - Cookstove - Fraction of nonCO2 emissions (%) Briquette production",
+    "value": 0.4227,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf",
+    "ref": null,
+    "index": 28
   },
   {
     "_id": "REF_NONCO2_PLTS",
@@ -267,6 +297,6 @@
     "value": 0.086424265,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
     "ref": null,
-    "index": 26
+    "index": 29
   }
 ]
