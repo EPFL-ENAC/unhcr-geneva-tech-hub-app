@@ -5,6 +5,7 @@ import {
 import {
   AllFuel,
   allFuelsButElectric,
+  allFuelsButThermal,
   AllFuelsWithTextById,
   BioMassFuel,
   biomassFuels,
@@ -38,6 +39,7 @@ import {
 } from "@/store/GhgInterface.vue";
 
 import {
+  cookstoveIdSolarCooker,
   cookstoveIdsTECHsWithAccess,
   cookstoveIdsTECHsWithBioMass,
   cookstoveIdWithoutAccess,
@@ -45,6 +47,10 @@ import {
   cookstoveTECHs,
 } from "@/components/green_house_gaz/energy/CookstoveTech";
 import { dieselInputsProducedPer } from "@/components/green_house_gaz/energy/dieselInputs";
+import {
+  computeThermalKWHPerDayFromPerYear,
+  computeThermalKWHPerYearFromPerDay,
+} from "@/components/green_house_gaz/energy/thermalInputs";
 import {
   ensureSurveyTableHeaders,
   surveyTableHeaderCO2,
@@ -238,7 +244,16 @@ export function headers(
         if (currentStove._id === cookstoveIdWithoutAccess) {
           localInput.fuelType = noAccessFuels[0];
         }
+
         resetSurveyInput(localInput);
+        // to force proper fuel type
+        if (currentStove._id === cookstoveIdSolarCooker) {
+          localInput.cookstove = cookstoveId;
+          localInput.fuelType = thermalFuels[0];
+          localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
+          localInput.renewablePower =
+            computeThermalKWHPerYearFromPerDay(localInput.fuelUsage);
+        }
         return localInput;
       },
     },
@@ -301,7 +316,7 @@ export function headers(
     {
       value: "input.disabledfuelUsage",
       text: "Fuel quantity known",
-      conditional_value: [cookstoveIdsTECHsWithAccess, ""],
+      conditional_value: [cookstoveIdsTECHsWithAccess, allFuelsButThermal],
       conditional: ["cookstove", "fuelType"],
       conditional_type: "AND",
       style: {
@@ -414,8 +429,43 @@ export function headers(
       type: "number",
       disabledWithConditions: "disabledfuelUsage",
       disabledWithConditions_value: false,
+      customEventInput: (
+        fuelUsage: number,
+        localInput: EnergyCookingItemInput
+      ) => {
+        if (localInput.fuelType === "THE") {
+          localInput.renewablePower =
+            computeThermalKWHPerYearFromPerDay(fuelUsage);
+          return localInput;
+        }
+      },
     },
-    ...dieselInputsProducedPer("Day", "Day"),
+    {
+      value: "input.renewablePower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
+      conditional_value: ["THE"],
+      disabled: false,
+      text: `Solar thermal (Kwh/year/HH) estimated`,
+      formatter: (v: number) => {
+        return formatNumber(v);
+      },
+      customEventInput: (
+        renewablePower: number,
+        localInput: EnergyCookingItemInput
+      ) => {
+        localInput.fuelUsage =
+          computeThermalKWHPerDayFromPerYear(renewablePower);
+        return localInput;
+      },
+      conditional: "fuelType",
+      suffix: "Kwh/year/HH",
+      style: {
+        cols: "12",
+      },
+      type: "number",
+      computeResults: true,
+      hideFooterContent: true,
+    },
+    ...dieselInputsProducedPer("Day", "Day", { hideFooterContent: true }),
     {
       value: "input.gridPower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
       conditional_value: ["ELE_GRID", "ELE_HYB"],
@@ -428,7 +478,9 @@ export function headers(
       type: "number",
     },
     // end of national grid
-    ...solarInputsProducedPer("Year", countryCode, projectSolar),
+    ...solarInputsProducedPer("Year", countryCode, projectSolar, {
+      hideFooterContent: true,
+    }),
     {
       conditional_value: biomassFuels,
       conditional: "fuelType",

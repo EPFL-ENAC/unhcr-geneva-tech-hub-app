@@ -112,7 +112,8 @@ export function computeKWInstalledWithKwhPerYearPerCountry(
 export function solarInputsProducedPer(
   timePeriod: TimePeriod,
   countryTwoLetterCode: CountryIrradianceKeys,
-  locationIrradianceValue: number | undefined
+  locationIrradianceValue: number | undefined,
+  { hideFooterContent } = { hideFooterContent: false}
 ): any[] {
   let computeSolarPower: any;
   let computeSolarInstalled: any;
@@ -182,7 +183,7 @@ export function solarInputsProducedPer(
       },
       type: "number",
       computeResults: true,
-      hideFooterContent: false,
+      hideFooterContent,
     },
   ];
 }

@@ -22,9 +22,12 @@ export interface CookstoveTech {
   readonly defaults?: PartialRecord<AllFuel, number>;
 }
 
+export const cookstoveIdWithoutAccess = "1";
+export const cookstoveIdSolarCooker = "9";
+
 export const cookstoveTECHs: CookstoveTech[] = [
   {
-    _id: "1",
+    _id: cookstoveIdWithoutAccess,
     fuelTypes: noAccessFuels,
     text: "Without any access (no possibility to cook)",
     image: undefined,
@@ -113,12 +116,12 @@ export const cookstoveTECHs: CookstoveTech[] = [
     },
   },
   {
-    _id: "9",
+    _id: cookstoveIdSolarCooker,
     fuelTypes: thermalFuels,
     text: "Solar cooker",
     image: "/images/energy/cookstoves/solar-parabolic.png",
     defaults: {
-      THE: 0,
+      THE: 0.02, // of: ~0.02 kWh/d/person.
     },
   },
 ];
@@ -133,4 +136,3 @@ export const cookstoveIdsTECHsWithBioMass = cookstoveTECHsWithAccess
       JSON.stringify(cookstove.fuelTypes) === JSON.stringify(biomassFuels)
   )
   .map((cookstove) => cookstove._id);
-export const cookstoveIdWithoutAccess = "1";

@@ -76,12 +76,21 @@ export const noAcessWithText: FuelTypesItem<NoAccessFuel>[] = [
 ];
 // end of thermal fuels
 
+
 export const allFuelsButElectric = [
   ...biomassFuels,
   ...liquidFuels,
   ...gasFuels,
   ...thermalFuels,
 ];
+
+export const allFuelsButThermal = [
+  ...biomassFuels,
+  ...liquidFuels,
+  ...gasFuels,
+  ...electricFuels,
+];
+
 // export type AllFuelsButElectric = typeof allFuelsButElectric[number];
 export const allFuels = [...allFuelsButElectric, ...electricFuels];
 
