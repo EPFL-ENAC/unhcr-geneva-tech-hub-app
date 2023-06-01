@@ -5,6 +5,25 @@ UNHCR Geneva Technical Hub App
 ## Status
 Currently under development, release 1.0 expected March 2023, then user testing.
 
+## Update references files
+1. go to https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/blob/main/frontend/src/assets/references/ghg_reference.json
+2. Click on the 'edit this file' button (small pencil icon on the top)
+  - <img width="1740" alt="click_on_edit" src="https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/assets/161889/45f7ce45-0034-4c85-8811-562898788941">
+
+4. Edit file and click on 'commit changes' button
+  - <img width="1740" alt="commit-changes" src="https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/assets/161889/bbf96be1-b91b-4cf5-bcc3-ad01b4492ad9">
+
+5. On the popup select 'create a new branch' instead of 'commit directly to main branch'
+  - Change the name of the branch so it reflects your changes
+  - Click on 'propose changes'
+  - <img width="1725" alt="create-new-branch" src="https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/assets/161889/1a719328-4d0b-4afd-8c33-92674a9c73d5">
+
+5. On the pull request page
+  - Edit the description
+  - Add the 'ghg' tag at least
+  - Add the appropriates assignees, milestones and projects
+  - Click on 'create pull request
+  <img width="1719" alt="create_pull-request" src="https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/assets/161889/8b099d0d-dfce-4e4b-ba09-8d9d8b68c4fa">
 
 ## Development
 
