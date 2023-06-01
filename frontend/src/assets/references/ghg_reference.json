@@ -4,7 +4,7 @@
     "type": "number",
     "category": "ENERGY",
     "description": "Emissions Factor - Diesel (100% mineral diesel) [kg CO2e/l]",
-    "value": 2.72440045,
+    "value": 2.7244004500,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
     "ref": null,
     "index": 0
