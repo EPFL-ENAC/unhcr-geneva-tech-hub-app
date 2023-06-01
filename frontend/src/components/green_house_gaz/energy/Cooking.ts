@@ -196,7 +196,11 @@ export function headers(
               <span class="ml-4">${name}</span>
             `;
       },
-      formatterTableComponent: (_id: string, _: unknown, localItem: EnergyCookingItem) => {
+      formatterTableComponent: (
+        _id: string,
+        _: unknown,
+        localItem: EnergyCookingItem
+      ) => {
         let defaultAppliance;
         switch (localItem.input.appliance) {
           case COOK_APP_Pressure:
@@ -250,14 +254,31 @@ export function headers(
       formatter: (v: AllFuel) => {
         return AllFuelsWithTextById?.[v]?.text;
       },
-      formatterTableComponent: () => {
-        return [
-          {
+      formatterTableComponent: (
+        fuelType: AllFuel,
+        _: unknown,
+        localItem: EnergyCookingItem
+      ) => {
+        const result = [];
+        const fuelTypeEnhanced = `${fuelType}${
+          localItem?.input?.carbonized ? "_C" : ""
+        }`;
+        if (fuelTypeEnhanced === "CHC" || fuelTypeEnhanced === "BRQ_C") {
+          result.push({
+            text: "(S3)",
+            description:
+              "Exceptionally, Scope 3 emissions relative to the production of charcoal are being considered due to their high impact.",
+            fill: "black",
+          });
+        }
+        if (localItem?.input?.sustainablySourced) {
+          result.push({
             icon: "$mdiTreeOutline",
             description: "Sustainably sourced biomass",
             fill: "green",
-          },
-        ];
+          });
+        }
+        return result;
       },
       customEventInput: (
         fuelType: AllFuel,
@@ -585,12 +606,14 @@ export function generateComputeItem(
           localItemInput.carbonized ? "_C" : ""
         }`;
         if (fuelTypeEnhanced === "CHC" || fuelTypeEnhanced === "BRQ_C") {
-          const fuelEfficiencyC = ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}_C`]?.value;
+          const fuelEfficiencyC =
+            ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}_C`]?.value;
           if (fuelEfficiencyC == undefined) {
             const errorMessage = `there are no emission factor REF_EFF_${fuelTypeEnhanced}_C`;
             throw new Error(errorMessage);
           }
-          const fuelEfficiencyP = ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}_P`]?.value;
+          const fuelEfficiencyP =
+            ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}_P`]?.value;
           if (fuelEfficiencyP == undefined) {
             const errorMessage = `there are no emission factor REF_EFF_${fuelTypeEnhanced}_P`;
             throw new Error(errorMessage);
