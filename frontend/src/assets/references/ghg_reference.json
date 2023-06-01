@@ -14,7 +14,7 @@
     "type": "number",
     "category": "ENERGY",
     "description": "Emissions Factor - Gasoline (100% mineral gasoline) [kg CO2e/l]",
-    "value": 2.34,
+    "value": 2.340,
     "source": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022",
     "ref": null,
     "index": 1
