@@ -106,69 +106,73 @@
       </div>
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-tooltip bottom>
-        <template #activator="{ on, attrs }">
-          <v-btn
-            v-bind="attrs"
-            icon
-            small
-            class="mr-2"
-            :disabled="disabled"
-            v-on="on"
-            @click.stop="() => openDialog(item, 'survey-item-dialog')"
+      <div class="actions-container">
+        <v-tooltip bottom>
+          <template #activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              icon
+              small
+              class="mr-2"
+              :disabled="disabled"
+              v-on="on"
+              @click.stop="() => openDialog(item, 'survey-item-dialog')"
+            >
+              <v-icon small class="better-click"> $mdiPencil </v-icon>
+            </v-btn>
+          </template>
+          <span>Edit</span>
+        </v-tooltip>
+        <v-tooltip bottom>
+          <template #activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              icon
+              small
+              class="mr-2"
+              :disabled="disabled"
+              v-on="on"
+              @click.stop="
+                () => openDialog(item, 'duplicate-survey-item-dialog')
+              "
+            >
+              <v-icon small class="better-click"> $mdiContentCopy </v-icon>
+            </v-btn>
+          </template>
+          <span>Duplicate</span>
+        </v-tooltip>
+        <v-tooltip bottom>
+          <template #activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              icon
+              small
+              class="mr-2"
+              :disabled="disabled"
+              v-on="on"
+              @click.stop="() => openDialog(item, 'delete-survey-item-dialog')"
+            >
+              <v-icon small class="better-click"> $mdiDelete </v-icon>
+            </v-btn>
+          </template>
+          <span>Delete</span>
+        </v-tooltip>
+        <v-tooltip v-if="intervention" bottom>
+          <template #activator="{ on, attrs }">
+            <v-simple-checkbox
+              v-bind="attrs"
+              v-model="item.enabled"
+              class="v-size--small"
+              @input="() => updateWithItem(item)"
+              v-on="on"
+            />
+          </template>
+          <span
+            >Checked means enabled, unchecked means disabled and ignored in
+            calculations.</span
           >
-            <v-icon small class="better-click"> $mdiPencil </v-icon>
-          </v-btn>
-        </template>
-        <span>Edit</span>
-      </v-tooltip>
-      <v-tooltip bottom>
-        <template #activator="{ on, attrs }">
-          <v-btn
-            v-bind="attrs"
-            icon
-            small
-            class="mr-2"
-            :disabled="disabled"
-            v-on="on"
-            @click.stop="() => openDialog(item, 'duplicate-survey-item-dialog')"
-          >
-            <v-icon small class="better-click"> $mdiContentCopy </v-icon>
-          </v-btn>
-        </template>
-        <span>Duplicate</span>
-      </v-tooltip>
-      <v-tooltip bottom>
-        <template #activator="{ on, attrs }">
-          <v-btn
-            v-bind="attrs"
-            icon
-            small
-            class="mr-2"
-            :disabled="disabled"
-            v-on="on"
-            @click.stop="() => openDialog(item, 'delete-survey-item-dialog')"
-          >
-            <v-icon small class="better-click"> $mdiDelete </v-icon>
-          </v-btn>
-        </template>
-        <span>Delete</span>
-      </v-tooltip>
-      <v-tooltip v-if="intervention" bottom>
-        <template #activator="{ on, attrs }">
-          <v-simple-checkbox
-            v-bind="attrs"
-            v-model="item.enabled"
-            class="v-size--small"
-            @input="() => updateWithItem(item)"
-            v-on="on"
-          />
-        </template>
-        <span
-          >Checked means enabled, unchecked means disabled and ignored in
-          calculations.</span
-        >
-      </v-tooltip>
+        </v-tooltip>
+      </div>
     </template>
     <template #foot="{}">
       <tr>
@@ -356,11 +360,15 @@ export default class BaselineTable extends Vue {
   font-weight: bold;
 }
 ::v-deep .inline-actions {
-  display: flex;
-  flex-direction: row;
-  justify-content: right;
-  align-items: center;
+  .actions-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+    height: auto;
+  }
 }
+
 ::v-deep .v-size--small {
   .v-icon__svg {
     height: 16px;

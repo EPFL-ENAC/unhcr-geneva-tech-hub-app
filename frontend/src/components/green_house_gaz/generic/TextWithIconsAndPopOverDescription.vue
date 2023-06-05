@@ -9,7 +9,8 @@ interface Props {
 export interface tableTextWithIcon {
   description: string;
   fill: string;
-  icon: string;
+  icon?: string;
+  text?: string;
 }
 
 const props = defineProps<Props>();
@@ -19,12 +20,24 @@ const props = defineProps<Props>();
   <!-- eslint-disable vue/no-v-text-v-html-on-component -->
   <div class="d-flex justify-left align-center">
     <span class="d-flex justify-left align-center" v-html="text"></span>
-    <span v-for="(config, key) in configs" :key="key">
+    <span v-for="(config, key) in configs" :key="key" class="ml-2">
       <v-tooltip top>
         <template #activator="{ on, attrs }">
-          <v-icon v-bind="attrs" :color="config.fill" v-on="on">
-            {{ config.icon }}</v-icon
-          >
+          <template v-if="config.icon">
+            <v-icon
+              style="cursor: pointer"
+              v-bind="attrs"
+              :color="config.fill"
+              v-on="on"
+            >
+              {{ config.icon }}</v-icon
+            >
+          </template>
+          <template v-else>
+            <span style="cursor: pointer" class="font-italic font-weight-light" v-bind="attrs" v-on="on">
+              {{ config.text }}
+            </span>
+          </template>
         </template>
 
         <span>{{ config.description }}</span>

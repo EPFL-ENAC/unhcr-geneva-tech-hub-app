@@ -14,7 +14,7 @@ type PartialRecord<K extends keyof any, T> = {
   [P in K]?: T;
 };
 
-export interface CookstoveTech {
+export interface LightingTech {
   readonly _id: string;
   readonly fuelTypes: readonly AllFuel[];
   readonly text: string;
@@ -22,12 +22,9 @@ export interface CookstoveTech {
   readonly defaults?: PartialRecord<AllFuel, number>;
 }
 
-export const cookstoveIdWithoutAccess = "1";
-export const cookstoveIdSolarCooker = "9";
-
-export const cookstoveTECHs: CookstoveTech[] = [
+export const lightingTECHs: LightingTech[] = [
   {
-    _id: cookstoveIdWithoutAccess,
+    _id: "1",
     fuelTypes: noAccessFuels,
     text: "Without any access (no possibility to cook)",
     image: undefined,
@@ -36,7 +33,7 @@ export const cookstoveTECHs: CookstoveTech[] = [
     _id: "2",
     fuelTypes: biomassFuels,
     text: "Traditional three stone fire",
-    image: "/images/energy/cookstoves/traditional-wood.png",
+    image: "/images/energy/lightings/traditional-wood.png",
     defaults: {
       FWD: 1.7,
       CHC: 0.898983050847458,
@@ -47,8 +44,8 @@ export const cookstoveTECHs: CookstoveTech[] = [
   {
     _id: "3",
     fuelTypes: biomassFuels,
-    text: "Traditional cookstove with solid biomass fuel",
-    image: "/images/energy/cookstoves/traditional-bricket.jpg",
+    text: "Traditional lighting with solid biomass fuel",
+    image: "/images/energy/lightings/traditional-bricket.jpg",
     defaults: {
       FWD: 1.578571429,
       CHC: 0.834769976,
@@ -59,8 +56,8 @@ export const cookstoveTECHs: CookstoveTech[] = [
   {
     _id: "4",
     fuelTypes: biomassFuels,
-    text: "Improved cookstove with solid biomass fuel",
-    image: "/images/energy/cookstoves/improved-bricket.jpg",
+    text: "Improved lighting with solid biomass fuel",
+    image: "/images/energy/lightings/improved-bricket.jpg",
     defaults: {
       FWD: 1.163157895,
       CHC: 0.615093666,
@@ -72,7 +69,7 @@ export const cookstoveTECHs: CookstoveTech[] = [
     _id: "5",
     fuelTypes: biomassFuelsForGasifier,
     text: "Gasifier stove",
-    image: "/images/energy/cookstoves/gasifier.png",
+    image: "/images/energy/lightings/gasifier.png",
     defaults: {
       FWD: 0.631428571,
       BRQ: 0.849162562,
@@ -82,8 +79,8 @@ export const cookstoveTECHs: CookstoveTech[] = [
   {
     _id: "6",
     fuelTypes: liquidFuels,
-    text: "Liquid fuel cookstove",
-    image: "/images/energy/cookstoves/kerosene.png",
+    text: "Liquid fuel lighting",
+    image: "/images/energy/lightings/kerosene.png",
     defaults: {
       ETH: 0.354443685,
       PET: 0.226270184,
@@ -94,8 +91,8 @@ export const cookstoveTECHs: CookstoveTech[] = [
   {
     _id: "7",
     fuelTypes: gasFuels,
-    text: "Gas powered cookstove",
-    image: "/images/energy/cookstoves/lpg.webp",
+    text: "Gas powered lighting",
+    image: "/images/energy/lightings/lpg.webp",
     defaults: {
       LPG: 0.086,
       BGS: 0.155112839,
@@ -105,8 +102,8 @@ export const cookstoveTECHs: CookstoveTech[] = [
   {
     _id: "8",
     fuelTypes: electricFuelsForCooking,
-    text: "Electric cookstove",
-    image: "/images/energy/cookstoves/induction.png",
+    text: "Electric lighting",
+    image: "/images/energy/lightings/induction.png",
     defaults: {
       ELE_DIES: 0.2,
       ELE_GRID: 0.6,
@@ -116,23 +113,24 @@ export const cookstoveTECHs: CookstoveTech[] = [
     },
   },
   {
-    _id: cookstoveIdSolarCooker,
+    _id: "9",
     fuelTypes: thermalFuels,
     text: "Solar cooker",
-    image: "/images/energy/cookstoves/solar-parabolic.png",
+    image: "/images/energy/lightings/solar-parabolic.png",
     defaults: {
-      THE: 0.02, // of: ~0.02 kWh/d/person.
+      THE: 0,
     },
   },
 ];
 
-export const cookstoveTECHsWithAccess = cookstoveTECHs.slice(1);
-export const cookstoveIdsTECHsWithAccess = cookstoveTECHsWithAccess.map(
-  (cookstove) => cookstove._id
+export const lightingTECHsWithAccess = lightingTECHs.slice(1);
+export const lightingIdsTECHsWithAccess = lightingTECHsWithAccess.map(
+  (lighting) => lighting._id
 );
-export const cookstoveIdsTECHsWithBioMass = cookstoveTECHsWithAccess
+export const lightingIdsTECHsWithBioMass = lightingTECHsWithAccess
   .filter(
-    (cookstove) =>
-      JSON.stringify(cookstove.fuelTypes) === JSON.stringify(biomassFuels)
+    (lighting) =>
+      JSON.stringify(lighting.fuelTypes) === JSON.stringify(biomassFuels)
   )
-  .map((cookstove) => cookstove._id);
+  .map((lighting) => lighting._id);
+export const lightingIdWithoutAccess = "1";

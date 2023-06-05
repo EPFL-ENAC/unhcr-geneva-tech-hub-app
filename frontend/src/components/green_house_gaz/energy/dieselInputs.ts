@@ -133,7 +133,8 @@ function computeDieselLitersFromPowerAndUpdateKey(
 
 export function dieselInputsProducedPer(
   timePeriod: TimePeriod,
-  timePeriodOperatingHours: TimePeriod
+  timePeriodOperatingHours: TimePeriod,
+  { hideFooterContent } = { hideFooterContent: false}
 ): any[] {
   let computePower: any;
   let computeLiters: any;
@@ -179,7 +180,7 @@ export function dieselInputsProducedPer(
       text: `Diesel (${suffix}) estimated`,
       computeResults: true,
       value: "input.dieselPower",
-      hideFooterContent: false,
+      hideFooterContent,
       formatter: (
         dieselPower: number,
         __: SurveyTableHeader,
