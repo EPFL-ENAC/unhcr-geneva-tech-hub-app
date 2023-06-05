@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.12.0...v0.13.0) (2023-06-05)
+
+
+### Features
+
+* **ghg-cooking:** correct formula for carbonized briquette so it behaves like charcoal [#374](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/374) ([fa8c674](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/fa8c674274082df1128f2c68152c260c53aa1cce))
+
+
+### Bug Fixes
+
+* **ghg-cooking:** add s3 tooltip warning for charchoal and carbonized briquette [#358](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/358) ([b22d644](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/b22d64434deb524deb17b0c87ac241040405b099))
+* **ghg-cooking:** better formula for thermal cookers ([98dba83](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/98dba833e6fdc65b4cb0aac2c2c74a6d7187704e))
+* **ghg:** correct css alignement for line-actions items part of [#378](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/378) ([450fde4](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/450fde4db55b38f0a09f411bc7de0f7ceac21af9))
+
 ## [0.12.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.11.0...v0.12.0) (2023-05-09)
 
 
