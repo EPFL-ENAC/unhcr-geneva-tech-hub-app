@@ -213,7 +213,7 @@
     "_id": "REF_EFF_KRS",
     "type": "number",
     "category": "Energy",
-    "description": "Energy - Cookstove - Emissions Factor - Kerosene [kg CO2e/L],
+    "description": "Energy - Cookstove - Emissions Factor - Kerosene [kg CO2e/L]",
     "value": 2.559489354,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
