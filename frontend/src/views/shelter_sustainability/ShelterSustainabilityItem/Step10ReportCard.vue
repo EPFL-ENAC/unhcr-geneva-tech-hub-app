@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col class="d-flex">
+      <v-col class="d-flex align-center">
         <h2 class="d-flex align-center project__h3 font-weight-medium">
           {{ infoTooltipText[$route.name].title }}
         </h2>

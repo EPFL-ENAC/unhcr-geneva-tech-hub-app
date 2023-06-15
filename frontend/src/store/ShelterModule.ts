@@ -1,3 +1,4 @@
+import { checkIfAdmin } from "@/plugins/user";
 import { getNewName, updateMetaFields } from "@/store/documentUtils";
 import { RootState } from "@/store/index";
 import { ScoreCard, Shelter, ShelterState } from "@/store/ShelterInterface";
@@ -40,6 +41,7 @@ const mutations: MutationTree<ShelterState> = {
     state.localCouch?.cancel();
   },
   SET_SHELTERS(state, value) {
+    // sorting is done in the frontend instead of couchdb..
     value.sort(function (a: Shelter, b: Shelter) {
       const nameA = a.name.toLowerCase(),
         nameB = b.name.toLowerCase();
@@ -94,9 +96,13 @@ const actions: ActionTree<ShelterState, RootState> = {
   },
   getShelters: (context: ActionContext<ShelterState, RootState>) => {
     const localCouch = context.state.localCouch;
+    const user = context.rootGetters["UserModule/user"];
+    const isAdmin = checkIfAdmin(user);
     // shelters/_design/shelter/_view/lits?include_docs=true
     return localCouch?.remoteDB
-      .query("shelter/list")
+      .query("shelter/list", {
+        keys: ["public", isAdmin ? "private" : `private_${user.name}`],
+      })
       .then(function (result) {
         context.commit(
           "SET_SHELTERS",

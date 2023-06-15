@@ -53,14 +53,16 @@
             </v-list-item-content>
           </v-list-item>
 
-          <v-list-item v-if="notificationsLength">
+          <v-list-item
+            v-if="notificationsLength"
+            @click.stop="toggleNotificationCenter"
+          >
             <v-list-item-icon>
               <v-btn
                 icon
                 small
                 style="width: 24px; height: 24px"
                 aria-label="notification-center"
-                @click.stop="toggleNotificationCenter"
               >
                 <v-badge
                   :content="notificationsLength"

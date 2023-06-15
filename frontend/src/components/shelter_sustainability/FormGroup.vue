@@ -7,7 +7,7 @@
           depth == 0,
       }"
     >
-      <v-col :cols="depth > 0 ? 11 : 12" class="d-flex v-tabs-bar">
+      <v-col :cols="depth > 0 ? 11 : 12" class="d-flex v-tabs-bar align-center">
         <component
           :is="`h${depth + 2}`"
           :class="`project-shelter__h${depth + 3}  font-weight-medium text-h${

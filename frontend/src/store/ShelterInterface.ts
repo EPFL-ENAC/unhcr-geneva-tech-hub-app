@@ -76,6 +76,8 @@ export interface Shelter {
   image?: ImageShelter | undefined;
   risk_flood: string;
   risk_seismic: string;
+  completed: boolean;
+  public: boolean;
 
   items: Item[];
   items_individual_shelter: number;

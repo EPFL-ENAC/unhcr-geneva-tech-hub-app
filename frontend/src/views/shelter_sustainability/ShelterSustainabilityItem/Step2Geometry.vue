@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row v-if="$router.currentRoute.name === 'ShelterSustainabilityStep2'">
-      <v-col class="d-flex">
+      <v-col class="d-flex align-center">
         <h2 class="text-h4 project__h3 font-weight-medium">
           {{ infoTooltipText[$route.name].title }}
         </h2>
