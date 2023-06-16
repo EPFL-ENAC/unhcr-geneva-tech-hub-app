@@ -276,6 +276,8 @@ export function generateNewShelter(name: string, user: CouchUser): Shelter {
       name,
       organisation: "",
       shelter_type: listOfShelterType[0],
+      completed: false,
+      public: true,
       shelter_total: undefined, // number of shelters
       shelter_occupants: undefined, // people
       shelter_lifespan: undefined, // years

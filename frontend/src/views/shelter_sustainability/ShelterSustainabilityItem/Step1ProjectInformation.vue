@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row v-if="$router.currentRoute.name === 'ShelterSustainabilityStep1'">
-      <v-col class="d-flex">
+      <v-col class="d-flex align-center">
         <h2 class="text-h4 project__h3 font-weight-medium">
           {{ infoTooltipText[$route.name].title }}
         </h2>
@@ -10,11 +10,20 @@
         </info-tooltip>
       </v-col>
       <v-spacer></v-spacer>
-      <v-col class="col-auto">
+      <v-col class="col-auto d-flex align-center">
         <user-manager
           v-model="localShelter.users"
           @change="updateFormInput"
         ></user-manager>
+        <!-- Make project public -->
+        <v-switch
+          v-model="localShelter.public"
+          :label="`${localShelter?.public ? 'Public' : 'Private'} project`"
+          @change="updateFormInput"
+        ></v-switch>
+        <info-tooltip>
+          Public projects are visible for all users, enabling dissemination of shelter designs and assessments. Private projects are visible to the project owner only.
+        </info-tooltip>
       </v-col>
     </v-row>
     <v-row>
@@ -47,12 +56,12 @@
                   @change="updateFormInput"
                 />
                 <country-select
-                  id="location_country"
+                  id="Country"
                   :value.sync="localShelter.location_country"
                   required
                   label="Country"
                   type="text"
-                  name="location_country"
+                  name="Country"
                   @change="updateFormInput"
                   @update:latitude="updateLatitude"
                   @update:longitude="updateLongitude"

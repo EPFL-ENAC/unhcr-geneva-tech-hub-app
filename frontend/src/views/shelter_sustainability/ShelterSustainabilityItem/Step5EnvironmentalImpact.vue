@@ -1,7 +1,7 @@
 <template>
   <v-container v-if="shelter" fluid class="shelter-step-5-container">
     <v-row v-if="$route.name === 'ShelterSustainabilityStep5'">
-      <v-col class="d-flex">
+      <v-col class="d-flex align-center">
         <h2 class="text-h4 project__h3 font-weight-medium">
           {{ infoTooltipText[$route.name].title }}
         </h2>

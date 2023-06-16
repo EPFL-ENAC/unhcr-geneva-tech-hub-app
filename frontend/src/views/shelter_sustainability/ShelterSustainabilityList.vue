@@ -234,6 +234,7 @@
                         class="text-caption align-center d-flex font-italic"
                       >
                         Created by: {{ project.created_by }}
+                        <v-icon v-if="!project.public">$mdiLock</v-icon>
                       </v-col>
                     </v-row>
                   </v-col>
