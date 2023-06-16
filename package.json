@@ -19,7 +19,7 @@
     ]
   },
   "name": "unhcr-geneva-tech-hub-app",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "repository": "https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app",
   "author": "Guilbert Pierre",
   "license": "GPL-3",
