@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.13.0...v0.14.0) (2023-06-16)
+
+
+### Features
+
+* **shelter:** add public/private view for projects ([1e77b3e](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/1e77b3e8c3d3eb9d26bd9ad929274e69a6fa5967))
+* **shelter:** correct js indentation [#377](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/377) [#393](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/393) ([5263947](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/526394759a09ea6e2c3ab67df195f752ce23a2b9))
+
 ## [0.13.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.12.0...v0.13.0) (2023-06-05)
 
 
