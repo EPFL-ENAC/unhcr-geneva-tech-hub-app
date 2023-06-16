@@ -17,6 +17,7 @@ function (doc) {
       updated_by: doc.updated_by || "",
       location_country: doc.location_country || "",
       organisation: doc.organisation || "",
+      completed: doc.completed || false,
     };
 
   if (doc.public === null || doc.public === undefined || doc.public) {

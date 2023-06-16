@@ -17,6 +17,16 @@
           >Export Bill of Quantities pdf</v-btn
         >
       </v-col>
+      <v-spacer />
+      <v-col class="col-auto d-flex align-center">
+        <span class="mr-4">Bill of quantities completed ?</span> <v-switch
+          v-model="localShelter.completed_boq"
+          @change="updateFormInput"
+        ></v-switch>
+        <info-tooltip>
+          Toggle switch to mark bill of quantities as completed
+        </info-tooltip>
+      </v-col>
     </v-row>
     <v-row class="d-print-none">
       <v-col>
@@ -333,6 +343,10 @@ export default class Step3Materials extends Vue {
       width: "140px",
     },
   ];
+
+  public updateFormInput(): void {
+    this.localShelter = Object.assign({}, this.localShelter);
+  }
 
   public submitForm(): void {
     this.$set(this.localShelter, "items", this.items);

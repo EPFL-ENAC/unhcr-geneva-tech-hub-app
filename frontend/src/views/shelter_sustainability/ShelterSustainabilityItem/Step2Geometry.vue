@@ -9,6 +9,17 @@
           {{ infoTooltipText[$route.name].text }}
         </info-tooltip>
       </v-col>
+      <v-spacer />
+      <v-col class="col-auto d-flex align-center">
+        <span class="mr-4">Project geometry completed ?</span> 
+        <v-switch
+          v-model="localShelter.completed_geometry"
+          @change="updateFormInput"
+        ></v-switch>
+        <info-tooltip>
+          Toggle switch to mark geometry as completed
+        </info-tooltip>
+      </v-col>
     </v-row>
     <v-row>
       <v-col>
