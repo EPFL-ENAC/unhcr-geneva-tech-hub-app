@@ -26,7 +26,7 @@
     "description": "Energy - Electricity - Emission Factor - Solar [kg CO2e/kWh]",
     "value": 0,
     "source": null,
-    "ref": null,
+    "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions.",
     "index": 2
   },
   {
@@ -316,7 +316,7 @@
     "description": "Energy - Lighting - Emission Factor - Torch or phone with battery [kg CO2e/kWh]",
     "value": 0,
     "source": null,
-    "ref": null,
+    "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions.",
     "index": 31
   }
 ]
