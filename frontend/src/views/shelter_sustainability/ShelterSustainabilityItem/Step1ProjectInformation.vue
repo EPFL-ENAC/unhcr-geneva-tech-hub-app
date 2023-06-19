@@ -22,11 +22,8 @@
           @change="updateFormInput"
         ></v-switch>
         <info-tooltip>
-          Public projects are visible for all users, enabling dissemination of
-          shelter designs and assessments. Private projects are visible to the
-          project owner only.
+          Public projects are visible for all users, enabling dissemination of shelter designs and assessments. Private projects are visible to the project owner only.
         </info-tooltip>
-        {{ localShelter.completed_info ? "completed" : "not completed" }}
       </v-col>
     </v-row>
     <v-row>
@@ -38,148 +35,138 @@
       <v-col>
         <v-sheet v-if="localShelter" elevation="2" rounded>
           <v-container fluid>
-            <v-form v-model="localShelter.completed_info">
-              <v-row>
-                <v-col class="about-first-column" cols="6">
-                  <v-text-field
-                    v-model="localShelter.name"
-                    name="name"
-                    label="Project name"
-                    type="text"
-                    required
-                    :rules="textRules"
-                    @change="updateFormInput"
-                  />
+            <v-row>
+              <v-col class="about-first-column" cols="6">
+                <v-text-field
+                  v-model="localShelter.name"
+                  name="name"
+                  label="Project name"
+                  type="text"
+                  required
+                  :rules="textRules"
+                  @change="updateFormInput"
+                />
 
-                  <v-text-field
-                    id="location_name"
-                    v-model="localShelter.location_name"
-                    name="location_name"
-                    label="Site name"
-                    type="text"
-                    required
-                    :rules="textRules"
-                    @change="updateFormInput"
-                  />
-                  <country-select
-                    id="Country"
-                    :value.sync="localShelter.location_country"
-                    required
-                    label="Country"
-                    type="text"
-                    name="Country"
-                    @change="updateFormInput"
-                    @update:latitude="updateLatitude"
-                    @update:longitude="updateLongitude"
-                    @update:region="updateRegion"
-                  />
-                  <v-text-field
-                    id="region"
-                    :value="localShelter.region"
-                    name="region"
-                    label="region"
-                    required
-                    :disabled="true"
-                    type="text"
-                  />
-                  <v-text-field
-                    id="organisation"
-                    v-model="localShelter.organisation"
-                    name="organisation"
-                    label="Implementing organisation"
-                    type="text"
-                    required
-                    :rules="textRules"
-                    @change="updateFormInput"
-                  />
+                <v-text-field
+                  id="location_name"
+                  v-model="localShelter.location_name"
+                  name="location_name"
+                  label="Site name"
+                  type="text"
+                  @change="updateFormInput"
+                />
+                <country-select
+                  id="Country"
+                  :value.sync="localShelter.location_country"
+                  required
+                  label="Country"
+                  type="text"
+                  name="Country"
+                  @change="updateFormInput"
+                  @update:latitude="updateLatitude"
+                  @update:longitude="updateLongitude"
+                  @update:region="updateRegion"
+                />
+                <v-text-field
+                  id="region"
+                  :value="localShelter.region"
+                  name="region"
+                  label="region"
+                  :disabled="true"
+                  type="text"
+                />
+                <v-text-field
+                  id="organisation"
+                  v-model="localShelter.organisation"
+                  name="organisation"
+                  label="Implementing organisation"
+                  type="text"
+                  required
+                  :rules="textRules"
+                  @change="updateFormInput"
+                />
 
-                  <v-row>
-                    <v-col class="d-flex info-map">
-                      <territory-map
-                        :value="latLng"
-                        required
-                        @update:value="updateLatLng"
-                      />
-                    </v-col>
-                  </v-row>
-                </v-col>
-                <v-col class="about-second-column" cols="6">
-                  <v-text-field
-                    v-model.number="localShelter.shelter_total"
-                    name="shelter_total"
-                    label="Number of shelters"
-                    type="number"
-                    required
-                    :rules="shelterTotalRules"
-                    @change="updateFormInput"
-                  />
-                  <v-select
-                    v-model.number="localShelter.shelter_occupants"
-                    :items="occupantsOptions"
-                    label="Intended Occupants per shelter"
-                    name="shelter_occupants"
-                    type="number"
-                    required
-                    :rules="shelterOccupantRules"
-                    @change="updateFormInput"
-                  ></v-select>
-                  <v-select
-                    v-model="localShelter.shelter_type"
-                    :items="shelterTypes"
-                    label="Shelter type"
-                    name="shelter_type"
-                    required
-                    :rules="shelterTypeRules"
-                    @change="updateFormInput"
-                  ></v-select>
-                  <v-select
-                    v-model.number="localShelter.shelter_lifespan"
-                    :items="lifeExpectancy"
-                    name="shelter_lifespan"
-                    label="Expected average shelter lifespan"
-                    item-text="label"
-                    item-value="value"
-                    type="number"
-                    required
-                    :rules="shelterLifespanRules"
-                    @change="updateFormInput"
-                  ></v-select>
+                <v-row>
+                  <v-col class="d-flex info-map">
+                    <territory-map
+                      :value="latLng"
+                      @update:value="updateLatLng"
+                    />
+                  </v-col>
+                </v-row>
+              </v-col>
+              <v-col class="about-second-column" cols="6">
+                <v-text-field
+                  v-model.number="localShelter.shelter_total"
+                  name="shelter_total"
+                  label="Number of shelters"
+                  type="number"
+                  required
+                  :rules="shelterTotalRules"
+                  @change="updateFormInput"
+                />
+                <v-select
+                  v-model.number="localShelter.shelter_occupants"
+                  :items="occupantsOptions"
+                  label="Intended Occupants per shelter"
+                  name="shelter_occupants"
+                  type="number"
+                  required
+                  :rules="shelterOccupantRules"
+                  @change="updateFormInput"
+                ></v-select>
+                <v-select
+                  v-model="localShelter.shelter_type"
+                  :items="shelterTypes"
+                  label="Shelter type"
+                  name="shelter_type"
+                  required
+                  :rules="shelterTypeRules"
+                  @change="updateFormInput"
+                ></v-select>
+                <v-select
+                  v-model.number="localShelter.shelter_lifespan"
+                  :items="lifeExpectancy"
+                  name="shelter_lifespan"
+                  label="Expected average shelter lifespan"
+                  item-text="label"
+                  item-value="value"
+                  type="number"
+                  required
+                  :rules="shelterLifespanRules"
+                  @change="updateFormInput"
+                ></v-select>
 
-                  <v-divider />
-                  <v-text-field
-                    v-model.number="localShelter.setup_people"
-                    name="setup_people"
-                    required
-                    :rules="numberRules"
-                    label="Number of people for setup"
-                    @change="updateFormInput"
-                  />
-                  <v-text-field
-                    v-model.number="localShelter.setup_time"
-                    name="setup_time"
-                    required
-                    :rules="numberRules"
-                    label="Time for setup (days)"
-                    @change="updateFormInput"
-                  />
-                  <v-divider />
-                  <input-with-info
-                    v-model="localShelter.risk_flood"
-                    :info="riskFlood"
-                    required
-                    :depth="2"
-                    @change="updateFormInput"
-                  />
-                  <input-with-info
-                    v-model="localShelter.risk_seismic"
-                    :info="riskSeismic"
-                    required
-                    :depth="2"
-                    @change="updateFormInput"
-                  />
-                </v-col>
-              </v-row>
-            </v-form>
+                <v-divider />
+                <v-text-field
+                  v-model.number="localShelter.setup_people"
+                  name="setup_people"
+                  label="Number of people for setup"
+                  type="number"
+                  @change="updateFormInput"
+                />
+                <v-text-field
+                  v-model.number="localShelter.setup_time"
+                  name="setup_time"
+                  label="Time for setup (days)"
+                  type="number"
+                  @change="updateFormInput"
+                />
+                <v-divider />
+                <input-with-info
+                  v-model="localShelter.risk_flood"
+                  :info="riskFlood"
+                  :depth="2"
+                  @change="updateFormInput"
+                />
+                <input-with-info
+                  v-model="localShelter.risk_seismic"
+                  :info="riskSeismic"
+                  :depth="2"
+                  @change="updateFormInput"
+                />
+              </v-col>
+            </v-row>
           </v-container>
         </v-sheet>
       </v-col>
@@ -205,8 +192,7 @@
             'warning--text': localShelter.images.length >= 10,
             'd-none': localShelter.images.length < 10,
           }"
-        >
-          (Max limit of 10 files per shelter)
+          >(Max limit of 10 files per shelter)
         </span>
         <upload-images
           :dialog.sync="uploadDialog"
@@ -234,9 +220,9 @@
                   <v-img :src="image.url"></v-img>
                 </v-avatar>
                 <v-avatar v-else class="profile" color="grey" size="164" tile>
-                  <v-card-title class="white--text">
-                    Thumbnail not available
-                  </v-card-title>
+                  <v-card-title class="white--text"
+                    >Thumbnail not available</v-card-title
+                  >
                 </v-avatar>
               </v-col>
               <v-col>
@@ -246,9 +232,9 @@
                     :href="image?.origin_url ?? image?.url"
                     target="_blank"
                   >
-                    <span style="text-overflow: ellipsis">
-                      {{ image.name }}
-                    </span>
+                    <span style="text-overflow: ellipsis">{{
+                      image.name
+                    }}</span>
                   </a>
                   <v-text-field
                     v-else
@@ -260,15 +246,15 @@
                     @keypress.escape="toggleImage"
                     @click:append="toggleImage"
                     @change="updateFormInput"
-                  ></v-text-field>
+                  >
+                  </v-text-field>
                   <v-btn
                     v-if="toggledImage != image.url"
                     small
                     icon
                     @click="toggleImage(image.url)"
+                    ><v-icon small>$mdiPencil</v-icon></v-btn
                   >
-                    <v-icon small>$mdiPencil</v-icon>
-                  </v-btn>
                 </div>
                 <div v-else>
                   <a
@@ -320,10 +306,8 @@
                       big
                       :href="image?.origin_url ?? image?.url"
                       target="_blank"
+                      >download<v-icon small>$mdiDownload</v-icon></v-btn
                     >
-                      download
-                      <v-icon small>$mdiDownload</v-icon>
-                    </v-btn>
                     <v-btn
                       v-if="toggledImage != image.url"
                       class="mr-8"
@@ -345,10 +329,8 @@
                       big
                       :href="image?.origin_url ?? image?.url"
                       target="_blank"
+                      >download <v-icon small>$mdiDownload</v-icon></v-btn
                     >
-                      download
-                      <v-icon small>$mdiDownload</v-icon>
-                    </v-btn>
                   </v-col>
                 </v-row>
               </v-col>
@@ -496,12 +478,6 @@ export default class Step1 extends Vue {
     (v: string): boolean | string =>
       v?.length >= 1 || `should have a length >= 1`,
   ];
-  numberRules = [
-    (v: string | number): boolean | string => {
-      return (v !== undefined && v !== "") || `is required`;
-    },
-  ];
-
   shelterTypeRules = this.textRules;
 
   shelterTotalRules = [
@@ -692,7 +668,6 @@ export default class Step1 extends Vue {
 ::v-deep input[type="number"] {
   -moz-appearance: textfield;
 }
-
 .info-map {
   height: 317px;
 }

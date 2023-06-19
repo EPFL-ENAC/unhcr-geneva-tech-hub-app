@@ -132,7 +132,6 @@ const actions: ActionTree<ShelterState, RootState> = {
       .then(function (result) {
         const scorecards = result.rows
           .filter((x) => x.value !== undefined)
-          .filter((x) => x.value.completed === true)
           .map((x) => ({
             ...x.value,
             id: x.id,

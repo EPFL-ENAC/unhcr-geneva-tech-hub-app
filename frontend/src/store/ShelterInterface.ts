@@ -62,7 +62,6 @@ export interface Shelter {
   _rev?: string;
   name: string;
   organisation: string;
-  region: string;
   shelter_total: number | undefined;
   shelter_occupants: number | undefined;
   shelter_lifespan: number | undefined;
@@ -78,9 +77,6 @@ export interface Shelter {
   risk_flood: string;
   risk_seismic: string;
   completed: boolean;
-  completed_info: boolean;
-  completed_geometry: boolean;
-  completed_boq: boolean;
   public: boolean;
 
   items: Item[];
@@ -147,7 +143,7 @@ export interface Geometry {
 export type GeometryKeys = "windowArea" | "floorArea" | "volume";
 
 export interface Score {
-  [property: string]: number | undefined | Score | boolean;
+  [property: string]: number | undefined | Score;
 }
 
 export type Units = UnitsMaterial | UnitsLabour | UnitsOther;

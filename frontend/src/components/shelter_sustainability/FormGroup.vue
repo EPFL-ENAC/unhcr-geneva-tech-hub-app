@@ -27,18 +27,6 @@
         >
           &nbsp;({{ result }})
         </span>
-
-        <v-spacer />
-        <v-col v-if="depth == 0" class="col-auto d-flex align-center">
-          <span class="mr-4">{{ form.title }} completed ?</span>
-          <v-switch
-            :value="value.completed"
-            @change="(v) => updateFormInput('completed', v)"
-          ></v-switch>
-          <info-tooltip>
-            Toggle switch to mark {{  form.title }} as completed
-          </info-tooltip>
-        </v-col>
       </v-col>
       <v-col
         v-if="depth > 0"
@@ -116,18 +104,12 @@ import { Component, Vue } from "vue-property-decorator";
 /** FormGroup */
 export default class FormGroup extends Vue {
   value!: Score;
-  completed!: boolean;
   form!: ShelterForm;
 
   showSubPanel = true;
   infoTooltipText = infoTooltipText;
   public toggle(): void {
     this.showSubPanel = !this.showSubPanel;
-  }
-
-  public updateFormInput(field: string, v: boolean): void {
-    const newValue = { ...this.value, [field]: v };
-    this.$emit("input", newValue);
   }
 
   // Avoid mutating a prop directly since the value will be overwritten whenever

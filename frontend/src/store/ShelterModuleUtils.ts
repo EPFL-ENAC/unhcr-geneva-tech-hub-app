@@ -47,7 +47,7 @@ export function computeShelter(value: Shelter): Shelter {
     .map((x) => tech[x])
     .filter((x) => x !== undefined).length;
   const valuesTech = Object.values(resultShelter.technical_performance).filter(
-    (x) => x !== undefined && typeof x !== "boolean" && x !== null
+    (x) => x !== undefined
   ) as number[];
   if (valuesTech.length) {
     const score = valuesTech.reduce((acc, el) => acc + el);
@@ -61,14 +61,6 @@ export function computeShelter(value: Shelter): Shelter {
       TOTAL_TECH_PERF - nonApplicableTech
     }`;
     resultShelter.technical_performance_score = 0;
-
-    resultShelter.completed =
-      (resultShelter.completed_info &&
-        resultShelter.completed_geometry &&
-        resultShelter.completed_boq &&
-        (resultShelter.habitability.completed as boolean) &&
-        (resultShelter.technical_performance.completed as boolean)) ??
-      false;
   }
 
   // change because of non-applicable
@@ -78,7 +70,7 @@ export function computeShelter(value: Shelter): Shelter {
     .map((x) => hab[x])
     .filter((x) => x !== undefined).length;
   const valuesHab = Object.values(resultShelter.habitability).filter(
-    (x) => x !== undefined && typeof x !== "boolean" && x !== null
+    (x) => x !== undefined
   ) as number[];
   if (valuesHab.length) {
     const score = valuesHab.reduce((acc, el) => acc + el);
@@ -285,11 +277,7 @@ export function generateNewShelter(name: string, user: CouchUser): Shelter {
       organisation: "",
       shelter_type: listOfShelterType[0],
       completed: false,
-      completed_info: false,
-      completed_geometry: false,
-      completed_boq: false,
       public: true,
-      region: "",
       shelter_total: undefined, // number of shelters
       shelter_occupants: undefined, // people
       shelter_lifespan: undefined, // years
@@ -302,14 +290,10 @@ export function generateNewShelter(name: string, user: CouchUser): Shelter {
       images: [],
       risk_flood: "",
       risk_seismic: "",
-      habitability: {
-        completed: false,
-      },
+      habitability: {},
       habitability_score: 0,
       technical_performance_score: 0,
-      technical_performance: {
-        completed: false,
-      },
+      technical_performance: {},
       geometry: getNewGeometry(),
       items: [],
       items_individual_shelter: 1,
