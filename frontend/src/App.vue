@@ -173,9 +173,13 @@
 
     <v-main v-if="$userIs('LoggedOut')" class="unhcr-main">
       <notification-center />
-      <router-view v-if="$route.name === 'About'" />
+      <template v-if="noGuardsRoutes.includes($route.name)">
+        <router-view />
+        <router-view :name="$route.name" />
+      </template>
+
       <v-layout
-        v-else-if="$router.currentRoute.name !== 'Login'"
+        v-else
         align-center
         justify-center
         class="login"
@@ -186,7 +190,6 @@
           <login-component />
         </v-flex>
       </v-layout>
-      <router-view v-else name="Login" />
     </v-main>
 
     <v-main v-else class="unhcr-main">
@@ -197,6 +200,8 @@
       <v-fade-transition mode="out-in">
         <router-view />
         <router-view name="Login" />
+        <router-view name="ForgotPassword" />
+        <router-view name="Confirm" />
       </v-fade-transition>
     </v-main>
 
@@ -320,6 +325,16 @@ export default class App extends Vue {
   rootRoute = {} as RouteRecordPublic;
   currentRouteName = "";
   rootRouteTitle = "";
+
+  noGuardsRoutes = [
+    "Login",
+    "Apps",
+    "ForgotPassword",
+    "Register",
+    "Confirm",
+    "Unconfirm",
+    "ChangePassword",
+  ];
 
   get currentRouteId(): string | undefined {
     return this.$store.getters?.["ShelterModule/shelter"]?.name;

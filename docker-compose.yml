@@ -63,8 +63,8 @@ services:
     build: ./couchdb-setup
     depends_on:
       - couchdb
-  upload-fast-api:
-    build: ./uploadFASTAPI
+  rest-api:
+    build: ./rest-api
     environment:
       - S3_ENDPOINT_HOSTNAME=${S3_ENDPOINT_HOSTNAME}
       - S3_ENDPOINT_PROTOCOL=${S3_ENDPOINT_PROTOCOL}
@@ -79,12 +79,12 @@ services:
     ports:
       - '5050:5050'
     labels:
-      - "traefik.http.routers.uploadFASTAPI.priority=1001"
-      - "traefik.http.routers.uploadFASTAPI.tls=true"
-      - "traefik.http.routers.uploadFASTAPI.rule=PathPrefix(`/api`)"
-      - "traefik.http.services.uploadFASTAPI.loadbalancer.server.port=5050"
-      - "traefik.http.routers.uploadFASTAPI.middlewares=uploadFASTAPI-middleware"
-      - "traefik.http.middlewares.uploadFASTAPI-middleware.stripprefix.prefixes=/api"
+      - "traefik.http.routers.restAPI.priority=1001"
+      - "traefik.http.routers.restAPI.tls=true"
+      - "traefik.http.routers.restAPI.rule=PathPrefix(`/api`)"
+      - "traefik.http.services.restAPI.loadbalancer.server.port=5050"
+      - "traefik.http.routers.restAPI.middlewares=restAPI-middleware"
+      - "traefik.http.middlewares.restAPI-middleware.stripprefix.prefixes=/api"
     restart: unless-stopped
     depends_on:
       - couchdb

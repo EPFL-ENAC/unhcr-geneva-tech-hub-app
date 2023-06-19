@@ -72,7 +72,7 @@ export interface UserState {
 }
 
 export interface UserCouchCredentials {
-  username: string;
+  username: string; // should be an email
   password: string;
 }
 
@@ -327,6 +327,26 @@ const actions: ActionTree<UserState, RootState> = {
       .finally(() => {
         context.commit("UNSET_USER_LOADING");
       });
+  },
+  register: async (
+    context: ActionContext<UserState, RootState>,
+    credentials
+  ) => {
+    context.commit("SET_USER_LOADING");
+    // removeItem: idea was to remove azure authentication info
+    // it is biased: we trigger a warning and logout for azure first
+    removeAllOauthTokens();
+    const { email, password } = credentials;
+    console.log(email, password);
+    // return loginDefault(username, password)
+    //   .then((axiosResponse) => {
+    //     context.commit("SET_USER", axiosResponse.data);
+    //     return axiosResponse;
+    //   })
+    //   .finally(() => {
+    //     context.commit("UNSET_USER_LOADING");
+    //   });
+    context.commit("UNSET_USER_LOADING");
   },
   loginAsGuest: async (context: ActionContext<UserState, RootState>) => {
     // force logout, just in case user already logged via the /db interface
