@@ -68,7 +68,7 @@ export default class Trucking extends Vue {
   ): WashTruckingItemResults {
     const { US_UNI, US_TYP, WACL, TR_TYP, TOT_WS, TR_VOL, LIT_WS } =
       localItemInput || {};
-    const { REF_WSH_D, REF_WSH_G, REF_DIES_L, REF_GAZ_L } = ghgMapRef;
+    const { REF_WSH_D, REF_WSH_G, REF_EFF_DIES, REF_EFF_PET } = ghgMapRef;
     try {
       /*
         When wastewater or faecal sludge is checked in the dropdown,
@@ -95,7 +95,7 @@ export default class Trucking extends Vue {
 
       if (US_UNI === LITERS) {
         const washFactorL =
-          TR_TYP === DIESEL ? REF_DIES_L?.value : REF_GAZ_L?.value;
+          TR_TYP === DIESEL ? REF_EFF_DIES?.value : REF_EFF_PET?.value;
         if (!washFactorL) {
           throw new Error(`washFactorL undefined`);
         }
