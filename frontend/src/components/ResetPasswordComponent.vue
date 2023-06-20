@@ -1,42 +1,42 @@
 <template>
   <v-card class="elevation-12">
     <v-toolbar dark color="primary" class="justify-center d-flex">
-      <v-toolbar-title data-cy="loginWelcome">Register</v-toolbar-title>
+      <v-toolbar-title data-cy="loginWelcome">Reset password</v-toolbar-title>
     </v-toolbar>
     <v-row>
-      <v-col>
-        <v-form v-if="showRegistrationComplete">
-          <v-card-text class="d-flex flex-column" style="gap: 1rem">
-            Registration email has been sent
-          </v-card-text>
-          <v-card-actions
-            class="justify-center d-flex flex-column pa-4"
-            style="margin-left: 33px; gap: 1rem"
+      <v-col v-if="showSuccessReset">
+        <v-card-text class="">
+          <span>
+            An email confirming the reset is on its way
+          </span>
+          <v-btn
+            class="mx-4"
+            text
+            data-cy="unhcr-user-login"
+            color="primary"
+            :to="{ name: 'Login' }"
+            >Go back to Login again</v-btn
           >
-            <v-btn
-              block
-              :to="{ name: 'Login' }"
-              color="#006fa0"
-              style="color: white"
-              >Go back</v-btn
-            >
-          </v-card-actions>
-        </v-form>
-        <v-form v-else v-model="formValid" @submit.prevent="registerCouchdb">
+        </v-card-text>
+      </v-col>
+      <v-col v-else>
+        <v-alert v-if="!token" type="warning"
+          >token is missing or expired
+          <v-btn
+            class="mx-4"
+            text
+            data-cy="unhcr-user-login"
+            color="primary"
+            :to="{ name: 'ForgotPassword' }"
+            >Try again</v-btn
+          >
+        </v-alert>
+        <v-form
+          v-model="formValid"
+          :disabled="!token"
+          @submit.prevent="resetPasswordCouchdb"
+        >
           <v-card-text class="d-flex flex-column" style="gap: 1rem">
-            <v-text-field
-              id="email"
-              v-model="username"
-              autocomplete="email"
-              outlined
-              label="Email"
-              prepend-icon="$mdiAccount"
-              placeholder=" "
-              persistent-placeholder
-              required
-              type="email"
-              name="email"
-            />
             <v-text-field
               id="current-password"
               v-model="password"
@@ -80,12 +80,20 @@
             style="margin-left: 33px; gap: 1rem"
           >
             <v-btn
+              v-if="showReset"
+              text
+              data-cy="unhcr-user-login"
+              color="primary"
+              :to="{ name: 'ForgotPassword' }"
+              >Send reset password email</v-btn
+            >
+            <v-btn
               block
-              type="submit"
               :disabled="!formValid"
+              type="submit"
               color="#006fa0"
               style="color: white"
-              >Create account</v-btn
+              >Reset password</v-btn
             >
           </v-card-actions>
         </v-form>
@@ -95,7 +103,7 @@
 </template>
 
 <script lang="ts">
-import { UserCouchCredentials } from "@/store/UserModule";
+import { CredentialsWithToken } from "@/store/UserModule";
 
 import { AxiosError, AxiosPromise } from "axios";
 import "vue-class-component/hooks";
@@ -108,11 +116,11 @@ import { mapActions, mapGetters } from "vuex";
   },
 
   methods: {
-    ...mapActions("UserModule", ["register"]),
+    ...mapActions("UserModule", ["resetPassword"]),
   },
 })
-export default class RegisterComponent extends Vue {
-  formValid = true;
+export default class ResetPasswordComponent extends Vue {
+  formValid = false;
   username = ""; // shoudl be an email
   password = "";
   confirmPassword = "";
@@ -120,10 +128,10 @@ export default class RegisterComponent extends Vue {
   minLength = 8;
   maxLength = 24;
   showReset = false;
-  showRegistrationComplete = false;
+  showSuccessReset = false;
 
   passwordSecretToggle = true;
-  register!: (doc: UserCouchCredentials) => AxiosPromise;
+  resetPassword!: (doc: CredentialsWithToken) => AxiosPromise;
 
   public get passwordInputType(): string {
     return this.passwordSecretToggle ? "password" : "text";
@@ -144,17 +152,36 @@ export default class RegisterComponent extends Vue {
   public get destinationRouteName(): string {
     const currentRouteName = this.$router.currentRoute.name as string;
     // TODO: check again
-    return currentRouteName === "Register" ? "Login" : currentRouteName;
+    return currentRouteName === "ResetPassword" ? "Login" : currentRouteName;
   }
-  registerCouchdb(): void {
+
+  public get token(): string {
+    const searchParams = new URLSearchParams(
+      window.location.search.substring(1)
+    );
+    return searchParams.get("token") || "";
+  }
+  resetPasswordCouchdb(): void {
     this.error = "";
-    const { username, password } = this;
-    this.register({ username, password })
+    const { password } = this;
+    if (this.token === "") {
+      // show reset password link button
+      this.showReset = true;
+      this.username = "";
+      this.password = "";
+      // window.location.search = ""; // deactivate the search token
+      this.$router.push({ name: this.$route.name as string, params: {} });
+      throw new Error("Reset password link has expired");
+    }
+    this.resetPassword({
+      credentials: { password },
+      token: this.token,
+    })
       .then(() => {
+        this.showSuccessReset = true;
         // if (this.$route.name !== this.destinationRouteName) {
         //   this.$router.push({ name: this.destinationRouteName });
         // }
-        this.showRegistrationComplete = true;
       })
       .catch((error: AxiosError) => {
         switch (error.response?.status) {
@@ -170,12 +197,6 @@ export default class RegisterComponent extends Vue {
 
   async created(): Promise<void> {
     console.log("created");
-  }
-
-  userExist(): void {
-    // userAlready exist/
-    // for security reason don't inform the user the email already exist
-    console.log("check");
   }
 
   required(value: string) {

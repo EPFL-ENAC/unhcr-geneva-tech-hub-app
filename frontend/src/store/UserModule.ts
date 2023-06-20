@@ -76,6 +76,20 @@ export interface UserCouchCredentials {
   password: string;
 }
 
+export interface UserPassword {
+  password: string;
+}
+
+export interface CredentialsWithToken {
+  credentials: UserPassword;
+  token: string;
+}
+
+export interface PasswordWithToken {
+  password: string;
+  token: string;
+}
+
 function generateEmptyUser(): CouchUser {
   return { loaded: false };
 }
@@ -336,17 +350,96 @@ const actions: ActionTree<UserState, RootState> = {
     // removeItem: idea was to remove azure authentication info
     // it is biased: we trigger a warning and logout for azure first
     removeAllOauthTokens();
-    const { email, password } = credentials;
-    console.log(email, password);
-    // return loginDefault(username, password)
-    //   .then((axiosResponse) => {
-    //     context.commit("SET_USER", axiosResponse.data);
-    //     return axiosResponse;
-    //   })
-    //   .finally(() => {
-    //     context.commit("UNSET_USER_LOADING");
-    //   });
+    const { username, password } = credentials;
+    let response;
+    try {
+      response = await axios.post(
+        `/api/register`,
+        { name: username, password },
+        {
+          headers: {
+            Accept: "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+    } catch (error: AxiosError<unknown, unknown> | unknown) {
+      console.error(error);
+    }
     context.commit("UNSET_USER_LOADING");
+    return response;
+  },
+  forgotPasswordCouchdb: async (
+    context: ActionContext<UserState, RootState>,
+    payload: UserCouchCredentials
+  ) => {
+    context.commit("SET_USER_LOADING");
+    // removeItem: idea was to remove azure authentication info
+    // it is biased: we trigger a warning and logout for azure first
+    removeAllOauthTokens();
+    let response;
+    try {
+      response = await axios.post(
+        `/api/forgot-password`,
+        { name: payload.username },
+        {
+          headers: {
+            Accept: "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+    } finally {
+      context.commit("UNSET_USER_LOADING");
+    }
+    return response;
+  },
+  resetPassword: async (
+    context: ActionContext<UserState, RootState>,
+    payload: CredentialsWithToken
+  ) => {
+    context.commit("SET_USER_LOADING");
+    // removeItem: idea was to remove azure authentication info
+    // it is biased: we trigger a warning and logout for azure first
+    removeAllOauthTokens();
+    const { password } = payload.credentials;
+    try {
+      const response = await axios.post(
+        `/api/reset-password`,
+        { password, token: payload.token },
+        {
+          headers: {
+            Accept: "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+    } catch (error: AxiosError<unknown, unknown> | unknown) {
+      console.error(error);
+    }
+    context.commit("UNSET_USER_LOADING");
+  },
+  confirmPasswordCouchdb: async (
+    context: ActionContext<UserState, RootState>,
+    payload: PasswordWithToken
+  ) => {
+    context.commit("SET_USER_LOADING");
+    // removeItem: idea was to remove azure authentication info
+    // it is biased: we trigger a warning and logout for azure first
+    removeAllOauthTokens();
+    let response;
+    try {
+      response = await axios.post(`/api/confirm-registration`, payload, {
+        headers: {
+          Accept: "application/json",
+        },
+        withCredentials: true,
+      });
+    } catch (error: AxiosError<unknown, unknown> | unknown) {
+      console.error(error);
+    }
+    context.commit("UNSET_USER_LOADING");
+    return response;
   },
   loginAsGuest: async (context: ActionContext<UserState, RootState>) => {
     // force logout, just in case user already logged via the /db interface

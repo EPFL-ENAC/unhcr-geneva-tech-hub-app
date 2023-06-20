@@ -333,7 +333,7 @@ export default class App extends Vue {
     "Register",
     "Confirm",
     "Unconfirm",
-    "ChangePassword",
+    "ResetPassword",
   ];
 
   get currentRouteId(): string | undefined {

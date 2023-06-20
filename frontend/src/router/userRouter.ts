@@ -1,8 +1,8 @@
-import ChangePassword from "@/views/ChangePasswordView.vue";
 import Confirm from "@/views/ConfirmView.vue";
 import ForgotPassword from "@/views/ForgotPasswordView.vue";
 import Login from "@/views/LoginView.vue";
 import Register from "@/views/RegisterView.vue";
+import ResetPassword from "@/views/ResetPasswordView.vue";
 import Unconfirm from "@/views/UnconfirmView.vue";
 
 export default [
@@ -47,20 +47,20 @@ export default [
     },
   },
   {
-    path: "/ChangePassword",
-    name: "ChangePassword",
+    path: "/reset-password",
+    name: "ResetPassword",
     meta: {
-      title: "ChangePassword",
+      title: "Reset password",
     },
     components: {
-      ChangePassword,
+      ResetPassword,
     },
   },
   {
     path: "/forgot-password",
     name: "ForgotPassword",
     meta: {
-      title: "ForgotPassword",
+      title: "Forgot password",
     },
     components: {
       ForgotPassword,

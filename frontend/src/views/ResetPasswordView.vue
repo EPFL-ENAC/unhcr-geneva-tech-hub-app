@@ -2,8 +2,7 @@
   <v-container class="login" fluid fill-height>
     <v-layout align-center justify-center>
       <v-flex xs10 sm9 md6 lg5>
-        Change password form
-        <!-- <login-component /> -->
+        <reset-password-component />
       </v-flex>
     </v-layout>
   </v-container>
@@ -12,13 +11,13 @@
 <script lang="ts">
 import Vue from "vue";
 import { mapGetters } from "vuex";
-// import LoginComponent from "../components/LoginComponent.vue";
+import ResetPasswordComponent from "../components/ResetPasswordComponent.vue";
 
 export default Vue.extend({
-  name: "ChangePasswordView",
-  // components: {
-  //   LoginComponent,
-  // },
+  name: "ForgotPasswordView",
+  components: {
+    ResetPasswordComponent,
+  },
   computed: {
     ...mapGetters("UserModule", ["user"]),
   },

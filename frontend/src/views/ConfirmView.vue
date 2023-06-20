@@ -2,8 +2,7 @@
   <v-container class="login" fluid fill-height>
     <v-layout align-center justify-center>
       <v-flex xs10 sm9 md6 lg5>
-        Confirm user registration
-        <!-- <login-component /> -->
+        <confirm-user-component />
       </v-flex>
     </v-layout>
   </v-container>
@@ -12,13 +11,13 @@
 <script lang="ts">
 import Vue from "vue";
 import { mapGetters } from "vuex";
-// import LoginComponent from "../components/LoginComponent.vue";
+import ConfirmUserComponent from "../components/ConfirmUserComponent.vue";
 
 export default Vue.extend({
   name: "ConfirmView",
-  // components: {
-  //   LoginComponent,
-  // },
+  components: {
+    ConfirmUserComponent,
+  },
   computed: {
     ...mapGetters("UserModule", ["user"]),
   },

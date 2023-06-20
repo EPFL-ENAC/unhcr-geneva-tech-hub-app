@@ -1,28 +1,21 @@
 <template>
   <v-card class="elevation-12">
     <v-toolbar dark color="primary" class="justify-center d-flex">
-      <v-toolbar-title data-cy="loginWelcome">Register</v-toolbar-title>
+      <v-toolbar-title data-cy="loginWelcome"
+        >Confirm registration</v-toolbar-title
+      >
     </v-toolbar>
     <v-row>
       <v-col>
-        <v-form v-if="showRegistrationComplete">
-          <v-card-text class="d-flex flex-column" style="gap: 1rem">
-            Registration email has been sent
-          </v-card-text>
-          <v-card-actions
-            class="justify-center d-flex flex-column pa-4"
-            style="margin-left: 33px; gap: 1rem"
-          >
-            <v-btn
-              block
-              :to="{ name: 'Login' }"
-              color="#006fa0"
-              style="color: white"
-              >Go back</v-btn
-            >
-          </v-card-actions>
-        </v-form>
-        <v-form v-else v-model="formValid" @submit.prevent="registerCouchdb">
+        <v-alert v-if="!token" type="warning"
+          >token is missing or expired</v-alert
+        >
+        <v-form
+          v-if="!token"
+          v-model="formValid"
+          :disabled="loading"
+          @submit.prevent="forgotPassword"
+        >
           <v-card-text class="d-flex flex-column" style="gap: 1rem">
             <v-text-field
               id="email"
@@ -37,12 +30,36 @@
               type="email"
               name="email"
             />
+            <span class="error--text">{{ error }}</span>
+          </v-card-text>
+          <v-card-actions
+            class="justify-center d-flex flex-column pa-4"
+            style="margin-left: 33px; gap: 1rem"
+          >
+            <v-btn
+              block
+              :disabled="!formValid"
+              type="submit"
+              :loading="loading"
+              color="#006fa0"
+              style="color: white"
+              >Send confirmation email again</v-btn
+            >
+          </v-card-actions>
+        </v-form>
+        <v-form
+          v-else
+          v-model="formValid"
+          :disabled="!token"
+          @submit.prevent="confirmPassword"
+        >
+          <v-card-text class="d-flex flex-column" style="gap: 1rem">
             <v-text-field
               id="current-password"
               v-model="password"
               outlined
               name="current-password"
-              label="Password"
+              label="Confirm password"
               autocomplete="new-password"
               placeholder=" "
               persistent-placeholder
@@ -55,24 +72,6 @@
               required
               @click:append="togglePassword"
             />
-            <v-text-field
-              id="confirm-current-password"
-              v-model="confirmPassword"
-              outlined
-              name="confirm-current-password"
-              autocomplete="new-password"
-              label="Confirm password"
-              placeholder=" "
-              persistent-placeholder
-              :minlength="minLength"
-              prepend-icon="$mdiLock"
-              :append-icon="passwordSecretToggle ? '$mdiEye' : '$mdiEyeOff'"
-              :type="confirmPasswordInputType"
-              :rules="[required, min6, matchingPasswords]"
-              :counter="maxLength"
-              required
-              @click:append="confirmTogglePassword"
-            />
             <span class="error--text">{{ error }}</span>
           </v-card-text>
           <v-card-actions
@@ -80,12 +79,20 @@
             style="margin-left: 33px; gap: 1rem"
           >
             <v-btn
+              v-if="showReset"
+              text
+              data-cy="unhcr-user-login"
+              color="primary"
+              :to="{ name: 'ForgotPassword' }"
+              >Send reset password email</v-btn
+            >
+            <v-btn
               block
-              type="submit"
               :disabled="!formValid"
+              type="submit"
               color="#006fa0"
               style="color: white"
-              >Create account</v-btn
+              >Confirm password</v-btn
             >
           </v-card-actions>
         </v-form>
@@ -95,7 +102,7 @@
 </template>
 
 <script lang="ts">
-import { UserCouchCredentials } from "@/store/UserModule";
+import { CredentialsWithToken } from "@/store/UserModule";
 
 import { AxiosError, AxiosPromise } from "axios";
 import "vue-class-component/hooks";
@@ -108,22 +115,21 @@ import { mapActions, mapGetters } from "vuex";
   },
 
   methods: {
-    ...mapActions("UserModule", ["register"]),
+    ...mapActions("UserModule", ["confirmPasswordCouchdb"]),
   },
 })
-export default class RegisterComponent extends Vue {
-  formValid = true;
+export default class ResetPasswordComponent extends Vue {
+  formValid = false;
   username = ""; // shoudl be an email
   password = "";
-  confirmPassword = "";
   error = "";
   minLength = 8;
   maxLength = 24;
   showReset = false;
-  showRegistrationComplete = false;
+  loading = false;
 
   passwordSecretToggle = true;
-  register!: (doc: UserCouchCredentials) => AxiosPromise;
+  confirmPasswordCouchdb!: (doc: CredentialsWithToken) => AxiosPromise;
 
   public get passwordInputType(): string {
     return this.passwordSecretToggle ? "password" : "text";
@@ -132,31 +138,40 @@ export default class RegisterComponent extends Vue {
     this.passwordSecretToggle = !this.passwordSecretToggle;
   }
 
-  confirmPasswordSecretToggle = true;
-
-  public get confirmPasswordInputType(): string {
-    return this.confirmPasswordSecretToggle ? "password" : "text";
-  }
-  public confirmTogglePassword(): void {
-    this.confirmPasswordSecretToggle = !this.confirmPasswordSecretToggle;
-  }
-
   public get destinationRouteName(): string {
     const currentRouteName = this.$router.currentRoute.name as string;
     // TODO: check again
-    return currentRouteName === "Register" ? "Login" : currentRouteName;
+    return currentRouteName === "Register" ? "Apps" : currentRouteName;
   }
-  registerCouchdb(): void {
+
+  public get token(): string {
+    const searchParams = new URLSearchParams(
+      window.location.search.substring(1)
+    );
+    return searchParams.get("token") || "";
+  }
+  confirmPassword(): void {
     this.error = "";
-    const { username, password } = this;
-    this.register({ username, password })
+    if (this.token === "") {
+      // show reset password link button
+      this.showReset = true;
+      this.username = "";
+      this.password = "";
+      // window.location.search = ""; // deactivate the search token
+      this.$router.push({ name: this.$route.name as string, params: {} });
+      throw new Error("Reset password link has expired");
+    }
+    this.confirmPasswordCouchdb({
+      password: this.password,
+      token: this.token,
+    })
       .then(() => {
-        // if (this.$route.name !== this.destinationRouteName) {
-        //   this.$router.push({ name: this.destinationRouteName });
-        // }
-        this.showRegistrationComplete = true;
+        if (this.$route.name !== this.destinationRouteName) {
+          this.$router.push({ name: this.destinationRouteName });
+        }
       })
       .catch((error: AxiosError) => {
+        // if token is not valid anymore change to showReset
         switch (error.response?.status) {
           case 401:
             this.error = "Invalid credentials";
@@ -169,13 +184,8 @@ export default class RegisterComponent extends Vue {
   }
 
   async created(): Promise<void> {
+    // verify token here.
     console.log("created");
-  }
-
-  userExist(): void {
-    // userAlready exist/
-    // for security reason don't inform the user the email already exist
-    console.log("check");
   }
 
   required(value: string) {
@@ -192,29 +202,5 @@ export default class RegisterComponent extends Vue {
       return `Password should have more than ${this.minLength} characters.`;
     }
   }
-  matchingPasswords() {
-    if (this.password === this.confirmPassword) {
-      return true;
-    } else {
-      return "Passwords does not match.";
-    }
-  }
 }
-/*
-
- Register page with email + password
-
- -> we send an email with a confirm page
-  -> on the confirm page: the user confirm the password
-  -> and then go to the apps page
-
-
-  Email confirmation template:
-
-  You have requested access to the unhcr-tss apps. Please click on the link below to confirm registration:
-
-  link: href
-
-
-*/
 </script>
