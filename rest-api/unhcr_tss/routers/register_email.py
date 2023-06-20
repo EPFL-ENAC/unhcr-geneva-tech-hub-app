@@ -46,12 +46,9 @@ conf = ConnectionConfig(
     MAIL_FROM=settings.MAIL_FROM,
     MAIL_PORT=settings.MAIL_PORT,
     MAIL_SERVER=settings.MAIL_SERVER,
-    # MAIL_STARTTLS=False,
-    # MAIL_SSL_TLS=False,
-    # USE_CREDENTIALS=False,
-    MAIL_STARTTLS=True,
-    MAIL_SSL_TLS=False,
-    USE_CREDENTIALS=True,
+    MAIL_STARTTLS=settings.MAIL_STARTTLS,
+    MAIL_SSL_TLS=settings.MAIL_SSL_TLS,
+    USE_CREDENTIALS=settings.USE_CREDENTIALS,
     VALIDATE_CERTS=True)
 
 confirm_path = "confirm"

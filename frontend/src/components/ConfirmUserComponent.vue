@@ -102,7 +102,7 @@
 </template>
 
 <script lang="ts">
-import { CredentialsWithToken } from "@/store/UserModule";
+import { PasswordWithToken } from "@/store/UserModule";
 
 import { AxiosError, AxiosPromise } from "axios";
 import "vue-class-component/hooks";
@@ -129,7 +129,7 @@ export default class ResetPasswordComponent extends Vue {
   loading = false;
 
   passwordSecretToggle = true;
-  confirmPasswordCouchdb!: (doc: CredentialsWithToken) => AxiosPromise;
+  confirmPasswordCouchdb!: (doc: PasswordWithToken) => AxiosPromise;
 
   public get passwordInputType(): string {
     return this.passwordSecretToggle ? "password" : "text";
