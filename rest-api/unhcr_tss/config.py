@@ -18,7 +18,19 @@ settings = Dynaconf(
         Validator("S3_REGION", must_exist=True, default="EU"),
         Validator("S3_Bucket", must_exist=True),
         Validator("S3_Key", must_exist=True, default=""),
-        Validator("AUTH_SERVER"),
+        Validator("MAIL_USERNAME", must_exist=True, default=""),
+        Validator("MAIL_PASSWORD", must_exist=True, default=""),
+        Validator("MAIL_FROM", must_exist=True, default=""),
+        Validator("MAIL_PORT", must_exist=True, default=587),
+        Validator("MAIL_SERVER", must_exist=True, default=""),
+        Validator("MAIL_FROM_NAME", must_exist=True, default=""),
+        Validator("MAIL_STARTTLS", must_exist=True, default=False),
+        Validator("MAIL_SSL_TLS", must_exist=True, default=False),
+        Validator("USE_CREDENTIALS", must_exist=True, default=False),
+        Validator("HOST_NAME", must_exist=True, default=""),
+        Validator("COUCHDB_USER", must_exist=True, default=""),
+        Validator("COUCHDB_PASSWORD", must_exist=True, default=""),
+        Validator("AUTH_SERVER", must_exist=True, default=""),
     ],
 )
 
@@ -27,3 +39,4 @@ CORS_ENABLED: bool = settings.CORS_ENABLED  # type: ignore
 root_path: str = settings.root_path  # type: ignore
 S3_Key: bool = settings.S3_Key  # type: ignore
 S3_Key: str = settings.S3_Key  # type: ignore
+AUTH_SERVER: str = settings.AUTH_SERVER  # type: ignore

@@ -204,3 +204,14 @@ We don't store the uploaded file directly to a database, it should be done by th
 [EPFL Essential Tech Center](https://www.essentialtech.ch/)
 [ENAC FAR](https://www.epfl.ch/labs/far/)
 [ENAC-IT4R](http://enac-it4r.epfl.ch/)
+
+
+## Registration process
+
+
+/register
+/confirm
+/unconfirm
+
+/forgot password --> forgot password form
+/change-password --> change password form (keep history of password)

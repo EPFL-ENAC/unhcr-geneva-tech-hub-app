@@ -1,62 +1,93 @@
 <template>
   <v-card class="elevation-12">
-    <v-toolbar dark color="primary">
-      <v-toolbar-title data-cy="loginWelcome">Welcome!</v-toolbar-title>
+    <v-toolbar dark color="primary" class="justify-center d-flex">
+      <v-toolbar-title data-cy="loginWelcome">Login</v-toolbar-title>
     </v-toolbar>
-    <v-form v-model="formValid" @submit.prevent="loginCouchdb">
-      <v-card-text v-show="showForm">
-        <v-text-field
-          id="username"
-          v-model="username"
-          autocomplete="username"
-          outlined
-          label="Login"
-          prepend-icon="$mdiAccount"
-          placeholder=" "
-          persistent-placeholder
-          required
-          type="text"
-          name="username"
-        />
-        <v-text-field
-          id="current-password"
-          v-model="password"
-          outlined
-          name="password"
-          autocomplete="current-password"
-          label="Password"
-          placeholder=" "
-          persistent-placeholder
-          prepend-icon="$mdiLock"
-          required
-          hide-details="true"
-          type="password"
-        />
-        <span class="error--text">{{ error }}</span>
-      </v-card-text>
-      <v-card-actions class="justify-center">
-        <v-btn v-show="!showForm" data-cy="guest-user-login" @click="loginGuest"
-          >Guest user</v-btn
-        >
-        <v-btn
-          v-show="!showForm"
-          data-cy="registered-user"
-          :disabled="!formValid"
-          @click="showForm = true"
-        >
-          Registered user
-        </v-btn>
-        <v-btn v-show="showForm" @click="showForm = false">Cancel</v-btn>
-        <v-btn v-show="showForm" type="submit" color="primary">Login</v-btn>
-        <v-btn
-          v-show="!showForm"
-          data-cy="unhcr-user-login"
-          color="primary"
-          @click="loginUnhcr"
-          >UNHCR user</v-btn
-        >
-      </v-card-actions>
-    </v-form>
+    <v-row>
+      <v-col>
+        <v-form v-model="formValid" @submit.prevent="loginCouchdb">
+          <v-card-text>
+            <v-text-field
+              id="username"
+              v-model="username"
+              autocomplete="username"
+              outlined
+              label="Login"
+              prepend-icon="$mdiAccount"
+              placeholder=" "
+              persistent-placeholder
+              required
+              type="text"
+              name="username"
+            />
+            <v-text-field
+              id="current-password"
+              v-model="password"
+              outlined
+              name="password"
+              autocomplete="current-password"
+              label="Password"
+              placeholder=" "
+              persistent-placeholder
+              prepend-icon="$mdiLock"
+              :append-icon="passwordSecretToggle ? '$mdiEye' : '$mdiEyeOff'"
+              :type="passwordInputType"
+              required
+              hide-details="true"
+              @click:append="togglePassword"
+            />
+            <span class="error--text">{{ error }}</span>
+          </v-card-text>
+          <v-card-actions
+            class="justify-center d-flex flex-column pa-4"
+            style="margin-left: 33px; gap: 1rem"
+          >
+            <v-btn block type="submit" color="#006fa0" style="color: white"
+              >Login</v-btn
+            >
+            <div>
+              <v-btn
+                text
+                data-cy="unhcr-user-login"
+                color="primary"
+                :to="{ name: 'ForgotPassword' }"
+                >Forgot password ?</v-btn
+              >
+            </div>
+          </v-card-actions>
+        </v-form>
+      </v-col>
+      <v-col>
+        <v-form v-model="formValid" @submit.prevent="loginCouchdb">
+          <v-card-actions
+            class="justify-center d-flex flex-column pa-4"
+            style="gap: 2rem"
+          >
+            <v-btn
+              block
+              class="mt-2"
+              data-cy="unhcr-user-login"
+              color="primary"
+              @click="loginUnhcr"
+              >UNHCR Login</v-btn
+            >
+            <v-btn block data-cy="guest-user-login" @click="loginGuest"
+              >Guest Login (read only)</v-btn
+            >
+            <div class="d-flex flex-column">
+              Don't have an account ?
+              <v-btn
+                text
+                data-cy="unhcr-user-login"
+                color="primary"
+                :to="{ name: 'Register' }"
+                >Register</v-btn
+              >
+            </div>
+          </v-card-actions>
+        </v-form>
+      </v-col>
+    </v-row>
   </v-card>
 </template>
 
@@ -102,6 +133,16 @@ export default class LoginComponent extends Vue {
     code_verifier,
   }: Record<string, string>) => AxiosPromise;
 
+  passwordSecretToggle = true;
+
+  public get passwordInputType(): string {
+    return this.passwordSecretToggle ? "password" : "text";
+  }
+
+  public togglePassword(): void {
+    this.passwordSecretToggle = !this.passwordSecretToggle;
+  }
+
   public tokenFlow(token: string): Promise<void> {
     return this.loginToken({ token })
       .then(() => {
@@ -134,6 +175,7 @@ export default class LoginComponent extends Vue {
     const code_verifier = sessionStorage.getItem("verifier");
     if (code || code_verifier) {
       if (!code || !code_verifier) {
+        sessionStorage.removeItem("verifier");
         throw new Error("code or code_verifier missing");
       }
       // code flow with PKCE (new authorization mode 6th march 2022)

@@ -63,28 +63,34 @@ services:
     build: ./couchdb-setup
     depends_on:
       - couchdb
-  upload-fast-api:
-    build: ./uploadFASTAPI
+  rest-api:
+    build: ./rest-api
+    env_file:
+      - .env
     environment:
-      - S3_ENDPOINT_HOSTNAME=${S3_ENDPOINT_HOSTNAME}
-      - S3_ENDPOINT_PROTOCOL=${S3_ENDPOINT_PROTOCOL}
-      - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
-      - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
-      - S3_REGION=${S3_REGION} 
-      - S3_Bucket=${S3_Bucket} 
-      - S3_Key=${S3_Key} 
-      - CORS_ENABLED=${CORS_ENABLED} 
-      - ROOT_PATH=
+    #   - S3_ENDPOINT_HOSTNAME=${S3_ENDPOINT_HOSTNAME}
+    #   - S3_ENDPOINT_PROTOCOL=${S3_ENDPOINT_PROTOCOL}
+    #   - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
+    #   - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
+    #   - S3_REGION=${S3_REGION} 
+    #   - S3_Bucket=${S3_Bucket} 
+    #   - S3_Key=${S3_Key} 
+    #   - CORS_ENABLED=${CORS_ENABLED} 
+    #   - ROOT_PATH=
       - AUTH_SERVER="http://couchdb:5984"
     ports:
       - '5050:5050'
     labels:
-      - "traefik.http.routers.uploadFASTAPI.priority=1001"
-      - "traefik.http.routers.uploadFASTAPI.tls=true"
-      - "traefik.http.routers.uploadFASTAPI.rule=PathPrefix(`/api`)"
-      - "traefik.http.services.uploadFASTAPI.loadbalancer.server.port=5050"
-      - "traefik.http.routers.uploadFASTAPI.middlewares=uploadFASTAPI-middleware"
-      - "traefik.http.middlewares.uploadFASTAPI-middleware.stripprefix.prefixes=/api"
+      - "traefik.http.routers.restAPI.priority=1001"
+      - "traefik.http.routers.restAPI.tls=true"
+      - "traefik.http.routers.restAPI.rule=PathPrefix(`/api`)"
+      - "traefik.http.services.restAPI.loadbalancer.server.port=5050"
+      - "traefik.http.routers.restAPI.middlewares=restAPI-middleware@docker,test-compress,rest-api-ratelimit"
+      - "traefik.http.middlewares.restAPI-middleware.stripprefix.prefixes=/api"
+      - "traefik.http.middlewares.rest-api-ratelimit.ratelimit.average=50"
+      - "traefik.http.middlewares.rest-api-ratelimit.ratelimit.burst=25"
+      - "traefik.http.middlewares.rest-api-ratelimit.ratelimit.period=1"
+      - "traefik.http.middlewares.test-compress.compress=true"
     restart: unless-stopped
     depends_on:
       - couchdb
