@@ -85,8 +85,12 @@ services:
       - "traefik.http.routers.restAPI.tls=true"
       - "traefik.http.routers.restAPI.rule=PathPrefix(`/api`)"
       - "traefik.http.services.restAPI.loadbalancer.server.port=5050"
-      - "traefik.http.routers.restAPI.middlewares=restAPI-middleware"
+      - "traefik.http.routers.restAPI.middlewares=restAPI-middleware,test-compress,rest-api-ratelimit"
       - "traefik.http.middlewares.restAPI-middleware.stripprefix.prefixes=/api"
+      - "traefik.http.middlewares.rest-api-ratelimit.ratelimit.average=10"
+      - "traefik.http.middlewares.rest-api-ratelimit.ratelimit.burst=10"
+      - "traefik.http.middlewares.rest-api-ratelimit.ratelimit.period=1"
+      - "traefik.http.middlewares.test-compress.compress=true"
     restart: unless-stopped
     depends_on:
       - couchdb

@@ -163,7 +163,6 @@ async def create_user(user: SimpleUserSchema):
     #  -d '{"name": "jan", "password": "apple", "roles": [], "type": "user"}'
     user_encoded = quote(":{user}".format(user=user.name))
     cookies, headers, r = await authenticate_admin()
-    # [ ] use asyncio for better perf
     headers['Content-Type'] = 'application/json'
     new_user = UserSchema(**user.dict())
     new_user.roles.append("unconfirmed")
@@ -177,9 +176,6 @@ async def create_user(user: SimpleUserSchema):
 
 
 async def confirm_user(user: UserSchema, password: str) -> JSONResponse:
-    # [ ] Endpoint should be protected or user identitifed
-    # [ ] use asyncio for better perf
-
     r = await get_user(
         user.name)  # maybe unecessary ? since we hhave the user at the top
 
@@ -195,23 +191,6 @@ async def confirm_user(user: UserSchema, password: str) -> JSONResponse:
     latest_user = r.json()
     latest_user.pop("unconfirmed", None)
     latest_user["roles"] = ["shelter", "user"]
-    print(latest_user)
-
-    # new_user = SimpleUserSchema(name=user.name,
-    #                             password=new_password,
-    #                             roles=user.roles,
-    #                             type=user.type)
-    # user_encoded = quote(":{user}".format(user=user.name))
-    # cookies, headers = await authenticate_admin()
-    # # [ ] use asyncio for better perf
-    # headers['Content-Type'] = 'application/json'
-    # headers['If-Match'] = user.rev
-    # return put(settings.AUTH_SERVER +
-    #            "/_users/org.couchdb.user{user_encoded}".format(
-    #                user_encoded=user_encoded),
-    #            cookies=cookies,
-    #            headers=headers,
-    #            data=new_user.json())
 
     user_encoded = quote(":{user}".format(user=user.name))
     cookies, headers, r = await authenticate_admin()
@@ -230,13 +209,12 @@ async def confirm_user(user: UserSchema, password: str) -> JSONResponse:
 
 
 async def create_token(email: str, expiration_in_minutes: int = 15) -> str:
-    expire: str = (datetime.today() +
-                   timedelta(minutes=expiration_in_minutes)).isoformat()
-    # [ ] create document in couchdb
+    expire_at: str = (datetime.today() +
+                      timedelta(minutes=expiration_in_minutes)).isoformat()
+    print(expire_at)
     cookies, headers, r = await authenticate_admin()
     headers['Content-Type'] = 'application/json'
     # id unique is uuid4 + email in base 64
-    # base64.b64encode(b'Hello World!')
     _id = "{uuid}{email}".format(uuid=str(uuid.uuid4()),
                                  email=base64.b64encode(
                                      email.encode('ascii')).decode('ascii'))
@@ -246,7 +224,7 @@ async def create_token(email: str, expiration_in_minutes: int = 15) -> str:
         cookies=cookies,
         headers=headers,
         data=json.dumps({
-            "expire_at": expire,
+            "expire_at": expire_at,
             "_id": _id,
             "email": email  # TODO should probably encrypt email there
         }))
@@ -255,10 +233,15 @@ async def create_token(email: str, expiration_in_minutes: int = 15) -> str:
 
 async def verify_token_validity(token: str):
     cookies, headers, r = await authenticate_admin()
-    # todo: use a views to retrieve not expired token
     r = get(settings.AUTH_SERVER + "/tokens/{token}".format(token=token),
             cookies=cookies,
             headers=headers)
+    expire_at = r.json().get("expire_at", "")
+    expired = False
+    if (expire_at != ""):
+        expired = datetime.now() > datetime.fromisoformat(expire_at)
+    if (expired):
+        r.status_code = 404
     return r
 
 
@@ -336,9 +319,6 @@ async def register_user(user: SimpleUserSchema) -> JSONResponse:
                              html_may_have_forgot,
                              token=temp_id)
 
-    # [ ] retrieve token document if none => then email verification has expired
-    # [ ] else => please enter your password --> login -> change unconfirmed field
-
     return JSONResponse(status_code=200,
                         content={"message": "email has been sent"})
 
@@ -365,9 +345,6 @@ async def send_confirmation(user: EmailSchema) -> JSONResponse:
                              html_may_have_forgot,
                              token=temp_id)
 
-    # [ ] retrieve token document if none => then email verification has expired
-    # [ ] else => please enter your password --> login -> change unconfirmed field
-
     return JSONResponse(status_code=200,
                         content={"message": "email has been sent"})
 
@@ -377,18 +354,14 @@ async def confirm_registration(
         payload: PasswordSchemaWithToken) -> JSONResponse:
     token_valid = await verify_token_validity(payload.token)
     # [ ] purge outdated token
-    # [ ] content={"message": "token is valid you may proceed"})
-    if (token_valid):
-        print(token_valid.json().get("email", ""))
+    if (token_valid.status_code == 404):
+        return JSONResponse(status_code=410,
+                            content={"error": "Confirmation link has expired"})
+    else:
         user = await get_user(token_valid.json().get("email", ""))
         resp = await confirm_user(UserSchema(**user.json()),
                                   password=payload.password)
-        print(resp)
         return resp
-    else:
-        # [ ] delete from couchdb the token
-        return JSONResponse(status_code=410,
-                            content={"error": "Confirmation link has expired"})
 
 
 @router.post("/forgot-password")
@@ -404,15 +377,14 @@ async def forgot_password(user: EmailSchema) -> JSONResponse:
 async def verify_token(token: str) -> JSONResponse:
     # retrieve user from token
     token_valid = await verify_token_validity(token)
-    if (token_valid):
-        # await confirm_user() maybe
+    if (token_valid.status_code == 404):
+        remove_tokens([token])
+        return JSONResponse(status_code=410,
+                            content={"error": "Confirmation link has expired"})
+    else:
         return JSONResponse(
             status_code=200,
             content={"message": "token is valid you may proceed"})
-    else:
-        # [ ] delete  from couchdb the token
-        return JSONResponse(status_code=410,
-                            content={"error": "Confirmation link has expired"})
 
 
 @router.post("/reset-password")
@@ -420,15 +392,6 @@ async def reset_password(payload: PasswordSchemaWithToken) -> JSONResponse:
     # https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html
     # check that the token is valid and that the user associated with the token match
     # the current user
-
-    # Implement protections against excessive automated submissions such as rate-limiting on a per-account basis, requiring a CAPTCHA, or other controls. Otherwise an attacker could make thousands of password reset requests per hour for a given account, flooding the user's intake system (e.g., email inbox or SMS) with useless requests.
-    # [ ] The user should confirm the password they set by writing it twice.
-    # [ ] Ensure that a secure password policy is in place, and is consistent with the rest of the application.
-    # [ ] Update and store the password following secure practices.
-    # [ ] Send the user an email informing them that their password has been reset (do not send the password in the email!).
-    # [ ] Once they have set their new password, the user should then login through the usual mechanism. Don't automatically log the user in, as this introduces additional complexity to the authentication and session handling code, and increases the likelihood of introducing vulnerabilities.
-    # [ ] Ask the user if they want to invalidate all of their existing sessions, or invalidate the sessions automatically.
-
     token_valid = await verify_token_validity(payload.token)
     if (token_valid.status_code == 404):
         return JSONResponse(status_code=410,
@@ -444,9 +407,6 @@ async def reset_password(payload: PasswordSchemaWithToken) -> JSONResponse:
                      title="Reset Successful",
                      body=html_reset_success,
                      token="")
-
-    # Once they have set their new password, the user should then login through the usual mechanism. Don't automatically log the user in, as this introduces additional complexity to the authentication and session handling code, and increases the likelihood of introducing vulnerabilities.
-    # TODO: find out how to do that in couchdb: Ask the user if they want to invalidate all of their existing sessions, or invalidate the sessions automatically.
 
     return JSONResponse(
         status_code=200,
