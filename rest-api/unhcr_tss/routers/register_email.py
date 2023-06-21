@@ -276,12 +276,18 @@ def remove_email_tokens(email: str):
     remove_tokens(tokens)
 
 
-async def update_user_password(user: UserWithRevSchema, new_password: str):
-
+async def update_user_password(email: str, new_password: str):
+    # The user should confirm the password they set by writing it twice. (in the frontend)
+    # [ ] Ensure that a secure password policy is in place, and is consistent with the rest of the application.
+    userResponse = await get_user(email)
+    # Update and store the password following secure practices.
+    user = UserWithRevSchema(**userResponse.json())
     new_user = UserSchema(name=user.name,
                           password=new_password,
                           roles=user.roles,
                           type=user.type)
+    if (user.unconfirmed):
+        new_user.unconfirmed = True
     user_encoded: str = quote(":{user}".format(user=user.name))
     cookies, headers, r = await authenticate_admin()
     # [ ] use asyncio for better perf
@@ -316,8 +322,11 @@ async def register_user(user: SimpleUserSchema) -> JSONResponse:
     else:
         # user already exist do nothing
         if (r.json().get("unconfirmed", False)):
-            #  user is unconfirmed
+            # user is unconfirmed
             # change password and update user
+            if (user.password == ""):
+                raise ValueError("password should not be empty")
+            await update_user_password(user.name, user.password or "")
             await send_confirmation_email(user)
         else:
             temp_id = await create_token(email=user.name,
@@ -426,12 +435,7 @@ async def reset_password(payload: PasswordSchemaWithToken) -> JSONResponse:
                             content="Confirmation link has expired")
 
     email = token_valid.json().get("email", "")
-    # The user should confirm the password they set by writing it twice. (in the frontend)
-    # [ ] Ensure that a secure password policy is in place, and is consistent with the rest of the application.
-    userResponse = await get_user(email)
-    # Update and store the password following secure practices.
-    current_user = UserWithRevSchema(**userResponse.json())
-    updateResponse = await update_user_password(current_user, payload.password)
+    updateResponse = await update_user_password(email, payload.password)
     print("update password response", updateResponse.status_code)
     print("update password response", updateResponse.json())
 
