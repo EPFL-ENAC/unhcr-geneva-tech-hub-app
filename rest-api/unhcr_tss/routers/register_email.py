@@ -67,7 +67,8 @@ html_template = """
 <br/>
 <br/>
 <p>The UNHCR-TSS team</p>
-<p>{HOST_NAME}/{default_path}</p>
+<p>
+<a href="{HOST_NAME}/{default_path}">{HOST_NAME}/{default_path}</a></p>
 """
 html_reset = html_template.format(
     title="You have requested a reset of your password.",
@@ -98,7 +99,7 @@ html_reset_success = """
 <br/>
 <br/>
 <p>The UNHCR-TSS team</p>
-<p>{HOST_NAME}/{default_path}</p>""".format(
+<p><a href="{HOST_NAME}/{default_path}">{HOST_NAME}/{default_path}</a></p>""".format(
     default_path=login_path,
     HOST_NAME=settings.HOST_NAME,
 )
@@ -108,7 +109,7 @@ html_confirm_success = """
 <br/>
 <br/>
 <p>The UNHCR-TSS team</p>
-<p>{HOST_NAME}/{default_path}</p>""".format(
+<p><a href="{HOST_NAME}/{default_path}">{HOST_NAME}/{default_path}</a></p>""".format(
     default_path=login_path,
     HOST_NAME=settings.HOST_NAME,
 )
@@ -316,6 +317,7 @@ async def register_user(user: SimpleUserSchema) -> JSONResponse:
         # user already exist do nothing
         if (r.json().get("unconfirmed", False)):
             #  user is unconfirmed
+            # change password and update user
             await send_confirmation_email(user)
         else:
             temp_id = await create_token(email=user.name,
