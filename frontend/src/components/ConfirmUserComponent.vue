@@ -217,7 +217,7 @@ export default class ResetPasswordComponent extends Vue {
     this.password = "";
     // window.location.search = ""; // deactivate the search token
     this.$router.push({ name: this.$route.name as string, params: {} });
-    throw new Error("Reset password link has expired");
+    throw new Error("Confirm password link has expired");
   }
 
   confirmPassword(): void {
@@ -232,11 +232,6 @@ export default class ResetPasswordComponent extends Vue {
       token: this.token,
     })
       .then(() => {
-        // if (this.$route.name !== this.destinationRouteName) {
-        //   this.$router.push({ name: this.destinationRouteName });
-        // }
-      })
-      .then(() => {
         this.showSuccessMessage = true; // success
       })
       .catch((error: AxiosError) => {
@@ -246,7 +241,6 @@ export default class ResetPasswordComponent extends Vue {
             error.response.statusText = `${error.response.statusText}:  ${this.error}`;
             break;
           case 410:
-            // this.error = error.response?.statusText; no need
             this.triggerExpire();
             break;
           default:

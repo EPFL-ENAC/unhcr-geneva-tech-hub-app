@@ -195,7 +195,10 @@ const actions: ActionTree<UserState, RootState> = {
     return loginDefault(username, password)
       .then((axiosResponse) => {
         if (axiosResponse.data.roles.includes("unconfirmed")) {
-          throw new Error("User unconfirmed, check your emails or register again", axiosResponse.data)
+          throw new Error(
+            "User unconfirmed, check your emails or register again",
+            axiosResponse.data
+          );
         }
         context.commit("SET_USER", axiosResponse.data);
         return axiosResponse;
@@ -366,10 +369,9 @@ const actions: ActionTree<UserState, RootState> = {
           withCredentials: true,
         }
       );
-    } catch (error: AxiosError<unknown, unknown> | unknown) {
-      console.error(error);
+    } finally {
+      context.commit("UNSET_USER_LOADING");
     }
-    context.commit("UNSET_USER_LOADING");
     return response;
   },
   forgotPasswordCouchdb: async (
@@ -406,8 +408,9 @@ const actions: ActionTree<UserState, RootState> = {
     // it is biased: we trigger a warning and logout for azure first
     removeAllOauthTokens();
     const { password } = payload.credentials;
+    let response;
     try {
-      const response = await axios.post(
+      response = await axios.post(
         `/api/reset-password`,
         { password, token: payload.token },
         {
@@ -417,10 +420,10 @@ const actions: ActionTree<UserState, RootState> = {
           withCredentials: true,
         }
       );
-    } catch (error: AxiosError<unknown, unknown> | unknown) {
-      console.error(error);
+    } finally {
+      context.commit("UNSET_USER_LOADING");
     }
-    context.commit("UNSET_USER_LOADING");
+    return response;
   },
   confirmPasswordCouchdb: async (
     context: ActionContext<UserState, RootState>,

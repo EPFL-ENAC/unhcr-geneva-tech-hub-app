@@ -6,9 +6,7 @@
     <v-row>
       <v-col v-if="showSuccessReset">
         <v-card-text class="">
-          <span>
-            An email confirming the reset is on its way
-          </span>
+          <span> An email confirming the reset is on its way </span>
           <v-btn
             class="mx-4"
             text
@@ -20,7 +18,7 @@
         </v-card-text>
       </v-col>
       <v-col v-else>
-        <v-alert v-if="!token" type="warning"
+        <v-alert v-if="showReset" type="warning"
           >token is missing or expired
           <v-btn
             class="mx-4"
@@ -33,7 +31,7 @@
         </v-alert>
         <v-form
           v-model="formValid"
-          :disabled="!token"
+          :disabled="showReset"
           @submit.prevent="resetPasswordCouchdb"
         >
           <v-card-text class="d-flex flex-column" style="gap: 1rem">
@@ -89,6 +87,7 @@
             >
             <v-btn
               block
+              :loading="loading"
               :disabled="!formValid"
               type="submit"
               color="#006fa0"
@@ -127,8 +126,9 @@ export default class ResetPasswordComponent extends Vue {
   error = "";
   minLength = 8;
   maxLength = 24;
-  showReset = false;
+  tokenHasExpired = false;
   showSuccessReset = false;
+  loading = false;
 
   passwordSecretToggle = true;
   resetPassword!: (doc: CredentialsWithToken) => AxiosPromise;
@@ -151,7 +151,6 @@ export default class ResetPasswordComponent extends Vue {
 
   public get destinationRouteName(): string {
     const currentRouteName = this.$router.currentRoute.name as string;
-    // TODO: check again
     return currentRouteName === "ResetPassword" ? "Login" : currentRouteName;
   }
 
@@ -161,17 +160,26 @@ export default class ResetPasswordComponent extends Vue {
     );
     return searchParams.get("token") || "";
   }
+
+  public get showReset(): boolean {
+    return this.token === "" || this.tokenHasExpired;
+  }
+
+  triggerExpire(): void {
+    this.tokenHasExpired = true;
+    this.username = "";
+    this.password = "";
+    // window.location.search = ""; // deactivate the search token
+    this.$router.push({ name: this.$route.name as string, params: {} });
+    throw new Error("Reset password link has expired");
+  }
+
   resetPasswordCouchdb(): void {
     this.error = "";
+    this.loading = true;
     const { password } = this;
     if (this.token === "") {
-      // show reset password link button
-      this.showReset = true;
-      this.username = "";
-      this.password = "";
-      // window.location.search = ""; // deactivate the search token
-      this.$router.push({ name: this.$route.name as string, params: {} });
-      throw new Error("Reset password link has expired");
+      this.triggerExpire();
     }
     this.resetPassword({
       credentials: { password },
@@ -179,19 +187,23 @@ export default class ResetPasswordComponent extends Vue {
     })
       .then(() => {
         this.showSuccessReset = true;
-        // if (this.$route.name !== this.destinationRouteName) {
-        //   this.$router.push({ name: this.destinationRouteName });
-        // }
       })
       .catch((error: AxiosError) => {
         switch (error.response?.status) {
           case 401:
-            this.error = "Invalid credentials";
+            this.error = "Password does not match, try again";
+            error.response.statusText = `${error.response.statusText}:  ${this.error}`;
+            break;
+          case 410:
+            this.triggerExpire();
             break;
           default:
-            this.error = error.message;
+            this.error = error.response?.statusText ?? error.message;
         }
         throw error;
+      })
+      .finally(() => {
+        this.loading = false;
       });
   }
 
