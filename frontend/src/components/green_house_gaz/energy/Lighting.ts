@@ -148,7 +148,6 @@ export function getDefaultFuel(
     // should be defined, so no error
     return 0;
   }
-  debugger;
   let fuelUsage =
     (currentStove.defaults?.[localInput.fuelType] ?? 0) * pp_per_hh;
 

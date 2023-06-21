@@ -194,6 +194,9 @@ const actions: ActionTree<UserState, RootState> = {
     const { username, password } = credentials;
     return loginDefault(username, password)
       .then((axiosResponse) => {
+        if (axiosResponse.data.roles.includes("unconfirmed")) {
+          throw new Error("User unconfirmed, check your emails or register again", axiosResponse.data)
+        }
         context.commit("SET_USER", axiosResponse.data);
         return axiosResponse;
       })
@@ -435,10 +438,30 @@ const actions: ActionTree<UserState, RootState> = {
         },
         withCredentials: true,
       });
-    } catch (error: AxiosError<unknown, unknown> | unknown) {
-      console.error(error);
+    } finally {
+      context.commit("UNSET_USER_LOADING");
     }
-    context.commit("UNSET_USER_LOADING");
+    return response;
+  },
+  sendConfirmCouchdb: async (
+    context: ActionContext<UserState, RootState>,
+    payload: Record<string, string>
+  ) => {
+    context.commit("SET_USER_LOADING");
+    // removeItem: idea was to remove azure authentication info
+    // it is biased: we trigger a warning and logout for azure first
+    removeAllOauthTokens();
+    let response;
+    try {
+      response = await axios.post(`/api/send-confirmation`, payload, {
+        headers: {
+          Accept: "application/json",
+        },
+        withCredentials: true,
+      });
+    } finally {
+      context.commit("UNSET_USER_LOADING");
+    }
     return response;
   },
   loginAsGuest: async (context: ActionContext<UserState, RootState>) => {

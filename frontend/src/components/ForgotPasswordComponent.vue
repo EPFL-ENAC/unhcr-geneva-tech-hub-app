@@ -117,7 +117,6 @@ export default class ForgotPasswordComponent extends Vue {
         this.showMessage = true;
       })
       .catch((error: AxiosError) => {
-        debugger;
         switch (error.response?.status) {
           case 422:
             this.error = error.response?.statusText;

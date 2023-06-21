@@ -5,16 +5,39 @@
         >Confirm registration</v-toolbar-title
       >
     </v-toolbar>
-    <v-row>
+    <v-row v-if="showSuccessMessage">
       <v-col>
-        <v-alert v-if="!token" type="warning"
-          >token is missing or expired</v-alert
-        >
+        <v-form v-model="formValid">
+          <v-card-text class="d-flex flex-column" style="gap: 1rem">
+            An email confirming that your registration is complete has been
+            sent, please check your inbox.
+            <p>You can now proceed to login</p>
+          </v-card-text>
+          <v-card-actions
+            class="justify-center d-flex flex-column pa-4"
+            style="margin-left: 33px; gap: 1rem"
+          >
+            <v-btn
+              block
+              :disabled="!formValid"
+              type="submit"
+              color="#006fa0"
+              style="color: white"
+              :to="{ name: 'Login' }"
+              >Login</v-btn
+            >
+          </v-card-actions>
+        </v-form>
+      </v-col></v-row
+    >
+
+    <v-row v-else-if="showReset">
+      <v-col>
+        <v-alert type="warning">token is missing or expired</v-alert>
         <v-form
-          v-if="!token"
           v-model="formValid"
           :disabled="loading"
-          @submit.prevent="forgotPassword"
+          @submit.prevent="sendConfirmation"
         >
           <v-card-text class="d-flex flex-column" style="gap: 1rem">
             <v-text-field
@@ -47,8 +70,32 @@
             >
           </v-card-actions>
         </v-form>
+      </v-col>
+    </v-row>
+    <v-row v-else-if="showConfirmationEmail">
+      <v-col>
+        <v-form>
+          <v-card-text class="d-flex flex-column" style="gap: 1rem">
+            Confirmation email has been sent
+          </v-card-text>
+          <v-card-actions
+            class="justify-center d-flex flex-column pa-4"
+            style="margin-left: 33px; gap: 1rem"
+          >
+            <v-btn
+              block
+              :to="{ name: 'Login' }"
+              color="#006fa0"
+              style="color: white"
+              >Go back</v-btn
+            >
+          </v-card-actions>
+        </v-form>
+      </v-col>
+    </v-row>
+    <v-row v-else>
+      <v-col>
         <v-form
-          v-else
           v-model="formValid"
           :disabled="!token"
           @submit.prevent="confirmPassword"
@@ -83,12 +130,13 @@
               text
               data-cy="unhcr-user-login"
               color="primary"
-              :to="{ name: 'ForgotPassword' }"
-              >Send reset password email</v-btn
+              :to="{ name: 'Register' }"
+              >Register again</v-btn
             >
             <v-btn
               block
               :disabled="!formValid"
+              :loading="loading"
               type="submit"
               color="#006fa0"
               style="color: white"
@@ -115,7 +163,10 @@ import { mapActions, mapGetters } from "vuex";
   },
 
   methods: {
-    ...mapActions("UserModule", ["confirmPasswordCouchdb"]),
+    ...mapActions("UserModule", [
+      "confirmPasswordCouchdb",
+      "sendConfirmCouchdb",
+    ]),
   },
 })
 export default class ResetPasswordComponent extends Vue {
@@ -125,11 +176,14 @@ export default class ResetPasswordComponent extends Vue {
   error = "";
   minLength = 8;
   maxLength = 24;
-  showReset = false;
   loading = false;
+  tokenHasExpired = false;
+  showSuccessMessage = false;
+  showConfirmationEmail = false;
 
   passwordSecretToggle = true;
   confirmPasswordCouchdb!: (doc: PasswordWithToken) => AxiosPromise;
+  sendConfirmCouchdb!: (doc: Record<string, string>) => AxiosPromise;
 
   public get passwordInputType(): string {
     return this.passwordSecretToggle ? "password" : "text";
@@ -150,36 +204,77 @@ export default class ResetPasswordComponent extends Vue {
     );
     return searchParams.get("token") || "";
   }
+
+  public get showReset(): boolean {
+    return (
+      (this.token === "" || this.tokenHasExpired) && !this.showConfirmationEmail
+    );
+  }
+
+  triggerExpire(): void {
+    this.tokenHasExpired = true;
+    this.username = "";
+    this.password = "";
+    // window.location.search = ""; // deactivate the search token
+    this.$router.push({ name: this.$route.name as string, params: {} });
+    throw new Error("Reset password link has expired");
+  }
+
   confirmPassword(): void {
     this.error = "";
+    this.loading = true;
     if (this.token === "") {
       // show reset password link button
-      this.showReset = true;
-      this.username = "";
-      this.password = "";
-      // window.location.search = ""; // deactivate the search token
-      this.$router.push({ name: this.$route.name as string, params: {} });
-      throw new Error("Reset password link has expired");
+      this.triggerExpire();
     }
     this.confirmPasswordCouchdb({
       password: this.password,
       token: this.token,
     })
       .then(() => {
-        if (this.$route.name !== this.destinationRouteName) {
-          this.$router.push({ name: this.destinationRouteName });
-        }
+        // if (this.$route.name !== this.destinationRouteName) {
+        //   this.$router.push({ name: this.destinationRouteName });
+        // }
+      })
+      .then(() => {
+        this.showSuccessMessage = true; // success
       })
       .catch((error: AxiosError) => {
-        // if token is not valid anymore change to showReset
         switch (error.response?.status) {
-          case 401:
-            this.error = "Invalid credentials";
+          case 410:
+            // this.error = error.response?.statusText; no need
+            this.triggerExpire();
             break;
           default:
-            this.error = error.message;
+            this.error = error.response?.statusText ?? error.message;
         }
         throw error;
+      })
+      .finally(() => {
+        this.loading = false;
+      });
+  }
+
+  sendConfirmation(): void {
+    //localhost:8080/confirm?token=f9c70267-83c2-44af-83df-63aecabc67edcGllcnJlLmd1aWxiZXJ0QGVwZmwuY2g%3D
+    this.error = "";
+    this.loading = true;
+    this.sendConfirmCouchdb({
+      name: this.username,
+    })
+      .then(() => {
+        this.showSuccessMessage = false;
+        this.showConfirmationEmail = true; // success
+      })
+      .catch((error: AxiosError) => {
+        switch (error.response?.status) {
+          default:
+            this.error = error.response?.statusText ?? error.message;
+        }
+        throw error;
+      })
+      .finally(() => {
+        this.loading = false;
       });
   }
 
