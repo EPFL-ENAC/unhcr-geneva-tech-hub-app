@@ -1,7 +1,7 @@
 import ghgRouter from "@/router/ghgRouter";
 import shelterRouter from "@/router/shelterRouter";
+import userRouter from "@/router/userRouter"
 import Apps from "@/views/AppListView.vue";
-import Login from "@/views/LoginView.vue";
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 
@@ -12,20 +12,7 @@ const routes: Array<RouteConfig> = [
     path: "/",
     redirect: "/login",
   },
-  {
-    path: "/login",
-    name: "Login",
-    meta: {
-      title: "Login",
-    },
-    components: {
-      Login,
-    },
-  },
-  {
-    path: "/auth",
-    redirect: "/login",
-  },
+  ...userRouter,
   {
     path: "/apps",
     name: "Apps",

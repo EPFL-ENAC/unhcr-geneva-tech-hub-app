@@ -37,7 +37,8 @@ module.exports = {
         },
       },
       "^/api": {
-        target: "http://localhost:5050/",
+        // target: "http://localhost:8000", // from running locally
+        target: "http://localhost:5050/", //from docker compose
         pathRewrite: {
           "^/api": "", // remove base path
         },
