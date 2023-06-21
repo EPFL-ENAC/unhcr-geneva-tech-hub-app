@@ -241,6 +241,10 @@ export default class ResetPasswordComponent extends Vue {
       })
       .catch((error: AxiosError) => {
         switch (error.response?.status) {
+          case 401:
+            this.error = "Password does not match, try again or register again";
+            error.response.statusText = `${error.response.statusText}:  ${this.error}`;
+            break;
           case 410:
             // this.error = error.response?.statusText; no need
             this.triggerExpire();

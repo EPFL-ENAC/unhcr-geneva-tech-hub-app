@@ -55,6 +55,7 @@ conf = ConnectionConfig(MAIL_USERNAME=settings.MAIL_USERNAME,
 
 confirm_path = "confirm"
 default_path = "apps"
+login_path = "login"
 reset_password_path = "reset-password"
 confirm_registration_message = "confirm registration"
 reset_password_message = "reset your password"
@@ -96,13 +97,21 @@ html_reset_success = """
 <p>You have successfully reset your password.</p>
 <br/>
 <br/>
-<p>The UNHCR-TSS team</p>"""
+<p>The UNHCR-TSS team</p>
+<p>{HOST_NAME}/{default_path}</p>""".format(
+    default_path=login_path,
+    HOST_NAME=settings.HOST_NAME,
+)
 
 html_confirm_success = """
-<p>You have successfully confirm your password. You may now login</p>
+<p>You have successfully confirm your password.</p>
 <br/>
 <br/>
-<p>The UNHCR-TSS team</p>"""
+<p>The UNHCR-TSS team</p>
+<p>{HOST_NAME}/{default_path}</p>""".format(
+    default_path=login_path,
+    HOST_NAME=settings.HOST_NAME,
+)
 
 router = APIRouter()
 
@@ -245,10 +254,25 @@ async def create_token(email: str, expiration_in_minutes: int = 15) -> str:
 
 async def verify_token_validity(token: str):
     cookies, headers, r = await authenticate_admin()
+    # todo: use a views to retrieve not expired token
     r = get(settings.AUTH_SERVER + "/tokens/{token}".format(token=token),
             cookies=cookies,
             headers=headers)
     return r
+
+
+def find_tokens_by_email(email: str) -> List[str]:
+    return []
+
+
+def remove_tokens(tokens: List[str]) -> List[str]:
+    # bulk delete post
+    return []
+
+
+def remove_email_tokens(email: str):
+    tokens = find_tokens_by_email(email)
+    remove_tokens(tokens)
 
 
 async def update_user_password(user: UserWithRevSchema, new_password: str):
