@@ -1,7 +1,7 @@
 function (doc) {
   // retrieve only fields necessary for listing shelters
   var score = doc.scorecard || {};
-    emit(doc._id, {
+    newDoc = {
       name: doc.name || "",
       weight: score.weight || 0,
       co2: score.co2 || 0,
@@ -17,5 +17,14 @@ function (doc) {
       updated_by: doc.updated_by || "",
       location_country: doc.location_country || "",
       organisation: doc.organisation || "",
-    });
+    };
+
+  if (doc.public === null || doc.public === undefined || doc.public) {
+    emit('public', newDoc)
+  } else {
+    emit('private', newDoc)
+    for (var user in doc.users) {
+      emit('private_' + getUserName(doc.users[user]), newDoc)
+    }
+  }
 }

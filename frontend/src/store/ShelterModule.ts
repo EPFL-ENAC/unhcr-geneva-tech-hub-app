@@ -118,6 +118,8 @@ const actions: ActionTree<ShelterState, RootState> = {
     ids: string | string[] | undefined
   ) => {
     const localCouch = context.state.localCouch;
+    const user = context.rootGetters["UserModule/user"];
+    const isAdmin = checkIfAdmin(user);
     // shelters/_design/shelter/_view/scorecards?include_docs=true
     let selectedIds: string[] = [];
     if (typeof ids === "string") {
@@ -128,7 +130,10 @@ const actions: ActionTree<ShelterState, RootState> = {
       selectedIds = ids;
     }
     return localCouch?.remoteDB
-      .query("shelter/scorecards", { include_docs: true })
+      .query("shelter/scorecards", {
+        keys: ["public", isAdmin ? "private" : `private_${user.name}`],
+        include_docs: true
+      })
       .then(function (result) {
         const scorecards = result.rows
           .filter((x) => x.value !== undefined)
