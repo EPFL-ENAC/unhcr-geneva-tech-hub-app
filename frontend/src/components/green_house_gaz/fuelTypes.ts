@@ -46,7 +46,7 @@ export const liquidFuelWithText: FuelTypesItem<LiquidFuel>[] = [
   { _id: "ETH", text: "Ethanol/alcohol" },
   { _id: "PET", text: "Petrol" }, // same as wash
   { _id: "DIES", text: "Diesel" }, // same as facilities for diesel gen
-  { _id: "KRS", text: "Kerosene/paraffin" },
+  { _id: "KRS", text: "Kerosene" },
 ];
 // end of liquid fuels
 

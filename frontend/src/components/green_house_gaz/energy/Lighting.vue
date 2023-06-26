@@ -163,7 +163,7 @@ export default class Lighting extends Vue {
         totalCO2Emission =
           computeCO2CostEnergy(
             localItemInput,
-            ghgMapRef?.REF_DIES_L,
+            ghgMapRef?.REF_EFF_DIES,
             this.project_REF_GRD
           ) *
           hhUsingTheFuel *

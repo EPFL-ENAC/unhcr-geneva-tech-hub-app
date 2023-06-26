@@ -102,7 +102,7 @@ export default class Pumping extends Vue {
       case "ELE_DIES":
         totalCO2Emission = computeCO2CostEnergy(
           localItemInput,
-          ghgMapRef?.REF_DIES_L,
+          ghgMapRef?.REF_EFF_DIES,
           this.project_REF_GRD
         );
         break;

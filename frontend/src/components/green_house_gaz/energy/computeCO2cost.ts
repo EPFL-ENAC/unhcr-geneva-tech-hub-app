@@ -22,17 +22,17 @@ interface EnergyItem extends DieselItem {
 
 export function computeCO2CostEnergy(
   localItem: EnergyItem,
-  REF_DIES_L: ReferenceItemInterface | undefined,
+  REF_EFF_DIES: ReferenceItemInterface | undefined,
   REF_GRD: ReferenceItemInterface | undefined
 ): number {
   let result = 0;
   // const dieselLiters = getLitresPerYearForGeneratorHoursPerWeek(localItem);
   // dieselLiters should always be defined prior
   // l * kgCO2/l / 1000  === tCO2e
-  if (REF_DIES_L?.value === undefined) {
-    throw new Error("REF_DIES_L value is undefined");
+  if (REF_EFF_DIES?.value === undefined) {
+    throw new Error("REF_EFF_DIES value is undefined");
   }
-  result += ((localItem?.dieselLiters ?? 0) * REF_DIES_L?.value) / 1000;
+  result += ((localItem?.dieselLiters ?? 0) * REF_EFF_DIES?.value) / 1000;
 
   // FYI, some countries are not in the IGES_GRID in MWH should be KWH
   // kwh * (tcO2/MWh) / 1000 == tco2e

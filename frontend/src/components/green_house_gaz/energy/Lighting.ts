@@ -508,7 +508,7 @@ function computeItemElectric(
       totalCO2Emission =
         computeCO2CostEnergy(
           localItemInput as EnergyItem,
-          ghgMapRef?.REF_DIES_L,
+          ghgMapRef?.REF_EFF_DIES,
           project_REF_GRD
         ) *
         hhUsingTheFuel *
