@@ -125,7 +125,6 @@ export function resetSurveyFuelOption(
   localInput.generatorLoad = 0.6; // default factor of 60%
   delete localInput.generatorSize;
   delete localInput.operatingHours;
-  delete localInput.dieselLiters;
 
   delete localInput.solarInstalled;
 
@@ -396,7 +395,7 @@ export function headers(
     },
     ...dieselInputsProducedPer("Day", "Day"),
     {
-      value: "input.gridPower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
+      value: "input.gridPower", // maybe use like in DieselGeneratorWithoutLitres
       conditional_value: ["ELE_GRID", "ELE_HYB"],
       conditional: "fuelType",
       text: "Estimated Kwh/day/HH for national grid",

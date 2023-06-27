@@ -47,7 +47,7 @@ export default class InstancePieChart extends Vue {
     }
     if (item.dieselPower) {
       data.push({
-        id: "dieselLiters",
+        id: "fuelUsage", // TODO: not sure if it works it was dieselLiters
         name: "Diesel",
         value: item.dieselPower,
         colorBy: "series",

@@ -64,7 +64,7 @@ export interface EnergyCookingItemInput
   numberOfCookstove?: number; // computed based on % of HH and stuffs
   cookstove: string; // type fo cookstove
   image?: string; // image of cookstove
-  fuelUsage?: number; // [kg or L/day]
+  fuelUsage?: number; // [kg/day or L/day]
   fuelType: AllFuel; // key
   fuelTypes?: AllFuel[]; // used only as a reference
   appliance?: string; // type of appliance heating retaining basket for instance
@@ -131,8 +131,6 @@ export function resetSurveyFuelOption(
   localInput.generatorLoad = 0.6; // default factor of 60%
   delete localInput.generatorSize;
   delete localInput.operatingHours;
-  delete localInput.dieselLiters;
-
   delete localInput.solarInstalled;
 
   return localInput;
@@ -251,8 +249,9 @@ export function headers(
           localInput.cookstove = cookstoveId;
           localInput.fuelType = thermalFuels[0];
           localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
-          localInput.renewablePower =
-            computeThermalKWHPerYearFromPerDay(localInput.fuelUsage);
+          localInput.renewablePower = computeThermalKWHPerYearFromPerDay(
+            localInput.fuelUsage
+          );
         }
         return localInput;
       },
@@ -337,6 +336,7 @@ export function headers(
         }
         if (!disabledfuelUsage) {
           localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
+          debugger;
         }
 
         return localInput;
@@ -441,7 +441,7 @@ export function headers(
       },
     },
     {
-      value: "input.renewablePower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
+      value: "input.renewablePower", // maybe like in DieselGeneratorWithoutLitres
       conditional_value: ["THE"],
       disabled: false,
       text: `Solar thermal (Kwh/year/HH) estimated`,
@@ -465,9 +465,12 @@ export function headers(
       computeResults: true,
       hideFooterContent: true,
     },
-    ...dieselInputsProducedPer("Day", "Day", { hideFooterContent: true }),
+    ...dieselInputsProducedPer("Day", "Day", {
+      hideFooterContent: true,
+      cookingMode: true,
+    }),
     {
-      value: "input.gridPower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
+      value: "input.gridPower", // maybe like in DieselGeneratorWithoutLitres
       conditional_value: ["ELE_GRID", "ELE_HYB"],
       conditional: "fuelType",
       text: "Estimated Kwh/day/HH for national grid",

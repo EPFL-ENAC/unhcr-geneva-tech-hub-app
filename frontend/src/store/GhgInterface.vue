@@ -195,7 +195,7 @@ type FacilityType =
   | "NotPowered";
 
 export interface DieselItem {
-  dieselLiters?: number;
+  fuelUsage?: number; // L/day
   disableDieselLiters?: boolean;
   generatorSize?: number; // replace the diesel liter
   operatingHours?: number; // replace the diesel liter

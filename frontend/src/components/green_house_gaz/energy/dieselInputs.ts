@@ -36,7 +36,7 @@ export function getLitresPerYearForGeneratorHoursPerWeek(
   if (localItem.disableDieselLiters) {
     return computeLitresDieselPerWeek(localItem);
   } else {
-    return localItem?.dieselLiters ?? 0;
+    return localItem?.fuelUsage ?? 0;
   }
 }
 
@@ -45,7 +45,7 @@ export function computeDieselPower(
   REF_EFF_DIES_L: ReferenceItemInterface | undefined
 ): number {
   if (REF_EFF_DIES_L?.value) {
-    return (localItem?.dieselLiters ?? 0) / REF_EFF_DIES_L?.value;
+    return (localItem?.fuelUsage ?? 0) / REF_EFF_DIES_L?.value;
   }
   return 0;
 }
@@ -90,8 +90,8 @@ function computeDieselPowerAndUpdateKey(
     ghgMapRef: ItemReferencesMap
   ): EnergyItem => {
     localInput[key] = valueOfKey as unknown as undefined;
-    if (key !== "dieselLiters") {
-      localInput.dieselLiters = computeLitersDiesel(localInput); // we're modifying the generator
+    if (key !== "fuelUsage") {
+      localInput.fuelUsage = computeLitersDiesel(localInput); // we're modifying the generator
       localInput = dieselEstimated(localInput, true, true);
     } else {
       localInput = dieselEstimated(localInput, true);
@@ -122,7 +122,7 @@ function computeDieselLitersFromPowerAndUpdateKey(
     ghgMapRef: ItemReferencesMap
   ): EnergyItem => {
     localInput[key] = valueOfKey as unknown as undefined;
-    localInput.dieselLiters = computeLitersDieselFromPower(
+    localInput.fuelUsage = computeLitersDieselFromPower(
       localInput,
       ghgMapRef?.REF_EFF_DIES_L
     );
@@ -134,7 +134,10 @@ function computeDieselLitersFromPowerAndUpdateKey(
 export function dieselInputsProducedPer(
   timePeriod: TimePeriod,
   timePeriodOperatingHours: TimePeriod,
-  { hideFooterContent } = { hideFooterContent: false}
+  { hideFooterContent, cookingMode } = {
+    hideFooterContent: false,
+    cookingMode: false,
+  } as { hideFooterContent?: boolean; cookingMode?: boolean }
 ): any[] {
   let computePower: any;
   let computeLiters: any;
@@ -174,41 +177,9 @@ export function dieselInputsProducedPer(
       computePower = computeDieselPower;
       break;
   }
-  return [
-    // beginning of diesel generators
-    {
-      text: `Diesel (${suffix}) estimated`,
-      computeResults: true,
-      value: "input.dieselPower",
-      hideFooterContent,
-      formatter: (
-        dieselPower: number,
-        __: SurveyTableHeader,
-        item: SurveyItem
-      ) => {
-        if (typeof dieselPower === "number") {
-          return `${item?.input?.dieselPowerEstimated ? "~" : ""}${formatNumber(
-            dieselPower
-          )} (${item?.input?.dieselLitersEstimated ? "~" : ""}${formatNumber(
-            item?.input?.dieselLiters as number
-          )}L) `;
-        }
-        return dieselPower;
-      },
-      customEventInput: computeDieselLitersFromPowerAndUpdateKey(
-        "dieselPower",
-        computeLitersFromPower
-      ),
-      conditional_value: ["ELE_DIES", "ELE_HYB"],
-      conditional: "fuelType",
-      disabled: false,
-      disabledWithConditions: "disableDieselLiters",
-      disabledWithConditions_value: true,
-      style: {
-        cols: "12",
-      },
-      type: "number",
-    },
+
+  // cookingInputs replace default Inputs
+  const defaultInputs = [
     {
       value: "input.disableDieselLiters",
       conditional_value: ["ELE_DIES", "ELE_HYB"],
@@ -228,9 +199,71 @@ export function dieselInputsProducedPer(
         computePower
       ),
     },
+  ];
+  const cookingInputs = [
     {
-      value: "input.dieselLiters", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
-      conditional_value: false,
+      value: "input.disableDieselLiters",
+      conditional_value: [["ELE_DIES", "ELE_HYB"], [true]],
+      text: "Generator size and working hours known", // Number of liters of diesel known
+      conditional: ["fuelType", "disabledfuelUsage"],
+      conditional_type: "AND",
+      style: {
+        cols: "12",
+      },
+      options: {
+        false: "yes",
+        true: "no",
+      },
+      type: "boolean",
+      customEventInput: computeDieselPowerAndUpdateKey(
+        "disableDieselLiters",
+        computeLiters,
+        computePower
+      ),
+    },
+  ];
+
+  const dynamicDieselInputs = cookingMode ? cookingInputs : defaultInputs;
+  const disableDieselLitersValue = cookingMode ? false : true;
+  return [
+    // beginning of diesel generators
+    {
+      text: `Diesel (${suffix}) estimated`,
+      computeResults: true,
+      value: "input.dieselPower",
+      hideFooterContent,
+      formatter: (
+        dieselPower: number,
+        __: SurveyTableHeader,
+        item: SurveyItem
+      ) => {
+        if (typeof dieselPower === "number") {
+          return `${item?.input?.dieselPowerEstimated ? "~" : ""}${formatNumber(
+            dieselPower
+          )} (${item?.input?.dieselLitersEstimated ? "~" : ""}${formatNumber(
+            item?.input?.fuelUsage as number
+          )}L) `;
+        }
+        return dieselPower;
+      },
+      customEventInput: computeDieselLitersFromPowerAndUpdateKey(
+        "dieselPower",
+        computeLitersFromPower
+      ),
+      conditional_value: ["ELE_DIES", "ELE_HYB"],
+      conditional: "fuelType",
+      disabled: !disableDieselLitersValue,
+      disabledWithConditions: "disableDieselLiters",
+      disabledWithConditions_value: disableDieselLitersValue,
+      style: {
+        cols: "12",
+      },
+      type: "number",
+    },
+    ...dynamicDieselInputs,
+    {
+      value: "input.fuelUsage",
+      conditional_value: !disableDieselLitersValue,
       conditional: "disableDieselLiters",
       computeResults: true,
       text: `Liters of diesel ${litersSuffix}`,
@@ -240,14 +273,14 @@ export function dieselInputsProducedPer(
       },
       type: "number",
       customEventInput: computeDieselPowerAndUpdateKey(
-        "dieselLiters",
+        "fuelUsage",
         computeLiters,
         computePower
       ),
     },
     {
-      value: "input.generatorSize", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
-      conditional_value: true,
+      value: "input.generatorSize", // maybe like in DieselGeneratorWithoutLitres
+      conditional_value: disableDieselLitersValue,
       conditional: "disableDieselLiters",
       text: "generator size (kW)",
       tooltipInfo: "read from nameplate",
@@ -265,7 +298,7 @@ export function dieselInputsProducedPer(
     },
     {
       value: "input.generatorLoad",
-      conditional_value: true,
+      conditional_value: disableDieselLitersValue,
       conditional: "disableDieselLiters",
       text: "generator load (percentage)",
       tooltipInfo:
@@ -283,7 +316,7 @@ export function dieselInputsProducedPer(
     },
     {
       value: "input.operatingHours",
-      conditional_value: true,
+      conditional_value: disableDieselLitersValue,
       conditional: "disableDieselLiters",
       text: `operating hours (${operatingHoursSuffix})`,
       tooltipInfo:

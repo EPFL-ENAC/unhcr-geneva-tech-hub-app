@@ -158,7 +158,7 @@ export default class Pumping extends Vue {
     localInput.generatorLoad = 0.6; // default factor of 60%
     delete localInput.generatorSize;
     delete localInput.operatingHours;
-    delete localInput.dieselLiters;
+    delete localInput.fuelUsage;
 
     delete localInput.solarInstalled;
 
@@ -221,7 +221,7 @@ export default class Pumping extends Vue {
       ...dieselInputsProducedPer("Year", "Week"),
       // begingin og national grid
       {
-        value: "input.gridPower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
+        value: "input.gridPower", // maybe use like in DieselGeneratorWithoutLitres
         conditional_value: ["ELE_GRID", "ELE_HYB"],
         computeResults: true,
         hideFooterContent: false,
@@ -263,7 +263,7 @@ export interface WashPumpingItemInput
   extends DieselItem,
     EnergyItem,
     SurveyInput {
-  fuelUsage?: number; // [L/yr] // dieselLiters: 0,
+  fuelUsage?: number; // [L/yr],
   fuelType?: ElectricFuel; // key
 }
 

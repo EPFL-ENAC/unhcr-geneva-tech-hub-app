@@ -159,7 +159,6 @@ export default class Facilities extends Vue {
     localInput.generatorLoad = 0.6; // default factor of 60%
     delete localInput.generatorSize;
     delete localInput.operatingHours;
-    delete localInput.dieselLiters;
 
     delete localInput.solarInstalled;
 
@@ -222,7 +221,7 @@ export default class Facilities extends Vue {
       ...dieselInputsProducedPer("Year", "Week"),
       // begingin og national grid
       {
-        value: "input.gridPower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
+        value: "input.gridPower", // maybe like in DieselGeneratorWithoutLitres
         conditional_value: ["ELE_GRID", "ELE_HYB"],
         computeResults: true,
         hideFooterContent: false,
@@ -264,7 +263,7 @@ export interface EnergyFacilityItemInput
   extends DieselItem,
     EnergyItem,
     SurveyInput {
-  fuelUsage?: number; // [L/yr] // dieselLiters: 0,
+  fuelUsage?: number; // [L/yr]
   fuelType?: ElectricFuel; // key
 }
 

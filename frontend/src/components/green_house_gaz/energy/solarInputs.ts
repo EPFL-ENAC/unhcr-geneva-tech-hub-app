@@ -135,7 +135,7 @@ export function solarInputsProducedPer(
   }
   return [
     {
-      value: "input.solarInstalled", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
+      value: "input.solarInstalled", // maybe use like in DieselGeneratorWithoutLitres
       conditional_value: ["ELE_SOLAR", "ELE_HYB"],
       conditional: "fuelType",
       tooltipInfo:
@@ -160,7 +160,7 @@ export function solarInputsProducedPer(
       type: "number",
     },
     {
-      value: "input.renewablePower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
+      value: "input.renewablePower", // maybe use like in DieselGeneratorWithoutLitres
       conditional_value: ["ELE_SOLAR", "ELE_HYB"],
       disabled: false,
       text: `Solar (${suffix}) estimated`,
