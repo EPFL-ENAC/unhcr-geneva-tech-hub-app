@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import { computeChangeInEmission } from "@/components/green_house_gaz/generic/changeInEmission";
-import { FormSurvey } from "@/store/GhgInterface.vue";
+import { FormSurvey } from "@/store/GhgInterface";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 

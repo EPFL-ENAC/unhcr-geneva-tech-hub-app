@@ -10,7 +10,7 @@ import {
   EnergyFacilityInterventionItemResult,
   EnergyFacilityItemResult,
   SurveyResult,
-} from "@/store/GhgInterface.vue";
+} from "@/store/GhgInterface";
 import { PieChart } from "echarts/charts";
 import { TitleComponent, TooltipComponent } from "echarts/components";
 import { use } from "echarts/core";

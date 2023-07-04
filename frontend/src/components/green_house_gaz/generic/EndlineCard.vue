@@ -117,7 +117,7 @@ import {
   SurveyInput,
   SurveyItem,
   SurveyResult,
-} from "@/store/GhgInterface.vue";
+} from "@/store/GhgInterface";
 import { cloneDeep } from "lodash";
 import Vue from "vue";
 import "vue-class-component/hooks";

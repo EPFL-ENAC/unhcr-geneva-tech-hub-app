@@ -44,7 +44,7 @@ import {
   SurveyInput,
   SurveyItem,
   SurveyResult,
-} from "@/store/GhgInterface.vue";
+} from "@/store/GhgInterface";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 
 import ComputeGenericFormSurveyMixin from "@/components/green_house_gaz/generic/ComputeGenericFormSurveyMixin.vue";

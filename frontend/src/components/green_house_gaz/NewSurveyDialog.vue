@@ -138,7 +138,7 @@ import {
   Site,
   Sites,
   Survey,
-} from "@/store/GhgInterface.vue";
+} from "@/store/GhgInterface";
 import { countriesMap } from "@/utils/countriesAsList";
 import { UNHCRLocation } from "@/store/UNHCRLocationModule";
 import { AxiosError } from "axios";

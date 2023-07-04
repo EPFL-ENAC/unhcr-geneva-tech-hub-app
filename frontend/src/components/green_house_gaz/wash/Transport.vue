@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface.vue";
+import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import { cloneDeep } from "lodash";
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";

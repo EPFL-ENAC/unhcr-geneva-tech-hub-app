@@ -4,7 +4,7 @@ import {
   SurveyInput,
   SurveyInputValue,
   SurveyItem,
-} from "@/store/GhgInterface.vue";
+} from "@/store/GhgInterface";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { get as _get } from "lodash";
 
@@ -191,9 +191,25 @@ export interface EasySurveyTableHeader {
     tableHeader?: SurveyTableHeader,
     item?: SurveyItem
   ) => string;
+  // show if true or not show based on conditions function or else
   conditional_type?: "AND" | "OR";
-  conditional_value: SurveyInputValue; // e.g "LITRES",
-  conditional: string | string[]; // based on other SurveyTableHeader field "US_UNI", needs to have conditional_value set
+  conditional_value?: SurveyInputValue; // e.g "LITRES",
+  conditional?: string | string[]; // based on other SurveyTableHeader field "US_UNI", needs to have conditional_value set
+  conditional_function?: (
+    localInput: SurveyInput,
+    surveyItem: SurveyTableHeader
+  ) => boolean;
+  // disable
+
+  disabled?: boolean;
+  disabledWithConditions_value?: boolean;
+  disabledWithConditions: string; // name of the field.. does not behave like conditional
+  conditional_disabled_function: (
+    localInput: SurveyInput,
+    surveyItem: SurveyTableHeader
+  ) => boolean;
+
+  // end of disabled with conditoons
   endlineOnly?: boolean; // show only for enldine table true,
   baselineOnly?: boolean;
   hideFooterContent: boolean; // default to true only for table

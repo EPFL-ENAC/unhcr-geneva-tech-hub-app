@@ -1,23 +1,10 @@
+import type { EnergyItem, DieselItem } from "@/store/GhgInterface";
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
-
-interface DieselItem {
-  fuelUsage?: number;
-  disableDieselLiters?: boolean;
-  generatorSize?: number; // replace the diesel liter
-  operatingHours?: number; // replace the diesel liter
-  generatorLoad?: number; // load of generator (should be default to 60%)
-}
 
 export const numberOfDaysPerYear = 365.25;
 export const numberOfWeekPerYear = 52;
 
 export type TimePeriod = "Day" | "Week" | "Year";
-
-interface EnergyItem extends DieselItem {
-  gridPower?: number;
-  dieselPower?: number;
-  renewablePower?: number;
-}
 
 export function computeCO2CostEnergy(
   localItem: EnergyItem,

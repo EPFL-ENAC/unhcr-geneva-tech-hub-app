@@ -1,5 +1,5 @@
 /** Config store */
-import { Country, GreenHouseGaz, Site } from "@/store/GhgInterface.vue";
+import { Country, GreenHouseGaz, Site } from "@/store/GhgInterface";
 import { SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,

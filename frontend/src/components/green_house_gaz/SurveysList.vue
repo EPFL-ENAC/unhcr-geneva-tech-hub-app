@@ -143,7 +143,7 @@
 
 <script lang="ts">
 import { getNewName, updateMetaFields } from "@/store/documentUtils";
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface.vue";
+import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import { CouchUser } from "@/store/UserModule";
 import { SyncDatabase } from "@/utils/couchdb";
 import { cloneDeep } from "lodash";

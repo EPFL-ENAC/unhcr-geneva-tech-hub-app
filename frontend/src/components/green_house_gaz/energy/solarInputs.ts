@@ -3,7 +3,7 @@ import {
   TimePeriod,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
 import { formatNumber } from "@/plugins/filters";
-import { EnergyItem } from "@/store/GhgInterface.vue";
+import { EnergyItem } from "@/store/GhgInterface";
 
 const countryIrradiance = {
   IR: 5.540210523,

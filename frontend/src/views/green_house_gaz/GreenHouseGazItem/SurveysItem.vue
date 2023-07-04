@@ -134,7 +134,7 @@ import {
   SurveyItem,
   SurveyResult,
   SurveySubcategory,
-} from "@/store/GhgInterface.vue";
+} from "@/store/GhgInterface";
 import getCountryName from "@/utils/getCountryName";
 import { cloneDeep, isEqual } from "lodash";
 import { Component, Vue } from "vue-property-decorator";

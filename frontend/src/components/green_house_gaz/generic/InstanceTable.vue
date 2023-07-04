@@ -226,7 +226,7 @@ import {
   SurveyInput,
   SurveyItem,
   SurveyResult,
-} from "@/store/GhgInterface.vue";
+} from "@/store/GhgInterface";
 import { cloneDeep, get, maxBy } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";

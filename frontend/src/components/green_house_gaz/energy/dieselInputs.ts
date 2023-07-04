@@ -5,8 +5,7 @@ import {
 } from "@/components/green_house_gaz/energy/computeCO2cost";
 import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import { formatNumber } from "@/plugins/filters";
-import { EnergyItem, SurveyItem } from "@/store/GhgInterface.vue";
-
+import { EnergyItem, SurveyInput, SurveyItem } from "@/store/GhgInterface";
 import {
   ItemReferencesMap,
   ReferenceItemInterface,
@@ -72,7 +71,7 @@ function dieselEstimated(
   return localInput;
 }
 
-function computeDieselPowerAndUpdateKey(
+export function computeDieselPowerAndUpdateKey(
   key: keyof EnergyItem,
   computeLitersDiesel: (v: EnergyItem) => number,
   computeDieselPowerFromLiters: (
@@ -182,8 +181,8 @@ export function dieselInputsProducedPer(
   const defaultInputs = [
     {
       value: "input.disableDieselLiters",
+      text: "Number of liters of diesel known?",
       conditional_value: ["ELE_DIES", "ELE_HYB"],
-      text: "Number of liters of diesel known",
       conditional: "fuelType",
       style: {
         cols: "12",
@@ -203,10 +202,32 @@ export function dieselInputsProducedPer(
   const cookingInputs = [
     {
       value: "input.disableDieselLiters",
-      conditional_value: [["ELE_DIES", "ELE_HYB"], [true]],
-      text: "Generator size and working hours known", // Number of liters of diesel known
-      conditional: ["fuelType", "disabledfuelUsage"],
-      conditional_type: "AND",
+      text: "Generator size and working hours known?", // Number of liters of diesel known
+      // conditional_value: [["ELE_DIES", "ELE_HYB"], [true]],
+      // conditional: ["fuelType"],
+      // conditional_type: "AND",
+      conditional_function: (
+        itemInput: SurveyInput,
+        tableHeader: SurveyTableHeader
+      ) => {
+        if (
+          itemInput.fuelType &&
+          !["ELE_DIES", "ELE_HYB"].includes(itemInput.fuelType as string)
+        ) {
+          return false;
+        }
+        return itemInput.disabledFuelUsage;
+        // return false;
+        // rules regarding appliance :
+        //   - only some cookstove tech have access (      conditional_value: allFuelsButElectric,
+        // conditional: "fuelType",)
+        //   - show if Fuel quantity not known (disabledFuelUsage is true)
+        //   - show only if
+        //     - cooking is electric diesel generator AND
+        //     -  disabledFuelUsage is True AND
+        //     -  disableDieselLiters is False (no diesel generator charact )
+        // when disabledFuelUsage == TRUE AND disableDieselLiters is False --> automatic number of diesel liters with default value
+      },
       style: {
         cols: "12",
       },
@@ -222,49 +243,123 @@ export function dieselInputsProducedPer(
       ),
     },
   ];
-
   const dynamicDieselInputs = cookingMode ? cookingInputs : defaultInputs;
-  const disableDieselLitersValue = cookingMode ? false : true;
+  const showGeneratorOptionFunction = (itemInput: SurveyInput) => {
+    if (cookingMode) {
+      return (
+        itemInput.disabledFuelUsage === true &&
+        itemInput.disableDieselLiters === false
+      );
+    } else {
+      return itemInput.disableDieselLiters === true;
+    }
+  };
+
+  const dieselEstimatedInput = {
+    text: `Diesel (${suffix}) estimated`,
+    computeResults: true,
+    value: "input.dieselPower",
+    hideFooterContent,
+    conditional_function: (itemInput: SurveyInput) => {
+      // if (
+      //   itemInput.cookstove &&
+      //   !["ELE_DIES", "ELE_HYB"].includes(itemInput.cookstove as string)
+      // ) {
+      //   return false;
+      // }
+      // return true;
+      if (
+        itemInput.fuelType &&
+        !["ELE_DIES", "ELE_HYB"].includes(itemInput.fuelType as string)
+      ) {
+        return false;
+      }
+      if (cookingMode) {
+        return (
+          itemInput.disabledFuelUsage === false ||
+          itemInput.disableDieselLiters != undefined
+        );
+      } else {
+        return itemInput.fuelType; // meaning it's defined
+      }
+      // if (cookingMode) {
+      //   return (
+      //     itemInput.disabledFuelUsage === true ||
+      //     itemInput.disableDieselLiters 
+      //   );
+      // } else {
+      //   return itemInput.disableDieselLiters != undefined;
+      // }
+      // rules regarding appliance :
+      //   - only some cookstove tech have access (      conditional_value: allFuelsButElectric,
+      // conditional: "fuelType",)
+      //   - show if Fuel quantity not known (disabledFuelUsage is true)
+      //   - show only if
+      //     - cooking is electric diesel generator AND
+      //     -  disabledFuelUsage is True AND
+      //     -  disableDieselLiters is False (no diesel generator charact )
+      // when disabledFuelUsage == TRUE AND disableDieselLiters is False --> automatic number of diesel liters with default value
+    },
+    formatter: (
+      dieselPower: number,
+      __: SurveyTableHeader,
+      item: SurveyItem
+    ) => {
+      if (typeof dieselPower === "number") {
+        return `${item?.input?.dieselPowerEstimated ? "~" : ""}${formatNumber(
+          dieselPower
+        )} (${item?.input?.dieselLitersEstimated ? "~" : ""}${formatNumber(
+          item?.input?.fuelUsage as number
+        )}L) `;
+      }
+      return dieselPower;
+    },
+    customEventInput: computeDieselLitersFromPowerAndUpdateKey(
+      "dieselPower",
+      computeLitersFromPower
+    ),
+    conditional_value: ["ELE_DIES", "ELE_HYB"],
+    conditional: "fuelType",
+    conditional_disabled_function: (itemInput: SurveyInput) => {
+      return itemInput.disableDieselLiters == !cookingMode;
+    },
+    style: {
+      cols: "12",
+    },
+    type: "number",
+  };
+
   return [
     // beginning of diesel generators
-    {
-      text: `Diesel (${suffix}) estimated`,
-      computeResults: true,
-      value: "input.dieselPower",
-      hideFooterContent,
-      formatter: (
-        dieselPower: number,
-        __: SurveyTableHeader,
-        item: SurveyItem
-      ) => {
-        if (typeof dieselPower === "number") {
-          return `${item?.input?.dieselPowerEstimated ? "~" : ""}${formatNumber(
-            dieselPower
-          )} (${item?.input?.dieselLitersEstimated ? "~" : ""}${formatNumber(
-            item?.input?.fuelUsage as number
-          )}L) `;
-        }
-        return dieselPower;
-      },
-      customEventInput: computeDieselLitersFromPowerAndUpdateKey(
-        "dieselPower",
-        computeLitersFromPower
-      ),
-      conditional_value: ["ELE_DIES", "ELE_HYB"],
-      conditional: "fuelType",
-      disabled: !disableDieselLitersValue,
-      disabledWithConditions: "disableDieselLiters",
-      disabledWithConditions_value: disableDieselLitersValue,
-      style: {
-        cols: "12",
-      },
-      type: "number",
-    },
+
     ...dynamicDieselInputs,
     {
       value: "input.fuelUsage",
-      conditional_value: !disableDieselLitersValue,
-      conditional: "disableDieselLiters",
+      conditional_function: (itemInput: SurveyInput) => {
+        if (
+          itemInput.fuelType &&
+          !["ELE_DIES", "ELE_HYB"].includes(itemInput.fuelType as string)
+        ) {
+          return false;
+        }
+        if (cookingMode) {
+          return (
+            itemInput.disabledFuelUsage === false ||
+            itemInput.disableDieselLiters === true
+          );
+        } else {
+          return itemInput.disableDieselLiters === false;
+        }
+        // rules regarding appliance :
+        //   - only some cookstove tech have access (      conditional_value: allFuelsButElectric,
+        // conditional: "fuelType",)
+        //   - show if Fuel quantity not known (disabledFuelUsage is true)
+        //   - show only if
+        //     - cooking is electric diesel generator AND
+        //     -  disabledFuelUsage is True AND
+        //     -  disableDieselLiters is False (no diesel generator charact )
+        // when disabledFuelUsage == TRUE AND disableDieselLiters is False --> automatic number of diesel liters with default value
+      },
       computeResults: true,
       text: `Liters of diesel ${litersSuffix}`,
       suffix: "l",
@@ -278,10 +373,10 @@ export function dieselInputsProducedPer(
         computePower
       ),
     },
+
     {
       value: "input.generatorSize", // maybe like in DieselGeneratorWithoutLitres
-      conditional_value: disableDieselLitersValue,
-      conditional: "disableDieselLiters",
+      conditional_function: showGeneratorOptionFunction,
       text: "generator size (kW)",
       tooltipInfo: "read from nameplate",
       suffix: "kW",
@@ -298,8 +393,7 @@ export function dieselInputsProducedPer(
     },
     {
       value: "input.generatorLoad",
-      conditional_value: disableDieselLitersValue,
-      conditional: "disableDieselLiters",
+      conditional_function: showGeneratorOptionFunction,
       text: "generator load (percentage)",
       tooltipInfo:
         "default average load of 60% per year will be used if not overwritten. Load on a diesel generator is the power being consumed from the unit. In a household application the load would be the items in a house, such as lights.",
@@ -316,8 +410,7 @@ export function dieselInputsProducedPer(
     },
     {
       value: "input.operatingHours",
-      conditional_value: disableDieselLitersValue,
-      conditional: "disableDieselLiters",
+      conditional_function: showGeneratorOptionFunction,
       text: `operating hours (${operatingHoursSuffix})`,
       tooltipInfo:
         "from daily log and application will extrapolate this information to be annual",
@@ -334,5 +427,6 @@ export function dieselInputsProducedPer(
       ),
     },
     // end of diesel generatorsp
+    dieselEstimatedInput,
   ];
 }

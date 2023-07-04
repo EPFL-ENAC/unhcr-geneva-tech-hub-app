@@ -20,7 +20,7 @@ import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
 
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface.vue";
+import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import { GHGfNRB } from "@/store/GHGReferencefNRB";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";

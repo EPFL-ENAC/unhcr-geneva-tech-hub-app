@@ -39,7 +39,7 @@ import {
   SurveyInput,
   SurveyItem,
   SurveyResult,
-} from "@/store/GhgInterface.vue";
+} from "@/store/GhgInterface";
 
 import {
   ElectricFuel,
@@ -47,7 +47,7 @@ import {
   electricFuelWithText,
 } from "@/components/green_house_gaz/fuelTypes";
 
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface.vue";
+import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";

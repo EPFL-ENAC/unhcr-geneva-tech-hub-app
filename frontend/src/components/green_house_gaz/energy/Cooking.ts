@@ -1,4 +1,8 @@
 import {
+  computeCO2CostEnergy,
+  numberOfDaysPerYear,
+} from "@/components/green_house_gaz/energy/computeCO2cost";
+import {
   CountryIrradianceKeys,
   solarInputsProducedPer,
 } from "@/components/green_house_gaz/energy/solarInputs";
@@ -20,23 +24,19 @@ import {
   thermalFuels,
 } from "@/components/green_house_gaz/fuelTypes";
 import { GHGfNRB } from "@/store/GHGReferencefNRB";
-import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
-
 import {
-  computeCO2CostEnergy,
-  numberOfDaysPerYear,
-} from "@/components/green_house_gaz/energy/computeCO2cost";
-import { ItemReferencesMap } from "@/store/GhgReferenceModule";
+  ItemReferencesMap,
+  ReferenceItemInterface,
+} from "@/store/GhgReferenceModule";
 
 import { formatNumber } from "@/plugins/filters";
 import {
-  DieselItem,
   EnergyItem,
   GenericFormSurvey,
   SurveyInput,
   SurveyItem,
   SurveyResult,
-} from "@/store/GhgInterface.vue";
+} from "@/store/GhgInterface";
 
 import {
   cookstoveIdSolarCooker,
@@ -46,7 +46,10 @@ import {
   CookstoveTech,
   cookstoveTECHs,
 } from "@/components/green_house_gaz/energy/CookstoveTech";
-import { dieselInputsProducedPer } from "@/components/green_house_gaz/energy/dieselInputs";
+import {
+  computeDieselPower,
+  dieselInputsProducedPer,
+} from "@/components/green_house_gaz/energy/dieselInputs";
 import {
   computeThermalKWHPerDayFromPerYear,
   computeThermalKWHPerYearFromPerDay,
@@ -57,10 +60,7 @@ import {
   surveyTableHeaderIncrements,
 } from "@/components/green_house_gaz/generic/surveyTableHeader";
 
-export interface EnergyCookingItemInput
-  extends SurveyInput,
-    DieselItem,
-    EnergyItem {
+export interface EnergyCookingItemInput extends SurveyInput, EnergyItem {
   numberOfCookstove?: number; // computed based on % of HH and stuffs
   cookstove: string; // type fo cookstove
   image?: string; // image of cookstove
@@ -72,7 +72,7 @@ export interface EnergyCookingItemInput
   sustainablySourced?: boolean;
   chcProcessingFactor?: number; // default to 6
   dryWood?: boolean;
-  disabledfuelUsage?: boolean;
+  disabledFuelUsage?: boolean;
 }
 
 export interface EnergyCookingItemResults extends SurveyResult {
@@ -127,7 +127,7 @@ export function resetSurveyFuelOption(
   delete localInput.appliance;
 
   delete localInput.disableDieselLiters; // do I know the total litres of diesels
-  localInput.disabledfuelUsage = false;
+  localInput.disabledFuelUsage = false;
   localInput.generatorLoad = 0.6; // default factor of 60%
   delete localInput.generatorSize;
   delete localInput.operatingHours;
@@ -249,6 +249,7 @@ export function headers(
           localInput.cookstove = cookstoveId;
           localInput.fuelType = thermalFuels[0];
           localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
+          // compute default according to type
           localInput.renewablePower = computeThermalKWHPerYearFromPerDay(
             localInput.fuelUsage
           );
@@ -296,7 +297,8 @@ export function headers(
       },
       customEventInput: (
         fuelType: AllFuel,
-        localInput: EnergyCookingItemInput
+        localInput: EnergyCookingItemInput,
+        ghgMapRef: ItemReferencesMap
       ) => {
         resetSurveyFuelOption(localInput);
         localInput.appliance = COOK_APP_Default;
@@ -306,6 +308,14 @@ export function headers(
         }
         localInput.fuelType = fuelType;
         localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
+
+        if (fuelType === electricFuels[0] || fuelType === electricFuels[3]) {
+          // compute default according to type
+          localInput.dieselPower = computeDieselPower(
+            localInput as EnergyItem,
+            ghgMapRef?.REF_EFF_DIES_L
+          );
+        }
         return localInput;
       },
       isInput: true,
@@ -313,11 +323,63 @@ export function headers(
       hideFooterContent: false,
     },
     {
-      value: "input.disabledfuelUsage",
-      text: "Fuel quantity known",
-      conditional_value: [cookstoveIdsTECHsWithAccess, allFuelsButThermal],
-      conditional: ["cookstove", "fuelType"],
-      conditional_type: "AND",
+      value: "input.disabledFuelUsage",
+      text: (localInput: EnergyCookingItemInput) => {
+        let result = "Fuel quantity known?";
+        const biomassFuelsText = "Biomass quantity known?";
+        const liquidFuelsText = "Number of liters known?";
+        const gasFuelsText = result;
+        const lpgFuelsText = result;
+        const electricFuelsText = result;
+        const thermalFuelsText = result;
+
+        const refTexts: {
+          readonly fuelTypes: readonly AllFuel[];
+          text: string;
+        }[] = [
+          { fuelTypes: biomassFuels, text: biomassFuelsText },
+          { fuelTypes: liquidFuels, text: liquidFuelsText },
+          { fuelTypes: ["BGS", "PNG"], text: gasFuelsText },
+          { fuelTypes: ["LPG"], text: lpgFuelsText },
+          {
+            fuelTypes: ["ELE_DIES"], // superseed electricFuels
+            text: "Number of liters of diesel known?",
+          },
+          { fuelTypes: electricFuels, text: electricFuelsText },
+          { fuelTypes: thermalFuels, text: thermalFuelsText },
+        ];
+        // Superseed the dieselInputs for dieselLiters
+
+        refTexts.every((refText) => {
+          if (refText.fuelTypes.includes(localInput.fuelType)) {
+            result = refText.text;
+            return false;
+          }
+          return true;
+        });
+        return result;
+      },
+      conditional_function: (itemInput: SurveyInput) => {
+        // conditional_value: [cookstoveIdsTECHsWithAccess, allFuelsButThermal],
+        // conditional: ["cookstove", "fuelType"],
+        // conditional_type: "AND",
+        // and don't show for ELE_HYB
+        if (
+          itemInput.cookstove &&
+          (cookstoveIdsTECHsWithAccess as string[]).includes(
+            itemInput.cookstove as string
+          ) &&
+          itemInput.fuelType &&
+          (allFuelsButThermal as string[]).includes(
+            itemInput.fuelType as string
+          ) &&
+          itemInput.fuelType !== "ELE_HYB"
+        ) {
+          return true;
+        }
+
+        return false;
+      },
       style: {
         cols: "12",
       },
@@ -328,26 +390,61 @@ export function headers(
       default: true,
       type: "boolean",
       customEventInput: (
-        disabledfuelUsage: boolean,
+        disabledFuelUsage: boolean,
         localInput: EnergyCookingItemInput
       ) => {
         if (!localInput.fuelType) {
           return localInput;
         }
-        if (!disabledfuelUsage) {
+        if (!disabledFuelUsage) {
           localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
-          debugger;
         }
 
         return localInput;
       },
     },
     {
-      conditional_value: [[true], cookstoveIdsTECHsWithAccess],
-      conditional: ["disabledfuelUsage", "cookstove"],
-      conditional_type: "AND",
       text: "Cookstove appliance",
       value: "input.appliance",
+      conditional_function: (itemInput: SurveyInput) => {
+        // const result = true;
+        // rules regarding appliance :
+        //   - only some cookstove tech have access
+        //   - show if Fuel quantity not known (disabledFuelUsage is true)
+        //   - show only if
+        //     - cooking is electric diesel generator AND
+        //     -  disabledFuelUsage is True AND
+        //     -  disableDieselLiters is False (no diesel generator charact )
+        // when disabledFuelUsage == TRUE AND disableDieselLiters is False
+        // --> automatic number of diesel liters with default value
+        // return true;
+
+        if (
+          itemInput.fuelType === undefined ||
+          itemInput.fuelType === "NO_ACCESS"
+        ) {
+          return false;
+        }
+        if (itemInput.disabledFuelUsage) {
+          if (itemInput.fuelType === "ELE_DIES") {
+            return itemInput.disableDieselLiters;
+          }
+          if (itemInput.fuelType === "ELE_HYB") {
+            return false;
+          }
+          return true;
+        }
+
+        if (
+          itemInput.cookstove &&
+          !(cookstoveIdsTECHsWithAccess as string[]).includes(
+            itemInput.cookstove as string
+          )
+        ) {
+          return false;
+        }
+        return false;
+      },
       items: [COOK_APP_Default, COOK_APP_Pressure, COOK_APP_Heat_Retaining],
       style: {
         cols: "12",
@@ -367,7 +464,7 @@ export function headers(
     },
     {
       conditional_value: [["FWD"], [true]],
-      conditional: ["fuelType", "disabledfuelUsage"],
+      conditional: ["fuelType", "disabledFuelUsage"],
       conditional_type: "AND",
       text: "Dry wood",
       style: {
@@ -410,6 +507,7 @@ export function headers(
           { fuelTypes: electricFuels, text: electricFuelsText },
           { fuelTypes: thermalFuels, text: thermalFuelsText },
         ];
+        // Superseed the dieselInputs for dieselLiters
 
         refTexts.every((refText) => {
           if (refText.fuelTypes.includes(localInput.fuelType)) {
@@ -427,7 +525,7 @@ export function headers(
         cols: "12",
       },
       type: "number",
-      disabledWithConditions: "disabledfuelUsage",
+      disabledWithConditions: "disabledFuelUsage",
       disabledWithConditions_value: false,
       customEventInput: (
         fuelUsage: number,

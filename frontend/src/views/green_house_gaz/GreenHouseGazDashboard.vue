@@ -34,7 +34,7 @@
 <script lang="ts">
 import TerritoryMap from "@/components/commons/TerritoryMap.vue";
 import NewSurveyDialog from "@/components/green_house_gaz/NewSurveyDialog.vue";
-import { Site } from "@/store/GhgInterface.vue";
+import { Site } from "@/store/GhgInterface";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 

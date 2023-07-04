@@ -37,9 +37,9 @@ import {
   SurveyInput,
   SurveyItem,
   SurveyResult,
-} from "@/store/GhgInterface.vue";
+} from "@/store/GhgInterface";
 
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface.vue";
+import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import { GHGfNRB } from "@/store/GHGReferencefNRB";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import "vue-class-component/hooks";
