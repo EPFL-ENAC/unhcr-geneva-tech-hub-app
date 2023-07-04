@@ -55,7 +55,7 @@ import {
   OffsetSurvey,
   Survey,
   WashSurvey,
-} from "@/store/GhgInterface.vue";
+} from "@/store/GhgInterface";
 
 import { BarChart } from "echarts/charts";
 import {

@@ -35,7 +35,7 @@ import {
   SurveyInput,
   SurveyItem,
   SurveyResult,
-} from "@/store/GhgInterface.vue";
+} from "@/store/GhgInterface";
 
 import {
   lightingIdsTECHsWithAccess,
@@ -66,7 +66,7 @@ export interface EnergyLightingItemInput
   sustainablySourced?: boolean;
   chcProcessingFactor?: number; // default to 6
   dryWood?: boolean;
-  disabledfuelUsage?: boolean;
+  disabledFuelUsage?: boolean;
 }
 
 export interface EnergyLightingItemResults extends SurveyResult {
@@ -121,11 +121,10 @@ export function resetSurveyFuelOption(
   delete localInput.appliance;
 
   delete localInput.disableDieselLiters; // do I know the total litres of diesels
-  localInput.disabledfuelUsage = false;
+  localInput.disabledFuelUsage = false;
   localInput.generatorLoad = 0.6; // default factor of 60%
   delete localInput.generatorSize;
   delete localInput.operatingHours;
-  delete localInput.dieselLiters;
 
   delete localInput.solarInstalled;
 
@@ -278,7 +277,7 @@ export function headers(
       hideFooterContent: false,
     },
     {
-      value: "input.disabledfuelUsage",
+      value: "input.disabledFuelUsage",
       text: "Fuel quantity known",
       conditional_value: [lightingIdsTECHsWithAccess, ""],
       conditional: ["lighting", "fuelType"],
@@ -293,13 +292,13 @@ export function headers(
       default: true,
       type: "boolean",
       customEventInput: (
-        disabledfuelUsage: boolean,
+        disabledFuelUsage: boolean,
         localInput: EnergyLightingItemInput
       ) => {
         if (!localInput.fuelType) {
           return localInput;
         }
-        if (!disabledfuelUsage) {
+        if (!disabledFuelUsage) {
           localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
         }
 
@@ -308,7 +307,7 @@ export function headers(
     },
     {
       conditional_value: [[true], lightingIdsTECHsWithAccess],
-      conditional: ["disabledfuelUsage", "lighting"],
+      conditional: ["disabledFuelUsage", "lighting"],
       conditional_type: "AND",
       text: "Lighting appliance",
       value: "input.appliance",
@@ -331,7 +330,7 @@ export function headers(
     },
     {
       conditional_value: [["FWD"], [true]],
-      conditional: ["fuelType", "disabledfuelUsage"],
+      conditional: ["fuelType", "disabledFuelUsage"],
       conditional_type: "AND",
       text: "Dry wood",
       style: {
@@ -391,12 +390,12 @@ export function headers(
         cols: "12",
       },
       type: "number",
-      disabledWithConditions: "disabledfuelUsage",
+      disabledWithConditions: "disabledFuelUsage",
       disabledWithConditions_value: false,
     },
     ...dieselInputsProducedPer("Day", "Day"),
     {
-      value: "input.gridPower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
+      value: "input.gridPower", // maybe use like in DieselGeneratorWithoutLitres
       conditional_value: ["ELE_GRID", "ELE_HYB"],
       conditional: "fuelType",
       text: "Estimated Kwh/day/HH for national grid",

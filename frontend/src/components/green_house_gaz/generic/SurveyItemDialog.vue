@@ -65,14 +65,16 @@
                       :src="localInput.image"
                     />
                   </div>
+                  <!-- <pre>
+                  {{  surveyItem.conditional }}
+                  {{  surveyItem.conditional_type }}
+                  {{  surveyItem.conditional_value }}
+                  </pre> -->
                   <form-item-component
                     v-if="!surveyItem.hideInput"
                     :value="localInput[surveyItem.key]"
                     v-bind="surveyItem"
-                    :disabled="
-                      surveyItem.disabled ||
-                      localInput?.[surveyItem.disabledWithConditions]
-                    "
+                    :disabled="matchDisabledConditions(localInput, surveyItem)"
                     @input="(v) => customFormInput(v, surveyItem, localInput)"
                   />
                 </v-col>
@@ -115,7 +117,7 @@ import {
   SurveyInput,
   SurveyInputValue,
   SurveyItem,
-} from "@/store/GhgInterface.vue";
+} from "@/store/GhgInterface";
 
 import { SelectCustom } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
@@ -168,7 +170,24 @@ export default class SurveyItemDialog extends Vue {
   @Watch("item", { immediate: true, deep: true })
   onItemChange(value: SurveyItem): void {
     this.localItem = cloneDeep(value);
-    this.localInput = cloneDeep(value.input);
+    this.localInput = cloneDeep(value.input) ?? {};
+    // // TODO: remove when testing is done
+    // this.localInput.appliance = "None";
+    // this.localInput.cookstove = "8";
+    // this.localInput.disabledFuelUsage = false;
+    // this.localInput.fuelType = "ELE_DIES";
+    // this.localInput.fuelTypes = [
+    //   "ELE_DIES",
+    //   "ELE_GRID",
+    //   "ELE_SOLAR",
+    //   "ELE_HYB",
+    // ];
+    // this.localInput.fuelUsage = 1;
+    // this.localInput.generatorLoad = 0.6;
+    // this.localInput.image = "/images/energy/cookstoves/induction.png";
+    // // END OF TODO
+
+    console.clear();
   }
   @Watch("formValid", { immediate: true, deep: true })
   onFormValid(): void {
@@ -282,10 +301,42 @@ export default class SurveyItemDialog extends Vue {
     this.isOpen = false;
   }
 
+  public matchDisabledConditions(
+    localInput: SurveyInput,
+    surveyItem: SurveyTableHeader
+  ) {
+    if (typeof surveyItem.conditional_disabled_function === "function") {
+      console.log(
+        "result of conditional_disabled_function:",
+        surveyItem.conditional_disabled_function(localInput, surveyItem)
+      );
+      console.groupEnd();
+      return surveyItem.conditional_disabled_function(localInput, surveyItem);
+    }
+    return (
+      surveyItem.disabled || localInput?.[surveyItem.disabledWithConditions]
+    );
+  }
+
   public matchConditions(
     localInput: SurveyInput,
     surveyItem: SurveyTableHeader
   ) {
+    console.group(`matchConditions: ${surveyItem.label}`);
+    console.log(
+      `\x1B[1;4m${surveyItem.key}: ${localInput[surveyItem.key] ?? ""}`
+    );
+    console.log(localInput, surveyItem);
+    // if we have a conditional_function field it superseed the conditional logic
+    if (typeof surveyItem.conditional_function === "function") {
+      console.log(
+        "result of conditional_function:",
+        surveyItem.conditional_function(localInput, surveyItem)
+      );
+      console.groupEnd();
+      return surveyItem.conditional_function(localInput, surveyItem);
+    }
+    console.groupEnd();
     if (typeof surveyItem.conditional === "undefined") {
       return true;
     }

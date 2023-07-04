@@ -1,4 +1,4 @@
-import { CountriesInfoMap, CountryInfo } from "@/store/GhgInterface.vue";
+import { CountriesInfoMap, CountryInfo } from "@/store/GhgInterface";
 import { ShelterRegions } from "@/store/ShelterInterface";
 export const regions = [
   "Asia and the Pacific",

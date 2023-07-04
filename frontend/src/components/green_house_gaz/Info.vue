@@ -117,7 +117,7 @@ import {
   Survey,
   SurveyInput,
   SurveyResult,
-} from "@/store/GhgInterface.vue";
+} from "@/store/GhgInterface";
 import {
   ItemReferencesMap,
   ReferenceItemInterface,

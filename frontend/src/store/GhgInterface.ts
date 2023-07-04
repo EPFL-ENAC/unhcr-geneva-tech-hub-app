@@ -1,5 +1,3 @@
-<script lang="ts">
-import { WashTruckingSurvey } from "@/components/green_house_gaz/wash/Trucking.vue";
 import { ShelterRegions } from "@/store/ShelterInterface";
 import { CouchUser } from "./UserModule";
 // import { Material } from "@/store/ShelterInterface";
@@ -98,7 +96,12 @@ export type EnergySurveyCategory = keyof EnergySurvey;
 
 // should be generic survey with import type from Trucking.vue
 export interface WashSurvey {
-  trucking: WashTruckingSurvey;
+  trucking: GenericFormSurvey<
+    SurveyItem,
+    SurveyResult,
+    SurveyItem,
+    SurveyResult
+  >;
 }
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -195,7 +198,7 @@ type FacilityType =
   | "NotPowered";
 
 export interface DieselItem {
-  dieselLiters?: number;
+  fuelUsage?: number; // L/day
   disableDieselLiters?: boolean;
   generatorSize?: number; // replace the diesel liter
   operatingHours?: number; // replace the diesel liter
@@ -255,10 +258,6 @@ export interface MaterialSurvey {
   >;
 }
 
-// export type MaterialCRISurvey = FormSurvey;
-
-// export type MaterialHHwasteSurvey = FormSurvey;
-
 export interface OffsetSurvey {
   treeplanting: GenericFormSurvey<
     SurveyItem,
@@ -268,31 +267,8 @@ export interface OffsetSurvey {
   >;
 }
 
-// export interface OffsetTreePlantingSurvey {
-//   baseline: number;
-//   endline: number;
-// }
-// export interface MaterialShelterSurvey {
-//   baseline: MaterialShelterSurveyItem;
-//   endline: MaterialShelterSurveyItemWithBalance;
-// }
-// export interface MaterialShelterSurveyItem {
-//   inputs: Material[];
-//   results: Material[];
-// }
-
-// export interface MaterialShelterSurveyItemWithBalance
-//   extends MaterialShelterSurveyItem {
-//   resultsBalance: MaterialShelterSurveyBalance;
-// }
-
-// export interface MaterialShelterSurveyBalance {
-//   SH_BAL_MAT: number; // Difference in material used
-//   SH_BAL_CO2: number; // Difference in CO2 Emissions
-// }
 export type SurveySubcategory =
   | keyof EnergySurvey
   | keyof WashSurvey
   | keyof MaterialSurvey
   | keyof OffsetSurvey;
-</script>

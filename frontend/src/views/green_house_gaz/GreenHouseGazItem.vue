@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { GreenHouseGaz } from "@/store/GhgInterface.vue";
+import { GreenHouseGaz } from "@/store/GhgInterface";
 import { Component, Vue } from "vue-property-decorator";
 import { Route } from "vue-router";
 import { mapActions, mapGetters } from "vuex";

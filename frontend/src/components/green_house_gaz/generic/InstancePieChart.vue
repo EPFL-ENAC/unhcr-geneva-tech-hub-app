@@ -10,7 +10,7 @@ import {
   EnergyFacilityInterventionItemResult,
   EnergyFacilityItemResult,
   SurveyResult,
-} from "@/store/GhgInterface.vue";
+} from "@/store/GhgInterface";
 import { PieChart } from "echarts/charts";
 import { TitleComponent, TooltipComponent } from "echarts/components";
 import { use } from "echarts/core";
@@ -47,7 +47,7 @@ export default class InstancePieChart extends Vue {
     }
     if (item.dieselPower) {
       data.push({
-        id: "dieselLiters",
+        id: "fuelUsage", // TODO: not sure if it works it was dieselLiters
         name: "Diesel",
         value: item.dieselPower,
         colorBy: "series",

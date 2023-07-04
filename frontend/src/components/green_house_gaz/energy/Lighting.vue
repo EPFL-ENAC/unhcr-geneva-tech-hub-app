@@ -37,9 +37,9 @@ import {
   SurveyInput,
   SurveyItem,
   SurveyResult,
-} from "@/store/GhgInterface.vue";
+} from "@/store/GhgInterface";
 
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface.vue";
+import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import { GHGfNRB } from "@/store/GHGReferencefNRB";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import "vue-class-component/hooks";
@@ -339,7 +339,6 @@ export default class Lighting extends Vue {
     localInput.generatorLoad = 0.6; // default factor of 60%
     delete localInput.generatorSize;
     delete localInput.operatingHours;
-    delete localInput.dieselLiters;
 
     delete localInput.solarInstalled;
 
@@ -382,7 +381,6 @@ export default class Lighting extends Vue {
       },
       {
         conditional_value: "",
-        // conditional: ["fuelUsage", "dieselLiters"],
         conditional: ["fuelType"],
         text: "Lighting type",
         value: "input.appliance",
@@ -467,7 +465,7 @@ export default class Lighting extends Vue {
       },
       ...dieselInputsProducedPer("Day", "Day"),
       {
-        value: "input.gridPower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
+        value: "input.gridPower", // maybe use like in DieselGeneratorWithoutLitres
         conditional_value: ["ELE_GRID", "ELE_HYB"],
         conditional: "fuelType",
         text: "Estimated Kwh/day/HH for national grid",

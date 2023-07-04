@@ -3,7 +3,7 @@ import {
   TimePeriod,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
 import { formatNumber } from "@/plugins/filters";
-import { EnergyItem } from "@/store/GhgInterface.vue";
+import { EnergyItem } from "@/store/GhgInterface";
 
 const countryIrradiance = {
   IR: 5.540210523,
@@ -135,7 +135,7 @@ export function solarInputsProducedPer(
   }
   return [
     {
-      value: "input.solarInstalled", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
+      value: "input.solarInstalled", // maybe use like in DieselGeneratorWithoutLitres
       conditional_value: ["ELE_SOLAR", "ELE_HYB"],
       conditional: "fuelType",
       tooltipInfo:
@@ -160,7 +160,7 @@ export function solarInputsProducedPer(
       type: "number",
     },
     {
-      value: "input.renewablePower", // maybe use dieselLiters like in DieselGeneratorWithoutLitres
+      value: "input.renewablePower", // maybe use like in DieselGeneratorWithoutLitres
       conditional_value: ["ELE_SOLAR", "ELE_HYB"],
       disabled: false,
       text: `Solar (${suffix}) estimated`,
