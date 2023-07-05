@@ -290,7 +290,7 @@
     "index": 30
   },
   {
-    "_id": "REF_BAT",
+    "_id": "REF_EFF_BAT",
     "type": "number",
     "category": "Energy",
     "description": "Energy - Lighting - Emission Factor - Torch or phone with battery [kg CO2e/kWh]",
