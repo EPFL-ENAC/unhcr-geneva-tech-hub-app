@@ -26,7 +26,7 @@ export const lightingTECHs: LightingTech[] = [
   {
     _id: "1",
     fuelTypes: noAccessFuels,
-    text: "Without any access (no possibility to cook)",
+    text: "Without any access",
     image: undefined,
   },
   {

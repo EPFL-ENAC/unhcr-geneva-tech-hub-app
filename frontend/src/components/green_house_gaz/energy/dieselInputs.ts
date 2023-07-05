@@ -10,6 +10,7 @@ import {
   ItemReferencesMap,
   ReferenceItemInterface,
 } from "@/store/GhgReferenceModule";
+import { EnergyCookingItemInput, getDefaultFuel } from "./Cooking";
 
 export function computeLitresDieselPerYear(localItem: EnergyItem): number {
   return computeLitresPerDayDiesel(localItem) * numberOfDaysPerYear;
@@ -60,15 +61,14 @@ export function computedieselLitersFromPower(
   return 0;
 }
 
-function dieselEstimated(
-  localInput: EnergyItem,
+export function dieselEstimated(
   PowerEstimated: boolean,
   LitersEstimated?: boolean
-): EnergyItem {
-  localInput.dieselPowerEstimated = PowerEstimated;
-  localInput.dieselLitersEstimated =
+): { dieselPowerEstimated: boolean, dieselLitersEstimated: boolean} {
+  const dieselPowerEstimated = PowerEstimated;
+  const dieselLitersEstimated =
     LitersEstimated !== undefined ? LitersEstimated : !PowerEstimated;
-  return localInput;
+  return { dieselPowerEstimated, dieselLitersEstimated};
 }
 
 export function computeDieselPowerAndUpdateKey(
@@ -77,23 +77,47 @@ export function computeDieselPowerAndUpdateKey(
   computeDieselPowerFromLiters: (
     v: EnergyItem,
     ghgMapRefItem: ReferenceItemInterface
-  ) => number
+  ) => number,
+  cookingMode?: boolean,
+  pp_per_hh?: number
 ): (
-  valueOfKey: number,
+  valueOfKey: number | boolean,
   localInput: EnergyItem,
   ghgMapRef: ItemReferencesMap
 ) => EnergyItem {
   return (
-    valueOfKey: number,
+    valueOfKey: number | boolean,
     localInput: EnergyItem,
     ghgMapRef: ItemReferencesMap
   ): EnergyItem => {
     localInput[key] = valueOfKey as unknown as undefined;
-    if (key !== "fuelUsage") {
-      localInput.fuelUsage = computeLitersDiesel(localInput); // we're modifying the generator
-      localInput = dieselEstimated(localInput, true, true);
+
+    if (key === "disableDieselLiters" && cookingMode) {
+      // set default VALUE for fuelUsage here...
+      // for cookstove
+      // false means generator config known
+      // true means liters field enabled and we should have default value
+      // else it's the oposite
+      if (valueOfKey) {
+        console.log("We should get default value");
+        localInput.fuelUsage = getDefaultFuel(
+          localInput as EnergyCookingItemInput,
+          pp_per_hh
+        );
+      }
     } else {
-      localInput = dieselEstimated(localInput, true);
+      if (key !== "fuelUsage") {
+        localInput.fuelUsage = computeLitersDiesel(localInput); // we're modifying the generator
+        const dieselEstimatedRes = dieselEstimated(true, true);
+        localInput.dieselPowerEstimated =dieselEstimatedRes.dieselLitersEstimated;
+        localInput.dieselLitersEstimated = dieselEstimatedRes.dieselLitersEstimated;
+
+      } else {
+        const dieselEstimatedRes = dieselEstimated(true);
+        localInput.dieselPowerEstimated =dieselEstimatedRes.dieselLitersEstimated;
+        localInput.dieselLitersEstimated = dieselEstimatedRes.dieselLitersEstimated;
+
+      }
     }
     // TODO divide or not by number of day.
     localInput.dieselPower = computeDieselPowerFromLiters(
@@ -125,7 +149,10 @@ function computeDieselLitersFromPowerAndUpdateKey(
       localInput,
       ghgMapRef?.REF_EFF_DIES_L
     );
-    localInput = dieselEstimated(localInput, false);
+    const dieselEstimatedRes = dieselEstimated(false);
+    localInput.dieselPowerEstimated = dieselEstimatedRes.dieselLitersEstimated;
+    localInput.dieselLitersEstimated = dieselEstimatedRes.dieselLitersEstimated;
+
     return localInput;
   };
 }
@@ -133,10 +160,15 @@ function computeDieselLitersFromPowerAndUpdateKey(
 export function dieselInputsProducedPer(
   timePeriod: TimePeriod,
   timePeriodOperatingHours: TimePeriod,
-  { hideFooterContent, cookingMode } = {
+  { hideFooterContent, cookingMode, pp_per_hh } = {
     hideFooterContent: false,
     cookingMode: false,
-  } as { hideFooterContent?: boolean; cookingMode?: boolean }
+    pp_per_hh: undefined,
+  } as {
+    hideFooterContent?: boolean;
+    cookingMode?: boolean;
+    pp_per_hh?: number;
+  }
 ): any[] {
   let computePower: any;
   let computeLiters: any;
@@ -195,7 +227,9 @@ export function dieselInputsProducedPer(
       customEventInput: computeDieselPowerAndUpdateKey(
         "disableDieselLiters",
         computeLiters,
-        computePower
+        computePower,
+        cookingMode,
+        pp_per_hh
       ),
     },
   ];
@@ -239,7 +273,9 @@ export function dieselInputsProducedPer(
       customEventInput: computeDieselPowerAndUpdateKey(
         "disableDieselLiters",
         computeLiters,
-        computePower
+        computePower,
+        cookingMode,
+        pp_per_hh
       ),
     },
   ];
@@ -285,7 +321,7 @@ export function dieselInputsProducedPer(
       // if (cookingMode) {
       //   return (
       //     itemInput.disabledFuelUsage === true ||
-      //     itemInput.disableDieselLiters 
+      //     itemInput.disableDieselLiters
       //   );
       // } else {
       //   return itemInput.disableDieselLiters != undefined;
@@ -361,7 +397,9 @@ export function dieselInputsProducedPer(
         // when disabledFuelUsage == TRUE AND disableDieselLiters is False --> automatic number of diesel liters with default value
       },
       computeResults: true,
-      text: `Liters of diesel ${litersSuffix}`,
+      // TODO: beware for lighting it should be per hh per day like cookstove
+      // but for facility it's not per hh
+      text: `Liters of diesel ${litersSuffix}${cookingMode ? "/HH" : ""}`,
       suffix: "l",
       style: {
         cols: "12",
@@ -370,7 +408,9 @@ export function dieselInputsProducedPer(
       customEventInput: computeDieselPowerAndUpdateKey(
         "fuelUsage",
         computeLiters,
-        computePower
+        computePower,
+        cookingMode,
+        pp_per_hh
       ),
     },
 
@@ -388,7 +428,9 @@ export function dieselInputsProducedPer(
       customEventInput: computeDieselPowerAndUpdateKey(
         "generatorSize",
         computeLiters,
-        computePower
+        computePower,
+        cookingMode,
+        pp_per_hh
       ),
     },
     {
@@ -405,7 +447,9 @@ export function dieselInputsProducedPer(
       customEventInput: computeDieselPowerAndUpdateKey(
         "generatorLoad",
         computeLiters,
-        computePower
+        computePower,
+        cookingMode,
+        pp_per_hh
       ),
     },
     {
@@ -423,7 +467,9 @@ export function dieselInputsProducedPer(
       customEventInput: computeDieselPowerAndUpdateKey(
         "operatingHours",
         computeLiters,
-        computePower
+        computePower,
+        cookingMode,
+        pp_per_hh
       ),
     },
     // end of diesel generatorsp

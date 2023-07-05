@@ -65,11 +65,7 @@
                       :src="localInput.image"
                     />
                   </div>
-                  <!-- <pre>
-                  {{  surveyItem.conditional }}
-                  {{  surveyItem.conditional_type }}
-                  {{  surveyItem.conditional_value }}
-                  </pre> -->
+                  <!-- {{ JSON.stringify(surveyItem) }} -->
                   <form-item-component
                     v-if="!surveyItem.hideInput"
                     :value="localInput[surveyItem.key]"
@@ -171,22 +167,6 @@ export default class SurveyItemDialog extends Vue {
   onItemChange(value: SurveyItem): void {
     this.localItem = cloneDeep(value);
     this.localInput = cloneDeep(value.input) ?? {};
-    // // TODO: remove when testing is done
-    // this.localInput.appliance = "None";
-    // this.localInput.cookstove = "8";
-    // this.localInput.disabledFuelUsage = false;
-    // this.localInput.fuelType = "ELE_DIES";
-    // this.localInput.fuelTypes = [
-    //   "ELE_DIES",
-    //   "ELE_GRID",
-    //   "ELE_SOLAR",
-    //   "ELE_HYB",
-    // ];
-    // this.localInput.fuelUsage = 1;
-    // this.localInput.generatorLoad = 0.6;
-    // this.localInput.image = "/images/energy/cookstoves/induction.png";
-    // // END OF TODO
-
     console.clear();
   }
   @Watch("formValid", { immediate: true, deep: true })
@@ -224,7 +204,9 @@ export default class SurveyItemDialog extends Vue {
 
   public get dynamicHeaders(): SurveyTableHeader[] {
     this.refreshKey; // Some hack it is: https://stackoverflow.com/questions/48700142/vue-js-force-computed-properties-to-recompute
+    const localInput = this.localInput;
     return this.headers.map((header: SurveyTableHeader) => {
+
       if (typeof header.items === "string") {
         const [category, key] = header.items.split(".");
         if (category !== "input") {
@@ -232,13 +214,29 @@ export default class SurveyItemDialog extends Vue {
             "items category should be input like so: `input.fuelTypes` for instance"
           );
         }
-        const items = _get(this.localInput, key) as string[];
+        const items = _get(localInput, key) as string[];
         if (typeof items === "object" && items.length) {
-          header.options = items.map((x) => ({
-            text: header.formatter?.(x as unknown) ?? x,
-            value: x,
-          }));
+          header.options = items.map((x) => {
+            let description;
+            if (typeof header.tooltipInfo === "string") {
+              description = header.tooltipInfo;
+            }
+
+            if (typeof header.tooltipInfo === "function") {
+              description = header.tooltipInfo?.(x);
+            }
+            return {
+              text: header.formatter?.(x as unknown) ?? x,
+              description,
+              value: x,
+            };
+          });
         }
+      }
+      if (typeof header.tooltipInfo === "function") {
+        // debugger;
+        header.tooltipInfo = undefined;
+        // header.tooltipInfo = header.tooltipInfo?.(localInput?.[header.key] ?? "");
       }
       // TODO implement a dynamic way for header.items when it's a function ? cf below
       if (typeof header.text === "function") {
@@ -252,17 +250,28 @@ export default class SurveyItemDialog extends Vue {
         header.formatter
       ) {
         // array we should just check that it's just string.
+        // debugger;
         header.options =
           header.items?.map((item: string | SelectCustom<string>) => {
+            let description;
+            if (typeof header.tooltipInfo === "string") {
+              description = header.tooltipInfo;
+            }
+
             if (typeof item === "string") {
+              if (typeof header.tooltipInfo === "function") {
+                description = header.tooltipInfo?.(item);
+              }
               return {
                 text: header.formatter?.(item as unknown) ?? item,
+                description,
                 value: item,
               };
             }
             return {
               text: item.text,
               value: item._id,
+              description,
             };
           }) ?? [];
       }
@@ -322,21 +331,21 @@ export default class SurveyItemDialog extends Vue {
     localInput: SurveyInput,
     surveyItem: SurveyTableHeader
   ) {
-    console.group(`matchConditions: ${surveyItem.label}`);
-    console.log(
-      `\x1B[1;4m${surveyItem.key}: ${localInput[surveyItem.key] ?? ""}`
-    );
-    console.log(localInput, surveyItem);
+    // console.group(`matchConditions: ${surveyItem.label}`);
+    // console.log(
+    //   `\x1B[1;4m${surveyItem.key}: ${localInput[surveyItem.key] ?? ""}`
+    // );
+    // console.log(localInput, surveyItem);
     // if we have a conditional_function field it superseed the conditional logic
     if (typeof surveyItem.conditional_function === "function") {
-      console.log(
-        "result of conditional_function:",
-        surveyItem.conditional_function(localInput, surveyItem)
-      );
-      console.groupEnd();
+      // console.log(
+      //   "result of conditional_function:",
+      //   surveyItem.conditional_function(localInput, surveyItem)
+      // );
+      // console.groupEnd();
       return surveyItem.conditional_function(localInput, surveyItem);
     }
-    console.groupEnd();
+    // console.groupEnd();
     if (typeof surveyItem.conditional === "undefined") {
       return true;
     }

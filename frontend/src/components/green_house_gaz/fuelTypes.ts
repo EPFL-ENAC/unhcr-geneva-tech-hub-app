@@ -1,6 +1,7 @@
 interface FuelTypesItem<T> {
   _id: T;
   text: string;
+  description?: string;
 }
 // electric fuels
 export const electricFuels = [
@@ -68,14 +69,60 @@ export const thermalFuelWithText: FuelTypesItem<ThermalFuel>[] = [
 ];
 // end of thermal fuels
 
+// lighting fuels
+export const lightingFuels = [
+  "CNDL",
+  "LIGHT_HYB",
+  "PET",
+  "OIL",
+  "LIGHT_SOLAR",
+  "BAT",
+  "ELE_GRID",
+  "ELE_DIES",
+  "ELE_SOLAR",
+  "ELE_HYB",
+] as const;
+export type LightingFuel = typeof lightingFuels[number];
+export const lightingFuelsWithText: FuelTypesItem<LightingFuel>[] = [
+  { _id: "CNDL", text: "Candle (paraffin) [kg/d]" },
+  {
+    _id: "LIGHT_HYB",
+    text: "Hybrid fuel mix (Firewood + paraffin + kerosene)",
+    // description: "Firewood + paraffin + kerosene",
+  },
+  {
+    _id: "PET",
+    text: "Gasoline lamp",
+    description: "",
+  },
+  {
+    _id: "OIL",
+    text: "Vegetable Oil lamp", // TODO: add tree icon: assumption is it sustainably manage
+    description: "",
+  },
+  {
+    _id: "LIGHT_SOLAR",
+    text: "Solar lantern", // total CO2 should be 0
+    // description:
+    //   "The GHG Emission Calculator only considers Scope 1 and 2 emissions.",
+  },
+  {
+    _id: "BAT", // todo change REF_BAT to REF_EFF_BAT
+
+    text: "Torch or phone with battery (rechargeable or not)",
+    // description:
+    //   "The GHG Emission Calculator only considers Scope 1 and 2 emissions.",
+  },
+];
+// end of lighting fuels
+
 // no access
 export const noAccessFuels = ["NO_ACCESS"] as const;
 export type NoAccessFuel = typeof noAccessFuels[number];
 export const noAcessWithText: FuelTypesItem<NoAccessFuel>[] = [
-  { _id: "NO_ACCESS", text: "No access" },
+  { _id: "NO_ACCESS", text: "Without any access" }, /// anciently No access
 ];
 // end of thermal fuels
-
 
 export const allFuelsButElectric = [
   ...biomassFuels,
@@ -94,6 +141,22 @@ export const allFuelsButThermal = [
 // export type AllFuelsButElectric = typeof allFuelsButElectric[number];
 export const allFuels = [...allFuelsButElectric, ...electricFuels];
 
+export const allFuelsForLighing = [
+  "NO_ACCESS",
+  "FWD",
+  "CNDL",
+  "KRS",
+  "LIGHT_HYB", // rename Hybrid fuel mix (paraffin,.. ...)
+  "PET",
+  "OIL",
+  "LIGHT_SOLAR",
+  "BAT",
+  "ELE_GRID",
+  "ELE_DIES",
+  "ELE_SOLAR",
+  "ELE_HYB", // rename Hybrid electric mix
+];
+
 export type AllFuel =
   | ElectricFuel
   | BioMassFuel
@@ -101,6 +164,15 @@ export type AllFuel =
   | GasFuel
   | ThermalFuel
   | NoAccessFuel;
+
+export type AllFuelForLighting =
+  | ElectricFuel
+  | BioMassFuel
+  | LiquidFuel
+  | GasFuel
+  | ThermalFuel
+  | NoAccessFuel
+  | LightingFuel;
 
 export const AllFuelsWithTextById = [
   ...electricFuelWithText,
@@ -113,3 +185,16 @@ export const AllFuelsWithTextById = [
   acc[el._id] = el;
   return acc;
 }, {} as Record<AllFuel, FuelTypesItem<AllFuel>>);
+
+export const AllLightingFuelsWithTextById = [
+  ...electricFuelWithText,
+  ...biomassFuelWithText,
+  ...liquidFuelWithText,
+  ...gasFuelWithText,
+  ...thermalFuelWithText,
+  ...noAcessWithText,
+  ...lightingFuelsWithText,
+].reduce((acc, el: FuelTypesItem<AllFuelForLighting>) => {
+  acc[el._id] = el;
+  return acc;
+}, {} as Record<AllFuelForLighting, FuelTypesItem<AllFuelForLighting>>);
