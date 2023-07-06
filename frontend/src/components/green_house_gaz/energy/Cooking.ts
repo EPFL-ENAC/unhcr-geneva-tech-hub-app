@@ -3,7 +3,7 @@ import {
   numberOfDaysPerYear,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
 import {
-  computeKWHPerYearPerCountry,
+  computeKWInstalledWithKwhPerYearPerCountry,
   CountryIrradianceKeys,
   solarInputsProducedPer,
 } from "@/components/green_house_gaz/energy/solarInputs";
@@ -323,12 +323,13 @@ export function headers(
           localInput.gridPower = getDefaultFuel(localInput, pp_per_hh);
         }
         if (localInput.fuelType === "ELE_SOLAR") {
-          localInput.solarInstalled = getDefaultFuel(localInput, pp_per_hh);
-          localInput.renewablePower = computeKWHPerYearPerCountry(
-            localInput.solarInstalled,
-            countryCode,
-            projectSolar
-          );
+          localInput.renewablePower = getDefaultFuel(localInput, pp_per_hh);
+          localInput.solarInstalled =
+            computeKWInstalledWithKwhPerYearPerCountry(
+              localInput.renewablePower,
+              countryCode,
+              projectSolar
+            );
         }
 
         if (fuelType === "ELE_DIES") {
@@ -612,8 +613,13 @@ export function headers(
           localInput.gridPower = getDefaultFuel(localInput, pp_per_hh);
         }
         if (localInput.fuelType === "ELE_SOLAR") {
-          // TODO : RECOMPUTE solar esimated dynamically
-          localInput.solarInstalled = getDefaultFuel(localInput, pp_per_hh);
+          localInput.renewablePower = getDefaultFuel(localInput, pp_per_hh);
+          localInput.solarInstalled =
+            computeKWInstalledWithKwhPerYearPerCountry(
+              localInput.renewablePower,
+              countryCode,
+              projectSolar
+            );
         }
         return localInput;
       },

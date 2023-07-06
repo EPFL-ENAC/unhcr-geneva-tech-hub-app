@@ -22,7 +22,7 @@ export const electricFuelWithText: FuelTypesItem<ElectricFuel>[] = [
   { _id: "ELE_DIES", text: "Diesel generators" },
   { _id: "ELE_GRID", text: "National Grid" },
   { _id: "ELE_SOLAR", text: "Solar Energy" },
-  { _id: "ELE_HYB", text: "Hybrid Mix" },
+  { _id: "ELE_HYB", text: "Hybrid Electric Mix" },
   { _id: "ELE_NONE", text: "Not powered" },
 ];
 // end of electric fuels
