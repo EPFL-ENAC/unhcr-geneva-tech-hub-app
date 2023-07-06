@@ -234,7 +234,7 @@ export default class SurveyItemDialog extends Vue {
         }
       }
       if (typeof header.tooltipInfo === "function") {
-        // debugger;
+        // TODO: fix dynamic tooltipinfo
         header.tooltipInfo = undefined;
         // header.tooltipInfo = header.tooltipInfo?.(localInput?.[header.key] ?? "");
       }
@@ -250,7 +250,6 @@ export default class SurveyItemDialog extends Vue {
         header.formatter
       ) {
         // array we should just check that it's just string.
-        // debugger;
         header.options =
           header.items?.map((item: string | SelectCustom<string>) => {
             let description;

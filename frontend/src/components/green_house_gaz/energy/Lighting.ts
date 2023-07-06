@@ -8,10 +8,9 @@ import {
 } from "@/components/green_house_gaz/energy/solarInputs";
 import {
   AllFuel,
-  allFuelsForLighing,
-  allFuelsButElectric,
+  AllFuelForLighting,
   allFuelsButThermal,
-  AllFuelsWithTextById,
+  allFuelsForLighing,
   AllLightingFuelsWithTextById,
   BioMassFuel,
   biomassFuels,
@@ -23,7 +22,6 @@ import {
   liquidFuels,
   ThermalFuel,
   thermalFuels,
-  AllFuelForLighting,
 } from "@/components/green_house_gaz/fuelTypes";
 
 import { GHGfNRB } from "@/store/GHGReferencefNRB";
@@ -92,10 +90,6 @@ export type EnergyLightingSurvey = GenericFormSurvey<
   EnergyLightingItem,
   EnergyLightingItemResultsWithBalance
 >;
-
-export const COOK_APP_Pressure = "Pressure cooker";
-export const COOK_APP_Heat_Retaining = "Heat retaining basket";
-export const COOK_APP_Default = "None";
 export const APPLIANCE_EFFICIENCY = 1;
 
 export const REF_DRY_WOOD = 1;
@@ -103,6 +97,47 @@ export const REF_WET_WOOD = 0.15; // 15% less efficient
 export const REF_SUSTAINED_WOOD = 0; // fNRB of sustained
 
 export const diffDimension: keyof EnergyLightingItemInput = "numberOfLighting";
+
+export const conditional_function_for_hyb_lights = (itemInput: SurveyInput) => {
+  if (itemInput?.fuelType == undefined || itemInput?.fuelType == "NO_ACCESS") {
+    return false;
+  }
+  if (["LIGHT_HYB"].includes(itemInput?.fuelType as AllFuelForLighting) ?? "") {
+    return true;
+  }
+  return false;
+};
+
+// Firewood + paraffin + kerosene
+export const hybridLightingInputs = [
+  {
+    text: "Firewood use per HH per day (kg/day)",
+    value: "input.fuelUsageFirewood",
+    conditional_function: conditional_function_for_hyb_lights,
+    style: {
+      cols: "12",
+    },
+    type: "number",
+  },
+  {
+    text: "Paraffin use per HH per day (kg/day)",
+    value: "input.fuelUsageParaffin",
+    conditional_function: conditional_function_for_hyb_lights,
+    style: {
+      cols: "12",
+    },
+    type: "number",
+  },
+  {
+    text: "Kerosene use per HH per day (L/day)",
+    value: "input.fuelUsageKerosene",
+    conditional_function: conditional_function_for_hyb_lights,
+    style: {
+      cols: "12",
+    },
+    type: "number",
+  },
+];
 
 export function resetSurveyInput(
   localInput: EnergyLightingItemInput
@@ -216,10 +251,9 @@ export function headers(
       isInput: true,
       type: "select",
       hideFooterContent: false,
-      tooltipInfo: (localInput: EnergyLightingItemInput) => {
-        console.log(localInput)
-        return 'kikoo';
-      }
+      // tooltipInfo: (localInput: EnergyLightingItemInput) => {
+      //   return "more info";
+      // },
     },
     {
       value: "input.disabledFuelUsage",
@@ -337,13 +371,16 @@ export function headers(
         const thermalFuelsText = "Estimated Kwh/day/HH";
 
         const refTexts: {
-          readonly fuelTypes: readonly AllFuel[];
+          readonly fuelTypes: readonly AllFuelForLighting[];
           text: string;
         }[] = [
           { fuelTypes: biomassFuels, text: biomassFuelsText },
           { fuelTypes: liquidFuels, text: liquidFuelsText },
           { fuelTypes: ["BGS", "PNG"], text: gasFuelsText },
           { fuelTypes: ["LPG"], text: lpgFuelsText },
+          { fuelTypes: ["CNDL"], text: lpgFuelsText },
+          { fuelTypes: ["OIL"], text: liquidFuelsText },
+          { fuelTypes: ["LIGHT_SOLAR", "BAT"], text: electricFuelsText },
           { fuelTypes: electricFuels, text: electricFuelsText },
           { fuelTypes: thermalFuels, text: thermalFuelsText },
         ];
@@ -359,8 +396,27 @@ export function headers(
         return result;
       },
       value: "input.fuelUsage",
-      conditional_value: allFuelsForLighing,
-      conditional: "fuelType",
+      conditional_function: (itemInput: SurveyInput) => {
+        if (
+          itemInput?.fuelType == undefined ||
+          itemInput?.fuelType == "NO_ACCESS"
+        ) {
+          return false;
+        }
+        if (
+          [
+            "LIGHT_HYB",
+            "ELE_GRID",
+            "ELE_DIES",
+            "ELE_SOLAR",
+            "ELE_HYB",
+          ].includes(itemInput?.fuelType as AllFuelForLighting) ??
+          ""
+        ) {
+          return false;
+        }
+        return true;
+      },
       style: {
         cols: "12",
       },
@@ -378,6 +434,7 @@ export function headers(
         }
       },
     },
+    ...hybridLightingInputs,
     {
       value: "input.renewablePower", // maybe like in DieselGeneratorWithoutLitres
       conditional_value: ["THE"],
@@ -405,7 +462,7 @@ export function headers(
     },
     ...dieselInputsProducedPer("Day", "Day", {
       hideFooterContent: true,
-      cookingMode: true,
+      cookingMode: false,
     }),
     {
       value: "input.gridPower", // maybe like in DieselGeneratorWithoutLitres

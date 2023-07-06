@@ -84,7 +84,7 @@ export const lightingFuels = [
 ] as const;
 export type LightingFuel = typeof lightingFuels[number];
 export const lightingFuelsWithText: FuelTypesItem<LightingFuel>[] = [
-  { _id: "CNDL", text: "Candle (paraffin) [kg/d]" },
+  { _id: "CNDL", text: "Candle (paraffin)" },
   {
     _id: "LIGHT_HYB",
     text: "Hybrid fuel mix (Firewood + paraffin + kerosene)",
