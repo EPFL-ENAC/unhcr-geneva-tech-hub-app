@@ -18,6 +18,7 @@ import {
   electricFuels,
   GasFuel,
   gasFuels,
+  LightingFuel,
   LiquidFuel,
   liquidFuels,
   ThermalFuel,
@@ -42,7 +43,6 @@ import {
 import {
   cookstoveIdsTECHsWithAccess,
   cookstoveIdsTECHsWithBioMass,
-  cookstoveTECHs,
 } from "@/components/green_house_gaz/energy/CookstoveTech";
 import { dieselInputsProducedPer } from "@/components/green_house_gaz/energy/dieselInputs";
 import {
@@ -59,13 +59,17 @@ export interface EnergyLightingItemInput extends SurveyInput, EnergyItem {
   numberOfLighting?: number; // computed based on % of HH and stuffs
   image?: string; // image of lighting
   fuelUsage?: number; // [kg or L/day]
-  fuelType: AllFuel; // key
-  fuelTypes?: AllFuel[]; // used only as a reference
+  fuelType: AllFuelForLighting; // key
+  fuelTypes?: AllFuelForLighting[]; // used only as a reference
   carbonized?: boolean;
   sustainablySourced?: boolean;
   chcProcessingFactor?: number; // default to 6
   dryWood?: boolean;
   disabledFuelUsage?: boolean;
+
+  fuelUsageFirewood?: number; // special for light_hyb
+  fuelUsageParaffin?: number; // special for light_hyb
+  fuelUsageKerosene?: number; // special for light_hyb
 }
 
 export interface EnergyLightingItemResults extends SurveyResult {
@@ -162,33 +166,10 @@ export function resetSurveyFuelOption(
   delete localInput.operatingHours;
   delete localInput.solarInstalled;
 
+  delete localInput.fuelUsageFirewood;
+  delete localInput.fuelUsageParaffin;
+  delete localInput.fuelUsageKerosene;
   return localInput;
-}
-
-export function getDefaultFuel(
-  localInput: EnergyLightingItemInput,
-  pp_per_hh: number | undefined
-): number {
-  const currentStove = cookstoveTECHs.find(
-    (cookstove) => cookstove._id === localInput.cookstove
-  );
-  if (!currentStove) {
-    // should be defined, so no error
-    return 0;
-  }
-
-  if (pp_per_hh === undefined) {
-    // should be defined, so no error
-    return 0;
-  }
-  // TODO: for gridPower && solarPower
-  let fuelUsage =
-    (currentStove.defaults?.[localInput.fuelType] ?? 0) * pp_per_hh;
-  if (localInput.fuelType === "FWD" && !localInput.dryWood) {
-    fuelUsage = fuelUsage * (1 + REF_WET_WOOD);
-  }
-
-  return fuelUsage;
 }
 
 export function headers(
@@ -209,7 +190,7 @@ export function headers(
         return AllLightingFuelsWithTextById?.[v]?.text;
       },
       formatterTableComponent: (
-        fuelType: AllFuel,
+        fuelType: AllFuelForLighting,
         _: unknown,
         localItem: EnergyLightingItem
       ) => {
@@ -225,7 +206,7 @@ export function headers(
             fill: "black",
           });
         }
-        if (localItem?.input?.sustainablySourced) {
+        if (localItem?.input?.sustainablySourced || fuelType === "OIL") {
           result.push({
             icon: "$mdiTreeOutline",
             description: "Sustainably sourced biomass",
@@ -243,9 +224,6 @@ export function headers(
         if (fuelType === "FWD") {
           localInput.dryWood = true;
         }
-        // todo improve typing
-        localInput.fuelUsage = getDefaultFuel(localInput, 5);
-
         return localInput;
       },
       isInput: true,
@@ -267,7 +245,7 @@ export function headers(
         const thermalFuelsText = result;
 
         const refTexts: {
-          readonly fuelTypes: readonly AllFuel[];
+          readonly fuelTypes: readonly AllFuelForLighting[];
           text: string;
         }[] = [
           { fuelTypes: biomassFuels, text: biomassFuelsText },
@@ -329,10 +307,6 @@ export function headers(
         if (!localInput.fuelType) {
           return localInput;
         }
-        if (!disabledFuelUsage) {
-          localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
-        }
-
         return localInput;
       },
     },
@@ -355,7 +329,6 @@ export function headers(
         }
 
         localInput.dryWood = dryWood;
-        localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
         return localInput;
       },
     },
@@ -689,6 +662,7 @@ export function generateComputeItem(
         break;
       }
       case liquidFuels.includes(fuelType as LiquidFuel):
+      case ["OIL", "CNDL"].includes(fuelType as LightingFuel):
       case gasFuels.includes(fuelType as GasFuel): {
         if (fuelUsage === undefined) {
           throw new Error("fuel usage not defined");
@@ -714,7 +688,68 @@ export function generateComputeItem(
           project_REF_GRD
         );
         break;
+      case ["BAT", "LIGHT_SOLAR"].includes(fuelType):
       case thermalFuels.includes(fuelType as ThermalFuel):
+        totalCO2Emission = 0;
+        break;
+      case fuelType === "LIGHT_HYB": {
+        const { fuelUsageFirewood, fuelUsageParaffin, fuelUsageKerosene } =
+          localItemInput;
+        if (fuelUsageFirewood === undefined) {
+          throw new Error("fuel usage not defined");
+        }
+        const fuelEfficiencyFirewood = ghgMapRef?.[`REF_EFF_FWD`]?.value;
+        if (fuelEfficiencyFirewood == undefined) {
+          const errorMessage = `there are no emission factor REF_EFF_FWD`;
+          throw new Error(errorMessage);
+        }
+        const totalCO2EmissionFirewood =
+          hhUsingTheFuel *
+          fuelUsageFirewood * // fuel consumed in kg / day
+          0.001 * // 1t/1000kg
+          numberOfDaysPerYear * // days/yr
+          fuelEfficiencyFirewood;
+
+        // PARAFFIN
+        if (fuelUsageParaffin === undefined) {
+          throw new Error("fuel usage not defined");
+        }
+        const fuelEfficiencyParaffin = ghgMapRef?.[`REF_EFF_CNDL`]?.value;
+        if (fuelEfficiencyParaffin == undefined) {
+          const errorMessage = `there are no emission factor REF_EFF_CNDL`;
+          throw new Error(errorMessage);
+        }
+        const totalCO2EmissionParaffin =
+          hhUsingTheFuel *
+          fuelUsageParaffin * // fuel consumed in kg / day
+          0.001 * // 1t/1000kg
+          numberOfDaysPerYear * // days/yr
+          fuelEfficiencyParaffin;
+        // END PARAFFIN
+
+        // KEROSENE
+        if (fuelUsageKerosene === undefined) {
+          throw new Error("fuel usage not defined");
+        }
+        const fuelEfficiencyKerosene = ghgMapRef?.[`REF_EFF_KRS`]?.value;
+        if (fuelEfficiencyKerosene == undefined) {
+          const errorMessage = `there are no emission factor REF_EFF_KRS`;
+          throw new Error(errorMessage);
+        }
+        const totalCO2EmissionKerosene =
+          hhUsingTheFuel *
+          fuelUsageKerosene * // fuel consumed in kg / day
+          0.001 * // 1t/1000kg
+          numberOfDaysPerYear * // days/yr
+          fuelEfficiencyKerosene;
+        // END KEROSENE
+        totalCO2Emission =
+          totalCO2EmissionFirewood +
+          totalCO2EmissionParaffin +
+          totalCO2EmissionKerosene;
+        break;
+      }
+      case ["NO_ACCESS"].includes(fuelType):
         totalCO2Emission = 0;
         break;
       default:
