@@ -17,7 +17,7 @@
           <v-card
             class="mx-auto d-flex flex-column"
             outlined
-            min-height="250px"
+            min-height="300px"
             max-width="100%"
             :elevation="hover ? 12 : 2"
             :class="{ 'on-hover': hover }"
@@ -33,6 +33,20 @@
                   <!-- eslint-disable-next-line vue/no-v-html -->
                   <p v-html="app.description"></p>
                 </div>
+                <div class="item-btn-container">
+
+                  <v-btn
+                      v-if="app.link"
+                      outlined
+                      rounded
+                      text
+                      :href="app.link"
+                      target="_blank"
+                      @click.stop=""
+                    >
+                    Click here for access to the Guidance Manuel
+                    </v-btn>
+                </div>
               </v-list-item-content>
 
               <div class="icon-and-click">
@@ -43,17 +57,7 @@
                   </v-icon>
                 </v-list-item-avatar>
                 <v-card-actions class="app-action">
-                  <!-- <v-btn
-                    v-if="app.link"
-                    outlined
-                    rounded
-                    text
-                    :href="app.link"
-                    target="_blank"
-                    @click.stop=""
-                  >
-                    report
-                  </v-btn> -->
+                  
                   <v-btn outlined rounded text :to="{ name: app.to }">
                     Access
                   </v-btn>
@@ -91,6 +95,11 @@ export default class AppList extends Vue {
   overflow: hidden;
   padding: 12px 0;
   justify-content: space-between;
+  div {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
 }
 ::v-deep .v-card__actions.app-action {
   width: 80px; // like the logo app
@@ -102,6 +111,10 @@ export default class AppList extends Vue {
 
 .description {
   overflow: auto;
-  height: 128px;
+  height: 148px;
+}
+.item-btn-container {
+  padding-top: 8px;
+    padding-bottom: 8px;
 }
 </style>

@@ -253,7 +253,7 @@ import ReferenceData from "@/components/ReferenceData.vue";
 
 import update from "@/mixins/update.js";
 import { CouchUser } from "@/store/UserModule";
-import Apps from "@/utils/apps";
+import Apps, { ghg, shelter } from "@/utils/apps";
 import md5 from "@/utils/md5";
 import { AxiosError, AxiosPromise } from "axios";
 import { Component, Vue, Watch } from "vue-property-decorator";
@@ -372,7 +372,7 @@ export default class App extends Vue {
         title: "Instruction manual",
         icon: "mdiFileDocumentOutline",
         type: "pdf",
-        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-15/Shelter & Sustainability Manual_230312.pdf",
+        href: shelter.link,
       },
       {
         title: "Viewing existing projects",
@@ -460,7 +460,7 @@ export default class App extends Vue {
         title: "Instruction manual",
         icon: "mdiFileDocumentOutline",
         type: "pdf",
-        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-05-02T083700Z/ghg_user_manual.pdf",
+        href: ghg.link,
       },
     ];
   }
