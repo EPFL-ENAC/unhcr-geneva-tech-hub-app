@@ -13,10 +13,6 @@
 </template>
 
 <script lang="ts">
-// TODO: never ask if you know or not the fuel usage
-// for diesel generator do like facilities
-// No default values
-
 import BaselineEndlineWrapper from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
 import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
