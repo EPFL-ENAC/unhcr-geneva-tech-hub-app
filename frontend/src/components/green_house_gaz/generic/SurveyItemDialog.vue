@@ -206,7 +206,6 @@ export default class SurveyItemDialog extends Vue {
     this.refreshKey; // Some hack it is: https://stackoverflow.com/questions/48700142/vue-js-force-computed-properties-to-recompute
     const localInput = this.localInput;
     return this.headers.map((header: SurveyTableHeader) => {
-
       if (typeof header.items === "string") {
         const [category, key] = header.items.split(".");
         if (category !== "input") {

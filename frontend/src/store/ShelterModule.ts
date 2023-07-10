@@ -132,7 +132,7 @@ const actions: ActionTree<ShelterState, RootState> = {
     return localCouch?.remoteDB
       .query("shelter/scorecards", {
         keys: ["public", isAdmin ? "private" : `private_${user.name}`],
-        include_docs: true
+        include_docs: true,
       })
       .then(function (result) {
         const scorecards = result.rows

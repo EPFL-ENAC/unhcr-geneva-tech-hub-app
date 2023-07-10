@@ -1,4 +1,4 @@
-import type { EnergyItem, DieselItem } from "@/store/GhgInterface";
+import type { EnergyItem } from "@/store/GhgInterface";
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
 
 export const numberOfDaysPerYear = 365.25;

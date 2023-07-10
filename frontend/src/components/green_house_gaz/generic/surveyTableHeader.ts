@@ -163,9 +163,7 @@ export interface EasySurveyTableHeader {
   options: SelectOption<SelectValue>[];
   isInput: boolean;
   label?: string;
-  tooltipInfo?: string | ((
-    value: string
-  ) => string);
+  tooltipInfo?: string | ((value: string) => string);
   category?: string; // example increment
   classFormatter?: (
     v: unknown,

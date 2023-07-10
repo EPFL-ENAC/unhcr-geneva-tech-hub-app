@@ -22,7 +22,9 @@
           @change="updateFormInput"
         ></v-switch>
         <info-tooltip>
-          Public projects are visible for all users, enabling dissemination of shelter designs and assessments. Private projects are visible to the project owner only.
+          Public projects are visible for all users, enabling dissemination of
+          shelter designs and assessments. Private projects are visible to the
+          project owner only.
         </info-tooltip>
       </v-col>
     </v-row>

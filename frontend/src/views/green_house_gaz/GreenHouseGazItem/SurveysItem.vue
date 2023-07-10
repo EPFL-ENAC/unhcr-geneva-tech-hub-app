@@ -178,7 +178,7 @@ export default class SurveyList extends Vue {
     {
       children: [
         {
-          icon: "$mdiShower",
+          icon: "$mdiHospitalBuilding",
           text: "Facilities",
           to: "Facilities",
         },

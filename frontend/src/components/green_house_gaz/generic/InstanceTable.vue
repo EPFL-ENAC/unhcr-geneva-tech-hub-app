@@ -222,11 +222,7 @@ import DuplicateSurveyItemDialog from "@/components/green_house_gaz/generic/Dupl
 import SurveyItemDialog from "@/components/green_house_gaz/generic/SurveyItemDialog.vue";
 import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import TextWithIconsAndPopOverDescription from "@/components/green_house_gaz/generic/TextWithIconsAndPopOverDescription.vue";
-import {
-  SurveyInput,
-  SurveyItem,
-  SurveyResult,
-} from "@/store/GhgInterface";
+import { SurveyInput, SurveyItem, SurveyResult } from "@/store/GhgInterface";
 import { cloneDeep, get, maxBy } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
