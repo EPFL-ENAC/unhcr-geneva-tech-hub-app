@@ -452,7 +452,7 @@ export default class DeleteItemDialog extends Vue {
     }
 
     if (this.localItem.itemType === "Material") {
-      return this.currentItem?.units ?? [];
+      return this.currentItem?.units ?? ["KG"]; // Other is default, and should be KG
     }
     return [];
   }
