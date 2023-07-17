@@ -62,7 +62,6 @@ export interface Shelter {
   _rev?: string;
   name: string;
   organisation: string;
-  shelter_total: number | undefined;
   shelter_occupants: number | undefined;
   shelter_lifespan: number | undefined;
   shelter_type: ShelterType;
