@@ -82,6 +82,20 @@ const getters: GetterTree<SheltersMaterialState, RootState> = {
       {} as Record<string, ShelterMaterial>
     );
   },
+  materialKeyToName: (s): Map<string, string> => {
+    // example:  Aluminium --> ALU
+    return s.items.reduce((acc, x) => {
+      acc.set(x._id.split("-")[0], x.material);
+      return acc;
+    }, new Map());
+  },
+  materialNameToKey: (s): Map<string, string> => {
+    // example: ALU --> Aluminium
+    return s.items.reduce((acc, x) => {
+      acc.set(x.material, x._id.split("-")[0]);
+      return acc;
+    }, new Map());
+  },
 };
 
 /** Mutations */

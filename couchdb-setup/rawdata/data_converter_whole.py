@@ -31,6 +31,8 @@ def convert(filename: str, output: str):
 def mapValue(value: str) -> Optional[Union[str, int, float, List[Any]]]:
     if len(value) == 0:
         return None
+    if value == "null":
+        return None
     if value.startswith("[") and value.endswith("]"):
         return [
             mapValue(v) for v in value.removeprefix("[").removesuffix("]").split(",")

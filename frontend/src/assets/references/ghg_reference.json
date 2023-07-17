@@ -197,7 +197,7 @@
     "value": 2.13362568,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 20
+    "index": 19
   },
   {
     "_id": "REF_EFF_KRS",
@@ -207,7 +207,7 @@
     "value": 2.566443042,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 21
+    "index": 20
   },
   {
     "_id": "REF_NONCO2_FWD",
@@ -217,7 +217,7 @@
     "value": 0.077885724,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 23
+    "index": 21
   },
   {
     "_id": "REF_NONCO2_CHC_C",
@@ -227,7 +227,7 @@
     "value": 0.049760319,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 24
+    "index": 22
   },
   {
     "_id": "REF_NONCO2_CHC_P",
@@ -237,7 +237,7 @@
     "value": 0.422709222,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf",
     "ref": null,
-    "index": 25
+    "index": 23
   },
   {
     "_id": "REF_NONCO2_BRQ",
@@ -247,7 +247,7 @@
     "value": 0.086424265,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 26
+    "index": 24
   },
   {
     "_id": "REF_NONCO2_BRQ_C_C",
@@ -257,7 +257,7 @@
     "value": 0.1202,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 27
+    "index": 25
   },
   {
     "_id": "REF_NONCO2_BRQ_C_P",
@@ -267,7 +267,7 @@
     "value": 0.4227,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf",
     "ref": null,
-    "index": 28
+    "index": 26
   },
   {
     "_id": "REF_NONCO2_PLTS",
@@ -277,7 +277,7 @@
     "value": 0.086424265,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 29
+    "index": 27
   },
   {
     "_id": "REF_EFF_OIL",
@@ -287,7 +287,7 @@
     "value": 2.58736961,
     "source": "https://www.epa.gov/system/files/documents/2023-03/ghg_emission_factors_hub.pdf",
     "ref": null,
-    "index": 30
+    "index": 28
   },
   {
     "_id": "REF_EFF_BAT",
@@ -297,6 +297,6 @@
     "value": 0,
     "source": null,
     "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions.",
-    "index": 31
+    "index": 29
   }
 ]

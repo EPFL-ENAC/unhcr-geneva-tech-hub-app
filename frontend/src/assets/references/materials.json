@@ -657,6 +657,24 @@
     "parameters": null
   },
   {
+    "_id": "GRA-OTH_",
+    "material": "Grass, straw",
+    "local": false,
+    "form": "Other",
+    "density": 15.0,
+    "embodied_carbon": 0.1,
+    "embodied_water": 18.7,
+    "embodied_water_ref": "EPIC (2019), softwood (derived)<https://doi.org/10.26188/5dc228ef98c5a>",
+    "embodied_carbon_ref": "Kuchai, N. et al., 2019. Embodied energy and embodied carbon of 81 shelters globally.",
+    "density_ref": "Kuchai, N. et al., 2019. Embodied energy and embodied carbon of 81 shelters globally. ",
+    "units": [
+      "KG"
+    ],
+    "density_unit": "kg/m3",
+    "shape": "UNDEFINED",
+    "parameters": null
+  },
+  {
     "_id": "GYP-PLA_",
     "material": "Gypsum",
     "local": false,
@@ -934,6 +952,24 @@
     "material": "Rubber",
     "local": false,
     "form": "..",
+    "density": 1500.0,
+    "embodied_carbon": 3.7,
+    "embodied_water": 111.0,
+    "embodied_water_ref": "EPIC (2019), Synthetic rubber, <https://doi.org/10.26188/5dc228ef98c5a>",
+    "embodied_carbon_ref": "EPIC (2019), Synthetic rubber, <https://doi.org/10.26188/5dc228ef98c5a>",
+    "density_ref": "ICE v.2.0 (2011)",
+    "units": [
+      "KG"
+    ],
+    "density_unit": "kg/m3",
+    "shape": "UNDEFINED",
+    "parameters": null
+  },
+  {
+    "_id": "RBR-OTH_",
+    "material": "Rubber",
+    "local": true,
+    "form": "Other",
     "density": 1500.0,
     "embodied_carbon": 3.7,
     "embodied_water": 111.0,
@@ -1289,7 +1325,7 @@
     "parameters": null
   },
   {
-    "_id": "STE-FXH_",
+    "_id": "STEFX-H_",
     "material": "Steel/brass fixture, fixing ",
     "local": false,
     "form": "Hinge",
@@ -1308,7 +1344,7 @@
     "parameters": null
   },
   {
-    "_id": "STE-FXL_",
+    "_id": "STEFX-L_",
     "material": "Steel/brass fixture, fixing ",
     "local": false,
     "form": "Lock",
@@ -1327,7 +1363,7 @@
     "parameters": null
   },
   {
-    "_id": "STE-FXN_",
+    "_id": "STEFX-N_",
     "material": "Steel/brass fixture, fixing ",
     "local": false,
     "form": "Bolts",
@@ -1346,7 +1382,7 @@
     "parameters": null
   },
   {
-    "_id": "STE-FXO_",
+    "_id": "STEFX-OTH_",
     "material": "Steel/brass fixture, fixing ",
     "local": false,
     "form": "Other",
