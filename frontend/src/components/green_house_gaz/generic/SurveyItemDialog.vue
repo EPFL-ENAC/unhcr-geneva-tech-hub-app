@@ -167,7 +167,6 @@ export default class SurveyItemDialog extends Vue {
   onItemChange(value: SurveyItem): void {
     this.localItem = cloneDeep(value);
     this.localInput = cloneDeep(value.input) ?? {};
-    console.clear();
   }
   @Watch("formValid", { immediate: true, deep: true })
   onFormValid(): void {
@@ -207,6 +206,7 @@ export default class SurveyItemDialog extends Vue {
     const localInput = this.localInput;
     return this.headers.map((header: SurveyTableHeader) => {
       if (typeof header.items === "string") {
+
         const [category, key] = header.items.split(".");
         if (category !== "input") {
           throw new Error(
@@ -214,6 +214,7 @@ export default class SurveyItemDialog extends Vue {
           );
         }
         const items = _get(localInput, key) as string[];
+
         if (typeof items === "object" && items.length) {
           header.options = items.map((x) => {
             let description;

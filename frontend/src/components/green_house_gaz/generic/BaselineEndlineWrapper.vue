@@ -105,11 +105,9 @@ export default class BaselineEndlineWrapper extends Mixins(
     if (!this.value) {
       return this.generateNewValue();
     }
-    // TODO: MIGRATION remove when data migration complete
     if (this.value?.baseline.items === undefined) {
       return this.generateNewValue();
     }
-    // END OF TODO: MIGRATION
     return this.value;
   }
 
