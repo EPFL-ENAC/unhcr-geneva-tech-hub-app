@@ -67,6 +67,12 @@
       :readonly="readonly"
       :disabled="disabled"
     >
+      <template v-if="tooltipInfo" #prepend>
+        <info-tooltip>
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <span v-html="tooltipInfo ?? label"></span>
+        </info-tooltip>
+      </template>
       <template #label>
         <v-tooltip top>
           <template #activator="{ on, attrs }">

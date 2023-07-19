@@ -34,7 +34,12 @@ const props = defineProps<Props>();
             >
           </template>
           <template v-else>
-            <span style="cursor: pointer" class="font-italic font-weight-light" v-bind="attrs" v-on="on">
+            <span
+              style="cursor: pointer"
+              class="font-italic font-weight-light"
+              v-bind="attrs"
+              v-on="on"
+            >
               {{ config.text }}
             </span>
           </template>

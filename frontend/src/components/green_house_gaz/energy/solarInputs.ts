@@ -113,7 +113,7 @@ export function solarInputsProducedPer(
   timePeriod: TimePeriod,
   countryTwoLetterCode: CountryIrradianceKeys,
   locationIrradianceValue: number | undefined,
-  { hideFooterContent } = { hideFooterContent: false}
+  { hideFooterContent } = { hideFooterContent: false }
 ): any[] {
   let computeSolarPower: any;
   let computeSolarInstalled: any;

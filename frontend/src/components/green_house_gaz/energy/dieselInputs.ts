@@ -64,11 +64,11 @@ export function computedieselLitersFromPower(
 export function dieselEstimated(
   PowerEstimated: boolean,
   LitersEstimated?: boolean
-): { dieselPowerEstimated: boolean, dieselLitersEstimated: boolean} {
+): { dieselPowerEstimated: boolean; dieselLitersEstimated: boolean } {
   const dieselPowerEstimated = PowerEstimated;
   const dieselLitersEstimated =
     LitersEstimated !== undefined ? LitersEstimated : !PowerEstimated;
-  return { dieselPowerEstimated, dieselLitersEstimated};
+  return { dieselPowerEstimated, dieselLitersEstimated };
 }
 
 export function computeDieselPowerAndUpdateKey(
@@ -109,14 +109,16 @@ export function computeDieselPowerAndUpdateKey(
       if (key !== "fuelUsage") {
         localInput.fuelUsage = computeLitersDiesel(localInput); // we're modifying the generator
         const dieselEstimatedRes = dieselEstimated(true, true);
-        localInput.dieselPowerEstimated =dieselEstimatedRes.dieselLitersEstimated;
-        localInput.dieselLitersEstimated = dieselEstimatedRes.dieselLitersEstimated;
-
+        localInput.dieselPowerEstimated =
+          dieselEstimatedRes.dieselLitersEstimated;
+        localInput.dieselLitersEstimated =
+          dieselEstimatedRes.dieselLitersEstimated;
       } else {
         const dieselEstimatedRes = dieselEstimated(true);
-        localInput.dieselPowerEstimated =dieselEstimatedRes.dieselLitersEstimated;
-        localInput.dieselLitersEstimated = dieselEstimatedRes.dieselLitersEstimated;
-
+        localInput.dieselPowerEstimated =
+          dieselEstimatedRes.dieselLitersEstimated;
+        localInput.dieselLitersEstimated =
+          dieselEstimatedRes.dieselLitersEstimated;
       }
     }
     // TODO divide or not by number of day.
