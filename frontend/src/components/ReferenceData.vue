@@ -1,6 +1,7 @@
 <template>
   <v-navigation-drawer
     v-model="drawer"
+    style="height: calc(100vh - 48px)"
     app
     absolute
     width="80%"

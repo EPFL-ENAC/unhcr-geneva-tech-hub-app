@@ -7,6 +7,7 @@ import {
   generateNewShelter,
   generateState,
 } from "@/store/ShelterModuleUtils";
+import { Paginate } from "@/store/SheltersMaterialModule";
 import { SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
@@ -23,6 +24,7 @@ const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 /** Getters */
 const getters: GetterTree<ShelterState, RootState> = {
   shelters: (s): Array<Shelter> => s.shelters,
+  sheltersLength: (s): number => s.sheltersLength,
   shelter: (s): Shelter | null => s.shelter,
   shelterLoading: (s): boolean => s.shelterLoading,
   db: (s): SyncDatabase<Shelter> | null => s.localCouch,
@@ -52,6 +54,9 @@ const mutations: MutationTree<ShelterState> = {
       return 0; //default return value (no sorting)
     });
     state.shelters = value;
+  },
+  SET_SHELTERS_LENGTH(state, value) {
+    state.sheltersLength = value;
   },
   SET_SCORECARDS(state, value) {
     state.scorecards = value;
@@ -94,7 +99,10 @@ const actions: ActionTree<ShelterState, RootState> = {
   closeDB: (context: ActionContext<ShelterState, RootState>) => {
     context.commit("CLOSE_DB");
   },
-  getShelters: (context: ActionContext<ShelterState, RootState>) => {
+  getShelters: (
+    context: ActionContext<ShelterState, RootState>,
+    paginate?: Paginate
+  ) => {
     const localCouch = context.state.localCouch;
     const user = context.rootGetters["UserModule/user"];
     const isAdmin = checkIfAdmin(user);
@@ -102,8 +110,10 @@ const actions: ActionTree<ShelterState, RootState> = {
     return localCouch?.remoteDB
       .query("shelter/list", {
         keys: ["public", isAdmin ? "private" : `private_${user.name}`],
+        ...(paginate ?? {}),
       })
       .then(function (result) {
+        context.commit("SET_SHELTERS_LENGTH", result.total_rows);
         context.commit(
           "SET_SHELTERS",
           result.rows.map((x) => x.value)
@@ -132,7 +142,7 @@ const actions: ActionTree<ShelterState, RootState> = {
     return localCouch?.remoteDB
       .query("shelter/scorecards", {
         keys: ["public", isAdmin ? "private" : `private_${user.name}`],
-        include_docs: true
+        include_docs: true,
       })
       .then(function (result) {
         const scorecards = result.rows

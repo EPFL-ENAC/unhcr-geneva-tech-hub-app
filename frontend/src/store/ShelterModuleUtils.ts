@@ -20,6 +20,7 @@ export function generateState(): ShelterState {
     shelter: {} as Shelter,
     shelterLoading: false,
     shelters: [],
+    sheltersLength: 0,
     scorecards: [],
     localCouch: null,
     years: [], // hold all the years of shelters created_at grouped
