@@ -6,6 +6,7 @@ export interface ShelterState {
   shelter: Shelter;
   shelterLoading: boolean;
   shelters: Array<Shelter>;
+  sheltersLength: number;
   scorecards: Array<ScoreCard>;
   years: Array<string>;
   countries: Array<string>;
@@ -62,7 +63,6 @@ export interface Shelter {
   _rev?: string;
   name: string;
   organisation: string;
-  shelter_total: number | undefined;
   shelter_occupants: number | undefined;
   shelter_lifespan: number | undefined;
   shelter_type: ShelterType;

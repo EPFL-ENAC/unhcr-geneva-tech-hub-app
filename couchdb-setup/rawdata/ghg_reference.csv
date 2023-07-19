@@ -28,4 +28,4 @@
 "REF_NONCO2_BRQ_C_P","number","Energy","Energy - Cookstove - Fraction of nonCO2 emissions - Carbonized briquette production",0.4227,"https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf",null,28
 "REF_NONCO2_PLTS","number","Energy","Energy - Cookstove - Fraction of nonCO2 emissions - Pellets",0.086424265,"https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",null,29
 "REF_EFF_OIL","number","Energy","Energy - Lighting - Emission Factor - Vegetable oil [kg CO2e/kg]",2.58736961,"https://www.epa.gov/system/files/documents/2023-03/ghg_emission_factors_hub.pdf",null,30
-"REF_BAT","number","Energy","Energy - Lighting - Emission Factor - Torch or phone with battery [kg CO2e/kWh]",0,null,"The GHG Emission Calculator only considers Scope 1 and 2 emissions.",31
+"REF_EFF_BAT","number","Energy","Energy - Lighting - Emission Factor - Torch or phone with battery [kg CO2e/kWh]",0,null,"The GHG Emission Calculator only considers Scope 1 and 2 emissions.",31

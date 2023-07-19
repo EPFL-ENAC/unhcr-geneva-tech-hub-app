@@ -110,6 +110,13 @@
               <!-- add new shelter -->
               <v-col>
                 <v-row>
+                  <v-col>
+                    <v-data-footer
+                      :pagination="pagination"
+                      :items-per-page-options="[5, 10, 15, 25, -1]"
+                      :options.sync="paginationOptions"
+                    />
+                  </v-col>
                   <v-col class="d-flex align-center justify-end">
                     <v-btn
                       class="float-right"
@@ -152,11 +159,15 @@
         </v-row>
       </v-container>
     </v-sheet>
-    <v-sheet>
+    <v-sheet class="country-list-pagination">
       <v-row>
         <v-col justify="center">
           <v-row>
-            <v-col v-for="project in projects" :key="project._id" cols="12">
+            <v-col
+              v-for="(project, $index) in projectsWithPagination"
+              :key="project._id"
+              cols="12"
+            >
               <v-card
                 :to="{
                   name: 'ShelterSustainabilityEdit',
@@ -173,6 +184,9 @@
               >
                 <v-row>
                   <v-col cols="1" class="d-flex justify-center align-center">
+                    <span>
+                      {{ $index + 1 + ((paginationOptions.page - 1) * paginationOptions.itemsPerPage)}}
+                    </span>
                     <v-icon
                       :class="`c-${shelterColors[project.shelter_type].name}`"
                       class="pa-8"
@@ -315,6 +329,8 @@
 <script lang="ts">
 import TerritoryMap from "@/components/commons/TerritoryMap.vue";
 import NewShelterDialog from "@/components/shelter_sustainability/NewShelterDialog.vue";
+import { Paginate } from "@/store/SheltersMaterialModule";
+
 import store from "@/store";
 import {
   listOfShelterType,
@@ -327,7 +343,7 @@ import {
   shelterColors,
   shelterIcons,
 } from "@/views/shelter_sustainability/shelterTypeColors";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
 
 @Component({
@@ -370,7 +386,7 @@ export default class ProjectList extends Vue {
   removeDoc!: (id: string) => void;
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
-  getShelters!: () => Promise<null>;
+  getShelters!: (paginate?: Paginate) => Promise<null>;
   getYears!: () => Promise<null>;
   getCountries!: () => Promise<null>;
   db!: SyncDatabase<Shelter> | null;
@@ -392,6 +408,37 @@ export default class ProjectList extends Vue {
 
   dialogDelete = false;
   deleteId = "";
+  paginationOptions = {
+    page: 1,
+    itemsPerPage: 25,
+  };
+  public get pagination(): {
+    page: number;
+    itemsPerPage: number;
+    pageStart: number;
+    pageStop: number;
+    pageCount: number;
+    itemsLength: number;
+  } {
+    return {
+      page: this.paginationOptions.page,
+      itemsPerPage: this.paginationOptions.itemsPerPage,
+      pageStart:
+        (this.paginationOptions.page - 1) * this.paginationOptions.itemsPerPage,
+      pageStop:
+        this.paginationOptions.page * this.paginationOptions.itemsPerPage,
+      pageCount: 0,
+      itemsLength: this.projects.length,
+    };
+  }
+  public get numberOfPages(): number {
+    return Math.floor(
+      (this.projects?.length ?? 0) / this.paginationOptions.itemsPerPage + 1
+    );
+  }
+
+  // getter for limit and skip
+
   deleteItem(id: string): void {
     this.deleteId = id;
     this.dialogDelete = true;
@@ -434,12 +481,21 @@ export default class ProjectList extends Vue {
   }
 
   public get projects(): Shelter[] {
+    function normalize(v: string): string {
+      return v
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "")
+        .toLocaleLowerCase()
+        .trim();
+    }
     // TODO replace by _find mango query when indexes work with couchdb bootstrap
     return this.shelters
       .filter((shelter: Shelter) => {
-        // by name
+        // by name do a lexicographic search
         if (this.shelterFilters.searchName) {
-          return shelter.name.includes(this.shelterFilters.searchName);
+          return normalize(shelter.name).includes(
+            normalize(this.shelterFilters.searchName)
+          );
         }
         return true;
       })
@@ -476,6 +532,13 @@ export default class ProjectList extends Vue {
       });
   }
 
+  public get projectsWithPagination(): Shelter[] {
+    return this.projects.slice(
+      (this.paginationOptions.page - 1) * this.paginationOptions.itemsPerPage,
+      this.paginationOptions.page * this.paginationOptions.itemsPerPage
+    );
+  }
+
   get computedGridTemplate(): string {
     return "{ grid-template-columns: 50% 25px 50%; }";
   }
@@ -498,6 +561,7 @@ export default class ProjectList extends Vue {
     this.getYears();
     this.getCountries();
 
+    // TODO: be responsive to change with a custom view
     // reload on db change
     // this.db?.onChange(this.getShelters);
 
@@ -514,6 +578,11 @@ export default class ProjectList extends Vue {
   beforeRouteEnter(to: unknown, from: unknown, next: any): void {
     store.dispatch("ShelterModule/resetDoc");
     next();
+  }
+  @Watch("shelterFilters", { deep: true })
+  onShelterFiltersChange(): void {
+    // reset pagination
+    this.paginationOptions.page = 1;
   }
 }
 
@@ -533,8 +602,27 @@ interface ShelterFilters {
 
 .country-list {
   grid-area: a;
+  position: fixed;
+  top:auto;
+  height:440px;
+  z-index:4;
+  width: 100%;
 }
 
+.country-list-pagination {
+  // display: flex;
+  // max-height:min-content;
+  position:relative;
+  top: 440px;
+  width: 100%;
+  height: calc(100vh - 500px);
+  overflow-y: auto;
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+  // margin-bottom: 20px;
+  // padding-bottom: 20px;
+}
 .country-list__actions {
   display: flex;
   flex-direction: row;

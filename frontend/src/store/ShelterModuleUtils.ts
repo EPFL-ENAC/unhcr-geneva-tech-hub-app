@@ -20,6 +20,7 @@ export function generateState(): ShelterState {
     shelter: {} as Shelter,
     shelterLoading: false,
     shelters: [],
+    sheltersLength: 0,
     scorecards: [],
     localCouch: null,
     years: [], // hold all the years of shelters created_at grouped
@@ -278,7 +279,6 @@ export function generateNewShelter(name: string, user: CouchUser): Shelter {
       shelter_type: listOfShelterType[0],
       completed: false,
       public: true,
-      shelter_total: undefined, // number of shelters
       shelter_occupants: undefined, // people
       shelter_lifespan: undefined, // years
       setup_people: undefined, // 2 people necessary for setup
@@ -315,7 +315,6 @@ export function completeMissingFields(shelter: Shelter): Shelter {
     ...shelter, // set _rev, _id, name,created_by, users by doing so
     // real overide
     organisation: shelter.organisation ?? "",
-    shelter_total: shelter.shelter_total ?? undefined, // number of shelters
     shelter_occupants: shelter.shelter_occupants ?? undefined, // people
     shelter_lifespan: shelter.shelter_lifespan ?? undefined, // years
     setup_people: shelter.setup_people ?? undefined, // 2 people necessary for setup

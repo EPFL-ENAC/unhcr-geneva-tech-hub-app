@@ -96,15 +96,6 @@
                 </v-row>
               </v-col>
               <v-col class="about-second-column" cols="6">
-                <v-text-field
-                  v-model.number="localShelter.shelter_total"
-                  name="shelter_total"
-                  label="Number of shelters"
-                  type="number"
-                  required
-                  :rules="shelterTotalRules"
-                  @change="updateFormInput"
-                />
                 <v-select
                   v-model.number="localShelter.shelter_occupants"
                   :items="occupantsOptions"

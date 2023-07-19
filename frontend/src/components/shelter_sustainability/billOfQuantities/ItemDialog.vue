@@ -341,6 +341,8 @@ const { default: SheltersTransportModule } = await import(
       "materials",
       "materialForms",
       "materialMap",
+      "materialNameToKey",
+      "materialKeyToName",
     ]),
   },
   methods: {
@@ -374,6 +376,8 @@ export default class DeleteItemDialog extends Vue {
   materials!: string[];
   materialForms!: Record<string, ShelterMaterial[]>;
   materialMap!: Record<string, ShelterMaterial>;
+  materialNameToKey!: Map<string, string>;
+  materialKeyToName!: Map<string, string>;
   localItem: Item = {} as Item;
   shelter!: Shelter;
 
@@ -386,6 +390,8 @@ export default class DeleteItemDialog extends Vue {
   workerTypes = ["Skilled", "Unskilled"];
 
   rules = [(v: string): boolean | string => !!v || `Required`];
+
+  suffixOther = "OTH_";
 
   public get title(): string {
     return this.editedIndex === -1 ? "New item" : "Edit item";
@@ -452,7 +458,7 @@ export default class DeleteItemDialog extends Vue {
     }
 
     if (this.localItem.itemType === "Material") {
-      return this.currentItem?.units ?? [];
+      return this.currentItem?.units ?? []; // Other is default, and should be KG in materials.csv or json
     }
     return [];
   }
@@ -527,7 +533,12 @@ export default class DeleteItemDialog extends Vue {
         return this.materialMap["OTH_"];
       } else {
         if (item.formId) {
-          return this.materialMap[item.formId];
+          if (item.formId === "Other") {
+            const materialKey = this.materialNameToKey.get(item.materialId);
+            return this.materialMap[`${materialKey}-${this.suffixOther}`];
+          } else {
+            return this.materialMap[item.formId];
+          }
         }
       }
     }
@@ -580,15 +591,20 @@ export default class DeleteItemDialog extends Vue {
         .localItem as Material;
       let { embodied_carbon, embodied_water } = this.localItem as Material;
 
+      const materialKey = this.materialNameToKey.get(materialId);
+
       const newValue = cloneDeep(this.localItem) as Material;
       if (formId && quantity && unit) {
         let material;
         if (materialId === "Other") {
           material = this.materialMap["OTH_"];
         } else {
-          material = this.materialMap[formId];
+          if (formId === "Other") {
+            material = this.materialMap[`${materialKey}-${this.suffixOther}`];
+          } else {
+            material = this.materialMap[formId];
+          }
         }
-
         const { density, local } = material;
         // special case of when Other is the materialId
         if (!embodied_carbon) {
