@@ -1,5 +1,12 @@
 <template>
-  <v-navigation-drawer v-model="drawer" app width="80%" right temporary style="height: calc(100vh - 48px)">
+  <v-navigation-drawer
+    v-model="drawer"
+    app
+    width="80%"
+    right
+    temporary
+    style="`height: calc(100vh - 48px); width: ${drawer ? '80%' : '0px'}`"
+  >
     <v-list-item>
       <v-list-item-content>
         <v-list-item-title class="d-flex justify-space-between">
