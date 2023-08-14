@@ -248,6 +248,7 @@ export default class BaselineTable extends Vue {
   @Prop({ type: [Array], default: () => [] })
   readonly referenceItems!: SurveyItem[];
 
+  // intervention means that we're in endline defacto
   @Prop({ type: Boolean, default: false })
   readonly intervention!: boolean;
 

@@ -23,7 +23,7 @@ export const infoTooltipText: Record<string, tooltipInfo> = {
     text: "The Lighting module will enable the user to calculate the emissions from various forms of energy sources used to power lighting at homes and in the settlements. Energy sources considered include firewood, candle, kerosene, solar and the national grid. A hydrid electricity usage will be calculated based on the use of diesel gas, solar PV and the national grid.",
   },
   "WASH-Pumping": {
-    ready: false,
+    ready: true,
     disabled: false,
     title: "WASH - Pumping",
     text: "The Pumping module will enable the user to calculate the emissions from pumping water or faecal sludge using either diesel, solar or national grid energy sources or a hybrid mix of these sources.",
@@ -47,6 +47,8 @@ export const infoTooltipText: Record<string, tooltipInfo> = {
     text: "The Core Relief Items (CRI) module will enable the user to calculate the emissions from the production and transport of various CRI materials including HDPE, LDPE, polyester, cotton and stainless steel. Emission factors come from the ICE or EcoInvent databases.",
   },
   "Material-DomesticSolidWaste": {
+    ready: true,
+    disabled: false,
     title: "Material - Domestic solid waste",
     text: "The Domestic solid waste module will enable the user to calculate the emissions from the production and transport of various domestic solid waste materials including paper, plastic and biodegradable waste. Emission factors come from the ICE or EcoInvent databases.",
   },

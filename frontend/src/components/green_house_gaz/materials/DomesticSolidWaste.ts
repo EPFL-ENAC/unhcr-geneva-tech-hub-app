@@ -8,6 +8,8 @@ import {
   SurveyResult,
 } from "@/store/GhgInterface";
 
+import { SelectOption, SelectValue } from "@/components/commons/FormItem";
+
 import {
   ensureSurveyTableHeaders,
   surveyTableHeaderCO2,
@@ -63,13 +65,64 @@ export function resetSurveyFuelOption(
   return localInput;
 }
 
+const openPits = "Open pits, unmanaged";
+const managedDisposalSite = "Managed disposal site";
+const openBurning = "Open burning";
+const compositing = "Composting";
+const anaerobicallyDigested = "Anaerobically digested";
+const recyclingReuse = "Recycling / Reuse";
+
+const bioWaste = "Biowaste";
+const nonBiowaste = "Non-biowaste";
+
+export type practiceTypes = "Biowaste" | "Non-biowaste";
+
+const baselinePractices = [openPits, managedDisposalSite, openBurning];
+
+const plastics = "Plastics";
+const textiles = "Textiles";
+const paper = "Paper / cardboard";
+const rubber = "Rubber / leather";
+const nappies = "Nappies";
+const mixed = "Mixed / unkown composition ";
+const biowasteSubcategories = [
+  plastics,
+  textiles,
+  paper,
+  rubber,
+  nappies,
+  mixed,
+];
+
+const endLinePractices: Record<string, Record<string, string[]>> = {
+  [bioWaste]: {
+    default: [
+      openPits,
+      managedDisposalSite,
+      openBurning,
+      compositing,
+      anaerobicallyDigested,
+      recyclingReuse,
+    ],
+  },
+  [nonBiowaste]: {
+    [plastics]: [openPits, managedDisposalSite, openBurning, recyclingReuse],
+    [textiles]: [openPits, managedDisposalSite, openBurning, recyclingReuse],
+    [paper]: [openPits, managedDisposalSite, openBurning, recyclingReuse],
+    [rubber]: [openPits, managedDisposalSite, openBurning, recyclingReuse],
+    [nappies]: [openPits, managedDisposalSite, openBurning],
+    [mixed]: [openPits, managedDisposalSite, openBurning, recyclingReuse],
+    default: [openPits, managedDisposalSite, openBurning, recyclingReuse],
+  },
+};
+
 export function headers(pp_per_hh: number | undefined) {
   return [
     ...surveyTableHeaderIncrements,
     {
       value: "input.biowaste",
       text: "Type of waste",
-      items: ["Biowaste", "Non-biowaste"],
+      items: [bioWaste, nonBiowaste],
       tooltipInfo:
         "Definition of biowaste: comprises only biodegradable garden and park waste, food and kitchen waste from households and markets  Source: EAWAG: https://www.eawag.ch/fileadmin/Domain1/Abteilungen/sandec/schwerpunkte/swm/SOWATT/sowatt.pdf",
       style: {
@@ -81,16 +134,9 @@ export function headers(pp_per_hh: number | undefined) {
     {
       conditional_value: ["Non-biowaste"],
       conditional: "biowaste",
-      value: "input.biowasteSubCategories",
-      text: "Biowaste subcategories",
-      items: [
-        "Plastics",
-        "Textiles",
-        "Paper / cardboard",
-        "Rubber / leather",
-        "Nappies",
-        "Mixed / unkown composition ",
-      ],
+      value: "input.nonBiowasteSubCategories",
+      text: "Non-biowaste subcategories",
+      items: biowasteSubcategories,
       style: {
         cols: "12",
       },
@@ -101,8 +147,50 @@ export function headers(pp_per_hh: number | undefined) {
     },
     {
       text: "Solid Waste Management (SWM) Practices",
+      conditional_value: ["Non-biowaste", "Biowaste"],
+      conditional: "biowaste",
+      conditional_function: (itemInput: SurveyInput) => {
+        if ([bioWaste, nonBiowaste].includes(itemInput.biowaste as string)) {
+          if (
+            itemInput.biowaste === nonBiowaste &&
+            !itemInput.nonBiowasteSubCategories
+          )
+            return false;
+          return true;
+        }
+      },
       value: "input.practiceType",
-      items: ["Open pits, unmanaged", "Managed disposal site", "Open burning"],
+      items: (options: {
+        intervention: boolean;
+        localInput: SurveyInput;
+      }): SelectOption<SelectValue>[] => {
+        let result = baselinePractices;
+        if (options.intervention) {
+          result = [];
+          if (
+            [bioWaste, nonBiowaste].includes(
+              options.localInput.biowaste as string
+            )
+          ) {
+            const practices =
+              endLinePractices[options.localInput.biowaste as practiceTypes];
+            result = practices?.default ?? [];
+            if (
+              options.localInput.nonBiowasteSubCategories &&
+              options.localInput.biowaste === nonBiowaste
+            ) {
+              result =
+                practices[
+                  options.localInput.nonBiowasteSubCategories as string
+                ];
+            }
+          }
+        }
+        return result.map((item: string) => ({
+          text: item,
+          value: item,
+        }));
+      },
       formatter: (x: string) => x,
       tooltipInfo: function (value: string) {
         if (value === "Open pits, unmanaged") {

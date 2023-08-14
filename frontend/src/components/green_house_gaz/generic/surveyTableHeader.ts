@@ -44,6 +44,9 @@ export const ensureSurveyTableHeaders = (item: any): SurveyTableHeader => {
         // items should not be string.
         return [];
       }
+      if (typeof items === "function") {
+        return items;
+      }
       return (
         items?.map((item: string | SelectCustom<string>) => {
           if (typeof item === "string") {
@@ -159,7 +162,13 @@ export interface EasySurveyTableHeader {
   text: string | ((v: SurveyInput) => string); //.e.g "Intervention" description or text to display for input or table header
   value: string; // name of the field to use for table
   type: string; // number etc for text-field type of value in formatter by the way
-  items: string[] | string;
+  items:
+    | string[]
+    | string
+    | ((options: {
+        intervention: boolean;
+        localInput: SurveyInput;
+      }) => SelectOption<SelectValue>[]);
   options: SelectOption<SelectValue>[];
   isInput: boolean;
   label?: string;
