@@ -1,5 +1,5 @@
 <template>
-  <main class="shelter__list" :style="computedGridTemplate">
+  <v-layout class="shelter__list" :style="computedGridTemplate">
     <v-dialog
       v-model="dialogDelete"
       max-width="500px"
@@ -38,7 +38,7 @@
 
         <v-row>
           <!-- search name and custom check-boxese-->
-          <v-col cols="6">
+          <v-col cols="12" md="6">
             <v-row>
               <v-col>
                 <v-text-field
@@ -146,9 +146,9 @@
               </v-col>
             </v-row>
           </v-col>
-          <v-col>
+          <v-col class="d-none d-md-block">
             <div class="separator"></div>
-            <div class="map-countries">
+            <div class="map-countries mr-4">
               <territory-map
                 :coordinates="coordinates"
                 :default-zoom="2"
@@ -184,21 +184,32 @@
               >
                 <v-row>
                   <v-col cols="1" class="d-flex justify-center align-center">
-                    <span>
-                      {{ $index + 1 + ((paginationOptions.page - 1) * paginationOptions.itemsPerPage)}}
-                    </span>
-                    <v-icon
-                      :class="`c-${shelterColors[project.shelter_type].name}`"
-                      class="pa-8"
-                    >
-                      {{ shelterIcons[project.shelter_type] }}
-                    </v-icon>
+                    <div class="pa-8 d-flex">
+                      <span class="mr-4">
+                        {{
+                          $index +
+                          1 +
+                          (paginationOptions.page - 1) *
+                            paginationOptions.itemsPerPage
+                        }}
+                      </span>
+                      <v-icon
+                        :class="`c-${shelterColors[project.shelter_type].name}`"
+                      >
+                        {{ shelterIcons[project.shelter_type] }}
+                      </v-icon>
+                    </div>
+
                     <div class="d-none project__hidden-child float-right">
                       <span v-if="$can('edit', project)">Read and write</span>
                       <span v-else>Read only</span>
                     </div>
                   </v-col>
-                  <v-col class="d-flex justify-center align-center">
+                  <v-col
+                    class="d-flex justify-center align-center"
+                    cols="3"
+                    md="1"
+                  >
                     <v-avatar
                       v-if="project.image?.url"
                       class="profile"
@@ -235,7 +246,10 @@
                       </span>
                     </v-card-subtitle>
                   </v-col>
-                  <v-col cols="4 justify-center align-center d-flex">
+                  <v-col
+                    cols="4"
+                    class="d-none justify-center align-center d-md-flex"
+                  >
                     <v-row class="align-center d-flex">
                       <v-col cols="4" class="text-caption">
                         Created: {{ project.created_at | formatDate }}
@@ -323,7 +337,7 @@
     </v-sheet>
 
     <new-shelter-dialog :open.sync="shelterDialog" />
-  </main>
+  </v-layout>
 </template>
 
 <script lang="ts">
@@ -603,25 +617,24 @@ interface ShelterFilters {
 .country-list {
   grid-area: a;
   position: fixed;
-  top:auto;
-  height:440px;
-  z-index:4;
+  top: 48px;
+  height: 440px;
+  z-index: 4;
   width: 100%;
+
+  box-shadow: 0 4px 6px -6px #222;
+  margin-left: -12px;
 }
 
 .country-list-pagination {
-  // display: flex;
-  // max-height:min-content;
-  position:relative;
+  position: relative;
   top: 440px;
   width: 100%;
-  height: calc(100vh - 500px);
-  overflow-y: auto;
+  overflow: hidden;
   padding: 0px;
   margin: 0px;
   box-sizing: border-box;
-  // margin-bottom: 20px;
-  // padding-bottom: 20px;
+  padding-bottom: 2rem;
 }
 .country-list__actions {
   display: flex;

@@ -28,7 +28,7 @@ export default class AppListView extends Vue {}
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  flex: 1 0 auto;
-  height: 100%;
+  flex: 1 1 auto;
+  width: 100%;
 }
 </style>
