@@ -130,12 +130,13 @@ export function headers(pp_per_hh: number | undefined) {
       },
       default: true,
       type: "select",
+      hideFooterContent: false,
     },
     {
       conditional_value: ["Non-biowaste"],
       conditional: "biowaste",
       value: "input.nonBiowasteSubCategories",
-      text: "Non-biowaste subcategories",
+      text: "Waste subcategories",
       items: biowasteSubcategories,
       style: {
         cols: "12",
@@ -193,6 +194,7 @@ export function headers(pp_per_hh: number | undefined) {
       },
       formatter: (x: string) => x,
       tooltipInfo: function (value: string) {
+        // TODO: check why it is not displayed!
         if (value === "Open pits, unmanaged") {
           return "Assumed to be shallow < 5 m depth";
         }
@@ -209,7 +211,7 @@ export function headers(pp_per_hh: number | undefined) {
       hideFooterContent: false,
     },
     {
-      text: "Percentage of waste category",
+      text: "% of total waste generated",
       computeResults: true,
       value: "input.percentageOfTotalCategories",
       // conditional_value: "",
