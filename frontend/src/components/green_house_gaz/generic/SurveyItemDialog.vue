@@ -65,7 +65,6 @@
                       :src="localInput.image"
                     />
                   </div>
-                  <!-- {{ JSON.stringify(surveyItem) }} -->
                   <form-item-component
                     v-if="!surveyItem.hideInput"
                     :value="localInput[surveyItem.key]"
@@ -206,7 +205,6 @@ export default class SurveyItemDialog extends Vue {
     const localInput = this.localInput;
     return this.headers.map((header: SurveyTableHeader) => {
       if (typeof header.items === "string") {
-
         const [category, key] = header.items.split(".");
         if (category !== "input") {
           throw new Error(
@@ -273,6 +271,13 @@ export default class SurveyItemDialog extends Vue {
               description,
             };
           }) ?? [];
+      }
+
+      if (typeof header.items === "function") {
+        header.options = header.items({
+          intervention: this.intervention,
+          localInput,
+        });
       }
       return header;
     });
