@@ -1,0 +1,1237 @@
+[
+  {
+    "_id": "DZ",
+    "Region": "Northern Africa",
+    "Country": "Algeria"
+  },
+  {
+    "_id": "EG",
+    "Region": "Northern Africa",
+    "Country": "Egypt"
+  },
+  {
+    "_id": "LY",
+    "Region": "Northern Africa",
+    "Country": "Libya"
+  },
+  {
+    "_id": "MA",
+    "Region": "Northern Africa",
+    "Country": "Morocco"
+  },
+  {
+    "_id": "SD",
+    "Region": "Northern Africa",
+    "Country": "Sudan"
+  },
+  {
+    "_id": "TN",
+    "Region": "Northern Africa",
+    "Country": "Tunisia"
+  },
+  {
+    "_id": "EH",
+    "Region": "Northern Africa",
+    "Country": "Western Sahara"
+  },
+  {
+    "_id": "IO",
+    "Region": "Eastern Africa",
+    "Country": "British Indian Ocean Territory"
+  },
+  {
+    "_id": "BI",
+    "Region": "Eastern Africa",
+    "Country": "Burundi"
+  },
+  {
+    "_id": "KM",
+    "Region": "Eastern Africa",
+    "Country": "Comoros"
+  },
+  {
+    "_id": "DJ",
+    "Region": "Eastern Africa",
+    "Country": "Djibouti"
+  },
+  {
+    "_id": "ER",
+    "Region": "Eastern Africa",
+    "Country": "Eritrea"
+  },
+  {
+    "_id": "ET",
+    "Region": "Eastern Africa",
+    "Country": "Ethiopia"
+  },
+  {
+    "_id": "TF",
+    "Region": "Eastern Africa",
+    "Country": "French Southern Territories"
+  },
+  {
+    "_id": "KE",
+    "Region": "Eastern Africa",
+    "Country": "Kenya"
+  },
+  {
+    "_id": "MG",
+    "Region": "Eastern Africa",
+    "Country": "Madagascar"
+  },
+  {
+    "_id": "MW",
+    "Region": "Eastern Africa",
+    "Country": "Malawi"
+  },
+  {
+    "_id": "MU",
+    "Region": "Eastern Africa",
+    "Country": "Mauritius"
+  },
+  {
+    "_id": "YT",
+    "Region": "Eastern Africa",
+    "Country": "Mayotte"
+  },
+  {
+    "_id": "MZ",
+    "Region": "Eastern Africa",
+    "Country": "Mozambique"
+  },
+  {
+    "_id": "RE",
+    "Region": "Eastern Africa",
+    "Country": "Réunion"
+  },
+  {
+    "_id": "RW",
+    "Region": "Eastern Africa",
+    "Country": "Rwanda"
+  },
+  {
+    "_id": "SC",
+    "Region": "Eastern Africa",
+    "Country": "Seychelles"
+  },
+  {
+    "_id": "SO",
+    "Region": "Eastern Africa",
+    "Country": "Somalia"
+  },
+  {
+    "_id": "SS",
+    "Region": "Eastern Africa",
+    "Country": "South Sudan"
+  },
+  {
+    "_id": "UG",
+    "Region": "Eastern Africa",
+    "Country": "Uganda"
+  },
+  {
+    "_id": "TZ",
+    "Region": "Eastern Africa",
+    "Country": "United Republic of Tanzania"
+  },
+  {
+    "_id": "ZM",
+    "Region": "Eastern Africa",
+    "Country": "Zambia"
+  },
+  {
+    "_id": "ZW",
+    "Region": "Eastern Africa",
+    "Country": "Zimbabwe"
+  },
+  {
+    "_id": "AO",
+    "Region": "Middle Africa",
+    "Country": "Angola"
+  },
+  {
+    "_id": "CM",
+    "Region": "Middle Africa",
+    "Country": "Cameroon"
+  },
+  {
+    "_id": "CF",
+    "Region": "Middle Africa",
+    "Country": "Central African Republic"
+  },
+  {
+    "_id": "TD",
+    "Region": "Middle Africa",
+    "Country": "Chad"
+  },
+  {
+    "_id": "CG",
+    "Region": "Middle Africa",
+    "Country": "Congo"
+  },
+  {
+    "_id": "CD",
+    "Region": "Middle Africa",
+    "Country": "Democratic Republic of the Congo"
+  },
+  {
+    "_id": "GQ",
+    "Region": "Middle Africa",
+    "Country": "Equatorial Guinea"
+  },
+  {
+    "_id": "GA",
+    "Region": "Middle Africa",
+    "Country": "Gabon"
+  },
+  {
+    "_id": "ST",
+    "Region": "Middle Africa",
+    "Country": "Sao Tome and Principe"
+  },
+  {
+    "_id": "BW",
+    "Region": "Southern Africa",
+    "Country": "Botswana"
+  },
+  {
+    "_id": "SZ",
+    "Region": "Southern Africa",
+    "Country": "Eswatini"
+  },
+  {
+    "_id": "LS",
+    "Region": "Southern Africa",
+    "Country": "Lesotho"
+  },
+  {
+    "_id": "NA",
+    "Region": "Southern Africa",
+    "Country": "Namibia"
+  },
+  {
+    "_id": "ZA",
+    "Region": "Southern Africa",
+    "Country": "South Africa"
+  },
+  {
+    "_id": "BJ",
+    "Region": "Western Africa",
+    "Country": "Benin"
+  },
+  {
+    "_id": "BF",
+    "Region": "Western Africa",
+    "Country": "Burkina Faso"
+  },
+  {
+    "_id": "CV",
+    "Region": "Western Africa",
+    "Country": "Cabo Verde"
+  },
+  {
+    "_id": "CI",
+    "Region": "Western Africa",
+    "Country": "Côte d’Ivoire"
+  },
+  {
+    "_id": "GM",
+    "Region": "Western Africa",
+    "Country": "Gambia"
+  },
+  {
+    "_id": "GH",
+    "Region": "Western Africa",
+    "Country": "Ghana"
+  },
+  {
+    "_id": "GN",
+    "Region": "Western Africa",
+    "Country": "Guinea"
+  },
+  {
+    "_id": "GW",
+    "Region": "Western Africa",
+    "Country": "Guinea-Bissau"
+  },
+  {
+    "_id": "LR",
+    "Region": "Western Africa",
+    "Country": "Liberia"
+  },
+  {
+    "_id": "ML",
+    "Region": "Western Africa",
+    "Country": "Mali"
+  },
+  {
+    "_id": "MR",
+    "Region": "Western Africa",
+    "Country": "Mauritania"
+  },
+  {
+    "_id": "NE",
+    "Region": "Western Africa",
+    "Country": "Niger"
+  },
+  {
+    "_id": "NG",
+    "Region": "Western Africa",
+    "Country": "Nigeria"
+  },
+  {
+    "_id": "SH",
+    "Region": "Western Africa",
+    "Country": "Saint Helena"
+  },
+  {
+    "_id": "SN",
+    "Region": "Western Africa",
+    "Country": "Senegal"
+  },
+  {
+    "_id": "SL",
+    "Region": "Western Africa",
+    "Country": "Sierra Leone"
+  },
+  {
+    "_id": "TG",
+    "Region": "Western Africa",
+    "Country": "Togo"
+  },
+  {
+    "_id": "AI",
+    "Region": "Caribbean",
+    "Country": "Anguilla"
+  },
+  {
+    "_id": "AG",
+    "Region": "Caribbean",
+    "Country": "Antigua and Barbuda"
+  },
+  {
+    "_id": "AW",
+    "Region": "Caribbean",
+    "Country": "Aruba"
+  },
+  {
+    "_id": "BS",
+    "Region": "Caribbean",
+    "Country": "Bahamas"
+  },
+  {
+    "_id": "BB",
+    "Region": "Caribbean",
+    "Country": "Barbados"
+  },
+  {
+    "_id": "BQ",
+    "Region": "Caribbean",
+    "Country": "Bonaire"
+  },
+  {
+    "_id": "VG",
+    "Region": "Caribbean",
+    "Country": "British Virgin Islands"
+  },
+  {
+    "_id": "KY",
+    "Region": "Caribbean",
+    "Country": "Cayman Islands"
+  },
+  {
+    "_id": "CU",
+    "Region": "Caribbean",
+    "Country": "Cuba"
+  },
+  {
+    "_id": "CW",
+    "Region": "Caribbean",
+    "Country": "Curaçao"
+  },
+  {
+    "_id": "DM",
+    "Region": "Caribbean",
+    "Country": "Dominica"
+  },
+  {
+    "_id": "DO",
+    "Region": "Caribbean",
+    "Country": "Dominican Republic"
+  },
+  {
+    "_id": "GD",
+    "Region": "Caribbean",
+    "Country": "Grenada"
+  },
+  {
+    "_id": "GP",
+    "Region": "Caribbean",
+    "Country": "Guadeloupe"
+  },
+  {
+    "_id": "HT",
+    "Region": "Caribbean",
+    "Country": "Haiti"
+  },
+  {
+    "_id": "JM",
+    "Region": "Caribbean",
+    "Country": "Jamaica"
+  },
+  {
+    "_id": "MQ",
+    "Region": "Caribbean",
+    "Country": "Martinique"
+  },
+  {
+    "_id": "MS",
+    "Region": "Caribbean",
+    "Country": "Montserrat"
+  },
+  {
+    "_id": "PR",
+    "Region": "Caribbean",
+    "Country": "Puerto Rico"
+  },
+  {
+    "_id": "BL",
+    "Region": "Caribbean",
+    "Country": "Saint Barthélemy"
+  },
+  {
+    "_id": "KN",
+    "Region": "Caribbean",
+    "Country": "Saint Kitts and Nevis"
+  },
+  {
+    "_id": "LC",
+    "Region": "Caribbean",
+    "Country": "Saint Lucia"
+  },
+  {
+    "_id": "MF",
+    "Region": "Caribbean",
+    "Country": "Saint Martin (French Part)"
+  },
+  {
+    "_id": "VC",
+    "Region": "Caribbean",
+    "Country": "Saint Vincent and the Grenadines"
+  },
+  {
+    "_id": "SX",
+    "Region": "Caribbean",
+    "Country": "Sint Maarten (Dutch part)"
+  },
+  {
+    "_id": "TT",
+    "Region": "Caribbean",
+    "Country": "Trinidad and Tobago"
+  },
+  {
+    "_id": "TC",
+    "Region": "Caribbean",
+    "Country": "Turks and Caicos Islands"
+  },
+  {
+    "_id": "VI",
+    "Region": "Caribbean",
+    "Country": "United States Virgin Islands"
+  },
+  {
+    "_id": "BZ",
+    "Region": "Central America",
+    "Country": "Belize"
+  },
+  {
+    "_id": "CR",
+    "Region": "Central America",
+    "Country": "Costa Rica"
+  },
+  {
+    "_id": "SV",
+    "Region": "Central America",
+    "Country": "El Salvador"
+  },
+  {
+    "_id": "GT",
+    "Region": "Central America",
+    "Country": "Guatemala"
+  },
+  {
+    "_id": "HN",
+    "Region": "Central America",
+    "Country": "Honduras"
+  },
+  {
+    "_id": "MX",
+    "Region": "Central America",
+    "Country": "Mexico"
+  },
+  {
+    "_id": "NI",
+    "Region": "Central America",
+    "Country": "Nicaragua"
+  },
+  {
+    "_id": "PA",
+    "Region": "Central America",
+    "Country": "Panama"
+  },
+  {
+    "_id": "AR",
+    "Region": "South America",
+    "Country": "Argentina"
+  },
+  {
+    "_id": "BO",
+    "Region": "South America",
+    "Country": "Bolivia (Plurinational State of)"
+  },
+  {
+    "_id": "BV",
+    "Region": "South America",
+    "Country": "Bouvet Island"
+  },
+  {
+    "_id": "BR",
+    "Region": "South America",
+    "Country": "Brazil"
+  },
+  {
+    "_id": "CL",
+    "Region": "South America",
+    "Country": "Chile"
+  },
+  {
+    "_id": "CO",
+    "Region": "South America",
+    "Country": "Colombia"
+  },
+  {
+    "_id": "EC",
+    "Region": "South America",
+    "Country": "Ecuador"
+  },
+  {
+    "_id": "FK",
+    "Region": "South America",
+    "Country": "Falkland Islands (Malvinas)"
+  },
+  {
+    "_id": "GF",
+    "Region": "South America",
+    "Country": "French Guiana"
+  },
+  {
+    "_id": "GY",
+    "Region": "South America",
+    "Country": "Guyana"
+  },
+  {
+    "_id": "PY",
+    "Region": "South America",
+    "Country": "Paraguay"
+  },
+  {
+    "_id": "PE",
+    "Region": "South America",
+    "Country": "Peru"
+  },
+  {
+    "_id": "GS",
+    "Region": "South America",
+    "Country": "South Georgia and the South Sandwich Islands"
+  },
+  {
+    "_id": "SR",
+    "Region": "South America",
+    "Country": "Suriname"
+  },
+  {
+    "_id": "UY",
+    "Region": "South America",
+    "Country": "Uruguay"
+  },
+  {
+    "_id": "VE",
+    "Region": "South America",
+    "Country": "Venezuela (Bolivarian Republic of)"
+  },
+  {
+    "_id": "BM",
+    "Region": "Northern America",
+    "Country": "Bermuda"
+  },
+  {
+    "_id": "CA",
+    "Region": "Northern America",
+    "Country": "Canada"
+  },
+  {
+    "_id": "GL",
+    "Region": "Northern America",
+    "Country": "Greenland"
+  },
+  {
+    "_id": "PM",
+    "Region": "Northern America",
+    "Country": "Saint Pierre and Miquelon"
+  },
+  {
+    "_id": "US",
+    "Region": "Northern America",
+    "Country": "United States of America"
+  },
+  {
+    "_id": "KZ",
+    "Region": "Central Asia",
+    "Country": "Kazakhstan"
+  },
+  {
+    "_id": "KG",
+    "Region": "Central Asia",
+    "Country": "Kyrgyzstan"
+  },
+  {
+    "_id": "TJ",
+    "Region": "Central Asia",
+    "Country": "Tajikistan"
+  },
+  {
+    "_id": "TM",
+    "Region": "Central Asia",
+    "Country": "Turkmenistan"
+  },
+  {
+    "_id": "UZ",
+    "Region": "Central Asia",
+    "Country": "Uzbekistan"
+  },
+  {
+    "_id": "CN",
+    "Region": "Eastern Asia",
+    "Country": "China"
+  },
+  {
+    "_id": "HK",
+    "Region": "Eastern Asia",
+    "Country": "Hong Kong SAR China"
+  },
+  {
+    "_id": "MO",
+    "Region": "Eastern Asia",
+    "Country": "Macau SAR China"
+  },
+  {
+    "_id": "KP",
+    "Region": "Eastern Asia",
+    "Country": "Democratic People's Republic of Korea"
+  },
+  {
+    "_id": "JP",
+    "Region": "Eastern Asia",
+    "Country": "Japan"
+  },
+  {
+    "_id": "MN",
+    "Region": "Eastern Asia",
+    "Country": "Mongolia"
+  },
+  {
+    "_id": "KR",
+    "Region": "Eastern Asia",
+    "Country": "Republic of Korea"
+  },
+  {
+    "_id": "BN",
+    "Region": "South-eastern Asia",
+    "Country": "Brunei Darussalam"
+  },
+  {
+    "_id": "KH",
+    "Region": "South-eastern Asia",
+    "Country": "Cambodia"
+  },
+  {
+    "_id": "ID",
+    "Region": "South-eastern Asia",
+    "Country": "Indonesia"
+  },
+  {
+    "_id": "LA",
+    "Region": "South-eastern Asia",
+    "Country": "Lao People's Democratic Republic"
+  },
+  {
+    "_id": "MY",
+    "Region": "South-eastern Asia",
+    "Country": "Malaysia"
+  },
+  {
+    "_id": "MM",
+    "Region": "South-eastern Asia",
+    "Country": "Myanmar"
+  },
+  {
+    "_id": "PH",
+    "Region": "South-eastern Asia",
+    "Country": "Philippines"
+  },
+  {
+    "_id": "SG",
+    "Region": "South-eastern Asia",
+    "Country": "Singapore"
+  },
+  {
+    "_id": "TH",
+    "Region": "South-eastern Asia",
+    "Country": "Thailand"
+  },
+  {
+    "_id": "TL",
+    "Region": "South-eastern Asia",
+    "Country": "Timor-Leste"
+  },
+  {
+    "_id": "VN",
+    "Region": "South-eastern Asia",
+    "Country": "Viet Nam"
+  },
+  {
+    "_id": "AF",
+    "Region": "Southern Asia",
+    "Country": "Afghanistan"
+  },
+  {
+    "_id": "BD",
+    "Region": "Southern Asia",
+    "Country": "Bangladesh"
+  },
+  {
+    "_id": "BT",
+    "Region": "Southern Asia",
+    "Country": "Bhutan"
+  },
+  {
+    "_id": "IN",
+    "Region": "Southern Asia",
+    "Country": "India"
+  },
+  {
+    "_id": "IR",
+    "Region": "Southern Asia",
+    "Country": "Iran (Islamic Republic of)"
+  },
+  {
+    "_id": "MV",
+    "Region": "Southern Asia",
+    "Country": "Maldives"
+  },
+  {
+    "_id": "NP",
+    "Region": "Southern Asia",
+    "Country": "Nepal"
+  },
+  {
+    "_id": "PK",
+    "Region": "Southern Asia",
+    "Country": "Pakistan"
+  },
+  {
+    "_id": "LK",
+    "Region": "Southern Asia",
+    "Country": "Sri Lanka"
+  },
+  {
+    "_id": "AM",
+    "Region": "Western Asia",
+    "Country": "Armenia"
+  },
+  {
+    "_id": "AZ",
+    "Region": "Western Asia",
+    "Country": "Azerbaijan"
+  },
+  {
+    "_id": "BH",
+    "Region": "Western Asia",
+    "Country": "Bahrain"
+  },
+  {
+    "_id": "CY",
+    "Region": "Western Asia",
+    "Country": "Cyprus"
+  },
+  {
+    "_id": "GE",
+    "Region": "Western Asia",
+    "Country": "Georgia"
+  },
+  {
+    "_id": "IQ",
+    "Region": "Western Asia",
+    "Country": "Iraq"
+  },
+  {
+    "_id": "IL",
+    "Region": "Western Asia",
+    "Country": "Israel"
+  },
+  {
+    "_id": "JO",
+    "Region": "Western Asia",
+    "Country": "Jordan"
+  },
+  {
+    "_id": "KW",
+    "Region": "Western Asia",
+    "Country": "Kuwait"
+  },
+  {
+    "_id": "LB",
+    "Region": "Western Asia",
+    "Country": "Lebanon"
+  },
+  {
+    "_id": "OM",
+    "Region": "Western Asia",
+    "Country": "Oman"
+  },
+  {
+    "_id": "QA",
+    "Region": "Western Asia",
+    "Country": "Qatar"
+  },
+  {
+    "_id": "SA",
+    "Region": "Western Asia",
+    "Country": "Saudi Arabia"
+  },
+  {
+    "_id": "PS",
+    "Region": "Western Asia",
+    "Country": "State of Palestine"
+  },
+  {
+    "_id": "SY",
+    "Region": "Western Asia",
+    "Country": "Syrian Arab Republic"
+  },
+  {
+    "_id": "TR",
+    "Region": "Western Asia",
+    "Country": "Türkiye"
+  },
+  {
+    "_id": "AE",
+    "Region": "Western Asia",
+    "Country": "United Arab Emirates"
+  },
+  {
+    "_id": "YE",
+    "Region": "Western Asia",
+    "Country": "Yemen"
+  },
+  {
+    "_id": "BY",
+    "Region": "Eastern Europe",
+    "Country": "Belarus"
+  },
+  {
+    "_id": "BG",
+    "Region": "Eastern Europe",
+    "Country": "Bulgaria"
+  },
+  {
+    "_id": "CZ",
+    "Region": "Eastern Europe",
+    "Country": "Czechia"
+  },
+  {
+    "_id": "HU",
+    "Region": "Eastern Europe",
+    "Country": "Hungary"
+  },
+  {
+    "_id": "PL",
+    "Region": "Eastern Europe",
+    "Country": "Poland"
+  },
+  {
+    "_id": "MD",
+    "Region": "Eastern Europe",
+    "Country": "Republic of Moldova"
+  },
+  {
+    "_id": "RO",
+    "Region": "Eastern Europe",
+    "Country": "Romania"
+  },
+  {
+    "_id": "RU",
+    "Region": "Eastern Europe",
+    "Country": "Russian Federation"
+  },
+  {
+    "_id": "SK",
+    "Region": "Eastern Europe",
+    "Country": "Slovakia"
+  },
+  {
+    "_id": "UA",
+    "Region": "Eastern Europe",
+    "Country": "Ukraine"
+  },
+  {
+    "_id": "AX",
+    "Region": "Northern Europe",
+    "Country": "Åland Islands"
+  },
+  {
+    "_id": "GG",
+    "Region": "Northern Europe",
+    "Country": "Guernsey"
+  },
+  {
+    "_id": "JE",
+    "Region": "Northern Europe",
+    "Country": "Jersey"
+  },
+  {
+    "_id": "DK",
+    "Region": "Northern Europe",
+    "Country": "Denmark"
+  },
+  {
+    "_id": "EE",
+    "Region": "Northern Europe",
+    "Country": "Estonia"
+  },
+  {
+    "_id": "FO",
+    "Region": "Northern Europe",
+    "Country": "Faroe Islands"
+  },
+  {
+    "_id": "FI",
+    "Region": "Northern Europe",
+    "Country": "Finland"
+  },
+  {
+    "_id": "IS",
+    "Region": "Northern Europe",
+    "Country": "Iceland"
+  },
+  {
+    "_id": "IE",
+    "Region": "Northern Europe",
+    "Country": "Ireland"
+  },
+  {
+    "_id": "IM",
+    "Region": "Northern Europe",
+    "Country": "Isle of Man"
+  },
+  {
+    "_id": "LV",
+    "Region": "Northern Europe",
+    "Country": "Latvia"
+  },
+  {
+    "_id": "LT",
+    "Region": "Northern Europe",
+    "Country": "Lithuania"
+  },
+  {
+    "_id": "NO",
+    "Region": "Northern Europe",
+    "Country": "Norway"
+  },
+  {
+    "_id": "SJ",
+    "Region": "Northern Europe",
+    "Country": "Svalbard and Jan Mayen Islands"
+  },
+  {
+    "_id": "SE",
+    "Region": "Northern Europe",
+    "Country": "Sweden"
+  },
+  {
+    "_id": "GB",
+    "Region": "Northern Europe",
+    "Country": "United Kingdom of Great Britain and Northern Ireland"
+  },
+  {
+    "_id": "AL",
+    "Region": "Southern Europe",
+    "Country": "Albania"
+  },
+  {
+    "_id": "AD",
+    "Region": "Southern Europe",
+    "Country": "Andorra"
+  },
+  {
+    "_id": "BA",
+    "Region": "Southern Europe",
+    "Country": "Bosnia and Herzegovina"
+  },
+  {
+    "_id": "HR",
+    "Region": "Southern Europe",
+    "Country": "Croatia"
+  },
+  {
+    "_id": "GI",
+    "Region": "Southern Europe",
+    "Country": "Gibraltar"
+  },
+  {
+    "_id": "GR",
+    "Region": "Southern Europe",
+    "Country": "Greece"
+  },
+  {
+    "_id": "VA",
+    "Region": "Southern Europe",
+    "Country": "Holy See"
+  },
+  {
+    "_id": "IT",
+    "Region": "Southern Europe",
+    "Country": "Italy"
+  },
+  {
+    "_id": "MT",
+    "Region": "Southern Europe",
+    "Country": "Malta"
+  },
+  {
+    "_id": "ME",
+    "Region": "Southern Europe",
+    "Country": "Montenegro"
+  },
+  {
+    "_id": "MK",
+    "Region": "Southern Europe",
+    "Country": "North Macedonia"
+  },
+  {
+    "_id": "PT",
+    "Region": "Southern Europe",
+    "Country": "Portugal"
+  },
+  {
+    "_id": "SM",
+    "Region": "Southern Europe",
+    "Country": "San Marino"
+  },
+  {
+    "_id": "RS",
+    "Region": "Southern Europe",
+    "Country": "Serbia"
+  },
+  {
+    "_id": "SI",
+    "Region": "Southern Europe",
+    "Country": "Slovenia"
+  },
+  {
+    "_id": "ES",
+    "Region": "Southern Europe",
+    "Country": "Spain"
+  },
+  {
+    "_id": "AT",
+    "Region": "Western Europe",
+    "Country": "Austria"
+  },
+  {
+    "_id": "BE",
+    "Region": "Western Europe",
+    "Country": "Belgium"
+  },
+  {
+    "_id": "FR",
+    "Region": "Western Europe",
+    "Country": "France"
+  },
+  {
+    "_id": "DE",
+    "Region": "Western Europe",
+    "Country": "Germany"
+  },
+  {
+    "_id": "LI",
+    "Region": "Western Europe",
+    "Country": "Liechtenstein"
+  },
+  {
+    "_id": "LU",
+    "Region": "Western Europe",
+    "Country": "Luxembourg"
+  },
+  {
+    "_id": "MC",
+    "Region": "Western Europe",
+    "Country": "Monaco"
+  },
+  {
+    "_id": "NL",
+    "Region": "Western Europe",
+    "Country": "Netherlands (Kingdom of the)"
+  },
+  {
+    "_id": "CH",
+    "Region": "Western Europe",
+    "Country": "Switzerland"
+  },
+  {
+    "_id": "AU",
+    "Region": "Australia and New Zealand",
+    "Country": "Australia"
+  },
+  {
+    "_id": "CX",
+    "Region": "Australia and New Zealand",
+    "Country": "Christmas Island"
+  },
+  {
+    "_id": "CC",
+    "Region": "Australia and New Zealand",
+    "Country": "Cocos (Keeling) Islands"
+  },
+  {
+    "_id": "HM",
+    "Region": "Australia and New Zealand",
+    "Country": "Heard Island and McDonald Islands"
+  },
+  {
+    "_id": "NZ",
+    "Region": "Australia and New Zealand",
+    "Country": "New Zealand"
+  },
+  {
+    "_id": "NF",
+    "Region": "Australia and New Zealand",
+    "Country": "Norfolk Island"
+  },
+  {
+    "_id": "FJ",
+    "Region": "Melanesia",
+    "Country": "Fiji"
+  },
+  {
+    "_id": "NC",
+    "Region": "Melanesia",
+    "Country": "New Caledonia"
+  },
+  {
+    "_id": "PG",
+    "Region": "Melanesia",
+    "Country": "Papua New Guinea"
+  },
+  {
+    "_id": "SB",
+    "Region": "Melanesia",
+    "Country": "Solomon Islands"
+  },
+  {
+    "_id": "VU",
+    "Region": "Melanesia",
+    "Country": "Vanuatu"
+  },
+  {
+    "_id": "GU",
+    "Region": "Micronesia",
+    "Country": "Guam"
+  },
+  {
+    "_id": "KI",
+    "Region": "Micronesia",
+    "Country": "Kiribati"
+  },
+  {
+    "_id": "MH",
+    "Region": "Micronesia",
+    "Country": "Marshall Islands"
+  },
+  {
+    "_id": "FM",
+    "Region": "Micronesia",
+    "Country": "Micronesia (Federated States of)"
+  },
+  {
+    "_id": "NR",
+    "Region": "Micronesia",
+    "Country": "Nauru"
+  },
+  {
+    "_id": "MP",
+    "Region": "Micronesia",
+    "Country": "Northern Mariana Islands"
+  },
+  {
+    "_id": "PW",
+    "Region": "Micronesia",
+    "Country": "Palau"
+  },
+  {
+    "_id": "UM",
+    "Region": "Micronesia",
+    "Country": "United States Minor Outlying Islands"
+  },
+  {
+    "_id": "AS",
+    "Region": "Polynesia",
+    "Country": "American Samoa"
+  },
+  {
+    "_id": "CK",
+    "Region": "Polynesia",
+    "Country": "Cook Islands"
+  },
+  {
+    "_id": "PF",
+    "Region": "Polynesia",
+    "Country": "French Polynesia"
+  },
+  {
+    "_id": "NU",
+    "Region": "Polynesia",
+    "Country": "Niue"
+  },
+  {
+    "_id": "PN",
+    "Region": "Polynesia",
+    "Country": "Pitcairn"
+  },
+  {
+    "_id": "WS",
+    "Region": "Polynesia",
+    "Country": "Samoa"
+  },
+  {
+    "_id": "TK",
+    "Region": "Polynesia",
+    "Country": "Tokelau"
+  },
+  {
+    "_id": "TO",
+    "Region": "Polynesia",
+    "Country": "Tonga"
+  },
+  {
+    "_id": "TV",
+    "Region": "Polynesia",
+    "Country": "Tuvalu"
+  },
+  {
+    "_id": "WF",
+    "Region": "Polynesia",
+    "Country": "Wallis and Futuna Islands"
+  }
+]

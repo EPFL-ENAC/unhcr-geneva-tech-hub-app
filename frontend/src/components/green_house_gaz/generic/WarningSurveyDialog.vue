@@ -6,6 +6,7 @@
           <warning-message-alert
             :show="show"
             :text="text"
+            :subtype="subtype"
             :baseline="baseline"
             :endline="endline"
           />
@@ -42,6 +43,8 @@ export default class WarningSurveyDialog extends Vue {
   readonly baseline!: number;
   @Prop([Number])
   readonly endline!: number;
+  @Prop([String])
+  readonly subtype!: string;
 
   get isOpen(): boolean {
     return this.dialogOpen;

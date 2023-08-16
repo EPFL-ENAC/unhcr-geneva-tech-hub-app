@@ -1,5 +1,9 @@
 <template>
-  <v-card elevation="2" rounded>
+  <v-card
+    elevation="2"
+    rounded
+    :style="`--in-mode:${baselineMode ?? false ? 'white' : '#d3d3d37d'}`"
+  >
     <v-card-title>
       <h3 class="baseline-title font-weight-medium">Baseline</h3>
     </v-card-title>
@@ -112,4 +116,9 @@ export default class BaselineCard extends Vue {
 .baseline-title {
   color: rgba(32, 135, 200, 1);
 }
+
+::v-deep.v-card.v-sheet.theme--light.elevation-2.rounded {
+    background-color: var(--in-mode);
+}
+
 </style>

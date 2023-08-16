@@ -1,5 +1,9 @@
 <template>
-  <v-card elevation="2" rounded>
+  <v-card
+    elevation="2"
+    rounded
+    :style="`--in-mode:${!baselineMode ?? false ? 'white' : '#d3d3d37d'}`"
+  >
     <v-card-title>
       <h3 class="endline-title font-weight-medium">Endline</h3>
     </v-card-title>
@@ -9,12 +13,14 @@
           :dialog-open.sync="dialogs['warning-survey-dialog']"
           :show="isDiffNull"
           :text="diffDimensionText"
+          :subtype="diffDimensionSubType"
           :baseline="baseline.results[diffDimension]"
           :endline="endline.results[diffDimension]"
         />
         <warning-message-alert
           :show="isDiffNull"
           :text="diffDimensionText"
+          :subtype="diffDimensionSubType"
           :baseline="baseline.results[diffDimension]"
           :endline="endline.results[diffDimension]"
         />
@@ -189,11 +195,16 @@ export default class EndlineCard extends Vue {
     return Math.abs(baseValue - endValue) <= precision;
   }
 
+  public get diffHeader(): SurveyTableHeader | undefined {
+    return this.headers.find((header) => header.key === this.diffDimension);
+  }
+
   public get diffDimensionText(): string {
-    return (
-      this.headers.find((header) => header.key === this.diffDimension)?.label ??
-      "no dimension selected"
-    );
+    return this.diffHeader?.label ?? "no dimension selected";
+  }
+
+  public get diffDimensionSubType(): string {
+    return this.diffHeader?.subtype ?? "number";
   }
 
   public updateEndlineInputs(value: SurveyItem[]) {
@@ -245,6 +256,10 @@ export default class EndlineCard extends Vue {
 </script>
 
 <style lang="scss" scoped>
+::v-deep.v-card.v-sheet.theme--light.elevation-2.rounded {
+  background-color: var(--in-mode);
+}
+
 .endline-title {
   color: rgba(32, 135, 200, 1);
 }

@@ -298,5 +298,149 @@
     "source": null,
     "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions.",
     "index": 29
+  },
+  {
+    "_id": "REF_EFF_BIO_COM",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Biowaste - Emission Factor - Composting [kgCO2e/kg]",
+    "value": 0.1756,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/5_Volume5/V5_4_Ch4_Bio_Treat.pdf"
+  },
+  {
+    "_id": "REF_EFF_BIO_AD",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Biowaste - Emission Factor - Anaerobic Digestion [kgCO2e/kg]",
+    "value": 0.0224,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/5_Volume5/V5_4_Ch4_Bio_Treat.pdf"
+  },
+  {
+    "_id": "REF_EFF_REC",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Emission Factor - Recycling/Reuse [kgCO2e/kg]",
+    "value": 0,
+    "source": ""
+  },
+  {
+    "_id": "REF_EFF_PLT_PIT",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Plastic - Emission Factor - Open pits [kgCO2e/kg]",
+    "value": 0,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+  },
+  {
+    "_id": "REF_EFF_PLT_MAN",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Plastic - Emission Factor - Managed disposal site [kgCO2e/kg]",
+    "value": 0,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+  },
+  {
+    "_id": "REF_EFF_PLT_BUR",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Plastic - Emission Factor - Open burning [kgCO2e/kg]",
+    "value": 2.17425,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf"
+  },
+  {
+    "_id": "REF_EFF_TEX_PIT",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Textiles - Emission Factor - Open pits [kgCO2e/kg]",
+    "value": 0.896,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+  },
+  {
+    "_id": "REF_EFF_TEX_MAN",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Textiles - Emission Factor - Managed disposal site [kgCO2e/kg]",
+    "value": 2.24,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+  },
+  {
+    "_id": "REF_EFF_TEX_BUR",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Textiles - Emission Factor - Open burning [kgCO2e/kg]",
+    "value": 0.422066667,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf"
+  },
+  {
+    "_id": "REF_EFF_PAP_PIT",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Paper/cardboard - Emission Factor - Open pits [kgCO2e/kg]",
+    "value": 1.493333333,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+  },
+  {
+    "_id": "REF_EFF_PAP_MAN",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Paper/cardboard - Emission Factor - Managed disposal site [kgCO2e/kg]",
+    "value": 3.733333333,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+  },
+  {
+    "_id": "REF_EFF_PAP_BUR",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Paper/cardboard - Emission Factor - Open burning [kgCO2e/kg]",
+    "value": 0.2285528,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf"
+  },
+  {
+    "_id": "REF_EFF_RUB_PIT",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Rubber / leather - Emission Factor - Open pits [kgCO2e/kg]",
+    "value": 0,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+  },
+  {
+    "_id": "REF_EFF_RUB_MAN",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Rubber / leather - Emission Factor - Managed disposal site [kgCO2e/kg]",
+    "value": 0,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+  },
+  {
+    "_id": "REF_EFF_RUB_BUR",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Rubber / leather - Emission Factor - Open burning [kgCO2e/kg]",
+    "value": 0.5084212,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf"
+  },
+  {
+    "_id": "REF_EFF_NAP_PIT",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Nappies - Emission Factor - Open pits [kgCO2e/kg]",
+    "value": 0.896,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+  },
+  {
+    "_id": "REF_EFF_NAP_MAN",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Nappies - Emission Factor - Managed disposal site [kgCO2e/kg]",
+    "value": 2.24,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+  },
+  {
+    "_id": "REF_EFF_NAP_BUR",
+    "type": "number",
+    "category": "WASTE",
+    "description": "Waste - Nappies - Emission Factor - Open burning [kgCO2e/kg]",
+    "value": 0.270793333,
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf"
   }
 ]

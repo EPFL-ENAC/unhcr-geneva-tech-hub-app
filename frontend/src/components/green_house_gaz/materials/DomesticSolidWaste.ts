@@ -8,7 +8,13 @@ import {
   SurveyResult,
 } from "@/store/GhgInterface";
 
+import GhgCountryRegionMap from "@/assets/references/ghg_country_region_map.json";
+import mixedBiowaste from "@/assets/references/ghg_ef_mixed_biowaste.json";
+import mixedNonBiowaste from "@/assets/references/ghg_ef_mixed_non_biowaste.json";
+import RefKeyName from "@/assets/references/ghg_ref_key_name.json";
+
 import { SelectOption, SelectValue } from "@/components/commons/FormItem";
+import { numberOfDaysPerYear } from "@/components/green_house_gaz/energy/computeCO2cost";
 
 import {
   ensureSurveyTableHeaders,
@@ -44,7 +50,7 @@ export interface MaterialSolidWasteSurvey
     MaterialSolidWasteItem,
     MaterialSolidWasteItemResultsWithBalance
   > {
-  generationKg: number;
+  generationGram: number;
 }
 
 export const diffDimension: keyof MaterialSolidWasteItemInput =
@@ -75,16 +81,16 @@ const recyclingReuse = "Recycling / Reuse";
 const bioWaste = "Biowaste";
 const nonBiowaste = "Non-biowaste";
 
-export type practiceTypes = "Biowaste" | "Non-biowaste";
+export type practiceCategoriess = "Biowaste" | "Non-biowaste";
 
-const baselinePractices = [openPits, managedDisposalSite, openBurning];
+const baselinePractices = [openPits, managedDisposalSite, openBurning]; // region dependent practices
 
 const plastics = "Plastics";
 const textiles = "Textiles";
 const paper = "Paper / cardboard";
 const rubber = "Rubber / leather";
 const nappies = "Nappies";
-const mixed = "Mixed / unkown composition ";
+const mixed = "Mixed / unkown composition";
 const biowasteSubcategories = [
   plastics,
   textiles,
@@ -116,7 +122,7 @@ const endLinePractices: Record<string, Record<string, string[]>> = {
   },
 };
 
-export function headers(pp_per_hh: number | undefined) {
+export function headers() {
   return [
     ...surveyTableHeaderIncrements,
     {
@@ -130,12 +136,13 @@ export function headers(pp_per_hh: number | undefined) {
       },
       default: true,
       type: "select",
+      hideFooterContent: false,
     },
     {
       conditional_value: ["Non-biowaste"],
       conditional: "biowaste",
       value: "input.nonBiowasteSubCategories",
-      text: "Non-biowaste subcategories",
+      text: "Waste subcategories",
       items: biowasteSubcategories,
       style: {
         cols: "12",
@@ -173,7 +180,9 @@ export function headers(pp_per_hh: number | undefined) {
             )
           ) {
             const practices =
-              endLinePractices[options.localInput.biowaste as practiceTypes];
+              endLinePractices[
+                options.localInput.biowaste as practiceCategoriess
+              ];
             result = practices?.default ?? [];
             if (
               options.localInput.nonBiowasteSubCategories &&
@@ -193,6 +202,7 @@ export function headers(pp_per_hh: number | undefined) {
       },
       formatter: (x: string) => x,
       tooltipInfo: function (value: string) {
+        // TODO: check why it is not displayed!
         if (value === "Open pits, unmanaged") {
           return "Assumed to be shallow < 5 m depth";
         }
@@ -209,7 +219,7 @@ export function headers(pp_per_hh: number | undefined) {
       hideFooterContent: false,
     },
     {
-      text: "Percentage of waste category",
+      text: "% of total waste generated",
       computeResults: true,
       value: "input.percentageOfTotalCategories",
       // conditional_value: "",
@@ -234,7 +244,9 @@ export function headers(pp_per_hh: number | undefined) {
 }
 
 export function generateComputeItem(
-  projectTotalHH: number
+  population: number,
+  generationGram: number,
+  countryCode: string
 ): (
   localItemInput: MaterialSolidWasteItemInput,
   ghgMapRef: ItemReferencesMap
@@ -248,19 +260,63 @@ export function generateComputeItem(
       console.log(ghgMapRef);
       throw new Error("number of cooktsove not defined");
     }
-    if (projectTotalHH === undefined) {
+    if (population === undefined) {
       throw new Error(
-        "Total House holds is undefined, please fill assessment information page and click on save"
+        "population is undefined, please fill assessment information page and click on save"
       );
     }
-    // const hhUsingTheFuel = percentageOfTotalCategories * projectTotalHH; // number of cookstoves
+    const populationPercentage = percentageOfTotalCategories * population; // number of cookstoves
     let totalCO2Emission = 0;
-    totalCO2Emission += 1;
 
-    // switch (true) {
-    //   default:
-    //     throw new Error(`unknown management type ${fuelType}`);
-    // }
+    // REF depends on Region for some
+    // Retrieve the region for the country
+    const projectRegion = (GhgCountryRegionMap as Record<string, string>)[
+      countryCode
+    ];
+    let REF_EFF = 0;
+    const practiceType = (localItemInput?.practiceType as string) ?? "";
+    const practiceKey =
+      (RefKeyName as Record<string, string>)[
+        localItemInput.practiceType as string
+      ] ?? "";
+    if (localItemInput.biowaste === bioWaste) {
+      if (baselinePractices.includes(practiceType)) {
+        // retrieve region dependant
+        REF_EFF =
+          (mixedBiowaste as Record<string, Record<string, number>>)?.[
+            practiceKey
+          ]?.[projectRegion] ?? 0;
+      } else {
+        REF_EFF = ghgMapRef?.[`REF_EFF_BIO_${practiceKey}`]?.value ?? 0;
+      }
+    }
+    if (localItemInput.biowaste === nonBiowaste) {
+      if (localItemInput.practiceType === mixed) {
+        // region dependant
+        if (baselinePractices.includes(practiceType)) {
+          // retrieve region dependant
+          REF_EFF =
+            (mixedNonBiowaste as Record<string, Record<string, number>>)?.[
+              practiceKey
+            ]?.[projectRegion] ?? 0;
+        } else {
+          // should be only Recycling
+          REF_EFF = 0;
+        }
+      } else {
+        const subcatKey = (RefKeyName as Record<string, string>)[
+          localItemInput.nonBiowasteSubCategories as string
+        ];
+        REF_EFF = ghgMapRef[`REF_EFF_${subcatKey}_${practiceKey}`]?.value ?? 0;
+      }
+    }
+    const totalwasteAmount = //  (ton/yr)
+      populationPercentage * // Population
+      generationGram * // in Gram
+      numberOfDaysPerYear * // days/yr
+      0.000001; // (like / 1000000  (g/ton))
+
+    totalCO2Emission = REF_EFF * totalwasteAmount;
     if (isNaN(totalCO2Emission)) {
       throw new Error(`totalCO2Emission is NaN`);
     }

@@ -1,0 +1,93 @@
+{
+  "PIT": {
+    "Central Asia": 0.795651805,
+    "Eastern Asia": 0.784,
+    "South-eastern Asia": 0.78913425,
+    "Southern Asia": 0.784,
+    "Western Asia": 0.802419971,
+    "Northern Africa": 0.784,
+    "Eastern Africa": 0.819150097,
+    "Middle Africa": 0.784,
+    "Southern Africa": 0.784,
+    "Western Africa": 0.784,
+    "Eastern Europe": 0.802339181,
+    "Northern Europe": 0.822279812,
+    "Southern Europe": 0.793835125,
+    "Western Europe": 0.803654596,
+    "Caribbean": 0.784,
+    "Central America": 0.784,
+    "South America": 0.79902439,
+    "Northern America": 0.849817284,
+    "Australia and New Zealand": 0.86768154,
+    "Melanesia": 0.86768154,
+    "Micronesia": 0.86768154,
+    "Polynesia": 0.86768154
+    },
+"MAN": {
+  "Central Asia": 1.989129512,
+  "Eastern Asia": 1.96,
+  "South-eastern Asia": 1.972835625,
+  "Southern Asia": 1.96,
+  "Western Asia": 2.006049927,
+  "Northern Africa": 1.96,
+  "Eastern Africa": 2.047875244,
+  "Middle Africa": 1.96,
+  "Southern Africa": 1.96,
+  "Western Africa": 1.96,
+  "Eastern Europe": 2.005847953,
+  "Northern Europe": 2.055699531,
+  "Southern Europe": 1.984587814,
+  "Western Europe": 2.00913649,
+  "Caribbean": 1.96,
+  "Central America": 1.96,
+  "South America": 1.997560976,
+  "Northern America": 2.12454321,
+  "Australia and New Zealand": 2.16920385,
+  "Melanesia": 2.16920385,
+  "Micronesia": 2.16920385,
+  "Polynesia":2.16920385 
+  },
+"BUR": {
+  "Central Asia":  0.1979,
+  "Eastern Asia":  0.1979,
+  "South-eastern Asia":  0.1979,
+  "Southern Asia":  0.1979,
+  "Western Asia":  0.1979,
+  "Northern Africa":  0.1979,
+  "Eastern Africa":  0.1979,
+  "Middle Africa":  0.1979,
+  "Southern Africa":  0.1979,
+  "Western Africa":  0.1979,
+  "Eastern Europe":  0.1979,
+  "Northern Europe":  0.1979,
+  "Southern Europe":  0.1979,
+  "Western Europe":  0.1979,
+  "Caribbean":  0.1979,
+  "Central America":  0.1979,
+  "South America":  0.1979,
+  "Northern America":  0.1979,
+  "Australia and New Zealand":  0.1979,
+  "Melanesia":  0.1979,
+  "Micronesia": 0.1979,
+  "Polynesia": 0.1979 
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
