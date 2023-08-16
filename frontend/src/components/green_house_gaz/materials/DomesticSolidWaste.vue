@@ -5,7 +5,7 @@
       <v-col :cols="4">
         <v-text-field
           id="email"
-          :value="localForm?.generationKg ?? 0"
+          :value="localForm?.generationGram ?? 0"
           autocomplete="generation-gram-per-capita-per-day"
           outlined
           label="generation-gram-per-capita-per-day"
@@ -15,7 +15,7 @@
           type="number"
           width="100"
           name="generation-gram-per-capita-per-day"
-          @change="updateGenerationKg"
+          @change="updateGenerationGram"
         />
       </v-col>
       <v-col class="d-flex align-center">
@@ -96,8 +96,8 @@ export default class Cooking extends Vue {
     return this.project.population === undefined;
   }
 
-  public updateGenerationKg(value: string) {
-    this.localForm.generationKg = parseFloat(value);
+  public updateGenerationGram(value: string) {
+    this.localForm.generationGram = parseFloat(value);
     this.$emit("update:form", this.localForm);
   }
 
@@ -105,11 +105,15 @@ export default class Cooking extends Vue {
     localItemInput: MaterialSolidWasteItemInput,
     ghgMapRef: ItemReferencesMap
   ) => MaterialSolidWasteItemResults {
-    return generateComputeItem(this.project.totalHH);
+    return generateComputeItem(
+      this.project.population,
+      this.localForm?.generationGram,
+      this.project.country_code
+    );
   }
   // should be a getter so it may be reactive for fuelTypes
   public get headers(): SurveyTableHeader[] {
-    return headers(this.project.pp_per_hh);
+    return headers();
   }
 }
 </script>

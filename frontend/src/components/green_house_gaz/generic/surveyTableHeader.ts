@@ -174,6 +174,7 @@ export interface EasySurveyTableHeader {
   label?: string;
   tooltipInfo?: string | ((value: string) => string);
   category?: string; // example increment
+  subtype?: string; // example: percent
   classFormatter?: (
     v: unknown,
     tableHeader?: SurveyTableHeader,

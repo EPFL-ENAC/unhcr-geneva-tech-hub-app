@@ -13,12 +13,12 @@
     {{ text }} do not match.
     <br />
     Baseline:
-    {{ baseline | formatNumber }}
-    {{ text }}
+    {{ baseline | formatNumber(formatNumberOptions) }}
+    {{ textFormatted }}
     <br />
     Endline:
-    {{ endline | formatNumber }}
-    {{ text }}
+    {{ endline | formatNumber(formatNumberOptions) }}
+    {{ textFormatted }}
   </v-alert>
 </template>
 
@@ -35,6 +35,25 @@ export default class WarningMessageAlert extends Vue {
   readonly baseline!: number;
   @Prop([Number])
   readonly endline!: number;
+  @Prop([String])
+  readonly subtype!: string;
+
+  public get formatNumberOptions() {
+    if (this.subtype === "percent") {
+      return {
+        style: "percent",
+        maximumFractionDigits: 0,
+      };
+    }
+    return {};
+  }
+
+  public get textFormatted() {
+    if (this.subtype === "percent") {
+      return this.text.replace("%", "");
+    }
+    return this.text;
+  }
 }
 </script>
 
