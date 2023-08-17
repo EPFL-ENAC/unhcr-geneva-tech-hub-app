@@ -93,10 +93,10 @@
               <span
                 v-if="item.itemType === 'Material' && materialMap[item.formId]"
               >
-              <span v-if="materialMap[item.formId].form === '..'">
-                {{ materialMap[item.formId].material }}
-              </span>
-              <span v-else>{{ materialMap[item.formId].form }}</span>
+                <span v-if="materialMap[item.formId].form === '..'">
+                  {{ materialMap[item.formId].material }}
+                </span>
+                <span v-else>{{ materialMap[item.formId].form }}</span>
               </span>
               <span v-else-if="item.materialId === 'Other'">{{
                 item.formId

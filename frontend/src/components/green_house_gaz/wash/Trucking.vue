@@ -90,7 +90,10 @@ export default class Trucking extends Vue {
         /* roundtrip distance by multiplying by 2 */
         itemComputed.TR_DIST = itemComputed.TR_NUM * TOT_WS * 2;
         itemComputed.totalCO2Emission =
-          (washFactorKM * itemComputed.TR_DIST) / 1000;
+          washFactorKM *
+          itemComputed.TR_DIST *
+          12 * // number of months
+          0.001; // 1/1000 (kg)
       }
 
       if (US_UNI === LITERS) {
@@ -99,7 +102,11 @@ export default class Trucking extends Vue {
         if (!washFactorL) {
           throw new Error(`washFactorL undefined`);
         }
-        itemComputed.totalCO2Emission = (washFactorL * LIT_WS) / 1000;
+        itemComputed.totalCO2Emission =
+          washFactorL *
+          LIT_WS *
+          12 * // number of months
+          0.001; // 1/1000 (kg)
       }
       return itemComputed;
     } catch (error) {
@@ -160,7 +167,7 @@ export default class Trucking extends Vue {
       },
     },
     {
-      text: "Liters of fuel consumed per year (l/yr)",
+      text: "Liters of fuel consumed per month (l/month)",
       value: "input.LIT_WS",
       conditional_value: LITERS,
       conditional: "US_UNI",
@@ -169,23 +176,27 @@ export default class Trucking extends Vue {
       },
       type: "number",
       hideFooterContent: false,
-      suffix: "l/yr",
+      suffix: "l/month",
       formatter: (v: number, { ...args }) => {
         return formatNumber(v, { suffix: args.suffix });
       },
     },
     {
-      text: `Total volume transported (m3/yr)`,
+      text: `Total volume transported (m³/month)`,
       value: "input.WACL",
       hideFooterContent: false,
       style: {
         cols: "12",
       },
+      suffix: "m³/month",
       computeResults: true,
       type: "number",
+      formatter: (v: number, { ...args }) => {
+        return formatNumber(v, { suffix: args.suffix });
+      },
     },
     {
-      text: "Volume of one water truck (m3)",
+      text: "Volume of one water truck (m³)",
       value: "input.TR_VOL",
       conditional_value: KM,
       conditional: "US_UNI",
