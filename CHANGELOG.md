@@ -2,6 +2,53 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.15.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.14.0...v0.15.0) (2023-08-17)
+
+
+### Features
+
+* **cooking:** breaking change fixing [#389](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/389) and [#390](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/390) ([1eed54f](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/1eed54fcb7038f7a34fc9f7800848d5927ef5ab7))
+* **frontend:** better confirm form ([8f4b030](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/8f4b0308fdb9e7a09d67e17db76081a9ceea912c))
+* **frontend:** correct type for build ([b7c0c48](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/b7c0c48e5d472e94a50760f546cd52fb49429f87))
+* **ghg-cooking:** draft for [#389](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/389) / renaming fuelUsage and dieselLiters ([72077dc](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/72077dcaa838d40a86ec4ca139d21366dda7aa6a))
+* **ghg:** fix change model ([660c1e0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/660c1e0d3d4856f9f2fe94f741548316fdffbb90))
+* **ghg:** remove lighting todo ([a6a2f85](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/a6a2f85536188c658526a9b2ed5a9cae2e62ab1a))
+* **registration:** add all the user flow logic ([37b9e6a](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/37b9e6a27d379fb3cd047f842a35e7b4bffd295c))
+* **registration:** add frontend and api ([db55f06](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/db55f066d39e6363e79589c664134d06f3591e90))
+* **registration:** add other endpoints ([961efd4](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/961efd452d62b017a6af4a38f00c00a46caee57d))
+* **registration:** add proper expiration for token and rate limit ([553054a](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/553054a7457941fda36cf0337d9b6e662dc37826))
+* **registration:** better confirm and forgot component ([23ad97c](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/23ad97c922174897cd413dc593f242b11a4f3e9d))
+* **registration:** better reset module ([1fbb9e6](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/1fbb9e6b51309c67f6db5253c92b57a8bdc7b111))
+* **registration:** hide ghg for new shelter user ([2bd180a](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/2bd180ac34da593aae1b5f5ee3659d87ffeaa90d))
+* **registration:** up rate limit to 50req/s ([ac942c8](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/ac942c8bfabaf29fcea225ef75ed3dcf60bf6496))
+* **shelter:** add a basic completed field for the scorecard ([9109705](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/9109705a7092653d29240a0ae6e36c175849359e))
+* **shelter:** almost working wip list of shelters ([14bdbae](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/14bdbaedd94fe43e376fcc633e1df74d3354610e))
+* **shelter:** fix Other reference form for materials [#404](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/404) ([b1244a8](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/b1244a8865b0b9300090bfaf94e034b79a59e293))
+* **shelter:** improve reliability of scroll and fixbar with more responsive [#368](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/368) ([0f2808f](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/0f2808f5f6b3c27e74d413855ca93a7e97e1567a))
+* **shelter:** remove unused total_shelter variable [#356](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/356) ([0fd0f1c](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/0fd0f1c9053212ae6f4feca1711e3bf872048499))
+* **solid-waste:** first draft of solid waste ([ef66ada](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/ef66ada16cfa1fec1128884f8cb868ff88f9f099))
+
+
+### Bug Fixes
+
+* **common:** run lint --fix and replace facilities icon [#371](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/371) ([0bb36b6](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/0bb36b674512324178a5c75c728155dd3e8212ef))
+* **commont:** add same link for manual for ghg and shelter + add button [#373](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/373) ([c1c78a5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c1c78a578ac4ab558456cc62ce24e362d0f2bf1f))
+* **ghg:** add info icon to solar and torch emissions [#396](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/396) ([4c93609](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/4c93609204c1a7a08420ddb490fc0422e3da7d96))
+* **ghg:** avoid bug with domestic solid waste per gram per capita ([4f1e19a](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/4f1e19a8bc91c51a3046ea4fe3ddefdf6d4c2c8a))
+* **ghg:** change of a liquid fueld name [#392](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/392) ([def23f0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/def23f0b6a7447487da59230c1f04a4481df8a26))
+* **ghg:** correct wording for domestic solid waste ([68ab837](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/68ab837c07889315bef7a499ec20e0e5e48db088))
+* **ghg:** fix cooking and fuelTypes ([27733a1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/27733a1c82dbc8dc665dee8cc5d2dc5943c20ac0))
+* **ghg:** redirect to Domestic solid waste instead of Shelter ([0109634](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/01096346dd3ba241c9fb871b42bc1074afe59b75))
+* **ghg:** remove some duplicated GHG ref entries [#397](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/397) ([8a261be](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/8a261befa599124948272c660927ff4dc76c6b25))
+* **ghg:** removing bad typescriped files ([9a9538c](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/9a9538ced0e4066ccc03fd1562eea6a47ff2b95c))
+* **ghg:** solid waste module ready with dynamic sub process ([55e73fa](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/55e73fa1e0383d77cfb4f85846a3a9cfccf21a9a))
+* **ghg:** working code for domestic solid waste ([3ded8e5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/3ded8e55b06bfd3753aa0c57e021108257c09530))
+* **lighting:** add proper fuel types and inputs ([f553f48](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f553f4881e6689e9da05052981834f157dbe261f))
+* **lighting:** better formula ([a13eb26](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/a13eb26b22f232c57b534115c2b2b5788b9e4c42))
+* **registration:** update password when unconfirmed user register again ([ceb9739](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/ceb97393a0700bce14fdfbb10558e10fb93b4bc2))
+* **scorecards:** hide private scorecards when not admin ([3b5f8e1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/3b5f8e1ef28426f3a5cfec0c43945c71f66e1cc8))
+* **shelter:** add default KG for BOQ other form [#404](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/404) ([e6a2df0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/e6a2df0e61578d8041235e0e35fe271c9fa2fba1))
+
 ## [0.14.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.13.0...v0.14.0) (2023-06-16)
 
 
