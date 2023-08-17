@@ -219,7 +219,7 @@ export default class SurveyList extends Vue {
       // text: "Shelter, Site and material",
       text: "Material",
       to: "Material",
-      redirect: "Material-Shelter",
+      redirect: "Material-DomesticSolidWaste",
       children: [
         {
           text: "Domestic solid waste",
