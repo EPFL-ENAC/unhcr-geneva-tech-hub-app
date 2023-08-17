@@ -291,7 +291,7 @@ export function generateComputeItem(
       }
     }
     if (localItemInput.biowaste === nonBiowaste) {
-      if (localItemInput.practiceType === mixed) {
+      if (localItemInput.nonBiowasteSubCategories === mixed) {
         // region dependant
         if (baselinePractices.includes(practiceType)) {
           // retrieve region dependant
