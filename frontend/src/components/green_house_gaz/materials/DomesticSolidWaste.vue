@@ -16,6 +16,7 @@
           width="100"
           name="generation-gram-per-capita-per-day"
           @change="updateGenerationGram"
+          @keydown.enter.prevent="() => updateGenerationGram(localForm?.generationGram ?? 0)"
         />
       </v-col>
       <v-col class="d-flex align-center">
@@ -41,9 +42,10 @@ import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTa
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 
+import ComputeGenericFormSurveyMixin from "@/components/green_house_gaz/generic/ComputeGenericFormSurveyMixin.vue";
 import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
 import "vue-class-component/hooks";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Mixins, Prop } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 
 import {
@@ -52,6 +54,7 @@ import {
   headers,
   MaterialSolidWasteItemInput,
   MaterialSolidWasteItemResults,
+  MaterialSolidWasteItemResultsBalance,
   MaterialSolidWasteSurvey,
 } from "@/components/green_house_gaz/materials/DomesticSolidWaste";
 
@@ -60,11 +63,13 @@ import {
     SurveyItemTitle,
     BaselineEndlineWrapper,
   },
+
   computed: {
     ...mapGetters("GhgModule", ["project"]),
+    ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
   },
 })
-export default class Cooking extends Vue {
+export default class Cooking extends Mixins(ComputeGenericFormSurveyMixin) {
   @Prop({ type: String, required: true, default: "" })
   readonly titleKey!: string;
 
@@ -74,12 +79,13 @@ export default class Cooking extends Vue {
   @Prop([Object, Array])
   readonly survey: Survey | undefined;
 
+  ghgMapRef!: ItemReferencesMap;
   project!: GreenHouseGaz;
   diffDimension = diffDimension;
   name = "solid waste";
 
   domesticSolidWasteHref =
-    "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-07-10T130208Z/SolidWaste_Specifications_v4.xlsx - RefugeeWasteExamples.pdf";
+    "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-08-14T111730Z/RefugeeWasteExamples.pdf";
 
   public get title(): string {
     return this.titleKey;
@@ -97,7 +103,36 @@ export default class Cooking extends Vue {
   }
 
   public updateGenerationGram(value: string) {
-    this.localForm.generationGram = parseFloat(value);
+    if (this.localForm === undefined) {
+      this.localForm = {
+        baseline: {
+          items: [],
+          results: {
+            totalCO2Emission: 0,
+            changeInEmission: 0,
+          } as MaterialSolidWasteItemResults,
+        },
+        endline: {
+          items: [],
+          results: {
+            totalCO2Emission: 0,
+            changeInEmission: 0,
+          } as MaterialSolidWasteItemResultsBalance,
+        },
+        generationGram: parseFloat(value),
+      };
+    } else {
+      this.localForm.generationGram = parseFloat(value);
+    }
+
+    this.localForm = this.updateGenericFormSurvey(
+      this.localForm,
+      this.diffDimension as string,
+      this.headers,
+      this.computeItem,
+      this.ghgMapRef
+    ) as any;
+
     this.$emit("update:form", this.localForm);
   }
 
@@ -107,7 +142,7 @@ export default class Cooking extends Vue {
   ) => MaterialSolidWasteItemResults {
     return generateComputeItem(
       this.project.population,
-      this.localForm?.generationGram,
+      this.localForm?.generationGram ?? 0,
       this.project.country_code
     );
   }
