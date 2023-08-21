@@ -103,15 +103,11 @@ export const lightingFuelsWithText: FuelTypesItem<LightingFuel>[] = [
   {
     _id: "LIGHT_SOLAR",
     text: "Solar lantern", // total CO2 should be 0
-    // description:
-    //   "The GHG Emission Calculator only considers Scope 1 and 2 emissions.",
   },
   {
     _id: "BAT", // todo change REF_BAT to REF_EFF_BAT
 
     text: "Torch or phone with battery (rechargeable or not)",
-    // description:
-    //   "The GHG Emission Calculator only considers Scope 1 and 2 emissions.",
   },
 ];
 // end of lighting fuels

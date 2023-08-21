@@ -45,7 +45,9 @@
               <v-col class="d-flex justify-end mx-2 mb-2">
                 <h4>
                   These calculations are limited to Scope 1 and Scope 2 sources
-                  of emissions for purposes of simplicity.
+                  of emissions for purposes of simplicity. Unless indicated with
+                  an S3 icon, these calculations are limited to Scope 1 and
+                  Scope 2 sources of emissions for purposes of simplicity.
                 </h4>
               </v-col>
             </v-row>
@@ -118,7 +120,6 @@ export default class BaselineCard extends Vue {
 }
 
 ::v-deep.v-card.v-sheet.theme--light.elevation-2.rounded {
-    background-color: var(--in-mode);
+  background-color: var(--in-mode);
 }
-
 </style>
