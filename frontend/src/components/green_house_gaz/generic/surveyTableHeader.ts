@@ -85,10 +85,11 @@ export const surveyTableHeaderCO2 = [
     readonly: true,
     endlineOnly: true,
     formatter: (v: number) => {
-      return formatNumber(v, {
+      const res = formatNumber(v, {
         style: "percent",
         signDisplay: "exceptZero",
       });
+      return `<span title=${String(v)}>${res}</span>`;
     },
     classFormatter: (
       v: number,
