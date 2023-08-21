@@ -292,7 +292,18 @@ export function headers(
             fill: "black",
           });
         }
-        if (localItem?.input?.sustainablySourced) {
+        if (fuelTypeEnhanced === "ETH") {
+          result.push({
+            text: "(S3)",
+            description:
+              "Exceptionally, Scope 3 emissions associated with feedstock production and/or processing of the fuel are being considered due to their high impact relative to the total emissions.",
+            fill: "black",
+          });
+        }
+        if (
+          localItem?.input?.sustainablySourced ||
+          ["ETH", "BGS"].includes(fuelTypeEnhanced)
+        ) {
           result.push({
             icon: "$mdiTreeOutline",
             description: "Sustainably sourced biomass",
