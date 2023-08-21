@@ -55,10 +55,12 @@
               <v-col :cols="6" class="d-flex flex-column justify-end">
                 <h3>
                   Total CO2 Emissions:
-                  {{
-                    endline.results.totalCO2Emission |
-                      formatNumber({ suffix: "tCO2e/year" })
-                  }}
+                  <span :title="endline.results.totalCO2Emission">
+                    {{
+                      endline.results.totalCO2Emission |
+                        formatNumber({ suffix: "tCO2e/year" })
+                    }}
+                  </span>
                 </h3>
 
                 <h3>
@@ -71,27 +73,35 @@
                     <v-icon :class="iconClass" :color="color">
                       $mdiTriangle
                     </v-icon>
-                    {{
+                    <span :title="endline.results.changeInEmission">{{
                       endline.results.changeInEmission |
                         formatNumber({
                           maximumFractionDigits: 0,
                           style: "percent",
                           signDisplay: "exceptZero",
                         })
-                    }}
-
-                    ({{
-                      (endline.results.totalCO2Emission -
-                        baseline.results.totalCO2Emission) |
-                        formatNumber({ suffix: "tCO2e/year" })
-                    }})
+                    }}</span>
+                    <span
+                      :title="
+                        endline.results.totalCO2Emission -
+                        baseline.results.totalCO2Emission
+                      "
+                    >
+                      ({{
+                        (endline.results.totalCO2Emission -
+                          baseline.results.totalCO2Emission) |
+                          formatNumber({ suffix: "tCO2e/year" })
+                      }})
+                    </span>
                   </span>
                 </h3>
               </v-col>
               <v-col :cols="12" class="d-flex justify-end mx-2 mb-2">
                 <h4>
                   These calculations are limited to Scope 1 and Scope 2 sources
-                  of emissions for purposes of simplicity.
+                  of emissions for purposes of simplicity. Unless indicated with
+                  an S3 icon, these calculations are limited to Scope 1 and
+                  Scope 2 sources of emissions for purposes of simplicity.
                 </h4>
               </v-col>
             </v-row>

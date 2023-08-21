@@ -111,7 +111,7 @@ export default class AppList extends Vue {
 
 .description {
   overflow: auto;
-  height: 148px;
+  height: 200px;
 }
 .item-btn-container {
   padding-top: 8px;

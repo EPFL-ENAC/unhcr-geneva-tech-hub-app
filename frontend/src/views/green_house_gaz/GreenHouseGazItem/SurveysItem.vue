@@ -123,7 +123,6 @@ import Shelter from "@/components/green_house_gaz/materials/Shelter.vue";
 import TreePlanting from "@/components/green_house_gaz/offset/TreePlanting.vue";
 import Results from "@/components/green_house_gaz/Results.vue";
 import Trucking from "@/components/green_house_gaz/wash/Trucking.vue";
-import Wastewater from "@/components/green_house_gaz/wash/Wastewater.vue";
 
 import { infoTooltipText } from "@/components/green_house_gaz/infoTooltipText";
 import {
@@ -160,7 +159,6 @@ import { mapActions, mapGetters } from "vuex";
     Results,
     UserManager,
     Info,
-    Wastewater,
   },
 })
 /** ProjectList */
@@ -206,11 +204,6 @@ export default class SurveyList extends Vue {
           icon: "$mdiWaterPump",
           text: "Water Pumping",
           to: "Pumping",
-        },
-        {
-          icon: "$mdiToilet",
-          text: "Wastewater",
-          to: "Wastewater",
         },
       ],
     },

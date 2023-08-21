@@ -198,15 +198,17 @@
                 )
               }}
             </span>
-            <span v-else>
-              {{
+            <span
+              v-else
+              v-html="
                 tableHeader.formatter(
                   results[tableHeader.key],
                   tableHeader,
                   { input: results },
                   items
                 )
-              }}
+              "
+            >
             </span>
           </span>
           <span v-else-if="!tableHeader.hidden"> – </span>

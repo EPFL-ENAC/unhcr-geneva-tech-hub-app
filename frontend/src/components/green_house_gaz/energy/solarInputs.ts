@@ -49,7 +49,7 @@ export function computeKWHPerDayPerCountry(
   countryTwoLetterCode: CountryIrradianceKeys,
   locationIrradianceValue: number | undefined
 ): number {
-  // return the number of kwh per day
+  // return the number of kWh per day
 
   const performanceRatio = 0.8;
   const defaultIrradiance = countryIrradiance.default;
@@ -58,8 +58,8 @@ export function computeKWHPerDayPerCountry(
     countryIrradiance?.[countryTwoLetterCode] ??
     defaultIrradiance;
 
-  const kwh = kW * irradiance * performanceRatio;
-  return parseFloat(kwh.toFixed(1));
+  const kWh = kW * irradiance * performanceRatio;
+  return parseFloat(kWh.toFixed(1));
 }
 
 export function computeKWHPerYearPerCountry(
@@ -81,7 +81,7 @@ export function computeKWInstalledWithKwhPerDayPerCountry(
   countryTwoLetterCode: CountryIrradianceKeys,
   locationIrradianceValue: number | undefined
 ): number {
-  // return the number of kwh per day
+  // return the number of kWh per day
   const defaultIrradiance = countryIrradiance.default;
   const performanceRatio = 0.8;
   const irradiance =
@@ -90,19 +90,19 @@ export function computeKWInstalledWithKwhPerDayPerCountry(
     defaultIrradiance;
   const kw = kWh / (irradiance * performanceRatio);
 
-  // if kwh = kw * h * performanceRatio then
-  // kw = kwh / h * performanceRatio
+  // if kWh = kw * h * performanceRatio then
+  // kw = kWh / h * performanceRatio
   return parseFloat(kw.toFixed(1));
 }
 
 export function computeKWInstalledWithKwhPerYearPerCountry(
-  kwh: number,
+  kWh: number,
   countryTwoLetterCode: CountryIrradianceKeys,
   locationIrradianceValue: number | undefined
 ): number {
   const kWInstalledPerYear =
     computeKWInstalledWithKwhPerDayPerCountry(
-      kwh,
+      kWh,
       countryTwoLetterCode,
       locationIrradianceValue
     ) / numberOfDaysPerYear;
@@ -122,13 +122,13 @@ export function solarInputsProducedPer(
     case "Day":
       computeSolarPower = computeKWHPerDayPerCountry;
       computeSolarInstalled = computeKWInstalledWithKwhPerDayPerCountry;
-      suffix = "Kwh/day";
+      suffix = "kWh/day";
       break;
     case "Week":
       throw new Error("Week is not supported for Solar");
       break;
     case "Year":
-      suffix = "Kwh/year";
+      suffix = "kWh/year";
       computeSolarPower = computeKWHPerYearPerCountry;
       computeSolarInstalled = computeKWInstalledWithKwhPerYearPerCountry;
       break;
@@ -168,7 +168,6 @@ export function solarInputsProducedPer(
         return formatNumber(v);
       },
       customEventInput: (renewablePower: number, localInput: EnergyItem) => {
-        // computeKWInstalledWithKwhPerDayPerCountry
         localInput.solarInstalled = computeSolarInstalled(
           renewablePower,
           countryTwoLetterCode,

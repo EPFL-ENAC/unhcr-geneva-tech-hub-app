@@ -103,6 +103,7 @@ export default class Cooking extends Mixins(ComputeGenericFormSurveyMixin) {
   }
 
   public updateGenerationGram(value: string) {
+    // If the form is not defined, set it to an empty object.
     if (this.localForm === undefined) {
       this.localForm = {
         baseline: {

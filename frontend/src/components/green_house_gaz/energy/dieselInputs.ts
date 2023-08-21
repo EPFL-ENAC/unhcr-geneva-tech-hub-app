@@ -185,7 +185,7 @@ export function dieselInputsProducedPer(
           `${timePeriodOperatingHours} is not supported for Diesel`
         );
       }
-      suffix = "Kwh/day";
+      suffix = "kWh/day";
       operatingHoursSuffix = "hrs/day";
       litersSuffix = "used per day";
       computeLitersFromPower = computedieselLitersFromPower;

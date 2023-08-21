@@ -1,0 +1,134 @@
+[
+    {
+        "region": "Central Asia",
+        "PIT": 0.593372093,
+        "MAN": 1.483430233,
+        "BUR": 0.473127198
+    },
+    {
+        "region": "Eastern Asia",
+        "PIT": 0.534795326,
+        "MAN": 1.336988314,
+        "BUR": 0.438514375
+    },
+    {
+        "region": "South-eastern Asia",
+        "PIT": 0.353168771,
+        "MAN": 0.882921928,
+        "BUR": 0.619890163
+    },
+    {
+        "region": "Southern Asia",
+        "PIT": 0.434424242,
+        "MAN": 1.086060606,
+        "BUR": 0.646228379
+    },
+    {
+        "region": "Western Asia",
+        "PIT": 0.47808507,
+        "MAN": 1.195212675,
+        "BUR": 0.840818986
+    },
+    {
+        "region": "Northern Africa",
+        "PIT": 0.466255177,
+        "MAN": 1.165637943,
+        "BUR": 0.766388939
+    },
+    {
+        "region": "Eastern Africa",
+        "PIT": 0.377396304,
+        "MAN": 0.94349076,
+        "BUR": 0.566723241
+    },
+    {
+        "region": "Middle Africa",
+        "PIT": 0.183121043,
+        "MAN": 0.457802607,
+        "BUR": 0.460828346
+    },
+    {
+        "region": "Southern Africa",
+        "PIT": 0.349754386,
+        "MAN": 0.874385965,
+        "BUR": 0.885341017
+    },
+    {
+        "region": "Western Africa",
+        "PIT": 0.278669546,
+        "MAN": 0.696673866,
+        "BUR": 0.519762315
+    },
+    {
+        "region": "Eastern Europe",
+        "PIT": 0.444533739,
+        "MAN": 1.111334348,
+        "BUR": 0.398898976
+    },
+    {
+        "region": "Northern Europe",
+        "PIT": 0.388983282,
+        "MAN": 0.972458204,
+        "BUR": 0.397307221
+    },
+    {
+        "region": "Southern Europe",
+        "PIT": 0.568841481,
+        "MAN": 1.422103704,
+        "BUR": 0.66982427
+    },
+    {
+        "region": "Western Europe",
+        "PIT": 0.536633177,
+        "MAN": 1.341582943,
+        "BUR": 0.871221798
+    },
+    {
+        "region": "Caribbean",
+        "PIT": 0.558382888,
+        "MAN": 1.395957219,
+        "BUR": 0.74856185
+    },
+    {
+        "region": "Central America",
+        "PIT": 0.558382888,
+        "MAN": 1.395957219,
+        "BUR": 0.74856185
+    },
+    {
+        "region": "South America",
+        "PIT": 0.511598431,
+        "MAN": 1.278996078,
+        "BUR": 0.852527555
+    },
+    {
+        "region": "Northern America",
+        "PIT": 0.540319782,
+        "MAN": 1.350799454,
+        "BUR": 0.641959112
+    },
+    {
+        "region": "Australia and New Zealand",
+        "PIT": 0.415853527,
+        "MAN": 1.039633818,
+        "BUR": 0.505745781
+    },
+    {
+        "region": "Melanesia",
+        "PIT": 0.415853527,
+        "MAN": 1.039633818,
+        "BUR": 0.505745781
+    },
+    {
+        "region": "Micronesia",
+        "PIT": 0.415853527,
+        "MAN": 1.039633818,
+        "BUR": 0.505745781
+    },
+    {
+        "region": "Polynesia",
+        "PIT": 0.415853527,
+        "MAN": 1.039633818,
+        "BUR": 0.505745781
+    }
+]

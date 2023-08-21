@@ -201,14 +201,14 @@ export function headers() {
         }));
       },
       formatter: (x: string) => x,
-      tooltipInfo: function (value: string) {
-        // TODO: check why it is not displayed!
+      tooltipInfoFn: function (value: string) {
         if (value === "Open pits, unmanaged") {
           return "Assumed to be shallow < 5 m depth";
         }
         if (value === "Managed disposal site") {
           return "At least one of these conditions: regular cover material (e.g, soil), mechanical compacting, or leveling of the waste. Example: landfill";
         }
+        return "";
       },
       style: {
         cols: "12",

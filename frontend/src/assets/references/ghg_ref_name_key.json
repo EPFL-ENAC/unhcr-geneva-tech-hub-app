@@ -1,0 +1,14 @@
+{
+  "COM": "Composting",
+  "AD": "Anaerobically digested",
+  "REC": "Recycling / Reuse",
+  "PIT": "Open pits, unmanaged",
+  "MAN": "Managed disposal site",
+  "BUR": "Open burning",
+  "PLT": "Plastics",
+  "TEX": "Textiles",
+  "PAP": "Paper / cardboard",
+  "RUB": "Rubber / leather",
+  "NAP": "Nappies",
+  "": "Mixed / unkown composition"
+}

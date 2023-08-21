@@ -9,8 +9,8 @@
         <v-card-title>
           <span class="text-h5">{{ title }} </span>
         </v-card-title>
-        <v-card-subtitle>
-          <span class="text-h7">Primary cooking solution only</span>
+        <v-card-subtitle v-if="subtitle">
+          <span class="text-h7">{{ subtitle }} </span>
         </v-card-subtitle>
         <v-card-text>
           <v-container v-if="localInput">
@@ -203,6 +203,18 @@ export default class SurveyItemDialog extends Vue {
     return this.isNewMode ? `New ${this.name}` : `Edit ${this.name}`;
   }
 
+  public get subtitle(): string | undefined {
+    const Cooking = "Primary cooking solution only"; // for cooking
+    const Lighting = "Consider fuel amounts for lighting only"; // for lighting
+    if (this.name === "cookstove") {
+      return Cooking;
+    }
+    if (this.name === "lighting") {
+      return Lighting;
+    }
+    return undefined;
+  }
+
   public get dynamicHeaders(): SurveyTableHeader[] {
     this.refreshKey; // Some hack it is: https://stackoverflow.com/questions/48700142/vue-js-force-computed-properties-to-recompute
     const localInput = this.localInput;
@@ -224,7 +236,7 @@ export default class SurveyItemDialog extends Vue {
             }
 
             if (typeof header.tooltipInfo === "function") {
-              description = header.tooltipInfo?.(x);
+              description = header.tooltipInfoFn?.(x);
             }
             return {
               text: header.formatter?.(x as unknown) ?? x,
@@ -234,10 +246,14 @@ export default class SurveyItemDialog extends Vue {
           });
         }
       }
-      if (typeof header.tooltipInfo === "function") {
-        // TODO: fix dynamic tooltipinfo
-        header.tooltipInfo = undefined;
-        // header.tooltipInfo = header.tooltipInfo?.(localInput?.[header.key] ?? "");
+      if (typeof header.tooltipInfoFn === "function") {
+        const res = header.tooltipInfoFn?.(
+          (localInput?.[header.key] as string) ?? ""
+        );
+
+        if (res) {
+          header.tooltipInfo = res;
+        }
       }
       // TODO implement a dynamic way for header.items when it's a function ? cf below
       if (typeof header.text === "function") {
@@ -260,7 +276,7 @@ export default class SurveyItemDialog extends Vue {
 
             if (typeof item === "string") {
               if (typeof header.tooltipInfo === "function") {
-                description = header.tooltipInfo?.(item);
+                description = header.tooltipInfoFn?.(item);
               }
               return {
                 text: header.formatter?.(item as unknown) ?? item,
@@ -287,7 +303,7 @@ export default class SurveyItemDialog extends Vue {
   }
 
   public get previousItem(): SurveyItem {
-    // small bug when using multiple item we show the previous kwh
+    // small bug when using multiple item we show the previous kWh
     return (
       this.referenceItems?.find(
         (x) => x.increment === this.localItem.originIncrement
