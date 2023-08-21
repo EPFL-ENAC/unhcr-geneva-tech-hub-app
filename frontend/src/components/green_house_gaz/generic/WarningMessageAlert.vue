@@ -8,7 +8,6 @@
     color="error"
     dark
   >
-    <!-- TODO: display percentage accordingly -->
     Please note that the baseline and endline
     {{ text }} do not match.
     <br />
