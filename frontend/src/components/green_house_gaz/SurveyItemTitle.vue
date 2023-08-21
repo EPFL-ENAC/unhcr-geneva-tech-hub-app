@@ -2,10 +2,16 @@
   <v-container v-if="titleKey" fluid>
     <v-row>
       <v-col class="d-flex">
-        <h2 class="text-h4 project__h3 font-weight-medium">
-          {{ infoTooltipText[titleKey].title }}
-        </h2>
-        <info-tooltip>
+        <div>
+          <h2 class="text-h4 project__h3 font-weight-medium">
+            {{ infoTooltipText[titleKey].title }}
+          </h2>
+          <h5 class="text-caption font-italic" v-if="infoTooltipText[titleKey]?.tooltipDisabled">
+            <p v-html="infoTooltipText[titleKey].text"></p>
+          </h5>
+        </div>
+        <info-tooltip v-if="!infoTooltipText[titleKey]?.tooltipDisabled">
+          <!-- If the tooltip is enabled, show the tooltip component -->
           <!-- eslint-disable-next-line vue/no-v-html -->
           <p v-html="infoTooltipText[titleKey].text"></p>
         </info-tooltip>

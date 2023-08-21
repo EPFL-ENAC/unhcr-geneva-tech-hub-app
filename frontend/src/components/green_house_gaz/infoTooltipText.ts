@@ -3,6 +3,7 @@ interface tooltipInfo {
   text: string;
   ready?: boolean;
   disabled?: boolean;
+  tooltipDisabled?: boolean;
 }
 
 export const infoTooltipText: Record<string, tooltipInfo> = {
@@ -54,6 +55,7 @@ export const infoTooltipText: Record<string, tooltipInfo> = {
   Results: {
     title: "Results",
     ready: true,
-    text: "The GHG Emission Calculator only considers Scope 1 and 2 emissions at this stage. The calculations are estimations. For solar in particular, it is assumed that the addition of solar panels will add zero emissions.",
+    tooltipDisabled: true,
+    text: "The GHG Emission Calculator only considers Scope 1 and 2 emissions at this stage. The calculations are estimations. For solar in particular, it is assumed that the addition of solar panels will add zero emissions.<br/> Exceptionally, Scope 3 emissions associated with feedstock production and/or processing of charcoal, ethanol and vegetable oil are considered due to their high impact relative to the total emissions.",
   },
 };
