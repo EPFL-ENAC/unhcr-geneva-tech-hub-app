@@ -466,8 +466,8 @@ export function headers(
         const liquidFuelsText = "Fuel use per HH per day  (L/day)";
         const gasFuelsText = "Fuel use per HH per day (m3/day)";
         const lpgFuelsText = "Fuel use per HH per day (kg/day)";
-        const electricFuelsText = "Estimated Kwh/day/HH";
-        const thermalFuelsText = "Estimated Kwh/day/HH";
+        const electricFuelsText = "Estimated kWh/day/HH";
+        const thermalFuelsText = "Estimated kWh/day/HH";
 
         const refTexts: {
           readonly fuelTypes: readonly AllFuel[];
@@ -515,7 +515,7 @@ export function headers(
       value: "input.renewablePower", // maybe like in DieselGeneratorWithoutLitres
       conditional_value: ["THE"],
       disabled: false,
-      text: `Solar thermal (Kwh/year/HH) estimated`,
+      text: `Solar thermal (kWh/year/HH) estimated`,
       formatter: (v: number) => {
         return formatNumber(v);
       },
@@ -528,7 +528,7 @@ export function headers(
         return localInput;
       },
       conditional: "fuelType",
-      suffix: "Kwh/year/HH",
+      suffix: "kWh/year/HH",
       style: {
         cols: "12",
       },
@@ -629,8 +629,8 @@ export function headers(
       value: "input.gridPower", // maybe like in DieselGeneratorWithoutLitres
       conditional_value: ["ELE_GRID", "ELE_HYB"],
       conditional: "fuelType",
-      text: "Estimated Kwh/day/HH for national grid",
-      suffix: "Kwh/day/HH",
+      text: "Estimated kWh/day/HH for national grid",
+      suffix: "kWh/day/HH",
       style: {
         cols: "12",
       },

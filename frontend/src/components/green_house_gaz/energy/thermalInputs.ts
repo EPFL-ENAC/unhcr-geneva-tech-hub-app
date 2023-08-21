@@ -3,7 +3,6 @@ import { numberOfDaysPerYear } from "@/components/green_house_gaz/energy/compute
 export function computeThermalKWHPerYearFromPerDay(
   KwhPerdayPerHH: number
 ): number {
-  // return KwhPerYearPerHH
   const kWhPerYear = KwhPerdayPerHH * numberOfDaysPerYear;
   return parseFloat(kWhPerYear.toFixed(1));
 }

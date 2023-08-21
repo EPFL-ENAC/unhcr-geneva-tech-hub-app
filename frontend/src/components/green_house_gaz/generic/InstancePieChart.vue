@@ -30,7 +30,7 @@ export default class InstancePieChart extends Vue {
   @Prop({ type: [Object], default: () => ({}) })
   readonly results!: SurveyResult;
 
-  private kwhDataFacilities(
+  private kWhDataFacilities(
     item: EnergyFacilityItemResult | EnergyFacilityInterventionItemResult
   ): EchartDataSerie[] {
     const data: EchartDataSerie[] = [];
@@ -75,7 +75,7 @@ export default class InstancePieChart extends Vue {
     item: EnergyFacilityItemResult | EnergyFacilityInterventionItemResult
   ): EChartsOption {
     // "Distribution of tCO2e/year per facilities"
-    const data = this.kwhDataFacilities(item);
+    const data = this.kWhDataFacilities(item);
     // energy mix
     return {
       title: {
