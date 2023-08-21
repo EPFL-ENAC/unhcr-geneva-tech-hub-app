@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import GHG from "@/components/reference_data/GHG.vue";
+import EmissionFactors from "@/components/reference_data/EmissionFactors.vue";
 import GHGfNRB from "@/components/reference_data/GHGfNRB.vue";
 import GHGSolarModule from "@/components/reference_data/GHGSolarModule.vue";
 import IgesGrid from "@/components/reference_data/IgesGrid.vue";
@@ -55,7 +55,7 @@ import { mapActions, mapGetters } from "vuex";
   },
   components: {
     MaterialsTransport,
-    GHG,
+    EmissionFactors,
     GHGfNRB,
     Materials,
     IgesGrid,
@@ -80,7 +80,7 @@ export default class App extends Vue {
       tab: "iges grid",
       componentName: "IgesGrid",
     },
-    { tab: "GHG", componentName: "GHG" },
+    { tab: "Emission Factors", componentName: "EmissionFactors" },
     { tab: "UNHCR Locations", componentName: "UNHCRLocation" },
     // { tab: "GHG Solar average", componentName: "GHGSolarModule" },
     { tab: "GHG fNRB", componentName: "GHGfNRB" },

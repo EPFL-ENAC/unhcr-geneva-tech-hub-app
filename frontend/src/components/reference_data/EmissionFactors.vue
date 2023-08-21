@@ -44,7 +44,7 @@ import { mapGetters } from "vuex";
     ...mapGetters(["referenceDataDrawer"]),
   },
 })
-export default class Energy extends Vue {
+export default class EmissionFactors extends Vue {
   items!: ReferenceItemInterface[];
 
   public get headers(): HeaderInterface[] {
