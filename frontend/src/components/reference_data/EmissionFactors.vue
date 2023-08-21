@@ -30,10 +30,14 @@
         </template>
       </v-data-table>
     </v-card-text>
+    <GHGMixedBiowaste />
+    <GHGMixedNonBiowaste />
   </v-card>
 </template>
 
 <script lang="ts">
+import GHGMixedBiowaste from "@/components/reference_data/GHGMixedBiowaste.vue";
+import GHGMixedNonBiowaste from "@/components/reference_data/GHGMixedNonBiowaste.vue";
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
@@ -42,6 +46,10 @@ import { mapGetters } from "vuex";
   computed: {
     ...mapGetters("GhgReferenceModule", ["items"]),
     ...mapGetters(["referenceDataDrawer"]),
+  },
+  components: {
+    GHGMixedBiowaste,
+    GHGMixedNonBiowaste,
   },
 })
 export default class EmissionFactors extends Vue {

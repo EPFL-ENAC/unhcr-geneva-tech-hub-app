@@ -2,9 +2,12 @@ import { themeColor } from "@/plugins/vuetify";
 import ConfigModule from "@/store/ConfigModule";
 import EnergyModule from "@/store/EnergyModule";
 import GhgModule from "@/store/GhgModule";
+import GHGReferenceBioWasteModule from "@/store/GHGReferenceBioWasteModule";
 import GHGReferencefNRB from "@/store/GHGReferencefNRB";
 import GhgReferenceIgesGridModule from "@/store/GhgReferenceIgesGridModule";
 import GhgReferenceModule from "@/store/GhgReferenceModule";
+import GHGReferenceNonBioWasteModule from "@/store/GHGReferenceNonBioWasteModule";
+import GhgReferenceRegionModule from "@/store/GHGReferenceRegionModule";
 import GhgReferenceSolarModule from "@/store/GHGReferenceSolarModule";
 import ShelterBillOfQuantitiesModule from "@/store/ShelterBillOfQuantitiesModule";
 import ShelterModule from "@/store/ShelterModule";
@@ -318,8 +321,11 @@ const store: StoreOptions<RootState> = {
     SheltersMaterialModule,
     ShelterBillOfQuantitiesModule,
     GhgModule,
+    GHGReferenceBioWasteModule,
+    GHGReferenceNonBioWasteModule,
     GhgReferenceModule,
     GhgReferenceIgesGridModule,
+    GhgReferenceRegionModule,
     GhgReferenceSolarModule,
     GHGReferencefNRB,
     UNHCRLocationModule,
