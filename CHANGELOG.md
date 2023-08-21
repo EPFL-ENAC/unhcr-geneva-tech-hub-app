@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.16.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.15.0...v0.16.0) (2023-08-21)
+
+
+### Features
+
+* **ghg:** reference for solid waste per region [#414](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/414) ([4c215c4](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/4c215c4b24627fe42fbc3637735350e85b4c22fc))
+
+
+### Bug Fixes
+
+* **common:** removing useless comments (already done or not relevant) ([8fbb418](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/8fbb41800c997a848e9336d75e37fc870a9df0ae))
+* **ghg:** Add proper condition for subtitle in survey form [#425](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/425) ([e8516c9](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/e8516c92ff7459e80f2dc8a65b78df2e1313dbe3))
+* **ghg:** add proper text for result page, add option without tooltip [#421](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/421) ([9346d9c](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/9346d9c84d405073a34db408648918e7a1b0c965))
+* **ghg:** add s3 and tree icon for approriate icon: [#417](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/417) ([cb3fd7d](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/cb3fd7d8b262ae192e1dcc07c3e326f24c033848))
+* **ghg:** add scope 3 info [#419](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/419) ([69e0a2c](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/69e0a2c4e722b450a804d59fecd6bc8d20988f85))
+* **ghg:** add subtitle card for cooking module [#381](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/381) ([c3be9fa](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c3be9fa2b4e4abf5e4920138a56c2eed06fca7cb))
+* **ghg:** add tooltip info for Open pits and Managed site ([c7478d2](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c7478d2c0784933f927f1b26477691ce96cb6545))
+* **ghg:** correct reference factor for mixed for non-biowaste [#415](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/415) ([38fcab1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/38fcab17b4504ff2ffc727366881193cf6b86648))
+* **ghg:** display full number in title of html element [#418](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/418) ([16eb365](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/16eb365218b7cb016ceaa893d8be679467e27cdf))
+* **ghg:** remove dead code and add comments ([4e99045](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/4e9904548800aed973919dc9931df5d720c32082))
+* **ghg:** remove Wastewater module [#423](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/423) ([7bfbf45](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/7bfbf45516a09d310530bb37a6bb7ebb16b907cd))
+* **ghg:** rename GHG database by Emission Factors [#422](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/422) ([74328a5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/74328a51210b472e865e1659478ceea92c86d0b2))
+* **ghg:** replace Kwh by kWh all over [#420](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/420) ([9bf70c4](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/9bf70c4d0eaf8ddabf6bff721d2da3e2ec2c3203))
+* **ghg:** use monthly data instead of yearly data for the wash trucking module [#400](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/400) ([d90aa7c](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d90aa7ccf57983117c5eaf5abfc44ff175c52507))
+
 ## [0.15.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.14.0...v0.15.0) (2023-08-17)
 
 
