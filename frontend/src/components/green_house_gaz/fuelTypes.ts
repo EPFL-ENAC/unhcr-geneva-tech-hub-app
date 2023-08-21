@@ -97,7 +97,7 @@ export const lightingFuelsWithText: FuelTypesItem<LightingFuel>[] = [
   },
   {
     _id: "OIL",
-    text: "Vegetable Oil lamp", // TODO: add tree icon: assumption is it sustainably manage
+    text: "Vegetable Oil lamp",
     description: "",
   },
   {
@@ -105,7 +105,7 @@ export const lightingFuelsWithText: FuelTypesItem<LightingFuel>[] = [
     text: "Solar lantern", // total CO2 should be 0
   },
   {
-    _id: "BAT", // todo change REF_BAT to REF_EFF_BAT
+    _id: "BAT",
 
     text: "Torch or phone with battery (rechargeable or not)",
   },
