@@ -229,9 +229,6 @@ export function headers(
       isInput: true,
       type: "select",
       hideFooterContent: false,
-      // tooltipInfo: (localInput: EnergyLightingItemInput) => {
-      //   return "more info";
-      // },
     },
     {
       value: "input.disabledFuelUsage",

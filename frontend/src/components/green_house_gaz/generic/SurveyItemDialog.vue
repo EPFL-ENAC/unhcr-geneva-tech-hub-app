@@ -224,7 +224,7 @@ export default class SurveyItemDialog extends Vue {
             }
 
             if (typeof header.tooltipInfo === "function") {
-              description = header.tooltipInfo?.(x);
+              description = header.tooltipInfoFn?.(x);
             }
             return {
               text: header.formatter?.(x as unknown) ?? x,
@@ -234,10 +234,12 @@ export default class SurveyItemDialog extends Vue {
           });
         }
       }
-      if (typeof header.tooltipInfo === "function") {
-        // TODO: fix dynamic tooltipinfo
-        header.tooltipInfo = undefined;
-        // header.tooltipInfo = header.tooltipInfo?.(localInput?.[header.key] ?? "");
+      if (typeof header.tooltipInfoFn === "function") {
+        const res = header.tooltipInfoFn?.((localInput?.[header.key] as string) ?? "");
+
+        if (res) {
+          header.tooltipInfo = res;
+        }
       }
       // TODO implement a dynamic way for header.items when it's a function ? cf below
       if (typeof header.text === "function") {
@@ -260,7 +262,7 @@ export default class SurveyItemDialog extends Vue {
 
             if (typeof item === "string") {
               if (typeof header.tooltipInfo === "function") {
-                description = header.tooltipInfo?.(item);
+                description = header.tooltipInfoFn?.(item);
               }
               return {
                 text: header.formatter?.(item as unknown) ?? item,

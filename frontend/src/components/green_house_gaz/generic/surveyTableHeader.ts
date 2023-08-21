@@ -24,7 +24,7 @@ export const ensureSurveyTableHeaders = (item: any): SurveyTableHeader => {
   // todo: implement typescript for item
   const [category, key] = item.value.split(".");
   const isInput = item?.isInput ?? category === "input";
-  return {
+  const res = {
     align: "start",
     sortable: false,
     hideFooterContent: item.hideFooterContent ?? true,
@@ -61,6 +61,7 @@ export const ensureSurveyTableHeaders = (item: any): SurveyTableHeader => {
     })(),
     ...item,
   } as SurveyTableHeader;
+  return res;
 };
 
 export const surveyTableHeaderCO2 = [
@@ -172,7 +173,8 @@ export interface EasySurveyTableHeader {
   options: SelectOption<SelectValue>[];
   isInput: boolean;
   label?: string;
-  tooltipInfo?: string | ((value: string) => string);
+  tooltipInfo?: string;
+  tooltipInfoFn?: (value: string) => string;
   category?: string; // example increment
   subtype?: string; // example: percent
   classFormatter?: (
