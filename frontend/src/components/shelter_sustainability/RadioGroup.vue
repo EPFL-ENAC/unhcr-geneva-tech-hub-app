@@ -154,7 +154,7 @@ export default class RadioGroup extends Vue {
     return newValue;
   }
 
-  updateValue(updatedKey: string, updatedValue: boolean, extended = ""): void {
+  updateValue(updatedKey: string, updatedValue: boolean): void {
     const newValue = this.value ?? {};
     const child = this.form.children?.find(
       (el: ShelterFormChild) => el._id === updatedKey

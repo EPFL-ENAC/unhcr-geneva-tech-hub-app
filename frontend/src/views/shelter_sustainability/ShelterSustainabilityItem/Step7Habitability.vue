@@ -71,7 +71,6 @@ export default class Step7 extends Vue {
 
   public async update(value: Score): Promise<void> {
     this.localShelter.habitability = value;
-    // debugger;
     // TODO: add for loading here!
     this.updateFormInput();
   }

@@ -30,14 +30,18 @@
 
         <v-spacer />
         <v-col v-if="depth == 0" class="col-auto d-flex align-center">
-          <span class="mr-4">{{ form.title }} completed ?</span>
-          <v-switch
+          <span class="mr-4" v-if="value.completed">
+           <v-icon class="green--text text--lighten-1">$mdiCheck</v-icon> complete</span>
+          <span class="mr-4" v-else>
+            <v-icon class="red--text text--lighten-1">$mdiClose</v-icon> incomplete</span>
+
+          <!-- <v-switch
             :value="value.completed"
             @change="(v) => updateFormInput('completed', v)"
           ></v-switch>
           <info-tooltip>
             Toggle switch to mark {{  form.title }} as completed
-          </info-tooltip>
+          </info-tooltip> -->
         </v-col>
       </v-col>
       <v-col
