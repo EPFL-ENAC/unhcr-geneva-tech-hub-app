@@ -43,12 +43,16 @@
                     :input-value="checkbox[child._id]"
                     :disabled="child.disabled || checkbox[child._id + 'na']"
                     hide-details
+                    :loading="loading"
+                    inset
+                    :indeterminate="checkbox[child._id] === undefined"
                     @mousedown.stop.prevent
                     @click.stop.prevent
                     @change="(v) => updateValue(child._id, v)"
                   >
                     <template #label>
-                      {{ child.label }}
+                      {{ child.label }}:
+                      {{ getText(checkbox[child._id]) }}
                     </template>
                   </v-checkbox>
 
@@ -117,6 +121,7 @@ import { Component, Vue } from "vue-property-decorator";
 export default class CheckboxGroup extends Vue {
   value!: Score;
   form!: ShelterForm;
+  loading = false;
 
   expandPanel = true;
 
@@ -124,41 +129,72 @@ export default class CheckboxGroup extends Vue {
     this.expandPanel = !this.expandPanel;
   }
 
+  public getText(value: boolean | undefined): string {
+    if (value === undefined) {
+      return "undefined";
+    }
+    return value ? "yes" : "no";
+  }
+
+  public getProperValueOfId2(
+    key: string,
+    oldValue: CheckboxScore
+  ): number | boolean | undefined | null | Score {
+    let result;
+    if (Object.prototype.hasOwnProperty.call(oldValue, key)) {
+      const old = oldValue?.[key] === undefined ? undefined : oldValue?.[key];
+      if (typeof old === "number") {
+        result = old >= 0;
+      }
+      if (typeof old === "boolean") {
+        result = old;
+      }
+    } else {
+      result = undefined;
+    }
+    return result;
+  }
+  // represents the value of the checkbox group by having the id of the checkbox as key and the value as boolean
   get checkbox(): CheckboxScore {
     const newValue = {} as CheckboxScore;
     const oldValue = this.value ?? {};
     // reset all previous values
     this.form.children?.forEach((input) => {
-      newValue[input._id] = oldValue[input._id] !== undefined;
-      newValue[input._id + "na"] = oldValue[input._id + "na"] !== undefined;
+      newValue[input._id] = this.getProperValueOfId2(input._id, oldValue);
+      newValue[input._id + "na"] = this.getProperValueOfId2(
+        input._id + "na",
+        oldValue
+      );
     });
     return newValue;
   }
 
+  /**
+   * We have two representation: We store the value as a number, but during the form evaluation by the user
+   * we need to store the value as a boolean. This is because we need to know if the user has checked the checkbox or not.
+   * If the user has checked the checkbox, we need to store the value as a number, otherwise we need to store the value as false.
+   * because for some checkbox, we need to know if the user has checked the checkbox or not and some field have a score of zero.
+   *
+   */
+
   updateValue(updatedKey: string, updatedValue: boolean, extended = ""): void {
-    const newValue = Object.entries(this.checkbox).reduce(
-      (acc, [currentKey, previousValue]) => {
-        // if updatedKey match current key, we need to update with updatedValue
-        // else we keep the previous value
-        const child = this.form.children?.find(
-          (el: ShelterFormChild) => el._id === currentKey
-        ) as ShelterFormInput;
-        // no extended!
-        const isCheckedValue =
-          currentKey === updatedKey ? updatedValue : previousValue;
-        acc[currentKey] = isCheckedValue ? child?.score ?? 0 : undefined;
-        if (currentKey === extended) {
-          acc[currentKey] = undefined;
-        }
-        return acc;
-      },
-      {} as Score
-    );
+    const newValue = this.value ?? {};
+    const child = this.form.children?.find(
+      (el: ShelterFormChild) => el._id === updatedKey
+    ) as ShelterFormInput;
+
+    if (extended !== "") {
+      // 'non applicable' logic
+      newValue[updatedKey] = updatedValue; // was undefined instead of false
+      newValue[extended] = undefined; // isCheckedValue ? -1 : undefined;
+    } else {
+      newValue[updatedKey] = updatedValue ? child?.score ?? 0 : -1;
+    }
     this.$emit("input", newValue);
   }
 }
 
-type CheckboxScore = Record<string, boolean>;
+type CheckboxScore = Record<string, boolean | undefined | number | null | Score>;
 </script>
 
 <style lang="scss" scoped>

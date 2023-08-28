@@ -31,6 +31,7 @@ export function generateState(): ShelterState {
 export function computeShelter(value: Shelter): Shelter {
   const newShelter = cloneDeep(value);
   const resultShelter = completeMissingFields(newShelter);
+  // debugger;
   // Divide by number of individual shelters in BOQ
   resultShelter.envPerfItems = getEnvPerfItems(
     newShelter?.items,
@@ -62,37 +63,64 @@ export function computeShelter(value: Shelter): Shelter {
       TOTAL_TECH_PERF - nonApplicableTech
     }`;
     resultShelter.technical_performance_score = 0;
-
-    resultShelter.completed =
-      (resultShelter.completed_info &&
-        resultShelter.completed_geometry &&
-        resultShelter.completed_boq &&
-        (resultShelter.habitability.completed as boolean) &&
-        (resultShelter.technical_performance.completed as boolean)) ??
-      false;
   }
 
   // change because of non-applicable
   const hab = resultShelter.habitability;
-  const nonApplicableHab = Object.keys(hab)
-    .filter((x) => x.match("na$"))
+
+  // debugger;
+  // resultShelter.habitability.completed =
+  //   Object.values(resultShelter.habitability).length === 14;
+
+  const y = Object.keys(hab)
+    .filter((x) => !x.match("na$"))
+    .filter((x) => x !== "completed");
+  // check that it doesn not contains na and completed field
+  // debugger;
+  const completedHab = y
     .map((x) => hab[x])
-    .filter((x) => x !== undefined).length;
-  const valuesHab = Object.values(resultShelter.habitability).filter(
-    (x) => x !== undefined && typeof x !== "boolean" && x !== null
+    .filter((x) => x !== undefined && typeof x !== "boolean" && x !== null);
+  // debugger;
+  const completedHabLength = completedHab.length;
+  const valuesHab = completedHab.filter(
+    (x) => x !== undefined && x !== -1
   ) as number[];
+  console.log(completedHab, completedHabLength);
+
+  const x = Object.keys(hab).filter((x) => x.match("na$"));
+  const nonApplicableHabitabilityArray = x
+    .map((x) => hab[x])
+    .filter((x) => x !== undefined && x !== false && x !== 0); /// new: na can be number or boolean; if 0 false, 1 true
+  const nonApplicableHab = nonApplicableHabitabilityArray.length;
+  // debugger;
+  // TODO: valuesHab should only match completed
+  // const valuesHab = Object.values(resultShelter.habitability).filter(
+  //   (x) => x !== undefined && x !== -1 && typeof x !== "boolean" && x !== null
+  // ) as number[];
+
+  const totalHabWithApplicable = TOTAL_HAB - nonApplicableHab;
   if (valuesHab.length) {
     const score = valuesHab.reduce((acc, el) => acc + el);
-    resultShelter.habitability_score_real = `${score} / ${
-      TOTAL_HAB - nonApplicableHab
-    }`;
+    // debugger;
+    resultShelter.habitability_score_real = `${score} / ${totalHabWithApplicable}`;
     resultShelter.habitability_score = score / (TOTAL_HAB - nonApplicableHab);
   } else {
-    resultShelter.habitability_score_real = `0 / ${
-      TOTAL_HAB - nonApplicableHab
-    }`;
+    resultShelter.habitability_score_real = `0 / ${totalHabWithApplicable}`;
     resultShelter.habitability_score = 0;
   }
+
+  resultShelter.habitability.completed =
+    completedHabLength === totalHabWithApplicable;
+
+  console.log("IS COMPELTED", resultShelter.habitability.completed)
+    resultShelter.completed =
+    (resultShelter.completed_info &&
+      resultShelter.completed_geometry &&
+      resultShelter.completed_boq &&
+      (resultShelter.habitability.completed as boolean) &&
+      (resultShelter.technical_performance.completed as boolean)) ??
+    false;
+
   const { scorecard, errors } = getScoreCard(resultShelter);
   resultShelter.scorecard = scorecard;
   resultShelter.scorecard_errors = errors;

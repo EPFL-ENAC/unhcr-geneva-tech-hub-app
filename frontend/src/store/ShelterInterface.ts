@@ -147,7 +147,7 @@ export interface Geometry {
 export type GeometryKeys = "windowArea" | "floorArea" | "volume";
 
 export interface Score {
-  [property: string]: number | undefined | Score | boolean;
+  [property: string]: number | undefined | Score | boolean | null;
 }
 
 export type Units = UnitsMaterial | UnitsLabour | UnitsOther;

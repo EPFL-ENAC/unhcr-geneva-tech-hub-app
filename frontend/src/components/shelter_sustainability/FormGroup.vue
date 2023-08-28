@@ -65,7 +65,7 @@
           <v-col class="group-col-container">
             <v-sheet elevation="2" rounded>
               <component
-                :is="child.type"
+                :is="ShelterFormType[child.type]"
                 :form="child"
                 :value="value"
                 :depth="depth + 1"
@@ -87,6 +87,9 @@ import RadioGroup from "@/components/shelter_sustainability/RadioGroup.vue";
 import { ShelterForm } from "@/components/shelter_sustainability/ShelterForm";
 import { Score } from "@/store/ShelterInterface";
 import { Component, Vue } from "vue-property-decorator";
+import {
+  ShelterFormType
+} from "@/components/shelter_sustainability/ShelterForm";
 
 @Component({
   name: "FormGroup",
@@ -119,6 +122,7 @@ export default class FormGroup extends Vue {
   completed!: boolean;
   form!: ShelterForm;
 
+  ShelterFormType =ShelterFormType;
   showSubPanel = true;
   infoTooltipText = infoTooltipText;
   public toggle(): void {

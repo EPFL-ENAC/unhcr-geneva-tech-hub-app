@@ -2,7 +2,7 @@
   <v-sheet elevation="2" rounded>
     <v-container fluid>
       <v-row v-if="form.title">
-        <v-col cols="11" class="group-title">
+        <v-col cols="9" class="group-title">
           <component
             :is="`h${depth + 2}`"
             :class="`project-shelter__h${depth + 3}  font-weight-medium text-h${
@@ -12,6 +12,25 @@
           >
         </v-col>
         <v-col class="d-print-none d-flex justify-end align-center">
+          <v-checkbox
+            class="unhcr-checkbox-group-non-applicable__checkbox"
+            :input-value="checkbox[form.title + 'na']"
+            :disabled="form.disabled"
+            hide-details
+            @mousedown.stop.prevent
+            @click.stop.prevent
+            @change="
+              (v) => {
+                updateValue(form.title + 'na', v, form.title);
+              }
+            "
+          >
+            <template #label>
+              <span class="unhcr-checkbox-group-non-applicable__checkbox__label"
+                >not applicable
+              </span>
+            </template>
+          </v-checkbox>
           <v-btn icon @click="toggle">
             <v-icon :class="{ 'chevron-rotate': !show }"
               >$mdiChevronDown</v-icon
@@ -41,35 +60,15 @@
                 <v-expansion-panel-header :hide-actions="!child.description">
                   <v-checkbox
                     :input-value="checkbox[child._id]"
-                    :disabled="child.disabled || checkbox[child._id + 'na']"
+                    :disabled="child.disabled || checkbox[form.title + 'na']"
                     hide-details
+                    :indeterminate="checkbox[child._id] === undefined"
                     @mousedown.stop.prevent
                     @click.stop.prevent
                     @change="(v) => updateValue(child._id, v)"
                   >
                     <template #label>
                       {{ child.label }}
-                    </template>
-                  </v-checkbox>
-
-                  <v-checkbox
-                    class="unhcr-checkbox-group-non-applicable__checkbox"
-                    :input-value="checkbox[child._id + 'na']"
-                    :disabled="child.disabled"
-                    hide-details
-                    @mousedown.stop.prevent
-                    @click.stop.prevent
-                    @change="
-                      (v) => {
-                        updateValue(child._id + 'na', v, child._id);
-                      }
-                    "
-                  >
-                    <template #label>
-                      <span
-                        class="unhcr-checkbox-group-non-applicable__checkbox__label"
-                        >not applicable
-                      </span>
                     </template>
                   </v-checkbox>
                 </v-expansion-panel-header>
@@ -95,7 +94,7 @@ import {
 import { Score } from "@/store/ShelterInterface";
 import { Component, Vue } from "vue-property-decorator";
 
-type ScoreBoolean = Record<string, boolean>;
+type ScoreBoolean = Record<string, boolean | undefined>;
 @Component({
   props: {
     form: {
@@ -120,44 +119,60 @@ export default class RadioGroup extends Vue {
     this.show = !this.show;
   }
 
-  get checkbox(): ScoreBoolean {
-    // transform a Score structure in boolean
-    const oldValue = this.value ?? ({} as Score);
-    // reset all previous values
-    if (this.form.children) {
-      const res = this.form.children
-        .map((child) => child._id)
-        .reduce((acc, _id) => {
-          acc[_id] = oldValue[_id] !== undefined;
-          acc[_id + "na"] = oldValue[_id + "na"] !== undefined;
-          return acc;
-        }, {} as ScoreBoolean);
-      const formId = this.form._id;
-      res[formId] = oldValue[formId] !== undefined;
-      res[formId + "na"] = oldValue[formId + "na"] !== undefined;
-      return res;
+  public getProperValueOfId(key: string, oldValue: Score): boolean | undefined {
+    let result;
+    if (Object.prototype.hasOwnProperty.call(oldValue, key)) {
+      const old = oldValue?.[key] === undefined ? undefined : oldValue?.[key];
+      if (typeof old === "number") {
+        result = old >= 0;
+      }
+      if (typeof old === "boolean") {
+        result = old;
+      }
+    } else {
+      result = undefined;
     }
-    return {} as ScoreBoolean;
+    return result;
+  }
+  // represents the value of the checkbox group by having the id of the checkbox as key and the value as boolean
+  get checkbox(): ScoreBoolean {
+    const newValue = {} as ScoreBoolean;
+    const oldValue = this.value ?? {};
+    this.form.children?.forEach((input) => {
+      newValue[input._id] = this.getProperValueOfId(input._id, oldValue);
+      newValue[input._id + "na"] = undefined;
+    });
+
+    newValue[this.form.title] = this.getProperValueOfId(
+      this.form.title,
+      oldValue
+    );
+    newValue[this.form.title + "na"] = this.getProperValueOfId(
+      this.form.title + "na",
+      oldValue
+    );
+    return newValue;
   }
 
   updateValue(updatedKey: string, updatedValue: boolean, extended = ""): void {
-    const newValue = Object.entries(this.checkbox).reduce(
-      (acc: Score, [currentKey]) => {
-        // we reset old values also
-        const isChecked = currentKey === updatedKey ? updatedValue : 0;
-        if (this.form.children) {
-          const lookup = this.form.children.find(
-            (el: ShelterFormChild): boolean => el._id === currentKey
-          ) as ShelterFormInput;
-          acc[currentKey] = isChecked ? lookup?.score ?? 0 : undefined;
-          if (currentKey === extended) {
-            acc[currentKey] = undefined;
-          }
-        }
-        return acc;
-      },
-      {} as Score
-    );
+    const newValue = this.value ?? {};
+    const child = this.form.children?.find(
+      (el: ShelterFormChild) => el._id === updatedKey
+    ) as ShelterFormInput;
+
+    this.form.children.forEach((el: ShelterFormChild): void => {
+      newValue[el._id] = undefined;
+    });
+    // reset every other field!
+    if (updatedKey !== this.form.title + "na") {
+      if (updatedValue) {
+        newValue[updatedKey] = child?.score ?? 0;
+      } else {
+        newValue[updatedKey] = undefined;
+      }
+    } else {
+      newValue[updatedKey] = updatedValue;
+    }
     this.$emit("input", newValue);
   }
 }

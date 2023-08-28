@@ -7,10 +7,13 @@ export interface ShelterForm {
   title: string;
   type: ShelterFormType;
   children: ShelterFormChild[];
+  nonApplicable?: boolean;
+  disabled?: boolean;
   _id: string;
 }
 export interface ShelterFormInput {
   description?: string;
+  nonApplicable?: boolean;
   label: string;
   score: number;
   imagePath?: string;

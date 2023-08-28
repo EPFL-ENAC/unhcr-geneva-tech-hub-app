@@ -1,18 +1,23 @@
-export default {
+import {
+  ShelterForm,
+  ShelterFormType,
+} from "@/components/shelter_sustainability/ShelterForm";
+
+const habitabilityForm: ShelterForm = {
   _id: "habitability",
   title: "Habitability",
-  type: "formGroup",
+  type: ShelterFormType.formGroup,
   children: [
     {
       _id: "1_floor",
       title: "Floor Area",
-      type: "radioGroup", // could be checkbox group also
+      type: ShelterFormType.radioGroup, // could be checkbox group also
       children: [
         {
           _id: "input1",
           label: "Floor area is in accordance with Sphere standards",
           score: 1,
-          image: "/shelter/habitability/floor_area.png",
+          imagePath: "/shelter/habitability/floor_area.png",
           description:
             "Provide a minimum 3.5 square metres of living space per person (excluding cooking space, bathing area and sanitation facility) or 4.5–5.5 square metres of living space per person in cold climates or urban settings where internal cooking space and bathing and/or sanitation facilities are included.<br/><br/>Consider living space for household members to gather, and for the care of infants, children and  persons who are ill or injured. Pay attention to changing use of space  during day and night, and plan the locations of windows, doors and  partitions to maximise the use of internal space and any adjacent  external areas such as kitchens or play areas. To accommodate these  activities in dignity, shelters need an enclosed space (walls, windows,  doors and roof) with adequate floor area. Overcrowding or exposure to  the elements increases the risk of disease outbreak or illness. Reduced space may lead to protection risks, reduced security and privacy.",
         },
@@ -37,7 +42,7 @@ export default {
     {
       _id: "2_accessibility",
       title: "Accessibility",
-      type: "checkboxGroup",
+      type: ShelterFormType.checkboxGroup,
       children: [
         {
           _id: "input5",
@@ -67,7 +72,7 @@ export default {
     {
       _id: "3_privacy",
       title: "Privacy",
-      type: "checkboxGroup",
+      type: ShelterFormType.checkboxGroup,
       children: [
         {
           _id: "input8",
@@ -96,12 +101,13 @@ export default {
     {
       _id: "4_artificial_lighting",
       title: "Artificial lighting",
-      type: "checkboxGroup",
+      type: ShelterFormType.checkboxGroup,
       children: [
         {
           _id: "input12",
           label: "Artificial lighting is provided inside shelter",
           disabled: true,
+          nonApplicable: true,
           description:
             "Artificial lighting contributes to personal safety in and around the shelter. The access to artificial lighting could be on an individual. Potential sources of artificial lighting vary. Candles present considerable fire risks. Connection to an electricity grid or generator, or use of different renewable energy lighting sources such as photovoltaic panels is encouraged.",
           score: 1,
@@ -110,6 +116,7 @@ export default {
           _id: "input13",
           disabled: true,
           label: "Artificial lighting is provided around shelter",
+          nonApplicable: true,
           description:
             "Artificial lighting contributes to personal safety in and around the shelter. The access to artificial lighting could be on a site level, where only strategic spaces and communal areas in the site are artificially lit. Potential sources of artificial lighting vary. Connection to an electricity grid or generator, or use of different renewable energy lighting sources such as photovoltaic panels is encouraged.",
           score: 1,
@@ -119,7 +126,7 @@ export default {
     {
       _id: "5_complimentary_facilities",
       title: "Complementary facilities",
-      type: "checkboxGroup",
+      type: ShelterFormType.checkboxGroup,
       children: [
         {
           _id: "input14",
@@ -164,3 +171,5 @@ export default {
     },
   ],
 };
+
+export default habitabilityForm;

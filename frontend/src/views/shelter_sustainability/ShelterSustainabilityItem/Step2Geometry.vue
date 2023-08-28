@@ -422,7 +422,9 @@ export default class Step2Geometry extends Vue {
     const maxDoorWidth = Math.max(
       ...doors_dimensions.map((door) => door.Wd ?? 0)
     );
-    this.localShelter.habitability.input5 = maxDoorWidth < 0.9 ? undefined : 1;
+    // -1 means false; undefined means not applicable or unknown; 1 means true
+    // cf habitabilityForm.ts
+    this.localShelter.habitability.input5 = maxDoorWidth < 0.9 ? -1 : 1;
   }
 
   private doorDimensions(doorDimensions: DoorDimensions[]): number {
