@@ -296,8 +296,11 @@ const actions: ActionTree<ShelterState, RootState> = {
     context: ActionContext<ShelterState, RootState>,
     value: Shelter
   ) => {
+    context.commit("SET_SHELTER_LOADING");
+
     const result = computeShelter(value);
     context.commit("SET_SHELTER", result);
+    context.commit("UNSET_SHELTER_LOADING");
   },
   getDoc: async (context: ActionContext<ShelterState, RootState>, id) => {
     let result: Shelter | undefined =

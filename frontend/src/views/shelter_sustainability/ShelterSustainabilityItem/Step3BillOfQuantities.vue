@@ -22,6 +22,7 @@
         <span class="mr-4">Bill of quantities completed ?</span> <v-switch
           v-model="localShelter.completed_boq"
           @change="updateFormInput"
+          :label="localShelter.completed_boq ? 'yes': 'no'"
         ></v-switch>
         <info-tooltip>
           Toggle switch to mark bill of quantities as completed

@@ -43,9 +43,10 @@
         </v-tab>
       </div>
     </v-tabs>
-    <v-container v-if="shelter.users" fluid>
+    <v-container v-if="shelter.users" fluid >
       <v-form @submit.stop.prevent="">
         <router-view
+          :loading="shelterLoading"
           :value="shelter"
           :shelter="shelter"
           @input="submitForm"
@@ -66,7 +67,7 @@ import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("ShelterModule", ["db", "shelter"]),
+    ...mapGetters("ShelterModule", ["db", "shelter", "shelterLoading"]),
   },
   methods: {
     ...mapActions("ShelterModule", [
@@ -88,6 +89,7 @@ export default class ProjectItem extends Vue {
   shelter!: Shelter;
   updateDoc!: (doc: Shelter) => void;
   updateLocalDoc!: (doc: Shelter) => void;
+  shelterLoading!: boolean;
 
   public get menuItems(): MenuItem[] {
     const scorecardErrorText = !this.shelter?.scorecard_errors?.length
@@ -197,6 +199,7 @@ a:active {
   position: -webkit-sticky;
   position: sticky;
   top: 3rem; // 16px*3
+  // top: 6rem; // 16px*3
   z-index: 2;
 }
 </style>

@@ -1,17 +1,19 @@
 <template>
-  <v-form v-if="localShelter.technical_performance">
+  <v-form v-if="localShelter.technical_performance" :disabled="loading">
     <component
-      :is="technicalPerformanceForm.type"
+      :is="ShelterFormType[technicalPerformanceForm.type]"
       :form="technicalPerformanceForm"
+      :disabled="loading"
+      :loading="loading"
       :value="localShelter.technical_performance"
       :result="localShelter.technical_performance_score_real"
       @input="(v) => update(v)"
     ></component>
   </v-form>
 </template>
-
 <script lang="ts">
 import FormGroup from "@/components/shelter_sustainability/FormGroup.vue";
+import { ShelterFormType } from "@/components/shelter_sustainability/ShelterForm";
 import { Score, Shelter } from "@/store/ShelterInterface";
 import technicalPerformanceForm from "@/views/shelter_sustainability/ShelterSustainabilityItem/technicalPerformanceForm";
 import { cloneDeep } from "lodash";
@@ -27,6 +29,9 @@ export default class Step6 extends Vue {
   @Prop({ type: [Object], required: true })
   shelter!: Shelter;
 
+  @Prop({ type: [Boolean], required: false, default: false })
+  loading!: boolean;
+  ShelterFormType = ShelterFormType;
   public get localShelter(): Shelter {
     return cloneDeep(this.shelter);
   }

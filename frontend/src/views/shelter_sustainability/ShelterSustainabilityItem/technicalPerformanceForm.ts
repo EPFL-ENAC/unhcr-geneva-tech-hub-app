@@ -1,17 +1,22 @@
-export default {
+import {
+  ShelterForm,
+  ShelterFormType,
+} from "@/components/shelter_sustainability/ShelterForm";
+
+const technicalPerformanceForm: ShelterForm = {
   _id: "technical_performance",
   title: "Technical Performance",
-  type: "formGroup",
+  type: ShelterFormType.formGroup,
   children: [
     {
       _id: "1_hazard",
       title: "Hazard-related structural performance",
-      type: "formGroup",
+      type: ShelterFormType.formGroup,
       children: [
         {
           _id: "1a_wind_resistance",
           title: "Wind resistance",
-          type: "checkboxGroup",
+          type: ShelterFormType.checkboxGroup,
           children: [
             {
               _id: "input_1a_1",
@@ -51,7 +56,7 @@ export default {
         {
           _id: "1b_flood_mitigation",
           title: "Flood mitigation",
-          type: "checkboxGroup",
+          type: ShelterFormType.checkboxGroup,
           children: [
             {
               _id: "input_1b_1",
@@ -96,7 +101,7 @@ export default {
         {
           _id: "1c_seismic_resistance",
           title: "Seismic resistance",
-          type: "checkboxGroup",
+          type: ShelterFormType.checkboxGroup,
           children: [
             {
               _id: "input_1c_1",
@@ -135,12 +140,12 @@ export default {
     {
       _id: "2_internal_comfort",
       title: "Internal comfort",
-      type: "formGroup",
+      type: ShelterFormType.formGroup,
       children: [
         {
           _id: "2a_natural_ventilation",
           title: "Natural ventilation",
-          type: "checkboxGroup",
+          type: ShelterFormType.checkboxGroup,
           children: [
             {
               _id: "input_2a_1",
@@ -171,11 +176,11 @@ export default {
         {
           _id: "2b_thermal_comfort",
           title: "Thermal comfort",
-          type: "formGroup",
+          type: ShelterFormType.formGroup,
           children: [
             {
               _id: "2b1_thermal_comfort",
-              type: "radioGroup",
+              type: ShelterFormType.radioGroup,
               children: [
                 {
                   _id: "input_2b_1",
@@ -189,7 +194,7 @@ export default {
             },
             {
               _id: "2b2_thermal_comfort",
-              type: "radioGroup",
+              type: ShelterFormType.radioGroup,
               children: [
                 {
                   _id: "input_2b_2",
@@ -231,7 +236,7 @@ export default {
             },
             {
               _id: "2b3_thermal_comfort",
-              type: "radioGroup",
+              type: ShelterFormType.radioGroup,
               children: [
                 {
                   _id: "input_2b_6",
@@ -277,7 +282,7 @@ export default {
         {
           _id: "2c_natural_lighting",
           title: "Natural lighting",
-          type: "checkboxGroup",
+          type: ShelterFormType.checkboxGroup,
           children: [
             {
               _id: "input_2c_1",
@@ -308,12 +313,12 @@ export default {
     {
       _id: "3_safety_and_security",
       title: "Safety and security",
-      type: "formGroup",
+      type: ShelterFormType.formGroup,
       children: [
         {
           _id: "3a_fire_safety",
           title: "Fire safety",
-          type: "checkboxGroup",
+          type: ShelterFormType.checkboxGroup,
           children: [
             {
               _id: "input_3a_1",
@@ -370,7 +375,7 @@ export default {
         {
           _id: "3b_personal_security",
           title: "Personal Security",
-          type: "checkboxGroup",
+          type: ShelterFormType.checkboxGroup,
           children: [
             {
               _id: "input_3b_1",
@@ -430,7 +435,7 @@ export default {
     {
       _id: "4_construction_techniques",
       title: "Construction techniques",
-      type: "checkboxGroup",
+      type: ShelterFormType.checkboxGroup,
       children: [
         {
           _id: "input_4a",
@@ -460,3 +465,5 @@ export default {
     },
   ],
 };
+
+export default technicalPerformanceForm;

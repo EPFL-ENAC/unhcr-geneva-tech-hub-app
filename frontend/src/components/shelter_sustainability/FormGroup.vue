@@ -7,6 +7,11 @@
           depth == 0,
       }"
     >
+      <v-progress-linear
+        v-if="loading"
+        indeterminate
+        color="primary"
+      ></v-progress-linear>
       <v-col :cols="depth > 0 ? 11 : 12" class="d-flex v-tabs-bar align-center">
         <component
           :is="`h${depth + 2}`"
@@ -30,18 +35,14 @@
 
         <v-spacer />
         <v-col v-if="depth == 0" class="col-auto d-flex align-center">
-          <span class="mr-4" v-if="value.completed">
-           <v-icon class="green--text text--lighten-1">$mdiCheck</v-icon> complete</span>
-          <span class="mr-4" v-else>
-            <v-icon class="red--text text--lighten-1">$mdiClose</v-icon> incomplete</span>
-
-          <!-- <v-switch
-            :value="value.completed"
-            @change="(v) => updateFormInput('completed', v)"
-          ></v-switch>
-          <info-tooltip>
-            Toggle switch to mark {{  form.title }} as completed
-          </info-tooltip> -->
+          <span v-if="value.completed" class="mr-4">
+            <v-icon class="green--text text--lighten-1">$mdiCheck</v-icon>
+            complete</span
+          >
+          <span v-else class="mr-4">
+            <v-icon class="red--text text--lighten-1">$mdiClose</v-icon>
+            incomplete</span
+          >
         </v-col>
       </v-col>
       <v-col
@@ -58,7 +59,7 @@
     </v-row>
 
     <v-expand-transition>
-      <v-form v-show="showSubPanel" class="col">
+      <v-form v-show="showSubPanel" class="col" :disabled="disabled">
         <v-row class="d-print-none">
           <v-col>
             <v-divider></v-divider>
@@ -71,6 +72,7 @@
               <component
                 :is="ShelterFormType[child.type]"
                 :form="child"
+                :disabled="disabled"
                 :value="value"
                 :depth="depth + 1"
                 @input="(v) => update(v)"
@@ -88,12 +90,12 @@ import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import CheckboxGroup from "@/components/shelter_sustainability/CheckboxGroup.vue";
 import { infoTooltipText } from "@/components/shelter_sustainability/infoTooltipText";
 import RadioGroup from "@/components/shelter_sustainability/RadioGroup.vue";
-import { ShelterForm } from "@/components/shelter_sustainability/ShelterForm";
+import {
+  ShelterForm,
+  ShelterFormType,
+} from "@/components/shelter_sustainability/ShelterForm";
 import { Score } from "@/store/ShelterInterface";
 import { Component, Vue } from "vue-property-decorator";
-import {
-  ShelterFormType
-} from "@/components/shelter_sustainability/ShelterForm";
 
 @Component({
   name: "FormGroup",
@@ -106,6 +108,14 @@ import {
     form: {
       type: Object as () => ShelterForm,
       default: { title: "" },
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    loading: {
+      type: Boolean,
+      default: false,
     },
     value: {
       type: Object as () => Score,
@@ -125,8 +135,9 @@ export default class FormGroup extends Vue {
   value!: Score;
   completed!: boolean;
   form!: ShelterForm;
-
-  ShelterFormType =ShelterFormType;
+  disabled!: boolean;
+  loading!: boolean;
+  ShelterFormType = ShelterFormType;
   showSubPanel = true;
   infoTooltipText = infoTooltipText;
   public toggle(): void {

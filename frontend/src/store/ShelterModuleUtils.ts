@@ -1,20 +1,26 @@
 import {
+  DoorDimensions,
   Geometry,
   Item,
   listOfShelterType,
   Material,
   MaterialTree,
   MaterialTreeRecord,
+  Score,
   ScoreCard,
   ScoreCardWithErrors,
   Shelter,
   ShelterState,
+  WindowDimensions,
 } from "@/store/ShelterInterface";
 import { cloneDeep, isNumber } from "lodash";
 import { CouchUser } from "./UserModule";
 
-export const TOTAL_HAB = 14;
-export const TOTAL_TECH_PERF = 42;
+export const TOTAL_SCORE_HAB = 14;
+export const TOTAL_HAB_ITEMS = 14;
+export const TOTAL_SCORE_TECH_PERF = 42;
+export const TOTAL_TECH_PERF_ITEMS = 39;
+
 export function generateState(): ShelterState {
   return {
     shelter: {} as Shelter,
@@ -25,6 +31,75 @@ export function generateState(): ShelterState {
     localCouch: null,
     years: [], // hold all the years of shelters created_at grouped
     countries: [], // hold all the shelters countries grouped
+  };
+}
+
+export function areDoorsBiggerThan90cm(geometry: Geometry): number {
+  const { doors_dimensions } = geometry;
+  if (doors_dimensions.length === 0) {
+    return -1; // false // no doors
+  }
+  const maxDoorWidth = Math.max(
+    ...doors_dimensions.map((door: DoorDimensions) => door.Wd ?? 0)
+  );
+  // -1 means false; undefined means not applicable or unknown; 1 means true
+  // cf habitabilityForm.ts
+  return maxDoorWidth < 0.9 ? -1 : 1;
+}
+
+export function getMaxWindowArea(windowDimensions: WindowDimensions[]): number {
+  if (windowDimensions.length === 0) {
+    return 0;
+  }
+  return Math.max(
+    ...windowDimensions.map(({ Ww, Hw }) => {
+      if (!Ww || !Hw) {
+        return 0; // missing Ww or Hw area is 0
+      }
+      return Ww * Hw;
+    })
+  );
+}
+
+export function getScore(score: Score): { score: number; completed: number } {
+  const ytech = Object.keys(score)
+    .filter((x) => !x.match("na$"))
+    .filter((x) => x !== "completed")
+    .filter((x) => x.match("^input.*"));
+  // check that it doesn not contains na and completed field
+  const completedTech = ytech
+    .map((x) => score[x])
+    .filter((x) => x !== undefined && typeof x !== "boolean" && x !== null);
+  const completedTechLength = completedTech.length;
+
+  const valuesTech = completedTech.filter(
+    (x) => x !== undefined && x !== -1
+  ) as number[];
+
+  return {
+    score: valuesTech.reduce((acc, el) => acc + el, 0),
+    completed: completedTechLength,
+  };
+}
+
+export function getNonApplicableScore(score: Score): {
+  score: number;
+  length: number;
+} {
+  const xtech = Object.keys(score).filter((x) => x.match("na$"));
+  const nonApplicableArray = xtech
+    .map((x) => score[x])
+    .filter((x) => x !== undefined && x !== false && x !== 0); /// new: na can be number or boolean; if 0 false, 1 true
+  const nonApplicableScore = nonApplicableArray.reduce((acc: number, el) => {
+    if (typeof el === "boolean") {
+      return acc + 1; // statisticaly, 90% of the time it will be true.. and it happens only for old schemas
+    } else {
+      return acc + (el as number);
+    }
+  }, 0);
+  return {
+    score: nonApplicableScore,
+    length: nonApplicableArray.length,
   };
 }
 
@@ -41,64 +116,43 @@ export function computeShelter(value: Shelter): Shelter {
     newShelter?.items
   );
 
-  // change because of non-applicable
-  const tech = resultShelter.technical_performance;
-  const nonApplicableTech = Object.keys(tech)
-    .filter((x) => x.match("na$"))
-    .map((x) => tech[x])
-    .filter((x) => x !== undefined).length;
-  const valuesTech = Object.values(resultShelter.technical_performance).filter(
-    (x) => x !== undefined && typeof x !== "boolean" && x !== null
-  ) as number[];
-  if (valuesTech.length) {
-    const score = valuesTech.reduce((acc, el) => acc + el);
-    resultShelter.technical_performance_score_real = `${score} / ${
-      TOTAL_TECH_PERF - nonApplicableTech
-    }`;
-    resultShelter.technical_performance_score =
-      score / (TOTAL_TECH_PERF - nonApplicableTech);
-  } else {
-    resultShelter.technical_performance_score_real = `0 / ${
-      TOTAL_TECH_PERF - nonApplicableTech
-    }`;
-    resultShelter.technical_performance_score = 0;
-  }
+  // technical performance
+  const technicalScore = getScore(resultShelter.technical_performance);
+  const nonApplicableTechnicalScore = getNonApplicableScore(
+    resultShelter.technical_performance
+  );
+  const totalTechWithApplicable =
+    TOTAL_SCORE_TECH_PERF - nonApplicableTechnicalScore.score;
 
-  // change because of non-applicable
-  const hab = resultShelter.habitability;
+  resultShelter.technical_performance_score_real = `${technicalScore.score} / ${totalTechWithApplicable}`;
+  resultShelter.technical_performance_score =
+    technicalScore.score / totalTechWithApplicable;
 
-  const y = Object.keys(hab)
-    .filter((x) => !x.match("na$"))
-    .filter((x) => x !== "completed")
-    .filter((x) => x.match("^input.*"));
-  // check that it doesn not contains na and completed field
-  const completedHab = y
-    .map((x) => hab[x])
-    .filter((x) => x !== undefined && typeof x !== "boolean" && x !== null);
-  const completedHabLength = completedHab.length;
-  const valuesHab = completedHab.filter(
-    (x) => x !== undefined && x !== -1
-  ) as number[];
-  console.log(completedHab, completedHabLength);
+  const totalToBeCompleted =
+    TOTAL_TECH_PERF_ITEMS - nonApplicableTechnicalScore.length;
+  resultShelter.technical_performance.completed =
+    technicalScore.completed === totalToBeCompleted;
 
-  const x = Object.keys(hab).filter((x) => x.match("na$"));
-  const nonApplicableHabitabilityArray = x
-    .map((x) => hab[x])
-    .filter((x) => x !== undefined && x !== false && x !== 0); /// new: na can be number or boolean; if 0 false, 1 true
-  const nonApplicableHab = nonApplicableHabitabilityArray.length;
+  // habitability
+  const habitabilityScore = getScore(resultShelter.habitability);
+  const nonApplicableHabitabilityScore = getNonApplicableScore(
+    resultShelter.habitability
+  );
+  const totalHabWithApplicable =
+    TOTAL_SCORE_HAB - nonApplicableHabitabilityScore.score;
 
-  const totalHabWithApplicable = TOTAL_HAB - nonApplicableHab;
-  if (valuesHab.length) {
-    const score = valuesHab.reduce((acc, el) => acc + el);
-    resultShelter.habitability_score_real = `${score} / ${totalHabWithApplicable}`;
-    resultShelter.habitability_score = score / (TOTAL_HAB - nonApplicableHab);
-  } else {
-    resultShelter.habitability_score_real = `0 / ${totalHabWithApplicable}`;
-    resultShelter.habitability_score = 0;
-  }
+  resultShelter.habitability_score_real = `${habitabilityScore.score} / ${totalHabWithApplicable}`;
+  resultShelter.habitability_score =
+    habitabilityScore.score / totalHabWithApplicable;
 
+  // todo change completed
+  const totalHabToBeCompleted =
+    TOTAL_HAB_ITEMS - nonApplicableHabitabilityScore.length;
   resultShelter.habitability.completed =
-    completedHabLength === totalHabWithApplicable;
+    habitabilityScore.completed === totalHabToBeCompleted;
+
+  resultShelter.completed_geometry =
+    resultShelter.geometry?.floorArea > 0 && resultShelter.geometry?.volume > 0;
   resultShelter.completed =
     (resultShelter.completed_info &&
       resultShelter.completed_geometry &&

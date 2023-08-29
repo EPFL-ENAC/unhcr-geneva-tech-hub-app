@@ -2,13 +2,27 @@
   <v-sheet elevation="2" rounded>
     <v-container fluid>
       <v-row>
-        <v-col cols="11" class="group-title">
+        <v-col cols="9" class="group-title">
           <component
             :is="`h${depth + 2}`"
             :class="`text-h${depth + 4} project-shelter__h${
               depth + 3
             }  font-weight-medium`"
             >{{ form.title }}</component
+          >
+          <v-spacer />
+        </v-col>
+        <v-col
+          cols="2"
+          class="d-flex align-center justify-end font-italic font-weight-light grey--text"
+        >
+          <span v-if="completed" class="mr-4">
+            <v-icon class="green--text text--lighten-3">$mdiCheck</v-icon>
+            complete</span
+          >
+          <span v-else class="mr-4">
+            <v-icon class="red--text text--lighten-3">$mdiClose</v-icon>
+            incomplete</span
           >
         </v-col>
         <v-col cols="1" class="d-flex justify-end align-center d-print-none">
@@ -57,9 +71,9 @@
                   </v-checkbox>
 
                   <v-checkbox
+                    v-if="!child.disabled"
                     class="unhcr-checkbox-group-non-applicable__checkbox"
                     :input-value="checkbox[child._id + 'na']"
-                    :disabled="child.disabled"
                     hide-details
                     @mousedown.stop.prevent
                     @click.stop.prevent
@@ -131,12 +145,12 @@ export default class CheckboxGroup extends Vue {
 
   public getText(value: boolean | undefined): string {
     if (value === undefined) {
-      return "undefined";
+      return "indeterminate";
     }
     return value ? "yes" : "no";
   }
 
-  public getProperValueOfId2(
+  public getProperValueOfId(
     key: string,
     oldValue: CheckboxScore
   ): number | boolean | undefined | null | Score {
@@ -160,13 +174,22 @@ export default class CheckboxGroup extends Vue {
     const oldValue = this.value ?? {};
     // reset all previous values
     this.form.children?.forEach((input) => {
-      newValue[input._id] = this.getProperValueOfId2(input._id, oldValue);
-      newValue[input._id + "na"] = this.getProperValueOfId2(
+      newValue[input._id] = this.getProperValueOfId(input._id, oldValue);
+      newValue[input._id + "na"] = this.getProperValueOfId(
         input._id + "na",
         oldValue
       );
     });
     return newValue;
+  }
+
+  get completed(): boolean {
+    return this.form.children?.every((child) => {
+      if (this.checkbox[child._id] === undefined) {
+        return this.checkbox[child._id + "na"] === true;
+      }
+      return this.checkbox[child._id] !== undefined;
+    });
   }
 
   /**
@@ -180,12 +203,11 @@ export default class CheckboxGroup extends Vue {
   updateValue(updatedKey: string, updatedValue: boolean, extended = ""): void {
     const newValue = this.value ?? {};
     const child = this.form.children?.find(
-      (el: ShelterFormChild) => el._id === updatedKey
+      (el: ShelterFormChild) => el._id === updatedKey || el._id === extended
     ) as ShelterFormInput;
-
+    // we pass child score to na to keep track of non applicable score
     if (extended !== "") {
-      // 'non applicable' logic
-      newValue[updatedKey] = updatedValue; // was undefined instead of false
+      newValue[updatedKey] = updatedValue ? child?.score ?? 0 : undefined; // was undefined instead of false
       newValue[extended] = undefined; // isCheckedValue ? -1 : undefined;
     } else {
       newValue[updatedKey] = updatedValue ? child?.score ?? 0 : -1;
@@ -194,7 +216,10 @@ export default class CheckboxGroup extends Vue {
   }
 }
 
-type CheckboxScore = Record<string, boolean | undefined | number | null | Score>;
+type CheckboxScore = Record<
+  string,
+  boolean | undefined | number | null | Score
+>;
 </script>
 
 <style lang="scss" scoped>

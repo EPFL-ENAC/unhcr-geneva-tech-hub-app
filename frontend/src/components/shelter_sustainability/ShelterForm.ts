@@ -4,7 +4,7 @@ export enum ShelterFormType {
   formGroup = 2,
 }
 export interface ShelterForm {
-  title: string;
+  title?: string;
   type: ShelterFormType;
   children: ShelterFormChild[];
   nonApplicable?: boolean;

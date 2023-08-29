@@ -26,7 +26,14 @@
           shelter designs and assessments. Private projects are visible to the
           project owner only.
         </info-tooltip>
-        {{ localShelter.completed_info ? "completed" : "not completed" }}
+        <span v-if="localShelter.completed_info" class="mr-4">
+          <v-icon class="green--text text--lighten-3">$mdiCheck</v-icon>
+          complete</span
+        >
+        <span v-else class="mr-4">
+          <v-icon class="red--text text--lighten-3">$mdiClose</v-icon>
+          incomplete</span
+        >
       </v-col>
     </v-row>
     <v-row>

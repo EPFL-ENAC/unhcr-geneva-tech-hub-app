@@ -1,27 +1,41 @@
 <template>
   <v-sheet elevation="2" rounded>
     <v-container fluid>
-      <v-row v-if="form.title">
-        <v-col cols="9" class="group-title">
+      <v-row v-if="form._id">
+        <v-col cols="8" class="group-title">
           <component
             :is="`h${depth + 2}`"
+            v-if="form._id"
             :class="`project-shelter__h${depth + 3}  font-weight-medium text-h${
               depth + 4
             } `"
             >{{ form.title }}</component
           >
         </v-col>
-        <v-col class="d-print-none d-flex justify-end align-center">
+        <v-col
+          cols="2"
+          class="d-flex align-center justify-end font-italic font-weight-light grey--text"
+        >
+          <span v-if="completed" class="mr-4">
+            <v-icon class="green--text text--lighten-3">$mdiCheck</v-icon>
+            complete</span
+          >
+          <span v-else class="mr-4">
+            <v-icon class="red--text text--lighten-3">$mdiClose</v-icon>
+            incomplete</span
+          >
+        </v-col>
+        <v-col cols="2" class="d-print-none d-flex justify-end align-center">
           <v-checkbox
             class="unhcr-checkbox-group-non-applicable__checkbox"
-            :input-value="checkbox[form.title + 'na']"
+            :input-value="checkbox[form._id + 'na']"
             :disabled="form.disabled"
             hide-details
             @mousedown.stop.prevent
             @click.stop.prevent
             @change="
               (v) => {
-                updateValue(form.title + 'na', v, form.title);
+                updateValue(form._id + 'na', v);
               }
             "
           >
@@ -60,7 +74,7 @@
                 <v-expansion-panel-header :hide-actions="!child.description">
                   <v-checkbox
                     :input-value="checkbox[child._id]"
-                    :disabled="child.disabled || checkbox[form.title + 'na']"
+                    :disabled="child.disabled || checkbox[form._id + 'na']"
                     hide-details
                     :indeterminate="checkbox[child._id] === undefined"
                     @mousedown.stop.prevent
@@ -143,15 +157,41 @@ export default class RadioGroup extends Vue {
       newValue[input._id + "na"] = undefined;
     });
 
-    newValue[this.form.title] = this.getProperValueOfId(
-      this.form.title,
-      oldValue
-    );
-    newValue[this.form.title + "na"] = this.getProperValueOfId(
-      this.form.title + "na",
+    newValue[this.form._id] = this.getProperValueOfId(this.form._id, oldValue);
+    newValue[this.form._id + "na"] = this.getProperValueOfId(
+      this.form._id + "na",
       oldValue
     );
     return newValue;
+  }
+
+  public isShelterFormInput(obj: any): obj is ShelterFormInput {
+    return obj.score !== undefined;
+  }
+
+  get completed(): boolean {
+    if (this.checkbox[this.form._id + "na"] === true) {
+      return true;
+    }
+    const result = this.form.children?.find((input) => {
+      if (
+        this.isShelterFormInput(input) &&
+        ((this.checkbox?.[input._id] ?? -1) as number) >= 0
+      ) {
+        return true;
+      }
+    });
+    return result !== undefined;
+  }
+
+  get highestScore(): number {
+    let highestScore = 0;
+    this.form.children?.forEach((child) => {
+      if (this.isShelterFormInput(child) && child.score > highestScore) {
+        highestScore = child.score;
+      }
+    });
+    return highestScore;
   }
 
   updateValue(updatedKey: string, updatedValue: boolean): void {
@@ -163,15 +203,16 @@ export default class RadioGroup extends Vue {
     this.form.children.forEach((el: ShelterFormChild): void => {
       newValue[el._id] = undefined;
     });
+    // highest score for
     // reset every other field!
-    if (updatedKey !== this.form.title + "na") {
+    if (updatedKey !== this.form._id + "na") {
       if (updatedValue) {
         newValue[updatedKey] = child?.score ?? 0;
       } else {
         newValue[updatedKey] = undefined;
       }
     } else {
-      newValue[updatedKey] = updatedValue;
+      newValue[updatedKey] = updatedValue ? this.highestScore : undefined;
     }
     this.$emit("input", newValue);
   }

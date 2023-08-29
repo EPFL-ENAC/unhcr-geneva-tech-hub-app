@@ -141,6 +141,7 @@ export interface Geometry {
   doors_dimensions: DoorDimensions[];
   windows_dimensions: WindowDimensions[];
   windowArea: number;
+  doorArea?: number;
   floorArea: number;
   volume: number;
 }
