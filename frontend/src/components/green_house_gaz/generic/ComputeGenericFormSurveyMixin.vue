@@ -139,13 +139,19 @@ export default class ComputeGenericFormSurveyMixin extends Vue {
       );
       const interventionsWithSameOriginsSelectedLength =
         interventionsWithSameOrigins.filter((x) => x.enabled).length;
-      const interventionsDiffDimensionTotal =
-        interventionsWithSameOrigins.reduce((acc, el) => {
-          const interventionDiffValue =
-            (el.input?.[diffDimension] as number) ??
-            (el.computed?.[diffDimension] as number);
-          return acc + interventionDiffValue;
-        }, 0);
+      // const interventionsDiffDimensionTotal = interventionsWithSameOrigins
+      //   .filter((x) => x.enabled)
+      //   .reduce((acc, el) => {
+      //     const interventionDiffValue =
+      //       (el.input?.[diffDimension] as number) ??
+      //       (el.computed?.[diffDimension] as number);
+      //     return acc + interventionDiffValue;
+      //   }, 0);
+
+      const baselineDiffDimensionTotal =
+        (baselineItem.input?.[diffDimension] as number) ??
+        (baselineItem.computed?.[diffDimension] as number);
+
       const baselineCO2 = baselineItem.computed.totalCO2Emission as number;
       const endlineCO2 = intervention.computed.totalCO2Emission as number;
 
@@ -154,24 +160,30 @@ export default class ComputeGenericFormSurveyMixin extends Vue {
         (intervention.computed?.[diffDimension] as number);
       // https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/351
       // we don't use the ratio when selected endline is 0 or 1
-      let ratioEndline = 1;
+      // let ratioEndline = 1;
+      let ratioBaseline = 1;
       if (interventionsWithSameOriginsSelectedLength > 1) {
-        ratioEndline =
-          interventionDiffDimension / interventionsDiffDimensionTotal;
+        // we were using the ratio endline for an unknown reason
+        // we keep it as a comment for now
+        // ratioEndline =
+        //   interventionDiffDimension / interventionsDiffDimensionTotal;
+
+        ratioBaseline = interventionDiffDimension / baselineDiffDimensionTotal;
       }
       // if baseline == 0 and endline === 0 then 0%
       // if baseline == 0 and endline = x then 100%
       // if baseline == NOT POWERED and endline = x then 100%
+
       let changeInEmission = 0;
-      if (baselineCO2 * ratioEndline === 0) {
+      if (baselineCO2 * ratioBaseline === 0) {
         if (endlineCO2 !== 0) {
-          changeInEmission = 1 * ratioEndline;
+          changeInEmission = 1 * ratioBaseline;
         }
       } else {
         changeInEmission = computeChangeInEmission(
           baselineCO2,
           endlineCO2,
-          ratioEndline
+          ratioBaseline
         );
       }
       intervention.computed.changeInEmission = changeInEmission;
