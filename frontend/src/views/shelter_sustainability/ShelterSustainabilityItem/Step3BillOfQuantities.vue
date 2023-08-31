@@ -19,10 +19,11 @@
       </v-col>
       <v-spacer />
       <v-col class="col-auto d-flex align-center">
-        <span class="mr-4">Bill of quantities completed ?</span> <v-switch
+        <!-- todo: add the icon check mark and cancel -->
+        <span class="mr-4">Bill of quantities status: </span> <v-switch
           v-model="localShelter.completed_boq"
           @change="updateFormInput"
-          :label="localShelter.completed_boq ? 'yes': 'no'"
+          :label="localShelter.completed_boq ? 'complete': 'incomplete'"
         ></v-switch>
         <info-tooltip>
           Toggle switch to mark bill of quantities as completed
@@ -56,6 +57,11 @@
     <v-row>
       <v-col>
         <v-sheet v-if="items" elevation="2" rounded>
+          <v-progress-linear
+        v-if="true"
+        indeterminate
+        color="primary"
+      ></v-progress-linear>
           <v-data-table
             :headers="headers"
             :items="items"

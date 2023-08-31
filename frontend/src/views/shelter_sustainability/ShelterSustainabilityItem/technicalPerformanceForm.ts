@@ -152,7 +152,7 @@ const technicalPerformanceForm: ShelterForm = {
               score: 1,
               disabled: true,
               label:
-                "Ratio of window and ventilation openings area to floor area > 0.05",
+                "Ratio of window and ventilation openings area to floor area > 0.05 (automatically determined based on geometry inputs)",
               description:
                 "Adequate ventilation helps maintain a healthy internal environment, prevents condensation and reduces the spread of communicable disease. It reduces the effect of smoke from indoor household stoves, which can cause respiratory infections and eye problems. <a href='https://handbook.spherestandards.org/en/sphere/#ch008_005' target='_blank'>spherestandards</a>. ASHRAE standards suggest minimum internal air change rate of 35 m3 per hour per person. Ventilation is dependant on a range of factors including relative sizes and locations of openings, floor area and ceiling height. Here, a simplified calculation of the ratio of the area of openings to floor area is used to assess the adequacy of natural ventilation. A threshold of 0.05 defines adequate natural ventilation.",
             },
@@ -288,7 +288,7 @@ const technicalPerformanceForm: ShelterForm = {
               _id: "input_2c_1",
               score: 1,
               disabled: true,
-              label: "Ratio of windows area to floor area > 0.10",
+              label: "Ratio of windows area to floor area > 0.10 (automatically determined based on geometry inputs)",
               description:
                 "Adequate lighting is an important aspect of health and well-being. The extent of natural lighting affects internal comfort, energy demand, the learning potential of children and the potential use of internal shelter space for livelihood activities. Size and placement of window openings should take into account natural lighting requirements and security concerns.  Here, a simplified calculation of the ratio of the area of openings to floor area is used to assess the adequacy of natural lighting. A threshold of 0.10 defines adequate natural lighting.",
             },
@@ -402,7 +402,7 @@ const technicalPerformanceForm: ShelterForm = {
               _id: "input_3b_4",
               score: 1,
               disabled: true,
-              label: "Window opening dimensions < 60x60cm",
+              label: "Window opening dimensions < 60x60cm (automatically determined based on geometry inputs)",
               description:
                 "Personal security is extremely important in a shelter to provide protection and to support groups at risk to feel safe. Personal security is highly context-specific and varies between households and between individuals. It may be influenced by family or household composition (e.g., female headed households) and by tensions with host communities or with other displaced groups. For this assessment, only the provision of basic shelter security features is considered.",
             },

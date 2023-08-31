@@ -51,6 +51,7 @@ export default class Step6 extends Vue {
     this.localShelter.technical_performance = value;
 
     // update habitability, because it should be done like this (defined in the specs)
+    // TODO: add non applicable because it does rely on the technical performance
     this.localShelter.habitability.input12 =
       this.technical_performance.input_3b_6;
     this.localShelter.habitability.input13 =

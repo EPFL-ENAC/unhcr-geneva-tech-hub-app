@@ -21,7 +21,8 @@
           incomplete</span
         >
         <info-tooltip>
-          Should have a floor + volume + window area (windows are optionals)
+          Geometry inputs are complete with sufficient dimensions to calculate
+          floor area and volume
         </info-tooltip>
       </v-col>
     </v-row>
@@ -77,6 +78,17 @@
                         :aria-label="geometry._id"
                       >
                       </v-img>
+                      <v-btn
+                        v-if="shelter_geometry_type"
+                        float
+                        absolute
+                        right
+                        class="primary"
+                        top
+                        @click.stop="() => void 0"
+                      >
+                        Save
+                      </v-btn>
                       <v-btn icon @click.stop="selectedItem = geometry">
                         <v-icon>{{ mdiMagnify }}</v-icon>
                       </v-btn>

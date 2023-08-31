@@ -105,7 +105,7 @@ const habitabilityForm: ShelterForm = {
       children: [
         {
           _id: "input12",
-          label: "Artificial lighting is provided inside shelter",
+          label: "Artificial lighting is provided inside shelter (determined by technical performance response)",
           disabled: true,
           // nonApplicable: true,
           description:
@@ -115,7 +115,7 @@ const habitabilityForm: ShelterForm = {
         {
           _id: "input13",
           disabled: true,
-          label: "Artificial lighting is provided around shelter",
+          label: "Artificial lighting is provided around shelter (determined by technical performance response)",
           // nonApplicable: true,
           description:
             "Artificial lighting contributes to personal safety in and around the shelter. The access to artificial lighting could be on a site level, where only strategic spaces and communal areas in the site are artificially lit. Potential sources of artificial lighting vary. Connection to an electricity grid or generator, or use of different renewable energy lighting sources such as photovoltaic panels is encouraged.",
