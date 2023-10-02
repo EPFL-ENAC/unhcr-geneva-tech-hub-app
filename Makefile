@@ -49,5 +49,5 @@ run:
 	docker-compose pull
 	docker-compose build --parallel --no-cache
 	docker-compose up -d --remove-orphans
-	docker-compose up --build --force-recreate couchdb-setup
+	docker-compose up --build --force-recreate --no-deps couchdb-setup
 	docker-compose restart couchdb
