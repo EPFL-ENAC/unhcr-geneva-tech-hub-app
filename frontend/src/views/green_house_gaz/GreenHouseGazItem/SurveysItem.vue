@@ -122,7 +122,7 @@ import DomesticSolidWaste from "@/components/green_house_gaz/materials/DomesticS
 import Shelter from "@/components/green_house_gaz/materials/Shelter.vue";
 import TreePlanting from "@/components/green_house_gaz/offset/TreePlanting.vue";
 import Results from "@/components/green_house_gaz/Results.vue";
-import Trucking from "@/components/green_house_gaz/wash/Trucking.vue";
+import WaterSupply from "@/components/green_house_gaz/wash/WaterSupply.vue";
 
 import { infoTooltipText } from "@/components/green_house_gaz/infoTooltipText";
 import {
@@ -154,7 +154,7 @@ import { mapActions, mapGetters } from "vuex";
     CRI,
     DomesticSolidWaste,
     Shelter,
-    Trucking,
+    WaterSupply,
     TreePlanting,
     Results,
     UserManager,
@@ -196,15 +196,18 @@ export default class SurveyList extends Vue {
       icon: "$mdiWater",
       text: "WASH",
       to: "WASH",
-      redirect: "WASH-Trucking",
+      redirect: "WASH-WaterSupply",
       children: [
-        { text: "Trucking", to: "Trucking", icon: "$mdiTankerTruck" },
+        { text: "Water Supply", to: "WaterSupply",
+        // icon: "$mdiTankerTruck"
+        icon: "$mdiWaterPump",
+      },
 
-        {
-          icon: "$mdiWaterPump",
-          text: "Water Pumping",
-          to: "Pumping",
-        },
+        // {
+        //   icon: "$mdiWaterPump",
+        //   text: "Water Pumping",
+        //   to: "Pumping",
+        // },
       ],
     },
     {

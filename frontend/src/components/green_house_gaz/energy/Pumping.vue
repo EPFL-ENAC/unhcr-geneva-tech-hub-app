@@ -14,6 +14,7 @@
 </template>
 
 <script lang="ts">
+// TODO: remove file
 import BaselineEndlineWrapper from "@/components/green_house_gaz/generic/BaselineEndlineWrapper.vue";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 
@@ -169,8 +170,8 @@ export default class Pumping extends Vue {
 
     delete localInput.dieselPowerEstimated;
     delete localInput.dieselLitersEstimated;
-    delete localInput.renewablePowerEstimated;
-    delete localInput.solarInstalledEstimated;
+    // delete localInput.renewablePowerEstimated;
+    // delete localInput.solarInstalledEstimated;
     return localInput;
   }
 
@@ -179,7 +180,7 @@ export default class Pumping extends Vue {
     return [
       ...surveyTableHeaderIncrements,
       {
-        text: "Name",
+        text: "Name", // TODO ? quid du name ?
         value: "input.name",
         type: "text",
         style: {
@@ -238,7 +239,7 @@ export default class Pumping extends Vue {
         type: "number",
       },
       // end of national grid\
-      ...solarInputsProducedPer("Year", this.countryCode, this.project.solar),
+      ...solarInputsProducedPer("Year", this.countryCode, this?.project.solar),
       {
         text: "Total (kWh/yr)",
         value: "computed.totalPower",

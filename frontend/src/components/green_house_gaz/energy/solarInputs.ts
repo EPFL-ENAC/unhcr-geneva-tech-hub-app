@@ -124,6 +124,8 @@ export function solarInputsProducedPer(
       computeSolarInstalled = computeKWInstalledWithKwhPerDayPerCountry;
       suffix = "kWh/day";
       break;
+    // case "Month":
+    //   break;
     case "Week":
       throw new Error("Week is not supported for Solar");
       break;
@@ -131,6 +133,9 @@ export function solarInputsProducedPer(
       suffix = "kWh/year";
       computeSolarPower = computeKWHPerYearPerCountry;
       computeSolarInstalled = computeKWInstalledWithKwhPerYearPerCountry;
+      break;
+    default:
+      suffix = "kWh/unknown";
       break;
   }
   return [

@@ -12,9 +12,27 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-data-table dense :headers="headers" :items="items">
+          <v-card-title>
+            IGES GRID
+            <v-spacer></v-spacer>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-card-title>
+          <v-data-table
+            dense
+            :headers="headers"
+            :items="items"
+            :search="search"
+          >
             <template #[`item.value`]="props">
-              <span>{{ props.item.value | formatNumber }}</span>
+              <span :title="props.item.value">{{
+                props.item.value | formatNumber
+              }}</span>
             </template>
           </v-data-table>
         </v-col>
@@ -50,6 +68,7 @@ export default class IgesGrid extends Vue {
     v.length <= 25 || "Input too long!";
   pagination = {};
 
+  search = "";
   public get headers(): HeaderInterface[] {
     return [
       {

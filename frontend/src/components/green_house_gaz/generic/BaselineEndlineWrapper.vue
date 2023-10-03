@@ -130,14 +130,18 @@ export default class BaselineEndlineWrapper extends Mixins(
   }
 
   public get baselineHeaders(): SurveyTableHeader[] {
-    return this.headers.filter(
-      (header: SurveyTableHeader) => !header.endlineOnly
+    return (
+      this.headers?.filter(
+        (header: SurveyTableHeader) => !header.endlineOnly
+      ) ?? []
     );
   }
 
   public get endlineHeaders(): SurveyTableHeader[] {
-    return this.headers.filter(
-      (header: SurveyTableHeader) => !header.baselineOnly
+    return (
+      this.headers?.filter(
+        (header: SurveyTableHeader) => !header.baselineOnly
+      ) ?? []
     );
   }
 

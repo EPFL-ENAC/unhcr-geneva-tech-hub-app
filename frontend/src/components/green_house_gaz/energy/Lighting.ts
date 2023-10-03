@@ -8,7 +8,6 @@ import {
 } from "@/components/green_house_gaz/energy/solarInputs";
 import {
   AllFuel,
-  AllFuelForLighting,
   allFuelsButThermal,
   allFuelsForLighing,
   AllLightingFuelsWithTextById,
@@ -58,9 +57,8 @@ import {
 export interface EnergyLightingItemInput extends SurveyInput, EnergyItem {
   numberOfLighting?: number; // computed based on % of HH and stuffs
   image?: string; // image of lighting
-  fuelUsage?: number; // [kg or L/day]
-  fuelType: AllFuelForLighting; // key
-  fuelTypes?: AllFuelForLighting[]; // used only as a reference
+  fuelType?: AllFuel; // key
+  fuelTypes?: AllFuel[]; // used only as a reference
   carbonized?: boolean;
   sustainablySourced?: boolean;
   chcProcessingFactor?: number; // default to 6
@@ -106,7 +104,7 @@ export const conditional_function_for_hyb_lights = (itemInput: SurveyInput) => {
   if (itemInput?.fuelType == undefined || itemInput?.fuelType == "NO_ACCESS") {
     return false;
   }
-  if (["LIGHT_HYB"].includes(itemInput?.fuelType as AllFuelForLighting) ?? "") {
+  if (["LIGHT_HYB"].includes(itemInput?.fuelType as AllFuel) ?? "") {
     return true;
   }
   return false;
@@ -186,11 +184,11 @@ export function headers(
       },
       text: "Lighting powered by",
       value: "input.fuelType",
-      formatter: (v: AllFuelForLighting) => {
+      formatter: (v: AllFuel) => {
         return AllLightingFuelsWithTextById?.[v]?.text;
       },
       formatterTableComponent: (
-        fuelType: AllFuelForLighting,
+        fuelType: AllFuel,
         _: unknown,
         localItem: EnergyLightingItem
       ) => {
@@ -242,7 +240,7 @@ export function headers(
         const thermalFuelsText = result;
 
         const refTexts: {
-          readonly fuelTypes: readonly AllFuelForLighting[];
+          readonly fuelTypes: readonly AllFuel[];
           text: string;
         }[] = [
           { fuelTypes: biomassFuels, text: biomassFuelsText },
@@ -259,7 +257,10 @@ export function headers(
         // Superseed the dieselInputs for dieselLiters
 
         refTexts.every((refText) => {
-          if (refText.fuelTypes.includes(localInput.fuelType)) {
+          if (
+            localInput.fuelType &&
+            refText.fuelTypes.includes(localInput.fuelType)
+          ) {
             result = refText.text;
             return false;
           }
@@ -272,6 +273,7 @@ export function headers(
         // conditional: ["cookstove", "fuelType"],
         // conditional_type: "AND",
         // and don't show for ELE_HYB
+        // TODO: should be working for lighting and cooking only
         if (
           itemInput.cookstove &&
           (cookstoveIdsTECHsWithAccess as string[]).includes(
@@ -341,7 +343,7 @@ export function headers(
         const thermalFuelsText = "Estimated kWh/day/HH";
 
         const refTexts: {
-          readonly fuelTypes: readonly AllFuelForLighting[];
+          readonly fuelTypes: readonly AllFuel[];
           text: string;
         }[] = [
           { fuelTypes: biomassFuels, text: biomassFuelsText },
@@ -357,7 +359,10 @@ export function headers(
         // Superseed the dieselInputs for dieselLiters
 
         refTexts.every((refText) => {
-          if (refText.fuelTypes.includes(localInput.fuelType)) {
+          if (
+            localInput.fuelType &&
+            refText.fuelTypes.includes(localInput.fuelType)
+          ) {
             result = refText.text;
             return false;
           }
@@ -380,7 +385,7 @@ export function headers(
             "ELE_DIES",
             "ELE_SOLAR",
             "ELE_HYB",
-          ].includes(itemInput?.fuelType as AllFuelForLighting) ??
+          ].includes(itemInput?.fuelType as AllFuel) ??
           ""
         ) {
           return false;
@@ -568,6 +573,12 @@ export function generateComputeItem(
     if (percentageOfTotalLighting === undefined) {
       throw new Error("number of cooktsove not defined");
     }
+
+    if (fuelType === undefined) {
+      return {
+        totalCO2Emission: 0,
+      };
+    }
     if (projectTotalHH === undefined) {
       throw new Error(
         "Total House holds is undefined, please fill assessment information page and click on save"
@@ -685,7 +696,7 @@ export function generateComputeItem(
           project_REF_GRD
         );
         break;
-      case ["BAT", "LIGHT_SOLAR"].includes(fuelType):
+      case ["BAT", "LIGHT_SOLAR"].includes(fuelType as LightingFuel):
       case thermalFuels.includes(fuelType as ThermalFuel):
         totalCO2Emission = 0;
         break;

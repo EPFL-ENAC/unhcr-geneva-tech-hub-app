@@ -3,10 +3,10 @@
     <survey-item-title :title-key="title" />
     <baseline-endline-wrapper
       v-model="washForm"
-      :headers="truckingHeaders"
+      :headers="waterSupplyHeaders"
       :diff-dimension="diffDimension"
-      :compute-item="truckingComputeCO2Cost"
-      name="transport"
+      :compute-item="waterSupplyComputeCO2Cost"
+      name="water supply"
     />
   </v-container>
 </template>
@@ -25,29 +25,44 @@ import {
   WashTruckingSurvey,
 } from "@/components/green_house_gaz/wash/Trucking";
 import { formatNumber } from "@/plugins/filters";
-import { SurveyInput } from "@/store/GhgInterface";
-import { ItemReferencesMap } from "@/store/GhgReferenceModule";
+import { GreenHouseGaz, SurveyInput } from "@/store/GhgInterface";
+import {
+  ItemReferencesMap,
+  ReferenceItemInterface,
+} from "@/store/GhgReferenceModule";
 
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { mapGetters } from "vuex";
+import { poweredByInputs } from "../energy/poweredBy";
+import { CountryIrradianceKeys } from "../energy/solarInputs";
 
 export const DIESEL = "Diesel";
 export const PETROL = "Petrol / Gaz";
 export const KM = "km";
-export const LITERS = "liters";
+export const LITERS = "liters of fuel";
 
 @Component({
   components: {
     SurveyItemTitle,
     BaselineEndlineWrapper,
   },
+  computed: {
+    ...mapGetters("GhgModule", ["project", "project_REF_GRD"]),
+  },
 })
-export default class Trucking extends Vue {
+export default class WaterSupply extends Vue {
   @Prop({ type: String, required: true })
   readonly titleKey!: string;
 
   @Prop({ type: [Object, Array] })
   readonly form!: WashTruckingSurvey;
+
+  @Prop({ type: String, required: true, default: "" })
+  readonly countryCode!: CountryIrradianceKeys;
+
+  project!: GreenHouseGaz;
+  project_REF_GRD!: ReferenceItemInterface;
 
   diffDimension: keyof WashTruckingItemInput = "WACL";
 
@@ -62,10 +77,11 @@ export default class Trucking extends Vue {
     this.$emit("update:form", value);
   }
 
-  public truckingComputeCO2Cost(
+  public waterSupplyComputeCO2Cost(
     localItemInput: WashTruckingItemInput,
     ghgMapRef: ItemReferencesMap
   ): WashTruckingItemResults {
+    // TODO: merge compute CO2 of trucking and pumping
     const { US_UNI, US_TYP, WACL, TR_TYP, TOT_WS, TR_VOL, LIT_WS } =
       localItemInput || {};
     const { REF_WSH_D, REF_WSH_G, REF_EFF_DIES, REF_EFF_PET } = ghgMapRef;
@@ -92,7 +108,7 @@ export default class Trucking extends Vue {
         itemComputed.totalCO2Emission =
           washFactorKM *
           itemComputed.TR_DIST *
-          12 * // number of months
+          // 12 * // number of months
           0.001; // 1/1000 (kg)
       }
 
@@ -105,16 +121,24 @@ export default class Trucking extends Vue {
         itemComputed.totalCO2Emission =
           washFactorL *
           LIT_WS *
-          12 * // number of months
+          // 12 * // number of months
           0.001; // 1/1000 (kg)
       }
       return itemComputed;
     } catch (error) {
-      throw new Error(`ghg wash input for trucking unknown unit type ${error}`);
+      throw new Error(`ghg wash input for water supply unknown unit type ${error}`);
     }
   }
 
-  readonly truckingHeaders = [
+  // TODO: merge typeof truck and  powered by
+  // Diesel should become Diesel truck
+  // Petrol should become Petrol Truck
+  // and voilà
+  // for the energy..do like issue 385: https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/385
+  // rename to : Annual fuel / Energy consumption
+  // Use truck consumption fuel by year and not by month anymore
+
+  readonly waterSupplyHeaders = [
     // replace description by label
     // replace code by value
     ...surveyTableHeaderIncrements,
@@ -127,19 +151,40 @@ export default class Trucking extends Vue {
       hideFooterContent: false,
     },
     {
-      text: "Fluid transported", // named "Trucking type",
-      value: "input.US_TYP",
+      text: "Name", // We keep the name for pumping and trucking
+      value: "input.name",
+      type: "text",
+      conditional_function: (input: SurveyInput) => {
+        return input.WASH_TYPE === "Pumping";
+      },
+      style: {
+        cols: "12",
+      },
+      hideFooterContent: false,
+    },
+    // {
+    //   text: "Fluid transported", // named "Trucking type",
+    //   value: "input.US_TYP",
+    //   type: "select",
+    //   hideFooterContent: false,
+    //   items: ["WATER", "WASTEWATER", "FAECAL SLUDGE"],
+    // },
+    {
+      text: "Water supplied by", // named "Trucking type",
+      value: "input.WASH_TYPE",
       type: "select",
       hideFooterContent: false,
-      items: ["WATER", "WASTEWATER", "FAECAL SLUDGE"],
+      items: ["Pumping", "Trucking"], // should be dynamic ? // todo: maybe dissplay only when it's WATER ? what are the rules ?
     },
     {
       text: "Trucking unit",
       value: "input.US_UNI",
       type: "select",
-
+      conditional_function: (input: SurveyInput) => {
+        return input.WASH_TYPE === "Trucking";
+      },
       items: [KM, LITERS],
-      hideFooterContent: false,
+      hideFooterContent: true,
       customEventInput: (truckId: string, localInput: SurveyInput) => {
         // does not work with reference ?
         // reset all values
@@ -153,9 +198,10 @@ export default class Trucking extends Vue {
     },
     {
       text: "Distance between water source or treatment",
+      conditional_function: (input: SurveyInput) => {
+        return input.WASH_TYPE === "Trucking" && input.US_UNI === KM;
+      },
       value: "input.TOT_WS",
-      conditional_value: KM,
-      conditional: "US_UNI",
       style: {
         cols: "12",
       },
@@ -167,28 +213,37 @@ export default class Trucking extends Vue {
       },
     },
     {
-      text: "Liters of fuel consumed per month (l/month)",
+      text: "Liters of fuel consumed during the year (l/year)",
       value: "input.LIT_WS",
-      conditional_value: LITERS,
-      conditional: "US_UNI",
+      tooltipInfo:
+        "Even if the duration of use extends to three months, it will still be calculated on an annual basis.",
+      conditional_function: (input: SurveyInput) => {
+        return input.WASH_TYPE === "Trucking" && input.US_UNI === LITERS;
+      },
       style: {
         cols: "12",
       },
       type: "number",
       hideFooterContent: false,
-      suffix: "l/month",
+      suffix: "l/year",
       formatter: (v: number, { ...args }) => {
         return formatNumber(v, { suffix: args.suffix });
       },
     },
     {
-      text: `Total volume transported (m³/month)`,
+      text: `Water volume (m³/year)`,
+      tooltipInfo:
+        "Even if the duration of use extends to three months, it will still be calculated on an annual basis.",
+
       value: "input.WACL",
+      conditional_function: (input: SurveyInput) => {
+        return input.WASH_TYPE !== undefined;
+      },
       hideFooterContent: false,
       style: {
         cols: "12",
       },
-      suffix: "m³/month",
+      suffix: "m³/year",
       computeResults: true,
       type: "number",
       formatter: (v: number, { ...args }) => {
@@ -198,8 +253,9 @@ export default class Trucking extends Vue {
     {
       text: "Volume of one water truck (m³)",
       value: "input.TR_VOL",
-      conditional_value: KM,
-      conditional: "US_UNI",
+      conditional_function: (input: SurveyInput) => {
+        return input.WASH_TYPE === "Trucking" && input.US_UNI === KM;
+      },
       style: {
         cols: "12",
       },
@@ -211,22 +267,37 @@ export default class Trucking extends Vue {
       type: "select",
       hideFooterContent: false,
       items: [DIESEL, PETROL],
+      conditional_function: (input: SurveyInput) => {
+        return input.WASH_TYPE === "Trucking";
+      },
     },
 
     {
       text: "Approximate number of trucks used",
       value: "computed.TR_NUM",
       type: "number",
+      conditional_function: (input: SurveyInput) => {
+        return input.WASH_TYPE === "Trucking";
+      },
       disabled: true,
     },
     {
       text: "Total distance travelled",
       value: "computed.TR_DIST",
       type: "number",
-
+      conditional_function: (input: SurveyInput) => {
+        return input.WASH_TYPE === "Trucking";
+      },
       suffix: "km",
       disabled: true,
     },
+
+    // start of pumping
+    ...poweredByInputs("Year", this.countryCode, this.project?.solar, {
+      conditional_function: (input: SurveyInput) => {
+        return input.WASH_TYPE === "Pumping";
+      },
+    }),
     ...surveyTableHeaderCO2,
   ].map(ensureSurveyTableHeaders);
 }

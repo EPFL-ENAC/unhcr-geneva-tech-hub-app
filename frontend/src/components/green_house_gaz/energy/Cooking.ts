@@ -74,7 +74,7 @@ export interface EnergyCookingItemInput extends SurveyInput, EnergyItem {
   sustainablySourced?: boolean;
   chcProcessingFactor?: number; // default to 6
   dryWood?: boolean;
-  disabledFuelUsage?: boolean;
+  disabledFuelUsage?: boolean; // DEPRECATED: moved to ENERGY ITEM ?
 }
 
 export interface EnergyCookingItemResults extends SurveyResult {
@@ -135,6 +135,7 @@ export function resetSurveyFuelOption(
   delete localInput.operatingHours;
   delete localInput.solarInstalled;
   delete localInput.renewablePower;
+  delete localInput.gridPower;
 
   return localInput;
 }
@@ -324,6 +325,7 @@ export function headers(
           localInput.dryWood = true;
         }
         localInput.fuelType = fuelType;
+
         localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
 
         // for hybrid mix NO DEFAULT VALUE
@@ -331,9 +333,11 @@ export function headers(
           localInput.fuelUsage = undefined;
         }
         if (localInput.fuelType === "ELE_GRID") {
+          localInput.fuelUsage = undefined;
           localInput.gridPower = getDefaultFuel(localInput, pp_per_hh);
         }
         if (localInput.fuelType === "ELE_SOLAR") {
+          localInput.fuelUsage = undefined;
           localInput.renewablePower = getDefaultFuel(localInput, pp_per_hh);
           localInput.solarInstalled =
             computeKWInstalledWithKwhPerYearPerCountry(

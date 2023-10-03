@@ -1,5 +1,13 @@
 import { ShelterRegions } from "@/store/ShelterInterface";
 import { CouchUser } from "./UserModule";
+
+import {
+  AllFuel,
+  ElectricFuel,
+  electricFuels,
+  electricFuelWithText,
+} from "@/components/green_house_gaz/fuelTypes";
+
 // import { Material } from "@/store/ShelterInterface";
 export type CountriesInfoMap = Record<string, CountryInfo>;
 export interface Country {
@@ -200,6 +208,7 @@ type FacilityType =
 export interface DieselItem {
   fuelUsage?: number; // L/day
   disableDieselLiters?: boolean;
+  disabledFuelUsage?: boolean;
   generatorSize?: number; // replace the diesel liter
   operatingHours?: number; // replace the diesel liter
   generatorLoad?: number; // load of generator (should be default to 60%)
@@ -216,13 +225,17 @@ export interface EnergyItem extends DieselItem, SolarItem {
   gridPower?: number;
   dieselPower?: number;
   renewablePower?: number;
+
+  fuelUsage?: number; // [L/yr]
+  fuelType?: AllFuel; // key of ElectricFuel
+
+  totalPower?: number; // [kWh/yr]
 }
 
 export interface EnergyFacilityItem extends EnergyItem {
   name: string;
   facilityType: FacilityType;
   totalCO2Emission: number;
-  totalPower?: number;
 }
 
 export type EnergyFacilityItemResult = Omit<

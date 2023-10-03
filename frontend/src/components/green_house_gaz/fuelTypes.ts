@@ -159,16 +159,17 @@ export type AllFuel =
   | LiquidFuel
   | GasFuel
   | ThermalFuel
+  | LightingFuel
   | NoAccessFuel;
 
-export type AllFuelForLighting =
-  | ElectricFuel
-  | BioMassFuel
-  | LiquidFuel
-  | GasFuel
-  | ThermalFuel
-  | NoAccessFuel
-  | LightingFuel;
+// export type AllFuel =
+//   | ElectricFuel
+//   | BioMassFuel
+//   | LiquidFuel
+//   | GasFuel
+//   | ThermalFuel
+//   | NoAccessFuel
+//   | LightingFuel;
 
 export const AllFuelsWithTextById = [
   ...electricFuelWithText,
@@ -190,7 +191,7 @@ export const AllLightingFuelsWithTextById = [
   ...thermalFuelWithText,
   ...noAcessWithText,
   ...lightingFuelsWithText,
-].reduce((acc, el: FuelTypesItem<AllFuelForLighting>) => {
+].reduce((acc, el: FuelTypesItem<AllFuel>) => {
   acc[el._id] = el;
   return acc;
-}, {} as Record<AllFuelForLighting, FuelTypesItem<AllFuelForLighting>>);
+}, {} as Record<AllFuel, FuelTypesItem<AllFuel>>);

@@ -33,7 +33,6 @@ import {
 } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import { formatNumber } from "@/plugins/filters";
 import {
-  DieselItem,
   EnergyItem,
   GenericFormSurvey,
   SurveyInput,
@@ -132,7 +131,7 @@ export default class Facilities extends Vue {
     if (fuelType === undefined) {
       throw new Error("fuel type not defined");
     }
-    if (!electricFuels.includes(fuelType)) {
+    if (!electricFuels.includes(fuelType as ElectricFuel)) {
       throw new Error(`unknown fuel type ${fuelType}`);
     }
     const totalCO2Emission = this.computeItemElectric(
@@ -169,8 +168,8 @@ export default class Facilities extends Vue {
 
     delete localInput.dieselPowerEstimated;
     delete localInput.dieselLitersEstimated;
-    delete localInput.renewablePowerEstimated;
-    delete localInput.solarInstalledEstimated;
+    // delete localInput.renewablePowerEstimated;
+    // delete localInput.solarInstalledEstimated;
     return localInput;
   }
 
@@ -238,7 +237,7 @@ export default class Facilities extends Vue {
         type: "number",
       },
       // end of national grid\
-      ...solarInputsProducedPer("Year", this.countryCode, this.project.solar),
+      ...solarInputsProducedPer("Year", this.countryCode, this?.project.solar),
       {
         text: "Total (kWh/yr)",
         value: "computed.totalPower",
@@ -259,13 +258,7 @@ export default class Facilities extends Vue {
   }
 }
 
-export interface EnergyFacilityItemInput
-  extends DieselItem,
-    EnergyItem,
-    SurveyInput {
-  fuelUsage?: number; // [L/yr]
-  fuelType?: ElectricFuel; // key
-}
+export interface EnergyFacilityItemInput extends EnergyItem, SurveyInput {}
 
 export interface EnergyFacilityItemResults extends SurveyResult {
   totalCO2Emission: number;

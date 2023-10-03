@@ -181,15 +181,8 @@ export default class Results extends Vue {
         stack: "co2",
       },
       {
-        color: `rgba(157,72,56,${this.omega})`,
-        name: "Energy - Pumping",
-        category: "energy",
-        subcategory: "pumping",
-        stack: "co2",
-      },
-      {
         color: `rgba(32,135,200,${this.omega})`,
-        name: "WASH - Trucking",
+        name: "WASH - Water Supply",
         resultKey: "totalCO2Emission",
         category: "wash",
         subcategory: "trucking",
@@ -200,20 +193,6 @@ export default class Results extends Vue {
       218,182,0
       169,134,0
       */
-      {
-        color: `rgba(218,182,0, ${this.alpha})`,
-        name: "Material - Shelter",
-        category: "material",
-        subcategory: "shelter",
-        stack: "co2",
-      },
-      {
-        color: `rgba(218,182,0,${this.beta})`,
-        name: "Material - CRI",
-        category: "material",
-        subcategory: "cri",
-        stack: "co2",
-      },
       {
         color: `rgba(1218,182,0,${this.delta})`,
         name: "Material - Domestic solid waste",

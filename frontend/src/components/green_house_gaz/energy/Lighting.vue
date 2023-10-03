@@ -93,8 +93,8 @@ export default class Cooking extends Vue {
   public get headers(): SurveyTableHeader[] {
     return headers(
       this.countryCode,
-      this.project.solar,
-      this.project.pp_per_hh
+      this.project?.solar,
+      this.project?.pp_per_hh
     );
   }
 
