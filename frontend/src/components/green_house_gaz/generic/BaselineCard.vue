@@ -34,7 +34,7 @@
                   Total CO2 Emissions:
                   {{
                     baseline.results.totalCO2Emission |
-                      formatNumber({
+                      formatNumberGhg({
                         suffix: "tCO2e/year",
                       })
                   }}

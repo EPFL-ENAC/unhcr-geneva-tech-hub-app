@@ -12,13 +12,13 @@
       <v-col :cols="6" class="d-flex justify-center">
         <h3>
           Total Baseline CO2 Emissions:
-          {{ totalBaseline | formatNumber }} (tCO2e/year)
+          {{ totalBaseline | formatNumberGhg }} (tCO2e/year)
         </h3>
       </v-col>
       <v-col :cols="6" class="d-flex flex-column justify-center">
         <h3>
           Total Endline CO2 Emissions:
-          {{ totalEndline | formatNumber }} (tCO2e/year)
+          {{ totalEndline | formatNumberGhg }} (tCO2e/year)
         </h3>
         <br />
         <h3>
@@ -31,13 +31,12 @@
           >
             {{
               totalChange |
-                formatNumber({
+                formatNumberGhg({
                   style: "percent",
-                  signDisplay: "exceptZero",
-                  maximumFractionDigits: 0,
+                  signDisplay: "exceptZero"
                 })
             }}
-            ({{ (totalEndline - totalBaseline) | formatNumber }} tCO2e/year)
+            ({{ (totalEndline - totalBaseline) | formatNumberGhg }} tCO2e/year)
           </span>
         </h3>
       </v-col>
@@ -273,7 +272,7 @@ export default class Results extends Vue {
           },
           tooltip: {
             valueFormatter: (value): string => {
-              return `${this.$options.filters?.formatNumber(
+              return `${this.$options.filters?.formatNumberGhg(
                 value
               )} (tCO2e/year)`;
             },

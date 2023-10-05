@@ -4,10 +4,7 @@
       <v-data-table :headers="headers" :items="items" dense>
         <template #[`item.value`]="props">
           <span :title="props.item._id">{{
-            props.item.value |
-              formatNumber({
-                maximumFractionDigits: 3,
-              })
+            props.item.value | formatNumberGhg
           }}</span>
         </template>
         <template #[`item.source`]="props">

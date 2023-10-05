@@ -4,7 +4,7 @@ import {
   TimePeriod,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
 import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
-import { formatNumber } from "@/plugins/filters";
+import { formatNumberGhg } from "@/plugins/filters";
 import { EnergyItem, SurveyInput, SurveyItem } from "@/store/GhgInterface";
 import {
   ItemReferencesMap,
@@ -157,6 +157,9 @@ function computeDieselLitersFromPowerAndUpdateKey(
     return localInput;
   };
 }
+export function getDieselPowerText(): string {
+  return `Diesel estimated`;
+}
 
 export function dieselInputsProducedPer(
   timePeriod: TimePeriod,
@@ -304,7 +307,7 @@ export function dieselInputsProducedPer(
   };
 
   const dieselEstimatedInput = (suffix: string) => ({
-    text: `Diesel (${suffix}) estimated`,
+    text: getDieselPowerText(),
     computeResults: true,
     value: "input.dieselPower",
     hideFooterContent,
@@ -354,11 +357,11 @@ export function dieselInputsProducedPer(
       item: SurveyItem
     ) => {
       if (typeof dieselPower === "number") {
-        return `${item?.input?.dieselPowerEstimated ? "~" : ""}${formatNumber(
+        return `${item?.input?.dieselPowerEstimated ? "~" : ""}${formatNumberGhg(
           dieselPower
-        )} (${item?.input?.dieselLitersEstimated ? "~" : ""}${formatNumber(
-          item?.input?.fuelUsage as number
-        )}L) `;
+        )} ${suffix} (${
+          item?.input?.dieselLitersEstimated ? "~" : ""
+        }${formatNumberGhg(item?.input?.fuelUsage as number)}L) `;
       }
       return dieselPower;
     },

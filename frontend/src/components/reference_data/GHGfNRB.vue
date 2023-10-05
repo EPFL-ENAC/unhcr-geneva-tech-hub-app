@@ -11,9 +11,8 @@
               <span :title="props.item.value"
                 >{{
                   props.item.value |
-                    formatNumber({
+                    formatNumberGhg({
                       style: "percent",
-                      maximumFractionDigits: 3,
                     })
                 }}
               </span>

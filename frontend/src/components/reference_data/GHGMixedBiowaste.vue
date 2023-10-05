@@ -20,25 +20,19 @@
             <template #[`item.MAN`]="props">
               <span :title="props.item.MAN">{{
                 props.item.MAN |
-                  formatNumber({
-                    maximumFractionDigits: 3,
-                  })
+                formatNumberGhg
               }}</span>
             </template>
             <template #[`item.BUR`]="props">
               <span :title="props.item.BUR">{{
                 props.item.BUR |
-                  formatNumber({
-                    maximumFractionDigits: 3,
-                  })
+                formatNumberGhg
               }}</span>
             </template>
             <template #[`item.PIT`]="props">
               <span :title="props.item.PIT">{{
                 props.item.PIT |
-                  formatNumber({
-                    maximumFractionDigits: 3,
-                  })
+                  formatNumberGhg
               }}</span>
             </template>
             <template #[`item._id`]="props">

@@ -1,7 +1,4 @@
-import {
-  computeCO2CostEnergy,
-  numberOfDaysPerYear,
-} from "@/components/green_house_gaz/energy/computeCO2cost";
+import { numberOfDaysPerYear } from "@/components/green_house_gaz/energy/computeCO2cost";
 import {
   computeKWInstalledWithKwhPerYearPerCountry,
   CountryIrradianceKeys,
@@ -30,7 +27,7 @@ import {
   ReferenceItemInterface,
 } from "@/store/GhgReferenceModule";
 
-import { formatNumber } from "@/plugins/filters";
+import { formatNumberGhg } from "@/plugins/filters";
 import {
   EnergyItem,
   GenericFormSurvey,
@@ -61,6 +58,7 @@ import {
   surveyTableHeaderCO2,
   surveyTableHeaderIncrements,
 } from "@/components/green_house_gaz/generic/surveyTableHeader";
+import { computeCO2costElectric } from "./poweredBy";
 
 export interface EnergyCookingItemInput extends SurveyInput, EnergyItem {
   numberOfCookstove?: number; // computed based on % of HH and stuffs
@@ -532,7 +530,7 @@ export function headers(
       disabled: false,
       text: `Solar thermal (kWh/year/HH) estimated`,
       formatter: (v: number) => {
-        return formatNumber(v);
+        return formatNumberGhg(v);
       },
       customEventInput: (
         renewablePower: number,
@@ -694,9 +692,9 @@ export function headers(
       type: "number",
       hideFooterContent: false,
       formatter: (v: number) => {
-        return formatNumber(v, {
+        return formatNumberGhg(v, {
           style: "percent",
-          maximumFractionDigits: 0,
+          // maximumFractionDigits: 0,
         });
       },
     },
@@ -738,36 +736,6 @@ function getLocalFNRB(
     localFNRB = REF_SUSTAINED_WOOD;
   }
   return localFNRB;
-}
-
-function computeItemElectric(
-  localItemInput: EnergyCookingItemInput,
-  ghgMapRef: ItemReferencesMap,
-  hhUsingTheFuel: number,
-  applianceEff: number,
-  project_REF_GRD: ReferenceItemInterface
-): number {
-  let totalCO2Emission = 0;
-  switch (localItemInput.fuelType) {
-    case "ELE_HYB":
-    case "ELE_GRID":
-    case "ELE_DIES":
-      totalCO2Emission =
-        computeCO2CostEnergy(
-          localItemInput as EnergyItem,
-          ghgMapRef?.REF_EFF_DIES,
-          project_REF_GRD
-        ) *
-        hhUsingTheFuel *
-        applianceEff *
-        numberOfDaysPerYear;
-      break;
-    case "ELE_SOLAR":
-    case "ELE_NONE":
-    default:
-      break;
-  }
-  return totalCO2Emission;
 }
 
 // this.project.totalHH
@@ -906,12 +874,11 @@ export function generateComputeItem(
         break;
       }
       case electricFuels.includes(fuelType as ElectricFuel):
-        totalCO2Emission = computeItemElectric(
+        totalCO2Emission = computeCO2costElectric(
           localItemInput,
           ghgMapRef,
-          hhUsingTheFuel,
-          applianceEff,
-          project_REF_GRD
+          project_REF_GRD,
+          hhUsingTheFuel * applianceEff * numberOfDaysPerYear
         );
         break;
       case thermalFuels.includes(fuelType as ThermalFuel):

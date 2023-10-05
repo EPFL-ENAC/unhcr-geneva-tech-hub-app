@@ -1,5 +1,5 @@
 import { SelectOption, SelectValue } from "@/components/commons/FormItem";
-import { formatNumber } from "@/plugins/filters";
+import { formatNumberGhg } from "@/plugins/filters";
 import {
   SurveyInput,
   SurveyInputValue,
@@ -70,7 +70,7 @@ export const surveyTableHeaderCO2 = [
     value: "computed.totalCO2Emission",
     hideFooterContent: false,
     formatter: (v: number, { ...args }) => {
-      return formatNumber(v, { suffix: args.suffix });
+      return formatNumberGhg(v, { suffix: args.suffix });
     },
     computeResults: true,
     type: "number",
@@ -85,7 +85,7 @@ export const surveyTableHeaderCO2 = [
     readonly: true,
     endlineOnly: true,
     formatter: (v: number) => {
-      const res = formatNumber(v, {
+      const res = formatNumberGhg(v, {
         style: "percent",
         signDisplay: "exceptZero",
       });
@@ -175,7 +175,12 @@ export interface EasySurveyTableHeader {
   isInput: boolean;
   label?: string;
   tooltipInfo?: string;
-  tooltipInfoFn?: (value: string) => string;
+  tooltipInfoFn?: (
+    value: string,
+    tableHeader?: SurveyTableHeader,
+    item?: SurveyItem,
+    items?: SurveyItem[]
+  ) => string;
   category?: string; // example increment
   subtype?: string; // example: percent
   classFormatter?: (

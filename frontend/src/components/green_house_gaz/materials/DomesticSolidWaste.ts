@@ -1,6 +1,6 @@
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 
-import { formatNumber } from "@/plugins/filters";
+import { formatNumberGhg } from "@/plugins/filters";
 import {
   GenericFormSurvey,
   SurveyInput,
@@ -232,9 +232,8 @@ export function headers() {
       type: "number",
       hideFooterContent: false,
       formatter: (v: number) => {
-        return formatNumber(v, {
+        return formatNumberGhg(v, {
           style: "percent",
-          maximumFractionDigits: 0,
         });
       },
     },

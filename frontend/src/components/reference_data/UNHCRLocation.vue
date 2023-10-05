@@ -18,17 +18,13 @@
             <template #[`item.Population`]="props">
               <span :title="props.item.Population">{{
                 props.item.Population |
-                  formatNumber({
-                    maximumFractionDigits: 3,
-                  })
+                formatNumberGhg
               }}</span>
             </template>
             <template #[`item.solar_peak_hours`]="props">
               <span :title="props.item.solar_peak_hours">{{
                 props.item.solar_peak_hours |
-                  formatNumber({
-                    maximumFractionDigits: 3,
-                  })
+                formatNumberGhg
               }}</span>
             </template>
             <template #[`item.Country`]="props">

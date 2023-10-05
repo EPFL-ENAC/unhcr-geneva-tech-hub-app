@@ -170,6 +170,7 @@ export default class ComputeGenericFormSurveyMixin extends Vue {
 
         ratioBaseline = interventionDiffDimension / baselineDiffDimensionTotal;
       }
+      // following three lines only if number of interventions === 1
       // if baseline == 0 and endline === 0 then 0%
       // if baseline == 0 and endline = x then 100%
       // if baseline == NOT POWERED and endline = x then 100%
@@ -180,6 +181,7 @@ export default class ComputeGenericFormSurveyMixin extends Vue {
           changeInEmission = 1 * ratioBaseline;
         }
       } else {
+        // if baseline is not 0
         changeInEmission = computeChangeInEmission(
           baselineCO2,
           endlineCO2,

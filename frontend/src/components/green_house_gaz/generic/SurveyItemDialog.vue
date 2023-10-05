@@ -324,7 +324,6 @@ export default class SurveyItemDialog extends Vue {
     if (!this.localInput) {
       return Promise.resolve();
     }
-    // this.localItem.input = this.localInput;
     this.$set(this.localItem, "input", this.localInput);
     if (this.intervention) {
       this.localItem.enabled = true;
@@ -338,11 +337,6 @@ export default class SurveyItemDialog extends Vue {
     surveyItem: SurveyTableHeader
   ) {
     if (typeof surveyItem.conditional_disabled_function === "function") {
-      console.log(
-        "result of conditional_disabled_function:",
-        surveyItem.conditional_disabled_function(localInput, surveyItem)
-      );
-      console.groupEnd();
       return surveyItem.conditional_disabled_function(localInput, surveyItem);
     }
     return (
@@ -354,21 +348,10 @@ export default class SurveyItemDialog extends Vue {
     localInput: SurveyInput,
     surveyItem: SurveyTableHeader
   ) {
-    // console.group(`matchConditions: ${surveyItem.label}`);
-    // console.log(
-    //   `\x1B[1;4m${surveyItem.key}: ${localInput[surveyItem.key] ?? ""}`
-    // );
-    // console.log(localInput, surveyItem);
     // if we have a conditional_function field it superseed the conditional logic
     if (typeof surveyItem.conditional_function === "function") {
-      // console.log(
-      //   "result of conditional_function:",
-      //   surveyItem.conditional_function(localInput, surveyItem)
-      // );
-      // console.groupEnd();
       return surveyItem.conditional_function(localInput, surveyItem);
     }
-    // console.groupEnd();
     if (typeof surveyItem.conditional === "undefined") {
       return true;
     }

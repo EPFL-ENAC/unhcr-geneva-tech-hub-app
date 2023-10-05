@@ -102,7 +102,7 @@ import CountrySelect from "@/components/commons/CountrySelect.vue";
 import { FormItem } from "@/components/commons/FormItem";
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import TerritoryMap from "@/components/commons/TerritoryMap.vue";
-import { formatNumber } from "@/plugins/filters";
+import { formatNumberGhg } from "@/plugins/filters";
 import { GHGfNRB } from "@/store/GHGReferencefNRB";
 
 import {
@@ -238,7 +238,7 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
     const key = this.project?.country_code ?? "default";
     const countrySolar = this.GhgReferenceSolarMap[key]?.c;
     const defaultSolar = this.GhgReferenceSolarMap?.default?.c;
-    return formatNumber(countrySolar ?? defaultSolar);
+    return formatNumberGhg(countrySolar ?? defaultSolar);
   }
 
   get generalItems(): (FormItem & {

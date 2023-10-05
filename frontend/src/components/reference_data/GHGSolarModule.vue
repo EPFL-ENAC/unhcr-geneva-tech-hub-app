@@ -13,12 +13,7 @@
           <v-data-table :headers="headers" :items="items" dense>
             <template #[`item.c`]="props">
               <span :title="props.item.c"
-                >{{
-                  props.item.c |
-                    formatNumber({
-                      maximumFractionDigits: 3,
-                    })
-                }}
+                >{{ props.item.c | formatNumberGhg }}
                 hrs/day
               </span>
             </template>

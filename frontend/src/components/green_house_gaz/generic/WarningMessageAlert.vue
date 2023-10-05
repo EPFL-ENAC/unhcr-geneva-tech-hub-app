@@ -12,11 +12,11 @@
     {{ text }} do not match.
     <br />
     Baseline:
-    {{ baseline | formatNumber(formatNumberOptions) }}
+    {{ baseline | formatNumberGhg(formatNumberGhgOptions) }}
     {{ textFormatted }}
     <br />
     Endline:
-    {{ endline | formatNumber(formatNumberOptions) }}
+    {{ endline | formatNumberGhg(formatNumberGhgOptions) }}
     {{ textFormatted }}
   </v-alert>
 </template>
@@ -37,11 +37,10 @@ export default class WarningMessageAlert extends Vue {
   @Prop([String])
   readonly subtype!: string;
 
-  public get formatNumberOptions() {
+  public get formatNumberGhgOptions() {
     if (this.subtype === "percent") {
       return {
         style: "percent",
-        maximumFractionDigits: 0,
       };
     }
     return {};
