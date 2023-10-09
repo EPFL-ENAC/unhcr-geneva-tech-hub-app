@@ -44,6 +44,7 @@ import {
   SurveyInput,
   SurveyItem,
   SurveyResult,
+  generateNewGenericFormSurvey,
 } from "@/store/GhgInterface";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 
@@ -103,31 +104,14 @@ export default class BaselineEndlineWrapper extends Mixins(
     SurveyResult
   > {
     if (!this.value) {
-      return this.generateNewValue();
+      return generateNewGenericFormSurvey();
     }
     if (this.value?.baseline.items === undefined) {
-      return this.generateNewValue();
+      return generateNewGenericFormSurvey();
     }
     return this.value;
   }
 
-  private generateNewValue(): GenericFormSurvey<
-    SurveyItem,
-    SurveyResult,
-    SurveyItem,
-    SurveyResult
-  > {
-    return {
-      baseline: {
-        items: [],
-        results: {} as SurveyResult,
-      },
-      endline: {
-        items: [],
-        results: {} as SurveyResult,
-      },
-    };
-  }
 
   public get baselineHeaders(): SurveyTableHeader[] {
     return (

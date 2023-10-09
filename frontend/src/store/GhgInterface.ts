@@ -1,12 +1,7 @@
 import { ShelterRegions } from "@/store/ShelterInterface";
 import { CouchUser } from "./UserModule";
 
-import {
-  AllFuel,
-  ElectricFuel,
-  electricFuels,
-  electricFuelWithText,
-} from "@/components/green_house_gaz/fuelTypes";
+import { AllFuel } from "@/components/green_house_gaz/fuelTypes";
 
 // import { Material } from "@/store/ShelterInterface";
 export type CountriesInfoMap = Record<string, CountryInfo>;
@@ -26,7 +21,7 @@ export interface Site {
   _rev?: string;
   id: string; // site unique identitier (name as first)
   name: string; // site name // location
-  country_code: CountryCode;
+  countryCode: CountryCode;
   created_by: Email | string;
   users: (CouchUser | Email | string)[];
   lat?: number;
@@ -36,14 +31,26 @@ type CountryCode = string;
 type Email = string;
 export type Sites = Site[];
 
-export interface GreenHouseGaz {
+export interface SurveyForms {
+  energy: EnergySurvey;
+  wash: WashSurvey;
+  material: MaterialSurvey;
+  offset: OffsetSurvey;
+}
+
+export interface GreenHouseGaz extends SurveyForms {
   _rev?: string;
   _id: string; // uuid4 mandatory
-  name: string;
-  country_code: string;
+  // todo check that it's not
+  // id: string; //
+  description: string; // assessment description  // was called survey name before
+  siteId: number|string; // unhcr number id or uuid
+  siteName: string;
+  countryCode: string;
+  reference?: boolean; // say if the survey is a reference or not
   latitude: number;
   longitude: number;
-  surveys: Survey[];
+  // surveys: Survey[];
   users: (CouchUser | Email | string)[];
   solar?: number;
   population: number; // total population
@@ -56,31 +63,37 @@ export interface GreenHouseGaz {
   isUNHCR?: boolean;
 }
 
-export interface SurveyForms {
-  energy: EnergySurvey;
-  wash: WashSurvey;
-  material: MaterialSurvey;
-  offset: OffsetSurvey;
-}
-
 // export type SurveyCategory = "energy" | "wash" | "material" | "offset";
 
-export type SurveyCategory = keyof SurveyForms;
+export type SurveyCategory = keyof GreenHouseGaz;
 
-export interface Survey extends SurveyForms {
-  _id: string; // uuid4
-  created_at: string;
-  created_by: string;
-  updated_by?: string;
-  updated_at?: string;
-  reference?: boolean; // say if the survey is a reference or not
-  name: string; // name is year
+export type SurveyKey = keyof GreenHouseGaz;
+
+export function generateNewGenericFormSurvey(): GenericFormSurvey<
+  SurveyItem,
+  SurveyResult,
+  SurveyItem,
+  SurveyResult
+> {
+  return {
+    baseline: {
+      items: [],
+      results: {} as SurveyResult,
+    },
+    endline: {
+      items: [],
+      results: {} as SurveyResult,
+    },
+  };
 }
 
-export type SurveyKey = keyof Survey;
-
 export interface EnergySurvey {
-  facilities: EnergyFacilitySurvey;
+  facilities: GenericFormSurvey<
+    SurveyItem,
+    SurveyResult,
+    SurveyItem,
+    SurveyResult
+  >;
   cooking: GenericFormSurvey<
     SurveyItem,
     SurveyResult,
@@ -93,12 +106,12 @@ export interface EnergySurvey {
     SurveyItem,
     SurveyResult
   >;
-  pumping: GenericFormSurvey<
-    SurveyItem,
-    SurveyResult,
-    SurveyItem,
-    SurveyResult
-  >;
+  // pumping: GenericFormSurvey<
+  //   SurveyItem,
+  //   SurveyResult,
+  //   SurveyItem,
+  //   SurveyResult
+  // >;
 }
 export type EnergySurveyCategory = keyof EnergySurvey;
 
@@ -115,6 +128,7 @@ export interface WashSurvey {
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 // TODO replace by GenericFormSurvey
+// TODO: remove everywehre!
 export interface FormSurvey {
   baseline: {
     inputs: FormSurveyInput[];
@@ -256,13 +270,13 @@ export type EnergyFacilityInterventionItemResult = Omit<
 
 // start of material survey
 export interface MaterialSurvey {
-  shelter: GenericFormSurvey<
-    SurveyItem,
-    SurveyResult,
-    SurveyItem,
-    SurveyResult
-  >;
-  cri: GenericFormSurvey<SurveyItem, SurveyResult, SurveyItem, SurveyResult>;
+  // shelter: GenericFormSurvey<
+  //   SurveyItem,
+  //   SurveyResult,
+  //   SurveyItem,
+  //   SurveyResult
+  // >;
+  // cri: GenericFormSurvey<SurveyItem, SurveyResult, SurveyItem, SurveyResult>;
   hhwaste: GenericFormSurvey<
     SurveyItem,
     SurveyResult,

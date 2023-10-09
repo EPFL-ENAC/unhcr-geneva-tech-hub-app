@@ -20,7 +20,7 @@ import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
 
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
+import { GreenHouseGaz } from "@/store/GhgInterface";
 import { GHGfNRB } from "@/store/GHGReferencefNRB";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -52,9 +52,6 @@ export default class Cooking extends Vue {
 
   @Prop({ type: [Object, Array] })
   readonly form!: EnergyLightingSurvey;
-
-  @Prop([Object, Array])
-  readonly survey: Survey | undefined;
 
   @Prop({ type: String, required: true, default: "" })
   readonly countryCode!: CountryIrradianceKeys;

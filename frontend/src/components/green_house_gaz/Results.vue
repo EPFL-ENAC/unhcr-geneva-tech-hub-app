@@ -33,7 +33,7 @@
               totalChange |
                 formatNumberGhg({
                   style: "percent",
-                  signDisplay: "exceptZero"
+                  signDisplay: "exceptZero",
                 })
             }}
             ({{ (totalEndline - totalBaseline) | formatNumberGhg }} tCO2e/year)
@@ -50,9 +50,9 @@ import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import {
   EnergySurvey,
   FormSurvey,
+  GreenHouseGaz,
   MaterialSurvey,
   OffsetSurvey,
-  Survey,
   WashSurvey,
 } from "@/store/GhgInterface";
 
@@ -70,7 +70,7 @@ import { CanvasRenderer } from "echarts/renderers";
 import { BarSeriesOption, EChartsOption } from "echarts/types/dist/shared";
 import "vue-class-component/hooks";
 import VChart from "vue-echarts";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 
 use([
@@ -94,33 +94,27 @@ use([
   },
 })
 export default class Results extends Vue {
-  @Prop([Object, Array])
-  readonly survey: Survey | undefined;
+  project!: GreenHouseGaz;
 
   public get totalChange(): number {
     return computeChangeInEmission(this.totalBaseline, this.totalEndline);
   }
 
   public totalResult(key: keyof FormSurvey): number {
-    if (this.survey) {
-      const survey = this.survey;
-      return this.items
-        .map((item) => {
-          const surveyCategory = survey[item.category] ?? {};
-          const subcat: FormSurvey =
-            surveyCategory[item.subcategory as keyof typeof surveyCategory] ??
-            {};
-          const results = subcat[key]?.results ?? {};
-          const resultValue =
-            (item.resultKey
-              ? results?.[item.resultKey as keyof typeof results]
-              : results?.totalCO2Emission) ?? 0;
+    return this.items
+      .map((item) => {
+        const surveyCategory = this.project[item.category] ?? {};
+        const subcat: FormSurvey =
+          surveyCategory[item.subcategory as keyof typeof surveyCategory] ?? {};
+        const results = subcat[key]?.results ?? {};
+        const resultValue =
+          (item.resultKey
+            ? results?.[item.resultKey as keyof typeof results]
+            : results?.totalCO2Emission) ?? 0;
 
-          return resultValue * (item.sign === "neg" ? -1 : 1);
-        })
-        .reduce((acc: number, el: number) => acc + el, 0);
-    }
-    return 0;
+        return resultValue * (item.sign === "neg" ? -1 : 1);
+      })
+      .reduce((acc: number, el: number) => acc + el, 0);
   }
 
   public get totalBaseline(): number {
@@ -248,22 +242,19 @@ export default class Results extends Vue {
       series: this.items.map((item: Config): BarSeriesOption => {
         let baseline = 0;
         let endline = 0;
-        if (this.survey) {
-          const surveyCategory = this.survey[item.category] ?? {};
-          const subcat: FormSurvey =
-            surveyCategory[item.subcategory as keyof typeof surveyCategory] ??
-            {};
-          const baseRes = subcat?.baseline?.results ?? {};
-          const endRes = subcat?.endline?.results ?? {};
-          baseline =
-            (item.resultKey
-              ? baseRes?.[item.resultKey as keyof typeof baseRes]
-              : baseRes?.totalCO2Emission) ?? 0;
-          endline =
-            (item.resultKey
-              ? endRes?.[item.resultKey as keyof typeof endRes]
-              : endRes?.totalCO2Emission) ?? 0;
-        }
+        const surveyCategory = this.project[item.category] ?? {};
+        const subcat: FormSurvey =
+          surveyCategory[item.subcategory as keyof typeof surveyCategory] ?? {};
+        const baseRes = subcat?.baseline?.results ?? {};
+        const endRes = subcat?.endline?.results ?? {};
+        baseline =
+          (item.resultKey
+            ? baseRes?.[item.resultKey as keyof typeof baseRes]
+            : baseRes?.totalCO2Emission) ?? 0;
+        endline =
+          (item.resultKey
+            ? endRes?.[item.resultKey as keyof typeof endRes]
+            : endRes?.totalCO2Emission) ?? 0;
 
         return {
           data: [baseline, endline],

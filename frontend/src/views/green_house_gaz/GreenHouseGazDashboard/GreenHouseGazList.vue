@@ -2,15 +2,15 @@
   <v-expansion-panels v-model="panel" accordion>
     <v-expansion-panel
       v-for="(country, keyIndex) in countries"
-      :key="`${country.key}${keyIndex}`"
+      :key="`${country.key[0]}${keyIndex}`"
     >
       <v-expansion-panel-header>
-        <div v-if="countriesMap[country.key]" class="panel-header">
+        <div v-if="countriesMap[country.key[0]]" class="panel-header">
           <span>
-            {{ countriesMap[country.key].name }}
+            {{ countriesMap[country.key[0]].name }}
           </span>
           <span>
-            <country-flag :country="country.key" size="small" />
+            <country-flag :country="country.key[0]" size="small" />
           </span>
         </div>
       </v-expansion-panel-header>
@@ -20,8 +20,8 @@
           :headers="tableHeaders"
           :items="country.value"
           :single-expand="singleExpand"
-          :expanded.sync="expanded[`${country.key}${keyIndex}`]"
-          item-key="name"
+          :expanded.sync="expanded[`${country.key[0]}${keyIndex}`]"
+          item-key="siteId"
           show-expand
           hide-default-footer
           :items-per-page="-1"
@@ -31,7 +31,7 @@
         >
           <template #expanded-item="{ headers, item }">
             <td :colspan="headers.length">
-              <survey-list :site="item.id" :country-code="country.key" />
+              <survey-list :site="item.siteId" :country-code="country.key[0]" />
             </td>
           </template>
         </v-data-table>
@@ -64,7 +64,7 @@ export default class ProjectList extends Vue {
   expanded: ExpandedObject = {};
 
   readonly tableHeaders: DataTableHeader[] = [
-    { text: "Site", value: "name" },
+    { text: "Site", value: "siteName" },
     { text: "", value: "data-table-expand", align: "end", sortable: false },
   ];
 
@@ -78,8 +78,8 @@ export default class ProjectList extends Vue {
 
   private setCountry(country: Country): void {
     let hash = "";
-    if (this.$route.hash !== `#${country.key}`) {
-      hash = country.key;
+    if (this.$route.hash !== `#${country.key[0]}`) {
+      hash = country.key[0];
     }
     this.$router.push({ hash });
   }
@@ -109,7 +109,7 @@ export default class ProjectList extends Vue {
 
   public clickSite(item: Site, keyIndex: number, event: EventClickRow): void {
     if (this.expanded) {
-      const accessKey = `${item.country_code}${keyIndex}`;
+      const accessKey = `${item.countryCode}${keyIndex}`;
       let currentExpandedArray = this.expanded[accessKey] ?? [];
       if (event.isExpanded) {
         const index = currentExpandedArray.findIndex((i) => i === item);

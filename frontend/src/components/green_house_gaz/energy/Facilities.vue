@@ -39,7 +39,7 @@ import {
   electricFuels,
 } from "@/components/green_house_gaz/fuelTypes";
 
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
+import { GreenHouseGaz } from "@/store/GhgInterface";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -65,9 +65,6 @@ export default class Facilities extends Vue {
 
   @Prop({ type: [Object, Array] })
   readonly form!: EnergyFacilitySurvey;
-
-  @Prop([Object, Array])
-  readonly survey: Survey | undefined;
 
   @Prop({ type: String, required: true, default: "" })
   readonly countryCode!: CountryIrradianceKeys;

@@ -143,7 +143,7 @@
 
 <script lang="ts">
 import { getNewName, updateMetaFields } from "@/store/documentUtils";
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
+import { GreenHouseGaz } from "@/store/GhgInterface";
 import { CouchUser } from "@/store/UserModule";
 import { SyncDatabase } from "@/utils/couchdb";
 import { cloneDeep } from "lodash";
@@ -158,7 +158,7 @@ import { mapActions, mapGetters } from "vuex";
   methods: {
     ...mapActions("GhgModule", [
       "updateDoc",
-      "getDoc",
+      "getSite",
       "getSites",
       "removeDoc",
       "syncDB",
@@ -170,13 +170,13 @@ import { mapActions, mapGetters } from "vuex";
 /** ProjectItem */
 export default class ProjectItem extends Vue {
   @Prop(String)
-  readonly site: string | undefined;
+  readonly site: number | undefined;
   @Prop(String)
   readonly countryCode: string | undefined;
 
   syncDB!: () => null;
   hasDB!: () => Promise<SyncDatabase<GreenHouseGaz> | null>;
-  getDoc!: (id: string) => null;
+  getSite!: (id: number) => null;
   removeDoc!: (id: string) => Promise<void>;
   closeDB!: () => null;
   project!: GreenHouseGaz;
@@ -205,11 +205,13 @@ export default class ProjectItem extends Vue {
   dialogDuplicate = false;
   dialogToggleReference = false;
   editedIndex = -1;
-  private newDefaultItem(): Survey {
+
+  // TODO: fix that: it should not exist
+  private newDefaultItem(): GreenHouseGaz {
     return {
       name: "",
       created_at: new Date().toISOString(),
-    } as Survey;
+    } as unknown as GreenHouseGaz;
   }
   editedItem = this.newDefaultItem();
 
@@ -217,17 +219,13 @@ export default class ProjectItem extends Vue {
     return "site-row-pointer";
   }
 
-  handleClick(item: Survey): void {
-    if (
-      !this.localProject._id ||
-      !this.localProject.country_code ||
-      !item._id
-    ) {
+  handleClick(item: GreenHouseGaz): void {
+    if (!this.localProject._id || !this.localProject.countryCode || !item._id) {
       if (!this.localProject._id) {
         throw new Error("site _id non existing");
       }
-      if (!this.localProject.country_code) {
-        throw new Error("site country_code non existing");
+      if (!this.localProject.countryCode) {
+        throw new Error("site countryCode non existing");
       }
       if (!item._id) {
         throw new Error("assessment _id non existing");
@@ -236,7 +234,7 @@ export default class ProjectItem extends Vue {
     this.$router.push({
       name: "GreenHouseGazItemSurveyId",
       params: {
-        country: encodeURIComponent(this.localProject.country_code),
+        country: encodeURIComponent(this.localProject.countryCode),
         site: encodeURIComponent(this.localProject._id),
         surveyId: encodeURIComponent(item._id),
       },
@@ -246,70 +244,77 @@ export default class ProjectItem extends Vue {
     });
   }
 
-  duplicateItem(item: Survey): void {
-    this.editedIndex = this.localProject.surveys.indexOf(item);
-    // get doc from database!
-    // retrieve real document first (it's okay it's a survey)
-    this.editedItem = cloneDeep(item) as Survey;
-    this.dialogDuplicate = true;
+  duplicateItem(item: GreenHouseGaz): void {
+    // TODO: fix duplicate
+    // this.editedIndex = this.localProject.surveys.indexOf(item);
+    // // get doc from database!
+    // // retrieve real document first (it's okay it's a survey)
+    // this.editedItem = cloneDeep(item) as Survey;
+    // this.dialogDuplicate = true;
   }
 
   async duplicateItemConfirm(): Promise<void> {
-    this.editedItem = updateMetaFields(this.editedItem, this.user);
-    this.editedItem.name = getNewName(this.editedItem.name);
+    // TODO: fix duplicate
+    // this.editedItem = updateMetaFields(this.editedItem, this.user);
+    // this.editedItem.name = getNewName(this.editedItem.name);
 
-    this.localProject.surveys.push(this.editedItem);
-    await this.submitForm(this.localProject);
-    await this.closeDialog();
+    // this.localProject.surveys.push(this.editedItem);
+    // await this.submitForm(this.localProject);
+    // await this.closeDialog();
   }
 
-  deleteItem(item: Survey): void {
-    this.editedIndex = this.localProject.surveys.indexOf(item);
-    this.editedItem = Object.assign({}, item) as Survey;
-    this.dialogDelete = true;
+  deleteItem(item: GreenHouseGaz): void {
+    // TODO: fix delete Item
+    // this.editedIndex = this.localProject.surveys.indexOf(item);
+    // this.editedItem = Object.assign({}, item) as Survey;
+    // this.dialogDelete = true;
   }
 
   async deleteItemConfirm(): Promise<void> {
-    this.localProject.surveys.splice(this.editedIndex, 1);
-    // if surveys === [] empty we want to delete the project!
-    if (this.localProject.surveys.length === 0 && this.localProject._id) {
-      await this.removeDoc(this.localProject._id).then(() => {
-        this.$store.dispatch("notifyUser", {
-          type: "info",
-          message: `successfuly removing site and its last assessment ${this.localProject.name}`,
-        });
-      });
-      await this.getSites();
-    } else {
-      await this.submitForm(this.localProject);
-      this.$store.dispatch("notifyUser", {
-        type: "info",
-        message: `successfuly removing site and its last assessment ${this.editedItem?.name}`,
-      });
-    }
-    await this.closeDialog();
+    // TODO: fix delete item confirm
+    // this.localProject.surveys.splice(this.editedIndex, 1);
+    // // if surveys === [] empty we want to delete the project!
+    // if (this.localProject.surveys.length === 0 && this.localProject._id) {
+    //   await this.removeDoc(this.localProject._id).then(() => {
+    //     this.$store.dispatch("notifyUser", {
+    //       type: "info",
+    //       message: `successfuly removing site and its last assessment ${this.localProject.name}`,
+    //     });
+    //   });
+    //   // TODO: change things to avoid this
+    //   await this.getSites();
+    // } else {
+    //   await this.submitForm(this.localProject);
+    //   this.$store.dispatch("notifyUser", {
+    //     type: "info",
+    //     message: `successfuly removing site and its last assessment ${this.editedItem?.name}`,
+    //   });
+    // }
+    // await this.closeDialog();
   }
 
-  toggleItemReferenceStatus(item: Survey): void {
-    this.editedIndex = this.localProject.surveys.indexOf(item);
-    this.editedItem = Object.assign({}, item) as Survey;
-    this.dialogToggleReference = true;
+  toggleItemReferenceStatus(item: GreenHouseGaz): void {
+    // TODO: fix toggle reference
+    // this.editedIndex = this.localProject.surveys.indexOf(item);
+    // this.editedItem = Object.assign({}, item) as Survey;
+    // this.dialogToggleReference = true;
   }
 
   async toggleItemAsReferenceConfirm(): Promise<void> {
-    this.editedItem.reference = !this.editedItem.reference;
+    // // TODO: fix toggle reference
+    // this.editedItem.reference = !this.editedItem.reference;
 
-    // copy
-    let newProjectSurveys: Survey[] = [];
-    newProjectSurveys = newProjectSurveys.concat(this.localProject.surveys);
-    newProjectSurveys.forEach((item: Survey): void => {
-      item.reference = undefined;
-    });
-    // replace
-    this.localProject.surveys = newProjectSurveys;
-    this.localProject.surveys.splice(this.editedIndex, 1, this.editedItem);
-    await this.submitForm(this.localProject);
-    await this.closeDialog();
+    // // copy
+    // let newProjectSurveys: Survey[] = [];
+    // newProjectSurveys = newProjectSurveys.concat(this.localProject.surveys);
+    // newProjectSurveys.forEach((item: GreenHouseGaz): void => {
+    //   item.reference = undefined;
+    // });
+    // // replace
+    // this.localProject.surveys = newProjectSurveys;
+    // this.localProject.surveys.splice(this.editedIndex, 1, this.editedItem);
+    // await this.submitForm(this.localProject);
+    // await this.closeDialog();
   }
 
   closeDialog(): void {
@@ -322,32 +327,33 @@ export default class ProjectItem extends Vue {
     });
   }
 
-  async save(): Promise<void> {
-    if (this.editedIndex > -1) {
-      Object.assign(
-        this.localProject.surveys[this.editedIndex],
-        this.editedItem
-      );
-    } else {
-      this.localProject.surveys.push(this.editedItem);
-    }
-    const created_id = this.editedItem._id;
-    await this.submitForm(this.localProject);
-    // TODO: should check unicity of name
-    if (this.$route.name !== "GreenHouseGazItemSurveyId") {
-      await this.$router.push({
-        name: "GreenHouseGazItemSurveyId",
-        params: { surveyId: encodeURIComponent(created_id) },
-      });
-    }
-  }
+  // async save(): Promise<void> {
+  //   if (this.editedIndex > -1) {
+  //     Object.assign(
+  //       this.localProject.surveys[this.editedIndex],
+  //       this.editedItem
+  //     );
+  //   } else {
+  //     this.localProject.surveys.push(this.editedItem);
+  //   }
+  //   const created_id = this.editedItem._id;
+  //   await this.submitForm(this.localProject);
+  //   // TODO: should check unicity of name
+  //   if (this.$route.name !== "GreenHouseGazItemSurveyId") {
+  //     await this.$router.push({
+  //       name: "GreenHouseGazItemSurveyId",
+  //       params: { surveyId: encodeURIComponent(created_id) },
+  //     });
+  //   }
+  // }
+
 
   public get formTitle(): string {
     return this.editedIndex === -1 ? "New assessment" : "Edit assessment";
   }
 
   public async submitForm(value: GreenHouseGaz): Promise<void> {
-    if (value.name !== "") {
+    if (value.siteName !== "") {
       await this.updateDoc(value);
     } else {
       throw new Error("please fill the new Name");
@@ -372,10 +378,11 @@ export default class ProjectItem extends Vue {
 
   // watch site and trigger retrieve
   @Watch("site", { immediate: true })
-  onSiteChange(newValue: string): void {
+  onSiteChange(newValue: number): void {
     this.hasDB().then((db: SyncDatabase<GreenHouseGaz> | null) => {
       if (db && newValue) {
-        this.getDoc(newValue);
+        debugger;
+        this.getSite(newValue);
       }
     });
   }
@@ -384,7 +391,8 @@ export default class ProjectItem extends Vue {
     this.syncDB();
     this.syncLocalShelter();
     if (this.site) {
-      this.getDoc(this.site);
+      debugger;
+      this.getSite(this.site);
     }
   }
   destroyed(): void {

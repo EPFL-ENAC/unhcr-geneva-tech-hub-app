@@ -15,7 +15,7 @@ azure:
 	$(MAKE) -C azure
 
 setup-database:
-	docker-compose up --build --force-recreate couchdb-setup
+	docker-compose up --build --force-recreate --no-deps couchdb-setup
 
 test:
 	$(MAKE) -C frontend test

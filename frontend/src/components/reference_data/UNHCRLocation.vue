@@ -69,7 +69,7 @@ export default class Energy extends Vue {
     // _id: string; // "Abazar : Point",
     // Country: string; // "IR",
     // Population: number;
-    // "Location id": number;
+    // siteId: number;
     // latitude: number; //: 28.978026
     // longitude: number; // : 50.8379918,
     // "solar_peak_hours": number; // 5.607999802,

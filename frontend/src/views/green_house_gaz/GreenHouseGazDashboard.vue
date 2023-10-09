@@ -92,10 +92,10 @@ export default class ProjectList extends Vue {
   }
 
   public openSite(item: Site): void {
-    if (item?.country_code) {
+    if (item?.countryCode) {
       let hash = "";
-      if (this.$route.hash !== `#${item?.country_code}`) {
-        hash = item?.country_code;
+      if (this.$route.hash !== `#${item?.countryCode}`) {
+        hash = item?.countryCode;
       }
       this.$router.push({ hash });
     }

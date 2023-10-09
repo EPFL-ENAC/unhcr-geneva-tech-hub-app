@@ -26,7 +26,7 @@ interface ProjectsState {
   localCouch: SyncDatabase<GreenHouseGaz> | null;
 }
 
-const DB_NAME = "ghg_projects";
+const DB_NAME = "ghg_projects_1696578512055758";
 
 function generateState(): ProjectsState {
   return {
@@ -72,7 +72,7 @@ const getters: GetterTree<ProjectsState, RootState> = {
     }
     const REF_GRD = ghgMapRef.REF_GRD;
     const iges_grid_match = iges_grid.find(
-      (el: IgesItem) => el._id === getters.project.country_code
+      (el: IgesItem) => el._id === getters.project.countryCode
     );
     REF_GRD.value = iges_grid_match?.value ?? REF_GRD.value; // find REF_GRD per country
 
@@ -147,6 +147,41 @@ function getGenericCountries(
   };
 }
 
+function getGenericSite(
+  queryParams: CouchQuery = {
+    reduce: true,
+    group: true,
+    group_level: 1,
+    skip: 0,
+    limit: 1000,
+  },
+  COMMIT_NAME = "SET_SITE"
+) {
+  return function getSite(
+    context: ActionContext<ProjectsState, RootState>,
+    id: number
+  ) {
+    const db = context.state.localCouch?.remoteDB;
+    if (!db) {
+      throw new Error(MSG_DB_DOES_NOT_EXIST);
+    }
+    // http://localhost:5984/ghg_projects_1696578512055758/_design/project/_view/sites_with_assessments?skip=0&limit=51&reduce=true&group=true&key=582
+    debugger;
+    db?.query("project/sites_with_assessments", {
+      ...queryParams,
+      key: id,
+    }).then(function (result) {
+      // TODO: finish GHG project site
+      if (result?.rows) {
+        const value = result.rows.filter((item) => item !== null);
+        context.commit(COMMIT_NAME, value);
+        return value;
+      }
+      throw new Error("undefined 'project/sites_with_assessments' response");
+    });
+  };
+}
+
 /** Action */
 const actions: ActionTree<ProjectsState, RootState> = {
   syncDB: (context: ActionContext<ProjectsState, RootState>) => {
@@ -176,7 +211,10 @@ const actions: ActionTree<ProjectsState, RootState> = {
     }
   },
   getSites: getGenericCountries({}, "SET_SITES"),
-  getCountries: getGenericCountries(),
+  getCountries: getGenericCountries({
+    group_level: 1,
+  }),
+  getSite: getGenericSite(),
   addDoc: (
     context: ActionContext<ProjectsState, RootState>,
     newGhg: GreenHouseGaz
@@ -300,6 +338,7 @@ const GhgModule: Module<ProjectsState, RootState> = {
 interface CouchQuery {
   reduce?: boolean;
   group?: boolean;
+  group_level?: number;
   skip?: number;
   limit?: number;
 }

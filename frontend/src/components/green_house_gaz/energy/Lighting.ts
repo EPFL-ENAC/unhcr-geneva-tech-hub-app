@@ -522,7 +522,7 @@ function getLocalFNRB(
 }
 
 // this.project.totalHH
-// this.project.country_code
+// this.project.countryCode
 export function generateComputeItem(
   countryCode: string,
   projectTotalHH: number,

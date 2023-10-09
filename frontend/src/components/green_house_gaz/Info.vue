@@ -39,7 +39,7 @@
                         xl="4"
                       >
                         <form-item-component
-                          v-if="item.key !== 'country_code'"
+                          v-if="item.key !== 'countryCode'"
                           v-model="localProject[item.key]"
                           v-bind="item"
                           @input="
@@ -53,7 +53,7 @@
                         <country-select
                           v-else
                           id="location_country"
-                          v-model="localProject.country_code"
+                          v-model="localProject.countryCode"
                           label="Country"
                           type="text"
                           name="location_country"
@@ -105,19 +105,8 @@ import TerritoryMap from "@/components/commons/TerritoryMap.vue";
 import { formatNumberGhg } from "@/plugins/filters";
 import { GHGfNRB } from "@/store/GHGReferencefNRB";
 
-import {
-  diffDimension as cookingDiffDimension,
-  generateComputeItem as cookingGenerateComputeItem,
-  headers as cookingHeaders,
-} from "@/components/green_house_gaz/energy/Cooking";
-import { CountryIrradianceKeys } from "@/components/green_house_gaz/energy/solarInputs";
 import ComputeGenericFormSurveyMixin from "@/components/green_house_gaz/generic/ComputeGenericFormSurveyMixin.vue";
-import {
-  GreenHouseGaz,
-  Survey,
-  SurveyInput,
-  SurveyResult,
-} from "@/store/GhgInterface";
+import { GreenHouseGaz } from "@/store/GhgInterface";
 import {
   ItemReferencesMap,
   ReferenceItemInterface,
@@ -171,9 +160,6 @@ import { mapActions, mapGetters } from "vuex";
 })
 /** ProjectItem */
 export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
-  @Prop([Object, Array])
-  readonly survey: Survey | undefined;
-
   @Prop([Number])
   readonly surveyIndex: number | undefined;
 
@@ -190,10 +176,10 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
   validations = {
     localProject: {
       name: { required },
-      country_code: { required }, //string;
+      countryCode: { required }, //string;
       latitude: { required }, //number;
       longitude: { required }, //number;
-      surveys: { required }, //Survey[];
+      // surveys: { required }, //Survey[];
       solar: {}, //number;
       population: { required }, //number; // total population
       pp_per_hh: { required }, //number; // ave people per hhtotalHH
@@ -235,7 +221,7 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
   }
 
   get defaultSolarPeak(): string {
-    const key = this.project?.country_code ?? "default";
+    const key = this.project?.countryCode ?? "default";
     const countrySolar = this.GhgReferenceSolarMap[key]?.c;
     const defaultSolar = this.GhgReferenceSolarMap?.default?.c;
     return formatNumberGhg(countrySolar ?? defaultSolar);
@@ -271,7 +257,7 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
       },
       {
         type: "text",
-        key: "country_code",
+        key: "countryCode",
         label: "Country code",
       },
       {
@@ -334,20 +320,10 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
   }
 
   public async submitForm(value: GreenHouseGaz): Promise<void> {
-    if (
-      value.name !== "" &&
-      this.survey &&
-      this.surveyIndex !== undefined &&
-      this.surveyIndex >= 0
-    ) {
+    if (value.siteName !== "") {
       this.saveInProgress = true;
-      if (this.surveyIndex !== undefined) {
-        const currentSurvey: Survey = value.surveys[this.surveyIndex];
-        currentSurvey.updated_at = new Date().toISOString();
-        currentSurvey.updated_by = this.$user().name ?? "user with no name";
-        value.surveys[this.surveyIndex] = currentSurvey;
-      }
-      value = this.updateSurveyForm(value, this.surveyIndex);
+      // do nothing right now
+      value = this.updateSurveyForm(value);
       try {
         await this.updateDoc(value);
       } finally {
@@ -361,11 +337,11 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
 
   public updateSurveyValues(): void {
     if (this.surveyIndex !== undefined) {
-      const currentSurvey: Survey = this.localProject.surveys[this.surveyIndex];
+      // const currentSurvey: Survey = this.localProject.surveys[this.surveyIndex];
+      const currentSurvey: GreenHouseGaz = this.localProject; //.surveys[this.surveyIndex];
       currentSurvey.updated_at = new Date().toISOString();
       currentSurvey.updated_by = this.$user().name ?? "user with no name";
-      this.localProject.surveys[this.surveyIndex] = currentSurvey;
-      this.localProject = Object.assign({}, this.localProject);
+      this.localProject = Object.assign({}, currentSurvey);
       // no vuelidate for descriptions and custom keys for now
       // but it works because we're using vuetify and vuelidate form validation
       this.$v.localProject.$touch();
@@ -403,39 +379,35 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
     });
   }
 
-  public updateSurveyForm(
-    value: GreenHouseGaz,
-    surveyIndex: number
-  ): GreenHouseGaz {
+  public updateSurveyForm(value: GreenHouseGaz): GreenHouseGaz {
     // TODO: it's working but it seems some variable are not always called
     //  need to find out why
-    if (surveyIndex !== undefined) {
-      // localProject.surveys[surveyIndex].energy.cooking
-      const currentSurvey = value.surveys[surveyIndex];
-      if (currentSurvey.energy?.cooking) {
-        currentSurvey.energy.cooking = this.updateGenericFormSurvey(
-          currentSurvey.energy.cooking,
-          cookingDiffDimension as string,
-          cookingHeaders(
-            value.country_code as CountryIrradianceKeys,
-            value.solar,
-            value.pp_per_hh
-          ),
-          cookingGenerateComputeItem(
-            value.country_code,
-            value.totalHH,
-            this.items, // being GHGReferencefNRB
-            this.project_REF_GRD
-          ) as unknown as (
-            localItemInput: SurveyInput,
-            ghgMapRef: ItemReferencesMap
-          ) => SurveyResult,
-          this.ghgMapRef
-        );
-      }
-
-      value.surveys[surveyIndex] = currentSurvey;
-    }
+    // if (surveyIndex !== undefined) {
+    // localProject.surveys[surveyIndex].energy.cooking
+    // const currentSurvey = value.surveys[surveyIndex];
+    // if (currentSurvey.energy?.cooking) {
+    //   currentSurvey.energy.cooking = this.updateGenericFormSurvey(
+    //     currentSurvey.energy.cooking,
+    //     cookingDiffDimension as string,
+    //     cookingHeaders(
+    //       value.countryCode as CountryIrradianceKeys,
+    //       value.solar,
+    //       value.pp_per_hh
+    //     ),
+    //     cookingGenerateComputeItem(
+    //       value.countryCode,
+    //       value.totalHH,
+    //       this.items, // being GHGReferencefNRB
+    //       this.project_REF_GRD
+    //     ) as unknown as (
+    //       localItemInput: SurveyInput,
+    //       ghgMapRef: ItemReferencesMap
+    //     ) => SurveyResult,
+    //     this.ghgMapRef
+    //   );
+    // }
+    // value.surveys[surveyIndex] = currentSurvey;
+    // }
     return value;
   }
 
