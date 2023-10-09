@@ -3,6 +3,15 @@ interface FuelTypesItem<T> {
   text: string;
   description?: string;
 }
+
+// TODO: lighting
+
+/*
+-- tous les electric/solar devices sous un meme group.
+
+*/
+
+
 // electric fuels
 export const electricFuels = [
   "ELE_DIES",
@@ -72,7 +81,7 @@ export const thermalFuelWithText: FuelTypesItem<ThermalFuel>[] = [
 // lighting fuels
 export const lightingFuels = [
   "CNDL",
-  "LIGHT_HYB",
+  // "LIGHT_HYB",
   "PET",
   "OIL",
   "LIGHT_SOLAR",
@@ -85,11 +94,11 @@ export const lightingFuels = [
 export type LightingFuel = typeof lightingFuels[number];
 export const lightingFuelsWithText: FuelTypesItem<LightingFuel>[] = [
   { _id: "CNDL", text: "Candle (paraffin)" },
-  {
-    _id: "LIGHT_HYB",
-    text: "Hybrid fuel mix (Firewood + paraffin + kerosene)",
-    // description: "Firewood + paraffin + kerosene",
-  },
+  // {
+  //   _id: "LIGHT_HYB",
+  //   text: "Hybrid fuel mix (Firewood + paraffin + kerosene)",
+  //   // description: "Firewood + paraffin + kerosene",
+  // },
   {
     _id: "PET",
     text: "Gasoline lamp",
@@ -138,11 +147,11 @@ export const allFuelsButThermal = [
 export const allFuels = [...allFuelsButElectric, ...electricFuels];
 
 export const allFuelsForLighing = [
-  "NO_ACCESS",
+  // "NO_ACCESS",
   "FWD",
   "CNDL",
   "KRS",
-  "LIGHT_HYB", // rename Hybrid fuel mix (paraffin,.. ...)
+  // "LIGHT_HYB", // rename Hybrid fuel mix (paraffin,.. ...)
   "PET",
   "OIL",
   "LIGHT_SOLAR",

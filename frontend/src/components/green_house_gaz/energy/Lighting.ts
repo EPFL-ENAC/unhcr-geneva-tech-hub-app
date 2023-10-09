@@ -669,63 +669,63 @@ export function generateComputeItem(
       case thermalFuels.includes(fuelType as ThermalFuel):
         totalCO2Emission = 0;
         break;
-      case fuelType === "LIGHT_HYB": {
-        const { fuelUsageFirewood, fuelUsageParaffin, fuelUsageKerosene } =
-          localItemInput;
-        if (fuelUsageFirewood === undefined) {
-          throw new Error("fuel usage not defined");
-        }
-        const fuelEfficiencyFirewood = ghgMapRef?.[`REF_EFF_FWD`]?.value;
-        if (fuelEfficiencyFirewood == undefined) {
-          const errorMessage = `there are no emission factor REF_EFF_FWD`;
-          throw new Error(errorMessage);
-        }
-        const totalCO2EmissionFirewood =
-          hhUsingTheFuel *
-          fuelUsageFirewood * // fuel consumed in kg / day
-          0.001 * // 1t/1000kg
-          numberOfDaysPerYear * // days/yr
-          fuelEfficiencyFirewood;
+      // case fuelType === "LIGHT_HYB": {
+      //   const { fuelUsageFirewood, fuelUsageParaffin, fuelUsageKerosene } =
+      //     localItemInput;
+      //   if (fuelUsageFirewood === undefined) {
+      //     throw new Error("fuel usage not defined");
+      //   }
+      //   const fuelEfficiencyFirewood = ghgMapRef?.[`REF_EFF_FWD`]?.value;
+      //   if (fuelEfficiencyFirewood == undefined) {
+      //     const errorMessage = `there are no emission factor REF_EFF_FWD`;
+      //     throw new Error(errorMessage);
+      //   }
+      //   const totalCO2EmissionFirewood =
+      //     hhUsingTheFuel *
+      //     fuelUsageFirewood * // fuel consumed in kg / day
+      //     0.001 * // 1t/1000kg
+      //     numberOfDaysPerYear * // days/yr
+      //     fuelEfficiencyFirewood;
 
-        // PARAFFIN
-        if (fuelUsageParaffin === undefined) {
-          throw new Error("fuel usage not defined");
-        }
-        const fuelEfficiencyParaffin = ghgMapRef?.[`REF_EFF_CNDL`]?.value;
-        if (fuelEfficiencyParaffin == undefined) {
-          const errorMessage = `there are no emission factor REF_EFF_CNDL`;
-          throw new Error(errorMessage);
-        }
-        const totalCO2EmissionParaffin =
-          hhUsingTheFuel *
-          fuelUsageParaffin * // fuel consumed in kg / day
-          0.001 * // 1t/1000kg
-          numberOfDaysPerYear * // days/yr
-          fuelEfficiencyParaffin;
-        // END PARAFFIN
+      //   // PARAFFIN
+      //   if (fuelUsageParaffin === undefined) {
+      //     throw new Error("fuel usage not defined");
+      //   }
+      //   const fuelEfficiencyParaffin = ghgMapRef?.[`REF_EFF_CNDL`]?.value;
+      //   if (fuelEfficiencyParaffin == undefined) {
+      //     const errorMessage = `there are no emission factor REF_EFF_CNDL`;
+      //     throw new Error(errorMessage);
+      //   }
+      //   const totalCO2EmissionParaffin =
+      //     hhUsingTheFuel *
+      //     fuelUsageParaffin * // fuel consumed in kg / day
+      //     0.001 * // 1t/1000kg
+      //     numberOfDaysPerYear * // days/yr
+      //     fuelEfficiencyParaffin;
+      //   // END PARAFFIN
 
-        // KEROSENE
-        if (fuelUsageKerosene === undefined) {
-          throw new Error("fuel usage not defined");
-        }
-        const fuelEfficiencyKerosene = ghgMapRef?.[`REF_EFF_KRS`]?.value;
-        if (fuelEfficiencyKerosene == undefined) {
-          const errorMessage = `there are no emission factor REF_EFF_KRS`;
-          throw new Error(errorMessage);
-        }
-        const totalCO2EmissionKerosene =
-          hhUsingTheFuel *
-          fuelUsageKerosene * // fuel consumed in kg / day
-          0.001 * // 1t/1000kg
-          numberOfDaysPerYear * // days/yr
-          fuelEfficiencyKerosene;
-        // END KEROSENE
-        totalCO2Emission =
-          totalCO2EmissionFirewood +
-          totalCO2EmissionParaffin +
-          totalCO2EmissionKerosene;
-        break;
-      }
+      //   // KEROSENE
+      //   if (fuelUsageKerosene === undefined) {
+      //     throw new Error("fuel usage not defined");
+      //   }
+      //   const fuelEfficiencyKerosene = ghgMapRef?.[`REF_EFF_KRS`]?.value;
+      //   if (fuelEfficiencyKerosene == undefined) {
+      //     const errorMessage = `there are no emission factor REF_EFF_KRS`;
+      //     throw new Error(errorMessage);
+      //   }
+      //   const totalCO2EmissionKerosene =
+      //     hhUsingTheFuel *
+      //     fuelUsageKerosene * // fuel consumed in kg / day
+      //     0.001 * // 1t/1000kg
+      //     numberOfDaysPerYear * // days/yr
+      //     fuelEfficiencyKerosene;
+      //   // END KEROSENE
+      //   totalCO2Emission =
+      //     totalCO2EmissionFirewood +
+      //     totalCO2EmissionParaffin +
+      //     totalCO2EmissionKerosene;
+      //   break;
+      // }
       case ["NO_ACCESS"].includes(fuelType):
         totalCO2Emission = 0;
         break;
