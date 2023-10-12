@@ -27,13 +27,13 @@
               <v-col cols="5">
                 <v-select
                   ref="existingSites"
-                  v-model="newCampSite.name"
+                  v-model="newCampSite.siteId"
                   :disabled="
                     existingSitesWithUnhcrSites.length === 0 || newName !== ''
                   "
                   tabindex="0"
                   :items="existingSitesWithUnhcrSites"
-                  item-text="name"
+                  item-text="siteName"
                   :return-object="true"
                   label="Select an existing site"
                   :rules="rulesSelectExistingSite"
@@ -48,7 +48,20 @@
                         :country="slotProps.item.countryCode"
                         size="small"
                       />
-                      {{ slotProps.item.name }}
+                      <div style="display: flex; flex-direction: column">
+                        <span>{{ slotProps.item.siteName }}</span>
+                        <span
+                          style="
+                            font-size: 9px;
+                            font-weight: lighter;
+                            font-style: italic;
+                          "
+                          :title="slotProps.item.siteId"
+                          >({{
+                            (slotProps.item.siteId + "").substr(0, 5)
+                          }})</span
+                        >
+                      </div>
                     </div>
                   </template>
                 </v-select>
@@ -264,7 +277,7 @@ export default class ProjectList extends Vue {
 
   get existingSites(): Sites {
     const currentCountry = this.countries.find(
-      (x) => x.key === this.newCampSite.countryCode
+      (x) => x.key[0] === this.newCampSite.countryCode
     );
     if (!currentCountry) {
       return [] as Sites;

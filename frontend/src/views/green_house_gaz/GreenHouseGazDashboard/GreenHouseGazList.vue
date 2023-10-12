@@ -99,7 +99,7 @@ export default class ProjectList extends Vue {
     const hash = this.$route.hash;
     const cleanedHash = hash.substring(1);
     const index = Object.values(this.countries)
-      .map((x: Country) => x.key)
+      .map((x: Country) => x.key[0])
       .findIndex((x) => x === cleanedHash);
     return index;
   }
