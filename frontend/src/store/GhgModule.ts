@@ -23,6 +23,8 @@ interface ProjectsState {
   projectLoading: boolean;
   countries: Array<Country>;
   sites: Site[];
+  siteAssessments: GreenHouseGaz[];
+  siteAssessmentsLoading: boolean;
   localCouch: SyncDatabase<GreenHouseGaz> | null;
 }
 
@@ -35,6 +37,8 @@ function generateState(): ProjectsState {
     projectLoading: false,
     countries: [],
     sites: [],
+    siteAssessments: [],
+    siteAssessmentsLoading: false,
     localCouch: null,
   };
 }
@@ -79,6 +83,8 @@ const getters: GetterTree<ProjectsState, RootState> = {
     return REF_GRD;
   },
   sites: (s): Array<Site> => s.sites,
+  siteAssessments: (s): GreenHouseGaz[] => s.siteAssessments,
+  siteAssessmentsLoading: (s): boolean => s.siteAssessmentsLoading,
   countries: (s): Array<Country> => s.countries,
 };
 
@@ -102,18 +108,21 @@ const mutations: MutationTree<ProjectsState> = {
   SET_COUNTRIES(state, countries) {
     state.countries = countries;
   },
+  SET_SITE_ASSESSMENTS(state, siteAssessments) {
+    state.siteAssessments = siteAssessments;
+  },
+  SET_SITE_ASSESSMENTS_LOADING(state, value) {
+    state.siteAssessmentsLoading = value;
+  },
   SET_SITES(state, sites) {
-    if (sites && sites[0] && sites[0].value) {
-      state.sites = sites[0].value;
-    } else {
-      state.sites = [];
-    }
+    state.sites = sites.map((x: any) => x.value);
   },
   ADD_DOC(state, value) {
     state.projects.push(value);
   },
   REMOVE_DOC(state, value) {
-    const indexToRemove = state.projects.findIndex((el) => el._id === value);
+    // todo:check that projects exists!
+    const indexToRemove = state.projects.findIndex((el) => el.id === value);
     state.projects.splice(indexToRemove, 1);
   },
 };
@@ -138,9 +147,9 @@ function getGenericCountries(
       result
     ) {
       if (result?.rows) {
-        const countries = result.rows.filter((item) => item !== null);
-        context.commit(COMMIT_NAME, countries);
-        return countries;
+        const value = result.rows.filter((item) => item !== null);
+        context.commit(COMMIT_NAME, value);
+        return value;
       }
       throw new Error("undefined 'project/countries_with_info' response");
     });
@@ -155,30 +164,43 @@ function getGenericSite(
     skip: 0,
     limit: 1000,
   },
-  COMMIT_NAME = "SET_SITE"
+  COMMIT_NAME = "SET_SITE_ASSESSMENTS"
 ) {
   return function getSite(
     context: ActionContext<ProjectsState, RootState>,
-    id: number
+    id: number | string
   ) {
+    // first setup loading
+    // second reset data
+    // third get data
+    // fourth reset loading
+    context.commit("SET_SITE_ASSESSMENTS_LOADING", true);
+    context.commit(COMMIT_NAME, []);
     const db = context.state.localCouch?.remoteDB;
     if (!db) {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
     // http://localhost:5984/ghg_projects_1696578512055758/_design/project/_view/sites_with_assessments?skip=0&limit=51&reduce=true&group=true&key=582
-    debugger;
     db?.query("project/sites_with_assessments", {
       ...queryParams,
       key: id,
-    }).then(function (result) {
-      // TODO: finish GHG project site
-      if (result?.rows) {
-        const value = result.rows.filter((item) => item !== null);
-        context.commit(COMMIT_NAME, value);
-        return value;
-      }
-      throw new Error("undefined 'project/sites_with_assessments' response");
-    });
+    })
+      .then(function (result) {
+        if (result?.rows) {
+          const value = result.rows
+            .filter((item) => item !== null)
+            .reduce((acc, x) => {
+              return acc.concat(x.value);
+            }, []);
+          context.commit(COMMIT_NAME, value);
+          return value;
+        }
+        context.commit("SET_SITE_ASSESSMENTS_LOADING", false);
+        throw new Error("undefined 'project/sites_with_assessments' response");
+      })
+      .finally(() => {
+        context.commit("SET_SITE_ASSESSMENTS_LOADING", false);
+      });
   };
 }
 
@@ -210,7 +232,15 @@ const actions: ActionTree<ProjectsState, RootState> = {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
   },
-  getSites: getGenericCountries({}, "SET_SITES"),
+  getSites: getGenericCountries(
+    {
+      reduce: false,
+      group: false,
+      skip: 0,
+      limit: 1000,
+    },
+    "SET_SITES"
+  ),
   getCountries: getGenericCountries({
     group_level: 1,
   }),
@@ -227,7 +257,7 @@ const actions: ActionTree<ProjectsState, RootState> = {
       delete value.isUNHCR;
       return remoteDB.post(value).then(() => {
         // set new rev
-        return context.dispatch("getDoc", value._id);
+        return context.dispatch("getDoc", value.id);
       });
     }
   },

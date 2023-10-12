@@ -17,10 +17,13 @@ export interface CountryInfo {
   lat: number;
   lon: number;
 }
+
+// site don't exist anymore
+// it's all project/assessment
 export interface Site {
   _rev?: string;
   id: string; // site unique identitier (name as first)
-  name: string; // site name // location
+  siteName: string; // site name // location
   countryCode: CountryCode;
   created_by: Email | string;
   users: (CouchUser | Email | string)[];
@@ -39,10 +42,8 @@ export interface SurveyForms {
 }
 
 export interface GreenHouseGaz extends SurveyForms {
-  _rev?: string;
-  _id: string; // uuid4 mandatory
-  // todo check that it's not
-  // id: string; //
+  // _rev?: string;
+  id: string; // uuid4 mandatory
   description: string; // assessment description  // was called survey name before
   siteId: number|string; // unhcr number id or uuid
   siteName: string;
@@ -65,7 +66,7 @@ export interface GreenHouseGaz extends SurveyForms {
 
 // export type SurveyCategory = "energy" | "wash" | "material" | "offset";
 
-export type SurveyCategory = keyof GreenHouseGaz;
+// export type SurveyCategory = keyof GreenHouseGaz;
 
 export type SurveyKey = keyof GreenHouseGaz;
 

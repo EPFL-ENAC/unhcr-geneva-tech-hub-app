@@ -14,10 +14,21 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-data-table :headers="headers" :items="items" dense>
-            <template #[`item.Population`]="props">
-              <span :title="props.item.Population">{{
-                props.item.Population |
+          <v-card-title>
+            IGES GRID
+            <v-spacer></v-spacer>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-card-title>
+          <v-data-table :headers="headers" :items="items" :search="search" dense>
+            <template #[`item.population`]="props">
+              <span :title="props.item.population">{{
+                props.item.population |
                 formatNumberGhg
               }}</span>
             </template>
@@ -28,9 +39,9 @@
               }}</span>
             </template>
             <template #[`item.Country`]="props">
-              <span :title="props.item.Country"
-                >{{ countriesMap[props.item.Country].name }}
-                <country-flag :country="props.item.Country" size="small" />
+              <span :title="props.item.country_code_2"
+                >{{ countriesMap[props.item.country_code_2].name }}
+                <country-flag :country="props.item.country_code_2" size="small" />
               </span>
             </template>
           </v-data-table>
@@ -64,15 +75,9 @@ import { mapGetters } from "vuex";
 export default class Energy extends Vue {
   items!: UNHCRLocation[];
   countriesMap = countriesMap;
+  search = "";
 
   public get headers(): HeaderInterface[] {
-    // _id: string; // "Abazar : Point",
-    // Country: string; // "IR",
-    // Population: number;
-    // siteId: number;
-    // latitude: number; //: 28.978026
-    // longitude: number; // : 50.8379918,
-    // "solar_peak_hours": number; // 5.607999802,
     return [
       {
         text: "Site name",
@@ -80,8 +85,20 @@ export default class Energy extends Vue {
         sortable: false,
         value: "_id",
       },
-      { text: "Country", value: "Country" },
-      { text: "Population", value: "Population" },
+      {
+        text: "location p code",
+        align: "start",
+        sortable: false,
+        value: "location_pcode",
+      },
+      {
+        text: "location id",
+        align: "start",
+        sortable: false,
+        value: "location_id",
+      },
+      { text: "Country", value: "country_code_2" },
+      { text: "Population", value: "population" },
       { text: "latitude", value: "latitude" },
       { text: "longitude", value: "longitude" },
       {

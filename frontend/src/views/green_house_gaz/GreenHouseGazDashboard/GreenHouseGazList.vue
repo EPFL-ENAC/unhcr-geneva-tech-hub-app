@@ -29,6 +29,12 @@
           :item-class="rowClasses"
           @click:row="(item, event) => clickSite(item, keyIndex, event)"
         >
+          <template #[`item.siteName`]="slotProps">
+            {{ slotProps.value }}
+            <span :title="slotProps.item.siteId"
+              >({{ (slotProps.item.siteId + "").substr(0, 5) }})</span
+            >
+          </template>
           <template #expanded-item="{ headers, item }">
             <td :colspan="headers.length">
               <survey-list :site="item.siteId" :country-code="country.key[0]" />

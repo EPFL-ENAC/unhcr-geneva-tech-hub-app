@@ -203,7 +203,7 @@ export default class ProjectList extends Vue {
     } catch (error: AxiosError<unknown, any> | unknown) {
       console.log("the 404 is normal, we check if the site already exist");
       const foundUNHCR = this.unhcrProjects.find(
-        (unhcrProject) => unhcrProject._id === site.id
+        (unhcrProject) => unhcrProject.id === site.id
       );
       if (!foundUNHCR) {
         throw error;
@@ -217,7 +217,7 @@ export default class ProjectList extends Vue {
 
   private newDefaultCampSite(): GreenHouseGaz {
     return {
-      _id: uuidv4(),
+      id: uuidv4(),
       siteName: "",
       siteId: 0,
       description: "",
@@ -274,23 +274,24 @@ export default class ProjectList extends Vue {
 
   get unhcrLocations(): UNHCRLocation[] {
     return this.items.filter(
-      (item) => item.Country === this.newCampSite.countryCode
+      (item) => item.country_code_2 === this.newCampSite.countryCode
     );
   }
 
   // OLD WAY: for unhcr SITES use siteID // for new site. use uuidv4
+  // TODO: fixme
   get unhcrSites(): Sites {
     const result = this.unhcrLocations.map((x) => ({
       id: uuidv4(), // site unique identitier (name as first)
-      siteId: x.siteId, // should not be string should be number ?
-      name: x._id, // site name // location
-      countryCode: x.Country,
+      siteId: x.location_pcode, // should not be string should be number ?
+      siteName: x._id, // site name // location
+      countryCode: x.country_code_2,
       created_by: this.$userName(),
       users: [this.$user()],
       lat: x.latitude,
       lon: x.longitude,
       solar: x.solar_peak_hours,
-      population: x.Population,
+      population: x.population,
       totalHH: 0,
     }));
     return result;
@@ -301,12 +302,12 @@ export default class ProjectList extends Vue {
         ({
           ...this.newDefaultCampSite(),
           ...x,
-          siteId: x.siteId,
+          siteId: x.location_pcode,
           name: x._id, // site unique identitier (name as first)
-          countryCode: x.Country,
+          countryCode: x.country_code_2,
           solar: x.solar_peak_hours,
-          population: x.Population,
-          totalHH: parseInt((x.Population / DEFAULT_PP_PER_HH).toFixed(0), 10),
+          population: x.population,
+          totalHH: parseInt((x.population / DEFAULT_PP_PER_HH).toFixed(0), 10),
           created_by: this.$userName(), // hack to avoid rule in v-form
           users: [this.$user()], // hack to avoid rule in v-form
         } as GreenHouseGaz)
@@ -334,7 +335,7 @@ export default class ProjectList extends Vue {
     this.newCampSite.latitude = selectedCountry?.lat ?? 0;
     this.newCampSite.longitude = selectedCountry?.lon ?? 0;
     this.newName = "";
-    this.newCampSite._id = uuidv4();
+    this.newCampSite.id = uuidv4();
     this.newCampSite.description = "";
     // this.editedItem._id = uuidv4();
     // this.editedItem.name = "";
@@ -399,12 +400,14 @@ export default class ProjectList extends Vue {
   }
 
   public ruleSiteAlreadyExist(value: string): boolean | string {
-    const sites =
-      this.existingSitesWithUnhcrSites?.map((survey) => survey.name) ?? [];
-    return (
-      sites.indexOf(value) === -1 ||
-      `An assessment with this site already exist`
-    );
+    // todo: fix me
+    return true;
+    // const sites =
+    //   this.existingSitesWithUnhcrSites?.map((survey) => survey.name) ?? [];
+    // return (
+    //   sites.indexOf(value) === -1 ||
+    //   `An assessment with this site already exist`
+    // );
   }
 
   async submit(): Promise<void> {
@@ -422,13 +425,13 @@ export default class ProjectList extends Vue {
     // to avoid having to erase all surveys
     if (
       this.newCampSite.countryCode &&
-      this.newCampSite._id &&
+      this.newCampSite.id &&
       this.newCampSite.siteId
     ) {
       const countryCode = this.newCampSite.countryCode;
       const siteId = this.newCampSite.siteId;
-      const surveyId = this.newCampSite._id;
-
+      const surveyId = this.newCampSite.id;
+      // when saving ? should probably replace id by _id ? (to avoid having to do it in the store)
       saveFn(this.newCampSite)
         .then(this.closeSiteDialog)
         .then(() => {

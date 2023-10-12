@@ -1,18 +1,23 @@
 <template>
   <div v-if="project && currentProject" class="fluid surveys-item">
-    <header class="ma-5">
+    <header v-if="currentProject && currentProject.siteName" class="ma-5">
       <v-row>
         <v-col>
           <h2 class="d-flex">
-            <span class="mx-4 mt-n1">
-              <country-flag :country="project && project.countryCode" />
+            <span
+              v-if="currentProject && currentProject.countryCode !== undefined"
+              class="mx-4 mt-n1"
+            >
+              <country-flag :country="currentProject.countryCode" />
             </span>
             <span>
-              {{ currentProjectCountryName }}, {{ project.siteName }},
-              {{ currentProject.name }}
+              {{ currentProjectCountryName }}, {{ currentProject.siteName }} ({{
+                (currentProject.siteId + "").substr(0, 5)
+              }}),
+              {{ currentProject.description }}
               {{
                 $can("edit", {
-                  users: project.users,
+                  users: currentProject.users,
                   reference: currentProject.reference,
                 })
                   ? ""
@@ -23,7 +28,7 @@
         </v-col>
         <v-col class="col-auto">
           <user-manager
-            v-model="project.users"
+            v-model="currentProject.users"
             @change="submitForm"
           ></user-manager>
         </v-col>
@@ -82,7 +87,7 @@
     </v-tabs>
     <v-row>
       <v-col>
-        <v-container v-if="project.users" fluid>
+        <v-container v-if="currentProject && currentProject.users" fluid>
           <!-- add !$can to put readonly mode for guest (but for now we want the
             user to be able to edit the field but not 'SAVE' them to the server) <v-form :readonly="isReadOnly"> -->
           <v-form class="surveys-item__form">
@@ -93,7 +98,7 @@
               :form.sync="localFormSurvey"
               :title-key="currentKeyTitle"
               :survey="currentProject"
-              :country-code="project.countryCode"
+              :country-code="currentProject && currentProject.countryCode"
             />
             <component
               :is="category"
@@ -126,8 +131,9 @@ import { infoTooltipText } from "@/components/green_house_gaz/infoTooltipText";
 import {
   GenericFormSurvey,
   GreenHouseGaz,
-  SurveyCategory,
+  SurveyForms,
   SurveyItem,
+  SurveyKey,
   SurveyResult,
   SurveySubcategory,
 } from "@/store/GhgInterface";
@@ -229,8 +235,8 @@ export default class SurveyList extends Vue {
     return (this.$route.query.category as string) ?? "";
   }
 
-  public get normedCategory(): SurveyCategory {
-    return this.category?.toLowerCase() as SurveyCategory;
+  public get normedCategory(): SurveyKey {
+    return this.category?.toLowerCase() as SurveyKey;
   }
 
   public get subcategory(): string {
@@ -266,28 +272,20 @@ export default class SurveyList extends Vue {
       | GenericFormSurvey<SurveyItem, SurveyResult, SurveyItem, SurveyResult>
       | undefined
   ) {
-    if (this.currentProject && this.normedCategory && this.normedSubcategory) {
-      const category = this.currentProject?.[this.normedCategory];
-      // help from @blueur needed for type
-      const subcategory = this.normedSubcategory as keyof typeof category;
-      if (subcategory === undefined) {
-        throw new Error("subcategory not defined");
+    if (value === undefined) {
+      throw new Error("value is undefined");
+    } else {
+      if (
+        this.currentProject &&
+        this.normedCategory &&
+        this.normedSubcategory
+      ) {
+        const normedCategory = this.normedCategory as keyof SurveyForms;
+        this.currentProject[normedCategory][
+          this.normedSubcategory as keyof SurveyForms[typeof normedCategory]
+        ] = value as never;
+        this.currentProject = { ...this.currentProject }; // force call to setter currentProject
       }
-      if (this.normedCategory == undefined) {
-        throw new Error("category not defined");
-      }
-      // if (!this.currentProject[this.normedCategory]) {
-      //   this.currentProject[this.normedCategory] = {};
-      // }
-      // if (
-      //   this.currentProject &&
-      //   this.currentProject[this.normedCategory] !== undefined &&
-      //   subcategory !== undefined
-      // ) {
-      // }
-      // TODO: FIND OUT why is it not working ?
-      // this.currentProject[this.normedCategory][subcategory] = value;
-      this.updateCurrentSurvey();
     }
   }
 
@@ -365,10 +363,6 @@ export default class SurveyList extends Vue {
     this.submitForm(newProject);
   }
 
-  public updateCurrentSurvey(): void {
-    // force update via setter
-    this.currentProject = Object.assign({}, this.currentProject);
-  }
   public submitForm(value: GreenHouseGaz = this.project): void {
     if (!this.isReadOnly) {
       if (value.siteName !== "") {

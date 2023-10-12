@@ -79,8 +79,8 @@ import { mapActions, mapGetters } from "vuex";
     ]),
   },
 })
-/** ProjectItem */
-export default class ProjectItem extends Vue {
+/** ShelterSustainabilityItem */
+export default class ShelterSustainabilityItem extends Vue {
   syncDB!: () => null;
   getDoc!: (id: string) => null;
   closeDB!: () => null;

@@ -16,8 +16,8 @@ import { mapActions, mapGetters } from "vuex";
     ...mapActions("GhgModule", ["getDoc", "syncDB", "closeDB"]),
   },
 })
-/** ProjectItem */
-export default class ProjectItem extends Vue {
+/** GreenHouseGazItem */
+export default class GreenHouseGazItem extends Vue {
   syncDB!: () => null;
   getDoc!: (id: string) => null;
   closeDB!: () => null;
@@ -26,7 +26,7 @@ export default class ProjectItem extends Vue {
 
   mounted(): void {
     this.syncDB();
-    this.getDoc(decodeURIComponent(this.$route.params.site));
+    this.getDoc(decodeURIComponent(this.$route.params.surveyId));
   }
   destroyed(): void {
     this.closeDB();

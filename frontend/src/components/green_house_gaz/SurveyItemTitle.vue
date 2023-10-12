@@ -6,7 +6,10 @@
           <h2 class="text-h4 project__h3 font-weight-medium">
             {{ infoTooltipText[titleKey].title }}
           </h2>
-          <h5 class="text-caption font-italic" v-if="infoTooltipText[titleKey]?.tooltipDisabled">
+          <h5
+            v-if="infoTooltipText[titleKey]?.tooltipDisabled"
+            class="text-caption font-italic"
+          >
             <p v-html="infoTooltipText[titleKey].text"></p>
           </h5>
         </div>

@@ -6,7 +6,17 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-data-table :headers="headers" :items="items" dense>
+          <v-card-title>
+            <v-spacer></v-spacer>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-card-title>
+          <v-data-table :headers="headers" :items="items" :search="search" dense>
             <template #[`item.value`]="props">
               <span :title="props.item.value"
                 >{{
@@ -50,6 +60,7 @@ export default class Energy extends Vue {
   items!: ReferenceItemInterface[];
   countriesMap = countriesMap;
 
+  search = "";
   public get headers(): HeaderInterface[] {
     return [
       { text: "Country", value: "_id" },

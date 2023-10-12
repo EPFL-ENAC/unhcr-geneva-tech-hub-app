@@ -64,29 +64,10 @@
                       </v-col>
                     </template>
                   </v-row>
-                  <v-row v-if="surveyIndex >= 0">
-                    <template v-for="(item, index) in surveyItems">
-                      <v-col
-                        v-if="!item.hidden"
-                        :key="index"
-                        cols="12"
-                        sm="6"
-                        md="4"
-                        lg="4"
-                        xl="4"
-                      >
-                        <form-item-component
-                          v-model="localProject.surveys[surveyIndex][item.key]"
-                          v-bind="item"
-                          @input="updateSurveyValues"
-                        ></form-item-component>
-                      </v-col>
-                    </template>
-                  </v-row>
                 </v-col>
                 <v-divider vertical></v-divider>
                 <v-col cols="6" class="map-countries">
-                  <territory-map :value="latLng" @update:value="updateLatLng" />
+                  <territory-map :value="latLng" @update:value="updateLatLng" :aspect-ratio="16/9" />
                 </v-col>
               </v-row>
             </v-card-text>
@@ -158,7 +139,7 @@ import { mapActions, mapGetters } from "vuex";
     TerritoryMap,
   },
 })
-/** ProjectItem */
+/** GhgInfo */
 export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
   @Prop([Number])
   readonly surveyIndex: number | undefined;
@@ -210,16 +191,6 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
     return defaultCoordinates as LatLngExpression;
   }
 
-  get surveyItems(): FormItem[] {
-    return [
-      {
-        type: "text",
-        key: "name",
-        label: "Assessment description",
-      },
-    ];
-  }
-
   get defaultSolarPeak(): string {
     const key = this.project?.countryCode ?? "default";
     const countrySolar = this.GhgReferenceSolarMap[key]?.c;
@@ -235,9 +206,14 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
     return [
       {
         type: "text",
-        key: "name",
+        key: "siteName",
         label: "Name of the site",
-        disabled: false,
+        disabled: true,
+      },
+      {
+        type: "text",
+        key: "description",
+        label: "Assessment description",
       },
       {
         type: "number",
@@ -428,7 +404,7 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
 
 <style lang="scss" scoped>
 .force-min-height-for-map {
-  min-height: calc(100vh - 250px);
+  max-height: calc(100vh - 250px);
 }
 .map-countries {
   z-index: 1;

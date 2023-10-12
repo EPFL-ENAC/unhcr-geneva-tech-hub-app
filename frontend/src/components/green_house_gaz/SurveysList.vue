@@ -50,14 +50,17 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- TODO: localProject.surveys become 'site': we should probably rename this!
+      projectLoading should also be use maybe ?
+    -->
     <v-data-table
       :headers="headersSurvey"
-      :items="localProject.surveys"
+      :items="siteAssessments"
       sort-by="created_at"
       hide-default-footer
       :items-per-page="-1"
       :item-class="rowClasses"
-      :loading="projectLoading"
+      :loading="siteAssessmentsLoading"
       @click:row="handleClick"
     >
       <template #[`item.created_at`]="{ item }">
@@ -142,7 +145,6 @@
 </template>
 
 <script lang="ts">
-import { getNewName, updateMetaFields } from "@/store/documentUtils";
 import { GreenHouseGaz } from "@/store/GhgInterface";
 import { CouchUser } from "@/store/UserModule";
 import { SyncDatabase } from "@/utils/couchdb";
@@ -152,14 +154,20 @@ import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("GhgModule", ["project", "projectLoading"]),
+    ...mapGetters("GhgModule", [
+      "project",
+      // "sites",
+      "siteAssessments",
+      "siteAssessmentsLoading",
+      "projectLoading",
+    ]),
     ...mapGetters("UserModule", ["user"]),
   },
   methods: {
     ...mapActions("GhgModule", [
       "updateDoc",
       "getSite",
-      "getSites",
+      // "getSites",
       "removeDoc",
       "syncDB",
       "hasDB",
@@ -167,19 +175,21 @@ import { mapActions, mapGetters } from "vuex";
     ]),
   },
 })
-/** ProjectItem */
-export default class ProjectItem extends Vue {
-  @Prop(String)
-  readonly site: number | undefined;
+/** SurveysList */
+export default class SurveysList extends Vue {
+  @Prop([String, Number])
+  readonly site: number | string | undefined;
   @Prop(String)
   readonly countryCode: string | undefined;
 
   syncDB!: () => null;
   hasDB!: () => Promise<SyncDatabase<GreenHouseGaz> | null>;
-  getSite!: (id: number) => null;
+  getSite!: (id: number | string) => null;
   removeDoc!: (id: string) => Promise<void>;
   closeDB!: () => null;
   project!: GreenHouseGaz;
+  siteAssessments!: GreenHouseGaz[];
+  siteAssessmentsLoading!: boolean;
   projectLoading!: boolean;
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
   getSites!: () => Promise<null>;
@@ -188,7 +198,7 @@ export default class ProjectItem extends Vue {
   user!: CouchUser;
 
   headersSurvey = [
-    { text: "Description", value: "name" },
+    { text: "Description", value: "description" },
     { text: "Created", value: "created_at" },
     { text: "Updated", value: "updated_at" },
     {
@@ -220,23 +230,23 @@ export default class ProjectItem extends Vue {
   }
 
   handleClick(item: GreenHouseGaz): void {
-    if (!this.localProject._id || !this.localProject.countryCode || !item._id) {
-      if (!this.localProject._id) {
+    if (!item.siteId || !item.countryCode || !item.id) {
+      if (!item.siteId) {
         throw new Error("site _id non existing");
       }
       if (!this.localProject.countryCode) {
         throw new Error("site countryCode non existing");
       }
-      if (!item._id) {
-        throw new Error("assessment _id non existing");
+      if (!item.id) {
+        throw new Error("assessment id non existing");
       }
     }
     this.$router.push({
       name: "GreenHouseGazItemSurveyId",
       params: {
-        country: encodeURIComponent(this.localProject.countryCode),
-        site: encodeURIComponent(this.localProject._id),
-        surveyId: encodeURIComponent(item._id),
+        country: encodeURIComponent(item.countryCode),
+        site: encodeURIComponent(item.siteId),
+        surveyId: encodeURIComponent(item.id),
       },
       query: {
         category: "Info",
@@ -257,7 +267,6 @@ export default class ProjectItem extends Vue {
     // TODO: fix duplicate
     // this.editedItem = updateMetaFields(this.editedItem, this.user);
     // this.editedItem.name = getNewName(this.editedItem.name);
-
     // this.localProject.surveys.push(this.editedItem);
     // await this.submitForm(this.localProject);
     // await this.closeDialog();
@@ -303,7 +312,6 @@ export default class ProjectItem extends Vue {
   async toggleItemAsReferenceConfirm(): Promise<void> {
     // // TODO: fix toggle reference
     // this.editedItem.reference = !this.editedItem.reference;
-
     // // copy
     // let newProjectSurveys: Survey[] = [];
     // newProjectSurveys = newProjectSurveys.concat(this.localProject.surveys);
@@ -347,7 +355,6 @@ export default class ProjectItem extends Vue {
   //   }
   // }
 
-
   public get formTitle(): string {
     return this.editedIndex === -1 ? "New assessment" : "Edit assessment";
   }
@@ -381,7 +388,6 @@ export default class ProjectItem extends Vue {
   onSiteChange(newValue: number): void {
     this.hasDB().then((db: SyncDatabase<GreenHouseGaz> | null) => {
       if (db && newValue) {
-        debugger;
         this.getSite(newValue);
       }
     });
@@ -390,10 +396,10 @@ export default class ProjectItem extends Vue {
   mounted(): void {
     this.syncDB();
     this.syncLocalShelter();
-    if (this.site) {
-      debugger;
-      this.getSite(this.site);
-    }
+    // not necessary since we trigger the watch above
+    // if (this.site) {
+    //   this.getSite(this.site);
+    // }
   }
   destroyed(): void {
     this.closeDB();
