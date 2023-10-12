@@ -1,6 +1,7 @@
 /** Config store */
 import { Country, GreenHouseGaz } from "@/store/GhgInterface";
 import { SyncDatabase } from "@/utils/couchdb";
+import { v4 as uuidv4 } from "uuid";
 import {
   ActionContext,
   ActionTree,
@@ -256,7 +257,7 @@ const actions: ActionTree<ProjectsState, RootState> = {
     const remoteDB = context.state.localCouch?.remoteDB;
     if (remoteDB) {
       delete value.isUNHCR;
-      value._id = value?._id ?? value.id;
+      value._id = value?._id ?? value?.id ?? uuidv4();
       delete value.id;
       return remoteDB.post(value).then((response) => {
         return context.dispatch("getDoc", response.id);
@@ -327,6 +328,10 @@ const actions: ActionTree<ProjectsState, RootState> = {
     context.commit("SET_PROJECT_LOADING", true);
     const db = context.state.localCouch?.remoteDB;
     if (db) {
+      // first retrieve latest rev
+      // const doc = await db.get(newValue.id);
+      // newValue._id = doc._id;
+      // newValue._rev = doc._rev;
       return await db
         .put(newValue, { force: true })
         .then((response) => {

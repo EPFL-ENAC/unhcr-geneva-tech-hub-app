@@ -18,21 +18,8 @@ export interface CountryInfo {
   lon: number;
 }
 
-// site don't exist anymore
-// it's all project/assessment
-// export interface Site {
-//   _rev?: string;
-//   id: string; // site unique identitier (name as first)
-//   siteName: string; // site name // location
-//   countryCode: CountryCode;
-//   created_by: Email | string;
-//   users: (CouchUser | Email | string)[];
-//   lat?: number;
-//   lon?: number;
-// }
 type CountryCode = string;
 type Email = string;
-// export type Sites = Site[];
 
 export interface SurveyForms {
   energy: EnergySurvey;
@@ -62,7 +49,8 @@ export function newSurveyForm(): SurveyForms {
 }
 
 export interface GreenHouseGaz extends SurveyForms {
-  // _rev?: string;
+  _id?: string;
+  _rev?: string;
   id: string; // uuid4 mandatory
   description: string; // assessment description  // was called survey name before
   siteId: number|string; // unhcr number id or uuid

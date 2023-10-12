@@ -50,9 +50,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <!-- TODO: localProject.surveys become 'site': we should probably rename this!
-      projectLoading should also be use maybe ?
-    -->
     <v-data-table
       :headers="headersSurvey"
       :items="siteAssessments"
@@ -64,7 +61,7 @@
       @click:row="handleClick"
     >
       <template #[`item.created_at`]="{ item }">
-        {{ item.created_at | formatDate }}
+        {{ item.created_at | formatDate }} {{ item.reference }}
       </template>
       <template #[`item.updated_at`]="{ item }">
         {{ item.updated_at | formatDate }}
@@ -76,7 +73,7 @@
               <v-btn
                 v-if="
                   $can('edit', {
-                    users: localProject.users,
+                    users: item.users,
                   })
                 "
                 v-bind="attrs"
@@ -94,7 +91,7 @@
           <v-tooltip bottom>
             <template #activator="{ on, attrs }">
               <v-btn
-                v-if="$can('delete', localProject)"
+                v-if="$can('delete', item)"
                 v-bind="attrs"
                 icon
                 small
@@ -111,7 +108,7 @@
           <v-tooltip bottom>
             <template #activator="{ on, attrs }">
               <v-btn
-                v-if="$can('admin', localProject)"
+                v-if="$can('admin', item)"
                 v-bind="attrs"
                 class="better-click"
                 small
@@ -130,7 +127,7 @@
                 <v-icon v-if="item.reference" small> $mdiOctagram </v-icon>
               </span>
             </template>
-            <div v-if="$can('admin', localProject)">
+            <div v-if="$can('admin', item)">
               <span v-if="!item.reference">Set as reference</span>
               <span v-else>Unset as reference</span>
             </div>
@@ -145,29 +142,27 @@
 </template>
 
 <script lang="ts">
+import { getNewName, updateMetaFields } from "@/store/documentUtils";
 import { GreenHouseGaz } from "@/store/GhgInterface";
+import { getDefaultScoreCard } from "@/store/ShelterModuleUtils";
 import { CouchUser } from "@/store/UserModule";
 import { SyncDatabase } from "@/utils/couchdb";
 import { cloneDeep } from "lodash";
+import { v4 as uuidv4 } from "uuid";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("GhgModule", [
-      "project",
-      // "sites",
-      "siteAssessments",
-      "siteAssessmentsLoading",
-      "projectLoading",
-    ]),
+    ...mapGetters("GhgModule", ["siteAssessments", "siteAssessmentsLoading"]),
     ...mapGetters("UserModule", ["user"]),
   },
   methods: {
     ...mapActions("GhgModule", [
+      "getDoc",
+      "addDoc",
       "updateDoc",
       "getSite",
-      // "getSites",
       "removeDoc",
       "syncDB",
       "hasDB",
@@ -187,14 +182,13 @@ export default class SurveysList extends Vue {
   getSite!: (id: number | string) => null;
   removeDoc!: (id: string) => Promise<void>;
   closeDB!: () => null;
-  project!: GreenHouseGaz;
   siteAssessments!: GreenHouseGaz[];
   siteAssessmentsLoading!: boolean;
-  projectLoading!: boolean;
+  getDoc!: (id: string) => Promise<GreenHouseGaz>;
+  addDoc!: (doc: GreenHouseGaz) => Promise<void>;
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
   getSites!: () => Promise<null>;
 
-  localProject = {} as GreenHouseGaz;
   user!: CouchUser;
 
   headersSurvey = [
@@ -234,7 +228,7 @@ export default class SurveysList extends Vue {
       if (!item.siteId) {
         throw new Error("site _id non existing");
       }
-      if (!this.localProject.countryCode) {
+      if (!item.countryCode) {
         throw new Error("site countryCode non existing");
       }
       if (!item.id) {
@@ -255,74 +249,44 @@ export default class SurveysList extends Vue {
   }
 
   duplicateItem(item: GreenHouseGaz): void {
-    // TODO: fix duplicate
-    // this.editedIndex = this.localProject.surveys.indexOf(item);
-    // // get doc from database!
-    // // retrieve real document first (it's okay it's a survey)
-    // this.editedItem = cloneDeep(item) as Survey;
-    // this.dialogDuplicate = true;
+    this.editedItem = cloneDeep(item) as GreenHouseGaz;
+    this.dialogDuplicate = true;
   }
 
   async duplicateItemConfirm(): Promise<void> {
-    // TODO: fix duplicate
-    // this.editedItem = updateMetaFields(this.editedItem, this.user);
-    // this.editedItem.name = getNewName(this.editedItem.name);
-    // this.localProject.surveys.push(this.editedItem);
-    // await this.submitForm(this.localProject);
-    // await this.closeDialog();
+    this.editedItem = updateMetaFields(this.editedItem, this.user);
+    this.editedItem.description = getNewName(this.editedItem.description);
+    this.editedItem.id = uuidv4();
+    await this.submitForm(this.editedItem);
+    await this.closeDialog();
   }
 
   deleteItem(item: GreenHouseGaz): void {
-    // TODO: fix delete Item
-    // this.editedIndex = this.localProject.surveys.indexOf(item);
-    // this.editedItem = Object.assign({}, item) as Survey;
-    // this.dialogDelete = true;
+    this.editedItem = Object.assign({}, item) as GreenHouseGaz;
+    this.dialogDelete = true;
   }
 
   async deleteItemConfirm(): Promise<void> {
-    // TODO: fix delete item confirm
-    // this.localProject.surveys.splice(this.editedIndex, 1);
-    // // if surveys === [] empty we want to delete the project!
-    // if (this.localProject.surveys.length === 0 && this.localProject._id) {
-    //   await this.removeDoc(this.localProject._id).then(() => {
-    //     this.$store.dispatch("notifyUser", {
-    //       type: "info",
-    //       message: `successfuly removing site and its last assessment ${this.localProject.name}`,
-    //     });
-    //   });
-    //   // TODO: change things to avoid this
-    //   await this.getSites();
-    // } else {
-    //   await this.submitForm(this.localProject);
-    //   this.$store.dispatch("notifyUser", {
-    //     type: "info",
-    //     message: `successfuly removing site and its last assessment ${this.editedItem?.name}`,
-    //   });
-    // }
-    // await this.closeDialog();
+    await this.removeDoc(this.editedItem.id).then(() => {
+      this.$store.dispatch("notifyUser", {
+        type: "info",
+        message: `successfuly removing site and its last assessment ${this.editedItem.description}`,
+      });
+    });
+    await this.closeDialog();
   }
 
   toggleItemReferenceStatus(item: GreenHouseGaz): void {
-    // TODO: fix toggle reference
-    // this.editedIndex = this.localProject.surveys.indexOf(item);
-    // this.editedItem = Object.assign({}, item) as Survey;
-    // this.dialogToggleReference = true;
+    this.editedItem = Object.assign({}, item) as GreenHouseGaz;
+    this.dialogToggleReference = true;
   }
 
   async toggleItemAsReferenceConfirm(): Promise<void> {
-    // // TODO: fix toggle reference
-    // this.editedItem.reference = !this.editedItem.reference;
-    // // copy
-    // let newProjectSurveys: Survey[] = [];
-    // newProjectSurveys = newProjectSurveys.concat(this.localProject.surveys);
-    // newProjectSurveys.forEach((item: GreenHouseGaz): void => {
-    //   item.reference = undefined;
-    // });
-    // // replace
-    // this.localProject.surveys = newProjectSurveys;
-    // this.localProject.surveys.splice(this.editedIndex, 1, this.editedItem);
-    // await this.submitForm(this.localProject);
-    // await this.closeDialog();
+    const doc = await this.getDoc(this.editedItem.id);
+    doc.reference = !doc.reference;
+
+    await this.submitUpdateForm(doc);
+    await this.closeDialog();
   }
 
   closeDialog(): void {
@@ -335,52 +299,24 @@ export default class SurveysList extends Vue {
     });
   }
 
-  // async save(): Promise<void> {
-  //   if (this.editedIndex > -1) {
-  //     Object.assign(
-  //       this.localProject.surveys[this.editedIndex],
-  //       this.editedItem
-  //     );
-  //   } else {
-  //     this.localProject.surveys.push(this.editedItem);
-  //   }
-  //   const created_id = this.editedItem._id;
-  //   await this.submitForm(this.localProject);
-  //   // TODO: should check unicity of name
-  //   if (this.$route.name !== "GreenHouseGazItemSurveyId") {
-  //     await this.$router.push({
-  //       name: "GreenHouseGazItemSurveyId",
-  //       params: { surveyId: encodeURIComponent(created_id) },
-  //     });
-  //   }
-  // }
-
   public get formTitle(): string {
     return this.editedIndex === -1 ? "New assessment" : "Edit assessment";
   }
 
   public async submitForm(value: GreenHouseGaz): Promise<void> {
-    if (value.siteName !== "") {
-      await this.updateDoc(value);
+    if (value.description !== "") {
+      await this.addDoc(value);
     } else {
-      throw new Error("please fill the new Name");
+      throw new Error("please fill the description");
     }
   }
 
-  public setLocalShelter(project: GreenHouseGaz): void {
-    this.localProject = project ? cloneDeep(project) : ({} as GreenHouseGaz);
-  }
-
-  public syncLocalShelter(): void {
-    // init function
-    this.setLocalShelter(this.project);
-
-    this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["GhgModule/SET_PROJECT"];
-      if (shouldUpdate.includes(mutation.type)) {
-        this.setLocalShelter(mutation.payload);
-      }
-    });
+  public async submitUpdateForm(value: GreenHouseGaz): Promise<void> {
+    if (value.description !== "") {
+      await this.updateDoc(value);
+    } else {
+      throw new Error("please fill the description");
+    }
   }
 
   // watch site and trigger retrieve
@@ -395,7 +331,6 @@ export default class SurveysList extends Vue {
 
   mounted(): void {
     this.syncDB();
-    this.syncLocalShelter();
   }
   destroyed(): void {
     this.closeDB();
@@ -416,11 +351,6 @@ export default class SurveysList extends Vue {
   outline: none;
 }
 .better-click {
-  // so to increase clickable zone
-  // display: block;
-  // padding: 1em;
-  // margin: -1em;
-
   align-items: center;
   display: flex;
 }
