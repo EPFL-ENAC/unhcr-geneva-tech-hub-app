@@ -6,8 +6,8 @@ import { AllFuel } from "@/components/green_house_gaz/fuelTypes";
 // import { Material } from "@/store/ShelterInterface";
 export type CountriesInfoMap = Record<string, CountryInfo>;
 export interface Country {
-  key: CountryCode;
-  value: Sites;
+  key: [CountryCode];
+  value: GreenHouseGaz[];
 }
 
 export interface CountryInfo {
@@ -20,25 +20,45 @@ export interface CountryInfo {
 
 // site don't exist anymore
 // it's all project/assessment
-export interface Site {
-  _rev?: string;
-  id: string; // site unique identitier (name as first)
-  siteName: string; // site name // location
-  countryCode: CountryCode;
-  created_by: Email | string;
-  users: (CouchUser | Email | string)[];
-  lat?: number;
-  lon?: number;
-}
+// export interface Site {
+//   _rev?: string;
+//   id: string; // site unique identitier (name as first)
+//   siteName: string; // site name // location
+//   countryCode: CountryCode;
+//   created_by: Email | string;
+//   users: (CouchUser | Email | string)[];
+//   lat?: number;
+//   lon?: number;
+// }
 type CountryCode = string;
 type Email = string;
-export type Sites = Site[];
+// export type Sites = Site[];
 
 export interface SurveyForms {
   energy: EnergySurvey;
   wash: WashSurvey;
   material: MaterialSurvey;
   offset: OffsetSurvey;
+}
+
+export function newSurveyForm(): SurveyForms {
+  return {
+    energy: {
+      facilities: generateNewGenericFormSurvey(),
+      cooking: generateNewGenericFormSurvey(),
+      lighting: generateNewGenericFormSurvey(),
+    },
+    wash: {
+      trucking: generateNewGenericFormSurvey(),
+    },
+    material: {
+      hhwaste: generateNewGenericFormSurvey(),
+      // recycling: generateNewGenericFormSurvey(),
+    },
+    offset: {
+      treeplanting: generateNewGenericFormSurvey(),
+    },
+  };
 }
 
 export interface GreenHouseGaz extends SurveyForms {
@@ -49,6 +69,8 @@ export interface GreenHouseGaz extends SurveyForms {
   siteName: string;
   countryCode: string;
   reference?: boolean; // say if the survey is a reference or not
+  lat?: number; // lat of the site
+  lon?: number; // lon of the site
   latitude: number;
   longitude: number;
   // surveys: Survey[];

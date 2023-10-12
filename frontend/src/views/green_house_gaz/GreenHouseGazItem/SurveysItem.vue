@@ -12,7 +12,7 @@
             </span>
             <span>
               {{ currentProjectCountryName }}, {{ currentProject.siteName }} ({{
-                (currentProject.siteId + "").substr(0, 5)
+                (currentProject.siteId + "").substr(0, 8)
               }}),
               {{ currentProject.description }}
               {{
@@ -131,6 +131,7 @@ import { infoTooltipText } from "@/components/green_house_gaz/infoTooltipText";
 import {
   GenericFormSurvey,
   GreenHouseGaz,
+  newSurveyForm,
   SurveyForms,
   SurveyItem,
   SurveyKey,
@@ -276,9 +277,9 @@ export default class SurveyList extends Vue {
       throw new Error("value is undefined");
     } else {
       if (
-        this.currentProject &&
+        this.currentProject !== undefined &&
         this.normedCategory &&
-        this.normedSubcategory
+        this.normedSubcategory &&  this.currentProject[this.normedCategory as keyof SurveyForms]
       ) {
         const normedCategory = this.normedCategory as keyof SurveyForms;
         this.currentProject[normedCategory][
@@ -344,11 +345,7 @@ export default class SurveyList extends Vue {
     if (this.project) {
       const result = cloneDeep(this.project);
       // ensure at least first level
-      result.wash = result.wash || {};
-      result.energy = result.energy || {};
-      result.material = result.material || {};
-      result.offset = result.offset || {};
-      return result;
+      return { ...result, ...newSurveyForm() };
     }
     return undefined;
   }

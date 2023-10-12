@@ -8,7 +8,7 @@ function (doc) {
     updated_at: doc.updated_at,
     users: doc.users,
     countryCode: doc.countryCode,
-    lat: doc.latitude,
-    lon: doc.longitude,
+    latitude: doc.latitude,
+    longitude: doc.longitude,
   });
 }

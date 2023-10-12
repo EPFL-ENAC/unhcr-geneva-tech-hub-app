@@ -44,8 +44,10 @@
                           v-bind="item"
                           @input="
                             (v) => {
-                              $v.localProject[item.key].$touch();
                               $v.localProject.$touch();
+                              $v.localProject[item.key] &&
+                                $v.localProject[item.key].$touch &&
+                                $v.localProject[item.key].$touch();
                               item?.customEventInput?.(v, localProject);
                             }
                           "
@@ -67,7 +69,11 @@
                 </v-col>
                 <v-divider vertical></v-divider>
                 <v-col cols="6" class="map-countries">
-                  <territory-map :value="latLng" @update:value="updateLatLng" :aspect-ratio="16/9" />
+                  <territory-map
+                    :value="latLng"
+                    :aspect-ratio="16 / 9"
+                    @update:value="updateLatLng"
+                  />
                 </v-col>
               </v-row>
             </v-card-text>

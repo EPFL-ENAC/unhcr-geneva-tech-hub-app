@@ -1,5 +1,5 @@
 /** Config store */
-import { Country, GreenHouseGaz, Site } from "@/store/GhgInterface";
+import { Country, GreenHouseGaz } from "@/store/GhgInterface";
 import { SyncDatabase } from "@/utils/couchdb";
 import {
   ActionContext,
@@ -22,7 +22,7 @@ interface ProjectsState {
   project: GreenHouseGaz;
   projectLoading: boolean;
   countries: Array<Country>;
-  sites: Site[];
+  sites: GreenHouseGaz[];
   siteAssessments: GreenHouseGaz[];
   siteAssessmentsLoading: boolean;
   localCouch: SyncDatabase<GreenHouseGaz> | null;
@@ -82,7 +82,7 @@ const getters: GetterTree<ProjectsState, RootState> = {
 
     return REF_GRD;
   },
-  sites: (s): Array<Site> => s.sites,
+  sites: (s): GreenHouseGaz[] => s.sites,
   siteAssessments: (s): GreenHouseGaz[] => s.siteAssessments,
   siteAssessmentsLoading: (s): boolean => s.siteAssessmentsLoading,
   countries: (s): Array<Country> => s.countries,
@@ -158,9 +158,10 @@ function getGenericCountries(
 
 function getGenericSite(
   queryParams: CouchQuery = {
-    reduce: true,
-    group: true,
-    group_level: 1,
+    // reduce: true,
+    // group: true,
+    // group_level: 1,
+    reduce: false,
     skip: 0,
     limit: 1000,
   },
@@ -251,13 +252,14 @@ const actions: ActionTree<ProjectsState, RootState> = {
   ) => {
     const user = context.rootGetters["UserModule/user"] as CouchUser;
     // context.commit("ADD_DOC", generateNewProject(newGhg, user));
-    const value = generateNewProject(newGhg, user);
+    const value = generateNewProject(newGhg, user) as any;
     const remoteDB = context.state.localCouch?.remoteDB;
     if (remoteDB) {
       delete value.isUNHCR;
-      return remoteDB.post(value).then(() => {
-        // set new rev
-        return context.dispatch("getDoc", value.id);
+      value._id = value?._id ?? value.id;
+      delete value.id;
+      return remoteDB.post(value).then((response) => {
+        return context.dispatch("getDoc", response.id);
       });
     }
   },

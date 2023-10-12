@@ -32,7 +32,7 @@
           <template #[`item.siteName`]="slotProps">
             {{ slotProps.value }}
             <span :title="slotProps.item.siteId"
-              >({{ (slotProps.item.siteId + "").substr(0, 5) }})</span
+              >({{ (slotProps.item.siteId + "").substr(0, 8) }})</span
             >
           </template>
           <template #expanded-item="{ headers, item }">
@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import SurveyList from "@/components/green_house_gaz/SurveysList.vue";
-import { Country, Site } from "@/store/GhgInterface";
+import { Country, GreenHouseGaz } from "@/store/GhgInterface";
 import { countries as Countries, countriesMap } from "@/utils/countriesAsList";
 import { Component, Vue } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";
@@ -113,7 +113,7 @@ export default class ProjectList extends Vue {
     }
   }
 
-  public clickSite(item: Site, keyIndex: number, event: EventClickRow): void {
+  public clickSite(item: GreenHouseGaz, keyIndex: number, event: EventClickRow): void {
     if (this.expanded) {
       const accessKey = `${item.countryCode}${keyIndex}`;
       let currentExpandedArray = this.expanded[accessKey] ?? [];
@@ -129,7 +129,7 @@ export default class ProjectList extends Vue {
   }
 }
 
-type ExpandedObject = Record<string, Site[]>;
+type ExpandedObject = Record<string, GreenHouseGaz[]>;
 interface EventClickRow extends Event {
   isExpanded: boolean;
 }

@@ -21,7 +21,7 @@ export interface UNHCRLocation {
   location_id: number; // was siteId // we should rename everywhere siteId to location_id ?
   latitude: number; //: 28.978026
   longitude: number; // : 50.8379918,
-  solar_peak_hours: number | null; // 5.607999802,
+  solar_peak_hours: number; // 5.607999802,
   year: number; // 2022,
   country_code_2: string; // "IR", // key was named 'Country'
   _id: string; // "Abazar : Point",

@@ -396,10 +396,6 @@ export default class SurveysList extends Vue {
   mounted(): void {
     this.syncDB();
     this.syncLocalShelter();
-    // not necessary since we trigger the watch above
-    // if (this.site) {
-    //   this.getSite(this.site);
-    // }
   }
   destroyed(): void {
     this.closeDB();
