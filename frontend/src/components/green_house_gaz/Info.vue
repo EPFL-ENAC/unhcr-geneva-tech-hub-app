@@ -66,7 +66,11 @@
                       </v-col>
                     </template>
                   </v-row>
+                  <v-row v-if="localProject.year">
+                    <v-col> UNHCR site year: {{ localProject.year }} </v-col>
+                  </v-row>
                 </v-col>
+
                 <v-divider vertical></v-divider>
                 <v-col cols="6" class="map-countries">
                   <territory-map

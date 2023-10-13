@@ -144,7 +144,6 @@
 <script lang="ts">
 import { getNewName, updateMetaFields } from "@/store/documentUtils";
 import { GreenHouseGaz } from "@/store/GhgInterface";
-import { getDefaultScoreCard } from "@/store/ShelterModuleUtils";
 import { CouchUser } from "@/store/UserModule";
 import { SyncDatabase } from "@/utils/couchdb";
 import { cloneDeep } from "lodash";
@@ -254,10 +253,15 @@ export default class SurveysList extends Vue {
   }
 
   async duplicateItemConfirm(): Promise<void> {
-    this.editedItem = updateMetaFields(this.editedItem, this.user);
-    this.editedItem.description = getNewName(this.editedItem.description);
-    this.editedItem.id = uuidv4();
-    await this.submitForm(this.editedItem);
+    let existingSite = await this.getDoc(this.editedItem.id);
+    existingSite = updateMetaFields(existingSite, this.user);
+    existingSite.description = getNewName(this.editedItem.description);
+    existingSite.id = uuidv4();
+    // we need to retrieve the full item, and then delete the id and create a new one ?
+    delete existingSite._id;
+    delete existingSite._rev;
+    const response = await this.submitForm(existingSite);
+    console.log(response);
     await this.closeDialog();
   }
 
@@ -282,10 +286,10 @@ export default class SurveysList extends Vue {
   }
 
   async toggleItemAsReferenceConfirm(): Promise<void> {
-    const doc = await this.getDoc(this.editedItem.id);
-    doc.reference = !doc.reference;
+    const existingSite = await this.getDoc(this.editedItem.id);
+    existingSite.reference = !existingSite.reference;
 
-    await this.submitUpdateForm(doc);
+    await this.submitUpdateForm(existingSite);
     await this.closeDialog();
   }
 
@@ -303,9 +307,9 @@ export default class SurveysList extends Vue {
     return this.editedIndex === -1 ? "New assessment" : "Edit assessment";
   }
 
-  public async submitForm(value: GreenHouseGaz): Promise<void> {
+  public async submitForm(value: GreenHouseGaz): Promise<GreenHouseGaz | void> {
     if (value.description !== "") {
-      await this.addDoc(value);
+      return await this.addDoc(value);
     } else {
       throw new Error("please fill the description");
     }
@@ -329,8 +333,23 @@ export default class SurveysList extends Vue {
     });
   }
 
+  public listenToSetProjectAndRetrieveAssessments(): void {
+    this.$store.subscribe((mutation) => {
+      const shouldUpdate = [
+        "GhgModule/NEW_ASSESSEMENT",
+        "GhgModule/REMOVE_ASSESSEMENT",
+        "GhgModule/UPDATE_ASSESSEMENT",
+      ];
+      if (shouldUpdate.includes(mutation.type) && this.site) {
+        console.log("UPDATE ?", mutation.type);
+        this.getSite(this.site);
+      }
+    });
+  }
+
   mounted(): void {
     this.syncDB();
+    this.listenToSetProjectAndRetrieveAssessments();
   }
   destroyed(): void {
     this.closeDB();

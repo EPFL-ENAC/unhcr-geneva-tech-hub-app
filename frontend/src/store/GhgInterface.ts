@@ -1,6 +1,6 @@
 import { ShelterRegions } from "@/store/ShelterInterface";
 import { CouchUser } from "./UserModule";
-
+import { v4 as uuidv4 } from "uuid";
 import { AllFuel } from "@/components/green_house_gaz/fuelTypes";
 
 // import { Material } from "@/store/ShelterInterface";
@@ -27,6 +27,27 @@ export interface SurveyForms {
   material: MaterialSurvey;
   offset: OffsetSurvey;
 }
+export const DEFAULT_PP_PER_HH = 5;
+
+export function newDefaultCampSite(username?: string): GreenHouseGaz {
+  return {
+    id: uuidv4(), // since it's new
+    siteName: "",
+    siteId: 0,
+    description: "",
+    countryCode: "",
+    latitude: 0,
+    longitude: 0,
+    users: [],
+    population: 0,
+    ...newSurveyForm(),
+    pp_per_hh: DEFAULT_PP_PER_HH, // 4.73 (based on the most recent values for average household size from Database on Household Size and Composition 2022
+    totalHH: 0,
+    // solar: , // TODO: I just noticed that I'm not using the solar average of the country
+    created_at: new Date().toISOString(),
+    created_by: username,
+  } as GreenHouseGaz;
+}
 
 export function newSurveyForm(): SurveyForms {
   return {
@@ -51,7 +72,7 @@ export function newSurveyForm(): SurveyForms {
 export interface GreenHouseGaz extends SurveyForms {
   _id?: string;
   _rev?: string;
-  id: string; // uuid4 mandatory
+  id: string; // uuid4 mandatory // it's optional because if we create a new one, it's not there yet
   description: string; // assessment description  // was called survey name before
   siteId: number|string; // unhcr number id or uuid
   siteName: string;
@@ -61,6 +82,8 @@ export interface GreenHouseGaz extends SurveyForms {
   lon?: number; // lon of the site
   latitude: number;
   longitude: number;
+  year?: number;
+  location_pcode?: string;
   // surveys: Survey[];
   users: (CouchUser | Email | string)[];
   solar?: number;

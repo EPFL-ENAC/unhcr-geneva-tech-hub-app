@@ -26,6 +26,9 @@ interface ProjectsState {
   sites: GreenHouseGaz[];
   siteAssessments: GreenHouseGaz[];
   siteAssessmentsLoading: boolean;
+  newAssessment: boolean;
+  removeAssessment: boolean;
+  updateAssessment: boolean;
   localCouch: SyncDatabase<GreenHouseGaz> | null;
 }
 
@@ -41,6 +44,9 @@ function generateState(): ProjectsState {
     siteAssessments: [],
     siteAssessmentsLoading: false,
     localCouch: null,
+    newAssessment: false,
+    removeAssessment: false,
+    updateAssessment: false,
   };
 }
 
@@ -120,6 +126,15 @@ const mutations: MutationTree<ProjectsState> = {
   },
   ADD_DOC(state, value) {
     state.projects.push(value);
+  },
+  NEW_ASSESSEMENT(state, value) {
+    state.newAssessment = value;
+  },
+  REMOVE_ASSESSEMENT(state, value) {
+    state.removeAssessment = value;
+  },
+  UPDATE_ASSESSEMENT(state, value) {
+    state.updateAssessment = value;
   },
   REMOVE_DOC(state, value) {
     // todo:check that projects exists!
@@ -258,8 +273,10 @@ const actions: ActionTree<ProjectsState, RootState> = {
     if (remoteDB) {
       delete value.isUNHCR;
       value._id = value?._id ?? value?.id ?? uuidv4();
-      delete value.id;
+      delete value.id; // just in case we forgot to remove it
+      delete value._rev; // just in case we forgot to remove it
       return remoteDB.post(value).then((response) => {
+        context.commit("NEW_ASSESSEMENT", true);
         return context.dispatch("getDoc", response.id);
       });
     }
@@ -273,6 +290,9 @@ const actions: ActionTree<ProjectsState, RootState> = {
       .get(id)
       .then(function (doc: PouchDB.Core.ExistingDocument<GreenHouseGaz>) {
         return remoteDB.put({ ...doc, _deleted: true });
+      })
+      .finally(() => {
+        context.commit("REMOVE_ASSESSEMENT", true);
       });
   },
   setDoc: (
@@ -297,7 +317,6 @@ const actions: ActionTree<ProjectsState, RootState> = {
           return result;
         })
         .catch(function (err: Error) {
-          // context.dispatch("resetDoc");
           context.commit("SET_PROJECT_LOADING", false);
           err.message = `${err?.message} ${id}`;
           throw err;
@@ -324,7 +343,8 @@ const actions: ActionTree<ProjectsState, RootState> = {
     }
     const newValue = updateMetaFieldsForUpdate(value, user);
     delete newValue.isUNHCR;
-    context.commit("SET_PROJECT", newValue);
+    // no need for  "SET_PROJECT" it should only be done by getDoc
+
     context.commit("SET_PROJECT_LOADING", true);
     const db = context.state.localCouch?.remoteDB;
     if (db) {
@@ -336,6 +356,7 @@ const actions: ActionTree<ProjectsState, RootState> = {
         .put(newValue, { force: true })
         .then((response) => {
           // set new rev
+          context.commit("UPDATE_ASSESSEMENT", true);
           return context.dispatch("getDoc", response.id);
         })
         .catch((response) => {

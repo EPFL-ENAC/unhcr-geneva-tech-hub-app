@@ -152,15 +152,18 @@
 */
 import CountrySelect from "@/components/commons/CountrySelect.vue";
 // TODO use generic Survey instead of Survey
-import { Country, GreenHouseGaz, newSurveyForm } from "@/store/GhgInterface";
+import {
+  Country,
+  DEFAULT_PP_PER_HH,
+  GreenHouseGaz,
+  newDefaultCampSite,
+  newSurveyForm,
+} from "@/store/GhgInterface";
 import { UNHCRLocation } from "@/store/UNHCRLocationModule";
 import { countriesMap } from "@/utils/countriesAsList";
-import { cloneDeep } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-
-export const DEFAULT_PP_PER_HH = 5;
 
 @Component({
   computed: {
@@ -183,7 +186,7 @@ export const DEFAULT_PP_PER_HH = 5;
   },
 })
 /** ProjectList */
-export default class ProjectList extends Vue {
+export default class NewSurveyDialog extends Vue {
   @Prop({ type: Boolean, default: false })
   readonly open!: boolean;
 
@@ -193,7 +196,7 @@ export default class ProjectList extends Vue {
   getSite!: (id: number | string) => null;
   addDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;
   updateDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;
-  getDoc!: (id: string) => PromiseLike<void>;
+  getDoc!: (id: string) => PromiseLike<GreenHouseGaz>;
   setDoc!: (obj: GreenHouseGaz) => PromiseLike<void>;
   resetDoc!: () => PromiseLike<void>;
 
@@ -205,6 +208,7 @@ export default class ProjectList extends Vue {
   countriesMap = countriesMap;
   project!: GreenHouseGaz;
   newName = "";
+  newCampSite = newDefaultCampSite(this.$userName());
 
   get dialogOpen(): boolean {
     return this.open;
@@ -220,7 +224,37 @@ export default class ProjectList extends Vue {
     if (foundUNHCR) {
       foundUNHCR.isUNHCR = true;
       this.newCampSite = { ...this.newCampSite, ...foundUNHCR };
+    } else {
+      // we should retrieve the following data from the database
+      // latitude, longitude, popuplation, siteId, siteName, countryCode,  solar, pp_per_hh, totalHH
+      const existingSite = await this.getDoc(site.id);
+      const {
+        latitude,
+        longitude,
+        population,
+        siteId,
+        siteName,
+        countryCode,
+        solar,
+        pp_per_hh,
+        totalHH,
+      } = existingSite;
+      this.newCampSite = {
+        ...this.newCampSite,
+        latitude,
+        longitude,
+        population,
+        siteId,
+        siteName,
+        countryCode,
+        solar,
+        pp_per_hh,
+        totalHH,
+      };
     }
+    this.newCampSite.created_by = this.$userName();
+
+    // get site retrieve all the assessment of the site, we need to check if the assessment description already exist
     this.getSite(site.siteId);
     this.$refs.newAssessmentForm.validate();
   }
@@ -233,28 +267,6 @@ export default class ProjectList extends Vue {
     }
     this.$refs.newAssessmentForm.validate();
   }
-
-  private newDefaultCampSite(): GreenHouseGaz {
-    return {
-      id: uuidv4(),
-      siteName: "",
-      siteId: 0,
-      description: "",
-      countryCode: "",
-      latitude: 0,
-      longitude: 0,
-      users: [],
-      population: 0,
-      ...newSurveyForm(),
-      pp_per_hh: DEFAULT_PP_PER_HH, // 4.73 (based on the most recent values for average household size from Database on Household Size and Composition 2022
-      totalHH: 0,
-      // solar: , // TODO: I just noticed that I'm not using the solar average of the country
-      created_at: new Date().toISOString(),
-      created_by: this.$userName(),
-    } as GreenHouseGaz;
-  }
-
-  newCampSite = this.newDefaultCampSite();
 
   get existingSites(): GreenHouseGaz[] {
     const currentCountry = this.countries.find(
@@ -275,8 +287,9 @@ export default class ProjectList extends Vue {
   get unhcrSites(): GreenHouseGaz[] {
     const result = this.unhcrLocations.map((x): GreenHouseGaz => {
       return {
-        ...this.newDefaultCampSite(),
+        ...newDefaultCampSite(this.$userName()),
         siteId: x.location_id, // should not be string should be number ?
+        location_pcode: x.location_pcode,
         siteName: x._id, // site name // location
         countryCode: x.country_code_2,
         created_by: this.$userName(),
@@ -285,6 +298,7 @@ export default class ProjectList extends Vue {
         longitude: x.longitude, // maybe ?
         solar: x.solar_peak_hours,
         population: x.population,
+        year: x.year,
         totalHH: parseInt((x.population / DEFAULT_PP_PER_HH).toFixed(0), 10),
         created_at: new Date().toISOString(),
         ...newSurveyForm(),
@@ -304,7 +318,7 @@ export default class ProjectList extends Vue {
   }
 
   public resetCampSite(): void {
-    this.newCampSite = this.newDefaultCampSite();
+    this.newCampSite = newDefaultCampSite(this.$userName());
   }
 
   public resetOnCountrySelect(countryCode: string): void {
@@ -418,22 +432,22 @@ export default class ProjectList extends Vue {
     }
   }
 
-  public setLocalCampSite(project: GreenHouseGaz): void {
-    this.newCampSite = project ? cloneDeep(project) : ({} as GreenHouseGaz);
-  }
+  // public setLocalCampSite(project: GreenHouseGaz): void {
+  //   this.newCampSite = project ? cloneDeep(project) : ({} as GreenHouseGaz);
+  // }
 
-  public syncLocalCampSite(): void {
-    // init function
-    // not sure how to handle this.project
-    this.setLocalCampSite(this.project);
+  // public syncLocalCampSite(): void {
+  //   // init function
+  //   // not sure how to handle this.project
+  //   this.setLocalCampSite(this.project);
 
-    this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["GhgModule/SET_PROJECT"];
-      if (shouldUpdate.includes(mutation.type)) {
-        this.setLocalCampSite(mutation.payload);
-      }
-    });
-  }
+  //   this.$store.subscribe((mutation) => {
+  //     const shouldUpdate = ["GhgModule/SET_PROJECT"];
+  //     if (shouldUpdate.includes(mutation.type)) {
+  //       this.setLocalCampSite(mutation.payload);
+  //     }
+  //   });
+  // }
 
   @Watch("open", { immediate: true })
   onOpenChange(value: boolean): void {
@@ -451,9 +465,10 @@ export default class ProjectList extends Vue {
   }
 
   mounted(): void {
-    this.resetDoc().then(() => {
-      this.syncLocalCampSite();
-    });
+    this.resetDoc();
+    // .then(() => {
+    // this.syncLocalCampSite();
+    // });
     this.resetCampSite();
   }
 

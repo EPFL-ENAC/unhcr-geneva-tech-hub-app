@@ -15,7 +15,6 @@
       <v-row>
         <v-col>
           <v-card-title>
-            IGES GRID
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"
