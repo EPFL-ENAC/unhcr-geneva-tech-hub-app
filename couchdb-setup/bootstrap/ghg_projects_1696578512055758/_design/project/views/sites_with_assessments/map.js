@@ -10,6 +10,7 @@ function (doc) {
     updated_by: doc.updated_by,
     users: doc.users,
     countryCode: doc.countryCode,
+    reference: doc.reference,
     latitude: doc.latitude,
     longitude: doc.longitude,
   });
