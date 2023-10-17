@@ -4,6 +4,9 @@ server {
     listen         5660 default_server;
     server_name  localhost;
 
+    resolver ${DNS} valid=10s;
+    resolver_timeout 5s;
+
     error_page 403 =404 @not_found;
     error_page      404 @not_found;
 
@@ -28,7 +31,6 @@ server {
     }
 
     location /  {
-      resolver               ${DNS};
       proxy_http_version     1.1;
       proxy_redirect         off;
       proxy_set_header       Connection "";
@@ -74,6 +76,7 @@ server {
       proxy_cache_lock on;
 
       proxy_cache_use_stale error timeout http_500 http_502 http_503 http_504;
+      set $target ${S3_ENDPOINT_PROTOCOL}${S3_ENDPOINT_HOSTNAME};
       proxy_pass             ${S3_ENDPOINT_PROTOCOL}${S3_ENDPOINT_HOSTNAME}/${S3_BUCKET_NAME}$request_uri;
     }
 }

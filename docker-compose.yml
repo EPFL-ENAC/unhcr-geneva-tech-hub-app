@@ -3,7 +3,8 @@ version: "3.9"
 include:
    - path: ./minio/minio-docker-compose.yml
      project_directory: ./minio
-     env_file: .env
+     env_file:
+      - ./.env
 
 services:
   reverse-proxy:

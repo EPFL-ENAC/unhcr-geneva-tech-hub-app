@@ -54,18 +54,40 @@ tee -a .env << EOF
 COUCHDB_USER=admin
 COUCHDB_PASSWORD=couchdb
 COUCHDB_HOST=localhost
-# EPFL DNS
-DNS=128.178.15.8
+# epfl dns for s3 epfl
+#DNS=128.178.15.8
+# docker epfl for internal nginx-minio
+DNS=127.0.0.11
+
+# we replace minio_root_user and root_password by s3_access_key and s3_secret_access
+#MINIO_ROOT_USER=minioadmin
+#MINIO_ROOT_PASSWORD=minioadmin
 
 # used by nginx s3 service and fast api boto api
-S3_ENDPOINT_HOSTNAME=s3.epfl.ch
-S3_ENDPOINT_PROTOCOL=https://
+#S3_ENDPOINT_HOSTNAME=s3.epfl.ch
+#S3_ENDPOINT_PROTOCOL=https://
+S3_ENDPOINT_HOSTNAME=nginx-minio:9000
+S3_ENDPOINT_PROTOCOL=http://
 S3_ACCESS_KEY_ID=XXXXXX_REPLACE__ME_XXX
 S3_SECRET_ACCESS_KEY=XXXXXX_REPLACE__ME_XXX
 S3_REGION=EU
 S3_Bucket=XXXXXX_REPLACE__ME_XXX
-# for instance if S3_Key is foo/bar/ ; the url will start with: /s3/foo/bar/
+# for instance if S3_Key is foo/bar/ ; the url will start with: /s3/foo/bar/ we use 'unhcr-tss/' for instance
 S3_Key=XXXXXX_REPLACE__ME_XXX
+
+# Mailer option for login/registering/password reset
+MAIL_USERNAME=
+MAIL_PASSWORD=
+MAIL_FROM="noreply+unhcr-tss@epfl.ch"
+MAIL_PORT=25
+MAIL_SERVER=mail.epfl.ch
+MAIL_FROM_NAME=UNHCR-TSS
+MAIL_STARTTLS=true
+MAIL_SSL_TLS=false
+USE_CREDENTIALS=true
+
+# use in email template in rest-api should be 'https://unhcr-tss.epfl.ch' if you want the user to be redirected there
+HOST_NAME=http://localhost:8080
 
 EOF
 ```

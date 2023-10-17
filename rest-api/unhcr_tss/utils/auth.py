@@ -20,8 +20,12 @@ def isUserLoggedIn(AuthSession: Union[str, None] = Cookie(default=None),
             cookies=cookies,
             headers=headers)
     userCtx = r.json().get("userCtx")
-    if (userCtx.get("name") is None):
+    if (userCtx is None):
         logger.error(f"user is not recognised {str(userCtx)}")
+        return False
+    if (userCtx is not None and userCtx.get("name") is None):
+        logger.error(f"user is not recognised {str(userCtx)}")
+        return False
     return userCtx.get("name") is not None
 
 
