@@ -1,4 +1,10 @@
 version: "3.9"
+
+include:
+   - path: ./minio/minio-docker-compose.yml
+     project_directory: ./minio
+     env_file: .env
+
 services:
   reverse-proxy:
     image: traefik:v2.9
@@ -16,6 +22,11 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    depends_on:
+      - nginx-minio
+      - couchdb
+      - rest-api
+      - s3_server
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
