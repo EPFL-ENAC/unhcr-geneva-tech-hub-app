@@ -31,7 +31,7 @@
       :rules="actualRules"
       :readonly="readonly"
       :disabled="disabled"
-      type="number"
+      type="string"
       @change="$emit('change', $event)"
     >
       <template #label>
