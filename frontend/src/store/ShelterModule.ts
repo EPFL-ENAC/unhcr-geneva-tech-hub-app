@@ -303,6 +303,11 @@ const actions: ActionTree<ShelterState, RootState> = {
     context.commit("UNSET_SHELTER_LOADING");
   },
   getDoc: async (context: ActionContext<ShelterState, RootState>, id) => {
+    await context.dispatch(
+      "ShelterBillOfQuantitiesModule/setItemsLoading",
+      true,
+      { root: true }
+    );
     let result: Shelter | undefined =
       await context.state.localCouch?.remoteDB.get(id);
     if (result) {
@@ -318,8 +323,18 @@ const actions: ActionTree<ShelterState, RootState> = {
         context.state.shelter.items_individual_shelter,
         { root: true }
       );
+      await context.dispatch(
+        "ShelterBillOfQuantitiesModule/setItemsLoading",
+        false,
+        { root: true }
+      );
       return result;
     } else {
+      await context.dispatch(
+        "ShelterBillOfQuantitiesModule/setItemsLoading",
+        false,
+        { root: true }
+      );
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
   },

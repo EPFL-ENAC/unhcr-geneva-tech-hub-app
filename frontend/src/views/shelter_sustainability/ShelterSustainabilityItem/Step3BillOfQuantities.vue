@@ -20,10 +20,11 @@
       <v-spacer />
       <v-col class="col-auto d-flex align-center">
         <!-- todo: add the icon check mark and cancel -->
-        <span class="mr-4">Bill of quantities status: </span> <v-switch
+        <span class="mr-4">Bill of quantities status: </span>
+        <v-switch
           v-model="localShelter.completed_boq"
+          :label="localShelter.completed_boq ? 'complete' : 'incomplete'"
           @change="updateFormInput"
-          :label="localShelter.completed_boq ? 'complete': 'incomplete'"
         ></v-switch>
         <info-tooltip>
           Toggle switch to mark bill of quantities as completed
@@ -58,10 +59,10 @@
       <v-col>
         <v-sheet v-if="items" elevation="2" rounded>
           <v-progress-linear
-        v-if="true"
-        indeterminate
-        color="primary"
-      ></v-progress-linear>
+            v-if="itemsLoading"
+            indeterminate
+            color="primary"
+          ></v-progress-linear>
           <v-data-table
             :headers="headers"
             :items="items"
@@ -256,6 +257,7 @@ import { mapActions, mapGetters } from "vuex";
   computed: {
     ...mapGetters("ShelterBillOfQuantitiesModule", [
       "items",
+      "itemsLoading",
       "items_individual_shelter",
       "isItemDialogOpen",
     ]),
@@ -283,6 +285,7 @@ export default class Step3Materials extends Vue {
   shelter!: Shelter;
   items_individual_shelter!: number;
   items!: Item[];
+  itemsLoading!: boolean;
   isItemDialogOpen!: boolean;
   setItems!: (items: Item[]) => void;
   setItemsIndividualShelter!: (v: number) => void;

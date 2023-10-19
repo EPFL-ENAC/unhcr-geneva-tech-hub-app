@@ -717,10 +717,10 @@
     "local": false,
     "form": "Rope, hemp (or other natural fibre) (10mm)",
     "density": 0.056,
-    "embodied_carbon": 4.265,
+    "embodied_carbon": 0.19,
     "embodied_water": 18.7,
     "embodied_water_ref": "EPIC (2019), softwood (derived), <https://doi.org/10.26188/5dc228ef98c5a>",
-    "embodied_carbon_ref": "Kalliala, E. et al., 1999. Environmental Profile of Cotton and Polyester Cotton Fabrics.",
+    "embodied_carbon_ref": "Florentin, Y. et al., 2010. A life-cycle energy and carbon analysis of hemp-lime bio-composite building materials. Energy and Buildings, 157, pp.293-305.",
     "density_ref": "Engineering Toolbox, Manila-rope-strength\r\n (equivalent strength to IOM-specified synthetic rope)",
     "units": [
       "KG",
@@ -736,10 +736,10 @@
     "local": false,
     "form": "Other",
     "density": 0.056,
-    "embodied_carbon": 4.265,
+    "embodied_carbon": 0.19,
     "embodied_water": 18.7,
     "embodied_water_ref": "EPIC (2019), softwood (derived), <https://doi.org/10.26188/5dc228ef98c5a>",
-    "embodied_carbon_ref": "Kalliala, E. et al., 1999. Environmental Profile of Cotton and Polyester Cotton Fabrics.",
+    "embodied_carbon_ref": "Florentin, Y. et al., 2010. A life-cycle energy and carbon analysis of hemp-lime bio-composite building materials. Energy and Buildings, 157, pp.293-305.",
     "density_ref": "Engineering Toolbox, Manila-rope-strength\r\n (equivalent strength to IOM-specified synthetic rope)",
     "units": [
       "KG"
