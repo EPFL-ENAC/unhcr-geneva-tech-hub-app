@@ -16,7 +16,9 @@
           width="100"
           name="generation-gram-per-capita-per-day"
           @change="updateGenerationGram"
-          @keydown.enter.prevent="() => updateGenerationGram(localForm?.generationGram ?? 0)"
+          @keydown.enter.prevent="
+            () => updateGenerationGram(localForm?.generationGram ?? 0)
+          "
         />
       </v-col>
       <v-col class="d-flex align-center">

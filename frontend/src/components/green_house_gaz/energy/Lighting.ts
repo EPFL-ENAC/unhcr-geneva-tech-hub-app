@@ -17,6 +17,9 @@ import {
   LightingFuel,
   LiquidFuel,
   liquidFuels,
+  plugInOrChargeBatteryDevice,
+  singleUseBatteryDevice,
+  solarLanternDevice,
   ThermalFuel,
   thermalFuels,
 } from "@/components/green_house_gaz/fuelTypes";
@@ -36,6 +39,7 @@ import {
   SurveyResult,
 } from "@/store/GhgInterface";
 
+import { SelectOption, SelectValue } from "@/components/commons/FormItem";
 import {
   cookstoveIdsTECHsWithAccess,
   cookstoveIdsTECHsWithBioMass,
@@ -47,6 +51,7 @@ import {
 } from "@/components/green_house_gaz/energy/thermalInputs";
 import {
   ensureSurveyTableHeaders,
+  SurveyTableHeader,
   surveyTableHeaderCO2,
   surveyTableHeaderIncrements,
 } from "@/components/green_house_gaz/generic/surveyTableHeader";
@@ -168,6 +173,52 @@ export function resetSurveyFuelOption(
   return localInput;
 }
 
+export const solidFuelsEnergyType = "Solid fuels";
+export const liquidFuelsEnergyType = "Liquid fuels";
+export const electricFuelsEnergyType = "Electric / solar devices";
+
+export function solarLanternHeaders() {
+  return [
+    {
+      style: {
+        cols: "12",
+      },
+      text: "watts for solar lantern",
+      type: "text",
+      value: "input.watts",
+      isInput: true,
+      hideFooterContent: false,
+      conditional_function: (itemInput: SurveyInput) => {
+        if (itemInput?.energySubType == solarLanternDevice) {
+          return true;
+        }
+        return false;
+      },
+    },
+  ];
+}
+
+export function singleUseBatteryDeviceHeaders() {
+  return [
+    {
+      style: {
+        cols: "12",
+      },
+      text: "operating hours for single use battery device",
+      type: "text",
+      value: "input.operatingHours",
+      isInput: true,
+      hideFooterContent: false,
+      conditional_function: (itemInput: SurveyInput) => {
+        if (itemInput?.energySubType == singleUseBatteryDevice) {
+          return true;
+        }
+        return false;
+      },
+    },
+  ];
+}
+
 export function headers(
   countryCode: CountryIrradianceKeys,
   projectSolar: number | undefined,
@@ -176,12 +227,89 @@ export function headers(
   return [
     ...surveyTableHeaderIncrements,
     {
-      items: allFuelsForLighing,
+      items: [
+        solidFuelsEnergyType,
+        liquidFuelsEnergyType,
+        electricFuelsEnergyType,
+      ],
       style: {
         cols: "12",
       },
+      text: "Energy for lighting",
+      type: "select",
+      value: "input.energyType",
+      isInput: true,
+      hideFooterContent: false,
+    },
+    {
+      // items: ["SOLAR_LANTERN", "SINGLE_USE_BAT", "PLUG_IN_OR_CHARGE_BAT"],
+      items: (): SelectOption<SelectValue>[] => {
+        const result: string[] = [
+          "SOLAR_LANTERN",
+          "SINGLE_USE_BAT",
+          "PLUG_IN_OR_CHARGE_BAT",
+        ];
+        return result.map((item: string) => ({
+          text: AllLightingFuelsWithTextById?.[item as AllFuel]?.text,
+          value: item,
+        }));
+      },
+      style: {
+        cols: "12",
+      },
+      text: "Electric / solar devices",
+      type: "select",
+      value: "input.energySubType",
+      isInput: true,
+      hideFooterContent: false,
+      conditional_function: (itemInput: SurveyInput) => {
+        if (itemInput?.energyType == electricFuelsEnergyType) {
+          return true;
+        }
+        return false;
+      },
+    },
+    {
       text: "Lighting powered by",
       value: "input.fuelType",
+      items: (options: {
+        localInput: SurveyInput;
+        surveyItemHeader: SurveyTableHeader;
+        intervention: boolean;
+      }): SelectOption<SelectValue>[] => {
+        let result: string[] = [];
+        if (options.localInput.energyType === undefined) {
+          result = allFuelsForLighing;
+        }
+        if (options.localInput.energyType === solidFuelsEnergyType) {
+          result = ["FWD", "CNDL"];
+        }
+        if (options.localInput.energyType === liquidFuelsEnergyType) {
+          result = ["OIL", "PET", "KRS"];
+        }
+        if (options.localInput.energyType === electricFuelsEnergyType) {
+          // result = ["SOLAR_LANTERN", "SINGLE_USE_BAT", "PLUG_IN_OR_CHARGE_BAT"];
+          result = electricFuels as unknown as string[];
+        }
+        return result.map((item: string) => ({
+          text: AllLightingFuelsWithTextById?.[item as AllFuel]?.text,
+          value: item,
+        }));
+      },
+      style: {
+        cols: "12",
+      },
+      conditional_function: (itemInput: SurveyInput) => {
+        if (itemInput?.energyType == undefined) {
+          return false;
+        }
+        if (itemInput?.energyType == electricFuelsEnergyType) {
+          // check for subtype!
+          return itemInput?.energySubType == plugInOrChargeBatteryDevice;
+        }
+
+        return true;
+      },
       formatter: (v: AllFuel) => {
         return AllLightingFuelsWithTextById?.[v]?.text;
       },
@@ -226,6 +354,8 @@ export function headers(
       type: "select",
       hideFooterContent: false,
     },
+    ...solarLanternHeaders(),
+    ...singleUseBatteryDeviceHeaders(),
     {
       value: "input.disabledFuelUsage",
       text: (localInput: EnergyLightingItemInput) => {
@@ -492,7 +622,7 @@ export function headers(
       hideFooterContent: false,
       formatter: (v: number) => {
         return formatNumberGhg(v, {
-          style: "percent"
+          style: "percent",
         });
       },
     },

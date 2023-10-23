@@ -61,7 +61,7 @@
       @click:row="handleClick"
     >
       <template #[`item.created_at`]="{ item }">
-        {{ item.created_at | formatDate }} {{ item.reference }}
+        {{ item.created_at | formatDate }}
       </template>
       <template #[`item.updated_at`]="{ item }">
         {{ item.updated_at | formatDate }}

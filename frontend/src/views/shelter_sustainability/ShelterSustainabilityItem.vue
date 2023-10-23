@@ -43,7 +43,7 @@
         </v-tab>
       </div>
     </v-tabs>
-    <v-container v-if="shelter.users" fluid >
+    <v-container v-if="shelter.users" fluid>
       <v-form @submit.stop.prevent="">
         <router-view
           :loading="shelterLoading"

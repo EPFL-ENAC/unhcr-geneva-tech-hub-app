@@ -233,7 +233,6 @@ export default class WaterSupply extends Vue {
       hideFooterContent: true,
     }),
 
-
     {
       text: "Trucking unit",
       value: "input.US_UNI",

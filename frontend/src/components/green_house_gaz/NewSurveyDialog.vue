@@ -288,7 +288,8 @@ export default class NewSurveyDialog extends Vue {
     const result = this.unhcrLocations.map((x): GreenHouseGaz => {
       return {
         ...newDefaultCampSite(this.$userName()),
-        siteId: x.location_id, // should not be string should be number ?
+        siteId: x.location_pcode, // should not be string should be number ?
+        location_id: x.location_id,
         location_pcode: x.location_pcode,
         siteName: x._id, // site name // location
         countryCode: x.country_code_2,
@@ -307,7 +308,17 @@ export default class NewSurveyDialog extends Vue {
     return result;
   }
   get existingSitesWithUnhcrSites(): GreenHouseGaz[] {
-    return this.unhcrSites.concat(this.existingSites);
+    let result = this.unhcrSites;
+    const unhcrLocationIds = this.unhcrLocations.map(
+      (location) => location.location_pcode
+    );
+    const filteredExistingSite = this.existingSites.filter(
+      (existingSite) => !unhcrLocationIds.includes(existingSite.siteId)
+    );
+    result = result.concat(filteredExistingSite);
+    // add onlye existing sites that are not in unhcr
+    result.sort((x, y) => (x.siteName < y.siteName ? -1 : 1));
+    return result;
   }
 
   public closeSiteDialog(): void {

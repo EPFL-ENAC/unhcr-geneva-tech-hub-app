@@ -19,7 +19,10 @@ const getters: GetterTree<Record<string, never>, RootState> = {
 };
 
 /** VuexStore */
-const GHGReferenceNonBioWasteModule: Module<Record<string, never>, RootState> = {
+const GHGReferenceNonBioWasteModule: Module<
+  Record<string, never>,
+  RootState
+> = {
   namespaced: true,
   getters,
 };

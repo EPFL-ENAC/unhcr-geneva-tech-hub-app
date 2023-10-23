@@ -279,7 +279,8 @@ export default class SurveyList extends Vue {
       if (
         this.currentProject !== undefined &&
         this.normedCategory &&
-        this.normedSubcategory &&  this.currentProject[this.normedCategory as keyof SurveyForms]
+        this.normedSubcategory &&
+        this.currentProject[this.normedCategory as keyof SurveyForms]
       ) {
         const normedCategory = this.normedCategory as keyof SurveyForms;
         this.currentProject[normedCategory][
@@ -345,7 +346,7 @@ export default class SurveyList extends Vue {
     if (this.project) {
       const result = cloneDeep(this.project);
       // ensure at least first level
-      return { ...result, ...newSurveyForm() };
+      return {...newSurveyForm(), ...result };
     }
     return undefined;
   }

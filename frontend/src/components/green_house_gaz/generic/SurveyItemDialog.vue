@@ -250,12 +250,10 @@ export default class SurveyItemDialog extends Vue {
         const res = header.tooltipInfoFn?.(
           (localInput?.[header.key] as string) ?? ""
         );
-
-        if (res) {
+        if (res !== undefined) {
           header.tooltipInfo = res;
         }
       }
-      // TODO implement a dynamic way for header.items when it's a function ? cf below
       if (typeof header.text === "function") {
         // we don't overide text (dynamic text should not be authorized for table)
         // only for header in form
@@ -293,10 +291,13 @@ export default class SurveyItemDialog extends Vue {
       }
 
       if (typeof header.items === "function") {
-        header.options = header.items({
-          intervention: this.intervention,
+        const items = header.items({
           localInput,
+          surveyItem: header,
+          intervention: this.intervention,
         });
+        // todo: abstract wrapper function to make things more readable
+        header.options = items;
       }
       return header;
     });

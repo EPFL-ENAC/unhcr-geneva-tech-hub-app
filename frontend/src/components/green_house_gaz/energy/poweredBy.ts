@@ -131,8 +131,9 @@ export function poweredByInputs(
     const dieselFormatter =
       dieselInputs.find((item) => item.value === "input.dieselPower")
         ?.formatter ?? (() => "");
-    const solarFormatter = solarInputs.find((item) => item.value === "input.renewablePower")
-    ?.formatter ?? (() => "");
+    const solarFormatter =
+      solarInputs.find((item) => item.value === "input.renewablePower")
+        ?.formatter ?? (() => "");
     const gridPowerFormatter = (v: number) => {
       return formatNumberGhg(v);
     };
@@ -193,7 +194,7 @@ export function poweredByInputs(
           return (
             (localInput.fuelType === "ELE_GRID" ||
               localInput.fuelType === "ELE_HYB") &&
-            (inputExtension?.conditional_function(localInput) ?? true)
+            (inputExtension?.conditional_function?.(localInput) ?? true)
           );
         },
       },

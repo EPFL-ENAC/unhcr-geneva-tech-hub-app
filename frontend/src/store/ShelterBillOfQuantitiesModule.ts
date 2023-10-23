@@ -122,7 +122,10 @@ const actions: ActionTree<BoqState, RootState> = {
   setItems: (context: ActionContext<BoqState, RootState>, items: Item[]) => {
     context.commit("SET_ITEMS", items);
   },
-  setItemsLoading: (context: ActionContext<BoqState, RootState>, value: boolean) => {
+  setItemsLoading: (
+    context: ActionContext<BoqState, RootState>,
+    value: boolean
+  ) => {
     context.commit("SET_ITEMS_LOADING", value);
   },
   openNewItemDialog: (context: ActionContext<BoqState, RootState>) => {
