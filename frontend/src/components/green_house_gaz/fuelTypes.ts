@@ -11,7 +11,6 @@ interface FuelTypesItem<T> {
 
 */
 
-
 // electric fuels
 export const electricFuels = [
   "ELE_DIES",

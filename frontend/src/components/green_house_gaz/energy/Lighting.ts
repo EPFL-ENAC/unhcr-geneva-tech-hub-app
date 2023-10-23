@@ -492,7 +492,7 @@ export function headers(
       hideFooterContent: false,
       formatter: (v: number) => {
         return formatNumberGhg(v, {
-          style: "percent"
+          style: "percent",
         });
       },
     },

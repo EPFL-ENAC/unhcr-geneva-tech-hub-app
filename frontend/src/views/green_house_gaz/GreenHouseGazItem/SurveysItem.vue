@@ -279,7 +279,8 @@ export default class SurveyList extends Vue {
       if (
         this.currentProject !== undefined &&
         this.normedCategory &&
-        this.normedSubcategory &&  this.currentProject[this.normedCategory as keyof SurveyForms]
+        this.normedSubcategory &&
+        this.currentProject[this.normedCategory as keyof SurveyForms]
       ) {
         const normedCategory = this.normedCategory as keyof SurveyForms;
         this.currentProject[normedCategory][

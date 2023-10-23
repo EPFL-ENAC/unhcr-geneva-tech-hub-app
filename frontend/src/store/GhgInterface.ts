@@ -1,7 +1,7 @@
-import { ShelterRegions } from "@/store/ShelterInterface";
-import { CouchUser } from "./UserModule";
-import { v4 as uuidv4 } from "uuid";
 import { AllFuel } from "@/components/green_house_gaz/fuelTypes";
+import { ShelterRegions } from "@/store/ShelterInterface";
+import { v4 as uuidv4 } from "uuid";
+import { CouchUser } from "./UserModule";
 
 // import { Material } from "@/store/ShelterInterface";
 export type CountriesInfoMap = Record<string, CountryInfo>;
@@ -74,7 +74,7 @@ export interface GreenHouseGaz extends SurveyForms {
   _rev?: string;
   id: string; // uuid4 mandatory // it's optional because if we create a new one, it's not there yet
   description: string; // assessment description  // was called survey name before
-  siteId: number|string; // unhcr number id or uuid
+  siteId: number | string; // unhcr number id or uuid
   siteName: string;
   countryCode: string;
   reference?: boolean; // say if the survey is a reference or not

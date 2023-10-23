@@ -38,13 +38,13 @@ import EndlineCard from "@/components/green_house_gaz/generic/EndlineCard.vue";
 import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import {
+  generateNewGenericFormSurvey,
   GenericBaseline,
   GenericEndline,
   GenericFormSurvey,
   SurveyInput,
   SurveyItem,
   SurveyResult,
-  generateNewGenericFormSurvey,
 } from "@/store/GhgInterface";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 
@@ -111,7 +111,6 @@ export default class BaselineEndlineWrapper extends Mixins(
     }
     return this.value;
   }
-
 
   public get baselineHeaders(): SurveyTableHeader[] {
     return (

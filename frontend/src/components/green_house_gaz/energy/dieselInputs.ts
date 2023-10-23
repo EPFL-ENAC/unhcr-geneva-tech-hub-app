@@ -357,9 +357,9 @@ export function dieselInputsProducedPer(
       item: SurveyItem
     ) => {
       if (typeof dieselPower === "number") {
-        return `${item?.input?.dieselPowerEstimated ? "~" : ""}${formatNumberGhg(
-          dieselPower
-        )} ${suffix} (${
+        return `${
+          item?.input?.dieselPowerEstimated ? "~" : ""
+        }${formatNumberGhg(dieselPower)} ${suffix} (${
           item?.input?.dieselLitersEstimated ? "~" : ""
         }${formatNumberGhg(item?.input?.fuelUsage as number)}L) `;
       }

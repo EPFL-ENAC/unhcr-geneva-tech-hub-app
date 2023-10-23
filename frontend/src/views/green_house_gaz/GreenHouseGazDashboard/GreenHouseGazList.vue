@@ -113,7 +113,11 @@ export default class ProjectList extends Vue {
     }
   }
 
-  public clickSite(item: GreenHouseGaz, keyIndex: number, event: EventClickRow): void {
+  public clickSite(
+    item: GreenHouseGaz,
+    keyIndex: number,
+    event: EventClickRow
+  ): void {
     if (this.expanded) {
       const accessKey = `${item.countryCode}${keyIndex}`;
       let currentExpandedArray = this.expanded[accessKey] ?? [];
