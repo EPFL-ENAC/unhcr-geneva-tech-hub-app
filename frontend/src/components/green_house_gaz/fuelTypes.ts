@@ -100,12 +100,12 @@ export const lightingFuelsWithText: FuelTypesItem<LightingFuel>[] = [
   // },
   {
     _id: "PET",
-    text: "Gasoline lamp",
+    text: "Gasoline",
     description: "",
   },
   {
     _id: "OIL",
-    text: "Vegetable oil lamp",
+    text: "Vegetable oil",
     description: "",
   },
   {
@@ -127,6 +127,28 @@ export const noAcessWithText: FuelTypesItem<NoAccessFuel>[] = [
   { _id: "NO_ACCESS", text: "Without any access" }, /// anciently No access
 ];
 // end of thermal fuels
+export const solarLanternDevice = "SOLAR_LANTERN" as const;
+export const singleUseBatteryDevice = "SINGLE_USE_BAT" as const;
+export const plugInOrChargeBatteryDevice = "PLUG_IN_OR_CHARGE_BAT" as const;
+export const electricDevices = [
+  solarLanternDevice,
+  singleUseBatteryDevice,
+  plugInOrChargeBatteryDevice,
+] as const;
+export type ElectricDevices = typeof electricDevices[number];
+export const electricDevicesWithText: FuelTypesItem<ElectricDevices>[] = [
+  { _id: "SOLAR_LANTERN", text: "Solar lantern" },
+  {
+    _id: "SINGLE_USE_BAT",
+    text: "Single-use battery devices",
+    description: "",
+  },
+  {
+    _id: "PLUG_IN_OR_CHARGE_BAT",
+    text: "Plug in or rechargeable batteries",
+    description: "",
+  },
+];
 
 export const allFuelsButElectric = [
   ...biomassFuels,
@@ -149,10 +171,10 @@ export const allFuelsForLighing = [
   // "NO_ACCESS",
   "FWD",
   "CNDL",
-  "KRS",
   // "LIGHT_HYB", // rename Hybrid fuel mix (paraffin,.. ...)
-  "PET",
   "OIL",
+  "PET",
+  "KRS",
   "LIGHT_SOLAR",
   "BAT",
   "ELE_GRID",
@@ -168,6 +190,7 @@ export type AllFuel =
   | GasFuel
   | ThermalFuel
   | LightingFuel
+  | ElectricDevices
   | NoAccessFuel;
 
 // export type AllFuel =
@@ -199,6 +222,7 @@ export const AllLightingFuelsWithTextById = [
   ...thermalFuelWithText,
   ...noAcessWithText,
   ...lightingFuelsWithText,
+  ...electricDevicesWithText,
 ].reduce((acc, el: FuelTypesItem<AllFuel>) => {
   acc[el._id] = el;
   return acc;

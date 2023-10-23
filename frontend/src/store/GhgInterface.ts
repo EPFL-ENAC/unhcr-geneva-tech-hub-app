@@ -33,7 +33,7 @@ export function newDefaultCampSite(username?: string): GreenHouseGaz {
   return {
     id: uuidv4(), // since it's new
     siteName: "",
-    siteId: 0,
+    siteId: uuidv4(),
     description: "",
     countryCode: "",
     latitude: 0,
@@ -74,7 +74,9 @@ export interface GreenHouseGaz extends SurveyForms {
   _rev?: string;
   id: string; // uuid4 mandatory // it's optional because if we create a new one, it's not there yet
   description: string; // assessment description  // was called survey name before
-  siteId: number | string; // unhcr number id or uuid
+  siteId: string; // in old times it was the location_id or a uuid, now it's a string: location_pcode or uuidv4
+  location_id?: number;
+  location_pcode?: string;
   siteName: string;
   countryCode: string;
   reference?: boolean; // say if the survey is a reference or not
@@ -83,7 +85,6 @@ export interface GreenHouseGaz extends SurveyForms {
   latitude: number;
   longitude: number;
   year?: number;
-  location_pcode?: string;
   // surveys: Survey[];
   users: (CouchUser | Email | string)[];
   solar?: number;

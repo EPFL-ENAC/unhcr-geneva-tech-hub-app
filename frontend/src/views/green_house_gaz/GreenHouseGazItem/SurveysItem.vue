@@ -346,7 +346,7 @@ export default class SurveyList extends Vue {
     if (this.project) {
       const result = cloneDeep(this.project);
       // ensure at least first level
-      return { ...result, ...newSurveyForm() };
+      return {...newSurveyForm(), ...result };
     }
     return undefined;
   }

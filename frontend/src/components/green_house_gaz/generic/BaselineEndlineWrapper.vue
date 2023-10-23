@@ -194,6 +194,7 @@ export default class BaselineEndlineWrapper extends Mixins(
       this.computeItem,
       this.ghgMapRef
     );
+
     this.$emit("input", newForm);
   }
 }
