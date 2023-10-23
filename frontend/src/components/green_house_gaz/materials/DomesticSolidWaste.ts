@@ -17,6 +17,7 @@ import { SelectOption, SelectValue } from "@/components/commons/FormItem";
 import { numberOfDaysPerYear } from "@/components/green_house_gaz/energy/computeCO2cost";
 
 import {
+  SurveyTableHeader,
   ensureSurveyTableHeaders,
   surveyTableHeaderCO2,
   surveyTableHeaderIncrements,
@@ -168,8 +169,9 @@ export function headers() {
       },
       value: "input.practiceType",
       items: (options: {
-        intervention: boolean;
         localInput: SurveyInput;
+        surveyItemHeader: SurveyTableHeader;
+        intervention: boolean;
       }): SelectOption<SelectValue>[] => {
         let result = baselinePractices;
         if (options.intervention) {

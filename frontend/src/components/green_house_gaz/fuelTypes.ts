@@ -105,7 +105,7 @@ export const lightingFuelsWithText: FuelTypesItem<LightingFuel>[] = [
   },
   {
     _id: "OIL",
-    text: "Vegetable Oil lamp",
+    text: "Vegetable oil lamp",
     description: "",
   },
   {

@@ -168,8 +168,9 @@ export interface EasySurveyTableHeader {
     | string[]
     | string
     | ((options: {
-        intervention: boolean;
         localInput: SurveyInput;
+        surveyItem: SurveyTableHeader;
+        intervention: boolean;
       }) => SelectOption<SelectValue>[]);
   options: SelectOption<SelectValue>[];
   isInput: boolean;

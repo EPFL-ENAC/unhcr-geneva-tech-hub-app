@@ -46,11 +46,13 @@ import {
   computeThermalKWHPerYearFromPerDay,
 } from "@/components/green_house_gaz/energy/thermalInputs";
 import {
+  SurveyTableHeader,
   ensureSurveyTableHeaders,
   surveyTableHeaderCO2,
   surveyTableHeaderIncrements,
 } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import { computeCO2costElectric } from "./poweredBy";
+import { SelectOption, SelectValue } from "@/components/commons/FormItem";
 
 export interface EnergyLightingItemInput extends SurveyInput, EnergyItem {
   numberOfLighting?: number; // computed based on % of HH and stuffs
@@ -168,6 +170,10 @@ export function resetSurveyFuelOption(
   return localInput;
 }
 
+export const solidFuelsEnergyType = "Solid fuels";
+export const liquidFuelsEnergyType = "Liquid fuels";
+export const electricFuelsEnergyType = "Electric / solar devices";
+
 export function headers(
   countryCode: CountryIrradianceKeys,
   projectSolar: number | undefined,
@@ -176,12 +182,55 @@ export function headers(
   return [
     ...surveyTableHeaderIncrements,
     {
-      items: allFuelsForLighing,
+      items: [
+        solidFuelsEnergyType,
+        liquidFuelsEnergyType,
+        electricFuelsEnergyType,
+      ],
       style: {
         cols: "12",
       },
+      text: "Energy for lighting",
+      type: "select",
+      value: "input.energyType",
+      isInput: true,
+      hideFooterContent: false,
+    },
+    {
       text: "Lighting powered by",
       value: "input.fuelType",
+      items: (options: {
+        localInput: SurveyInput;
+        surveyItemHeader: SurveyTableHeader;
+        intervention: boolean;
+      }): SelectOption<SelectValue>[] => {
+        let result: string[] = [];
+        if (options.localInput.energyType === undefined) {
+          result = allFuelsForLighing;
+        }
+        if (options.localInput.energyType === solidFuelsEnergyType) {
+          result = biomassFuels  as unknown as  string[];
+        }
+        if (options.localInput.energyType === liquidFuelsEnergyType) {
+          result = liquidFuels  as unknown as  string[];
+        }
+        if (options.localInput.energyType === electricFuelsEnergyType) {
+          result = electricFuels as unknown as string[];
+        }
+        return result.map((item: string) => ({
+          text: item,
+          value: item,
+        }));
+      },
+      style: {
+        cols: "12",
+      },
+      conditional_function: (itemInput: SurveyInput) => {
+        if (itemInput?.energyType == undefined) {
+          return false;
+        }
+        return true;
+      },
       formatter: (v: AllFuel) => {
         return AllLightingFuelsWithTextById?.[v]?.text;
       },
