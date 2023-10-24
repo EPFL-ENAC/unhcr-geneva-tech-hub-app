@@ -29,6 +29,7 @@
           :reference-items="referenceItems"
           :intervention="intervention"
           :diff-dimension="diffDimension"
+          :compute-item="computeItem"
           :name="name"
           @update:item="updateWithItem"
         />
@@ -262,6 +263,7 @@ import SurveyItemDialog from "@/components/green_house_gaz/generic/SurveyItemDia
 import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import TextWithIconsAndPopOverDescription from "@/components/green_house_gaz/generic/TextWithIconsAndPopOverDescription.vue";
 import { SurveyInput, SurveyItem, SurveyResult } from "@/store/GhgInterface";
+import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { cloneDeep, get, maxBy } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
@@ -305,6 +307,12 @@ export default class BaselineTable extends Vue {
 
   @Prop([String])
   readonly diffDimension!: keyof SurveyInput;
+
+  @Prop([Function])
+  readonly computeItem!: (
+    localItemInput: SurveyInput,
+    ghgMapRef: ItemReferencesMap
+  ) => SurveyResult;
 
   localItems: SurveyItem[] = [];
   localItem: SurveyItem = {} as SurveyItem;

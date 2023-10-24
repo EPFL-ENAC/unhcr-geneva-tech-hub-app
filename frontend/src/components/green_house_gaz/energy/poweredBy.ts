@@ -200,19 +200,6 @@ export function poweredByInputs(
       },
       // end of national grid\
       ...solarInputs,
-      // {
-      //   text: `Total (kWh${suffixTimePeriod})`,
-      //   value: "computed.totalPower",
-      //   hideInput: true, // so we can only display diffWarning in endline
-      //   isInput: true,
-      //   formatter: (v: number, { ...args }) => {
-      //     return formatNumberGhg(v, { suffix: args.suffix });
-      //   },
-      //   computeResults: true,
-      //   type: "number",
-      //   disabled: true,
-      //   ...inputExtension,
-      // },
       {
         text: `Annual fuel / Energy consumption`,
         value: "computed.totalPower",

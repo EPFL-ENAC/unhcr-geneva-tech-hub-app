@@ -232,5 +232,6 @@ export interface EasySurveyTableHeader {
   endlineOnly?: boolean; // show only for enldine table true,
   baselineOnly?: boolean;
   hideFooterContent: boolean; // default to true only for table
+  hideInput: boolean; // default to false only for surveyItemDialog
   computeResults: boolean; // false,
 }

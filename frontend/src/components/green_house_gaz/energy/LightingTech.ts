@@ -2,7 +2,7 @@ import {
   AllFuel,
   biomassFuels,
   biomassFuelsForGasifier,
-  electricFuelsForCooking,
+  electricFuelsWithoutNone,
   gasFuels,
   liquidFuels,
   noAccessFuels,
@@ -101,7 +101,7 @@ export const lightingTECHs: LightingTech[] = [
   },
   {
     _id: "8",
-    fuelTypes: electricFuelsForCooking,
+    fuelTypes: electricFuelsWithoutNone,
     text: "Electric lighting",
     image: "/images/energy/lightings/induction.png",
     defaults: {

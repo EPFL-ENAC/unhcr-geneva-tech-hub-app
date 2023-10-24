@@ -9,6 +9,7 @@
           :diff-dimension="diffDimension"
           :name="name"
           :headers="baselineHeaders"
+          :compute-item="computeItem"
           @update:baseline="updateBaseline"
         />
       </v-col>
@@ -24,6 +25,7 @@
           :diff-dimension="diffDimension"
           :name="name"
           :headers="endlineHeaders"
+          :compute-item="computeItem"
           @update:endline="updateEndline"
         />
       </v-col>
@@ -194,7 +196,6 @@ export default class BaselineEndlineWrapper extends Mixins(
       this.computeItem,
       this.ghgMapRef
     );
-
     this.$emit("input", newForm);
   }
 }

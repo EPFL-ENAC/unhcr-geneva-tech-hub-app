@@ -35,6 +35,7 @@
           :results="endline.results"
           :disabled="baselineMode"
           :headers="headers"
+          :compute-item="computeItem"
           :sort-by="sortBy"
           :name="name"
           :diff-dimension="diffDimension"
@@ -133,6 +134,7 @@ import {
   SurveyItem,
   SurveyResult,
 } from "@/store/GhgInterface";
+import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { cloneDeep } from "lodash";
 import Vue from "vue";
 import "vue-class-component/hooks";
@@ -164,6 +166,11 @@ export default class EndlineCard extends Vue {
 
   @Prop({ type: String, default: "increment" })
   readonly sortBy!: string;
+  @Prop([Function])
+  readonly computeItem!: (
+    localItemInput: SurveyInput,
+    ghgMapRef: ItemReferencesMap
+  ) => SurveyResult;
 
   dialogs = { "warning-survey-dialog": false } as Record<string, boolean>;
 

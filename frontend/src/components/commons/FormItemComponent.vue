@@ -24,7 +24,7 @@
       v-model.number="numberModel"
       hide-details="auto"
       hide-spin-buttons
-      required
+      :required="!optional"
       :placeholder="placeholder"
       :messages="messages"
       :suffix="suffix"
