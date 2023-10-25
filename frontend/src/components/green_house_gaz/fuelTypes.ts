@@ -2,6 +2,7 @@ export interface IdTextTypesItem<T> {
   _id: T;
   text: string;
   description?: string;
+  default?: number;
 }
 
 // TODO: lighting
@@ -137,7 +138,7 @@ export const electricDevices = [
 ] as const;
 export type ElectricDevices = typeof electricDevices[number];
 export const electricDevicesWithText: IdTextTypesItem<ElectricDevices>[] = [
-  { _id: "SOLAR_LANTERN", text: "Solar lantern" },
+  { _id: "SOLAR_LANTERN", text: "Solar lantern", default: 0.3 },
   {
     _id: "SINGLE_USE_BAT",
     text: "Single-use battery devices",

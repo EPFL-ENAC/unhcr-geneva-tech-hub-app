@@ -385,6 +385,9 @@ export default class SurveyItemDialog extends Vue {
     surveyItem: SurveyTableHeader
   ) {
     // if we have a conditional_function field it superseed the conditional logic
+    if (localInput === undefined) {
+      return false;
+    }
     if (typeof surveyItem.conditional_function === "function") {
       return surveyItem.conditional_function(localInput, surveyItem);
     }

@@ -6,6 +6,8 @@ import {
   AllLightingFuelsWithTextById,
   BioMassFuel,
   biomassFuels,
+  ElectricDevices,
+  electricDevicesWithText,
   ElectricFuel,
   electricFuels,
   electricFuelsWithoutNone,
@@ -188,16 +190,22 @@ export type PlugingRecheargeableDevice =
   typeof plugingRecheargeableDevices[number];
 export const plugingRecheargeableDevicesWithText: IdTextTypesItem<PlugingRecheargeableDevice>[] =
   [
-    { _id: "POWER_KNOWN", text: "Power of device known" },
-    { _id: "PLUGIN_LIGHT_BULB", text: "Plugin light-bulb" },
-    { _id: "PLUGIN_LAMP_WITH_PLUGS", text: "plugin lamp with plugs" },
+    { _id: "POWER_KNOWN", text: "Power of device known", default: 10 },
+    { _id: "PLUGIN_LIGHT_BULB", text: "Plugin light-bulb", default: 60 },
+    {
+      _id: "PLUGIN_LAMP_WITH_PLUGS",
+      text: "Plugin lamp with plugs",
+      default: 10,
+    },
     {
       _id: "RECHARGEABLE_BAT_TORCH",
       text: "Rechargeable batteries handheld torch",
+      default: 1,
     },
     {
       _id: "RECHARGEABLE_BAT_LANTERN",
       text: "Recheargeable batteries lantern",
+      default: 3,
     },
   ];
 
@@ -205,13 +213,17 @@ export const singleUseBatteryDevices = ["TORCH", "LANTERN"] as const;
 export type SingleUseBatteryDevices = typeof singleUseBatteryDevices[number];
 export const singleUseBatteryDevicesWithText: IdTextTypesItem<SingleUseBatteryDevices>[] =
   [
-    { _id: "TORCH", text: "Handheld torch" },
-    { _id: "LANTERN", text: "Lantern" },
+    { _id: "TORCH", text: "Handheld torch", default: 1 },
+    { _id: "LANTERN", text: "Lantern", default: 1 },
   ];
-export type AllDevices = SingleUseBatteryDevices | PlugingRecheargeableDevice;
+export type AllDevices =
+  | SingleUseBatteryDevices
+  | PlugingRecheargeableDevice
+  | ElectricDevices;
 export const AllDevicesWithTextById = [
   ...plugingRecheargeableDevicesWithText,
   ...singleUseBatteryDevicesWithText,
+  ...electricDevicesWithText,
 ].reduce((acc, el: IdTextTypesItem<AllDevices>) => {
   acc[el._id] = el;
   return acc;
@@ -268,36 +280,22 @@ export function commonElectricSolarDevicesHeaders() {
           result = [...plugingRecheargeableDevices];
         }
         return result.map((item: AllDevices) => ({
-          text: AllDevicesWithTextById[item].text,
+          text: AllDevicesWithTextById[item]?.text,
           value: item,
         }));
       },
-      formatter: (v: number) => {
-        return formatNumberGhg(v);
+      formatter: (v: AllDevices) => {
+        return AllDevicesWithTextById[v]?.text;
       },
       customEventInput: (deviceType: AllDevices, localInput: SurveyInput) => {
-        if (deviceType === "RECHARGEABLE_BAT_TORCH") {
-          localInput.electricPower = 0.01;
-        }
-        if (deviceType === "RECHARGEABLE_BAT_LANTERN") {
-          localInput.electricPower = 0.01;
-        }
-        if (deviceType === "PLUGIN_LIGHT_BULB") {
-          localInput.electricPower = 0.01;
-        }
-        if (deviceType === "PLUGIN_LAMP_WITH_PLUGS") {
-          localInput.electricPower = 0.01;
-        }
-        if (deviceType === "POWER_KNOWN") {
-          localInput.electricPower = 0.01;
-        }
+        localInput.electricPower = AllDevicesWithTextById[deviceType]?.default ?? 666;
         return localInput;
       },
       value: "input.deviceType",
       suffix: "W",
       optional: false,
       required: true,
-      hideFooterContent: false,
+      hideFooterContent: true,
       conditional_function: (itemInput: SurveyInput) => {
         return (
           itemInput?.energySubType != solarLanternDevice &&
@@ -318,7 +316,7 @@ export function commonElectricSolarDevicesHeaders() {
       },
       value: "input.electricPower",
       suffix: "W",
-      hideFooterContent: false,
+      hideFooterContent: true,
       conditional_function: conditionalFunctionElectricSolarDevices,
     },
     {
@@ -390,52 +388,72 @@ export function commonElectricSolarDevicesHeaders() {
   ];
 }
 
-export function solarLanternHeaders() {
+export function conditionalFunctionElectricHybDevices(
+  itemInput: SurveyInput
+) {
+  if (
+    itemInput?.energyType == electricFuelsEnergyType &&
+    itemInput?.energySubType === plugInOrChargeBatteryDevice &&
+    itemInput.fuelType === "ELE_HYB"
+  ) {
+    return true;
+  }
+  return false;
+}
+
+export function hybridLightingElectricHeaders() {
+  // diesel/ grid / solar
   return [
     {
       style: {
-        cols: "12",
+        cols: "4",
       },
-      text: "watts for solar lantern",
-      type: "text",
-      value: "input.watts",
-      formatter: (v: number) => {
-        return formatNumberGhg(v);
-      },
+      text: "Diesel generator",
+      value: "input.dieselPercentage",
+      subtype: "percent",
+      type: "number",
       hideFooterContent: false,
-      conditional_function: (itemInput: SurveyInput) => {
-        if (itemInput?.energySubType == solarLanternDevice) {
-          return true;
-        }
-        return false;
+      formatter: (v: number) => {
+        return formatNumberGhg(v, {
+          style: "percent",
+        });
       },
+      conditional_function: conditionalFunctionElectricHybDevices,
     },
-  ];
-}
-
-export function singleUseBatteryDeviceHeaders() {
-  return [
     {
       style: {
-        cols: "12",
+        cols: "4",
       },
-      text: "operating hours for single use battery device",
-      type: "text",
-      value: "input.operatingHours",
-      formatter: (v: number) => {
-        return formatNumberGhg(v);
-      },
+      text: "Grid",
+      value: "input.gridPercentage",
+      subtype: "percent",
+      type: "number",
       hideFooterContent: false,
-      conditional_function: (itemInput: SurveyInput) => {
-        if (itemInput?.energySubType == singleUseBatteryDevice) {
-          return true;
-        }
-        return false;
+      formatter: (v: number) => {
+        return formatNumberGhg(v, {
+          style: "percent",
+        });
       },
+      conditional_function: conditionalFunctionElectricHybDevices,
     },
-  ];
+    {
+      style: {
+        cols: "4",
+      },
+      text: "Solar",
+      value: "input.solarPercentage",
+      subtype: "percent",
+      type: "number",
+      hideFooterContent: false,
+      formatter: (v: number) => {
+        return formatNumberGhg(v, {
+          style: "percent",
+        });
+      },
+      conditional_function: conditionalFunctionElectricHybDevices,
+    },
+  ]
 }
-
 export function headers(
   countryCode: CountryIrradianceKeys,
   projectSolar: number | undefined,
@@ -480,7 +498,7 @@ export function headers(
       formatter: (v: AllFuel) => {
         return AllLightingFuelsWithTextById?.[v]?.text;
       },
-      text: "Type of electric / solar devices",
+      text: "Type of Lighting Device",
       type: "select",
       value: "input.energySubType",
       hideFooterContent: false,
@@ -488,7 +506,9 @@ export function headers(
         energySubType: EnergySubType,
         localInput: EnergyLightingItemInput
       ) => {
-        return resetDeviceInput(localInput);
+        localInput = resetDeviceInput(localInput);
+        localInput.electricPower = AllDevicesWithTextById[energySubType]?.default ?? 0;
+        return localInput;
       },
       conditional_function: (itemInput: SurveyInput) => {
         if (itemInput?.energyType == electricFuelsEnergyType) {
@@ -581,6 +601,7 @@ export function headers(
       type: "select",
       hideFooterContent: false,
     },
+    ...hybridLightingElectricHeaders(),
     ...commonElectricSolarDevicesHeaders(),
     {
       conditional_value: [["FWD"], [true]],
