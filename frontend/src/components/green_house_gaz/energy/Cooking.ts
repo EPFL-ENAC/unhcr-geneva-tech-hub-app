@@ -354,7 +354,6 @@ export function headers(
         }
         return localInput;
       },
-      isInput: true,
       type: "select",
       hideFooterContent: false,
     },

@@ -13,6 +13,7 @@
         :results="baseline.results"
         :disabled="!baselineMode"
         :headers="headers"
+        :compute-item="computeItem"
         :name="name"
         @update:items="updateBaselineItems"
       />
@@ -75,6 +76,7 @@ import {
   SurveyItem,
   SurveyResult,
 } from "@/store/GhgInterface";
+import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { cloneDeep } from "lodash";
 import Vue from "vue";
 import "vue-class-component/hooks";
@@ -99,6 +101,11 @@ export default class BaselineCard extends Vue {
   readonly headers!: SurveyTableHeader;
   @Prop({ type: Boolean, default: false })
   readonly activatePie!: boolean;
+  @Prop([Function])
+  readonly computeItem!: (
+    localItemInput: SurveyInput,
+    ghgMapRef: ItemReferencesMap
+  ) => SurveyResult;
 
   public toggleBaselineMode(): void {
     this.$emit("update:baselineMode", !this.baselineMode);
