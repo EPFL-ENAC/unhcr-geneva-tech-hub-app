@@ -288,7 +288,8 @@ export function commonElectricSolarDevicesHeaders() {
         return AllDevicesWithTextById[v]?.text;
       },
       customEventInput: (deviceType: AllDevices, localInput: SurveyInput) => {
-        localInput.electricPower = AllDevicesWithTextById[deviceType]?.default ?? 666;
+        localInput.electricPower =
+          AllDevicesWithTextById[deviceType]?.default ?? 0;
         return localInput;
       },
       value: "input.deviceType",
@@ -388,9 +389,7 @@ export function commonElectricSolarDevicesHeaders() {
   ];
 }
 
-export function conditionalFunctionElectricHybDevices(
-  itemInput: SurveyInput
-) {
+export function conditionalFunctionElectricHybDevices(itemInput: SurveyInput) {
   if (
     itemInput?.energyType == electricFuelsEnergyType &&
     itemInput?.energySubType === plugInOrChargeBatteryDevice &&
@@ -403,6 +402,21 @@ export function conditionalFunctionElectricHybDevices(
 
 export function hybridLightingElectricHeaders() {
   // diesel/ grid / solar
+  const hybridPercentagesRuleFn = (localInput: SurveyInput, surveyItem: SurveyTableHeader) => {
+    const { dieselPercentage, gridPercentage, solarPercentage } =
+      localInput;
+    const totalPercentage =
+      ((dieselPercentage as number) ?? 0) +
+      ((gridPercentage as number) ?? 0) +
+      ((solarPercentage as number) ?? 0);
+    return [
+      (v: number) =>
+        totalPercentage <= 1 ||
+        `Total percentage should be <= 100%: it's ${formatNumberGhg(
+          totalPercentage * 100
+        )}`,
+    ];
+  };
   return [
     {
       style: {
@@ -412,6 +426,7 @@ export function hybridLightingElectricHeaders() {
       value: "input.dieselPercentage",
       subtype: "percent",
       type: "number",
+      rulesFn: hybridPercentagesRuleFn,
       hideFooterContent: false,
       formatter: (v: number) => {
         return formatNumberGhg(v, {
@@ -434,6 +449,7 @@ export function hybridLightingElectricHeaders() {
           style: "percent",
         });
       },
+      rulesFn: hybridPercentagesRuleFn,
       conditional_function: conditionalFunctionElectricHybDevices,
     },
     {
@@ -444,6 +460,7 @@ export function hybridLightingElectricHeaders() {
       value: "input.solarPercentage",
       subtype: "percent",
       type: "number",
+      rulesFn: hybridPercentagesRuleFn,
       hideFooterContent: false,
       formatter: (v: number) => {
         return formatNumberGhg(v, {
@@ -452,7 +469,7 @@ export function hybridLightingElectricHeaders() {
       },
       conditional_function: conditionalFunctionElectricHybDevices,
     },
-  ]
+  ];
 }
 export function headers(
   countryCode: CountryIrradianceKeys,
@@ -507,7 +524,8 @@ export function headers(
         localInput: EnergyLightingItemInput
       ) => {
         localInput = resetDeviceInput(localInput);
-        localInput.electricPower = AllDevicesWithTextById[energySubType]?.default ?? 0;
+        localInput.electricPower =
+          AllDevicesWithTextById[energySubType]?.default ?? 0;
         return localInput;
       },
       conditional_function: (itemInput: SurveyInput) => {
@@ -788,7 +806,8 @@ export function generateComputeItem(
     localItemInput: EnergyLightingItemInput,
     ghgMapRef: ItemReferencesMap
   ): EnergyLightingItemResults {
-    const { percentageOfTotalHouseHolds, fuelUsage, fuelType } = localItemInput;
+    const { percentageOfTotalHouseHolds, fuelUsage, fuelType, energySubTypes } =
+      localItemInput;
     if (percentageOfTotalHouseHolds === undefined) {
       throw new Error("percentage of total households not defined");
     }
@@ -914,6 +933,11 @@ export function generateComputeItem(
           project_REF_GRD,
           hhUsingTheFuel * numberOfDaysPerYear
         );
+        break;
+      case plugingRecheargeableDevices.includes(
+        energySubTypes as PlugingRecheargeableDevice
+      ):
+        totalCO2Emission = 0;
         break;
       case ["BAT", "LIGHT_SOLAR"].includes(fuelType as LightingFuel):
       case thermalFuels.includes(fuelType as ThermalFuel):

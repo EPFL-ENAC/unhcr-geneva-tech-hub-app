@@ -6,6 +6,7 @@ import {
   SurveyItem,
 } from "@/store/GhgInterface";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
+import { Rule } from "@/utils/rules";
 import { get as _get } from "lodash";
 
 function n2sFormatter(n: number): string {
@@ -173,6 +174,8 @@ export interface EasySurveyTableHeader {
         intervention: boolean;
       }) => SelectOption<SelectValue>[]);
   options: SelectOption<SelectValue>[];
+  rules?: Rule[];
+  rulesFn?: (localInput: SurveyInput, surveyItem: SurveyTableHeader) => Rule[];
   isInput: boolean;
   label?: string;
   tooltipInfo?: string;
