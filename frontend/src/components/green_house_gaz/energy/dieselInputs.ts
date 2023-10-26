@@ -158,7 +158,7 @@ function computeDieselLitersFromPowerAndUpdateKey(
   };
 }
 export function getDieselPowerText(): string {
-  return `Diesel estimated (kwh/yr)`;
+  return `Diesel estimated (kWh/yr)`;
 }
 
 export function dieselInputsProducedPer(

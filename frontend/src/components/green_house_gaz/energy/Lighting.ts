@@ -1,5 +1,8 @@
 import { numberOfDaysPerYear } from "@/components/green_house_gaz/energy/computeCO2cost";
-import { CountryIrradianceKeys } from "@/components/green_house_gaz/energy/solarInputs";
+import {
+  CountryIrradianceKeys,
+  getSolarPowerText,
+} from "@/components/green_house_gaz/energy/solarInputs";
 import {
   AllFuel,
   allFuelsForLighing,
@@ -47,7 +50,8 @@ import {
   surveyTableHeaderCO2,
   surveyTableHeaderIncrements,
 } from "@/components/green_house_gaz/generic/surveyTableHeader";
-import { computeCO2costElectric } from "./poweredBy";
+import { getDieselPowerText } from "./dieselInputs";
+import { computeCO2costElectric, getGridPowerText } from "./poweredBy";
 
 export interface EnergyLightingItemInput extends SurveyInput, EnergyItem {
   percentageOfTotalHouseHolds?: number; // computed based on % of HH and stuffs
@@ -189,8 +193,8 @@ export const plugingRecheargeableDevices = [
   "POWER_KNOWN",
   "PLUGIN_LIGHT_BULB_INC",
   "PLUGIN_LIGHT_BULB_LED",
-  "PLUGIN_LAMP_WITH_PLUGS",
   "RECHARGEABLE_BAT_TORCH",
+  "RECHARGEABLE_BAT_BIG_TORCH",
   "RECHARGEABLE_BAT_LANTERN",
 ] as const;
 export type PlugingRecheargeableDevice =
@@ -200,36 +204,41 @@ export const plugingRecheargeableDevicesWithText: IdTextTypesItem<PlugingRechear
     { _id: "POWER_KNOWN", text: "Power of device known", default: 10 },
     {
       _id: "PLUGIN_LIGHT_BULB_INC",
-      text: "Plugin incandescent light bulb ",
+      text: "Incandescent light bulb (plug-in)",
       default: 60,
     },
     {
       _id: "PLUGIN_LIGHT_BULB_LED",
-      text: "Plugin LED light bulb ",
-      default: 10,
-    },
-    {
-      _id: "PLUGIN_LAMP_WITH_PLUGS",
-      text: "Plugin lamp with plugs",
+      text: "LED light bulb (plug-in)",
       default: 10,
     },
     {
       _id: "RECHARGEABLE_BAT_TORCH",
-      text: "Rechargeable batteries handheld torch",
+      text: "Small handheld torch (rechargeable batteries)",
       default: 1,
     },
     {
+      _id: "RECHARGEABLE_BAT_BIG_TORCH",
+      text: "Big handheld torch (rechargeable batteries)",
+      default: 5,
+    },
+    {
       _id: "RECHARGEABLE_BAT_LANTERN",
-      text: "Recheargeable batteries lantern",
+      text: "Lantern (rechargeable batteries)",
       default: 3,
     },
   ];
 
-export const singleUseBatteryDevices = ["TORCH", "LANTERN"] as const;
+export const singleUseBatteryDevices = [
+  "TORCH",
+  "TORCH_BIG",
+  "LANTERN",
+] as const;
 export type SingleUseBatteryDevices = typeof singleUseBatteryDevices[number];
 export const singleUseBatteryDevicesWithText: IdTextTypesItem<SingleUseBatteryDevices>[] =
   [
-    { _id: "TORCH", text: "Handheld torch", default: 1 },
+    { _id: "TORCH", text: "Small handheld torch", default: 1 },
+    { _id: "TORCH_BIG", text: "Big handheld torch", default: 3 },
     { _id: "LANTERN", text: "Lantern", default: 1 },
   ];
 export type AllDevices =
@@ -245,10 +254,10 @@ export const AllDevicesWithTextById = [
   return acc;
 }, {} as Record<AllDevices, IdTextTypesItem<AllDevices>>);
 
+// TODO: use unique id instead of text
 export const solidFuelsEnergyType = "Solid fuels";
 export const liquidFuelsEnergyType = "Liquid fuels";
-export const electricFuelsEnergyType = "Electric / solar devices";
-
+export const electricFuelsEnergyType = "Electric / Battery / Solar";
 export const energyTypes = [
   solidFuelsEnergyType,
   liquidFuelsEnergyType,
@@ -276,6 +285,7 @@ export function conditionalFunctionElectricSolarDevices(
 }
 
 export function commonElectricSolarDevicesHeaders() {
+  const timePeriod = "Year";
   return [
     {
       value: "input.deviceType",
@@ -347,7 +357,7 @@ export function commonElectricSolarDevicesHeaders() {
       },
       type: "number",
       value: "input.numberOfDevices",
-      hideFooterContent: false,
+      hideFooterContent: true,
       conditional_function: conditionalFunctionElectricSolarDevices,
     },
     {
@@ -361,14 +371,14 @@ export function commonElectricSolarDevicesHeaders() {
         return formatNumberGhg(v);
       },
       suffix: "h",
-      hideFooterContent: false,
+      hideFooterContent: true,
       conditional_function: conditionalFunctionElectricSolarDevices,
     },
     {
       style: {
         cols: "6",
       },
-      text: "Total power",
+      text: `Total power`,
       min: 0,
       type: "number",
       formatter: (v: number) => {
@@ -379,7 +389,7 @@ export function commonElectricSolarDevicesHeaders() {
       isInput: true,
       disabled: true,
       optional: true,
-      hideFooterContent: false,
+      hideFooterContent: true,
       computeResults: true,
       conditional_function: conditionalFunctionElectricSolarDevices,
     },
@@ -387,13 +397,96 @@ export function commonElectricSolarDevicesHeaders() {
       style: {
         cols: "6",
       },
-      text: "Total energy",
+      value: "computed.totalEnergy",
+      text: "Annual fuel / Energy consumption",
+      formatter: (v: number, { ...args }, localInput: any) => {
+        let suffixTimePeriod = "";
+        switch (timePeriod) {
+          case "Year":
+            suffixTimePeriod = "/yr";
+            break;
+          default:
+            break;
+        }
+        const suffix = `kWh${suffixTimePeriod}`;
+
+        if (localInput?.input?.energyType === solidFuelsEnergyType) {
+          return formatNumberGhg(localInput?.input?.fuelUsage * 365.25, {
+            suffix: "kg/yr",
+          });
+        }
+        if (localInput?.input?.energyType === liquidFuelsEnergyType) {
+          return formatNumberGhg(localInput?.input?.fuelUsage * 365.25, {
+            suffix: "L/yr",
+          });
+        }
+        if (
+          localInput?.input?.fuelType === "ELE_SOLAR" ||
+          localInput?.input?.fuelType === "ELE_HYB" ||
+          localInput?.input?.fuelType === "ELE_GRID"
+          // localInput?.input?.fuelType === "ELE_DIES"
+        ) {
+          // use the formater of the correct input!
+          return formatNumberGhg(v, { suffix });
+        }
+        if (localInput?.input?.fuelType === "ELE_DIES") {
+          // return dieselFormatter(v, args, localInput);
+          return formatNumberGhg(localInput?.input?.fuelUsage, {
+            suffix: "L/yr",
+          });
+        }
+        if (localInput?.input?.fuelType === "NO_ACCESS") {
+          return formatNumberGhg(v, { suffix });
+        }
+        return formatNumberGhg(localInput?.input?.fuelUsage, {
+          suffix: "L/yr",
+        });
+      },
+      tooltipInfoFn: (value: string, args: any, localItem: any) => {
+        // iterate diesel/grid/solar estimated
+        let suffixTimePeriod = "";
+        switch (timePeriod) {
+          case "Year":
+            suffixTimePeriod = "/yr";
+            break;
+          default:
+            break;
+        }
+        const suffix = `kWh${suffixTimePeriod}`;
+        if (localItem?.input?.fuelType === "ELE_HYB") {
+          const dieselTotalPowerRatio =
+            (localItem?.computed?.totalEnergy ?? 0) *
+            (localItem?.input?.dieselPercentage ?? 0);
+          const gridTotalPowerRatio =
+            (localItem?.computed?.totalEnergy ?? 0) *
+            (localItem?.input?.gridPercentage ?? 0);
+          const solarTotalPowerRatio =
+            (localItem?.computed?.totalEnergy ?? 0) *
+            (localItem?.input?.solarPercentage ?? 0);
+          return `
+        <ul>
+            <li>
+            ${getDieselPowerText()}:
+                ${dieselTotalPowerRatio} ${suffix}
+            </li>
+            <li>
+              ${getGridPowerText()}:
+              ${gridTotalPowerRatio} ${suffix}
+            </li>
+            <li>
+            ${getSolarPowerText()}:
+            ${solarTotalPowerRatio} ${suffix}
+          </li>
+          <ul>
+        `;
+        }
+        return false;
+      },
       min: 0,
       type: "number",
-      formatter: (v: number) => {
-        return formatNumberGhg(v, { suffix: "kWh/year" });
-      },
-      value: "computed.totalEnergy",
+      // formatter: (v: number) => {
+      //   return formatNumberGhg(v, { suffix: "kWh/year" });
+      // },
       suffix: "kWh/year",
       isInput: true,
       disabled: true,
@@ -430,9 +523,9 @@ export function hybridLightingElectricHeaders() {
     return [
       (v: number) =>
         totalPercentage <= 1 ||
-        `Total percentage should be <= 100%: it's ${formatNumberGhg(
-          totalPercentage * 100
-        )}`,
+        `Sum should be <= 100%  Sum now = ${formatNumberGhg(totalPercentage, {
+          style: "percent",
+        })}`,
     ];
   };
   return [
@@ -603,8 +696,45 @@ export function headers(
 
         return true;
       },
-      formatter: (v: AllFuel) => {
+      formatter: (v: AllFuel, _: any, localItem: EnergyLightingItem) => {
+        if (
+          v === "NO_ACCESS" &&
+          localItem.input.energySubType === "SOLAR_LANTERN"
+        ) {
+          return "Solar";
+        }
+        if (
+          v === "NO_ACCESS" &&
+          localItem.input.energySubType === "SINGLE_USE_BAT"
+        ) {
+          return "Batteries";
+        }
         return AllLightingFuelsWithTextById?.[v]?.text;
+      },
+      tooltipInfoFn: (
+        value: string,
+        args: any,
+        localItem: EnergyLightingItem
+      ) => {
+        if (localItem?.input?.fuelType === "ELE_HYB") {
+          return `
+          Hybrid mix percentages:<br/>
+          Diesel generator: ${formatNumberGhg(
+            localItem?.input?.dieselPercentage ?? 0,
+            {
+              style: "percent",
+            }
+          )}<br/>
+          National Grid: ${formatNumberGhg(
+            localItem?.input?.gridPercentage ?? 0,
+            {
+              style: "percent",
+            }
+          )}<br/>
+          Solar: : ${formatNumberGhg(localItem?.input?.solarPercentage ?? 0, {
+            style: "percent",
+          })}`;
+        }
       },
       formatterTableComponent: (
         fuelType: AllFuel,
@@ -1083,6 +1213,7 @@ export function generateComputeItem(
             break;
           }
           case ["ELE_HYB"].includes(fuelType as PlugingRecheargeableDevice): {
+            // side effect here.
             localItemInput.gridPower =
               totalEnergy * (localItemInput?.gridPercentage ?? 0);
             localItemInput.fuelUsage =
