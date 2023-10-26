@@ -8,7 +8,6 @@ import {
   biomassFuels,
   ElectricDevices,
   electricDevicesWithText,
-  ElectricFuel,
   electricFuels,
   electricFuelsWithoutNone,
   GasFuel,
@@ -67,7 +66,14 @@ export interface EnergyLightingItemInput extends SurveyInput, EnergyItem {
 
   numberOfDevices?: number; // special for electric
   electricPower?: number; // special for electric
-  deviceType?: string; // special for electric
+  deviceType?: AllDevices; // special for electric
+
+  energyType?: EnergyType;
+  energySubType?: EnergySubType;
+
+  gridPercentage?: number;
+  dieselPercentage?: number;
+  solarPercentage?: number;
 }
 
 export interface EnergyLightingItemResults extends SurveyResult {
@@ -181,7 +187,8 @@ export function resetSurveyFuelOption(
 
 export const plugingRecheargeableDevices = [
   "POWER_KNOWN",
-  "PLUGIN_LIGHT_BULB",
+  "PLUGIN_LIGHT_BULB_INC",
+  "PLUGIN_LIGHT_BULB_LED",
   "PLUGIN_LAMP_WITH_PLUGS",
   "RECHARGEABLE_BAT_TORCH",
   "RECHARGEABLE_BAT_LANTERN",
@@ -191,7 +198,16 @@ export type PlugingRecheargeableDevice =
 export const plugingRecheargeableDevicesWithText: IdTextTypesItem<PlugingRecheargeableDevice>[] =
   [
     { _id: "POWER_KNOWN", text: "Power of device known", default: 10 },
-    { _id: "PLUGIN_LIGHT_BULB", text: "Plugin light-bulb", default: 60 },
+    {
+      _id: "PLUGIN_LIGHT_BULB_INC",
+      text: "Plugin incandescent light bulb ",
+      default: 60,
+    },
+    {
+      _id: "PLUGIN_LIGHT_BULB_LED",
+      text: "Plugin LED light bulb ",
+      default: 10,
+    },
     {
       _id: "PLUGIN_LAMP_WITH_PLUGS",
       text: "Plugin lamp with plugs",
@@ -262,6 +278,7 @@ export function conditionalFunctionElectricSolarDevices(
 export function commonElectricSolarDevicesHeaders() {
   return [
     {
+      value: "input.deviceType",
       style: {
         cols: "12",
       },
@@ -292,7 +309,6 @@ export function commonElectricSolarDevicesHeaders() {
           AllDevicesWithTextById[deviceType]?.default ?? 0;
         return localInput;
       },
-      value: "input.deviceType",
       suffix: "W",
       optional: false,
       required: true,
@@ -402,9 +418,11 @@ export function conditionalFunctionElectricHybDevices(itemInput: SurveyInput) {
 
 export function hybridLightingElectricHeaders() {
   // diesel/ grid / solar
-  const hybridPercentagesRuleFn = (localInput: SurveyInput, surveyItem: SurveyTableHeader) => {
-    const { dieselPercentage, gridPercentage, solarPercentage } =
-      localInput;
+  const hybridPercentagesRuleFn = (
+    localInput: SurveyInput,
+    surveyItem: SurveyTableHeader
+  ) => {
+    const { dieselPercentage, gridPercentage, solarPercentage } = localInput;
     const totalPercentage =
       ((dieselPercentage as number) ?? 0) +
       ((gridPercentage as number) ?? 0) +
@@ -427,7 +445,7 @@ export function hybridLightingElectricHeaders() {
       subtype: "percent",
       type: "number",
       rulesFn: hybridPercentagesRuleFn,
-      hideFooterContent: false,
+      hideFooterContent: true,
       formatter: (v: number) => {
         return formatNumberGhg(v, {
           style: "percent",
@@ -443,7 +461,7 @@ export function hybridLightingElectricHeaders() {
       value: "input.gridPercentage",
       subtype: "percent",
       type: "number",
-      hideFooterContent: false,
+      hideFooterContent: true,
       formatter: (v: number) => {
         return formatNumberGhg(v, {
           style: "percent",
@@ -461,7 +479,7 @@ export function hybridLightingElectricHeaders() {
       subtype: "percent",
       type: "number",
       rulesFn: hybridPercentagesRuleFn,
-      hideFooterContent: false,
+      hideFooterContent: true,
       formatter: (v: number) => {
         return formatNumberGhg(v, {
           style: "percent",
@@ -501,7 +519,6 @@ export function headers(
       hideFooterContent: false,
     },
     {
-      // items: ["SOLAR_LANTERN", "SINGLE_USE_BAT", "PLUG_IN_OR_CHARGE_BAT"],
       items: (): SelectOption<SelectValue>[] => {
         const result: string[] = [...energySubTypes];
         return result.map((item: string) => ({
@@ -512,8 +529,20 @@ export function headers(
       style: {
         cols: "12",
       },
-      formatter: (v: AllFuel) => {
-        return AllLightingFuelsWithTextById?.[v]?.text;
+      formatter: (
+        v: AllFuel,
+        tableHeader: SurveyTableHeader,
+        localItem: EnergyLightingItem
+      ) => {
+        const deviceType = localItem.input.deviceType;
+        let deviceTypeText = "";
+        if (deviceType !== undefined) {
+          deviceTypeText = AllDevicesWithTextById[deviceType]?.text ?? "";
+          deviceTypeText = ` — ${deviceTypeText}`;
+        }
+        return `${
+          AllLightingFuelsWithTextById?.[v]?.text ?? "—"
+        }${deviceTypeText}`;
       },
       text: "Type of Lighting Device",
       type: "select",
@@ -554,7 +583,6 @@ export function headers(
           result = ["OIL", "PET", "KRS"];
         }
         if (options.localInput.energyType === electricFuelsEnergyType) {
-          // result = ["SOLAR_LANTERN", "SINGLE_USE_BAT", "PLUG_IN_OR_CHARGE_BAT"];
           result = electricFuelsWithoutNone as unknown as string[];
         }
         return result.map((item: string) => ({
@@ -570,7 +598,6 @@ export function headers(
           return false;
         }
         if (itemInput?.energyType == electricFuelsEnergyType) {
-          // check for subtype!
           return itemInput?.energySubType == plugInOrChargeBatteryDevice;
         }
 
@@ -791,8 +818,157 @@ function getLocalFNRB(
   return localFNRB;
 }
 
-// this.project.totalHH
-// this.project.countryCode
+// deprecated we don't use lihgt hybrid anymore
+export function computeItemLightHyb(
+  localItemInput: EnergyLightingItemInput,
+  ghgMapRef: ItemReferencesMap,
+  hhUsingTheFuel: number
+) {
+  const { fuelUsageFirewood, fuelUsageParaffin, fuelUsageKerosene } =
+    localItemInput;
+  if (fuelUsageFirewood === undefined) {
+    throw new Error("fuel usage not defined");
+  }
+  const fuelEfficiencyFirewood = ghgMapRef?.[`REF_EFF_FWD`]?.value;
+  if (fuelEfficiencyFirewood == undefined) {
+    const errorMessage = `there are no emission factor REF_EFF_FWD`;
+    throw new Error(errorMessage);
+  }
+  const totalCO2EmissionFirewood =
+    hhUsingTheFuel *
+    fuelUsageFirewood * // fuel consumed in kg / day
+    0.001 * // 1t/1000kg
+    numberOfDaysPerYear * // days/yr
+    fuelEfficiencyFirewood;
+
+  // PARAFFIN
+  if (fuelUsageParaffin === undefined) {
+    throw new Error("fuel usage not defined");
+  }
+  const fuelEfficiencyParaffin = ghgMapRef?.[`REF_EFF_CNDL`]?.value;
+  if (fuelEfficiencyParaffin == undefined) {
+    const errorMessage = `there are no emission factor REF_EFF_CNDL`;
+    throw new Error(errorMessage);
+  }
+  const totalCO2EmissionParaffin =
+    hhUsingTheFuel *
+    fuelUsageParaffin * // fuel consumed in kg / day
+    0.001 * // 1t/1000kg
+    numberOfDaysPerYear * // days/yr
+    fuelEfficiencyParaffin;
+  // END PARAFFIN
+
+  // KEROSENE
+  if (fuelUsageKerosene === undefined) {
+    throw new Error("fuel usage not defined");
+  }
+  const fuelEfficiencyKerosene = ghgMapRef?.[`REF_EFF_KRS`]?.value;
+  if (fuelEfficiencyKerosene == undefined) {
+    const errorMessage = `there are no emission factor REF_EFF_KRS`;
+    throw new Error(errorMessage);
+  }
+  const totalCO2EmissionKerosene =
+    hhUsingTheFuel *
+    fuelUsageKerosene * // fuel consumed in kg / day
+    0.001 * // 1t/1000kg
+    numberOfDaysPerYear * // days/yr
+    fuelEfficiencyKerosene;
+  // END KEROSENE
+  return {
+    totalCO2Emission:
+      totalCO2EmissionFirewood +
+      totalCO2EmissionParaffin +
+      totalCO2EmissionKerosene,
+  };
+}
+
+export function computeItemBiomass(
+  fuelUsage: number | undefined,
+  localItemInput: EnergyLightingItemInput,
+  ghgMapRef: ItemReferencesMap,
+  countryCode: string,
+  fuelType: AllFuel,
+  hhUsingTheFuel: number,
+  itemsGHGfNRB: GHGfNRB[]
+) {
+  /*
+        - Three version for the fnrb factor
+          - briket and pellets
+          - wood same as bricket + dry factor
+          - charcoal same as bricket but fnrb factor is combustion + production
+       */
+  if (fuelUsage === undefined) {
+    throw new Error("fuel usage not defined");
+  }
+
+  let drynessFactor = REF_DRY_WOOD;
+  if (!localItemInput.dryWood && fuelType === "FWD") {
+    drynessFactor = drynessFactor + REF_WET_WOOD;
+  }
+  const localFNRB = getLocalFNRB(
+    countryCode,
+    ghgMapRef?.REF_FNRB?.value,
+    localItemInput.sustainablySourced,
+    itemsGHGfNRB
+  );
+
+  let efficiencyFactor = 1;
+  const fuelTypeEnhanced = `${fuelType}${
+    localItemInput.carbonized ? "_C" : ""
+  }`;
+  if (fuelTypeEnhanced === "CHC" || fuelTypeEnhanced === "BRQ_C") {
+    const fuelEfficiencyC = ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}_C`]?.value;
+    if (fuelEfficiencyC == undefined) {
+      const errorMessage = `there are no emission factor REF_EFF_${fuelTypeEnhanced}_C`;
+      throw new Error(errorMessage);
+    }
+    const fuelEfficiencyP = ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}_P`]?.value;
+    if (fuelEfficiencyP == undefined) {
+      const errorMessage = `there are no emission factor REF_EFF_${fuelTypeEnhanced}_P`;
+      throw new Error(errorMessage);
+    }
+    const nonCO2FractionC =
+      ghgMapRef?.[`REF_NONCO2_${fuelTypeEnhanced}_C`]?.value;
+    if (nonCO2FractionC == undefined) {
+      const errorMessage = `there are no nonCO2Fraction factor REF_NONCO2_${fuelTypeEnhanced}_C`;
+      throw new Error(errorMessage);
+    }
+    const nonCO2FractionP =
+      ghgMapRef?.[`REF_NONCO2_${fuelTypeEnhanced}_P`]?.value;
+    if (nonCO2FractionP == undefined) {
+      const errorMessage = `there are no nonCO2Fraction factor REF_NONCO2_${fuelTypeEnhanced}_P`;
+      throw new Error(errorMessage);
+    }
+
+    efficiencyFactor =
+      (localFNRB + (1 - localFNRB) * nonCO2FractionC) * fuelEfficiencyC +
+      (localFNRB + (1 - localFNRB) * nonCO2FractionP) * fuelEfficiencyP;
+  } else {
+    const fuelEfficiency = ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}`]?.value;
+    if (fuelEfficiency == undefined) {
+      const errorMessage = `there are no emission factor REF_EFF_${fuelTypeEnhanced}`;
+      throw new Error(errorMessage);
+    }
+    const nonCO2Fraction = ghgMapRef?.[`REF_NONCO2_${fuelType}`]?.value;
+    if (nonCO2Fraction == undefined) {
+      const errorMessage = `there are no nonCO2Fraction factor REF_NONCO2_${fuelType}`;
+      throw new Error(errorMessage);
+    }
+    // for "FWD", "BRQ", "PLTS"
+    efficiencyFactor =
+      (localFNRB + (1 - localFNRB) * nonCO2Fraction) * fuelEfficiency;
+  }
+  return {
+    totalCO2Emission:
+      hhUsingTheFuel *
+      fuelUsage * // fuel consumed in kg / day
+      drynessFactor * // only for wood but since it's 1 as default it's going to be okay
+      0.001 * // 1t/1000kg
+      numberOfDaysPerYear * // days/yr
+      efficiencyFactor,
+  };
+}
+
 export function generateComputeItem(
   countryCode: string,
   projectTotalHH: number,
@@ -806,7 +982,7 @@ export function generateComputeItem(
     localItemInput: EnergyLightingItemInput,
     ghgMapRef: ItemReferencesMap
   ): EnergyLightingItemResults {
-    const { percentageOfTotalHouseHolds, fuelUsage, fuelType, energySubTypes } =
+    const { percentageOfTotalHouseHolds, fuelUsage, fuelType, energySubType } =
       localItemInput;
     if (percentageOfTotalHouseHolds === undefined) {
       throw new Error("percentage of total households not defined");
@@ -822,89 +998,28 @@ export function generateComputeItem(
         "Total House holds is undefined, please fill assessment information page and click on save"
       );
     }
+
+    const totalPower =
+      (localItemInput?.numberOfDevices ?? 0) *
+      (localItemInput?.electricPower ?? 0);
+    const operatingHours = localItemInput?.operatingHours ?? 0;
+    const totalEnergy = (totalPower * operatingHours * 365.25) / 1000; // in kWh/year
     const hhUsingTheFuel = percentageOfTotalHouseHolds * projectTotalHH; // number of cookstoves
     let totalCO2Emission = 0;
 
     switch (true) {
       /* solid fuels "FWD", "CHC", "BRQ", "PLTS" */
       case biomassFuels.includes(fuelType as BioMassFuel): {
-        /*
-        - Three version for the fnrb factor
-          - briket and pellets
-          - wood same as bricket + dry factor
-          - charcoal same as bricket but fnrb factor is combustion + production
-       */
-        if (fuelUsage === undefined) {
-          throw new Error("fuel usage not defined");
-        }
-
-        let drynessFactor = REF_DRY_WOOD;
-        if (!localItemInput.dryWood && fuelType === "FWD") {
-          drynessFactor = drynessFactor + REF_WET_WOOD;
-        }
-        const localFNRB = getLocalFNRB(
+        // todo: simplify argument to this function
+        totalCO2Emission = computeItemBiomass(
+          fuelUsage,
+          localItemInput,
+          ghgMapRef,
           countryCode,
-          ghgMapRef?.REF_FNRB?.value,
-          localItemInput.sustainablySourced,
+          fuelType,
+          hhUsingTheFuel,
           itemsGHGfNRB
-        );
-
-        let efficiencyFactor = 1;
-        const fuelTypeEnhanced = `${fuelType}${
-          localItemInput.carbonized ? "_C" : ""
-        }`;
-        if (fuelTypeEnhanced === "CHC" || fuelTypeEnhanced === "BRQ_C") {
-          const fuelEfficiencyC =
-            ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}_C`]?.value;
-          if (fuelEfficiencyC == undefined) {
-            const errorMessage = `there are no emission factor REF_EFF_${fuelTypeEnhanced}_C`;
-            throw new Error(errorMessage);
-          }
-          const fuelEfficiencyP =
-            ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}_P`]?.value;
-          if (fuelEfficiencyP == undefined) {
-            const errorMessage = `there are no emission factor REF_EFF_${fuelTypeEnhanced}_P`;
-            throw new Error(errorMessage);
-          }
-          const nonCO2FractionC =
-            ghgMapRef?.[`REF_NONCO2_${fuelTypeEnhanced}_C`]?.value;
-          if (nonCO2FractionC == undefined) {
-            const errorMessage = `there are no nonCO2Fraction factor REF_NONCO2_${fuelTypeEnhanced}_C`;
-            throw new Error(errorMessage);
-          }
-          const nonCO2FractionP =
-            ghgMapRef?.[`REF_NONCO2_${fuelTypeEnhanced}_P`]?.value;
-          if (nonCO2FractionP == undefined) {
-            const errorMessage = `there are no nonCO2Fraction factor REF_NONCO2_${fuelTypeEnhanced}_P`;
-            throw new Error(errorMessage);
-          }
-
-          efficiencyFactor =
-            (localFNRB + (1 - localFNRB) * nonCO2FractionC) * fuelEfficiencyC +
-            (localFNRB + (1 - localFNRB) * nonCO2FractionP) * fuelEfficiencyP;
-        } else {
-          const fuelEfficiency =
-            ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}`]?.value;
-          if (fuelEfficiency == undefined) {
-            const errorMessage = `there are no emission factor REF_EFF_${fuelTypeEnhanced}`;
-            throw new Error(errorMessage);
-          }
-          const nonCO2Fraction = ghgMapRef?.[`REF_NONCO2_${fuelType}`]?.value;
-          if (nonCO2Fraction == undefined) {
-            const errorMessage = `there are no nonCO2Fraction factor REF_NONCO2_${fuelType}`;
-            throw new Error(errorMessage);
-          }
-          // for "FWD", "BRQ", "PLTS"
-          efficiencyFactor =
-            (localFNRB + (1 - localFNRB) * nonCO2Fraction) * fuelEfficiency;
-        }
-        totalCO2Emission =
-          hhUsingTheFuel *
-          fuelUsage * // fuel consumed in kg / day
-          drynessFactor * // only for wood but since it's 1 as default it's going to be okay
-          0.001 * // 1t/1000kg
-          numberOfDaysPerYear * // days/yr
-          efficiencyFactor;
+        ).totalCO2Emission;
         break;
       }
       case liquidFuels.includes(fuelType as LiquidFuel):
@@ -926,95 +1041,93 @@ export function generateComputeItem(
           fuelEfficiency;
         break;
       }
-      case electricFuels.includes(fuelType as ElectricFuel):
-        totalCO2Emission = computeCO2costElectric(
-          localItemInput,
-          ghgMapRef,
-          project_REF_GRD,
-          hhUsingTheFuel * numberOfDaysPerYear
-        );
-        break;
-      case plugingRecheargeableDevices.includes(
-        energySubTypes as PlugingRecheargeableDevice
-      ):
+      case ["SOLAR_LANTERN", "SINGLE_USE_BAT"].includes(
+        energySubType as PlugingRecheargeableDevice
+      ): {
         totalCO2Emission = 0;
         break;
-      case ["BAT", "LIGHT_SOLAR"].includes(fuelType as LightingFuel):
+      }
+      case ["PLUG_IN_OR_CHARGE_BAT"].includes(
+        energySubType as PlugingRecheargeableDevice
+      ): {
+        totalCO2Emission = 0;
+        switch (true) {
+          case ["ELE_GRID"].includes(fuelType as PlugingRecheargeableDevice): {
+            localItemInput.gridPower = totalEnergy;
+            localItemInput.fuelUsage = 0;
+            totalCO2Emission = computeCO2costElectric(
+              localItemInput,
+              ghgMapRef,
+              project_REF_GRD,
+              hhUsingTheFuel
+            );
+            break;
+          }
+          case ["ELE_DIES"].includes(fuelType as PlugingRecheargeableDevice): {
+            localItemInput.gridPower = 0;
+            // totalEnergy is kWh/year
+            // REF_EFF_DIES_L is  [l/kWh]
+            // then fuelUsage is l/year
+            localItemInput.fuelUsage =
+              totalEnergy * ghgMapRef?.REF_EFF_DIES_L?.value;
+            totalCO2Emission = computeCO2costElectric(
+              localItemInput,
+              ghgMapRef,
+              project_REF_GRD,
+              hhUsingTheFuel
+            );
+            break;
+          }
+          case ["ELE_SOLAR"].includes(fuelType as PlugingRecheargeableDevice): {
+            totalCO2Emission = 0;
+            break;
+          }
+          case ["ELE_HYB"].includes(fuelType as PlugingRecheargeableDevice): {
+            localItemInput.gridPower =
+              totalEnergy * (localItemInput?.gridPercentage ?? 0);
+            localItemInput.fuelUsage =
+              totalEnergy *
+              ghgMapRef?.REF_EFF_DIES_L?.value *
+              (localItemInput?.dieselPercentage ?? 0);
+            totalCO2Emission = computeCO2costElectric(
+              localItemInput,
+              ghgMapRef,
+              project_REF_GRD,
+              hhUsingTheFuel
+            );
+            break;
+          }
+          default:
+            break;
+        }
+        break;
+      }
+      // case ["BAT", "LIGHT_SOLAR"].includes(fuelType as LightingFuel):
       case thermalFuels.includes(fuelType as ThermalFuel):
         totalCO2Emission = 0;
         break;
-      // case fuelType === "LIGHT_HYB": {
-      //   const { fuelUsageFirewood, fuelUsageParaffin, fuelUsageKerosene } =
-      //     localItemInput;
-      //   if (fuelUsageFirewood === undefined) {
-      //     throw new Error("fuel usage not defined");
-      //   }
-      //   const fuelEfficiencyFirewood = ghgMapRef?.[`REF_EFF_FWD`]?.value;
-      //   if (fuelEfficiencyFirewood == undefined) {
-      //     const errorMessage = `there are no emission factor REF_EFF_FWD`;
-      //     throw new Error(errorMessage);
-      //   }
-      //   const totalCO2EmissionFirewood =
-      //     hhUsingTheFuel *
-      //     fuelUsageFirewood * // fuel consumed in kg / day
-      //     0.001 * // 1t/1000kg
-      //     numberOfDaysPerYear * // days/yr
-      //     fuelEfficiencyFirewood;
-
-      //   // PARAFFIN
-      //   if (fuelUsageParaffin === undefined) {
-      //     throw new Error("fuel usage not defined");
-      //   }
-      //   const fuelEfficiencyParaffin = ghgMapRef?.[`REF_EFF_CNDL`]?.value;
-      //   if (fuelEfficiencyParaffin == undefined) {
-      //     const errorMessage = `there are no emission factor REF_EFF_CNDL`;
-      //     throw new Error(errorMessage);
-      //   }
-      //   const totalCO2EmissionParaffin =
-      //     hhUsingTheFuel *
-      //     fuelUsageParaffin * // fuel consumed in kg / day
-      //     0.001 * // 1t/1000kg
-      //     numberOfDaysPerYear * // days/yr
-      //     fuelEfficiencyParaffin;
-      //   // END PARAFFIN
-
-      //   // KEROSENE
-      //   if (fuelUsageKerosene === undefined) {
-      //     throw new Error("fuel usage not defined");
-      //   }
-      //   const fuelEfficiencyKerosene = ghgMapRef?.[`REF_EFF_KRS`]?.value;
-      //   if (fuelEfficiencyKerosene == undefined) {
-      //     const errorMessage = `there are no emission factor REF_EFF_KRS`;
-      //     throw new Error(errorMessage);
-      //   }
-      //   const totalCO2EmissionKerosene =
-      //     hhUsingTheFuel *
-      //     fuelUsageKerosene * // fuel consumed in kg / day
-      //     0.001 * // 1t/1000kg
-      //     numberOfDaysPerYear * // days/yr
-      //     fuelEfficiencyKerosene;
-      //   // END KEROSENE
-      //   totalCO2Emission =
-      //     totalCO2EmissionFirewood +
-      //     totalCO2EmissionParaffin +
-      //     totalCO2EmissionKerosene;
-      //   break;
-      // }
+      case fuelType === "LIGHT_HYB": {
+        totalCO2Emission = computeItemLightHyb(
+          localItemInput,
+          ghgMapRef,
+          hhUsingTheFuel
+        ).totalCO2Emission;
+        break;
+      }
       case ["NO_ACCESS"].includes(fuelType):
         totalCO2Emission = 0;
         break;
       default:
-        throw new Error(`unknown fuel type ${fuelType}`);
+        throw new Error(
+          `unknown fuel type ${fuelType} for lighting: ${JSON.stringify(
+            localItemInput
+          )}`
+        );
     }
     if (isNaN(totalCO2Emission)) {
       throw new Error(`totalCO2Emission is NaN`);
     }
 
-    const totalPower =
-      (localItemInput?.numberOfDevices ?? 0) *
-      (localItemInput?.electricPower ?? 0);
-    const operatingHours = localItemInput?.operatingHours ?? 0;
-    const totalEnergy = (totalPower * operatingHours * 365.25) / 1000; // in kWh/year
     return {
       totalCO2Emission,
       totalPower,

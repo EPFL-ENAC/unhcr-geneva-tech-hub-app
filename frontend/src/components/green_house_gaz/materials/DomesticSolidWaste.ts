@@ -17,8 +17,8 @@ import { SelectOption, SelectValue } from "@/components/commons/FormItem";
 import { numberOfDaysPerYear } from "@/components/green_house_gaz/energy/computeCO2cost";
 
 import {
-  SurveyTableHeader,
   ensureSurveyTableHeaders,
+  SurveyTableHeader,
   surveyTableHeaderCO2,
   surveyTableHeaderIncrements,
 } from "@/components/green_house_gaz/generic/surveyTableHeader";

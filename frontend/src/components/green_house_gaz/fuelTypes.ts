@@ -81,7 +81,7 @@ export const thermalFuelWithText: IdTextTypesItem<ThermalFuel>[] = [
 // lighting fuels
 export const lightingFuels = [
   "CNDL",
-  // "LIGHT_HYB",
+  "LIGHT_HYB",
   "PET",
   "OIL",
   "LIGHT_SOLAR",
@@ -94,11 +94,11 @@ export const lightingFuels = [
 export type LightingFuel = typeof lightingFuels[number];
 export const lightingFuelsWithText: IdTextTypesItem<LightingFuel>[] = [
   { _id: "CNDL", text: "Candle (paraffin)" },
-  // {
-  //   _id: "LIGHT_HYB",
-  //   text: "Hybrid fuel mix (Firewood + paraffin + kerosene)",
-  //   // description: "Firewood + paraffin + kerosene",
-  // },
+  {
+    _id: "LIGHT_HYB",
+    text: "Hybrid fuel mix (Firewood + paraffin + kerosene)",
+    // description: "Firewood + paraffin + kerosene",
+  },
   {
     _id: "PET",
     text: "Gasoline",
@@ -172,7 +172,7 @@ export const allFuelsForLighing = [
   // "NO_ACCESS",
   "FWD",
   "CNDL",
-  // "LIGHT_HYB", // rename Hybrid fuel mix (paraffin,.. ...)
+  "LIGHT_HYB", // rename Hybrid fuel mix (paraffin,.. ...)
   "OIL",
   "PET",
   "KRS",

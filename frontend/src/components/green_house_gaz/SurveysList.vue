@@ -341,7 +341,6 @@ export default class SurveysList extends Vue {
         "GhgModule/UPDATE_ASSESSEMENT",
       ];
       if (shouldUpdate.includes(mutation.type) && this.site) {
-        console.log("UPDATE ?", mutation.type);
         this.getSite(this.site);
       }
     });

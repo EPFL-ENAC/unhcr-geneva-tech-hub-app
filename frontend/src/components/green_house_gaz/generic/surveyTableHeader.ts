@@ -34,7 +34,12 @@ export const ensureSurveyTableHeaders = (item: any): SurveyTableHeader => {
     key, // for form-item-component
     isInput,
     category, // input or computed,
-    formatter: (value: unknown) => value,
+    formatter: (value: unknown) => {
+      if (item?.type === "number") {
+        return formatNumberGhg(value as number, { suffix: item?.suffix });
+      }
+      return value;
+    },
     classFormatter: () => "",
     options: (() => {
       if (item.options) {
