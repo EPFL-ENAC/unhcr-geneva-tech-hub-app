@@ -551,11 +551,13 @@ interface Info {
   .shelter-environmental-graphs-container__col {
     justify-content: start;
     align-content: start;
-    max-height: 150px !important;
-    min-height: 150px !important;
+    min-width: 475px !important;
+    max-width: 475px !important;
+    max-height: 250px !important;
+    min-height: 250px !important;
     .v-responsive {
-      max-height: 150px !important;
-      min-height: 150px !important;
+      max-height: 250px !important;
+      min-height: 250px !important;
     }
   }
   @page {

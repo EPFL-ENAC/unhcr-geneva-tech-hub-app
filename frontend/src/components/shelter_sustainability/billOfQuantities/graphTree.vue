@@ -1,6 +1,9 @@
 <template>
   <v-responsive v-bind="{ ...$attrs, ...$props }" class="justify-center">
-    <v-chart autoresize :option="option"></v-chart>
+    <v-chart
+      autoresize
+      :option="option"
+    ></v-chart>
   </v-responsive>
 </template>
 
