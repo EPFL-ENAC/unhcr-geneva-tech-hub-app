@@ -16,15 +16,28 @@ interface UNHCRLocationState {
   Stone
 */
 export interface UNHCRLocation {
-  _rev?: string;
-  _id: string; // "Abazar : Point",
-  Country: string; // "IR",
-  Population: number;
-  "Location id": number;
+  location_pcode: string; // "20IDN023", unique id per unhcr standard
+  population: number; // key was Population
+  location_id: number; // was siteId // we should rename everywhere siteId to location_id ?
   latitude: number; //: 28.978026
   longitude: number; // : 50.8379918,
   solar_peak_hours: number; // 5.607999802,
+  year: number; // 2022,
+  country_code_2: string; // "IR", // key was named 'Country'
+  _id: string; // "Abazar : Point",
+  index: number; // 0
 }
+
+// "_id": "Nusa Tenggara Timur : Provinsi - Province",
+// "country_code_2": "ID",
+// "population": 200,
+// "location_id": 1411,
+// "location_pcode": "20IDN023",
+// "latitude": "-8,6573819",
+// "longitude": "121,0793705",
+// "solar_peak_hours": "5,508999825",
+// "year": 2022,
+// "index": 127
 
 /** Default Configure state value */
 function generateState(): UNHCRLocationState {

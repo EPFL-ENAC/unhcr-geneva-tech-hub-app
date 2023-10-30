@@ -365,7 +365,7 @@ export default class App extends Vue {
     return false;
   }
 
-  // https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/
+  // /s3/2023-03-27/
   get shelterHelpers(): Helpers[] {
     return [
       {
@@ -378,78 +378,78 @@ export default class App extends Vue {
         title: "Viewing existing projects",
         icon: "mdiPlayCircle",
         type: "video",
-        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Viewing existing projects.mp4",
+        href: "/s3/2023-03-27/Viewing existing projects.mp4",
       },
       {
         title: "Creating new projects",
         icon: "mdiPlayCircle",
         type: "video",
-        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Creating new projects.mp4",
+        href: "/s3/2023-03-27/Creating new projects.mp4",
       },
       {
         title: "Entering project information",
         icon: "mdiPlayCircle",
         type: "video",
-        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Entering project information.mp4",
+        href: "/s3/2023-03-27/Entering project information.mp4",
       },
       {
         title: "Uploading and downloading project files",
         icon: "mdiPlayCircle",
         type: "video",
-        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Uploading and downloading project files.mp4",
+        href: "/s3/2023-03-27/Uploading and downloading project files.mp4",
       },
       {
         title: "Entering geometry information",
         icon: "mdiPlayCircle",
         type: "video",
 
-        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Entering geometry information.mp4",
+        href: "/s3/2023-03-27/Entering geometry information.mp4",
       },
       {
         title: "Entering Bill of Quantities information",
         icon: "mdiPlayCircle",
         type: "video",
-        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Entering BOQ information.mp4",
+        href: "/s3/2023-03-27/Entering BOQ information.mp4",
       },
       {
         title: "Assessing technical performance criteria",
         icon: "mdiPlayCircle",
         type: "video",
-        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Assessing technical performance.mp4",
+        href: "/s3/2023-03-27/Assessing technical performance.mp4",
       },
       {
         title: "Assessing habitability criteria",
         icon: "mdiPlayCircle",
         type: "video",
-        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Assessing Habitability.mp4",
+        href: "/s3/2023-03-27/Assessing Habitability.mp4",
       },
       {
         title: "Comparing projects",
         icon: "mdiPlayCircle",
         type: "video",
 
-        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Comparing projects.mp4",
+        href: "/s3/2023-03-27/Comparing projects.mp4",
       },
       {
         title: "Exporting reports",
         icon: "mdiPlayCircle",
         type: "video",
 
-        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Exporting reports.mp4",
+        href: "/s3/2023-03-27/Exporting reports.mp4",
       },
       {
         title: "Viewing overview data",
         icon: "mdiPlayCircle",
         type: "video",
 
-        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Viewing overview data.mp4",
+        href: "/s3/2023-03-27/Viewing overview data.mp4",
       },
       {
         title: "Viewing reference data",
         icon: "mdiPlayCircle",
         type: "video",
 
-        href: "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-03-27/Viewing reference data.mp4",
+        href: "/s3/2023-03-27/Viewing reference data.mp4",
       },
     ];
   }
@@ -536,7 +536,7 @@ export default class App extends Vue {
     this.checkAndRefresh();
     this.intervalId = window.setInterval(() => {
       this.checkAndRefresh();
-    }, 1000 * 60 * 15); // check every 15 minutes: 1000 * 60 * 15
+    }, 1000 * 30); // check every 30 seconds | every 15mn was not enough
 
     this.$store.subscribe((mutation) => {
       const shouldUpdate = ["storeMessage"];

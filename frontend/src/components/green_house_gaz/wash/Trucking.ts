@@ -1,15 +1,21 @@
 import {
+  EnergyItem,
   GenericFormSurvey,
   SurveyInput,
   SurveyItem,
   SurveyResult,
 } from "@/store/GhgInterface";
 
-export interface WashTruckingItemInput extends SurveyInput {
+export const DIESEL = "Diesel";
+export const PETROL = "Petrol / Gas";
+export const KM = "km";
+export const LITERS = "liters of fuel";
+
+export interface WashTruckingItemInput extends SurveyInput, EnergyItem {
   US_TYP: string;
   US_UNI: string;
   TOT_WS: number;
-  LIT_WS: number;
+  // LIT_WS: number; // replace by EnergyItem fuelUsage
   WACL: number;
   TR_VOL: number;
   TR_TYP: string;

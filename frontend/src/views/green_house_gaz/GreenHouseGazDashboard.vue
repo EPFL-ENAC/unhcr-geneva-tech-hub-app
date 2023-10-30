@@ -34,7 +34,7 @@
 <script lang="ts">
 import TerritoryMap from "@/components/commons/TerritoryMap.vue";
 import NewSurveyDialog from "@/components/green_house_gaz/NewSurveyDialog.vue";
-import { Site } from "@/store/GhgInterface";
+import { GreenHouseGaz } from "@/store/GhgInterface";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
@@ -64,14 +64,14 @@ export default class ProjectList extends Vue {
 
   siteDialog = false;
 
-  sites!: Site[];
+  sites!: GreenHouseGaz[];
 
-  public get coordinates(): (number | undefined | Site)[][] {
+  public get coordinates(): (number | undefined | GreenHouseGaz)[][] {
     return this.sites
-      .filter((site: Site) => site.lat !== undefined)
-      .map((site: Site): (number | undefined | Site)[] => [
-        site.lat ?? 0,
-        site.lon ?? 0,
+      .filter((site: GreenHouseGaz) => site.latitude !== undefined)
+      .map((site: GreenHouseGaz): (number | undefined | GreenHouseGaz)[] => [
+        site.latitude ?? 0,
+        site.longitude ?? 0,
         undefined,
         site,
       ]);
@@ -91,11 +91,11 @@ export default class ProjectList extends Vue {
     return "{ grid-template-columns: 50% 25px 50%; }";
   }
 
-  public openSite(item: Site): void {
-    if (item?.country_code) {
+  public openSite(item: GreenHouseGaz): void {
+    if (item?.countryCode) {
       let hash = "";
-      if (this.$route.hash !== `#${item?.country_code}`) {
-        hash = item?.country_code;
+      if (this.$route.hash !== `#${item?.countryCode}`) {
+        hash = item?.countryCode;
       }
       this.$router.push({ hash });
     }

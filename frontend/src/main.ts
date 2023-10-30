@@ -68,31 +68,31 @@ axios.interceptors.response.use(undefined, function (error: AxiosError) {
   return Promise.reject(error);
 });
 
-Vue.config.errorHandler = function (err, vm, info) {
-  // handle error
-  // `info` is a Vue-specific error info, e.g. which lifecycle hook
-  // the error was found in. Only available in 2.2.0+
+// Vue.config.errorHandler = function (err, vm, info) {
+//   // handle error
+//   // `info` is a Vue-specific error info, e.g. which lifecycle hook
+//   // the error was found in. Only available in 2.2.0+
 
-  console.trace(err.stack);
-  store.dispatch("notifyUser", {
-    title: info,
-    message: err.message,
-    stack: err.stack,
-    type: "error",
-  });
-};
+//   console.trace(err.stack);
+//   store.dispatch("notifyUser", {
+//     title: info,
+//     message: err.message,
+//     stack: err.stack,
+//     type: "error",
+//   });
+// };
 
-Vue.config.warnHandler = function (err, vm, info) {
-  // handle warning
-  // `info` is a Vue-specific error info, e.g. which lifecycle hook
-  console.trace(info);
-  store.dispatch("notifyUser", {
-    title: `${vm.$options.name}: ${err.split(":")[0] ?? err}`,
-    message: err,
-    stack: info,
-    type: "warning",
-  });
-};
+// Vue.config.warnHandler = function (err, vm, info) {
+//   // handle warning
+//   // `info` is a Vue-specific error info, e.g. which lifecycle hook
+//   console.trace(info);
+//   store.dispatch("notifyUser", {
+//     title: `${vm.$options.name}: ${err.split(":")[0] ?? err}`,
+//     message: err,
+//     stack: info,
+//     type: "warning",
+//   });
+// };
 
 window.addEventListener("unhandledrejection", function (event) {
   //handle error here

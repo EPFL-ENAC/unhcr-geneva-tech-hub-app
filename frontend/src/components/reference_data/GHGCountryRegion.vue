@@ -6,7 +6,22 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-data-table :headers="headers" :items="items" dense>
+          <v-card-title>
+            <v-spacer></v-spacer>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-card-title>
+          <v-data-table
+            :headers="headers"
+            :items="items"
+            :search="search"
+            dense
+          >
             <template #[`item.c`]="props">
               <span>{{ props.item.Region }} </span>
             </template>
@@ -42,6 +57,7 @@ import { mapGetters } from "vuex";
 export default class Energy extends Vue {
   items!: GHGRegion[];
   countriesMap = countriesMap;
+  search = "";
 
   public get headers(): HeaderInterface[] {
     return [

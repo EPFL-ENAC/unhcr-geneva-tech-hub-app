@@ -214,7 +214,8 @@ interface HeaderInterface {
 <style>
 .transport-header {
   height: 160px;
-  overflow: auto;
-  margin-bottom: 10px;
+  overflow-y: scroll;
+  margin-bottom: 15px;
+  border-bottom: 1px solid grey;
 }
 </style>

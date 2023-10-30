@@ -1,6 +1,7 @@
 /** Config store */
-import { Country, GreenHouseGaz, Site } from "@/store/GhgInterface";
+import { Country, GreenHouseGaz } from "@/store/GhgInterface";
 import { SyncDatabase } from "@/utils/couchdb";
+import { v4 as uuidv4 } from "uuid";
 import {
   ActionContext,
   ActionTree,
@@ -22,11 +23,16 @@ interface ProjectsState {
   project: GreenHouseGaz;
   projectLoading: boolean;
   countries: Array<Country>;
-  sites: Site[];
+  sites: GreenHouseGaz[];
+  siteAssessments: GreenHouseGaz[];
+  siteAssessmentsLoading: boolean;
+  newAssessment: boolean;
+  removeAssessment: boolean;
+  updateAssessment: boolean;
   localCouch: SyncDatabase<GreenHouseGaz> | null;
 }
 
-const DB_NAME = "ghg_projects";
+const DB_NAME = "ghg_projects_1696578512055758";
 
 function generateState(): ProjectsState {
   return {
@@ -35,7 +41,12 @@ function generateState(): ProjectsState {
     projectLoading: false,
     countries: [],
     sites: [],
+    siteAssessments: [],
+    siteAssessmentsLoading: false,
     localCouch: null,
+    newAssessment: false,
+    removeAssessment: false,
+    updateAssessment: false,
   };
 }
 
@@ -72,13 +83,15 @@ const getters: GetterTree<ProjectsState, RootState> = {
     }
     const REF_GRD = ghgMapRef.REF_GRD;
     const iges_grid_match = iges_grid.find(
-      (el: IgesItem) => el._id === getters.project.country_code
+      (el: IgesItem) => el._id === getters.project.countryCode
     );
     REF_GRD.value = iges_grid_match?.value ?? REF_GRD.value; // find REF_GRD per country
 
     return REF_GRD;
   },
-  sites: (s): Array<Site> => s.sites,
+  sites: (s): GreenHouseGaz[] => s.sites,
+  siteAssessments: (s): GreenHouseGaz[] => s.siteAssessments,
+  siteAssessmentsLoading: (s): boolean => s.siteAssessmentsLoading,
   countries: (s): Array<Country> => s.countries,
 };
 
@@ -102,18 +115,30 @@ const mutations: MutationTree<ProjectsState> = {
   SET_COUNTRIES(state, countries) {
     state.countries = countries;
   },
+  SET_SITE_ASSESSMENTS(state, siteAssessments) {
+    state.siteAssessments = siteAssessments;
+  },
+  SET_SITE_ASSESSMENTS_LOADING(state, value) {
+    state.siteAssessmentsLoading = value;
+  },
   SET_SITES(state, sites) {
-    if (sites && sites[0] && sites[0].value) {
-      state.sites = sites[0].value;
-    } else {
-      state.sites = [];
-    }
+    state.sites = sites.map((x: any) => x.value);
   },
   ADD_DOC(state, value) {
     state.projects.push(value);
   },
+  NEW_ASSESSEMENT(state, value) {
+    state.newAssessment = value;
+  },
+  REMOVE_ASSESSEMENT(state, value) {
+    state.removeAssessment = value;
+  },
+  UPDATE_ASSESSEMENT(state, value) {
+    state.updateAssessment = value;
+  },
   REMOVE_DOC(state, value) {
-    const indexToRemove = state.projects.findIndex((el) => el._id === value);
+    // todo:check that projects exists!
+    const indexToRemove = state.projects.findIndex((el) => el.id === value);
     state.projects.splice(indexToRemove, 1);
   },
 };
@@ -138,12 +163,61 @@ function getGenericCountries(
       result
     ) {
       if (result?.rows) {
-        const countries = result.rows.filter((item) => item !== null);
-        context.commit(COMMIT_NAME, countries);
-        return countries;
+        const value = result.rows.filter((item) => item !== null);
+        context.commit(COMMIT_NAME, value);
+        return value;
       }
       throw new Error("undefined 'project/countries_with_info' response");
     });
+  };
+}
+
+function getGenericSite(
+  queryParams: CouchQuery = {
+    // reduce: true,
+    // group: true,
+    // group_level: 1,
+    reduce: false,
+    skip: 0,
+    limit: 1000,
+  },
+  COMMIT_NAME = "SET_SITE_ASSESSMENTS"
+) {
+  return function getSite(
+    context: ActionContext<ProjectsState, RootState>,
+    id: number | string
+  ) {
+    // first setup loading
+    // second reset data
+    // third get data
+    // fourth reset loading
+    context.commit("SET_SITE_ASSESSMENTS_LOADING", true);
+    context.commit(COMMIT_NAME, []);
+    const db = context.state.localCouch?.remoteDB;
+    if (!db) {
+      throw new Error(MSG_DB_DOES_NOT_EXIST);
+    }
+    // http://localhost:5984/ghg_projects_1696578512055758/_design/project/_view/sites_with_assessments?skip=0&limit=51&reduce=true&group=true&key=582
+    db?.query("project/sites_with_assessments", {
+      ...queryParams,
+      key: id,
+    })
+      .then(function (result) {
+        if (result?.rows) {
+          const value = result.rows
+            .filter((item) => item !== null)
+            .reduce((acc, x) => {
+              return acc.concat(x.value);
+            }, []);
+          context.commit(COMMIT_NAME, value);
+          return value;
+        }
+        context.commit("SET_SITE_ASSESSMENTS_LOADING", false);
+        throw new Error("undefined 'project/sites_with_assessments' response");
+      })
+      .finally(() => {
+        context.commit("SET_SITE_ASSESSMENTS_LOADING", false);
+      });
   };
 }
 
@@ -175,21 +249,35 @@ const actions: ActionTree<ProjectsState, RootState> = {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
   },
-  getSites: getGenericCountries({}, "SET_SITES"),
-  getCountries: getGenericCountries(),
+  getSites: getGenericCountries(
+    {
+      reduce: false,
+      group: false,
+      skip: 0,
+      limit: 1000,
+    },
+    "SET_SITES"
+  ),
+  getCountries: getGenericCountries({
+    group_level: 1,
+  }),
+  getSite: getGenericSite(),
   addDoc: (
     context: ActionContext<ProjectsState, RootState>,
     newGhg: GreenHouseGaz
   ) => {
     const user = context.rootGetters["UserModule/user"] as CouchUser;
     // context.commit("ADD_DOC", generateNewProject(newGhg, user));
-    const value = generateNewProject(newGhg, user);
+    const value = generateNewProject(newGhg, user) as any;
     const remoteDB = context.state.localCouch?.remoteDB;
     if (remoteDB) {
       delete value.isUNHCR;
-      return remoteDB.post(value).then(() => {
-        // set new rev
-        return context.dispatch("getDoc", value._id);
+      value._id = value?._id ?? value?.id ?? uuidv4();
+      delete value.id; // just in case we forgot to remove it
+      delete value._rev; // just in case we forgot to remove it
+      return remoteDB.post(value).then((response) => {
+        context.commit("NEW_ASSESSEMENT", true);
+        return context.dispatch("getDoc", response.id);
       });
     }
   },
@@ -202,6 +290,9 @@ const actions: ActionTree<ProjectsState, RootState> = {
       .get(id)
       .then(function (doc: PouchDB.Core.ExistingDocument<GreenHouseGaz>) {
         return remoteDB.put({ ...doc, _deleted: true });
+      })
+      .finally(() => {
+        context.commit("REMOVE_ASSESSEMENT", true);
       });
   },
   setDoc: (
@@ -226,7 +317,6 @@ const actions: ActionTree<ProjectsState, RootState> = {
           return result;
         })
         .catch(function (err: Error) {
-          // context.dispatch("resetDoc");
           context.commit("SET_PROJECT_LOADING", false);
           err.message = `${err?.message} ${id}`;
           throw err;
@@ -253,14 +343,20 @@ const actions: ActionTree<ProjectsState, RootState> = {
     }
     const newValue = updateMetaFieldsForUpdate(value, user);
     delete newValue.isUNHCR;
-    context.commit("SET_PROJECT", newValue);
+    // no need for  "SET_PROJECT" it should only be done by getDoc
+
     context.commit("SET_PROJECT_LOADING", true);
     const db = context.state.localCouch?.remoteDB;
     if (db) {
+      // first retrieve latest rev
+      // const doc = await db.get(newValue.id);
+      // newValue._id = doc._id;
+      // newValue._rev = doc._rev;
       return await db
         .put(newValue, { force: true })
         .then((response) => {
           // set new rev
+          context.commit("UPDATE_ASSESSEMENT", true);
           return context.dispatch("getDoc", response.id);
         })
         .catch((response) => {
@@ -300,6 +396,7 @@ const GhgModule: Module<ProjectsState, RootState> = {
 interface CouchQuery {
   reduce?: boolean;
   group?: boolean;
+  group_level?: number;
   skip?: number;
   limit?: number;
 }

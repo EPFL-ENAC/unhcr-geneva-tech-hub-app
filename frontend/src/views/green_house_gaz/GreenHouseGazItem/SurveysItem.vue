@@ -1,19 +1,24 @@
 <template>
-  <div v-if="project && currentSurvey" class="fluid surveys-item">
-    <header class="ma-5">
+  <div v-if="project && currentProject" class="fluid surveys-item">
+    <header v-if="currentProject && currentProject.siteName" class="ma-5">
       <v-row>
         <v-col>
           <h2 class="d-flex">
-            <span class="mx-4 mt-n1">
-              <country-flag :country="project && project.country_code" />
+            <span
+              v-if="currentProject && currentProject.countryCode !== undefined"
+              class="mx-4 mt-n1"
+            >
+              <country-flag :country="currentProject.countryCode" />
             </span>
             <span>
-              {{ currentProjectCountryName }}, {{ project.name }},
-              {{ currentSurvey.name }}
+              {{ currentProjectCountryName }}, {{ currentProject.siteName }} ({{
+                (currentProject.siteId + "").substr(0, 8)
+              }}),
+              {{ currentProject.description }}
               {{
                 $can("edit", {
-                  users: project.users,
-                  reference: currentSurvey.reference,
+                  users: currentProject.users,
+                  reference: currentProject.reference,
                 })
                   ? ""
                   : "(Read only)"
@@ -23,7 +28,7 @@
         </v-col>
         <v-col class="col-auto">
           <user-manager
-            v-model="project.users"
+            v-model="currentProject.users"
             @change="submitForm"
           ></user-manager>
         </v-col>
@@ -82,7 +87,7 @@
     </v-tabs>
     <v-row>
       <v-col>
-        <v-container v-if="project.users" fluid>
+        <v-container v-if="currentProject && currentProject.users" fluid>
           <!-- add !$can to put readonly mode for guest (but for now we want the
             user to be able to edit the field but not 'SAVE' them to the server) <v-form :readonly="isReadOnly"> -->
           <v-form class="surveys-item__form">
@@ -92,16 +97,15 @@
               :disabled="moduleDisabled"
               :form.sync="localFormSurvey"
               :title-key="currentKeyTitle"
-              :survey="currentSurvey"
-              :country-code="project.country_code"
+              :survey="currentProject"
+              :country-code="currentProject && currentProject.countryCode"
             />
             <component
               :is="category"
               v-else
               :disabled="moduleDisabled"
               :readonly="isReadOnly"
-              :survey-index="currentSurveyIndex"
-              :survey.sync="currentSurvey"
+              :survey.sync="currentProject"
             />
           </v-form>
         </v-container>
@@ -115,22 +119,22 @@ import UserManager from "@/components/commons/UserManager.vue";
 import Cooking from "@/components/green_house_gaz/energy/Cooking.vue";
 import Facilities from "@/components/green_house_gaz/energy/Facilities.vue";
 import Lighting from "@/components/green_house_gaz/energy/Lighting.vue";
-import Pumping from "@/components/green_house_gaz/energy/Pumping.vue";
 import Info from "@/components/green_house_gaz/Info.vue";
-import CRI from "@/components/green_house_gaz/materials/CRI.vue";
+// import CRI from "@/components/green_house_gaz/materials/CRI.vue";
 import DomesticSolidWaste from "@/components/green_house_gaz/materials/DomesticSolidWaste.vue";
-import Shelter from "@/components/green_house_gaz/materials/Shelter.vue";
+// import Shelter from "@/components/green_house_gaz/materials/Shelter.vue";
 import TreePlanting from "@/components/green_house_gaz/offset/TreePlanting.vue";
 import Results from "@/components/green_house_gaz/Results.vue";
-import Trucking from "@/components/green_house_gaz/wash/Trucking.vue";
+import WaterSupply from "@/components/green_house_gaz/wash/WaterSupply.vue";
 
 import { infoTooltipText } from "@/components/green_house_gaz/infoTooltipText";
 import {
   GenericFormSurvey,
   GreenHouseGaz,
-  Survey,
-  SurveyCategory,
+  newSurveyForm,
+  SurveyForms,
   SurveyItem,
+  SurveyKey,
   SurveyResult,
   SurveySubcategory,
 } from "@/store/GhgInterface";
@@ -150,11 +154,10 @@ import { mapActions, mapGetters } from "vuex";
     Cooking,
     Facilities,
     Lighting,
-    Pumping,
-    CRI,
+    // CRI,
     DomesticSolidWaste,
-    Shelter,
-    Trucking,
+    // Shelter,
+    WaterSupply,
     TreePlanting,
     Results,
     UserManager,
@@ -196,15 +199,9 @@ export default class SurveyList extends Vue {
       icon: "$mdiWater",
       text: "WASH",
       to: "WASH",
-      redirect: "WASH-Trucking",
+      redirect: "WASH-WaterSupply",
       children: [
-        { text: "Trucking", to: "Trucking", icon: "$mdiTankerTruck" },
-
-        {
-          icon: "$mdiWaterPump",
-          text: "Water Pumping",
-          to: "Pumping",
-        },
+        { text: "Water Supply", to: "WaterSupply", icon: "$mdiWaterPump" },
       ],
     },
     {
@@ -239,8 +236,8 @@ export default class SurveyList extends Vue {
     return (this.$route.query.category as string) ?? "";
   }
 
-  public get normedCategory(): SurveyCategory {
-    return this.category?.toLowerCase() as SurveyCategory;
+  public get normedCategory(): SurveyKey {
+    return this.category?.toLowerCase() as SurveyKey;
   }
 
   public get subcategory(): string {
@@ -265,7 +262,7 @@ export default class SurveyList extends Vue {
   public get localFormSurvey():
     | GenericFormSurvey<SurveyItem, SurveyResult, SurveyItem, SurveyResult>
     | undefined {
-    const category = this.currentSurvey?.[this.normedCategory];
+    const category = this.currentProject?.[this.normedCategory];
     const subcategory =
       category?.[this.normedSubcategory as keyof typeof category];
     return subcategory;
@@ -276,19 +273,28 @@ export default class SurveyList extends Vue {
       | GenericFormSurvey<SurveyItem, SurveyResult, SurveyItem, SurveyResult>
       | undefined
   ) {
-    if (this.currentSurvey && this.normedCategory && this.normedSubcategory) {
-      const category = this.currentSurvey?.[this.normedCategory];
-      // help from @blueur needed for type
-      const subcategory = this.normedSubcategory as keyof typeof category;
-      this.currentSurvey[this.normedCategory][subcategory] = value as never;
-      this.updateCurrentSurvey();
+    if (value === undefined) {
+      throw new Error("value is undefined");
+    } else {
+      if (
+        this.currentProject !== undefined &&
+        this.normedCategory &&
+        this.normedSubcategory &&
+        this.currentProject[this.normedCategory as keyof SurveyForms]
+      ) {
+        const normedCategory = this.normedCategory as keyof SurveyForms;
+        this.currentProject[normedCategory][
+          this.normedSubcategory as keyof SurveyForms[typeof normedCategory]
+        ] = value as never;
+        this.currentProject = { ...this.currentProject }; // force call to setter currentProject
+      }
     }
   }
 
   public get isReadOnly(): boolean {
     return !this.$can("edit", {
       users: this.project.users,
-      reference: this.currentSurvey?.reference,
+      reference: this.currentProject?.reference,
     });
   }
 
@@ -326,61 +332,38 @@ export default class SurveyList extends Vue {
   }
 
   public get currentProjectCountryName(): string {
-    if (this.project?.country_code) {
-      return getCountryName(this.project.country_code);
+    if (this.project?.countryCode) {
+      return getCountryName(this.project.countryCode);
     }
     return "";
   }
 
-  public get currentSurveyId(): string {
+  public get currentProjectId(): string {
     return decodeURIComponent(this.$route.params.surveyId);
   }
 
-  public get currentSurveyIndex(): number {
-    return (
-      this.project.surveys?.findIndex(
-        (el: Survey) =>
-          el.name === this.currentSurveyId || el._id === this.currentSurveyId
-      ) ?? -1
-    );
-  }
-
-  public get currentSurvey(): Survey | undefined {
-    if (this.project?.surveys) {
-      const result = cloneDeep(
-        this.project.surveys?.[this.currentSurveyIndex] ?? ({} as Survey)
-      );
+  public get currentProject(): GreenHouseGaz | undefined {
+    if (this.project) {
+      const result = cloneDeep(this.project);
       // ensure at least first level
-      result.wash = result.wash || {};
-      result.energy = result.energy || {};
-      result.material = result.material || {};
-      result.offset = result.offset || {};
-      return result;
+      return { ...newSurveyForm(), ...result };
     }
     return undefined;
   }
 
-  public set currentSurvey(survey: Survey | undefined) {
-    const newProject = cloneDeep(this.project);
+  public set currentProject(newProject: GreenHouseGaz | undefined) {
+    // let newProject = cloneDeep(this.project);
     // update array of survey and then submit!
-    if (survey) {
-      survey.updated_at = new Date().toISOString();
-      survey.updated_by = this.$user().name ?? "user with no name";
-      newProject.surveys.splice(this.currentSurveyIndex, 1, survey);
-    } else {
-      // in case of undefined remove survey
-      newProject.surveys.splice(this.currentSurveyIndex, 1);
+    if (newProject) {
+      newProject.updated_at = new Date().toISOString();
+      newProject.updated_by = this.$user().name ?? "user with no name";
     }
     this.submitForm(newProject);
   }
 
-  public updateCurrentSurvey(): void {
-    // force update via setter
-    this.currentSurvey = Object.assign({}, this.currentSurvey);
-  }
   public submitForm(value: GreenHouseGaz = this.project): void {
     if (!this.isReadOnly) {
-      if (value.name !== "") {
+      if (value.siteName !== "") {
         this.updateDoc(value);
       } else {
         throw new Error("please fill the new Name");

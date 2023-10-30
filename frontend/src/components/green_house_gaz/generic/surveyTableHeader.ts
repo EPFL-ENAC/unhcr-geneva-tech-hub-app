@@ -1,11 +1,12 @@
 import { SelectOption, SelectValue } from "@/components/commons/FormItem";
-import { formatNumber } from "@/plugins/filters";
+import { formatNumberGhg } from "@/plugins/filters";
 import {
   SurveyInput,
   SurveyInputValue,
   SurveyItem,
 } from "@/store/GhgInterface";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
+import { Rule } from "@/utils/rules";
 import { get as _get } from "lodash";
 
 function n2sFormatter(n: number): string {
@@ -33,7 +34,12 @@ export const ensureSurveyTableHeaders = (item: any): SurveyTableHeader => {
     key, // for form-item-component
     isInput,
     category, // input or computed,
-    formatter: (value: unknown) => value,
+    formatter: (value: unknown) => {
+      if (item?.type === "number") {
+        return formatNumberGhg(value as number, { suffix: item?.suffix });
+      }
+      return value;
+    },
     classFormatter: () => "",
     options: (() => {
       if (item.options) {
@@ -70,7 +76,7 @@ export const surveyTableHeaderCO2 = [
     value: "computed.totalCO2Emission",
     hideFooterContent: false,
     formatter: (v: number, { ...args }) => {
-      return formatNumber(v, { suffix: args.suffix });
+      return formatNumberGhg(v, { suffix: args.suffix });
     },
     computeResults: true,
     type: "number",
@@ -85,7 +91,7 @@ export const surveyTableHeaderCO2 = [
     readonly: true,
     endlineOnly: true,
     formatter: (v: number) => {
-      const res = formatNumber(v, {
+      const res = formatNumberGhg(v, {
         style: "percent",
         signDisplay: "exceptZero",
       });
@@ -168,14 +174,22 @@ export interface EasySurveyTableHeader {
     | string[]
     | string
     | ((options: {
-        intervention: boolean;
         localInput: SurveyInput;
+        surveyItem: SurveyTableHeader;
+        intervention: boolean;
       }) => SelectOption<SelectValue>[]);
   options: SelectOption<SelectValue>[];
+  rules?: Rule[];
+  rulesFn?: (localInput: SurveyInput, surveyItem: SurveyTableHeader) => Rule[];
   isInput: boolean;
   label?: string;
   tooltipInfo?: string;
-  tooltipInfoFn?: (value: string) => string;
+  tooltipInfoFn?: (
+    value: string,
+    tableHeader?: SurveyTableHeader,
+    item?: SurveyItem,
+    items?: SurveyItem[]
+  ) => string;
   category?: string; // example increment
   subtype?: string; // example: percent
   classFormatter?: (
@@ -226,5 +240,6 @@ export interface EasySurveyTableHeader {
   endlineOnly?: boolean; // show only for enldine table true,
   baselineOnly?: boolean;
   hideFooterContent: boolean; // default to true only for table
+  hideInput: boolean; // default to false only for surveyItemDialog
   computeResults: boolean; // false,
 }

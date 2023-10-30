@@ -1,4 +1,5 @@
 <!-- eslint-disable vue/no-v-html -->
+<!-- eslint-disable vue/no-v-text-v-html-on-component -->
 <template>
   <v-data-table
     v-if="items"
@@ -28,6 +29,7 @@
           :reference-items="referenceItems"
           :intervention="intervention"
           :diff-dimension="diffDimension"
+          :compute-item="computeItem"
           :name="name"
           @update:item="updateWithItem"
         />
@@ -93,6 +95,7 @@
         </span>
         <span
           v-else
+          :title="_get(item, tableHeader.value)"
           v-html="
             tableHeader.formatter(
               _get(item, tableHeader.value),
@@ -103,6 +106,41 @@
           "
         >
         </span>
+
+        <v-menu
+          v-if="
+            tableHeader.tooltipInfoFn &&
+            tableHeader.tooltipInfoFn(
+              _get(item, tableHeader.value),
+              tableHeader,
+              item,
+              items
+            )
+          "
+          open-on-hover
+          offset-y
+          :close-on-content-click="false"
+        >
+          <template #activator="{ on, attrs }">
+            <v-icon v-bind="attrs" small class="better-click mx-4" v-on="on">
+              $mdiInformation
+            </v-icon>
+          </template>
+
+          <v-card>
+            <v-card-text
+              v-html="
+                tableHeader.tooltipInfoFn(
+                  _get(item, tableHeader.value),
+                  tableHeader,
+                  item,
+                  items
+                )
+              "
+            >
+            </v-card-text>
+          </v-card>
+        </v-menu>
       </div>
     </template>
     <template #[`item.actions`]="{ item }">
@@ -225,6 +263,7 @@ import SurveyItemDialog from "@/components/green_house_gaz/generic/SurveyItemDia
 import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import TextWithIconsAndPopOverDescription from "@/components/green_house_gaz/generic/TextWithIconsAndPopOverDescription.vue";
 import { SurveyInput, SurveyItem, SurveyResult } from "@/store/GhgInterface";
+import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { cloneDeep, get, maxBy } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
@@ -268,6 +307,12 @@ export default class BaselineTable extends Vue {
 
   @Prop([String])
   readonly diffDimension!: keyof SurveyInput;
+
+  @Prop([Function])
+  readonly computeItem!: (
+    localItemInput: SurveyInput,
+    ghgMapRef: ItemReferencesMap
+  ) => SurveyResult;
 
   localItems: SurveyItem[] = [];
   localItem: SurveyItem = {} as SurveyItem;

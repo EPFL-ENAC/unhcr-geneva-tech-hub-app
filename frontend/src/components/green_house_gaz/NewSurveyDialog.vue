@@ -15,7 +15,7 @@
             <v-row>
               <v-col cols="12">
                 <country-select
-                  v-model="newCampSite.country_code"
+                  v-model="newCampSite.countryCode"
                   :rules="rulesCountry"
                   required
                   @update="(v) => resetOnCountrySelect(v)"
@@ -27,13 +27,13 @@
               <v-col cols="5">
                 <v-select
                   ref="existingSites"
-                  v-model="newCampSite.name"
+                  v-model="selectedSite"
                   :disabled="
                     existingSitesWithUnhcrSites.length === 0 || newName !== ''
                   "
                   tabindex="0"
                   :items="existingSitesWithUnhcrSites"
-                  item-text="name"
+                  item-text="siteName"
                   :return-object="true"
                   label="Select an existing site"
                   :rules="rulesSelectExistingSite"
@@ -41,14 +41,33 @@
                 >
                   <template #item="slotProps">
                     <div
-                      class="d-flex justify-space-between"
-                      style="width: 300px"
+                      class="d-flex justify-left align-center"
+                      style="width: 300px; gap: 2rem"
                     >
                       <country-flag
-                        :country="slotProps.item.country_code"
+                        :country="slotProps.item.countryCode"
                         size="small"
                       />
-                      {{ slotProps.item.name }}
+                      <div
+                        style="
+                          display: flex;
+                          flex-direction: column;
+                          width: 260px;
+                        "
+                      >
+                        <span>{{ slotProps.item.siteName }}</span>
+                        <span
+                          style="
+                            font-size: 9px;
+                            font-weight: lighter;
+                            font-style: italic;
+                          "
+                          :title="slotProps.item.siteId"
+                          >({{
+                            (slotProps.item.siteId + "").substr(0, 8)
+                          }})</span
+                        >
+                      </div>
                     </div>
                   </template>
                 </v-select>
@@ -66,7 +85,7 @@
                   :rules="rulesCreateNewSite"
                   label="Create a new site"
                   type="text"
-                  @input="$refs.newAssessmentForm.validate()"
+                  @input="onCreateNewSite"
                 />
               </v-col>
 
@@ -75,7 +94,7 @@
               </v-col>
               <v-col cols="12">
                 <v-text-field
-                  v-model="editedItem.name"
+                  v-model="newCampSite.description"
                   tabindex="2"
                   required
                   name="description"
@@ -85,6 +104,7 @@
                   ]"
                   label="Assessment description"
                   type="text"
+                  @change="$refs.newAssessmentForm.validate()"
                 />
               </v-col>
             </v-row>
@@ -134,25 +154,21 @@ import CountrySelect from "@/components/commons/CountrySelect.vue";
 // TODO use generic Survey instead of Survey
 import {
   Country,
+  DEFAULT_PP_PER_HH,
   GreenHouseGaz,
-  Site,
-  Sites,
-  Survey,
+  newDefaultCampSite,
+  newSurveyForm,
 } from "@/store/GhgInterface";
 import { UNHCRLocation } from "@/store/UNHCRLocationModule";
 import { countriesMap } from "@/utils/countriesAsList";
-import { AxiosError } from "axios";
-import { cloneDeep, isEmpty } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
-export const DEFAULT_PP_PER_HH = 5;
-
 @Component({
   computed: {
     ...mapGetters("UNHCRLocationModule", ["items"]),
-    ...mapGetters("GhgModule", ["countries", "project"]),
+    ...mapGetters("GhgModule", ["countries", "project", "siteAssessments"]),
   },
 
   methods: {
@@ -160,6 +176,7 @@ export const DEFAULT_PP_PER_HH = 5;
       "addDoc",
       "updateDoc",
       "getDoc",
+      "getSite",
       "setDoc",
       "resetDoc",
     ]),
@@ -169,15 +186,17 @@ export const DEFAULT_PP_PER_HH = 5;
   },
 })
 /** ProjectList */
-export default class ProjectList extends Vue {
+export default class NewSurveyDialog extends Vue {
   @Prop({ type: Boolean, default: false })
   readonly open!: boolean;
 
   items!: UNHCRLocation[];
-
+  selectedSite: GreenHouseGaz | Record<string, string> = {};
+  siteAssessments!: GreenHouseGaz[];
+  getSite!: (id: number | string) => null;
   addDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;
   updateDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;
-  getDoc!: (id: string) => PromiseLike<void>;
+  getDoc!: (id: string) => PromiseLike<GreenHouseGaz>;
   setDoc!: (obj: GreenHouseGaz) => PromiseLike<void>;
   resetDoc!: () => PromiseLike<void>;
 
@@ -189,6 +208,7 @@ export default class ProjectList extends Vue {
   countriesMap = countriesMap;
   project!: GreenHouseGaz;
   newName = "";
+  newCampSite = newDefaultCampSite(this.$userName());
 
   get dialogOpen(): boolean {
     return this.open;
@@ -197,110 +217,108 @@ export default class ProjectList extends Vue {
     this.$emit("update:open", v);
   }
 
-  public async onSelectExistingSite(site: Site): Promise<void> {
-    try {
-      await this.getDoc(site.id);
-    } catch (error: AxiosError<unknown, any> | unknown) {
-      console.log("the 404 is normal, we check if the site already exist");
-      // TODO make the types working
-      // if (axios.isAxiosError(error) && (error.status as unknown) !== 404) {
-      //   throw error;
-      // } else {
-      // }
-      // }
-      // try to find it inside the existingUNHCR and call
-      // "GhgModule/SET_PROJECT"; or a new action
-      const foundUNHCR = this.unhcrProjects.find(
-        (unhcrProject) => unhcrProject._id === site.id
-      );
-      if (!foundUNHCR) {
-        throw error;
-      }
+  public async onSelectExistingSite(site: GreenHouseGaz): Promise<void> {
+    const foundUNHCR = this.unhcrSites.find(
+      (assessment) => assessment.siteId === site.siteId
+    );
+    if (foundUNHCR) {
       foundUNHCR.isUNHCR = true;
-      this.setDoc(foundUNHCR);
-    } finally {
-      this.$refs.newAssessmentForm.validate();
+      this.newCampSite = { ...this.newCampSite, ...foundUNHCR };
+    } else {
+      // we should retrieve the following data from the database
+      // latitude, longitude, popuplation, siteId, siteName, countryCode,  solar, pp_per_hh, totalHH
+      const existingSite = await this.getDoc(site.id);
+      const {
+        latitude,
+        longitude,
+        population,
+        siteId,
+        siteName,
+        countryCode,
+        solar,
+        pp_per_hh,
+        totalHH,
+      } = existingSite;
+      this.newCampSite = {
+        ...this.newCampSite,
+        latitude,
+        longitude,
+        population,
+        siteId,
+        siteName,
+        countryCode,
+        solar,
+        pp_per_hh,
+        totalHH,
+      };
     }
+    this.newCampSite.created_by = this.$userName();
+
+    // get site retrieve all the assessment of the site, we need to check if the assessment description already exist
+    this.getSite(site.siteId);
+    this.$refs.newAssessmentForm.validate();
   }
 
-  private newDefaultCampSite(): GreenHouseGaz {
-    return {
-      _id: uuidv4(),
-      name: "",
-      country_code: "",
-      pp_per_hh: DEFAULT_PP_PER_HH, // 4.73 (based on the most recent values for average household size from Database on Household Size and Composition 2022
-      totalHH: 0,
-      // solar: , // TODO: I just noticed that I'm not using the solar average of the country
-      created_at: new Date().toISOString(),
-      created_by: this.$userName(),
-      surveys: [] as Survey[],
-    } as GreenHouseGaz;
+  public onCreateNewSite(value: string | undefined): void {
+    if (!value && this.selectedSite?.siteId) {
+      this.newCampSite.siteId = this.selectedSite?.siteId;
+    } else {
+      this.newCampSite.siteId = uuidv4();
+    }
+    this.$refs.newAssessmentForm.validate();
   }
 
-  newCampSite = this.newDefaultCampSite();
-
-  editedIndex = -1;
-  private newDefaultItem(): Survey {
-    return {
-      _id: uuidv4(),
-      name: "", // current year
-      created_at: new Date().toISOString(),
-      created_by: this.$userName(),
-    } as Survey;
-  }
-  editedItem = this.newDefaultItem();
-
-  get existingSites(): Sites {
+  get existingSites(): GreenHouseGaz[] {
     const currentCountry = this.countries.find(
-      (x) => x.key === this.newCampSite.country_code
+      (x) => x.key[0] === this.newCampSite.countryCode
     );
     if (!currentCountry) {
-      return [] as Sites;
+      return [] as GreenHouseGaz[];
     }
     return currentCountry.value;
   }
 
   get unhcrLocations(): UNHCRLocation[] {
     return this.items.filter(
-      (item) => item.Country === this.newCampSite.country_code
+      (item) => item.country_code_2 === this.newCampSite.countryCode
     );
   }
 
-  // TODO: for unhcr SITES use location ID // for new site. use uuidv4
-  get unhcrSites(): Sites {
-    const result = this.unhcrLocations.map((x) => ({
-      id: x["Location id"].toFixed(), // site unique identitier (name as first)
-      name: x._id, // site name // location
-      country_code: x.Country,
-      created_by: this.$userName(),
-      users: [this.$user()],
-      lat: x.latitude,
-      lon: x.longitude,
-      solar: x.solar_peak_hours,
-      population: x.Population,
-      totalHH: 0,
-    }));
+  get unhcrSites(): GreenHouseGaz[] {
+    const result = this.unhcrLocations.map((x): GreenHouseGaz => {
+      return {
+        ...newDefaultCampSite(this.$userName()),
+        siteId: x.location_pcode, // should not be string should be number ?
+        location_id: x.location_id,
+        location_pcode: x.location_pcode,
+        siteName: x._id, // site name // location
+        countryCode: x.country_code_2,
+        created_by: this.$userName(),
+        users: [this.$user()],
+        latitude: x.latitude,
+        longitude: x.longitude, // maybe ?
+        solar: x.solar_peak_hours,
+        population: x.population,
+        year: x.year,
+        totalHH: parseInt((x.population / DEFAULT_PP_PER_HH).toFixed(0), 10),
+        created_at: new Date().toISOString(),
+        ...newSurveyForm(),
+      };
+    });
     return result;
   }
-  get unhcrProjects(): GreenHouseGaz[] {
-    return this.unhcrLocations.map(
-      (x) =>
-        ({
-          ...this.newDefaultCampSite(),
-          ...x,
-          _id: x["Location id"].toFixed(),
-          name: x._id, // site unique identitier (name as first)
-          country_code: x.Country,
-          solar: x.solar_peak_hours,
-          population: x.Population,
-          totalHH: parseInt((x.Population / DEFAULT_PP_PER_HH).toFixed(0), 10),
-          created_by: this.$userName(), // hack to avoid rule in v-form
-          users: [this.$user()], // hack to avoid rule in v-form
-        } as GreenHouseGaz)
+  get existingSitesWithUnhcrSites(): GreenHouseGaz[] {
+    let result = this.unhcrSites;
+    const unhcrLocationIds = this.unhcrLocations.map(
+      (location) => location.location_pcode
     );
-  }
-  get existingSitesWithUnhcrSites(): Sites {
-    return this.unhcrSites.concat(this.existingSites);
+    const filteredExistingSite = this.existingSites.filter(
+      (existingSite) => !unhcrLocationIds.includes(existingSite.siteId)
+    );
+    result = result.concat(filteredExistingSite);
+    // add onlye existing sites that are not in unhcr
+    result.sort((x, y) => (x.siteName < y.siteName ? -1 : 1));
+    return result;
   }
 
   public closeSiteDialog(): void {
@@ -311,18 +329,18 @@ export default class ProjectList extends Vue {
   }
 
   public resetCampSite(): void {
-    this.newCampSite = this.newDefaultCampSite();
+    this.newCampSite = newDefaultCampSite(this.$userName());
   }
 
   public resetOnCountrySelect(countryCode: string): void {
-    this.newCampSite._id = uuidv4();
-    this.newCampSite.name = "";
+    this.newCampSite.id = uuidv4();
+    this.newCampSite.siteId = uuidv4(); // default in case not in unhcr
+    this.newCampSite.siteName = "";
     const selectedCountry = this.countriesMap[countryCode];
     this.newCampSite.latitude = selectedCountry?.lat ?? 0;
     this.newCampSite.longitude = selectedCountry?.lon ?? 0;
     this.newName = "";
-    this.editedItem._id = uuidv4();
-    this.editedItem.name = "";
+    this.newCampSite.description = "";
   }
 
   createProjectFormValid = false;
@@ -334,101 +352,87 @@ export default class ProjectList extends Vue {
 
   rulesCountry = [(v: string): boolean | string => !!v || `is required`];
   public ruleANameIsRequired(v: string): boolean | string {
-    return !!v || !this.newCampSite.name || `A name is required`;
+    return !!v || !this.newCampSite.siteName || `A name is required`;
   }
   public ruleANameShouldHaveLength(v: string): boolean | string {
     return (
-      !!this.newCampSite.name ||
+      !!this.newCampSite.siteName ||
       v?.length > 1 ||
       `Name should have a length >= 1`
     );
   }
 
   public ruleShouldHaveTheEditRights(): boolean | string {
-    if (this.newName) {
-      return true;
-    } else {
-      // if unhcr site.. it's not a project yet.. so we need to create it.
-      if (isEmpty(this.project)) {
-        return true;
-      }
-      return (
-        this.$can("edit", this.project) ||
-        `You're not on the list of authorized user for this existing site, please contact the creator of the site: ${
-          this.project.name ?? ""
-        } ${this.project.created_by ?? ""}`
-      );
-    }
+    // no more, because every creation is unique to the user
+    return true;
   }
 
   rulesSelectExistingSite = [this.ruleShouldHaveTheEditRights];
 
   public ruleADescriptionIsRequired(value: string): boolean | string {
-    return !!value || `A name is required`;
+    return !!value || `A description is required`;
+  }
+
+  public get currentAssessmentsDescriptions(): string[] {
+    if (this.newCampSite?.siteId) {
+      return (
+        this.siteAssessments?.map(
+          (assessment: GreenHouseGaz) => assessment.description
+        ) ?? []
+      );
+    }
+    return [];
   }
 
   public ruleSurveyDescriptionAlreadyExist(value: string): boolean | string {
     if (this.newName) {
       return true;
     } else {
-      const surveys =
-        this.newCampSite?.surveys?.map((survey) => survey.name) ?? [];
-      return (
-        surveys.indexOf(value) === -1 ||
-        `An assessment with this name already exist`
-      );
+      if (this.currentAssessmentsDescriptions.indexOf(value) === -1) {
+        return true;
+      } else {
+        return `An assessment with this description already exist`;
+      }
     }
   }
 
   public ruleSiteAlreadyExist(value: string): boolean | string {
-    const sites =
-      this.existingSitesWithUnhcrSites?.map((survey) => survey.name) ?? [];
+    const siteNames =
+      this.existingSitesWithUnhcrSites?.map((survey) => survey.siteName) ?? [];
     return (
-      sites.indexOf(value) === -1 ||
+      siteNames.indexOf(value) === -1 ||
       `An assessment with this site already exist`
     );
   }
 
   async submit(): Promise<void> {
-    // if does not exist
-    // addDoc else
-    // update doc with new survey
-    // if it's unhcr.. then it's a new document
-    const saveFn =
-      this.newName || this.newCampSite.isUNHCR ? this.addDoc : this.updateDoc;
-    this.newCampSite.surveys.push(this.editedItem);
-    // newName has priority
-    this.newCampSite.name = this.newName || this.newCampSite.name;
-
-    // TODO: IMPORTANT When selecting an existing site; we need to retrieve the actual site
-    // to avoid having to erase all surveys
+    this.newCampSite.siteName = this.newName || this.newCampSite.siteName;
     if (
-      this.newCampSite.country_code &&
-      this.newCampSite._id &&
-      this.editedItem._id
+      this.newCampSite.countryCode &&
+      this.newCampSite.id &&
+      this.newCampSite.siteId
     ) {
-      const country_code = this.newCampSite.country_code;
-      const siteId = this.newCampSite._id;
-      const surveyId = this.editedItem._id;
-
-      saveFn(this.newCampSite)
+      const countryCode = this.newCampSite.countryCode;
+      const siteId = this.newCampSite.siteId;
+      const surveyId = this.newCampSite.id;
+      this.addDoc(this.newCampSite)
         .then(this.closeSiteDialog)
         .then(() => {
-          this.navigateToNewSurvey(country_code, siteId, surveyId);
+          this.navigateToNewSurvey(countryCode, siteId, surveyId);
         });
     }
   }
 
   private navigateToNewSurvey(
-    country_code: string,
-    site: string,
+    countryCode: string,
+    site: number | string,
     surveyId: string
   ): void {
     if (this.$route.name !== "GreenHouseGazItemSurveyId") {
       this.$router.push({
         name: "GreenHouseGazItemSurveyId",
         params: {
-          country: country_code,
+          country: countryCode,
           site: encodeURIComponent(site),
           surveyId: encodeURIComponent(surveyId),
         },
@@ -439,22 +443,22 @@ export default class ProjectList extends Vue {
     }
   }
 
-  public setLocalCampSite(project: GreenHouseGaz): void {
-    // TODO: clean up _rev here also (maybe ?)
-    this.newCampSite = project ? cloneDeep(project) : ({} as GreenHouseGaz);
-  }
+  // public setLocalCampSite(project: GreenHouseGaz): void {
+  //   this.newCampSite = project ? cloneDeep(project) : ({} as GreenHouseGaz);
+  // }
 
-  public syncLocalCampSite(): void {
-    // init function
-    this.setLocalCampSite(this.project);
+  // public syncLocalCampSite(): void {
+  //   // init function
+  //   // not sure how to handle this.project
+  //   this.setLocalCampSite(this.project);
 
-    this.$store.subscribe((mutation) => {
-      const shouldUpdate = ["GhgModule/SET_PROJECT"];
-      if (shouldUpdate.includes(mutation.type)) {
-        this.setLocalCampSite(mutation.payload);
-      }
-    });
-  }
+  //   this.$store.subscribe((mutation) => {
+  //     const shouldUpdate = ["GhgModule/SET_PROJECT"];
+  //     if (shouldUpdate.includes(mutation.type)) {
+  //       this.setLocalCampSite(mutation.payload);
+  //     }
+  //   });
+  // }
 
   @Watch("open", { immediate: true })
   onOpenChange(value: boolean): void {
@@ -472,9 +476,10 @@ export default class ProjectList extends Vue {
   }
 
   mounted(): void {
-    this.resetDoc().then(() => {
-      this.syncLocalCampSite();
-    });
+    this.resetDoc();
+    // .then(() => {
+    // this.syncLocalCampSite();
+    // });
     this.resetCampSite();
   }
 

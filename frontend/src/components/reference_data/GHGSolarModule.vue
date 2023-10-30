@@ -10,15 +10,25 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-data-table :headers="headers" :items="items" dense>
+          <v-card-title>
+            <v-spacer></v-spacer>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-card-title>
+          <v-data-table
+            :headers="headers"
+            :items="items"
+            :search="search"
+            dense
+          >
             <template #[`item.c`]="props">
               <span :title="props.item.c"
-                >{{
-                  props.item.c |
-                    formatNumber({
-                      maximumFractionDigits: 3,
-                    })
-                }}
+                >{{ props.item.c | formatNumberGhg }}
                 hrs/day
               </span>
             </template>
@@ -54,7 +64,7 @@ import { mapGetters } from "vuex";
 export default class Energy extends Vue {
   items!: GHGSolar[];
   countriesMap = countriesMap;
-
+  search = "";
   public get headers(): HeaderInterface[] {
     return [
       { text: "Country name", value: "_id" },

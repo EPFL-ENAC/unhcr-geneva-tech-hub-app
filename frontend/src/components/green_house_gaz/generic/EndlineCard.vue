@@ -35,6 +35,7 @@
           :results="endline.results"
           :disabled="baselineMode"
           :headers="headers"
+          :compute-item="computeItem"
           :sort-by="sortBy"
           :name="name"
           :diff-dimension="diffDimension"
@@ -58,7 +59,7 @@
                   <span :title="endline.results.totalCO2Emission">
                     {{
                       endline.results.totalCO2Emission |
-                        formatNumber({ suffix: "tCO2e/year" })
+                        formatNumberGhg({ suffix: "tCO2e/year" })
                     }}
                   </span>
                 </h3>
@@ -75,8 +76,7 @@
                     </v-icon>
                     <span :title="endline.results.changeInEmission">{{
                       endline.results.changeInEmission |
-                        formatNumber({
-                          maximumFractionDigits: 0,
+                        formatNumberGhg({
                           style: "percent",
                           signDisplay: "exceptZero",
                         })
@@ -90,7 +90,7 @@
                       ({{
                         (endline.results.totalCO2Emission -
                           baseline.results.totalCO2Emission) |
-                          formatNumber({ suffix: "tCO2e/year" })
+                          formatNumberGhg({ suffix: "tCO2e/year" })
                       }})
                     </span>
                   </span>
@@ -134,6 +134,7 @@ import {
   SurveyItem,
   SurveyResult,
 } from "@/store/GhgInterface";
+import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { cloneDeep } from "lodash";
 import Vue from "vue";
 import "vue-class-component/hooks";
@@ -165,6 +166,11 @@ export default class EndlineCard extends Vue {
 
   @Prop({ type: String, default: "increment" })
   readonly sortBy!: string;
+  @Prop([Function])
+  readonly computeItem!: (
+    localItemInput: SurveyInput,
+    ghgMapRef: ItemReferencesMap
+  ) => SurveyResult;
 
   dialogs = { "warning-survey-dialog": false } as Record<string, boolean>;
 

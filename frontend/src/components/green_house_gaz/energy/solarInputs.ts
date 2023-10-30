@@ -2,7 +2,7 @@ import {
   numberOfDaysPerYear,
   TimePeriod,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
-import { formatNumber } from "@/plugins/filters";
+import { formatNumberGhg } from "@/plugins/filters";
 import { EnergyItem } from "@/store/GhgInterface";
 
 const countryIrradiance = {
@@ -95,6 +95,10 @@ export function computeKWInstalledWithKwhPerDayPerCountry(
   return parseFloat(kw.toFixed(1));
 }
 
+export function getSolarPowerText() {
+  return `Solar estimated`;
+}
+
 export function computeKWInstalledWithKwhPerYearPerCountry(
   kWh: number,
   countryTwoLetterCode: CountryIrradianceKeys,
@@ -124,6 +128,8 @@ export function solarInputsProducedPer(
       computeSolarInstalled = computeKWInstalledWithKwhPerDayPerCountry;
       suffix = "kWh/day";
       break;
+    // case "Month":
+    //   break;
     case "Week":
       throw new Error("Week is not supported for Solar");
       break;
@@ -131,6 +137,9 @@ export function solarInputsProducedPer(
       suffix = "kWh/year";
       computeSolarPower = computeKWHPerYearPerCountry;
       computeSolarInstalled = computeKWInstalledWithKwhPerYearPerCountry;
+      break;
+    default:
+      suffix = "kWh/unknown";
       break;
   }
   return [
@@ -150,7 +159,7 @@ export function solarInputsProducedPer(
         return localInput;
       },
       formatter: (v: number) => {
-        return formatNumber(v);
+        return formatNumberGhg(v);
       },
       text: "Total kW of solar installed",
       suffix: "Kw",
@@ -163,9 +172,9 @@ export function solarInputsProducedPer(
       value: "input.renewablePower", // maybe use like in DieselGeneratorWithoutLitres
       conditional_value: ["ELE_SOLAR", "ELE_HYB"],
       disabled: false,
-      text: `Solar (${suffix}) estimated`,
+      text: getSolarPowerText(),
       formatter: (v: number) => {
-        return formatNumber(v);
+        return formatNumberGhg(v);
       },
       customEventInput: (renewablePower: number, localInput: EnergyItem) => {
         localInput.solarInstalled = computeSolarInstalled(

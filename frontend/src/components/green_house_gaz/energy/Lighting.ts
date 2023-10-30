@@ -1,26 +1,27 @@
-import {
-  computeCO2CostEnergy,
-  numberOfDaysPerYear,
-} from "@/components/green_house_gaz/energy/computeCO2cost";
+import { numberOfDaysPerYear } from "@/components/green_house_gaz/energy/computeCO2cost";
 import {
   CountryIrradianceKeys,
-  solarInputsProducedPer,
+  getSolarPowerText,
 } from "@/components/green_house_gaz/energy/solarInputs";
 import {
   AllFuel,
-  AllFuelForLighting,
-  allFuelsButThermal,
   allFuelsForLighing,
   AllLightingFuelsWithTextById,
   BioMassFuel,
   biomassFuels,
-  ElectricFuel,
+  ElectricDevices,
+  electricDevicesWithText,
   electricFuels,
+  electricFuelsWithoutNone,
   GasFuel,
   gasFuels,
+  IdTextTypesItem,
   LightingFuel,
   LiquidFuel,
   liquidFuels,
+  plugInOrChargeBatteryDevice,
+  singleUseBatteryDevice,
+  solarLanternDevice,
   ThermalFuel,
   thermalFuels,
 } from "@/components/green_house_gaz/fuelTypes";
@@ -31,7 +32,7 @@ import {
   ReferenceItemInterface,
 } from "@/store/GhgReferenceModule";
 
-import { formatNumber } from "@/plugins/filters";
+import { formatNumberGhg } from "@/plugins/filters";
 import {
   EnergyItem,
   GenericFormSurvey,
@@ -40,27 +41,23 @@ import {
   SurveyResult,
 } from "@/store/GhgInterface";
 
-import {
-  cookstoveIdsTECHsWithAccess,
-  cookstoveIdsTECHsWithBioMass,
-} from "@/components/green_house_gaz/energy/CookstoveTech";
-import { dieselInputsProducedPer } from "@/components/green_house_gaz/energy/dieselInputs";
-import {
-  computeThermalKWHPerDayFromPerYear,
-  computeThermalKWHPerYearFromPerDay,
-} from "@/components/green_house_gaz/energy/thermalInputs";
+import { SelectOption, SelectValue } from "@/components/commons/FormItem";
+import { cookstoveIdsTECHsWithBioMass } from "@/components/green_house_gaz/energy/CookstoveTech";
+import { computeThermalKWHPerYearFromPerDay } from "@/components/green_house_gaz/energy/thermalInputs";
 import {
   ensureSurveyTableHeaders,
+  SurveyTableHeader,
   surveyTableHeaderCO2,
   surveyTableHeaderIncrements,
 } from "@/components/green_house_gaz/generic/surveyTableHeader";
+import { getDieselPowerText } from "./dieselInputs";
+import { computeCO2costElectric, getGridPowerText } from "./poweredBy";
 
 export interface EnergyLightingItemInput extends SurveyInput, EnergyItem {
-  numberOfLighting?: number; // computed based on % of HH and stuffs
+  percentageOfTotalHouseHolds?: number; // computed based on % of HH and stuffs
   image?: string; // image of lighting
-  fuelUsage?: number; // [kg or L/day]
-  fuelType: AllFuelForLighting; // key
-  fuelTypes?: AllFuelForLighting[]; // used only as a reference
+  fuelType?: AllFuel; // key
+  fuelTypes?: AllFuel[]; // used only as a reference
   carbonized?: boolean;
   sustainablySourced?: boolean;
   chcProcessingFactor?: number; // default to 6
@@ -70,6 +67,17 @@ export interface EnergyLightingItemInput extends SurveyInput, EnergyItem {
   fuelUsageFirewood?: number; // special for light_hyb
   fuelUsageParaffin?: number; // special for light_hyb
   fuelUsageKerosene?: number; // special for light_hyb
+
+  numberOfDevices?: number; // special for electric
+  electricPower?: number; // special for electric
+  deviceType?: AllDevices; // special for electric
+
+  energyType?: EnergyType;
+  energySubType?: EnergySubType;
+
+  gridPercentage?: number;
+  dieselPercentage?: number;
+  solarPercentage?: number;
 }
 
 export interface EnergyLightingItemResults extends SurveyResult {
@@ -100,13 +108,14 @@ export const REF_DRY_WOOD = 1;
 export const REF_WET_WOOD = 0.15; // 15% less efficient
 export const REF_SUSTAINED_WOOD = 0; // fNRB of sustained
 
-export const diffDimension: keyof EnergyLightingItemInput = "numberOfLighting";
+export const diffDimension: keyof EnergyLightingItemInput =
+  "percentageOfTotalHouseHolds";
 
 export const conditional_function_for_hyb_lights = (itemInput: SurveyInput) => {
   if (itemInput?.fuelType == undefined || itemInput?.fuelType == "NO_ACCESS") {
     return false;
   }
-  if (["LIGHT_HYB"].includes(itemInput?.fuelType as AllFuelForLighting) ?? "") {
+  if (["LIGHT_HYB"].includes(itemInput?.fuelType as AllFuel) ?? "") {
     return true;
   }
   return false;
@@ -147,8 +156,19 @@ export function resetSurveyInput(
   localInput: EnergyLightingItemInput
 ): EnergyLightingItemInput {
   localInput.fuelType = "NO_ACCESS";
-  delete localInput.numberOfLighting; // percentage of percentage
+  localInput.percentageOfTotalHouseHolds = 0;
   return resetSurveyFuelOption(localInput);
+}
+
+export function resetDeviceInput(
+  localInput: EnergyLightingItemInput
+): EnergyLightingItemInput {
+  // delete localInput.electricPower;
+  // delete localInput.numberOfDevices;
+  // delete localInput.operatingHours;
+  // set default value here ?
+  delete localInput.deviceType;
+  return localInput;
 }
 
 export function resetSurveyFuelOption(
@@ -161,9 +181,6 @@ export function resetSurveyFuelOption(
 
   delete localInput.disableDieselLiters; // do I know the total litres of diesels
   localInput.disabledFuelUsage = false;
-  localInput.generatorLoad = 0.6; // default factor of 60%
-  delete localInput.generatorSize;
-  delete localInput.operatingHours;
   delete localInput.solarInstalled;
 
   delete localInput.fuelUsageFirewood;
@@ -172,6 +189,399 @@ export function resetSurveyFuelOption(
   return localInput;
 }
 
+export const plugingRecheargeableDevices = [
+  "POWER_KNOWN",
+  "PLUGIN_LIGHT_BULB_INC",
+  "PLUGIN_LIGHT_BULB_LED",
+  "RECHARGEABLE_BAT_TORCH",
+  "RECHARGEABLE_BAT_BIG_TORCH",
+  "RECHARGEABLE_BAT_LANTERN",
+] as const;
+export type PlugingRecheargeableDevice =
+  typeof plugingRecheargeableDevices[number];
+export const plugingRecheargeableDevicesWithText: IdTextTypesItem<PlugingRecheargeableDevice>[] =
+  [
+    { _id: "POWER_KNOWN", text: "Power of device known", default: 10 },
+    {
+      _id: "PLUGIN_LIGHT_BULB_INC",
+      text: "Incandescent light bulb (plug-in)",
+      default: 60,
+    },
+    {
+      _id: "PLUGIN_LIGHT_BULB_LED",
+      text: "LED light bulb (plug-in)",
+      default: 10,
+    },
+    {
+      _id: "RECHARGEABLE_BAT_TORCH",
+      text: "Small handheld torch (rechargeable batteries)",
+      default: 1,
+    },
+    {
+      _id: "RECHARGEABLE_BAT_BIG_TORCH",
+      text: "Big handheld torch (rechargeable batteries)",
+      default: 5,
+    },
+    {
+      _id: "RECHARGEABLE_BAT_LANTERN",
+      text: "Lantern (rechargeable batteries)",
+      default: 3,
+    },
+  ];
+
+export const singleUseBatteryDevices = [
+  "TORCH",
+  "TORCH_BIG",
+  "LANTERN",
+] as const;
+export type SingleUseBatteryDevices = typeof singleUseBatteryDevices[number];
+export const singleUseBatteryDevicesWithText: IdTextTypesItem<SingleUseBatteryDevices>[] =
+  [
+    { _id: "TORCH", text: "Small handheld torch", default: 1 },
+    { _id: "TORCH_BIG", text: "Big handheld torch", default: 3 },
+    { _id: "LANTERN", text: "Lantern", default: 1 },
+  ];
+export type AllDevices =
+  | SingleUseBatteryDevices
+  | PlugingRecheargeableDevice
+  | ElectricDevices;
+export const AllDevicesWithTextById = [
+  ...plugingRecheargeableDevicesWithText,
+  ...singleUseBatteryDevicesWithText,
+  ...electricDevicesWithText,
+].reduce((acc, el: IdTextTypesItem<AllDevices>) => {
+  acc[el._id] = el;
+  return acc;
+}, {} as Record<AllDevices, IdTextTypesItem<AllDevices>>);
+
+// TODO: use unique id instead of text
+export const solidFuelsEnergyType = "Solid fuels";
+export const liquidFuelsEnergyType = "Liquid fuels";
+export const electricFuelsEnergyType = "Electric / Battery / Solar";
+export const energyTypes = [
+  solidFuelsEnergyType,
+  liquidFuelsEnergyType,
+  electricFuelsEnergyType,
+] as const;
+export type EnergyType = typeof energyTypes[number];
+
+export const energySubTypes = [
+  "SOLAR_LANTERN",
+  "SINGLE_USE_BAT",
+  "PLUG_IN_OR_CHARGE_BAT",
+] as const;
+export type EnergySubType = typeof energySubTypes[number];
+
+export function conditionalFunctionElectricSolarDevices(
+  itemInput: SurveyInput
+) {
+  if (
+    itemInput?.energyType == electricFuelsEnergyType &&
+    itemInput?.energySubType != undefined
+  ) {
+    return true;
+  }
+  return false;
+}
+
+export function commonElectricSolarDevicesHeaders() {
+  const timePeriod = "Year";
+  return [
+    {
+      value: "input.deviceType",
+      style: {
+        cols: "12",
+      },
+      text: "Select device",
+      type: "select",
+      items: (options: {
+        localInput: SurveyInput;
+        surveyItemHeader: SurveyTableHeader;
+        intervention: boolean;
+      }): SelectOption<SelectValue>[] => {
+        let result: AllDevices[] = [];
+        if (options.localInput.energySubType === singleUseBatteryDevice) {
+          result = [...singleUseBatteryDevices];
+        }
+        if (options.localInput.energySubType === plugInOrChargeBatteryDevice) {
+          result = [...plugingRecheargeableDevices];
+        }
+        return result.map((item: AllDevices) => ({
+          text: AllDevicesWithTextById[item]?.text,
+          value: item,
+        }));
+      },
+      formatter: (v: AllDevices) => {
+        return AllDevicesWithTextById[v]?.text;
+      },
+      customEventInput: (deviceType: AllDevices, localInput: SurveyInput) => {
+        localInput.electricPower =
+          AllDevicesWithTextById[deviceType]?.default ?? 0;
+        return localInput;
+      },
+      suffix: "W",
+      optional: false,
+      required: true,
+      hideFooterContent: true,
+      conditional_function: (itemInput: SurveyInput) => {
+        return (
+          itemInput?.energySubType != solarLanternDevice &&
+          conditionalFunctionElectricSolarDevices(itemInput)
+        );
+      },
+    },
+    {
+      style: {
+        cols: "4",
+      },
+      text: "Watts",
+      type: "number",
+      min: 0,
+      max: 9000,
+      formatter: (v: number) => {
+        return formatNumberGhg(v);
+      },
+      value: "input.electricPower",
+      suffix: "W",
+      hideFooterContent: true,
+      conditional_function: conditionalFunctionElectricSolarDevices,
+    },
+    {
+      style: {
+        cols: "4",
+      },
+      text: "Number of devices",
+      min: 0,
+      formatter: (v: number) => {
+        return formatNumberGhg(v);
+      },
+      type: "number",
+      value: "input.numberOfDevices",
+      hideFooterContent: true,
+      conditional_function: conditionalFunctionElectricSolarDevices,
+    },
+    {
+      style: {
+        cols: "4",
+      },
+      text: "Operating hours per day",
+      type: "number",
+      value: "input.operatingHours",
+      formatter: (v: number) => {
+        return formatNumberGhg(v);
+      },
+      suffix: "h",
+      hideFooterContent: true,
+      conditional_function: conditionalFunctionElectricSolarDevices,
+    },
+    {
+      style: {
+        cols: "6",
+      },
+      text: `Total power`,
+      min: 0,
+      type: "number",
+      formatter: (v: number) => {
+        return formatNumberGhg(v, { suffix: "W" });
+      },
+      value: "computed.totalPower",
+      suffix: "W",
+      isInput: true,
+      disabled: true,
+      optional: true,
+      hideFooterContent: true,
+      computeResults: true,
+      conditional_function: conditionalFunctionElectricSolarDevices,
+    },
+    {
+      style: {
+        cols: "6",
+      },
+      value: "computed.totalEnergy",
+      text: "Annual fuel / Energy consumption",
+      formatter: (v: number, { ...args }, localInput: any) => {
+        let suffixTimePeriod = "";
+        switch (timePeriod) {
+          case "Year":
+            suffixTimePeriod = "/yr";
+            break;
+          default:
+            break;
+        }
+        const suffix = `kWh${suffixTimePeriod}`;
+
+        if (localInput?.input?.energyType === solidFuelsEnergyType) {
+          return formatNumberGhg(localInput?.input?.fuelUsage * 365.25, {
+            suffix: "kg/yr",
+          });
+        }
+        if (localInput?.input?.energyType === liquidFuelsEnergyType) {
+          return formatNumberGhg(localInput?.input?.fuelUsage * 365.25, {
+            suffix: "L/yr",
+          });
+        }
+        if (
+          localInput?.input?.fuelType === "ELE_SOLAR" ||
+          localInput?.input?.fuelType === "ELE_HYB" ||
+          localInput?.input?.fuelType === "ELE_GRID"
+          // localInput?.input?.fuelType === "ELE_DIES"
+        ) {
+          // use the formater of the correct input!
+          return formatNumberGhg(v, { suffix });
+        }
+        if (localInput?.input?.fuelType === "ELE_DIES") {
+          // return dieselFormatter(v, args, localInput);
+          return formatNumberGhg(localInput?.input?.fuelUsage, {
+            suffix: "L/yr",
+          });
+        }
+        if (localInput?.input?.fuelType === "NO_ACCESS") {
+          return formatNumberGhg(v, { suffix });
+        }
+        return formatNumberGhg(localInput?.input?.fuelUsage, {
+          suffix: "L/yr",
+        });
+      },
+      tooltipInfoFn: (value: string, args: any, localItem: any) => {
+        // iterate diesel/grid/solar estimated
+        let suffixTimePeriod = "";
+        switch (timePeriod) {
+          case "Year":
+            suffixTimePeriod = "/yr";
+            break;
+          default:
+            break;
+        }
+        const suffix = `kWh${suffixTimePeriod}`;
+        if (localItem?.input?.fuelType === "ELE_HYB") {
+          const dieselTotalPowerRatio =
+            (localItem?.computed?.totalEnergy ?? 0) *
+            (localItem?.input?.dieselPercentage ?? 0);
+          const gridTotalPowerRatio =
+            (localItem?.computed?.totalEnergy ?? 0) *
+            (localItem?.input?.gridPercentage ?? 0);
+          const solarTotalPowerRatio =
+            (localItem?.computed?.totalEnergy ?? 0) *
+            (localItem?.input?.solarPercentage ?? 0);
+          return `
+        <ul>
+            <li>
+            ${getDieselPowerText()}:
+                ${dieselTotalPowerRatio} ${suffix}
+            </li>
+            <li>
+              ${getGridPowerText()}:
+              ${gridTotalPowerRatio} ${suffix}
+            </li>
+            <li>
+            ${getSolarPowerText()}:
+            ${solarTotalPowerRatio} ${suffix}
+          </li>
+          <ul>
+        `;
+        }
+        return false;
+      },
+      min: 0,
+      type: "number",
+      // formatter: (v: number) => {
+      //   return formatNumberGhg(v, { suffix: "kWh/year" });
+      // },
+      suffix: "kWh/year",
+      isInput: true,
+      disabled: true,
+      optional: true,
+      hideFooterContent: false,
+      computeResults: true,
+      conditional_function: conditionalFunctionElectricSolarDevices,
+    },
+  ];
+}
+
+export function conditionalFunctionElectricHybDevices(itemInput: SurveyInput) {
+  if (
+    itemInput?.energyType == electricFuelsEnergyType &&
+    itemInput?.energySubType === plugInOrChargeBatteryDevice &&
+    itemInput.fuelType === "ELE_HYB"
+  ) {
+    return true;
+  }
+  return false;
+}
+
+export function hybridLightingElectricHeaders() {
+  // diesel/ grid / solar
+  const hybridPercentagesRuleFn = (
+    localInput: SurveyInput,
+    surveyItem: SurveyTableHeader
+  ) => {
+    const { dieselPercentage, gridPercentage, solarPercentage } = localInput;
+    const totalPercentage =
+      ((dieselPercentage as number) ?? 0) +
+      ((gridPercentage as number) ?? 0) +
+      ((solarPercentage as number) ?? 0);
+    return [
+      (v: number) =>
+        totalPercentage <= 1 ||
+        `Sum should be <= 100%  Sum now = ${formatNumberGhg(totalPercentage, {
+          style: "percent",
+        })}`,
+    ];
+  };
+  return [
+    {
+      style: {
+        cols: "4",
+      },
+      text: "Diesel generator",
+      value: "input.dieselPercentage",
+      subtype: "percent",
+      type: "number",
+      rulesFn: hybridPercentagesRuleFn,
+      hideFooterContent: true,
+      formatter: (v: number) => {
+        return formatNumberGhg(v, {
+          style: "percent",
+        });
+      },
+      conditional_function: conditionalFunctionElectricHybDevices,
+    },
+    {
+      style: {
+        cols: "4",
+      },
+      text: "Grid",
+      value: "input.gridPercentage",
+      subtype: "percent",
+      type: "number",
+      hideFooterContent: true,
+      formatter: (v: number) => {
+        return formatNumberGhg(v, {
+          style: "percent",
+        });
+      },
+      rulesFn: hybridPercentagesRuleFn,
+      conditional_function: conditionalFunctionElectricHybDevices,
+    },
+    {
+      style: {
+        cols: "4",
+      },
+      text: "Solar",
+      value: "input.solarPercentage",
+      subtype: "percent",
+      type: "number",
+      rulesFn: hybridPercentagesRuleFn,
+      hideFooterContent: true,
+      formatter: (v: number) => {
+        return formatNumberGhg(v, {
+          style: "percent",
+        });
+      },
+      conditional_function: conditionalFunctionElectricHybDevices,
+    },
+  ];
+}
 export function headers(
   countryCode: CountryIrradianceKeys,
   projectSolar: number | undefined,
@@ -180,17 +590,154 @@ export function headers(
   return [
     ...surveyTableHeaderIncrements,
     {
-      items: allFuelsForLighing,
+      items: [
+        solidFuelsEnergyType,
+        liquidFuelsEnergyType,
+        electricFuelsEnergyType,
+      ],
       style: {
         cols: "12",
       },
+      text: "Energy for lighting",
+      type: "select",
+      value: "input.energyType",
+      customEventInput: (
+        energyType: EnergyType,
+        localInput: EnergyLightingItemInput
+      ) => {
+        localInput = resetSurveyInput(localInput);
+        localInput = resetDeviceInput(localInput);
+        return localInput;
+      },
+      hideFooterContent: false,
+    },
+    {
+      items: (): SelectOption<SelectValue>[] => {
+        const result: string[] = [...energySubTypes];
+        return result.map((item: string) => ({
+          text: AllLightingFuelsWithTextById?.[item as AllFuel]?.text,
+          value: item,
+        }));
+      },
+      style: {
+        cols: "12",
+      },
+      formatter: (
+        v: AllFuel,
+        tableHeader: SurveyTableHeader,
+        localItem: EnergyLightingItem
+      ) => {
+        const deviceType = localItem.input.deviceType;
+        let deviceTypeText = "";
+        if (deviceType !== undefined) {
+          deviceTypeText = AllDevicesWithTextById[deviceType]?.text ?? "";
+          deviceTypeText = ` — ${deviceTypeText}`;
+        }
+        return `${
+          AllLightingFuelsWithTextById?.[v]?.text ?? "—"
+        }${deviceTypeText}`;
+      },
+      text: "Type of Lighting Device",
+      type: "select",
+      value: "input.energySubType",
+      hideFooterContent: false,
+      customEventInput: (
+        energySubType: EnergySubType,
+        localInput: EnergyLightingItemInput
+      ) => {
+        localInput = resetDeviceInput(localInput);
+        localInput.electricPower =
+          AllDevicesWithTextById[energySubType]?.default ?? 0;
+        return localInput;
+      },
+      conditional_function: (itemInput: SurveyInput) => {
+        if (itemInput?.energyType == electricFuelsEnergyType) {
+          return true;
+        }
+        return false;
+      },
+    },
+    {
       text: "Lighting powered by",
       value: "input.fuelType",
-      formatter: (v: AllFuelForLighting) => {
+      items: (options: {
+        localInput: SurveyInput;
+        surveyItemHeader: SurveyTableHeader;
+        intervention: boolean;
+      }): SelectOption<SelectValue>[] => {
+        let result: string[] = [];
+        if (options.localInput.energyType === undefined) {
+          result = allFuelsForLighing;
+        }
+        if (options.localInput.energyType === solidFuelsEnergyType) {
+          result = ["FWD", "CNDL"];
+        }
+        if (options.localInput.energyType === liquidFuelsEnergyType) {
+          result = ["OIL", "PET", "KRS"];
+        }
+        if (options.localInput.energyType === electricFuelsEnergyType) {
+          result = electricFuelsWithoutNone as unknown as string[];
+        }
+        return result.map((item: string) => ({
+          text: AllLightingFuelsWithTextById?.[item as AllFuel]?.text,
+          value: item,
+        }));
+      },
+      style: {
+        cols: "12",
+      },
+      conditional_function: (itemInput: SurveyInput) => {
+        if (itemInput?.energyType == undefined) {
+          return false;
+        }
+        if (itemInput?.energyType == electricFuelsEnergyType) {
+          return itemInput?.energySubType == plugInOrChargeBatteryDevice;
+        }
+
+        return true;
+      },
+      formatter: (v: AllFuel, _: any, localItem: EnergyLightingItem) => {
+        if (
+          v === "NO_ACCESS" &&
+          localItem.input.energySubType === "SOLAR_LANTERN"
+        ) {
+          return "Solar";
+        }
+        if (
+          v === "NO_ACCESS" &&
+          localItem.input.energySubType === "SINGLE_USE_BAT"
+        ) {
+          return "Batteries";
+        }
         return AllLightingFuelsWithTextById?.[v]?.text;
       },
+      tooltipInfoFn: (
+        value: string,
+        args: any,
+        localItem: EnergyLightingItem
+      ) => {
+        if (localItem?.input?.fuelType === "ELE_HYB") {
+          return `
+          Hybrid mix percentages:<br/>
+          Diesel generator: ${formatNumberGhg(
+            localItem?.input?.dieselPercentage ?? 0,
+            {
+              style: "percent",
+            }
+          )}<br/>
+          National Grid: ${formatNumberGhg(
+            localItem?.input?.gridPercentage ?? 0,
+            {
+              style: "percent",
+            }
+          )}<br/>
+          Solar: : ${formatNumberGhg(localItem?.input?.solarPercentage ?? 0, {
+            style: "percent",
+          })}`;
+        }
+      },
       formatterTableComponent: (
-        fuelType: AllFuelForLighting,
+        fuelType: AllFuel,
         _: unknown,
         localItem: EnergyLightingItem
       ) => {
@@ -226,87 +773,11 @@ export function headers(
         }
         return localInput;
       },
-      isInput: true,
       type: "select",
       hideFooterContent: false,
     },
-    {
-      value: "input.disabledFuelUsage",
-      text: (localInput: EnergyLightingItemInput) => {
-        let result = "Fuel quantity known?";
-        const biomassFuelsText = "Biomass quantity known?";
-        const liquidFuelsText = "Number of liters known?";
-        const gasFuelsText = result;
-        const lpgFuelsText = result;
-        const electricFuelsText = result;
-        const thermalFuelsText = result;
-
-        const refTexts: {
-          readonly fuelTypes: readonly AllFuelForLighting[];
-          text: string;
-        }[] = [
-          { fuelTypes: biomassFuels, text: biomassFuelsText },
-          { fuelTypes: liquidFuels, text: liquidFuelsText },
-          { fuelTypes: ["BGS", "PNG"], text: gasFuelsText },
-          { fuelTypes: ["LPG"], text: lpgFuelsText },
-          {
-            fuelTypes: ["ELE_DIES"], // superseed electricFuels
-            text: "Number of liters of diesel known?",
-          },
-          { fuelTypes: electricFuels, text: electricFuelsText },
-          { fuelTypes: thermalFuels, text: thermalFuelsText },
-        ];
-        // Superseed the dieselInputs for dieselLiters
-
-        refTexts.every((refText) => {
-          if (refText.fuelTypes.includes(localInput.fuelType)) {
-            result = refText.text;
-            return false;
-          }
-          return true;
-        });
-        return result;
-      },
-      conditional_function: (itemInput: SurveyInput) => {
-        // conditional_value: [cookstoveIdsTECHsWithAccess, allFuelsButThermal],
-        // conditional: ["cookstove", "fuelType"],
-        // conditional_type: "AND",
-        // and don't show for ELE_HYB
-        if (
-          itemInput.cookstove &&
-          (cookstoveIdsTECHsWithAccess as string[]).includes(
-            itemInput.cookstove as string
-          ) &&
-          itemInput.fuelType &&
-          (allFuelsButThermal as string[]).includes(
-            itemInput.fuelType as string
-          ) &&
-          itemInput.fuelType !== "ELE_HYB"
-        ) {
-          return true;
-        }
-
-        return false;
-      },
-      style: {
-        cols: "12",
-      },
-      options: {
-        false: "yes",
-        true: "no",
-      },
-      default: true,
-      type: "boolean",
-      customEventInput: (
-        disabledFuelUsage: boolean,
-        localInput: EnergyLightingItemInput
-      ) => {
-        if (!localInput.fuelType) {
-          return localInput;
-        }
-        return localInput;
-      },
-    },
+    ...hybridLightingElectricHeaders(),
+    ...commonElectricSolarDevicesHeaders(),
     {
       conditional_value: [["FWD"], [true]],
       conditional: ["fuelType", "disabledFuelUsage"],
@@ -341,7 +812,7 @@ export function headers(
         const thermalFuelsText = "Estimated kWh/day/HH";
 
         const refTexts: {
-          readonly fuelTypes: readonly AllFuelForLighting[];
+          readonly fuelTypes: readonly AllFuel[];
           text: string;
         }[] = [
           { fuelTypes: biomassFuels, text: biomassFuelsText },
@@ -357,7 +828,10 @@ export function headers(
         // Superseed the dieselInputs for dieselLiters
 
         refTexts.every((refText) => {
-          if (refText.fuelTypes.includes(localInput.fuelType)) {
+          if (
+            localInput.fuelType &&
+            refText.fuelTypes.includes(localInput.fuelType)
+          ) {
             result = refText.text;
             return false;
           }
@@ -380,7 +854,7 @@ export function headers(
             "ELE_DIES",
             "ELE_SOLAR",
             "ELE_HYB",
-          ].includes(itemInput?.fuelType as AllFuelForLighting) ??
+          ].includes(itemInput?.fuelType as AllFuel) ??
           ""
         ) {
           return false;
@@ -405,50 +879,6 @@ export function headers(
       },
     },
     ...hybridLightingInputs,
-    {
-      value: "input.renewablePower", // maybe like in DieselGeneratorWithoutLitres
-      conditional_value: ["THE"],
-      disabled: false,
-      text: `Solar thermal (kWh/year/HH) estimated`,
-      formatter: (v: number) => {
-        return formatNumber(v);
-      },
-      customEventInput: (
-        renewablePower: number,
-        localInput: EnergyLightingItemInput
-      ) => {
-        localInput.fuelUsage =
-          computeThermalKWHPerDayFromPerYear(renewablePower);
-        return localInput;
-      },
-      conditional: "fuelType",
-      suffix: "kWh/year/HH",
-      style: {
-        cols: "12",
-      },
-      type: "number",
-      computeResults: true,
-      hideFooterContent: true,
-    },
-    ...dieselInputsProducedPer("Day", "Day", {
-      hideFooterContent: true,
-      cookingMode: false,
-    }),
-    {
-      value: "input.gridPower", // maybe like in DieselGeneratorWithoutLitres
-      conditional_value: ["ELE_GRID", "ELE_HYB"],
-      conditional: "fuelType",
-      text: "Estimated kWh/day/HH for national grid",
-      suffix: "kWh/day/HH",
-      style: {
-        cols: "12",
-      },
-      type: "number",
-    },
-    // end of national grid
-    ...solarInputsProducedPer("Year", countryCode, projectSolar, {
-      hideFooterContent: true,
-    }),
     {
       conditional_value: biomassFuels,
       conditional: "fuelType",
@@ -477,7 +907,7 @@ export function headers(
     {
       text: "Percentage of total households",
       computeResults: true,
-      value: "input.numberOfLighting",
+      value: "input.percentageOfTotalHouseHolds",
       conditional_value: "",
       conditional: ["fuelType"],
       style: {
@@ -488,9 +918,8 @@ export function headers(
       type: "number",
       hideFooterContent: false,
       formatter: (v: number) => {
-        return formatNumber(v, {
+        return formatNumberGhg(v, {
           style: "percent",
-          maximumFractionDigits: 0,
         });
       },
     },
@@ -519,36 +948,157 @@ function getLocalFNRB(
   return localFNRB;
 }
 
-function computeItemElectric(
+// deprecated we don't use lihgt hybrid anymore
+export function computeItemLightHyb(
   localItemInput: EnergyLightingItemInput,
   ghgMapRef: ItemReferencesMap,
-  hhUsingTheFuel: number,
-  project_REF_GRD: ReferenceItemInterface
-): number {
-  let totalCO2Emission = 0;
-  switch (localItemInput.fuelType) {
-    case "ELE_HYB":
-    case "ELE_GRID":
-    case "ELE_DIES":
-      totalCO2Emission =
-        computeCO2CostEnergy(
-          localItemInput as EnergyItem,
-          ghgMapRef?.REF_EFF_DIES,
-          project_REF_GRD
-        ) *
-        hhUsingTheFuel *
-        numberOfDaysPerYear;
-      break;
-    case "ELE_SOLAR":
-    case "ELE_NONE":
-    default:
-      break;
+  hhUsingTheFuel: number
+) {
+  const { fuelUsageFirewood, fuelUsageParaffin, fuelUsageKerosene } =
+    localItemInput;
+  if (fuelUsageFirewood === undefined) {
+    throw new Error("fuel usage not defined");
   }
-  return totalCO2Emission;
+  const fuelEfficiencyFirewood = ghgMapRef?.[`REF_EFF_FWD`]?.value;
+  if (fuelEfficiencyFirewood == undefined) {
+    const errorMessage = `there are no emission factor REF_EFF_FWD`;
+    throw new Error(errorMessage);
+  }
+  const totalCO2EmissionFirewood =
+    hhUsingTheFuel *
+    fuelUsageFirewood * // fuel consumed in kg / day
+    0.001 * // 1t/1000kg
+    numberOfDaysPerYear * // days/yr
+    fuelEfficiencyFirewood;
+
+  // PARAFFIN
+  if (fuelUsageParaffin === undefined) {
+    throw new Error("fuel usage not defined");
+  }
+  const fuelEfficiencyParaffin = ghgMapRef?.[`REF_EFF_CNDL`]?.value;
+  if (fuelEfficiencyParaffin == undefined) {
+    const errorMessage = `there are no emission factor REF_EFF_CNDL`;
+    throw new Error(errorMessage);
+  }
+  const totalCO2EmissionParaffin =
+    hhUsingTheFuel *
+    fuelUsageParaffin * // fuel consumed in kg / day
+    0.001 * // 1t/1000kg
+    numberOfDaysPerYear * // days/yr
+    fuelEfficiencyParaffin;
+  // END PARAFFIN
+
+  // KEROSENE
+  if (fuelUsageKerosene === undefined) {
+    throw new Error("fuel usage not defined");
+  }
+  const fuelEfficiencyKerosene = ghgMapRef?.[`REF_EFF_KRS`]?.value;
+  if (fuelEfficiencyKerosene == undefined) {
+    const errorMessage = `there are no emission factor REF_EFF_KRS`;
+    throw new Error(errorMessage);
+  }
+  const totalCO2EmissionKerosene =
+    hhUsingTheFuel *
+    fuelUsageKerosene * // fuel consumed in kg / day
+    0.001 * // 1t/1000kg
+    numberOfDaysPerYear * // days/yr
+    fuelEfficiencyKerosene;
+  // END KEROSENE
+  return {
+    totalCO2Emission:
+      totalCO2EmissionFirewood +
+      totalCO2EmissionParaffin +
+      totalCO2EmissionKerosene,
+  };
 }
 
-// this.project.totalHH
-// this.project.country_code
+export function computeItemBiomass(
+  fuelUsage: number | undefined,
+  localItemInput: EnergyLightingItemInput,
+  ghgMapRef: ItemReferencesMap,
+  countryCode: string,
+  fuelType: AllFuel,
+  hhUsingTheFuel: number,
+  itemsGHGfNRB: GHGfNRB[]
+) {
+  /*
+        - Three version for the fnrb factor
+          - briket and pellets
+          - wood same as bricket + dry factor
+          - charcoal same as bricket but fnrb factor is combustion + production
+       */
+  if (fuelUsage === undefined) {
+    throw new Error("fuel usage not defined");
+  }
+
+  let drynessFactor = REF_DRY_WOOD;
+  if (!localItemInput.dryWood && fuelType === "FWD") {
+    drynessFactor = drynessFactor + REF_WET_WOOD;
+  }
+  const localFNRB = getLocalFNRB(
+    countryCode,
+    ghgMapRef?.REF_FNRB?.value,
+    localItemInput.sustainablySourced,
+    itemsGHGfNRB
+  );
+
+  let efficiencyFactor = 1;
+  const fuelTypeEnhanced = `${fuelType}${
+    localItemInput.carbonized ? "_C" : ""
+  }`;
+  if (fuelTypeEnhanced === "CHC" || fuelTypeEnhanced === "BRQ_C") {
+    const fuelEfficiencyC = ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}_C`]?.value;
+    if (fuelEfficiencyC == undefined) {
+      const errorMessage = `there are no emission factor REF_EFF_${fuelTypeEnhanced}_C`;
+      throw new Error(errorMessage);
+    }
+    const fuelEfficiencyP = ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}_P`]?.value;
+    if (fuelEfficiencyP == undefined) {
+      const errorMessage = `there are no emission factor REF_EFF_${fuelTypeEnhanced}_P`;
+      throw new Error(errorMessage);
+    }
+    const nonCO2FractionC =
+      ghgMapRef?.[`REF_NONCO2_${fuelTypeEnhanced}_C`]?.value;
+    if (nonCO2FractionC == undefined) {
+      const errorMessage = `there are no nonCO2Fraction factor REF_NONCO2_${fuelTypeEnhanced}_C`;
+      throw new Error(errorMessage);
+    }
+    const nonCO2FractionP =
+      ghgMapRef?.[`REF_NONCO2_${fuelTypeEnhanced}_P`]?.value;
+    if (nonCO2FractionP == undefined) {
+      const errorMessage = `there are no nonCO2Fraction factor REF_NONCO2_${fuelTypeEnhanced}_P`;
+      throw new Error(errorMessage);
+    }
+
+    efficiencyFactor =
+      (localFNRB + (1 - localFNRB) * nonCO2FractionC) * fuelEfficiencyC +
+      (localFNRB + (1 - localFNRB) * nonCO2FractionP) * fuelEfficiencyP;
+  } else {
+    const fuelEfficiency = ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}`]?.value;
+    if (fuelEfficiency == undefined) {
+      const errorMessage = `there are no emission factor REF_EFF_${fuelTypeEnhanced}`;
+      throw new Error(errorMessage);
+    }
+    const nonCO2Fraction = ghgMapRef?.[`REF_NONCO2_${fuelType}`]?.value;
+    if (nonCO2Fraction == undefined) {
+      const errorMessage = `there are no nonCO2Fraction factor REF_NONCO2_${fuelType}`;
+      throw new Error(errorMessage);
+    }
+    // for "FWD", "BRQ", "PLTS"
+    efficiencyFactor =
+      (localFNRB + (1 - localFNRB) * nonCO2Fraction) * fuelEfficiency;
+  }
+  return {
+    totalCO2Emission:
+      hhUsingTheFuel *
+      fuelUsage * // fuel consumed in kg / day
+      drynessFactor * // only for wood but since it's 1 as default it's going to be okay
+      0.001 * // 1t/1000kg
+      numberOfDaysPerYear * // days/yr
+      efficiencyFactor,
+  };
+}
+
 export function generateComputeItem(
   countryCode: string,
   projectTotalHH: number,
@@ -562,100 +1112,44 @@ export function generateComputeItem(
     localItemInput: EnergyLightingItemInput,
     ghgMapRef: ItemReferencesMap
   ): EnergyLightingItemResults {
-    const { numberOfLighting: percentageOfTotalLighting, fuelUsage } =
+    const { percentageOfTotalHouseHolds, fuelUsage, fuelType, energySubType } =
       localItemInput;
-    const { fuelType } = localItemInput;
-    if (percentageOfTotalLighting === undefined) {
-      throw new Error("number of cooktsove not defined");
+    if (percentageOfTotalHouseHolds === undefined) {
+      throw new Error("percentage of total households not defined");
+    }
+
+    if (fuelType === undefined) {
+      return {
+        totalCO2Emission: 0,
+      };
     }
     if (projectTotalHH === undefined) {
       throw new Error(
         "Total House holds is undefined, please fill assessment information page and click on save"
       );
     }
-    const hhUsingTheFuel = percentageOfTotalLighting * projectTotalHH; // number of cookstoves
+
+    const totalPower =
+      (localItemInput?.numberOfDevices ?? 0) *
+      (localItemInput?.electricPower ?? 0);
+    const operatingHours = localItemInput?.operatingHours ?? 0;
+    const totalEnergy = (totalPower * operatingHours * 365.25) / 1000; // in kWh/year
+    const hhUsingTheFuel = percentageOfTotalHouseHolds * projectTotalHH; // number of cookstoves
     let totalCO2Emission = 0;
 
     switch (true) {
       /* solid fuels "FWD", "CHC", "BRQ", "PLTS" */
       case biomassFuels.includes(fuelType as BioMassFuel): {
-        /*
-        - Three version for the fnrb factor
-          - briket and pellets
-          - wood same as bricket + dry factor
-          - charcoal same as bricket but fnrb factor is combustion + production
-       */
-        if (fuelUsage === undefined) {
-          throw new Error("fuel usage not defined");
-        }
-
-        let drynessFactor = REF_DRY_WOOD;
-        if (!localItemInput.dryWood && fuelType === "FWD") {
-          drynessFactor = drynessFactor + REF_WET_WOOD;
-        }
-        const localFNRB = getLocalFNRB(
+        // todo: simplify argument to this function
+        totalCO2Emission = computeItemBiomass(
+          fuelUsage,
+          localItemInput,
+          ghgMapRef,
           countryCode,
-          ghgMapRef?.REF_FNRB?.value,
-          localItemInput.sustainablySourced,
+          fuelType,
+          hhUsingTheFuel,
           itemsGHGfNRB
-        );
-
-        let efficiencyFactor = 1;
-        const fuelTypeEnhanced = `${fuelType}${
-          localItemInput.carbonized ? "_C" : ""
-        }`;
-        if (fuelTypeEnhanced === "CHC" || fuelTypeEnhanced === "BRQ_C") {
-          const fuelEfficiencyC =
-            ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}_C`]?.value;
-          if (fuelEfficiencyC == undefined) {
-            const errorMessage = `there are no emission factor REF_EFF_${fuelTypeEnhanced}_C`;
-            throw new Error(errorMessage);
-          }
-          const fuelEfficiencyP =
-            ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}_P`]?.value;
-          if (fuelEfficiencyP == undefined) {
-            const errorMessage = `there are no emission factor REF_EFF_${fuelTypeEnhanced}_P`;
-            throw new Error(errorMessage);
-          }
-          const nonCO2FractionC =
-            ghgMapRef?.[`REF_NONCO2_${fuelTypeEnhanced}_C`]?.value;
-          if (nonCO2FractionC == undefined) {
-            const errorMessage = `there are no nonCO2Fraction factor REF_NONCO2_${fuelTypeEnhanced}_C`;
-            throw new Error(errorMessage);
-          }
-          const nonCO2FractionP =
-            ghgMapRef?.[`REF_NONCO2_${fuelTypeEnhanced}_P`]?.value;
-          if (nonCO2FractionP == undefined) {
-            const errorMessage = `there are no nonCO2Fraction factor REF_NONCO2_${fuelTypeEnhanced}_P`;
-            throw new Error(errorMessage);
-          }
-
-          efficiencyFactor =
-            (localFNRB + (1 - localFNRB) * nonCO2FractionC) * fuelEfficiencyC +
-            (localFNRB + (1 - localFNRB) * nonCO2FractionP) * fuelEfficiencyP;
-        } else {
-          const fuelEfficiency =
-            ghgMapRef?.[`REF_EFF_${fuelTypeEnhanced}`]?.value;
-          if (fuelEfficiency == undefined) {
-            const errorMessage = `there are no emission factor REF_EFF_${fuelTypeEnhanced}`;
-            throw new Error(errorMessage);
-          }
-          const nonCO2Fraction = ghgMapRef?.[`REF_NONCO2_${fuelType}`]?.value;
-          if (nonCO2Fraction == undefined) {
-            const errorMessage = `there are no nonCO2Fraction factor REF_NONCO2_${fuelType}`;
-            throw new Error(errorMessage);
-          }
-          // for "FWD", "BRQ", "PLTS"
-          efficiencyFactor =
-            (localFNRB + (1 - localFNRB) * nonCO2Fraction) * fuelEfficiency;
-        }
-        totalCO2Emission =
-          hhUsingTheFuel *
-          fuelUsage * // fuel consumed in kg / day
-          drynessFactor * // only for wood but since it's 1 as default it's going to be okay
-          0.001 * // 1t/1000kg
-          numberOfDaysPerYear * // days/yr
-          efficiencyFactor;
+        ).totalCO2Emission;
         break;
       }
       case liquidFuels.includes(fuelType as LiquidFuel):
@@ -677,86 +1171,98 @@ export function generateComputeItem(
           fuelEfficiency;
         break;
       }
-      case electricFuels.includes(fuelType as ElectricFuel):
-        totalCO2Emission = computeItemElectric(
-          localItemInput,
-          ghgMapRef,
-          hhUsingTheFuel,
-          project_REF_GRD
-        );
+      case ["SOLAR_LANTERN", "SINGLE_USE_BAT"].includes(
+        energySubType as PlugingRecheargeableDevice
+      ): {
+        totalCO2Emission = 0;
         break;
-      case ["BAT", "LIGHT_SOLAR"].includes(fuelType):
+      }
+      case ["PLUG_IN_OR_CHARGE_BAT"].includes(
+        energySubType as PlugingRecheargeableDevice
+      ): {
+        totalCO2Emission = 0;
+        switch (true) {
+          case ["ELE_GRID"].includes(fuelType as PlugingRecheargeableDevice): {
+            localItemInput.gridPower = totalEnergy;
+            localItemInput.fuelUsage = 0;
+            totalCO2Emission = computeCO2costElectric(
+              localItemInput,
+              ghgMapRef,
+              project_REF_GRD,
+              hhUsingTheFuel
+            );
+            break;
+          }
+          case ["ELE_DIES"].includes(fuelType as PlugingRecheargeableDevice): {
+            localItemInput.gridPower = 0;
+            // totalEnergy is kWh/year
+            // REF_EFF_DIES_L is  [l/kWh]
+            // then fuelUsage is l/year
+            localItemInput.fuelUsage =
+              totalEnergy * ghgMapRef?.REF_EFF_DIES_L?.value;
+            totalCO2Emission = computeCO2costElectric(
+              localItemInput,
+              ghgMapRef,
+              project_REF_GRD,
+              hhUsingTheFuel
+            );
+            break;
+          }
+          case ["ELE_SOLAR"].includes(fuelType as PlugingRecheargeableDevice): {
+            totalCO2Emission = 0;
+            break;
+          }
+          case ["ELE_HYB"].includes(fuelType as PlugingRecheargeableDevice): {
+            // side effect here.
+            localItemInput.gridPower =
+              totalEnergy * (localItemInput?.gridPercentage ?? 0);
+            localItemInput.fuelUsage =
+              totalEnergy *
+              ghgMapRef?.REF_EFF_DIES_L?.value *
+              (localItemInput?.dieselPercentage ?? 0);
+            totalCO2Emission = computeCO2costElectric(
+              localItemInput,
+              ghgMapRef,
+              project_REF_GRD,
+              hhUsingTheFuel
+            );
+            break;
+          }
+          default:
+            break;
+        }
+        break;
+      }
+      // case ["BAT", "LIGHT_SOLAR"].includes(fuelType as LightingFuel):
       case thermalFuels.includes(fuelType as ThermalFuel):
         totalCO2Emission = 0;
         break;
       case fuelType === "LIGHT_HYB": {
-        const { fuelUsageFirewood, fuelUsageParaffin, fuelUsageKerosene } =
-          localItemInput;
-        if (fuelUsageFirewood === undefined) {
-          throw new Error("fuel usage not defined");
-        }
-        const fuelEfficiencyFirewood = ghgMapRef?.[`REF_EFF_FWD`]?.value;
-        if (fuelEfficiencyFirewood == undefined) {
-          const errorMessage = `there are no emission factor REF_EFF_FWD`;
-          throw new Error(errorMessage);
-        }
-        const totalCO2EmissionFirewood =
-          hhUsingTheFuel *
-          fuelUsageFirewood * // fuel consumed in kg / day
-          0.001 * // 1t/1000kg
-          numberOfDaysPerYear * // days/yr
-          fuelEfficiencyFirewood;
-
-        // PARAFFIN
-        if (fuelUsageParaffin === undefined) {
-          throw new Error("fuel usage not defined");
-        }
-        const fuelEfficiencyParaffin = ghgMapRef?.[`REF_EFF_CNDL`]?.value;
-        if (fuelEfficiencyParaffin == undefined) {
-          const errorMessage = `there are no emission factor REF_EFF_CNDL`;
-          throw new Error(errorMessage);
-        }
-        const totalCO2EmissionParaffin =
-          hhUsingTheFuel *
-          fuelUsageParaffin * // fuel consumed in kg / day
-          0.001 * // 1t/1000kg
-          numberOfDaysPerYear * // days/yr
-          fuelEfficiencyParaffin;
-        // END PARAFFIN
-
-        // KEROSENE
-        if (fuelUsageKerosene === undefined) {
-          throw new Error("fuel usage not defined");
-        }
-        const fuelEfficiencyKerosene = ghgMapRef?.[`REF_EFF_KRS`]?.value;
-        if (fuelEfficiencyKerosene == undefined) {
-          const errorMessage = `there are no emission factor REF_EFF_KRS`;
-          throw new Error(errorMessage);
-        }
-        const totalCO2EmissionKerosene =
-          hhUsingTheFuel *
-          fuelUsageKerosene * // fuel consumed in kg / day
-          0.001 * // 1t/1000kg
-          numberOfDaysPerYear * // days/yr
-          fuelEfficiencyKerosene;
-        // END KEROSENE
-        totalCO2Emission =
-          totalCO2EmissionFirewood +
-          totalCO2EmissionParaffin +
-          totalCO2EmissionKerosene;
+        totalCO2Emission = computeItemLightHyb(
+          localItemInput,
+          ghgMapRef,
+          hhUsingTheFuel
+        ).totalCO2Emission;
         break;
       }
       case ["NO_ACCESS"].includes(fuelType):
         totalCO2Emission = 0;
         break;
       default:
-        throw new Error(`unknown fuel type ${fuelType}`);
+        throw new Error(
+          `unknown fuel type ${fuelType} for lighting: ${JSON.stringify(
+            localItemInput
+          )}`
+        );
     }
     if (isNaN(totalCO2Emission)) {
       throw new Error(`totalCO2Emission is NaN`);
     }
+
     return {
       totalCO2Emission,
+      totalPower,
+      totalEnergy,
     };
   };
 }

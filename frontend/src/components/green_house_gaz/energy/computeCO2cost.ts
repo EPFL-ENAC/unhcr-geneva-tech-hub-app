@@ -4,7 +4,7 @@ import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
 export const numberOfDaysPerYear = 365.25;
 export const numberOfWeekPerYear = 52;
 
-export type TimePeriod = "Day" | "Week" | "Year";
+export type TimePeriod = "Day" | "Week" | "Month" | "Year";
 
 export function computeCO2CostEnergy(
   localItem: EnergyItem,
@@ -13,6 +13,7 @@ export function computeCO2CostEnergy(
 ): number {
   let result = 0;
   // l * kgCO2/l / 1000  === tCO2e
+
   if (REF_EFF_DIES?.value === undefined) {
     throw new Error("REF_EFF_DIES value is undefined");
   }

@@ -34,18 +34,17 @@
                   <p v-html="app.description"></p>
                 </div>
                 <div class="item-btn-container">
-
                   <v-btn
-                      v-if="app.link"
-                      outlined
-                      rounded
-                      text
-                      :href="app.link"
-                      target="_blank"
-                      @click.stop=""
-                    >
+                    v-if="app.link"
+                    outlined
+                    rounded
+                    text
+                    :href="app.link"
+                    target="_blank"
+                    @click.stop=""
+                  >
                     Click here for access to the Guidance Manuel
-                    </v-btn>
+                  </v-btn>
                 </div>
               </v-list-item-content>
 
@@ -57,7 +56,6 @@
                   </v-icon>
                 </v-list-item-avatar>
                 <v-card-actions class="app-action">
-                  
                   <v-btn outlined rounded text :to="{ name: app.to }">
                     Access
                   </v-btn>
@@ -115,6 +113,6 @@ export default class AppList extends Vue {
 }
 .item-btn-container {
   padding-top: 8px;
-    padding-bottom: 8px;
+  padding-bottom: 8px;
 }
 </style>

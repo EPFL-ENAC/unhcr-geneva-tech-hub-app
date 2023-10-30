@@ -18,9 +18,16 @@ import {
 } from "vuex";
 import { CouchUser } from "./UserModule";
 
-const DB_NAME = "shelters";
+const DB_NAME = "shelter_projects_1698666594213623";
 const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 
+const timeoutIds: NodeJS.Timeout[] = [];
+
+function cleartimeouts(timeoutIds: NodeJS.Timeout[]): void {
+  timeoutIds.forEach((id) => {
+    clearTimeout(id);
+  });
+}
 /** Getters */
 const getters: GetterTree<ShelterState, RootState> = {
   shelters: (s): Array<Shelter> => s.shelters,
@@ -147,6 +154,7 @@ const actions: ActionTree<ShelterState, RootState> = {
       .then(function (result) {
         const scorecards = result.rows
           .filter((x) => x.value !== undefined)
+          .filter((x) => x.value.completed === true)
           .map((x) => ({
             ...x.value,
             id: x.id,
@@ -248,6 +256,10 @@ const actions: ActionTree<ShelterState, RootState> = {
       }
       if (!context.getters["shelterLoading"]) {
         context.commit("SET_SHELTER_LOADING");
+        const timeId: NodeJS.Timeout = setTimeout(function () {
+          context.dispatch("setLoading", true, { root: true });
+        }, 300);
+        timeoutIds.push(timeId);
         try {
           const response = await remoteDB.put(computedShelter);
           computedShelter._rev = response.rev;
@@ -256,6 +268,8 @@ const actions: ActionTree<ShelterState, RootState> = {
 
           context.commit("SET_SHELTER", computedShelter);
           context.commit("UNSET_SHELTER_LOADING");
+          cleartimeouts(timeoutIds);
+          context.dispatch("setLoading", false, { root: true });
           /* eslint-disable-next-line */
         } catch (e: any) {
           if (e.error === "conflict") {
@@ -285,7 +299,10 @@ const actions: ActionTree<ShelterState, RootState> = {
               },
               { root: true }
             );
+            throw e;
           }
+          cleartimeouts(timeoutIds);
+          context.dispatch("setLoading", false, { root: true });
           context.commit("UNSET_SHELTER_LOADING");
         }
       }
@@ -295,10 +312,18 @@ const actions: ActionTree<ShelterState, RootState> = {
     context: ActionContext<ShelterState, RootState>,
     value: Shelter
   ) => {
+    context.commit("SET_SHELTER_LOADING");
+
     const result = computeShelter(value);
     context.commit("SET_SHELTER", result);
+    context.commit("UNSET_SHELTER_LOADING");
   },
   getDoc: async (context: ActionContext<ShelterState, RootState>, id) => {
+    await context.dispatch(
+      "ShelterBillOfQuantitiesModule/setItemsLoading",
+      true,
+      { root: true }
+    );
     let result: Shelter | undefined =
       await context.state.localCouch?.remoteDB.get(id);
     if (result) {
@@ -314,8 +339,18 @@ const actions: ActionTree<ShelterState, RootState> = {
         context.state.shelter.items_individual_shelter,
         { root: true }
       );
+      await context.dispatch(
+        "ShelterBillOfQuantitiesModule/setItemsLoading",
+        false,
+        { root: true }
+      );
       return result;
     } else {
+      await context.dispatch(
+        "ShelterBillOfQuantitiesModule/setItemsLoading",
+        false,
+        { root: true }
+      );
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
   },

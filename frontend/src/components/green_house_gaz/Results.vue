@@ -12,13 +12,13 @@
       <v-col :cols="6" class="d-flex justify-center">
         <h3>
           Total Baseline CO2 Emissions:
-          {{ totalBaseline | formatNumber }} (tCO2e/year)
+          {{ totalBaseline | formatNumberGhg }} (tCO2e/year)
         </h3>
       </v-col>
       <v-col :cols="6" class="d-flex flex-column justify-center">
         <h3>
           Total Endline CO2 Emissions:
-          {{ totalEndline | formatNumber }} (tCO2e/year)
+          {{ totalEndline | formatNumberGhg }} (tCO2e/year)
         </h3>
         <br />
         <h3>
@@ -31,13 +31,12 @@
           >
             {{
               totalChange |
-                formatNumber({
+                formatNumberGhg({
                   style: "percent",
                   signDisplay: "exceptZero",
-                  maximumFractionDigits: 0,
                 })
             }}
-            ({{ (totalEndline - totalBaseline) | formatNumber }} tCO2e/year)
+            ({{ (totalEndline - totalBaseline) | formatNumberGhg }} tCO2e/year)
           </span>
         </h3>
       </v-col>
@@ -51,9 +50,9 @@ import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import {
   EnergySurvey,
   FormSurvey,
+  GreenHouseGaz,
   MaterialSurvey,
   OffsetSurvey,
-  Survey,
   WashSurvey,
 } from "@/store/GhgInterface";
 
@@ -71,7 +70,7 @@ import { CanvasRenderer } from "echarts/renderers";
 import { BarSeriesOption, EChartsOption } from "echarts/types/dist/shared";
 import "vue-class-component/hooks";
 import VChart from "vue-echarts";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 
 use([
@@ -95,33 +94,27 @@ use([
   },
 })
 export default class Results extends Vue {
-  @Prop([Object, Array])
-  readonly survey: Survey | undefined;
+  project!: GreenHouseGaz;
 
   public get totalChange(): number {
     return computeChangeInEmission(this.totalBaseline, this.totalEndline);
   }
 
   public totalResult(key: keyof FormSurvey): number {
-    if (this.survey) {
-      const survey = this.survey;
-      return this.items
-        .map((item) => {
-          const surveyCategory = survey[item.category] ?? {};
-          const subcat: FormSurvey =
-            surveyCategory[item.subcategory as keyof typeof surveyCategory] ??
-            {};
-          const results = subcat[key]?.results ?? {};
-          const resultValue =
-            (item.resultKey
-              ? results?.[item.resultKey as keyof typeof results]
-              : results?.totalCO2Emission) ?? 0;
+    return this.items
+      .map((item) => {
+        const surveyCategory = this.project[item.category] ?? {};
+        const subcat: FormSurvey =
+          surveyCategory[item.subcategory as keyof typeof surveyCategory] ?? {};
+        const results = subcat[key]?.results ?? {};
+        const resultValue =
+          (item.resultKey
+            ? results?.[item.resultKey as keyof typeof results]
+            : results?.totalCO2Emission) ?? 0;
 
-          return resultValue * (item.sign === "neg" ? -1 : 1);
-        })
-        .reduce((acc: number, el: number) => acc + el, 0);
-    }
-    return 0;
+        return resultValue * (item.sign === "neg" ? -1 : 1);
+      })
+      .reduce((acc: number, el: number) => acc + el, 0);
   }
 
   public get totalBaseline(): number {
@@ -181,15 +174,8 @@ export default class Results extends Vue {
         stack: "co2",
       },
       {
-        color: `rgba(157,72,56,${this.omega})`,
-        name: "Energy - Pumping",
-        category: "energy",
-        subcategory: "pumping",
-        stack: "co2",
-      },
-      {
         color: `rgba(32,135,200,${this.omega})`,
-        name: "WASH - Trucking",
+        name: "WASH - Water Supply",
         resultKey: "totalCO2Emission",
         category: "wash",
         subcategory: "trucking",
@@ -200,20 +186,6 @@ export default class Results extends Vue {
       218,182,0
       169,134,0
       */
-      {
-        color: `rgba(218,182,0, ${this.alpha})`,
-        name: "Material - Shelter",
-        category: "material",
-        subcategory: "shelter",
-        stack: "co2",
-      },
-      {
-        color: `rgba(218,182,0,${this.beta})`,
-        name: "Material - CRI",
-        category: "material",
-        subcategory: "cri",
-        stack: "co2",
-      },
       {
         color: `rgba(1218,182,0,${this.delta})`,
         name: "Material - Domestic solid waste",
@@ -270,22 +242,19 @@ export default class Results extends Vue {
       series: this.items.map((item: Config): BarSeriesOption => {
         let baseline = 0;
         let endline = 0;
-        if (this.survey) {
-          const surveyCategory = this.survey[item.category] ?? {};
-          const subcat: FormSurvey =
-            surveyCategory[item.subcategory as keyof typeof surveyCategory] ??
-            {};
-          const baseRes = subcat?.baseline?.results ?? {};
-          const endRes = subcat?.endline?.results ?? {};
-          baseline =
-            (item.resultKey
-              ? baseRes?.[item.resultKey as keyof typeof baseRes]
-              : baseRes?.totalCO2Emission) ?? 0;
-          endline =
-            (item.resultKey
-              ? endRes?.[item.resultKey as keyof typeof endRes]
-              : endRes?.totalCO2Emission) ?? 0;
-        }
+        const surveyCategory = this.project[item.category] ?? {};
+        const subcat: FormSurvey =
+          surveyCategory[item.subcategory as keyof typeof surveyCategory] ?? {};
+        const baseRes = subcat?.baseline?.results ?? {};
+        const endRes = subcat?.endline?.results ?? {};
+        baseline =
+          (item.resultKey
+            ? baseRes?.[item.resultKey as keyof typeof baseRes]
+            : baseRes?.totalCO2Emission) ?? 0;
+        endline =
+          (item.resultKey
+            ? endRes?.[item.resultKey as keyof typeof endRes]
+            : endRes?.totalCO2Emission) ?? 0;
 
         return {
           data: [baseline, endline],
@@ -294,7 +263,7 @@ export default class Results extends Vue {
           },
           tooltip: {
             valueFormatter: (value): string => {
-              return `${this.$options.filters?.formatNumber(
+              return `${this.$options.filters?.formatNumberGhg(
                 value
               )} (tCO2e/year)`;
             },

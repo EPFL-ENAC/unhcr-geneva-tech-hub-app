@@ -22,7 +22,7 @@
         @click="() => goToMarker(markerCoordinate[3])"
       >
         <l-tooltip v-if="markerCoordinate[3]">
-          {{ markerCoordinate[3].name }}
+          {{ markerCoordinate[3].siteName }}
         </l-tooltip>
       </l-marker>
     </l-map>
@@ -130,8 +130,9 @@ export default class TerritoryMap extends Vue {
       if (lat === 0 && lng === 0) {
         return defaultCoordinates;
       }
-      // special offset of 5 lng for printing only
-      return [parseFloat(lat as string), parseFloat(lng as string) + 5];
+      // TODO: find another way of special offset of 5 lng for printing only
+      // return [parseFloat(lat as string), parseFloat(lng as string) + 5];
+      return [parseFloat(lat as string), parseFloat(lng as string)];
     }
     return defaultCoordinates;
   }

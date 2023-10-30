@@ -16,7 +16,9 @@
           width="100"
           name="generation-gram-per-capita-per-day"
           @change="updateGenerationGram"
-          @keydown.enter.prevent="() => updateGenerationGram(localForm?.generationGram ?? 0)"
+          @keydown.enter.prevent="
+            () => updateGenerationGram(localForm?.generationGram ?? 0)
+          "
         />
       </v-col>
       <v-col class="d-flex align-center">
@@ -43,7 +45,7 @@ import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 
 import ComputeGenericFormSurveyMixin from "@/components/green_house_gaz/generic/ComputeGenericFormSurveyMixin.vue";
-import { GreenHouseGaz, Survey } from "@/store/GhgInterface";
+import { GreenHouseGaz } from "@/store/GhgInterface";
 import "vue-class-component/hooks";
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import { mapGetters } from "vuex";
@@ -76,16 +78,13 @@ export default class Cooking extends Mixins(ComputeGenericFormSurveyMixin) {
   @Prop({ type: [Object, Array] })
   readonly form!: MaterialSolidWasteSurvey;
 
-  @Prop([Object, Array])
-  readonly survey: Survey | undefined;
-
   ghgMapRef!: ItemReferencesMap;
   project!: GreenHouseGaz;
   diffDimension = diffDimension;
   name = "solid waste";
 
   domesticSolidWasteHref =
-    "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-08-14T111730Z/RefugeeWasteExamples.pdf";
+    "/s3/2023-08-14T111730Z/RefugeeWasteExamples.pdf";
 
   public get title(): string {
     return this.titleKey;
@@ -144,7 +143,7 @@ export default class Cooking extends Mixins(ComputeGenericFormSurveyMixin) {
     return generateComputeItem(
       this.project.population,
       this.localForm?.generationGram ?? 0,
-      this.project.country_code
+      this.project.countryCode
     );
   }
   // should be a getter so it may be reactive for fuelTypes

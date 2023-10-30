@@ -1,7 +1,9 @@
 export function computeChangeInEmission(
   baseline: number,
   endline: number,
-  ratioEndline = 1
+  ratio = 1
 ): number {
-  return (endline - baseline * ratioEndline) / baseline;
+  const result = (endline - baseline * ratio) / (baseline * ratio);
+  // we are only interested in 6 digits after the decimal point to avoid weird behavior with minitessimal numbers
+  return parseFloat(result.toFixed(6));
 }

@@ -4,7 +4,7 @@ import {
   TimePeriod,
 } from "@/components/green_house_gaz/energy/computeCO2cost";
 import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
-import { formatNumber } from "@/plugins/filters";
+import { formatNumberGhg } from "@/plugins/filters";
 import { EnergyItem, SurveyInput, SurveyItem } from "@/store/GhgInterface";
 import {
   ItemReferencesMap,
@@ -99,7 +99,6 @@ export function computeDieselPowerAndUpdateKey(
       // true means liters field enabled and we should have default value
       // else it's the oposite
       if (valueOfKey) {
-        console.log("We should get default value");
         localInput.fuelUsage = getDefaultFuel(
           localInput as EnergyCookingItemInput,
           pp_per_hh
@@ -158,6 +157,9 @@ function computeDieselLitersFromPowerAndUpdateKey(
     return localInput;
   };
 }
+export function getDieselPowerText(): string {
+  return `Diesel estimated (kWh/yr)`;
+}
 
 export function dieselInputsProducedPer(
   timePeriod: TimePeriod,
@@ -175,39 +177,50 @@ export function dieselInputsProducedPer(
   let computePower: any;
   let computeLiters: any;
   let computeLitersFromPower: any;
-  let suffix: string;
-  let litersSuffix: string;
-  let operatingHoursSuffix: string;
+  let powerSuffix!: string;
+  let litersSuffix!: string;
+  let operatingHoursSuffix!: string;
+
   switch (timePeriod) {
-    case "Day":
-      if (timePeriodOperatingHours !== "Day") {
-        throw new Error(
-          `${timePeriodOperatingHours} is not supported for Diesel`
-        );
-      }
-      suffix = "kWh/day";
+    case "Day": {
+      powerSuffix = "kWh/day";
       operatingHoursSuffix = "hrs/day";
       litersSuffix = "used per day";
       computeLitersFromPower = computedieselLitersFromPower;
       computeLiters = computeLitresPerDayDiesel;
       computePower = computeDieselPower;
+      if (timePeriodOperatingHours !== "Day") {
+        throw new Error(
+          `${timePeriodOperatingHours} is not supported for Diesel`
+        );
+      }
       break;
-    case "Week":
+    }
+    case "Week": {
       throw new Error("Week is not supported for Solar");
+    }
+    case "Month": {
+      powerSuffix = "kWh/month";
+      litersSuffix = "used per month";
+      operatingHoursSuffix = "hrs/week";
       break;
-    case "Year":
+    }
+    case "Year": {
       if (timePeriodOperatingHours !== "Week") {
         throw new Error(
           `${timePeriodOperatingHours} is not supported for Diesel`
         );
       }
-      suffix = "kWh/yr";
+      powerSuffix = "kWh/yr";
       litersSuffix = "used per year";
       operatingHoursSuffix = "hrs/week";
       // todo arange per week
       computeLitersFromPower = computedieselLitersFromPower;
       computeLiters = computeLitresDieselPerWeek;
       computePower = computeDieselPower;
+      break;
+    }
+    default:
       break;
   }
 
@@ -293,8 +306,8 @@ export function dieselInputsProducedPer(
     }
   };
 
-  const dieselEstimatedInput = {
-    text: `Diesel (${suffix}) estimated`,
+  const dieselEstimatedInput = (suffix: string) => ({
+    text: getDieselPowerText(),
     computeResults: true,
     value: "input.dieselPower",
     hideFooterContent,
@@ -344,11 +357,11 @@ export function dieselInputsProducedPer(
       item: SurveyItem
     ) => {
       if (typeof dieselPower === "number") {
-        return `${item?.input?.dieselPowerEstimated ? "~" : ""}${formatNumber(
-          dieselPower
-        )} (${item?.input?.dieselLitersEstimated ? "~" : ""}${formatNumber(
-          item?.input?.fuelUsage as number
-        )}L) `;
+        return `${
+          item?.input?.dieselPowerEstimated ? "~" : ""
+        }${formatNumberGhg(dieselPower)} ${suffix} (${
+          item?.input?.dieselLitersEstimated ? "~" : ""
+        }${formatNumberGhg(item?.input?.fuelUsage as number)}L) `;
       }
       return dieselPower;
     },
@@ -365,7 +378,7 @@ export function dieselInputsProducedPer(
       cols: "12",
     },
     type: "number",
-  };
+  });
 
   return [
     // beginning of diesel generators
@@ -475,6 +488,6 @@ export function dieselInputsProducedPer(
       ),
     },
     // end of diesel generatorsp
-    dieselEstimatedInput,
+    dieselEstimatedInput(powerSuffix),
   ];
 }

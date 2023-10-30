@@ -12,6 +12,7 @@ import { RootState } from ".";
 
 interface BoqState {
   items: Item[];
+  itemsLoading: boolean;
   items_individual_shelter: number;
   editedItem: Item;
   editedIndex: number;
@@ -43,6 +44,7 @@ function getDefaultLabourItem(): Item {
 function generateState(): BoqState {
   return {
     items: [],
+    itemsLoading: false,
     items_individual_shelter: 1,
     editedItem: getDefaultItem() as Item,
     editedIndex: -1,
@@ -54,6 +56,7 @@ function generateState(): BoqState {
 /** Getters */
 const getters: GetterTree<BoqState, RootState> = {
   items: (s): Item[] | null => s.items,
+  itemsLoading: (s): boolean => s.itemsLoading,
   items_individual_shelter: (s): number => s.items_individual_shelter ?? 1,
   editedItem: (s): Item => s.editedItem,
   editedIndex: (s): number => s.editedIndex,
@@ -68,6 +71,9 @@ const mutations: MutationTree<BoqState> = {
   },
   SET_ITEMS(state: BoqState, items: Item[]): void {
     state.items = items ?? [];
+  },
+  SET_ITEMS_LOADING(state: BoqState, value: boolean): void {
+    state.itemsLoading = value;
   },
   ADD_ITEM(state: BoqState, item: Item): void {
     state.items.push(item);
@@ -115,6 +121,12 @@ const actions: ActionTree<BoqState, RootState> = {
   },
   setItems: (context: ActionContext<BoqState, RootState>, items: Item[]) => {
     context.commit("SET_ITEMS", items);
+  },
+  setItemsLoading: (
+    context: ActionContext<BoqState, RootState>,
+    value: boolean
+  ) => {
+    context.commit("SET_ITEMS_LOADING", value);
   },
   openNewItemDialog: (context: ActionContext<BoqState, RootState>) => {
     // open dialog and set store item and index for future save

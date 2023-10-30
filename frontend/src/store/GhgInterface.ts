@@ -1,10 +1,13 @@
+import { AllFuel } from "@/components/green_house_gaz/fuelTypes";
 import { ShelterRegions } from "@/store/ShelterInterface";
+import { v4 as uuidv4 } from "uuid";
 import { CouchUser } from "./UserModule";
+
 // import { Material } from "@/store/ShelterInterface";
 export type CountriesInfoMap = Record<string, CountryInfo>;
 export interface Country {
-  key: CountryCode;
-  value: Sites;
+  key: [CountryCode];
+  value: GreenHouseGaz[];
 }
 
 export interface CountryInfo {
@@ -14,28 +17,75 @@ export interface CountryInfo {
   lat: number;
   lon: number;
 }
-export interface Site {
-  _rev?: string;
-  id: string; // site unique identitier (name as first)
-  name: string; // site name // location
-  country_code: CountryCode;
-  created_by: Email | string;
-  users: (CouchUser | Email | string)[];
-  lat?: number;
-  lon?: number;
-}
+
 type CountryCode = string;
 type Email = string;
-export type Sites = Site[];
 
-export interface GreenHouseGaz {
+export interface SurveyForms {
+  energy: EnergySurvey;
+  wash: WashSurvey;
+  material: MaterialSurvey;
+  offset: OffsetSurvey;
+}
+export const DEFAULT_PP_PER_HH = 5;
+
+export function newDefaultCampSite(username?: string): GreenHouseGaz {
+  return {
+    id: uuidv4(), // since it's new
+    siteName: "",
+    siteId: uuidv4(),
+    description: "",
+    countryCode: "",
+    latitude: 0,
+    longitude: 0,
+    users: [],
+    population: 0,
+    ...newSurveyForm(),
+    pp_per_hh: DEFAULT_PP_PER_HH, // 4.73 (based on the most recent values for average household size from Database on Household Size and Composition 2022
+    totalHH: 0,
+    // solar: , // TODO: I just noticed that I'm not using the solar average of the country
+    created_at: new Date().toISOString(),
+    created_by: username,
+  } as GreenHouseGaz;
+}
+
+export function newSurveyForm(): SurveyForms {
+  return {
+    energy: {
+      facilities: generateNewGenericFormSurvey(),
+      cooking: generateNewGenericFormSurvey(),
+      lighting: generateNewGenericFormSurvey(),
+    },
+    wash: {
+      trucking: generateNewGenericFormSurvey(),
+    },
+    material: {
+      hhwaste: generateNewGenericFormSurvey(),
+      // recycling: generateNewGenericFormSurvey(),
+    },
+    offset: {
+      treeplanting: generateNewGenericFormSurvey(),
+    },
+  };
+}
+
+export interface GreenHouseGaz extends SurveyForms {
+  _id?: string;
   _rev?: string;
-  _id: string; // uuid4 mandatory
-  name: string;
-  country_code: string;
+  id: string; // uuid4 mandatory // it's optional because if we create a new one, it's not there yet
+  description: string; // assessment description  // was called survey name before
+  siteId: string; // in old times it was the location_id or a uuid, now it's a string: location_pcode or uuidv4
+  location_id?: number;
+  location_pcode?: string;
+  siteName: string;
+  countryCode: string;
+  reference?: boolean; // say if the survey is a reference or not
+  lat?: number; // lat of the site
+  lon?: number; // lon of the site
   latitude: number;
   longitude: number;
-  surveys: Survey[];
+  year?: number;
+  // surveys: Survey[];
   users: (CouchUser | Email | string)[];
   solar?: number;
   population: number; // total population
@@ -48,31 +98,37 @@ export interface GreenHouseGaz {
   isUNHCR?: boolean;
 }
 
-export interface SurveyForms {
-  energy: EnergySurvey;
-  wash: WashSurvey;
-  material: MaterialSurvey;
-  offset: OffsetSurvey;
-}
-
 // export type SurveyCategory = "energy" | "wash" | "material" | "offset";
 
-export type SurveyCategory = keyof SurveyForms;
+// export type SurveyCategory = keyof GreenHouseGaz;
 
-export interface Survey extends SurveyForms {
-  _id: string; // uuid4
-  created_at: string;
-  created_by: string;
-  updated_by?: string;
-  updated_at?: string;
-  reference?: boolean; // say if the survey is a reference or not
-  name: string; // name is year
+export type SurveyKey = keyof GreenHouseGaz;
+
+export function generateNewGenericFormSurvey(): GenericFormSurvey<
+  SurveyItem,
+  SurveyResult,
+  SurveyItem,
+  SurveyResult
+> {
+  return {
+    baseline: {
+      items: [],
+      results: {} as SurveyResult,
+    },
+    endline: {
+      items: [],
+      results: {} as SurveyResult,
+    },
+  };
 }
 
-export type SurveyKey = keyof Survey;
-
 export interface EnergySurvey {
-  facilities: EnergyFacilitySurvey;
+  facilities: GenericFormSurvey<
+    SurveyItem,
+    SurveyResult,
+    SurveyItem,
+    SurveyResult
+  >;
   cooking: GenericFormSurvey<
     SurveyItem,
     SurveyResult,
@@ -85,12 +141,12 @@ export interface EnergySurvey {
     SurveyItem,
     SurveyResult
   >;
-  pumping: GenericFormSurvey<
-    SurveyItem,
-    SurveyResult,
-    SurveyItem,
-    SurveyResult
-  >;
+  // pumping: GenericFormSurvey<
+  //   SurveyItem,
+  //   SurveyResult,
+  //   SurveyItem,
+  //   SurveyResult
+  // >;
 }
 export type EnergySurveyCategory = keyof EnergySurvey;
 
@@ -107,6 +163,7 @@ export interface WashSurvey {
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 // TODO replace by GenericFormSurvey
+// TODO: remove everywehre!
 export interface FormSurvey {
   baseline: {
     inputs: FormSurveyInput[];
@@ -200,6 +257,7 @@ type FacilityType =
 export interface DieselItem {
   fuelUsage?: number; // L/day
   disableDieselLiters?: boolean;
+  disabledFuelUsage?: boolean;
   generatorSize?: number; // replace the diesel liter
   operatingHours?: number; // replace the diesel liter
   generatorLoad?: number; // load of generator (should be default to 60%)
@@ -216,13 +274,17 @@ export interface EnergyItem extends DieselItem, SolarItem {
   gridPower?: number;
   dieselPower?: number;
   renewablePower?: number;
+
+  fuelUsage?: number; // [L/yr]
+  fuelType?: AllFuel; // key of ElectricFuel
+
+  totalPower?: number; // [kWh/yr]
 }
 
 export interface EnergyFacilityItem extends EnergyItem {
   name: string;
   facilityType: FacilityType;
   totalCO2Emission: number;
-  totalPower?: number;
 }
 
 export type EnergyFacilityItemResult = Omit<
@@ -243,13 +305,13 @@ export type EnergyFacilityInterventionItemResult = Omit<
 
 // start of material survey
 export interface MaterialSurvey {
-  shelter: GenericFormSurvey<
-    SurveyItem,
-    SurveyResult,
-    SurveyItem,
-    SurveyResult
-  >;
-  cri: GenericFormSurvey<SurveyItem, SurveyResult, SurveyItem, SurveyResult>;
+  // shelter: GenericFormSurvey<
+  //   SurveyItem,
+  //   SurveyResult,
+  //   SurveyItem,
+  //   SurveyResult
+  // >;
+  // cri: GenericFormSurvey<SurveyItem, SurveyResult, SurveyItem, SurveyResult>;
   hhwaste: GenericFormSurvey<
     SurveyItem,
     SurveyResult,

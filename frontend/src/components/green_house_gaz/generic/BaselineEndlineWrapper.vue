@@ -9,6 +9,7 @@
           :diff-dimension="diffDimension"
           :name="name"
           :headers="baselineHeaders"
+          :compute-item="computeItem"
           @update:baseline="updateBaseline"
         />
       </v-col>
@@ -24,6 +25,7 @@
           :diff-dimension="diffDimension"
           :name="name"
           :headers="endlineHeaders"
+          :compute-item="computeItem"
           @update:endline="updateEndline"
         />
       </v-col>
@@ -38,6 +40,7 @@ import EndlineCard from "@/components/green_house_gaz/generic/EndlineCard.vue";
 import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import {
+  generateNewGenericFormSurvey,
   GenericBaseline,
   GenericEndline,
   GenericFormSurvey,
@@ -103,41 +106,27 @@ export default class BaselineEndlineWrapper extends Mixins(
     SurveyResult
   > {
     if (!this.value) {
-      return this.generateNewValue();
+      return generateNewGenericFormSurvey();
     }
     if (this.value?.baseline.items === undefined) {
-      return this.generateNewValue();
+      return generateNewGenericFormSurvey();
     }
     return this.value;
   }
 
-  private generateNewValue(): GenericFormSurvey<
-    SurveyItem,
-    SurveyResult,
-    SurveyItem,
-    SurveyResult
-  > {
-    return {
-      baseline: {
-        items: [],
-        results: {} as SurveyResult,
-      },
-      endline: {
-        items: [],
-        results: {} as SurveyResult,
-      },
-    };
-  }
-
   public get baselineHeaders(): SurveyTableHeader[] {
-    return this.headers.filter(
-      (header: SurveyTableHeader) => !header.endlineOnly
+    return (
+      this.headers?.filter(
+        (header: SurveyTableHeader) => !header.endlineOnly
+      ) ?? []
     );
   }
 
   public get endlineHeaders(): SurveyTableHeader[] {
-    return this.headers.filter(
-      (header: SurveyTableHeader) => !header.baselineOnly
+    return (
+      this.headers?.filter(
+        (header: SurveyTableHeader) => !header.baselineOnly
+      ) ?? []
     );
   }
 

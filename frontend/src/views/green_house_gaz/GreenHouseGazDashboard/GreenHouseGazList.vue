@@ -2,15 +2,15 @@
   <v-expansion-panels v-model="panel" accordion>
     <v-expansion-panel
       v-for="(country, keyIndex) in countries"
-      :key="`${country.key}${keyIndex}`"
+      :key="`${country.key[0]}${keyIndex}`"
     >
       <v-expansion-panel-header>
-        <div v-if="countriesMap[country.key]" class="panel-header">
+        <div v-if="countriesMap[country.key[0]]" class="panel-header">
           <span>
-            {{ countriesMap[country.key].name }}
+            {{ countriesMap[country.key[0]].name }}
           </span>
           <span>
-            <country-flag :country="country.key" size="small" />
+            <country-flag :country="country.key[0]" size="small" />
           </span>
         </div>
       </v-expansion-panel-header>
@@ -20,8 +20,8 @@
           :headers="tableHeaders"
           :items="country.value"
           :single-expand="singleExpand"
-          :expanded.sync="expanded[`${country.key}${keyIndex}`]"
-          item-key="name"
+          :expanded.sync="expanded[`${country.key[0]}${keyIndex}`]"
+          item-key="siteId"
           show-expand
           hide-default-footer
           :items-per-page="-1"
@@ -29,9 +29,15 @@
           :item-class="rowClasses"
           @click:row="(item, event) => clickSite(item, keyIndex, event)"
         >
+          <template #[`item.siteName`]="slotProps">
+            {{ slotProps.value }}
+            <span :title="slotProps.item.siteId"
+              >({{ (slotProps.item.siteId + "").substr(0, 8) }})</span
+            >
+          </template>
           <template #expanded-item="{ headers, item }">
             <td :colspan="headers.length">
-              <survey-list :site="item.id" :country-code="country.key" />
+              <survey-list :site="item.siteId" :country-code="country.key[0]" />
             </td>
           </template>
         </v-data-table>
@@ -42,7 +48,7 @@
 
 <script lang="ts">
 import SurveyList from "@/components/green_house_gaz/SurveysList.vue";
-import { Country, Site } from "@/store/GhgInterface";
+import { Country, GreenHouseGaz } from "@/store/GhgInterface";
 import { countries as Countries, countriesMap } from "@/utils/countriesAsList";
 import { Component, Vue } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";
@@ -64,7 +70,7 @@ export default class ProjectList extends Vue {
   expanded: ExpandedObject = {};
 
   readonly tableHeaders: DataTableHeader[] = [
-    { text: "Site", value: "name" },
+    { text: "Site", value: "siteName" },
     { text: "", value: "data-table-expand", align: "end", sortable: false },
   ];
 
@@ -78,8 +84,8 @@ export default class ProjectList extends Vue {
 
   private setCountry(country: Country): void {
     let hash = "";
-    if (this.$route.hash !== `#${country.key}`) {
-      hash = country.key;
+    if (this.$route.hash !== `#${country.key[0]}`) {
+      hash = country.key[0];
     }
     this.$router.push({ hash });
   }
@@ -93,7 +99,7 @@ export default class ProjectList extends Vue {
     const hash = this.$route.hash;
     const cleanedHash = hash.substring(1);
     const index = Object.values(this.countries)
-      .map((x: Country) => x.key)
+      .map((x: Country) => x.key[0])
       .findIndex((x) => x === cleanedHash);
     return index;
   }
@@ -107,9 +113,13 @@ export default class ProjectList extends Vue {
     }
   }
 
-  public clickSite(item: Site, keyIndex: number, event: EventClickRow): void {
+  public clickSite(
+    item: GreenHouseGaz,
+    keyIndex: number,
+    event: EventClickRow
+  ): void {
     if (this.expanded) {
-      const accessKey = `${item.country_code}${keyIndex}`;
+      const accessKey = `${item.countryCode}${keyIndex}`;
       let currentExpandedArray = this.expanded[accessKey] ?? [];
       if (event.isExpanded) {
         const index = currentExpandedArray.findIndex((i) => i === item);
@@ -123,7 +133,7 @@ export default class ProjectList extends Vue {
   }
 }
 
-type ExpandedObject = Record<string, Site[]>;
+type ExpandedObject = Record<string, GreenHouseGaz[]>;
 interface EventClickRow extends Event {
   isExpanded: boolean;
 }

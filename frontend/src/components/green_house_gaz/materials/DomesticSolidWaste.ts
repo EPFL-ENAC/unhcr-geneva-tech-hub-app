@@ -1,6 +1,6 @@
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 
-import { formatNumber } from "@/plugins/filters";
+import { formatNumberGhg } from "@/plugins/filters";
 import {
   GenericFormSurvey,
   SurveyInput,
@@ -18,6 +18,7 @@ import { numberOfDaysPerYear } from "@/components/green_house_gaz/energy/compute
 
 import {
   ensureSurveyTableHeaders,
+  SurveyTableHeader,
   surveyTableHeaderCO2,
   surveyTableHeaderIncrements,
 } from "@/components/green_house_gaz/generic/surveyTableHeader";
@@ -148,7 +149,6 @@ export function headers() {
         cols: "12",
       },
       default: true,
-      isInput: true,
       type: "select",
       hideFooterContent: false,
     },
@@ -168,8 +168,9 @@ export function headers() {
       },
       value: "input.practiceType",
       items: (options: {
-        intervention: boolean;
         localInput: SurveyInput;
+        surveyItemHeader: SurveyTableHeader;
+        intervention: boolean;
       }): SelectOption<SelectValue>[] => {
         let result = baselinePractices;
         if (options.intervention) {
@@ -203,10 +204,13 @@ export function headers() {
       formatter: (x: string) => x,
       tooltipInfoFn: function (value: string) {
         if (value === "Open pits, unmanaged") {
-          return "Assumed to be shallow < 5 m depth";
+          return "Assumed to be shallow < 5 m depth<br/><b>WARNING</b>: This option does not account for non-climate change impacts such as air pollution, leaching and public health concerns.";
         }
         if (value === "Managed disposal site") {
-          return "At least one of these conditions: regular cover material (e.g, soil), mechanical compacting, or leveling of the waste. Example: landfill";
+          return "At least one of these conditions: regular cover material (e.g, soil), mechanical compacting, or leveling of the waste. Example: landfill<br/><b>WARNING</b>: Managed disposal emissions relate to anaerobic conditions that release methane. Methane has a much higher global warming potential than carbon dioxide (28 times more powerful as GHG), so the CO2e emissions considered are relatively high compared to options like burning or open pits disposal that release predominantly biogenic CO2.";
+        }
+        if (value === "Open burning") {
+          return "<b>WARNING</b>: This option does not account for non-climate change impacts such as issues related to air pollution and public health."
         }
         return "";
       },
@@ -214,7 +218,6 @@ export function headers() {
         cols: "12",
       },
       default: true,
-      isInput: true,
       type: "select",
       hideFooterContent: false,
     },
@@ -232,9 +235,8 @@ export function headers() {
       type: "number",
       hideFooterContent: false,
       formatter: (v: number) => {
-        return formatNumber(v, {
+        return formatNumberGhg(v, {
           style: "percent",
-          maximumFractionDigits: 0,
         });
       },
     },

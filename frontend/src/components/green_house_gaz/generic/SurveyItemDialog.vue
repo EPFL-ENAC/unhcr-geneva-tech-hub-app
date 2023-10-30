@@ -13,7 +13,7 @@
           <span class="text-h7">{{ subtitle }} </span>
         </v-card-subtitle>
         <v-card-text>
-          <v-container v-if="localInput">
+          <v-container v-if="localItem">
             <v-row v-if="intervention">
               <v-col>
                 <v-select
@@ -36,7 +36,7 @@
                   v-if="
                     surveyItem.type &&
                     surveyItem.isInput &&
-                    matchConditions(localInput, surveyItem)
+                    matchConditions(localItem?.input, surveyItem)
                   "
                   :key="$index"
                   :cols="surveyItem?.style?.cols ?? 6"
@@ -61,19 +61,23 @@
                     class="d-flex flex-row justify-center align-center"
                   >
                     <v-img
-                      v-if="localInput.image"
+                      v-if="localItem.input.image"
                       max-width="150px"
                       max-height="150px"
                       aspect-ratio="1"
-                      :src="localInput.image"
+                      :src="localItem.input.image"
                     />
                   </div>
                   <form-item-component
                     v-if="!surveyItem.hideInput"
-                    :value="localInput[surveyItem.key]"
                     v-bind="surveyItem"
-                    :disabled="matchDisabledConditions(localInput, surveyItem)"
-                    @input="(v) => customFormInput(v, surveyItem, localInput)"
+                    :value="_get(localItem, surveyItem.value)"
+                    :disabled="
+                      matchDisabledConditions(localItem.input, surveyItem)
+                    "
+                    @input="
+                      (v) => customFormInput(v, surveyItem, localItem.input)
+                    "
                   />
                 </v-col>
               </template>
@@ -115,12 +119,13 @@ import {
   SurveyInput,
   SurveyInputValue,
   SurveyItem,
+  SurveyResult,
 } from "@/store/GhgInterface";
 
 import { SelectCustom } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 import { VForm } from "@/utils/vuetify";
-import { cloneDeep, get as _get } from "lodash";
+import { cloneDeep, get as _get, set as _set } from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 
@@ -130,6 +135,10 @@ import { mapGetters } from "vuex";
   },
   computed: {
     ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
+  },
+  methods: {
+    _get,
+    _set,
   },
 })
 export default class SurveyItemDialog extends Vue {
@@ -153,6 +162,12 @@ export default class SurveyItemDialog extends Vue {
   @Prop([String])
   readonly diffDimension!: keyof SurveyInput;
 
+  @Prop([Function])
+  readonly computeItem!: (
+    localItemInput: SurveyInput,
+    ghgMapRef: ItemReferencesMap
+  ) => SurveyResult;
+
   $refs!: {
     form: VForm;
   };
@@ -161,18 +176,34 @@ export default class SurveyItemDialog extends Vue {
   formValid = false;
   refreshKey = 0;
 
-  localInput: SurveyInput = {} as SurveyInput;
   localItem: SurveyItem = {} as SurveyItem;
-  // previousItem: SurveyItem = {} as SurveyItem;
 
   @Watch("item", { immediate: true, deep: true })
   onItemChange(value: SurveyItem): void {
     this.localItem = cloneDeep(value);
-    this.localInput = cloneDeep(value.input) ?? {};
   }
   @Watch("formValid", { immediate: true, deep: true })
   onFormValid(): void {
     this.$refs?.form?.validate();
+  }
+
+  @Watch("localItem.input", { immediate: true, deep: true })
+  onLocalInputChange(): void {
+    this.$refs?.form?.validate();
+    // if (this.formValid) {
+    // fail silently!
+    try {
+      const computed = this.computeItem(this.localItem.input, this.ghgMapRef);
+      this.$set(this.localItem, "computed", computed);
+    } catch (e) {
+      // it's on purpose we don't want to show the error
+      // A better way of doing this, would be to have a partial computed, that does not fail on error
+      // but we don't have time for that right now
+      // console.log(
+      //   "warning in computeItem, due to unfinished/not valid form",
+      //   e
+      // );
+    }
   }
 
   get isOpen(): boolean {
@@ -183,17 +214,21 @@ export default class SurveyItemDialog extends Vue {
     this.$emit("update:dialogOpen", value);
   }
   public customFormInput(
-    v: SurveyInputValue,
+    newInputValue: SurveyInputValue,
     surveyItem: SurveyTableHeader,
-    localInput: SurveyInput
+    localInput: SurveyInput = {}
   ): void {
     const newLocalInput = (surveyItem?.customEventInput?.(
-      v,
+      newInputValue,
       localInput,
       this.ghgMapRef
     ) ?? cloneDeep(localInput)) as SurveyInput;
-    newLocalInput[surveyItem.key] = v;
-    this.localInput = newLocalInput;
+    const newLocalItem = cloneDeep(this.localItem);
+    newLocalItem.input = newLocalInput;
+    _set(newLocalItem, surveyItem.value, newInputValue);
+
+    this.localItem = newLocalItem;
+    this.$refs.form.validate();
     this.refreshKey = this.refreshKey + 1;
   }
   public get isNewMode(): boolean {
@@ -217,8 +252,11 @@ export default class SurveyItemDialog extends Vue {
 
   public get dynamicHeaders(): SurveyTableHeader[] {
     this.refreshKey; // Some hack it is: https://stackoverflow.com/questions/48700142/vue-js-force-computed-properties-to-recompute
-    const localInput = this.localInput;
+    const localInput = this.localItem?.input ?? {};
     return this.headers.map((header: SurveyTableHeader) => {
+      if (typeof header.rulesFn === "function") {
+        header.rules = header.rulesFn(localInput, header);
+      }
       if (typeof header.items === "string") {
         const [category, key] = header.items.split(".");
         if (category !== "input") {
@@ -226,7 +264,7 @@ export default class SurveyItemDialog extends Vue {
             "items category should be input like so: `input.fuelTypes` for instance"
           );
         }
-        const items = _get(localInput, key) as string[];
+        const items = _get(this.localItem[category], key) as string[];
 
         if (typeof items === "object" && items.length) {
           header.options = items.map((x) => {
@@ -250,16 +288,14 @@ export default class SurveyItemDialog extends Vue {
         const res = header.tooltipInfoFn?.(
           (localInput?.[header.key] as string) ?? ""
         );
-
-        if (res) {
+        if (res !== undefined) {
           header.tooltipInfo = res;
         }
       }
-      // TODO implement a dynamic way for header.items when it's a function ? cf below
       if (typeof header.text === "function") {
         // we don't overide text (dynamic text should not be authorized for table)
         // only for header in form
-        header.label = header.text(this.localInput);
+        header.label = header.text(this.localItem?.input ?? {});
       }
       if (
         typeof header.items === "object" &&
@@ -293,10 +329,13 @@ export default class SurveyItemDialog extends Vue {
       }
 
       if (typeof header.items === "function") {
-        header.options = header.items({
+        const items = header.items({
+          localInput: this.localItem?.input ?? {},
+          surveyItem: header,
           intervention: this.intervention,
-          localInput,
         });
+        // todo: abstract wrapper function to make things more readable
+        header.options = items;
       }
       return header;
     });
@@ -316,16 +355,15 @@ export default class SurveyItemDialog extends Vue {
     if (foundItem) {
       this.$set(this.localItem, "origin", foundItem._id);
       this.$set(this.localItem, "originIncrement", foundItem.increment);
-      this.localInput = cloneDeep(foundItem.input);
+      this.$set(this.localItem, "input", cloneDeep(foundItem.input));
+      this.localItem = { ...this.localItem };
     }
   }
 
   public async submitFn(): Promise<void> {
-    if (!this.localInput) {
+    if (!this.localItem?.input) {
       return Promise.resolve();
     }
-    // this.localItem.input = this.localInput;
-    this.$set(this.localItem, "input", this.localInput);
     if (this.intervention) {
       this.localItem.enabled = true;
     }
@@ -338,11 +376,6 @@ export default class SurveyItemDialog extends Vue {
     surveyItem: SurveyTableHeader
   ) {
     if (typeof surveyItem.conditional_disabled_function === "function") {
-      console.log(
-        "result of conditional_disabled_function:",
-        surveyItem.conditional_disabled_function(localInput, surveyItem)
-      );
-      console.groupEnd();
       return surveyItem.conditional_disabled_function(localInput, surveyItem);
     }
     return (
@@ -354,21 +387,13 @@ export default class SurveyItemDialog extends Vue {
     localInput: SurveyInput,
     surveyItem: SurveyTableHeader
   ) {
-    // console.group(`matchConditions: ${surveyItem.label}`);
-    // console.log(
-    //   `\x1B[1;4m${surveyItem.key}: ${localInput[surveyItem.key] ?? ""}`
-    // );
-    // console.log(localInput, surveyItem);
     // if we have a conditional_function field it superseed the conditional logic
+    if (localInput === undefined) {
+      return false;
+    }
     if (typeof surveyItem.conditional_function === "function") {
-      // console.log(
-      //   "result of conditional_function:",
-      //   surveyItem.conditional_function(localInput, surveyItem)
-      // );
-      // console.groupEnd();
       return surveyItem.conditional_function(localInput, surveyItem);
     }
-    // console.groupEnd();
     if (typeof surveyItem.conditional === "undefined") {
       return true;
     }

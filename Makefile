@@ -15,7 +15,7 @@ azure:
 	$(MAKE) -C azure
 
 setup-database:
-	docker-compose up --build --force-recreate couchdb-setup
+	docker-compose up --build --force-recreate --no-deps couchdb-setup
 
 test:
 	$(MAKE) -C frontend test
@@ -46,8 +46,13 @@ setup:
 	echo "nothing to see here"
 
 run:
-	docker-compose pull
-	docker-compose build --parallel --no-cache
-	docker-compose up -d --remove-orphans
-	docker-compose up --build --force-recreate couchdb-setup
-	docker-compose restart couchdb
+	docker compose -f docker-compose.yml -f docker-compose.prod.yml up --pull=always -d --remove-orphans
+
+run-dev:
+	docker compose -f docker-compose.yml -f docker-compose.dev.yml up --pull=always -d --remove-orphans
+
+# docker-compose pull
+# docker-compose build --parallel --no-cache
+# docker-compose up -d --remove-orphans
+# docker-compose up --build --force-recreate --no-deps couchdb-setup
+# docker-compose restart couchdb

@@ -9,6 +9,22 @@
           {{ infoTooltipText[$route.name].text }}
         </info-tooltip>
       </v-col>
+      <v-spacer />
+      <v-col class="col-auto d-flex align-center">
+        <span class="mr-4">Project geometry</span>
+        <span v-if="localShelter.completed_geometry" class="mr-4">
+          <v-icon class="green--text text--lighten-3">$mdiCheck</v-icon>
+          complete</span
+        >
+        <span v-else class="mr-4">
+          <v-icon class="red--text text--lighten-3">$mdiClose</v-icon>
+          incomplete</span
+        >
+        <info-tooltip>
+          Geometry inputs are complete with sufficient dimensions to calculate
+          floor area and volume
+        </info-tooltip>
+      </v-col>
     </v-row>
     <v-row>
       <v-col>
@@ -62,6 +78,17 @@
                         :aria-label="geometry._id"
                       >
                       </v-img>
+                      <!-- <v-btn
+                        v-if="shelter_geometry_type"
+                        float
+                        absolute
+                        right
+                        class="primary"
+                        top
+                        @click.stop="() => void 0"
+                      >
+                        Save
+                      </v-btn> -->
                       <v-btn icon @click.stop="selectedItem = geometry">
                         <v-icon>{{ mdiMagnify }}</v-icon>
                       </v-btn>
@@ -248,14 +275,18 @@ import {
   ShelterDimensions,
   WindowDimensions,
 } from "@/store/ShelterInterface";
-import { getNewGeometry } from "@/store/ShelterModuleUtils";
+import {
+  areDoorsBiggerThan90cm,
+  getMaxWindowArea,
+  getNewGeometry,
+} from "@/store/ShelterModuleUtils";
 import {
   geometries,
   geometryOtherName,
 } from "@/views/shelter_sustainability/ShelterSustainabilityItem/geometries";
 import { mdiDelete, mdiMagnify, mdiPlusBox } from "@mdi/js";
 import { cloneDeep } from "lodash";
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch, VModel } from "vue-property-decorator";
 
 /* two ways to have a store copy locally
 1. having a watcher on the store that cloneDeep to data() locally
@@ -270,20 +301,11 @@ for the original discussion
 })
 /** Project */
 export default class Step2Geometry extends Vue {
-  @Prop({ type: [Object], required: true })
-  shelter!: Shelter;
+  @VModel({ type: [Object], required: true }) localShelter!: Shelter;
 
   mdiMagnify = mdiMagnify;
   mdiDelete = mdiDelete;
   mdiPlusBox = mdiPlusBox;
-
-  public get localShelter(): Shelter {
-    return cloneDeep(this.shelter);
-  }
-
-  public set localShelter(newShelter: Shelter) {
-    this.$emit("update:shelter", newShelter);
-  }
 
   public updateFormInput(): void {
     this.localShelter = Object.assign({}, this.localShelter);
@@ -368,6 +390,10 @@ export default class Step2Geometry extends Vue {
 
   public updateShelterDoorDimensions(): void {
     this.updateHabitability();
+    const doorArea = this.doorDimensions(
+      this.localShelter.geometry.doors_dimensions
+    );
+    this.localShelter.geometry.doorArea = parseFloat(doorArea.toFixed(2));
     // transmist change above
     this.updateFormInput();
   }
@@ -383,35 +409,29 @@ export default class Step2Geometry extends Vue {
     }
   }
   private updateTechnicalPerformance(): void {
+    // todo: we should update technical_performance when opening technical_performance
     const { windowArea, floorArea } = this.localShelter.geometry;
     // update technical_performance, because it should be done like this (defined in the specs)
     // Ratio of window and ventilation openings area to floor area > 0.05
     this.localShelter.technical_performance.input_2a_1 =
-      windowArea / floorArea > 0.05 ? 1 : undefined;
+      windowArea / floorArea > 0.05 ? 1 : -1;
 
     // Ratio of windows area to floor area > 0.10
     this.localShelter.technical_performance.input_2c_1 =
-      windowArea / floorArea > 0.1 ? 1 : undefined;
+      windowArea / floorArea > 0.1 ? 1 : -1;
 
     // Window opening dimensions < 60x60cm
     const hasAWindowTooBig =
-      this.getMaxWindowArea(this.localShelter.geometry.windows_dimensions) >=
-      0.36;
+      getMaxWindowArea(this.localShelter.geometry.windows_dimensions) >= 0.36;
     this.localShelter.technical_performance.input_3b_4 = hasAWindowTooBig
-      ? undefined
+      ? -1
       : 1;
   }
 
   private updateHabitability(): void {
-    // Door(s) >= 90cm wide INPUT 5 habitability
-    const { doors_dimensions } = this.localShelter.geometry;
-    if (doors_dimensions.length === 0) {
-      return;
-    }
-    const maxDoorWidth = Math.max(
-      ...doors_dimensions.map((door) => door.Wd ?? 0)
+    this.localShelter.habitability.input5 = areDoorsBiggerThan90cm(
+      this.localShelter.geometry
     );
-    this.localShelter.habitability.input5 = maxDoorWidth < 0.9 ? undefined : 1;
   }
 
   private doorDimensions(doorDimensions: DoorDimensions[]): number {
@@ -442,24 +462,11 @@ export default class Step2Geometry extends Vue {
       })
       .reduce((windowsArea, windowArea) => windowsArea + windowArea);
   }
-  private getMaxWindowArea(windowDimensions: WindowDimensions[]): number {
-    if (windowDimensions.length === 0) {
-      return 0;
-    }
-    return Math.max(
-      ...windowDimensions.map(({ Ww, Hw }) => {
-        if (!Ww || !Hw) {
-          return 0; // missing Ww or Hw area is 0
-        }
-        return Ww * Hw;
-      })
-    );
-  }
 
   private floorArea(shelterDimension: ShelterDimensions): number {
     const { L, W } = shelterDimension || {};
     let res = 0;
-    if (!L || !W) {
+    if (L === undefined || W === undefined) {
       return res; // Length or Width not defined
     }
     if (this.shelter_geometry_type === "dome") {
