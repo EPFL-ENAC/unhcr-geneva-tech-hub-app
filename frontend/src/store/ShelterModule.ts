@@ -21,6 +21,13 @@ import { CouchUser } from "./UserModule";
 const DB_NAME = "shelters";
 const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 
+const timeoutIds: NodeJS.Timeout[] = [];
+
+function cleartimeouts(timeoutIds: NodeJS.Timeout[]): void {
+  timeoutIds.forEach((id) => {
+    clearTimeout(id);
+  });
+}
 /** Getters */
 const getters: GetterTree<ShelterState, RootState> = {
   shelters: (s): Array<Shelter> => s.shelters,
@@ -249,6 +256,10 @@ const actions: ActionTree<ShelterState, RootState> = {
       }
       if (!context.getters["shelterLoading"]) {
         context.commit("SET_SHELTER_LOADING");
+        const timeId: NodeJS.Timeout = setTimeout(function () {
+          context.dispatch("setLoading", true, { root: true });
+        }, 300);
+        timeoutIds.push(timeId);
         try {
           const response = await remoteDB.put(computedShelter);
           computedShelter._rev = response.rev;
@@ -257,6 +268,8 @@ const actions: ActionTree<ShelterState, RootState> = {
 
           context.commit("SET_SHELTER", computedShelter);
           context.commit("UNSET_SHELTER_LOADING");
+          cleartimeouts(timeoutIds);
+          context.dispatch("setLoading", false, { root: true });
           /* eslint-disable-next-line */
         } catch (e: any) {
           if (e.error === "conflict") {
@@ -287,6 +300,8 @@ const actions: ActionTree<ShelterState, RootState> = {
               { root: true }
             );
           }
+          cleartimeouts(timeoutIds);
+          context.dispatch("setLoading", false, { root: true });
           context.commit("UNSET_SHELTER_LOADING");
         }
       }

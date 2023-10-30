@@ -383,7 +383,7 @@ import {
   Shelter,
 } from "@/store/ShelterInterface";
 import { cloneDeep } from "lodash";
-import { Component, VModel, Vue } from "vue-property-decorator";
+import { Component, VModel, Vue, Prop } from "vue-property-decorator";
 
 @Component({
   components: {
@@ -399,6 +399,8 @@ import { Component, VModel, Vue } from "vue-property-decorator";
 /** Project */
 export default class Step1 extends Vue {
   @VModel({ type: [Object], required: true }) localShelter!: Shelter;
+
+  @Prop({ type: Boolean, default: false }) loading!: boolean;
 
   readonly zoom = defaultZoom;
   readonly defaultCoordinates = defaultCoordinates;

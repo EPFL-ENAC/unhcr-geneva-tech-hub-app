@@ -78,7 +78,7 @@
                         :aria-label="geometry._id"
                       >
                       </v-img>
-                      <v-btn
+                      <!-- <v-btn
                         v-if="shelter_geometry_type"
                         float
                         absolute
@@ -88,7 +88,7 @@
                         @click.stop="() => void 0"
                       >
                         Save
-                      </v-btn>
+                      </v-btn> -->
                       <v-btn icon @click.stop="selectedItem = geometry">
                         <v-icon>{{ mdiMagnify }}</v-icon>
                       </v-btn>
@@ -286,7 +286,7 @@ import {
 } from "@/views/shelter_sustainability/ShelterSustainabilityItem/geometries";
 import { mdiDelete, mdiMagnify, mdiPlusBox } from "@mdi/js";
 import { cloneDeep } from "lodash";
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch, VModel } from "vue-property-decorator";
 
 /* two ways to have a store copy locally
 1. having a watcher on the store that cloneDeep to data() locally
@@ -301,20 +301,22 @@ for the original discussion
 })
 /** Project */
 export default class Step2Geometry extends Vue {
-  @Prop({ type: [Object], required: true })
-  shelter!: Shelter;
+  // @Prop({ type: [Object], required: true })
+  // shelter!: Shelter;
+  @VModel({ type: [Object], required: true }) localShelter!: Shelter;
+
 
   mdiMagnify = mdiMagnify;
   mdiDelete = mdiDelete;
   mdiPlusBox = mdiPlusBox;
 
-  public get localShelter(): Shelter {
-    return cloneDeep(this.shelter);
-  }
+  // public get localShelter(): Shelter {
+  //   return cloneDeep(this.shelter);
+  // }
 
-  public set localShelter(newShelter: Shelter) {
-    this.$emit("update:shelter", newShelter);
-  }
+  // public set localShelter(newShelter: Shelter) {
+  //   this.$emit("update:shelter", newShelter);
+  // }
 
   public updateFormInput(): void {
     this.localShelter = Object.assign({}, this.localShelter);

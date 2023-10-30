@@ -54,8 +54,12 @@ export default class Step6 extends Vue {
     // TODO: add non applicable because it does rely on the technical performance
     this.localShelter.habitability.input12 =
       this.technical_performance.input_3b_6;
+    this.localShelter.habitability.input12na =
+      this.technical_performance.input_3b_6na;
     this.localShelter.habitability.input13 =
       this.technical_performance.input_3b_7;
+    this.localShelter.habitability.input13na =
+      this.technical_performance.input_3b_7na;
     this.updateFormInput();
   }
 

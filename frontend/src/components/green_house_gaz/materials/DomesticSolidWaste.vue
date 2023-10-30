@@ -84,7 +84,7 @@ export default class Cooking extends Mixins(ComputeGenericFormSurveyMixin) {
   name = "solid waste";
 
   domesticSolidWasteHref =
-    "https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-08-14T111730Z/RefugeeWasteExamples.pdf";
+    "/s3/2023-08-14T111730Z/RefugeeWasteExamples.pdf";
 
   public get title(): string {
     return this.titleKey;
