@@ -9,16 +9,16 @@ run-frontend:
 	$(MAKE) -C frontend run
 
 run-database:
-	docker-compose up --build -d couchdb
+	docker compose up --build -d couchdb
 
 azure:
 	$(MAKE) -C azure
 
 setup-database:
-	docker-compose up --build --force-recreate --no-deps couchdb-setup
+	docker compose up --build --force-recreate --no-deps couchdb-setup
 
 setup-data:
-	docker-compose up --build --force-recreate --no-deps data-setup
+	docker compose up --build --force-recreate --no-deps data-setup
 
 test:
 	$(MAKE) -C frontend test
