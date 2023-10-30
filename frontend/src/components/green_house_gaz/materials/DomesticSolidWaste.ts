@@ -204,7 +204,7 @@ export function headers() {
       formatter: (x: string) => x,
       tooltipInfoFn: function (value: string) {
         if (value === "Open pits, unmanaged") {
-          return "Assumed to be shallow < 5 m depth<br/><b>WARNING</b>: This option does not account for non-climate change impacts such as air pollution, leaching and public health concerns.";
+          return "Assumed to be shallow < 5 m depth<br/><b>WARNING</b>: This option appears to have lower emissions than the managed option, however, it does not account for non-climate change impacts such as air pollution, leaching and public health concerns.";
         }
         if (value === "Managed disposal site") {
           return "At least one of these conditions: regular cover material (e.g, soil), mechanical compacting, or leveling of the waste. Example: landfill<br/><b>WARNING</b>: Managed disposal emissions relate to anaerobic conditions that release methane. Methane has a much higher global warming potential than carbon dioxide (28 times more powerful as GHG), so the CO2e emissions considered are relatively high compared to options like burning or open pits disposal that release predominantly biogenic CO2.";
