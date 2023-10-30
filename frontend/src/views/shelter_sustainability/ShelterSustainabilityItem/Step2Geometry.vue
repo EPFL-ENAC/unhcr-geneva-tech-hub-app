@@ -301,22 +301,11 @@ for the original discussion
 })
 /** Project */
 export default class Step2Geometry extends Vue {
-  // @Prop({ type: [Object], required: true })
-  // shelter!: Shelter;
   @VModel({ type: [Object], required: true }) localShelter!: Shelter;
-
 
   mdiMagnify = mdiMagnify;
   mdiDelete = mdiDelete;
   mdiPlusBox = mdiPlusBox;
-
-  // public get localShelter(): Shelter {
-  //   return cloneDeep(this.shelter);
-  // }
-
-  // public set localShelter(newShelter: Shelter) {
-  //   this.$emit("update:shelter", newShelter);
-  // }
 
   public updateFormInput(): void {
     this.localShelter = Object.assign({}, this.localShelter);

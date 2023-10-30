@@ -299,6 +299,7 @@ const actions: ActionTree<ShelterState, RootState> = {
               },
               { root: true }
             );
+            throw e;
           }
           cleartimeouts(timeoutIds);
           context.dispatch("setLoading", false, { root: true });
