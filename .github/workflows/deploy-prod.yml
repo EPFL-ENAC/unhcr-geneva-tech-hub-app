@@ -1,6 +1,6 @@
 ---
   # https://github.com/EPFL-ENAC/github-actions-runner#readme
-  name: deploy-test
+  name: deploy-prod
   "on":
     push:
       branches:
