@@ -350,7 +350,7 @@ export function commonElectricSolarDevicesHeaders() {
       style: {
         cols: "4",
       },
-      text: "Number of devices",
+      text: "Number of devices per household",
       min: 0,
       formatter: (v: number) => {
         return formatNumberGhg(v);
@@ -1133,8 +1133,11 @@ export function generateComputeItem(
       (localItemInput?.numberOfDevices ?? 0) *
       (localItemInput?.electricPower ?? 0);
     const operatingHours = localItemInput?.operatingHours ?? 0;
-    const totalEnergy = (totalPower * operatingHours * 365.25) / 1000; // in kWh/year
     const hhUsingTheFuel = percentageOfTotalHouseHolds * projectTotalHH; // number of cookstoves
+    const totalEnergyPerHouseHold =
+      totalPower * operatingHours * 365.25 * 0.001; // in kWh/year
+    const totalEnergy =
+      totalEnergyPerHouseHold * percentageOfTotalHouseHolds * projectTotalHH; // in kWh/year
     let totalCO2Emission = 0;
 
     switch (true) {
@@ -1183,7 +1186,7 @@ export function generateComputeItem(
         totalCO2Emission = 0;
         switch (true) {
           case ["ELE_GRID"].includes(fuelType as PlugingRecheargeableDevice): {
-            localItemInput.gridPower = totalEnergy;
+            localItemInput.gridPower = totalEnergyPerHouseHold;
             localItemInput.fuelUsage = 0;
             totalCO2Emission = computeCO2costElectric(
               localItemInput,
@@ -1215,9 +1218,9 @@ export function generateComputeItem(
           case ["ELE_HYB"].includes(fuelType as PlugingRecheargeableDevice): {
             // side effect here.
             localItemInput.gridPower =
-              totalEnergy * (localItemInput?.gridPercentage ?? 0);
+              totalEnergyPerHouseHold * (localItemInput?.gridPercentage ?? 0);
             localItemInput.fuelUsage =
-              totalEnergy *
+              totalEnergyPerHouseHold *
               ghgMapRef?.REF_EFF_DIES_L?.value *
               (localItemInput?.dieselPercentage ?? 0);
             totalCO2Emission = computeCO2costElectric(
