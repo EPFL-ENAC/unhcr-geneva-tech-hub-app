@@ -18,7 +18,7 @@ import {
 } from "vuex";
 import { CouchUser } from "./UserModule";
 
-const DB_NAME = "shelters";
+const DB_NAME = "shelter_projects_1698666594213623";
 const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 
 const timeoutIds: NodeJS.Timeout[] = [];

@@ -76,6 +76,8 @@
         "updated_at": "2023-06-01T12:33:46.224Z",
         "updated_by": "admin",
         "description": "Understand difference to HOMER (by MK)",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 1000,
         "latitude": 23.684994,
@@ -250,23 +252,10 @@
                             "input": {
                                 "biowaste": "Biowaste",
                                 "practiceType": "Open pits, unmanaged",
-                                "percentageOfTotalCategories": 0.53
+                                "percentageOfTotalCategories": 0.54
                             },
                             "computed": {
-                                "totalCO2Emission": 23192.957758338405
-                            }
-                        },
-                        {
-                            "_id": "78435dec-3bf3-4ca8-9c59-6871951c0d37",
-                            "increment": 1,
-                            "input": {
-                                "biowaste": "Non-biowaste",
-                                "nonBiowasteSubCategories": "Textiles",
-                                "practiceType": "Open burning",
-                                "percentageOfTotalCategories": 0.03
-                            },
-                            "computed": {
-                                "totalCO2Emission": 690.5272916912539
+                                "totalCO2Emission": 10857.284661986054
                             }
                         },
                         {
@@ -276,35 +265,10 @@
                                 "biowaste": "Non-biowaste",
                                 "nonBiowasteSubCategories": "Plastics",
                                 "practiceType": "Open burning",
-                                "percentageOfTotalCategories": 0.1
+                                "percentageOfTotalCategories": 0.13
                             },
                             "computed": {
-                                "totalCO2Emission": 11857.360312541248
-                            }
-                        },
-                        {
-                            "_id": "ae6b23e1-eba9-4862-9d5c-b258c1ccd4fa",
-                            "increment": 3,
-                            "input": {
-                                "biowaste": "Biowaste",
-                                "practiceType": "Managed disposal site",
-                                "percentageOfTotalCategories": 0.1
-                            },
-                            "computed": {
-                                "totalCO2Emission": 10940.074411583795
-                            }
-                        },
-                        {
-                            "_id": "8b2eeac6-8246-480e-bc21-ab14d3c2cca6",
-                            "increment": 4,
-                            "input": {
-                                "biowaste": "Non-biowaste",
-                                "nonBiowasteSubCategories": "Plastics",
-                                "practiceType": "Open burning",
-                                "percentageOfTotalCategories": 0.05
-                            },
-                            "computed": {
-                                "totalCO2Emission": 5928.680156270624
+                                "totalCO2Emission": 7082.369267761124
                             }
                         },
                         {
@@ -314,171 +278,111 @@
                                 "biowaste": "Non-biowaste",
                                 "nonBiowasteSubCategories": "Mixed / unkown composition",
                                 "practiceType": "Open pits, unmanaged",
-                                "percentageOfTotalCategories": 0.05
+                                "percentageOfTotalCategories": 0.33
                             },
                             "computed": {
-                                "totalCO2Emission": 1303.628132697828
-                            }
-                        },
-                        {
-                            "_id": "1b127ad2-3696-4993-9fc8-b5d1ae597636",
-                            "increment": 6,
-                            "input": {
-                                "biowaste": "Biowaste",
-                                "practiceType": "Open pits, unmanaged",
-                                "percentageOfTotalCategories": 0.1
-                            },
-                            "computed": {
-                                "totalCO2Emission": 4376.029765724226
+                                "totalCO2Emission": 3953.1642294242247
                             }
                         }
                     ],
                     "results": {
-                        "percentageOfTotalCategories": 0.9600000000000001,
-                        "totalCO2Emission": 58289.25782884738
+                        "percentageOfTotalCategories": 1,
+                        "totalCO2Emission": 21892.818159171402
                     }
                 },
                 "endline": {
                     "items": [
                         {
-                            "_id": "fcf46776-2c01-43cc-9143-c182b14bdba4",
-                            "increment": 0,
+                            "_id": "58c1ab81-9809-4974-a821-7fa378225fd2",
+                            "increment": 1,
                             "input": {
                                 "biowaste": "Biowaste",
                                 "practiceType": "Composting",
-                                "percentageOfTotalCategories": 0.53
+                                "percentageOfTotalCategories": 0.27
                             },
                             "computed": {
-                                "totalCO2Emission": 5075.501021352601,
-                                "changeInEmission": -0.7811619770864352
+                                "totalCO2Emission": 1187.9933548194,
+                                "changeInEmission": -0.39058098854321754
                             },
-                            "origin": "8ea66987-8580-45ac-935a-e49152d60609",
                             "originIncrement": 0,
+                            "origin": "8ea66987-8580-45ac-935a-e49152d60609",
                             "enabled": true
                         },
                         {
-                            "_id": "019b5a10-7235-45d4-adbc-7eed3bba7172",
-                            "increment": 1,
+                            "_id": "901ae2dd-d1a8-4167-bc76-c0194d35be41",
+                            "increment": 0,
                             "input": {
-                                "biowaste": "Non-biowaste",
-                                "nonBiowasteSubCategories": "Textiles",
-                                "practiceType": "Open burning",
-                                "percentageOfTotalCategories": 0.03
+                                "biowaste": "Biowaste",
+                                "practiceType": "Anaerobically digested",
+                                "percentageOfTotalCategories": 0.27
                             },
                             "computed": {
-                                "totalCO2Emission": 690.5272916912539,
-                                "changeInEmission": 0
+                                "totalCO2Emission": 151.5435714576,
+                                "changeInEmission": -0.48604222177316675
                             },
-                            "origin": "78435dec-3bf3-4ca8-9c59-6871951c0d37",
-                            "originIncrement": 1,
+                            "originIncrement": 0,
+                            "origin": "8ea66987-8580-45ac-935a-e49152d60609",
                             "enabled": true
                         },
                         {
-                            "_id": "54068c80-6009-4773-8d72-02267c1ab90b",
-                            "increment": 2,
+                            "_id": "8094665b-84f1-4e54-b5a2-fc918ca6aac8",
+                            "increment": 3,
                             "input": {
                                 "biowaste": "Non-biowaste",
                                 "nonBiowasteSubCategories": "Plastics",
-                                "practiceType": "Open burning",
-                                "percentageOfTotalCategories": 0.1
+                                "practiceType": "Recycling / Reuse",
+                                "percentageOfTotalCategories": 0.13
                             },
                             "computed": {
-                                "totalCO2Emission": 11857.360312541248,
-                                "changeInEmission": 0
+                                "totalCO2Emission": 0,
+                                "changeInEmission": -1
                             },
-                            "origin": "9ab538d0-9f8f-4a87-adc9-5a40b6d3b1f9",
                             "originIncrement": 2,
+                            "origin": "9ab538d0-9f8f-4a87-adc9-5a40b6d3b1f9",
                             "enabled": true
                         },
                         {
-                            "_id": "25a6cba5-315e-4756-9ed4-d460cd48421b",
-                            "increment": 3,
-                            "input": {
-                                "biowaste": "Biowaste",
-                                "practiceType": "Managed disposal site",
-                                "percentageOfTotalCategories": 0.1
-                            },
-                            "computed": {
-                                "totalCO2Emission": 10940.074411583795,
-                                "changeInEmission": 0
-                            },
-                            "origin": "ae6b23e1-eba9-4862-9d5c-b258c1ccd4fa",
-                            "originIncrement": 3,
-                            "enabled": true
-                        },
-                        {
-                            "_id": "250f6f36-4811-4299-b603-ff85189dc2f1",
+                            "_id": "0ea540da-3360-4b01-9b1e-82cd4e700b16",
                             "increment": 4,
                             "input": {
                                 "biowaste": "Non-biowaste",
-                                "nonBiowasteSubCategories": "Plastics",
-                                "practiceType": "Open burning",
-                                "percentageOfTotalCategories": 0.05
-                            },
-                            "computed": {
-                                "totalCO2Emission": 5928.680156270624,
-                                "changeInEmission": 0
-                            },
-                            "origin": "8b2eeac6-8246-480e-bc21-ab14d3c2cca6",
-                            "originIncrement": 4,
-                            "enabled": true
-                        },
-                        {
-                            "_id": "2248abd4-79e1-4d68-a3a0-2a052a11cca0",
-                            "increment": 5,
-                            "input": {
-                                "biowaste": "Non-biowaste",
                                 "nonBiowasteSubCategories": "Mixed / unkown composition",
-                                "practiceType": "Open burning",
-                                "percentageOfTotalCategories": 0.05
+                                "practiceType": "Managed disposal site",
+                                "percentageOfTotalCategories": 0.33
                             },
                             "computed": {
-                                "totalCO2Emission": 2292.720173537444,
-                                "changeInEmission": 0.7587225344644206
+                                "totalCO2Emission": 9882.91057356056,
+                                "changeInEmission": 1.4999999999999998
                             },
-                            "origin": "c4fe2d8a-9fd4-4523-bec8-2e1bca78fcb3",
                             "originIncrement": 5,
-                            "enabled": true
-                        },
-                        {
-                            "_id": "88f2aa86-22db-4b0d-950a-2470c1d93ba2",
-                            "increment": 6,
-                            "input": {
-                                "biowaste": "Biowaste",
-                                "practiceType": "Open pits, unmanaged",
-                                "percentageOfTotalCategories": 0.1
-                            },
-                            "computed": {
-                                "totalCO2Emission": 4376.029765724226,
-                                "changeInEmission": 0
-                            },
-                            "origin": "1b127ad2-3696-4993-9fc8-b5d1ae597636",
-                            "originIncrement": 6,
+                            "origin": "c4fe2d8a-9fd4-4523-bec8-2e1bca78fcb3",
                             "enabled": true
                         }
                     ],
                     "results": {
-                        "percentageOfTotalCategories": 0.9600000000000001,
-                        "totalCO2Emission": 41160.893132701196,
-                        "changeInEmission": -0.29385113714159095
+                        "percentageOfTotalCategories": 1,
+                        "totalCO2Emission": 11222.44749983756,
+                        "changeInEmission": -0.48739137107681035
                     }
                 },
-                "generationGram": 1850
+                "generationGram": 850
             }
         },
         "offset": {},
-        "updated_at": "2023-08-25T08:47:52.105Z",
+        "updated_at": "2023-10-13T15:30:26.386Z",
         "updated_by": "natalia.montoyaarevalo@epfl.ch",
         "description": "TestSolidWaste",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
-        "totalHH": 16142,
+        "totalHH": 20,
         "Population": 80708,
         "latitude": 32.4186,
         "longitude": 38.3165725,
         "solar_peak_hours": 5.89,
         "index": 130,
         "solar": 5.89,
-        "population": 80708,
+        "population": 100,
         "users": [
             {
                 "name": "natalia.montoyaarevalo@epfl.ch",
@@ -489,6 +393,310 @@
                 "loaded": true
             }
         ],
+        "siteId": "JORs004465",
+        "location_id": 1641,
+        "location_pcode": "JORs004465",
+        "siteName": "Mafraq : Zataari Camp",
+        "countryCode": "JO"
+    },
+    {
+        "_id": "b7c88be7-6f6b-4764-8ee2-ccaa4f3445e1",
+        "created_at": "2023-10-13T15:30:47.423Z",
+        "created_by": "natalia.montoyaarevalo@epfl.ch",
+        "wash": {},
+        "energy": {
+            "lighting": {
+                "baseline": {
+                    "items": [
+                        {
+                            "_id": "b72ace60-8123-4afd-9e6a-17fc507ce7cf",
+                            "increment": 0,
+                            "input": {
+                                "disabledFuelUsage": false,
+                                "generatorLoad": 0.6,
+                                "fuelType": "ELE_SOLAR",
+                                "renewablePower": 86052.9,
+                                "solarInstalled": 50,
+                                "numberOfLighting": 0.5
+                            },
+                            "computed": {
+                                "totalCO2Emission": 0
+                            }
+                        },
+                        {
+                            "_id": "54e797ba-61c2-43bd-9854-5f80312bea26",
+                            "increment": 1,
+                            "input": {
+                                "disabledFuelUsage": false,
+                                "generatorLoad": 0.6,
+                                "fuelType": "ELE_GRID",
+                                "gridPower": 100,
+                                "numberOfLighting": 0.2
+                            },
+                            "computed": {
+                                "totalCO2Emission": 67802.45324999999
+                            }
+                        }
+                    ],
+                    "results": {
+                        "renewablePower": 86052.9,
+                        "numberOfLighting": 0.7,
+                        "totalCO2Emission": 67802.45324999999
+                    }
+                },
+                "endline": {
+                    "items": [
+                        {
+                            "_id": "5a1cb976-a251-4465-9ef0-828f2b6b7578",
+                            "increment": 0,
+                            "input": {
+                                "disabledFuelUsage": false,
+                                "generatorLoad": 0.6,
+                                "fuelType": "ELE_SOLAR",
+                                "renewablePower": 86052.9,
+                                "solarInstalled": 50,
+                                "numberOfLighting": 0.5
+                            },
+                            "computed": {
+                                "totalCO2Emission": 0,
+                                "changeInEmission": 0
+                            },
+                            "origin": "b72ace60-8123-4afd-9e6a-17fc507ce7cf",
+                            "originIncrement": 0,
+                            "enabled": true
+                        },
+                        {
+                            "_id": "c58a2a57-63c4-47c6-a193-b63442140529",
+                            "increment": 1,
+                            "input": {
+                                "disabledFuelUsage": false,
+                                "generatorLoad": 0.6,
+                                "fuelType": "ELE_GRID",
+                                "gridPower": 100,
+                                "numberOfLighting": 0.2
+                            },
+                            "computed": {
+                                "totalCO2Emission": 67802.45324999999,
+                                "changeInEmission": 0
+                            },
+                            "origin": "54e797ba-61c2-43bd-9854-5f80312bea26",
+                            "originIncrement": 1,
+                            "enabled": true
+                        }
+                    ],
+                    "results": {
+                        "renewablePower": 86052.9,
+                        "numberOfLighting": 0.7,
+                        "totalCO2Emission": 67802.45324999999,
+                        "changeInEmission": 0
+                    }
+                }
+            },
+            "facilities": {
+                "baseline": {
+                    "items": [
+                        {
+                            "_id": "1f0fe894-3ff2-4bfd-82d0-2add1257501c",
+                            "increment": 0,
+                            "input": {
+                                "name": "H1",
+                                "fuelType": "ELE_GRID",
+                                "generatorLoad": 0.6,
+                                "gridPower": 100000
+                            },
+                            "computed": {
+                                "totalCO2Emission": 57.49999999999999,
+                                "totalPower": 100000
+                            }
+                        }
+                    ],
+                    "results": {
+                        "gridPower": 100000,
+                        "totalPower": 100000,
+                        "totalCO2Emission": 57.49999999999999
+                    }
+                },
+                "endline": {
+                    "items": [
+                        {
+                            "_id": "17c403fd-49d1-4e65-8be3-81477369f691",
+                            "increment": 0,
+                            "input": {
+                                "name": "H1",
+                                "fuelType": "ELE_GRID",
+                                "generatorLoad": 0.6,
+                                "gridPower": 100000
+                            },
+                            "computed": {
+                                "totalCO2Emission": 57.49999999999999,
+                                "totalPower": 100000,
+                                "changeInEmission": 0
+                            },
+                            "origin": "1f0fe894-3ff2-4bfd-82d0-2add1257501c",
+                            "originIncrement": 0,
+                            "enabled": true
+                        }
+                    ],
+                    "results": {
+                        "gridPower": 100000,
+                        "totalPower": 100000,
+                        "totalCO2Emission": 57.49999999999999,
+                        "changeInEmission": 0
+                    }
+                }
+            }
+        },
+        "material": {
+            "domesticsolidwaste": {
+                "baseline": {
+                    "items": [
+                        {
+                            "_id": "8ea66987-8580-45ac-935a-e49152d60609",
+                            "increment": 0,
+                            "input": {
+                                "biowaste": "Biowaste",
+                                "practiceType": "Open pits, unmanaged",
+                                "percentageOfTotalCategories": 0.54
+                            },
+                            "computed": {
+                                "totalCO2Emission": 10857.284661986054
+                            }
+                        },
+                        {
+                            "_id": "9ab538d0-9f8f-4a87-adc9-5a40b6d3b1f9",
+                            "increment": 2,
+                            "input": {
+                                "biowaste": "Non-biowaste",
+                                "nonBiowasteSubCategories": "Plastics",
+                                "practiceType": "Open burning",
+                                "percentageOfTotalCategories": 0.13
+                            },
+                            "computed": {
+                                "totalCO2Emission": 7082.369267761124
+                            }
+                        },
+                        {
+                            "_id": "c4fe2d8a-9fd4-4523-bec8-2e1bca78fcb3",
+                            "increment": 5,
+                            "input": {
+                                "biowaste": "Non-biowaste",
+                                "nonBiowasteSubCategories": "Mixed / unkown composition",
+                                "practiceType": "Open pits, unmanaged",
+                                "percentageOfTotalCategories": 0.33
+                            },
+                            "computed": {
+                                "totalCO2Emission": 3953.1642294242247
+                            }
+                        }
+                    ],
+                    "results": {
+                        "percentageOfTotalCategories": 1,
+                        "totalCO2Emission": 21892.818159171402
+                    }
+                },
+                "endline": {
+                    "items": [
+                        {
+                            "_id": "58c1ab81-9809-4974-a821-7fa378225fd2",
+                            "increment": 1,
+                            "input": {
+                                "biowaste": "Biowaste",
+                                "practiceType": "Composting",
+                                "percentageOfTotalCategories": 0.27
+                            },
+                            "computed": {
+                                "totalCO2Emission": 1187.9933548194,
+                                "changeInEmission": -0.39058098854321754
+                            },
+                            "originIncrement": 0,
+                            "origin": "8ea66987-8580-45ac-935a-e49152d60609",
+                            "enabled": true
+                        },
+                        {
+                            "_id": "901ae2dd-d1a8-4167-bc76-c0194d35be41",
+                            "increment": 0,
+                            "input": {
+                                "biowaste": "Biowaste",
+                                "practiceType": "Anaerobically digested",
+                                "percentageOfTotalCategories": 0.27
+                            },
+                            "computed": {
+                                "totalCO2Emission": 151.5435714576,
+                                "changeInEmission": -0.48604222177316675
+                            },
+                            "originIncrement": 0,
+                            "origin": "8ea66987-8580-45ac-935a-e49152d60609",
+                            "enabled": true
+                        },
+                        {
+                            "_id": "8094665b-84f1-4e54-b5a2-fc918ca6aac8",
+                            "increment": 3,
+                            "input": {
+                                "biowaste": "Non-biowaste",
+                                "nonBiowasteSubCategories": "Plastics",
+                                "practiceType": "Recycling / Reuse",
+                                "percentageOfTotalCategories": 0.13
+                            },
+                            "computed": {
+                                "totalCO2Emission": 0,
+                                "changeInEmission": -1
+                            },
+                            "originIncrement": 2,
+                            "origin": "9ab538d0-9f8f-4a87-adc9-5a40b6d3b1f9",
+                            "enabled": true
+                        },
+                        {
+                            "_id": "0ea540da-3360-4b01-9b1e-82cd4e700b16",
+                            "increment": 4,
+                            "input": {
+                                "biowaste": "Non-biowaste",
+                                "nonBiowasteSubCategories": "Mixed / unkown composition",
+                                "practiceType": "Managed disposal site",
+                                "percentageOfTotalCategories": 0.33
+                            },
+                            "computed": {
+                                "totalCO2Emission": 9882.91057356056,
+                                "changeInEmission": 1.4999999999999998
+                            },
+                            "originIncrement": 5,
+                            "origin": "c4fe2d8a-9fd4-4523-bec8-2e1bca78fcb3",
+                            "enabled": true
+                        }
+                    ],
+                    "results": {
+                        "percentageOfTotalCategories": 1,
+                        "totalCO2Emission": 11222.44749983756,
+                        "changeInEmission": -0.48739137107681035
+                    }
+                },
+                "generationGram": 850
+            }
+        },
+        "offset": {},
+        "updated_at": "2023-10-13T15:30:47.423Z",
+        "updated_by": "natalia.montoyaarevalo@epfl.ch",
+        "users": [
+            {
+                "name": "natalia.montoyaarevalo@epfl.ch",
+                "roles": [
+                    "user",
+                    "admin"
+                ],
+                "loaded": true
+            }
+        ],
+        "description": "TestSolidWaste (v1)",
+        "version": "1.0.0",
+        "schema": "ghg_project",
+        "pp_per_hh": 5,
+        "totalHH": 20,
+        "Population": 80708,
+        "latitude": 32.4186,
+        "longitude": 38.3165725,
+        "solar_peak_hours": 5.89,
+        "index": 130,
+        "solar": 5.89,
+        "population": 100,
         "siteId": "JORs004465",
         "location_id": 1641,
         "location_pcode": "JORs004465",
@@ -555,6 +763,8 @@
         "updated_at": "2023-08-16T21:00:56.012Z",
         "updated_by": "pierre.guilbert@epfl.ch",
         "description": "Test",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 8787,
         "Population": 43934,
@@ -820,6 +1030,40 @@
         "updated_by": "natalia.montoyaarevalo@epfl.ch",
         "reference": true,
         "description": "Test for user's manual",
+        "version": "1.0.0",
+        "schema": "ghg_project",
+        "pp_per_hh": 5,
+        "totalHH": 15886,
+        "Population": 79429,
+        "latitude": 0.194599,
+        "longitude": 40.2879598,
+        "solar_peak_hours": 5.66,
+        "index": 133,
+        "solar": 5.66,
+        "population": 79429,
+        "users": [
+            {
+                "name": "natalia.montoyaarevalo@epfl.ch",
+                "roles": [
+                    "user",
+                    "admin"
+                ],
+                "loaded": true
+            }
+        ],
+        "siteId": "KENs001088",
+        "location_id": 1657,
+        "location_pcode": "KENs001088",
+        "siteName": "Dagahaley",
+        "countryCode": "KE"
+    },
+    {
+        "_id": "a43f8b33-8846-4efe-9cd0-184d8e8dcbd4",
+        "created_at": "2023-10-13T15:36:48.902Z",
+        "created_by": "natalia.montoyaarevalo@epfl.ch",
+        "description": "NAMA1",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 15886,
         "Population": 79429,
@@ -935,357 +1179,8 @@
         },
         "offset": {},
         "description": "Tutorial",
-        "pp_per_hh": 5,
-        "totalHH": 1,
-        "Population": 173742,
-        "latitude": 3.716764,
-        "longitude": 34.8568982,
-        "solar_peak_hours": 6.06,
-        "index": 136,
-        "solar": 6.06,
-        "population": 5,
-        "users": [
-            {
-                "name": "pierre.guilbert@epfl.ch",
-                "roles": [
-                    "user",
-                    "admin"
-                ],
-                "loaded": true
-            }
-        ],
-        "siteId": "KENs001093",
-        "location_id": 1664,
-        "location_pcode": "KENs001093",
-        "siteName": "Kakuma",
-        "countryCode": "KE"
-    },
-    {
-        "_id": "99b041fb-85a5-4fa8-8963-c9f23f5552c8",
-        "created_at": "2023-04-28T09:23:40.377Z",
-        "created_by": "cara.tobin@epfl.ch",
-        "wash": {
-            "trucking": {
-                "baseline": {
-                    "items": [
-                        {
-                            "_id": "7daf25aa-9fa9-47be-abb5-e89d3b913806",
-                            "increment": 0,
-                            "input": {
-                                "US_TYP": "WATER",
-                                "US_UNI": "km",
-                                "TOT_WS": 10,
-                                "WACL": 50000,
-                                "TR_VOL": 3.5,
-                                "TR_TYP": "Diesel"
-                            },
-                            "computed": {
-                                "TR_NUM": 14286,
-                                "TR_DIST": 285720,
-                                "totalCO2Emission": 72.03858360000001
-                            }
-                        },
-                        {
-                            "_id": "9a6b7ae8-6655-41b5-9ff2-ef5317e81fc4",
-                            "increment": 1,
-                            "input": {
-                                "US_TYP": "FAECAL SLUDGE",
-                                "US_UNI": "liters",
-                                "LIT_WS": 4000,
-                                "WACL": 5000,
-                                "TR_TYP": "Diesel"
-                            },
-                            "computed": {
-                                "totalCO2Emission": 10.8976018
-                            }
-                        }
-                    ],
-                    "results": {
-                        "WACL": 55000,
-                        "totalCO2Emission": 82.93618540000001
-                    }
-                },
-                "endline": {
-                    "items": [
-                        {
-                            "_id": "73b2aa71-fcd9-421a-9706-1e532813e69a",
-                            "increment": 3,
-                            "input": {
-                                "US_TYP": "WATER",
-                                "US_UNI": "km",
-                                "TOT_WS": 2,
-                                "WACL": 50000,
-                                "TR_VOL": 3.5,
-                                "TR_TYP": "Diesel",
-                                "description": "Reduce distance"
-                            },
-                            "computed": {
-                                "TR_NUM": 14286,
-                                "TR_DIST": 57144,
-                                "totalCO2Emission": 14.40771672,
-                                "changeInEmission": -0.8
-                            },
-                            "origin": "7daf25aa-9fa9-47be-abb5-e89d3b913806",
-                            "originIncrement": 0,
-                            "enabled": true
-                        },
-                        {
-                            "_id": "960578a5-8dcc-4453-9e55-d5448265d21a",
-                            "increment": 2,
-                            "input": {
-                                "US_TYP": "FAECAL SLUDGE",
-                                "US_UNI": "liters",
-                                "LIT_WS": 2000,
-                                "WACL": 2500,
-                                "TR_TYP": "Petrol / Gaz",
-                                "description": "ChangeTruckFuel"
-                            },
-                            "computed": {
-                                "totalCO2Emission": 4.68,
-                                "changeInEmission": -0.07054771445218345
-                            },
-                            "origin": "9a6b7ae8-6655-41b5-9ff2-ef5317e81fc4",
-                            "originIncrement": 1,
-                            "enabled": true
-                        },
-                        {
-                            "_id": "ec91ad64-3386-4b91-99bc-e637e9ff2bef",
-                            "increment": 1,
-                            "input": {
-                                "US_TYP": "FAECAL SLUDGE",
-                                "US_UNI": "liters",
-                                "LIT_WS": 2000,
-                                "WACL": 2500,
-                                "TR_TYP": "Diesel",
-                                "description": "InitialDieselTrucks"
-                            },
-                            "computed": {
-                                "totalCO2Emission": 5.4488009,
-                                "changeInEmission": 0
-                            },
-                            "origin": "9a6b7ae8-6655-41b5-9ff2-ef5317e81fc4",
-                            "originIncrement": 1,
-                            "enabled": true
-                        }
-                    ],
-                    "results": {
-                        "WACL": 55000,
-                        "totalCO2Emission": 24.536517619999998,
-                        "changeInEmission": -0.7041518427492085
-                    }
-                }
-            }
-        },
-        "energy": {
-            "facilities": {
-                "baseline": {
-                    "items": [
-                        {
-                            "_id": "1c56c50e-e602-4ae0-a788-a6bda386e35f",
-                            "increment": 0,
-                            "input": {
-                                "name": "Angelina Jolie School",
-                                "fuelType": "ELE_DIES",
-                                "generatorLoad": 0.6,
-                                "disableDieselLiters": true,
-                                "dieselLiters": 8754.63807047179,
-                                "dieselPowerEstimated": true,
-                                "dieselLitersEstimated": true,
-                                "dieselPower": 32788.906630980484,
-                                "generatorSize": 25,
-                                "operatingHours": 42
-                            },
-                            "computed": {
-                                "totalCO2Emission": 23.851139898780477,
-                                "totalPower": 32789
-                            }
-                        },
-                        {
-                            "_id": "59737571-36d8-41a0-929a-6938c43bff83",
-                            "increment": 2,
-                            "input": {
-                                "name": "School C",
-                                "fuelType": "ELE_DIES",
-                                "generatorLoad": 0.6,
-                                "disableDieselLiters": false,
-                                "dieselLiters": 5000,
-                                "dieselPowerEstimated": true,
-                                "dieselLitersEstimated": false,
-                                "dieselPower": 18726.591760299623
-                            },
-                            "computed": {
-                                "totalCO2Emission": 13.62200225,
-                                "totalPower": 18727
-                            }
-                        },
-                        {
-                            "_id": "4bd174be-ef5f-4f37-ad00-12865c7ea76c",
-                            "increment": 1,
-                            "input": {
-                                "name": "School B",
-                                "fuelType": "ELE_DIES",
-                                "generatorLoad": 0.6,
-                                "disableDieselLiters": false,
-                                "dieselLiters": 5000,
-                                "dieselPowerEstimated": true,
-                                "dieselLitersEstimated": false,
-                                "dieselPower": 18726.591760299623
-                            },
-                            "computed": {
-                                "totalCO2Emission": 13.62200225,
-                                "totalPower": 18727
-                            }
-                        },
-                        {
-                            "_id": "96958c19-ee28-4f4a-85ed-3067677dcdc4",
-                            "increment": 3,
-                            "input": {
-                                "name": "Unpowered",
-                                "fuelType": "ELE_NONE",
-                                "generatorLoad": 0.6
-                            },
-                            "computed": {
-                                "totalCO2Emission": 0,
-                                "totalPower": 0
-                            }
-                        }
-                    ],
-                    "results": {
-                        "dieselPower": 70242.09015157973,
-                        "dieselLiters": 18754.63807047179,
-                        "totalPower": 70243,
-                        "totalCO2Emission": 51.09514439878048
-                    }
-                },
-                "endline": {
-                    "items": [
-                        {
-                            "_id": "35a0b4b8-2c0f-4f2c-a151-528510be4b44",
-                            "increment": 0,
-                            "input": {
-                                "name": "Angelina Jolie School",
-                                "fuelType": "ELE_GRID",
-                                "generatorLoad": 0.6,
-                                "gridPower": 32789
-                            },
-                            "computed": {
-                                "totalCO2Emission": 19.115986999999997,
-                                "totalPower": 32789,
-                                "changeInEmission": -0.19852941699539448
-                            },
-                            "origin": "1c56c50e-e602-4ae0-a788-a6bda386e35f",
-                            "originIncrement": 0,
-                            "enabled": true
-                        },
-                        {
-                            "_id": "5f1f1d83-eae9-471f-b1f8-849e3b015cbb",
-                            "increment": 1,
-                            "input": {
-                                "name": "School B",
-                                "fuelType": "ELE_SOLAR",
-                                "generatorLoad": 0.6,
-                                "solarInstalled": 10.576,
-                                "renewablePower": 18727
-                            },
-                            "computed": {
-                                "totalCO2Emission": 0,
-                                "totalPower": 18727,
-                                "changeInEmission": -1
-                            },
-                            "origin": "4bd174be-ef5f-4f37-ad00-12865c7ea76c",
-                            "originIncrement": 1,
-                            "enabled": true
-                        },
-                        {
-                            "_id": "39f5e884-2ddb-475d-b257-2ece57f35a12",
-                            "increment": 2,
-                            "input": {
-                                "name": "School B_copy",
-                                "fuelType": "ELE_HYB",
-                                "generatorLoad": 0.6,
-                                "disableDieselLiters": false,
-                                "dieselPower": 8727,
-                                "dieselLiters": 2330.109,
-                                "dieselPowerEstimated": false,
-                                "dieselLitersEstimated": true,
-                                "gridPower": 5000,
-                                "solarInstalled": 2.824,
-                                "renewablePower": 5000
-                            },
-                            "computed": {
-                                "totalCO2Emission": 9.26315000814905,
-                                "totalPower": 18727,
-                                "changeInEmission": -0.3199861636971135
-                            },
-                            "origin": "59737571-36d8-41a0-929a-6938c43bff83",
-                            "originIncrement": 2,
-                            "enabled": false
-                        },
-                        {
-                            "_id": "3d1d145c-cd23-4469-8057-0bd12d076bec",
-                            "increment": 3,
-                            "input": {
-                                "name": "Unpowered",
-                                "fuelType": "ELE_DIES",
-                                "generatorLoad": 0.6,
-                                "disableDieselLiters": false,
-                                "dieselPower": 37453.18352059925,
-                                "dieselLiters": 10000,
-                                "dieselPowerEstimated": true,
-                                "dieselLitersEstimated": false
-                            },
-                            "computed": {
-                                "totalCO2Emission": 27.2440045,
-                                "totalPower": 37453,
-                                "changeInEmission": 1
-                            },
-                            "origin": "96958c19-ee28-4f4a-85ed-3067677dcdc4",
-                            "originIncrement": 3,
-                            "enabled": false
-                        },
-                        {
-                            "_id": "d239a124-d5e0-47ea-b03d-de6d7f46f31e",
-                            "increment": 4,
-                            "input": {
-                                "name": "School C",
-                                "fuelType": "ELE_HYB",
-                                "generatorLoad": 0.6,
-                                "disableDieselLiters": false,
-                                "solarInstalled": 4.928,
-                                "renewablePower": 8727,
-                                "gridPower": 5000,
-                                "dieselPower": 5000,
-                                "dieselLiters": 1335,
-                                "dieselPowerEstimated": false,
-                                "dieselLitersEstimated": true
-                            },
-                            "computed": {
-                                "totalCO2Emission": 6.55207460075,
-                                "totalPower": 18727,
-                                "changeInEmission": -0.5190079636971136
-                            },
-                            "originIncrement": 2,
-                            "origin": "59737571-36d8-41a0-929a-6938c43bff83",
-                            "enabled": true
-                        }
-                    ],
-                    "results": {
-                        "dieselPower": 5000,
-                        "dieselLiters": 1335,
-                        "gridPower": 37789,
-                        "renewablePower": 27454,
-                        "totalPower": 70243,
-                        "totalCO2Emission": 25.668061600749997,
-                        "changeInEmission": -0.4976418620051373
-                    }
-                }
-            }
-        },
-        "material": {},
-        "offset": {},
-        "updated_at": "2023-05-01T19:38:09.735Z",
-        "updated_by": "cara.tobin@epfl.ch",
-        "description": "Pretest",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 1,
         "Population": 173742,
@@ -1687,43 +1582,243 @@
                         "changeInEmission": -0.6082793079767426
                     }
                 }
+            },
+            "cooking": {
+                "baseline": {
+                    "items": [
+                        {
+                            "_id": "d7db26d6-78a7-42b9-b2ef-284458fdc9e1",
+                            "increment": 0,
+                            "input": {
+                                "image": "/images/energy/cookstoves/traditional-wood.png",
+                                "fuelTypes": [
+                                    "FWD",
+                                    "CHC",
+                                    "BRQ",
+                                    "PLTS"
+                                ],
+                                "fuelType": "CHC",
+                                "disabledFuelUsage": false,
+                                "generatorLoad": 0.6,
+                                "cookstove": "2",
+                                "appliance": "None",
+                                "fuelUsage": 4.49491525423729,
+                                "sustainablySourced": false,
+                                "numberOfCookstove": 0.25
+                            },
+                            "computed": {
+                                "totalCO2Emission": 2.383312240043129
+                            }
+                        },
+                        {
+                            "_id": "1cebd87f-0002-4f45-be2b-9b7c53d6eb1f",
+                            "increment": 1,
+                            "input": {
+                                "image": "/images/energy/cookstoves/kerosene.png",
+                                "fuelTypes": [
+                                    "ETH",
+                                    "PET",
+                                    "DIES",
+                                    "KRS"
+                                ],
+                                "fuelType": "DIES",
+                                "disabledFuelUsage": false,
+                                "generatorLoad": 0.6,
+                                "cookstove": "6",
+                                "appliance": "None",
+                                "fuelUsage": 1.02527806,
+                                "numberOfCookstove": 0.25
+                            },
+                            "computed": {
+                                "totalCO2Emission": 0.25506028498407285
+                            }
+                        },
+                        {
+                            "_id": "c5ee478f-ca63-4b7c-ab23-8b57ec8c319a",
+                            "increment": 2,
+                            "input": {
+                                "image": "/images/energy/cookstoves/induction.png",
+                                "fuelTypes": [
+                                    "ELE_DIES",
+                                    "ELE_GRID",
+                                    "ELE_SOLAR",
+                                    "ELE_HYB"
+                                ],
+                                "fuelType": "ELE_GRID",
+                                "disabledFuelUsage": false,
+                                "generatorLoad": 0.6,
+                                "cookstove": "8",
+                                "appliance": "None",
+                                "fuelUsage": 3,
+                                "gridPower": 3,
+                                "numberOfCookstove": 0.25
+                            },
+                            "computed": {
+                                "totalCO2Emission": 0.906021010771875
+                            }
+                        },
+                        {
+                            "_id": "3814e1e2-6a79-4da6-82fe-badb783d74db",
+                            "increment": 3,
+                            "input": {
+                                "image": "/images/energy/cookstoves/gasifier.png",
+                                "fuelTypes": [
+                                    "FWD",
+                                    "BRQ",
+                                    "PLTS"
+                                ],
+                                "fuelType": "BRQ",
+                                "disabledFuelUsage": false,
+                                "generatorLoad": 0.6,
+                                "cookstove": "5",
+                                "appliance": "None",
+                                "fuelUsage": 4.245812809999999,
+                                "sustainablySourced": false,
+                                "numberOfCookstove": 0.25
+                            },
+                            "computed": {
+                                "totalCO2Emission": 0.45629312315166015
+                            }
+                        }
+                    ],
+                    "results": {
+                        "fuelUsage": 12.76600612423729,
+                        "numberOfCookstove": 1,
+                        "totalCO2Emission": 4.000686658950737
+                    }
+                },
+                "endline": {
+                    "items": [
+                        {
+                            "_id": "05959a30-34e4-4adc-aa1b-5f0d8a1055b1",
+                            "increment": 0,
+                            "input": {
+                                "image": "/images/energy/cookstoves/traditional-wood.png",
+                                "fuelTypes": [
+                                    "FWD",
+                                    "CHC",
+                                    "BRQ",
+                                    "PLTS"
+                                ],
+                                "fuelType": "CHC",
+                                "disabledFuelUsage": false,
+                                "generatorLoad": 0.6,
+                                "cookstove": "2",
+                                "appliance": "None",
+                                "fuelUsage": 4.49491525423729,
+                                "sustainablySourced": true,
+                                "numberOfCookstove": 0.25
+                            },
+                            "computed": {
+                                "totalCO2Emission": 0.5428577047324266,
+                                "changeInEmission": -0.7722255205962426
+                            },
+                            "origin": "d7db26d6-78a7-42b9-b2ef-284458fdc9e1",
+                            "originIncrement": 0,
+                            "enabled": true
+                        },
+                        {
+                            "_id": "7866ffa2-4892-43e2-a506-fea079db2ef5",
+                            "increment": 1,
+                            "input": {
+                                "image": "/images/energy/cookstoves/kerosene.png",
+                                "fuelTypes": [
+                                    "ETH",
+                                    "PET",
+                                    "DIES",
+                                    "KRS"
+                                ],
+                                "fuelType": "ETH",
+                                "disabledFuelUsage": false,
+                                "generatorLoad": 0.6,
+                                "cookstove": "6",
+                                "numberOfCookstove": 0.25,
+                                "appliance": "None",
+                                "fuelUsage": 1.7722184250000002
+                            },
+                            "computed": {
+                                "totalCO2Emission": 0.2005196297113078,
+                                "changeInEmission": -0.2138343696909569
+                            },
+                            "origin": "1cebd87f-0002-4f45-be2b-9b7c53d6eb1f",
+                            "originIncrement": 1,
+                            "enabled": true
+                        },
+                        {
+                            "_id": "d0e15489-a634-4fbe-a93a-b529ab6f41f9",
+                            "increment": 2,
+                            "input": {
+                                "image": "/images/energy/cookstoves/induction.png",
+                                "fuelTypes": [
+                                    "ELE_DIES",
+                                    "ELE_GRID",
+                                    "ELE_SOLAR",
+                                    "ELE_HYB"
+                                ],
+                                "fuelType": "ELE_SOLAR",
+                                "disabledFuelUsage": true,
+                                "generatorLoad": 0.6,
+                                "cookstove": "8",
+                                "gridPower": 3,
+                                "numberOfCookstove": 0.25,
+                                "appliance": "Pressure cooker",
+                                "fuelUsage": 0.9000000000000001,
+                                "renewablePower": 0.9000000000000001,
+                                "solarInstalled": 0.001
+                            },
+                            "computed": {
+                                "totalCO2Emission": 0,
+                                "changeInEmission": -1
+                            },
+                            "origin": "c5ee478f-ca63-4b7c-ab23-8b57ec8c319a",
+                            "originIncrement": 2,
+                            "enabled": true
+                        },
+                        {
+                            "_id": "da5f4a0e-b769-466f-ac05-ef5365725c9f",
+                            "increment": 3,
+                            "input": {
+                                "image": "/images/energy/cookstoves/gasifier.png",
+                                "fuelTypes": [
+                                    "FWD",
+                                    "BRQ",
+                                    "PLTS"
+                                ],
+                                "fuelType": "BRQ",
+                                "disabledFuelUsage": true,
+                                "generatorLoad": 0.6,
+                                "cookstove": "5",
+                                "appliance": "Pressure cooker",
+                                "fuelUsage": 1.273743843,
+                                "sustainablySourced": true,
+                                "numberOfCookstove": 0.25
+                            },
+                            "computed": {
+                                "totalCO2Emission": 0.003828976611107536,
+                                "changeInEmission": -0.9916085156299081
+                            },
+                            "origin": "3814e1e2-6a79-4da6-82fe-badb783d74db",
+                            "originIncrement": 3,
+                            "enabled": true
+                        }
+                    ],
+                    "results": {
+                        "fuelUsage": 8.44087752223729,
+                        "renewablePower": 0.9000000000000001,
+                        "numberOfCookstove": 1,
+                        "totalCO2Emission": 0.7472063110548418,
+                        "changeInEmission": -0.8132304839762652
+                    }
+                }
             }
         },
         "material": {},
         "offset": {},
-        "updated_at": "2023-07-24T15:41:33.678Z",
+        "updated_at": "2023-10-23T13:22:15.280Z",
         "updated_by": "cara.tobin@epfl.ch",
         "description": "TutorialUNHCR",
-        "pp_per_hh": 5,
-        "totalHH": 1,
-        "Population": 173742,
-        "latitude": 3.716764,
-        "longitude": 34.8568982,
-        "solar_peak_hours": 6.06,
-        "index": 136,
-        "solar": 6.06,
-        "population": 5,
-        "users": [
-            {
-                "name": "pierre.guilbert@epfl.ch",
-                "roles": [
-                    "user",
-                    "admin"
-                ],
-                "loaded": true
-            }
-        ],
-        "siteId": "KENs001093",
-        "location_id": 1664,
-        "location_pcode": "KENs001093",
-        "siteName": "Kakuma",
-        "countryCode": "KE"
-    },
-    {
-        "_id": "6807ed94-cf27-49ed-95aa-70c332c585b9",
-        "created_at": "2023-05-02T14:16:49.000Z",
-        "created_by": "cara.tobin@epfl.ch",
-        "description": "test",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 1,
         "Population": 173742,
@@ -2077,6 +2172,8 @@
         "updated_at": "2023-05-16T12:13:57.147Z",
         "updated_by": "natalia.montoyaarevalo@epfl.ch",
         "description": "Tutorial_FieldColleagues",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 1,
         "Population": 173742,
@@ -2619,6 +2716,8 @@
         "material": {},
         "offset": {},
         "description": "Assessment Cooking LCA",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 1,
         "Population": 173742,
@@ -2740,15 +2839,35 @@
                                 "totalCO2Emission": 45.96138217,
                                 "totalPower": 325097
                             }
+                        },
+                        {
+                            "_id": "574a3445-00d1-4567-b9af-aa7093e8c9b4",
+                            "increment": 5,
+                            "input": {
+                                "name": "Test Cara",
+                                "fuelType": "ELE_DIES",
+                                "generatorLoad": 0.6,
+                                "disableDieselLiters": false,
+                                "fuelUsage": 86800.632,
+                                "dieselPowerEstimated": true,
+                                "dieselLitersEstimated": true,
+                                "dieselPower": 325096,
+                                "generatorSize": 30,
+                                "operatingHours": 40
+                            },
+                            "computed": {
+                                "totalCO2Emission": 236.47968088108442,
+                                "totalPower": 325096
+                            }
                         }
                     ],
                     "results": {
-                        "fuelUsage": 107850.06933,
-                        "dieselPower": 403932.8439325842,
+                        "fuelUsage": 194650.70133,
+                        "dieselPower": 729028.8439325842,
                         "gridPower": 403932.85,
                         "renewablePower": 817618.6,
-                        "totalPower": 1625485,
-                        "totalCO2Emission": 529.3196289651833
+                        "totalPower": 1950581,
+                        "totalCO2Emission": 765.7993098462676
                     }
                 },
                 "endline": {
@@ -2861,15 +2980,39 @@
                             "origin": "c4a326d8-4337-4083-9716-1fbcb90306a8",
                             "originIncrement": 4,
                             "enabled": true
+                        },
+                        {
+                            "_id": "5c8b730e-d2b8-48f2-80cc-285e6bd86b29",
+                            "increment": 5,
+                            "input": {
+                                "name": "Test Cara",
+                                "fuelType": "ELE_DIES",
+                                "generatorLoad": 0.6,
+                                "disableDieselLiters": false,
+                                "fuelUsage": 86800.632,
+                                "dieselPowerEstimated": true,
+                                "dieselLitersEstimated": true,
+                                "dieselPower": 325096,
+                                "generatorSize": 30,
+                                "operatingHours": 40
+                            },
+                            "computed": {
+                                "totalCO2Emission": 236.47968088108442,
+                                "totalPower": 325096,
+                                "changeInEmission": 0
+                            },
+                            "origin": "574a3445-00d1-4567-b9af-aa7093e8c9b4",
+                            "originIncrement": 5,
+                            "enabled": true
                         }
                     ],
                     "results": {
-                        "fuelUsage": 107850.06933,
-                        "dieselPower": 403932.8439325842,
+                        "fuelUsage": 194650.70133,
+                        "dieselPower": 729028.8439325842,
                         "gridPower": 403932.85,
                         "renewablePower": 817618.6,
-                        "totalPower": 1625485,
-                        "totalCO2Emission": 529.3196289651833,
+                        "totalPower": 1950581,
+                        "totalCO2Emission": 765.7993098462676,
                         "changeInEmission": 0
                     }
                 }
@@ -2932,9 +3075,11 @@
         },
         "material": {},
         "offset": {},
-        "updated_at": "2023-09-01T08:41:51.580Z",
-        "updated_by": "natalia.montoyaarevalo@epfl.ch",
+        "updated_at": "2023-10-23T08:22:10.088Z",
+        "updated_by": "cara.tobin@epfl.ch",
         "description": "Assessment Pumping LCA - Jinjin",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 1,
         "Population": 173742,
@@ -2961,10 +3106,44 @@
         "countryCode": "KE"
     },
     {
-        "_id": "a3605544-7c4e-43af-a7f8-4e3744665b4e",
-        "created_at": "2023-08-17T08:20:32.865Z",
-        "created_by": "natalia.montoyaarevalo@epfl.ch",
-        "description": "Test12321",
+        "_id": "36e877f7-2e8d-417e-a828-6c35d271f3ba",
+        "created_at": "2023-10-27T07:16:47.222Z",
+        "created_by": "cara.tobin@epfl.ch",
+        "description": "GuidedExample_Cooking_WaterSupply",
+        "version": "1.0.0",
+        "schema": "ghg_project",
+        "pp_per_hh": 5,
+        "totalHH": 1,
+        "Population": 173742,
+        "latitude": 3.716764,
+        "longitude": 34.8568982,
+        "solar_peak_hours": 6.06,
+        "index": 136,
+        "solar": 6.06,
+        "population": 5,
+        "users": [
+            {
+                "name": "pierre.guilbert@epfl.ch",
+                "roles": [
+                    "user",
+                    "admin"
+                ],
+                "loaded": true
+            }
+        ],
+        "siteId": "KENs001093",
+        "location_id": 1664,
+        "location_pcode": "KENs001093",
+        "siteName": "Kakuma",
+        "countryCode": "KE"
+    },
+    {
+        "_id": "ba984f32-1613-4f62-8218-ddfc946fd89f",
+        "created_at": "2023-10-27T07:58:22.176Z",
+        "created_by": "cara.tobin@epfl.ch",
+        "description": "GuidedExercise_WaterSupply_Cooking",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 1,
         "Population": 173742,
@@ -2995,6 +3174,8 @@
         "created_at": "2023-07-18T12:13:43.128Z",
         "created_by": "krahenbu@unhcr.org",
         "description": "GTH test July 2023_1",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 10535,
         "Population": 52673,
@@ -3191,6 +3372,8 @@
         "updated_at": "2023-08-28T12:07:29.900Z",
         "updated_by": "krahenbu@unhcr.org",
         "description": "GTH test August 2023",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 10535,
         "Population": 52673,
@@ -3348,6 +3531,8 @@
         "updated_at": "2023-07-17T07:08:47.798Z",
         "updated_by": "krahenbu@unhcr.org",
         "description": "Test: Field mission 2023",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 1,
         "Population": 69149,
@@ -3720,6 +3905,8 @@
         "updated_at": "2023-09-26T10:32:45.682Z",
         "updated_by": "krahenbu@unhcr.org",
         "description": "GTH test July 2023",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 1,
         "Population": 69149,
@@ -3886,6 +4073,8 @@
         "updated_by": "natalia.montoyaarevalo@epfl.ch",
         "reference": true,
         "description": "Test for WASH Trucking",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 2797,
         "Population": 13986,
@@ -3973,6 +4162,289 @@
         "updated_at": "2023-08-25T09:12:11.136Z",
         "updated_by": "natalia.montoyaarevalo@epfl.ch",
         "description": "Test SWM",
+        "version": "1.0.0",
+        "schema": "ghg_project",
+        "pp_per_hh": 5,
+        "totalHH": 2797,
+        "Population": 13986,
+        "latitude": 28.490733,
+        "longitude": 65.0957792,
+        "solar_peak_hours": 5.9,
+        "index": 151,
+        "solar": 5.9,
+        "population": 13986,
+        "users": [
+            {
+                "name": "natalia.montoyaarevalo@epfl.ch",
+                "roles": [
+                    "user",
+                    "admin"
+                ],
+                "loaded": true
+            }
+        ],
+        "siteId": "22PAK002",
+        "location_id": 2088,
+        "location_pcode": "22PAK002",
+        "siteName": "Balochistan",
+        "countryCode": "PK"
+    },
+    {
+        "_id": "9359928a-5b40-427e-9f2d-35c9fda59254",
+        "created_at": "2023-10-10T22:52:21.934Z",
+        "created_by": "natalia.montoyaarevalo@epfl.ch",
+        "wash": {},
+        "energy": {
+            "cooking": {
+                "baseline": {
+                    "items": [
+                        {
+                            "_id": "1b6a1230-e61c-4ffc-bbff-fe455350e44f",
+                            "increment": 0,
+                            "input": {
+                                "image": "/images/energy/cookstoves/traditional-wood.png",
+                                "fuelTypes": [
+                                    "FWD",
+                                    "CHC",
+                                    "BRQ",
+                                    "PLTS"
+                                ],
+                                "fuelType": "FWD",
+                                "disabledFuelUsage": true,
+                                "generatorLoad": 0.6,
+                                "cookstove": "2",
+                                "appliance": "Heat retaining basket",
+                                "dryWood": true,
+                                "fuelUsage": 5.949999999999999,
+                                "sustainablySourced": true,
+                                "numberOfCookstove": 0.2
+                            },
+                            "computed": {
+                                "totalCO2Emission": 125.5866364004601
+                            }
+                        },
+                        {
+                            "_id": "73cc451a-cda1-4a48-b90f-960ccee228de",
+                            "increment": 1,
+                            "input": {
+                                "image": "/images/energy/cookstoves/improved-bricket.jpg",
+                                "fuelTypes": [
+                                    "FWD",
+                                    "CHC",
+                                    "BRQ",
+                                    "PLTS"
+                                ],
+                                "fuelType": "CHC",
+                                "disabledFuelUsage": true,
+                                "generatorLoad": 0.6,
+                                "cookstove": "4",
+                                "appliance": "Pressure cooker",
+                                "fuelUsage": 0.9226404990000001,
+                                "sustainablySourced": false,
+                                "numberOfCookstove": 0.2
+                            },
+                            "computed": {
+                                "totalCO2Emission": 309.09910280146465
+                            }
+                        },
+                        {
+                            "_id": "13946f96-b502-437c-9956-91679a0df5d6",
+                            "increment": 2,
+                            "input": {
+                                "image": "/images/energy/cookstoves/kerosene.png",
+                                "fuelTypes": [
+                                    "ETH",
+                                    "PET",
+                                    "DIES",
+                                    "KRS"
+                                ],
+                                "fuelType": "ETH",
+                                "disabledFuelUsage": false,
+                                "generatorLoad": 0.6,
+                                "cookstove": "6",
+                                "appliance": "None",
+                                "fuelUsage": 1.7722184250000002,
+                                "numberOfCookstove": 0.2
+                            },
+                            "computed": {
+                                "totalCO2Emission": 448.6827234420223
+                            }
+                        }
+                    ],
+                    "results": {
+                        "fuelUsage": 8.644858924,
+                        "numberOfCookstove": 0.6000000000000001,
+                        "totalCO2Emission": 883.368462643947
+                    }
+                },
+                "endline": {
+                    "items": [
+                        {
+                            "_id": "208743d8-dc52-4f15-a216-35ae5fb7c816",
+                            "increment": 0,
+                            "input": {
+                                "image": "/images/energy/cookstoves/traditional-wood.png",
+                                "fuelTypes": [
+                                    "FWD",
+                                    "CHC",
+                                    "BRQ",
+                                    "PLTS"
+                                ],
+                                "fuelType": "FWD",
+                                "disabledFuelUsage": true,
+                                "generatorLoad": 0.6,
+                                "cookstove": "2",
+                                "appliance": "Heat retaining basket",
+                                "dryWood": true,
+                                "fuelUsage": 5.949999999999999,
+                                "sustainablySourced": true,
+                                "numberOfCookstove": 0.2
+                            },
+                            "computed": {
+                                "totalCO2Emission": 125.5866364004601,
+                                "changeInEmission": 0
+                            },
+                            "origin": "1b6a1230-e61c-4ffc-bbff-fe455350e44f",
+                            "originIncrement": 0,
+                            "enabled": true
+                        },
+                        {
+                            "_id": "4fd53f59-b934-4fb9-bcc5-29577e439277",
+                            "increment": 1,
+                            "input": {
+                                "image": "/images/energy/cookstoves/improved-bricket.jpg",
+                                "fuelTypes": [
+                                    "FWD",
+                                    "CHC",
+                                    "BRQ",
+                                    "PLTS"
+                                ],
+                                "fuelType": "CHC",
+                                "disabledFuelUsage": true,
+                                "generatorLoad": 0.6,
+                                "cookstove": "4",
+                                "appliance": "None",
+                                "fuelUsage": 3.07546833,
+                                "sustainablySourced": false,
+                                "numberOfCookstove": 0.2
+                            },
+                            "computed": {
+                                "totalCO2Emission": 3434.4344755718294,
+                                "changeInEmission": 10.11111111111111
+                            },
+                            "origin": "73cc451a-cda1-4a48-b90f-960ccee228de",
+                            "originIncrement": 1,
+                            "enabled": true
+                        },
+                        {
+                            "_id": "957353ba-cab9-4ee1-b091-a42ccc56d388",
+                            "increment": 2,
+                            "input": {
+                                "image": "/images/energy/cookstoves/kerosene.png",
+                                "fuelTypes": [
+                                    "ETH",
+                                    "PET",
+                                    "DIES",
+                                    "KRS"
+                                ],
+                                "fuelType": "ETH",
+                                "disabledFuelUsage": true,
+                                "generatorLoad": 0.6,
+                                "cookstove": "6",
+                                "appliance": "Pressure cooker",
+                                "fuelUsage": 0.5316655275000002,
+                                "numberOfCookstove": 0.2
+                            },
+                            "computed": {
+                                "totalCO2Emission": 40.38144510978202,
+                                "changeInEmission": -0.9099999999999999
+                            },
+                            "origin": "13946f96-b502-437c-9956-91679a0df5d6",
+                            "originIncrement": 2,
+                            "enabled": true
+                        }
+                    ],
+                    "results": {
+                        "fuelUsage": 9.557133857499998,
+                        "numberOfCookstove": 0.6000000000000001,
+                        "totalCO2Emission": 3600.4025570820713,
+                        "changeInEmission": 3.075765333874342
+                    }
+                }
+            }
+        },
+        "material": {
+            "domesticsolidwaste": {
+                "baseline": {
+                    "items": [
+                        {
+                            "_id": "94ca2d09-d499-4861-bf4b-ff6d29dca1f0",
+                            "increment": 0,
+                            "input": {
+                                "biowaste": "Biowaste",
+                                "practiceType": "Open pits, unmanaged",
+                                "percentageOfTotalCategories": 0.54
+                            },
+                            "computed": {
+                                "totalCO2Emission": 432.537301728
+                            }
+                        }
+                    ],
+                    "results": {
+                        "percentageOfTotalCategories": 0.54,
+                        "totalCO2Emission": 432.537301728
+                    }
+                },
+                "endline": {
+                    "items": [
+                        {
+                            "_id": "7db5b3c9-224f-4484-b353-b5a06cfe0046",
+                            "increment": 1,
+                            "input": {
+                                "biowaste": "Biowaste",
+                                "practiceType": "Composting",
+                                "percentageOfTotalCategories": 0.27
+                            },
+                            "computed": {
+                                "totalCO2Emission": 48.4397641476,
+                                "changeInEmission": -0.38801020408163267
+                            },
+                            "origin": "94ca2d09-d499-4861-bf4b-ff6d29dca1f0",
+                            "originIncrement": 0,
+                            "enabled": true
+                        },
+                        {
+                            "_id": "12122f7c-6756-4c3e-b02b-454f5c2ed76c",
+                            "increment": 0,
+                            "input": {
+                                "biowaste": "Biowaste",
+                                "practiceType": "Anaerobically digested",
+                                "percentageOfTotalCategories": 0.27
+                            },
+                            "computed": {
+                                "totalCO2Emission": 6.1791043104,
+                                "changeInEmission": -0.4857142857142857
+                            },
+                            "origin": "94ca2d09-d499-4861-bf4b-ff6d29dca1f0",
+                            "originIncrement": 0,
+                            "enabled": true
+                        }
+                    ],
+                    "results": {
+                        "percentageOfTotalCategories": 0.54,
+                        "totalCO2Emission": 54.618868458,
+                        "changeInEmission": -0.8737244897959183
+                    }
+                },
+                "generationGram": 200
+            }
+        },
+        "offset": {},
+        "updated_at": "2023-10-23T13:26:38.240Z",
+        "updated_by": "natalia.montoyaarevalo@epfl.ch",
+        "description": "Test Cooking for User's Manual",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 2797,
         "Population": 13986,
@@ -4470,6 +4942,8 @@
         "updated_at": "2023-10-05T14:10:59.829Z",
         "updated_by": "natalia.montoyaarevalo@epfl.ch",
         "description": "Test lighting",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 1396,
         "Population": 6979,
@@ -4503,6 +4977,8 @@
         "updated_at": "2023-07-25T14:55:48.403Z",
         "updated_by": "krahenbu@unhcr.org",
         "description": "GTH test July 2023",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 2,
         "latitude": 46.818188,
@@ -4519,6 +4995,94 @@
         "siteId": "21bb646c-c516-46c7-973b-859af9df96e3",
         "siteName": "Berne",
         "countryCode": "CH"
+    },
+    {
+        "_id": "d7764b71-4760-40cc-ac34-04dfabf85188",
+        "created_at": "2023-10-13T15:35:18.019Z",
+        "created_by": "natalia.montoyaarevalo@epfl.ch",
+        "description": "NataliaMA",
+        "version": "1.0.0",
+        "schema": "ghg_project",
+        "pp_per_hh": 5,
+        "totalHH": 1972,
+        "Population": 9862,
+        "latitude": 33.333847,
+        "longitude": 69.9371673,
+        "solar_peak_hours": 5.17,
+        "index": 0,
+        "solar": 5.17,
+        "population": 9862,
+        "users": [
+            {
+                "name": "natalia.montoyaarevalo@epfl.ch",
+                "roles": [
+                    "user",
+                    "admin"
+                ],
+                "loaded": true
+            }
+        ],
+        "siteId": "21AFG014",
+        "location_id": 22,
+        "location_pcode": "21AFG014",
+        "siteName": "Khost : Wilayat",
+        "countryCode": "AF"
+    },
+    {
+        "_id": "21c6ccea-2fbc-4ed7-82f7-7b6fc71515d9",
+        "created_at": "2023-10-13T15:30:56.766Z",
+        "created_by": "natalia.montoyaarevalo@epfl.ch",
+        "updated_at": "2023-10-13T15:31:49.102Z",
+        "updated_by": "natalia.montoyaarevalo@epfl.ch",
+        "description": "Test_1310",
+        "version": "1.0.0",
+        "schema": "ghg_project",
+        "pp_per_hh": 5,
+        "totalHH": 20,
+        "latitude": 28.033886,
+        "longitude": 1.659626,
+        "users": [
+            {
+                "name": "natalia.montoyaarevalo@epfl.ch",
+                "roles": [
+                    "user",
+                    "admin"
+                ],
+                "loaded": true
+            }
+        ],
+        "population": 100,
+        "solar": 5.32,
+        "siteId": "23ebbe36-1b10-4efd-8085-4cee900c84f0",
+        "siteName": "New_site_test",
+        "countryCode": "DZ"
+    },
+    {
+        "_id": "7fcce931-9dbd-465c-853e-8f591c89c45d",
+        "created_at": "2023-10-13T15:33:37.462Z",
+        "created_by": "natalia.montoyaarevalo@epfl.ch",
+        "description": "svgd",
+        "version": "1.0.0",
+        "schema": "ghg_project",
+        "pp_per_hh": 5,
+        "totalHH": 20,
+        "latitude": 28.033886,
+        "longitude": 1.659626,
+        "users": [
+            {
+                "name": "natalia.montoyaarevalo@epfl.ch",
+                "roles": [
+                    "user",
+                    "admin"
+                ],
+                "loaded": true
+            }
+        ],
+        "population": 100,
+        "solar": 5.32,
+        "siteId": "23ebbe36-1b10-4efd-8085-4cee900c84f0",
+        "siteName": "New_site_test",
+        "countryCode": "DZ"
     },
     {
         "_id": "aededa3a-4d9d-4604-950d-05522795e4fc",
@@ -4755,6 +5319,8 @@
         "updated_at": "2023-05-23T08:35:24.046Z",
         "updated_by": "gituma@unhcr.org",
         "description": "Solarization of health facilities - Trial",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 25767,
         "Population": 128835,
@@ -5096,6 +5662,8 @@
         "updated_at": "2023-09-14T12:30:39.945Z",
         "updated_by": "natalia.montoyaarevalo@epfl.ch",
         "description": "GTH test August 2023_2",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 6853,
         "Population": 34265,
@@ -5124,6 +5692,8 @@
         "created_at": "2023-09-14T11:47:48.380Z",
         "created_by": "pierre.guilbert@epfl.ch",
         "description": "pierre's test",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 6853,
         "Population": 34265,
@@ -5152,6 +5722,8 @@
         "created_at": "2023-03-29T06:26:38.714Z",
         "created_by": "krahenbu@unhcr.org",
         "description": "GTH test March 2023",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 2979,
         "Population": 14895,
@@ -5180,6 +5752,8 @@
         "created_at": "2023-07-18T12:17:51.146Z",
         "created_by": "krahenbu@unhcr.org",
         "description": "GTH July 2023",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 2979,
         "Population": 14895,
@@ -5317,6 +5891,8 @@
         "updated_at": "2023-08-14T12:34:43.150Z",
         "updated_by": "krahenbu@unhcr.org",
         "description": "GTH test August 2023",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 2979,
         "Population": 14895,
@@ -5819,6 +6395,8 @@
         "updated_at": "2023-08-28T11:29:41.871Z",
         "updated_by": "krahenbu@unhcr.org",
         "description": "GTH test August 2023_2",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 2979,
         "Population": 14895,
@@ -5927,6 +6505,8 @@
         "material": {},
         "offset": {},
         "description": "Test for LPG publication",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 1,
         "totalHH": 1213092,
         "Population": 30835,
@@ -5955,6 +6535,8 @@
         "created_at": "2023-08-24T11:36:47.661Z",
         "created_by": "krahenbu@unhcr.org",
         "description": "GTH Env test Aug 2023",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 1,
         "totalHH": 1213092,
         "Population": 30835,
@@ -5983,6 +6565,8 @@
         "created_at": "2023-08-03T14:43:32.907Z",
         "created_by": "benato@unhcr.org",
         "description": "test",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 0,
         "latitude": 1.373333,
@@ -6116,6 +6700,8 @@
         "material": {},
         "offset": {},
         "description": "Test2HCR",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 7,
         "totalHH": 71,
         "Population": 499,
@@ -6397,6 +6983,8 @@
         "material": {},
         "offset": {},
         "description": "TestCara",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "hh": 1,
         "Population": 684,
@@ -6429,6 +7017,8 @@
         "created_by": "cara.tobin@epfl.ch",
         "reference": true,
         "description": "TestCoP",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 1986,
         "Population": 9928,
@@ -6928,6 +7518,8 @@
         "updated_at": "2023-08-17T11:47:10.851Z",
         "updated_by": "pierre.guilbert@epfl.ch",
         "description": "GeneralTest",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 6,
         "totalHH": 2796,
         "Population": 16775,
@@ -7123,6 +7715,8 @@
         "updated_at": "2023-09-14T11:55:36.186Z",
         "updated_by": "pierre.guilbert@epfl.ch",
         "description": "pierre test",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 6,
         "totalHH": 2796,
         "Population": 16775,
@@ -7267,6 +7861,8 @@
         "updated_at": "2023-09-12T11:17:43.862Z",
         "updated_by": "natalia.montoyaarevalo@epfl.ch",
         "description": "SWM Test",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 6,
         "totalHH": 2796,
         "Population": 16775,
@@ -7298,6 +7894,8 @@
         "created_at": "2023-05-16T11:11:49.354Z",
         "created_by": "ntawukur@unhcr.org",
         "description": "GHG calculator",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 0,
         "latitude": -1.940278,
@@ -7452,6 +8050,8 @@
         "updated_at": "2023-06-20T09:35:37.589Z",
         "updated_by": "cara.tobin@epfl.ch",
         "description": "Trial",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 2031,
         "Population": 10153,
@@ -7559,6 +8159,8 @@
         "updated_at": "2023-06-19T11:20:14.031Z",
         "updated_by": "cara.tobin@epfl.ch",
         "description": "CookingTest",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 2031,
         "Population": 10153,
@@ -7989,6 +8591,8 @@
         "updated_at": "2023-07-06T11:18:35.981Z",
         "updated_by": "cara.tobin@epfl.ch",
         "description": "Test Cooking",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 6092,
         "Population": 30462,
@@ -8022,6 +8626,8 @@
         "updated_at": "2023-04-27T12:38:42.598Z",
         "updated_by": "modan@unhcr.org",
         "description": "Core home",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 100,
         "latitude": 48.379433,
@@ -8068,6 +8674,8 @@
         "updated_at": "2023-08-24T13:39:08.644Z",
         "updated_by": "cara.tobin@epfl.ch",
         "description": "test",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 0,
         "latitude": 28.033886,
@@ -8162,6 +8770,8 @@
         "updated_at": "2023-09-14T12:08:01.033Z",
         "updated_by": "pierre.guilbert@epfl.ch",
         "description": "GTH Test May 2023",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 0,
         "latitude": 7.369722,
@@ -8183,6 +8793,8 @@
         "created_at": "2023-08-17T08:21:49.773Z",
         "created_by": "natalia.montoyaarevalo@epfl.ch",
         "description": "2465431",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 0,
         "latitude": 5.152149,
@@ -8854,14 +9466,39 @@
                             "computed": {
                                 "totalCO2Emission": 1.6041570376904624
                             }
+                        },
+                        {
+                            "_id": "7101da1e-5eba-4f78-bd20-45987667743c",
+                            "increment": 20,
+                            "input": {
+                                "image": "/images/energy/cookstoves/traditional-wood.png",
+                                "fuelTypes": [
+                                    "FWD",
+                                    "CHC",
+                                    "BRQ",
+                                    "PLTS"
+                                ],
+                                "fuelType": "FWD",
+                                "disabledFuelUsage": false,
+                                "generatorLoad": 0.6,
+                                "cookstove": "2",
+                                "appliance": "None",
+                                "dryWood": true,
+                                "fuelUsage": 8.5,
+                                "sustainablySourced": true,
+                                "numberOfCookstove": 0.01
+                            },
+                            "computed": {
+                                "totalCO2Emission": 0.9163362815878537
+                            }
                         }
                     ],
                     "results": {
-                        "fuelUsage": 59.957202631237294,
+                        "fuelUsage": 68.4572026312373,
                         "dieselPower": 3.2222522719177804,
                         "renewablePower": 1500.5,
-                        "numberOfCookstove": 1.0699999999999998,
-                        "totalCO2Emission": 305.3637281972506
+                        "numberOfCookstove": 1.0799999999999998,
+                        "totalCO2Emission": 306.2800644788385
                     }
                 },
                 "endline": {
@@ -9338,15 +9975,44 @@
                             "origin": "f7ffaee4-456e-49ef-9425-f6349ee2f01a",
                             "originIncrement": 19,
                             "enabled": true
+                        },
+                        {
+                            "_id": "7e7f92e8-95ca-4c35-9a3b-0806d24b362e",
+                            "increment": 20,
+                            "input": {
+                                "image": "/images/energy/cookstoves/traditional-wood.png",
+                                "fuelTypes": [
+                                    "FWD",
+                                    "CHC",
+                                    "BRQ",
+                                    "PLTS"
+                                ],
+                                "fuelType": "FWD",
+                                "disabledFuelUsage": false,
+                                "generatorLoad": 0.6,
+                                "cookstove": "2",
+                                "appliance": "None",
+                                "dryWood": true,
+                                "fuelUsage": 8.5,
+                                "sustainablySourced": true,
+                                "numberOfCookstove": 0.01
+                            },
+                            "computed": {
+                                "totalCO2Emission": 0.9163362815878537,
+                                "changeInEmission": 0
+                            },
+                            "origin": "7101da1e-5eba-4f78-bd20-45987667743c",
+                            "originIncrement": 20,
+                            "enabled": true
                         }
                     ],
                     "results": {
-                        "fuelUsage": 43.11267061123729,
+                        "fuelUsage": 51.61267061123729,
                         "dieselPower": 2.6217228464419473,
                         "renewablePower": 39.5,
-                        "numberOfCookstove": 1.26,
-                        "totalCO2Emission": 209.07683472931993,
-                        "changeInEmission": -0.31531869890497893
+                        "numberOfCookstove": 1.27,
+                        "totalCO2Emission": 209.9931710109078,
+                        "changeInEmission": -0.3143753206130834
                     }
                 }
             },
@@ -10309,9 +10975,11 @@
             }
         },
         "offset": {},
-        "updated_at": "2023-10-03T08:34:04.151Z",
+        "updated_at": "2023-10-06T08:45:26.604Z",
         "updated_by": "natalia.montoyaarevalo@epfl.ch",
         "description": "Test of cooking module Natalia",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 200,
         "users": [
@@ -10333,7 +11001,7 @@
         "countryCode": "PK"
     },
     {
-        "_id": "8c775dae-7568-4b66-a7e2-4c067798edc9",
+        "_id": "cc62f897-2233-493d-8080-db8f8b1e0cb7",
         "created_at": "2023-05-04T12:21:36.544Z",
         "created_by": "natalia.montoyaarevalo@epfl.ch",
         "wash": {
@@ -10798,6 +11466,8 @@
             }
         ],
         "description": "Test of cooking module Natalia (v1)",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 200,
         "latitude": 33.42,
@@ -10813,6 +11483,8 @@
         "created_at": "2023-03-30T14:22:55.316Z",
         "created_by": "ochakaf@unhcr.org",
         "description": "Newly created Zone in the Settlement",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 0,
         "users": [
@@ -10967,6 +11639,8 @@
         },
         "offset": {},
         "description": "GTH test July 2023",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 200,
         "latitude": 46.818188,
@@ -10989,6 +11663,8 @@
         "created_at": "2023-06-23T11:38:02.537Z",
         "created_by": "chuentet@unhcr.org",
         "description": "Emission calcultation ",
+        "version": "1.0.0",
+        "schema": "ghg_project",
         "pp_per_hh": 5,
         "totalHH": 0,
         "latitude": 21.00789,

@@ -1266,6 +1266,8 @@ function up(a) {
     const newAssessmentWithProjectInfo = project.surveys.map(assessment => {
 
       assessment.description = ""+ assessment.name;
+      assessment.version = "1.0.0";
+      assessment.schema = "ghg_project"
       delete assessment.name;
       assessment = { ...assessment, ...cleanProject };
       delete assessment.Country;
