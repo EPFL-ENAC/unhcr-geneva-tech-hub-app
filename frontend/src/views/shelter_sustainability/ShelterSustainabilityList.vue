@@ -231,7 +231,7 @@
                   </v-col>
                   <v-col cols="4" class="d-flex justify-start align-center">
                     <v-card-title>
-                      {{ project.siteName }}
+                      {{ project.name }}
                     </v-card-title>
                     <v-card-subtitle class="pb-0 ma-0">
                       <span v-if="project.location_name">
