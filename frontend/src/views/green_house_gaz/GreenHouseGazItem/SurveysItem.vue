@@ -219,12 +219,6 @@ export default class SurveyList extends Vue {
       ],
     },
     {
-      icon: "$mdiLeaf",
-      text: "Offset",
-      to: "Offset",
-      redirect: "Offset-TreePlanting",
-    },
-    {
       icon: "$mdiNewspaperVariantOutline",
       text: "Results",
       to: "Results",

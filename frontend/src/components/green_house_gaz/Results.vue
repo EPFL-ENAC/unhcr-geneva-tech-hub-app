@@ -194,14 +194,14 @@ export default class Results extends Vue {
         stack: "co2",
       },
       // https://unhcr-web.github.io/unhcRstyle/docs/reference/unhcr_green.html
-      {
-        sign: "neg",
-        color: `rgba(1,178,152,${this.omega})`,
-        name: "Offset - Tree planting",
-        category: "offset",
-        subcategory: "treeplanting",
-        stack: "offset",
-      },
+      // {
+      //   sign: "neg",
+      //   color: `rgba(1,178,152,${this.omega})`,
+      //   name: "Offset - Tree planting",
+      //   category: "offset",
+      //   subcategory: "treeplanting",
+      //   stack: "offset",
+      // },
     ];
   }
 

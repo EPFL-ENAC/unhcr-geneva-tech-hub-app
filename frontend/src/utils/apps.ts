@@ -3,8 +3,19 @@ export const ghg = {
   to: "GreenHouseGaz",
   link: "/s3/2023-05-02T083700Z/ghg_user_manual.pdf",
   logoIcon: "$vuetify.icon.ghg",
-  description:
-    "This tool is tailored to refugee camps and settlements for calculating greenhouse gas emissions associated with energy, material and transport uses.<br/>The GHG Emission Calculator only considers Scope 1 and 2 emissions at this stage. Exceptionally, Scope 3 emissions associated with feedstock production and/or processing of some fuels are considered due to their high impact relative to the total emissions. The calculations are estimations. For solar in particular, it is assumed that the addition of solar panels will add zero emissions.",
+  description: `This tool is tailored to refugee camps and settlements for
+    calculating greenhouse gas emissions associated with energy, material and transport uses.<br/>
+    The GHG Calculator only considers Scope 1 and 2 emissions at this stage. According to the <a  onclick="event.stopPropagation();" target="_blank" href="https://www.ipcc.ch/site/assets/uploads/2018/02/ipcc_wg3_ar5_annex-i.pdf">IPCC</a>,
+    ‘Scope 1’ indicates direct greenhouse gas (GHG) emissions that are from sources owned or controlled by the reporting entity. ‘Scope 2’ indicates indirect GHG emissions associated with the production of electricity, heat, or steam purchased by the reporting entity.
+    
+    <br/>Exceptionally ‘Scope 3’ indicates all other indirect emissions, i.e., emissions associated with the extraction and production of purchased materials, fuels, and services, including transport in vehicles not owned or controlled by the reporting entity, outsourced activities, waste disposal, etc
+    <br/> Scope 3 emissions associated with feedstock production and/or processing
+    of some fuels are considered due to their high impact relative to the total emissions.
+    <br/>
+    The calculations are estimations.
+    <br/>
+    For solar in particular, it is assumed that the addition of solar panels will add zero emissions.
+`,
 };
 
 export const shelter = {

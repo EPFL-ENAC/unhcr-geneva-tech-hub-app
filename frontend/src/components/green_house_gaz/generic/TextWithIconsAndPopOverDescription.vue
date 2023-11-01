@@ -20,7 +20,7 @@ const props = defineProps<Props>();
   <!-- eslint-disable vue/no-v-text-v-html-on-component -->
   <div class="d-flex justify-left align-center">
     <span class="d-flex justify-left align-center" v-html="text"></span>
-    <span v-for="(config, key) in configs" :key="key" class="ml-2">
+    <span v-for="(config) in configs" :key="config.icon" class="ml-2">
       <v-tooltip top>
         <template #activator="{ on, attrs }">
           <template v-if="config.icon">

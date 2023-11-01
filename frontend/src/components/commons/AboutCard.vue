@@ -28,9 +28,22 @@
         evidence-based recommendations. These elements are made available
         directly and in a user-friendly way to humanitarian practitioners
         working in the field. It will support UNHCR to align with the Pillar 2
-        of its Strategic Framework for Climate Action. The tools also support
-        actions toward achieving UNHCR's Operational Strategy for Climate
-        Resilience and Environmental Sustainability 2021-2025.
+        of its
+        <a
+          onclick="event.stopPropagation();"
+          target="_blank"
+          href="https://www.unhcr.org/sites/default/files/legacy-pdf/604a26d84.pdf"
+        >
+          Strategic Framework for Climate Action </a
+        >. The tools also support actions toward achieving UNHCR's
+        <a
+          onclick="event.stopPropagation();"
+          target="_blank"
+          href="https://www.unhcr.org/media/summary-operational-strategy-climate-resilience-and-environmental-sustainability-2022-2025"
+        >
+          Operational Strategy for Climate Resilience
+        </a>
+        and Environmental Sustainability 2021-2025.
       </p>
     </v-card-text>
   </v-card>

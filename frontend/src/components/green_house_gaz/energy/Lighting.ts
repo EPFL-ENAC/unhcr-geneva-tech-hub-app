@@ -467,15 +467,15 @@ export function commonElectricSolarDevicesHeaders() {
         <ul>
             <li>
             ${getDieselPowerText()}:
-                ${dieselTotalPowerRatio} ${suffix}
+                ${formatNumberGhg(dieselTotalPowerRatio)} ${suffix}
             </li>
             <li>
               ${getGridPowerText()}:
-              ${gridTotalPowerRatio} ${suffix}
+              ${formatNumberGhg(gridTotalPowerRatio)} ${suffix}
             </li>
             <li>
             ${getSolarPowerText()}:
-            ${solarTotalPowerRatio} ${suffix}
+            ${formatNumberGhg(solarTotalPowerRatio)} ${suffix}
           </li>
           <ul>
         `;
@@ -511,23 +511,32 @@ export function conditionalFunctionElectricHybDevices(itemInput: SurveyInput) {
 
 export function hybridLightingElectricHeaders() {
   // diesel/ grid / solar
-  const hybridPercentagesRuleFn = (
-    localInput: SurveyInput,
-    surveyItem: SurveyTableHeader
-  ) => {
-    const { dieselPercentage, gridPercentage, solarPercentage } = localInput;
-    const totalPercentage =
-      ((dieselPercentage as number) ?? 0) +
-      ((gridPercentage as number) ?? 0) +
-      ((solarPercentage as number) ?? 0);
-    return [
-      (v: number) =>
-        totalPercentage <= 1 ||
-        `Sum should be <= 100%  Sum now = ${formatNumberGhg(totalPercentage, {
-          style: "percent",
-        })}`,
-    ];
-  };
+
+  const hybridPercentagesRuleFn =
+    (key: string) =>
+    (localInput: SurveyInput, surveyItem: SurveyTableHeader) => {
+      // warning: It's not working properly because of computed lag
+      return [
+        (v: number) => {
+          const { dieselPercentage, gridPercentage, solarPercentage } =
+            localInput;
+          const totalPercentage =
+            ((dieselPercentage as number) ?? 0) +
+            ((gridPercentage as number) ?? 0) +
+            ((solarPercentage as number) ?? 0);
+          return true;
+          // return (
+          //   totalPercentage <= 1 ||
+          //   `Sum should be == 100%  Sum now = ${formatNumberGhg(
+          //     totalPercentage,
+          //     {
+          //       style: "percent",
+          //     }
+          //   )}`
+          // );
+        },
+      ];
+    };
   return [
     {
       style: {
@@ -537,7 +546,7 @@ export function hybridLightingElectricHeaders() {
       value: "input.dieselPercentage",
       subtype: "percent",
       type: "number",
-      rulesFn: hybridPercentagesRuleFn,
+      rulesFn: hybridPercentagesRuleFn("dieselPercentage"),
       hideFooterContent: true,
       formatter: (v: number) => {
         return formatNumberGhg(v, {
@@ -560,7 +569,7 @@ export function hybridLightingElectricHeaders() {
           style: "percent",
         });
       },
-      rulesFn: hybridPercentagesRuleFn,
+      rulesFn: hybridPercentagesRuleFn("gridPercentage"),
       conditional_function: conditionalFunctionElectricHybDevices,
     },
     {
@@ -571,7 +580,7 @@ export function hybridLightingElectricHeaders() {
       value: "input.solarPercentage",
       subtype: "percent",
       type: "number",
-      rulesFn: hybridPercentagesRuleFn,
+      rulesFn: hybridPercentagesRuleFn("solarPercentage"),
       hideFooterContent: true,
       formatter: (v: number) => {
         return formatNumberGhg(v, {
@@ -580,6 +589,24 @@ export function hybridLightingElectricHeaders() {
       },
       conditional_function: conditionalFunctionElectricHybDevices,
     },
+    // {
+    //   style: {
+    //     cols: "12",
+    //   },
+    //   text: "Total percentage",
+    //   value: "computed.totalPercentage",
+    //   isInput: true,
+    //   subtype: "percent",
+    //   type: "number",
+    //   rulesFn: hybridPercentagesRuleFn("solarPercentage"),
+    //   hideFooterContent: true,
+    //   formatter: (v: number) => {
+    //     return formatNumberGhg(v, {
+    //       style: "percent",
+    //     });
+    //   },
+    //   conditional_function: conditionalFunctionElectricHybDevices,
+    // },
   ];
 }
 export function headers(

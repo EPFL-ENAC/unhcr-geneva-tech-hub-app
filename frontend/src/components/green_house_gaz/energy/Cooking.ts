@@ -210,22 +210,23 @@ export function headers(
         _: unknown,
         localItem: EnergyCookingItem
       ) => {
-        let defaultAppliance;
-        switch (localItem.input.appliance) {
+        let appIcon;
+        const appliance  = localItem.input.appliance;
+        switch (appliance) {
           case COOK_APP_Pressure:
-            defaultAppliance = "$mdiPotOutline";
+            appIcon = "$mdiPotOutline";
             break;
           case COOK_APP_Heat_Retaining:
-            defaultAppliance = "$mdiBasketOutline";
+            appIcon = "$mdiBasketOutline";
             break;
           default:
-            defaultAppliance = "";
+            appIcon = "";
             break;
         }
         return [
           {
-            icon: defaultAppliance,
-            description: localItem.input.appliance,
+            icon: appIcon,
+            description: appliance,
             fill: "black",
           },
         ];
@@ -438,6 +439,7 @@ export function headers(
             localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
           }
         }
+        localInput.appliance = COOK_APP_Default;
 
         return localInput;
       },
