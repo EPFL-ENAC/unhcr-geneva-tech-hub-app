@@ -5,6 +5,9 @@ install:
 	npx husky install
 	$(MAKE) -C frontend install
 
+env-file:
+	cp .env.example .env
+
 run-frontend:
 	$(MAKE) -C frontend run
 
@@ -56,9 +59,3 @@ run-local:
 
 run-dev:
 	docker compose -f docker-compose.yml -f docker-compose.dev.yml up --pull=always -d --remove-orphans
-
-# docker-compose pull
-# docker-compose build --parallel --no-cache
-# docker-compose up -d --remove-orphans
-# docker-compose up --build --force-recreate --no-deps couchdb-setup
-# docker-compose restart couchdb

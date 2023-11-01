@@ -44,51 +44,55 @@ Prerequisites:
 
 ### Run for development
 
+#### information about 127.0.0.11 as the static docker dns ip
+From: https://hwchiu.medium.com/fun-dns-facts-learned-from-the-kind-environment-241e0ea8c6d4
+Readers familiar with Docker Compose are likely aware that for convenient communication between containers, container names can be used directly as DNS targets. This design eliminates the need for containers to worry about IP changes. Docker, in fact, embeds a DNS server within its system to handle this issue, with the DNS server’s fixed IP being 127.0.0.11.
+
+The responsibilities of this DNS server can be categorized as follows:
+
+If the DNS request is for a container name, the IP of the container is returned.
+Otherwise, based on the host configuration, the DNS request is forwarded to an upstream DNS server.
+In the example depicted below, two containers, named “hwchiu” and “hwchiu2,” are running. Using nslookup, one can easily resolve the corresponding IP addresses. It’s also observable that the /etc/hosts file within these containers dynamically point to 127.0.0.11. This implies that all DNS requests within the containers are redirected to the built-in Docker DNS server.
+
 #### Create .env file to hold your Secrets
 
 An environment file should be created; you may copy paste the following
 code, don't forget to replace by the appropriate bucket name and HOSTNAME
 
+- you could run the following script, or just run `make env-file`
 ```bash
 tee -a .env << EOF
 COUCHDB_USER=admin
 COUCHDB_PASSWORD=couchdb
 COUCHDB_HOST=localhost
-# epfl dns for s3 epfl
-#DNS=128.178.15.8
 # docker epfl for internal nginx-minio
 DNS=127.0.0.11
 
-# we replace minio_root_user and root_password by s3_access_key and s3_secret_access
-#MINIO_ROOT_USER=minioadmin
-#MINIO_ROOT_PASSWORD=minioadmin
-
-# used by nginx s3 service and fast api boto api
-#S3_ENDPOINT_HOSTNAME=s3.epfl.ch
-#S3_ENDPOINT_PROTOCOL=https://
+# used by nginx s3 service and fast api boto api and minio
 S3_ENDPOINT_HOSTNAME=nginx-minio:9000
 S3_ENDPOINT_PROTOCOL=http://
 S3_ACCESS_KEY_ID=XXXXXX_REPLACE__ME_XXX
 S3_SECRET_ACCESS_KEY=XXXXXX_REPLACE__ME_XXX
 S3_REGION=EU
 S3_Bucket=XXXXXX_REPLACE__ME_XXX
-# for instance if S3_Key is foo/bar/ ; the url will start with: /s3/foo/bar/ we use 'unhcr-tss/' for instance
+# for instance if S3_Key is foo/bar/ ; the url will start with: /s3/foo/bar/ we use 'unhcr-tss/' for the prod instance
 S3_Key=XXXXXX_REPLACE__ME_XXX
 
 # Mailer option for login/registering/password reset
 MAIL_USERNAME=
 MAIL_PASSWORD=
-MAIL_FROM="noreply+unhcr-tss@epfl.ch"
+# inside the epfl network we use "noreply+unhcr-tss@epfl.ch"
+MAIL_FROM="noreply+unhcr-tss@yourfqdn.com"
 MAIL_PORT=25
-MAIL_SERVER=mail.epfl.ch
+# use whatever mail server you want but be sure to have a valid from address we use mail.epfl.ch inside the epfl network
+MAIL_SERVER=mail.yourfqdn.com
 MAIL_FROM_NAME=UNHCR-TSS
 MAIL_STARTTLS=true
 MAIL_SSL_TLS=false
 USE_CREDENTIALS=true
 
-# use in email template in rest-api should be 'https://unhcr-tss.epfl.ch' if you want the user to be redirected there
+# use in email template in rest-api should be 'https://yourfqdn.com' if you want the user to be redirected there
 HOST_NAME=http://localhost:8080
-
 EOF
 ```
 

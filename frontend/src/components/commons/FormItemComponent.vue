@@ -200,8 +200,8 @@ export default class FormItemComponent extends Vue {
   readonly subtype: "percent" | undefined;
   @Prop(String)
   readonly label: string | undefined;
-  @Prop(String)
-  readonly tooltipInfo: string | undefined;
+  @Prop([String, Boolean])
+  readonly tooltipInfo: string | boolean | undefined;
   @Prop([Object, Array])
   readonly options:
     | BooleanOptions

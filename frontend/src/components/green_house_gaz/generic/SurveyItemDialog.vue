@@ -182,19 +182,28 @@ export default class SurveyItemDialog extends Vue {
   onItemChange(value: SurveyItem): void {
     this.localItem = cloneDeep(value);
   }
+
+  mounted(): void {
+    this.$refs?.form?.validate();
+  }
+
   @Watch("formValid", { immediate: true, deep: true })
   onFormValid(): void {
     this.$refs?.form?.validate();
   }
 
   @Watch("localItem.input", { immediate: true, deep: true })
-  onLocalInputChange(): void {
-    this.$refs?.form?.validate();
+  onLocalInputChange(value: any): void {
+    // we watch only for input, because we modify the localitem.computed object
+    if (value === undefined) {
+      return;
+    }
     // if (this.formValid) {
     // fail silently!
     try {
-      const computed = this.computeItem(this.localItem.input, this.ghgMapRef);
+      const computed = this.computeItem(value, this.ghgMapRef);
       this.$set(this.localItem, "computed", computed);
+      this.$refs?.form?.validate();
     } catch (e) {
       // it's on purpose we don't want to show the error
       // A better way of doing this, would be to have a partial computed, that does not fail on error
@@ -205,6 +214,16 @@ export default class SurveyItemDialog extends Vue {
       // );
     }
   }
+
+  @Watch("localItem", { immediate: true, deep: true })
+  onlocalitemchange(value: any): void {
+    if (value === undefined) {
+      return;
+    }
+    // this.$refs?.form?.reset();
+    this.$refs?.form?.validate();
+  }
+
 
   get isOpen(): boolean {
     return this.dialogOpen;
