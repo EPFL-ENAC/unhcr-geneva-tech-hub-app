@@ -1,6 +1,6 @@
 <template>
   <v-card flat>
-    <v-card-text v-if="items">
+    <v-card-text v-if="computedItems">
       <v-row>
         <v-col>
           Daily solar peak hours approximated using the Longterm daily average
@@ -9,7 +9,7 @@
           operated by the company Solargis s.r.o. on behalf of the World Bank
           Group, utilizing Solargis data, with funding provided by the Energy
           Sector Management Assistance Program (ESMAP). For additional
-          information: https://globalsolaratlas.info)
+          information: <a target="_blank" href="https://globalsolaratlas.info">globalsolaratlas.info</a>)
         </v-col>
       </v-row>
       <v-row>
@@ -26,7 +26,7 @@
           </v-card-title>
           <v-data-table
             :headers="headers"
-            :items="items"
+            :items="computedItems"
             :search="search"
             dense
           >
@@ -40,7 +40,7 @@
                 props.item.solar_peak_hours | formatNumberGhg
               }}</span>
             </template>
-            <template #[`item.Country`]="props">
+            <template #[`item.country_name`]="props">
               <span :title="props.item.country_code_2"
                 >{{ countriesMap[props.item.country_code_2].name }}
                 <country-flag
@@ -82,14 +82,29 @@ export default class Energy extends Vue {
   countriesMap = countriesMap;
   search = "";
 
+  public get computedItems(): UNHCRLocation[] {
+    let newItems: UNHCRLocation[] = [];
+    newItems = newItems.concat(this.items);
+    newItems = newItems.map((item) => {
+      item.country_name = countriesMap[item.country_code_2].name;
+      return item;
+    });
+    newItems.sort((a, b) => {
+      return a._id.localeCompare(b._id);
+    });
+    return newItems;
+  }
+
+
   public get headers(): HeaderInterface[] {
     return [
       {
         text: "Site name",
         align: "start",
-        sortable: false,
+        sortable: true,
         value: "_id",
       },
+      { text: "Year", value: "year" },
       {
         text: "location p code",
         align: "start",
@@ -102,7 +117,7 @@ export default class Energy extends Vue {
         sortable: false,
         value: "location_id",
       },
-      { text: "Country", value: "country_code_2" },
+      { text: "Country", value: "country_name" },
       { text: "Population", value: "population" },
       { text: "latitude", value: "latitude" },
       { text: "longitude", value: "longitude" },

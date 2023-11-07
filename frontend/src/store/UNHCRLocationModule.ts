@@ -24,6 +24,7 @@ export interface UNHCRLocation {
   solar_peak_hours: number; // 5.607999802,
   year: number; // 2022,
   country_code_2: string; // "IR", // key was named 'Country'
+  country_name?: string; // "Iran (Islamic Republic of)", // key was named 'Country' not present in the json
   _id: string; // "Abazar : Point",
   index: number; // 0
 }
