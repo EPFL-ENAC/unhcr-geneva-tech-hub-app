@@ -1,6 +1,6 @@
 <template>
   <v-card flat>
-    <v-card-text v-if="items">
+    <v-card-text v-if="computedItems">
       <v-row>
         <v-col>
           List of Grid Emission Factor from IGES (Institute for Global
@@ -26,12 +26,12 @@
           <v-data-table
             dense
             :headers="headers"
-            :items="items"
+            :items="computedItems"
             :search="search"
           >
             <template #[`item.value`]="props">
               <span :title="props.item.value">{{
-                props.item.value | formatNumber
+                props.item.value | formatNumberGhg
               }}</span>
             </template>
           </v-data-table>
@@ -84,6 +84,15 @@ export default class IgesGrid extends Vue {
         align: "center",
       },
     ];
+  }
+
+  public get computedItems(): IgesItem[] {
+    let newItems: IgesItem[] = [];
+    newItems = newItems.concat(this.items);
+    newItems.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
+    return newItems;
   }
 
   save(): void {
