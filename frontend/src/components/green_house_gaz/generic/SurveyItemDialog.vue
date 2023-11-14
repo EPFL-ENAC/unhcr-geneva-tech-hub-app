@@ -81,6 +81,14 @@
                   />
                 </v-col>
               </template>
+              <v-col v-if="showOverride" :cols="12">
+                <v-checkbox v-model="overrideAll" hide-details inset>
+                  <template #label>
+                    Do you want to override all endline items ?
+                    {{ overrideAll ? "yes" : "no" }}
+                  </template>
+                </v-checkbox>
+              </v-col>
             </v-row>
           </v-container>
         </v-card-text>
@@ -177,6 +185,7 @@ export default class SurveyItemDialog extends Vue {
   refreshKey = 0;
 
   localItem: SurveyItem = {} as SurveyItem;
+  overrideAll = false;
 
   @Watch("item", { immediate: true, deep: true })
   onItemChange(value: SurveyItem): void {
@@ -224,7 +233,6 @@ export default class SurveyItemDialog extends Vue {
     this.$refs?.form?.validate();
   }
 
-
   get isOpen(): boolean {
     return this.dialogOpen;
   }
@@ -253,6 +261,11 @@ export default class SurveyItemDialog extends Vue {
   public get isNewMode(): boolean {
     return Object.keys(this.item?.input ?? []).length === 0;
   }
+
+  public get showOverride(): boolean {
+    return !this.isNewMode && !this.intervention;
+  }
+
   public get title(): string {
     return this.isNewMode ? `New ${this.name}` : `Edit ${this.name}`;
   }
@@ -385,6 +398,9 @@ export default class SurveyItemDialog extends Vue {
     }
     if (this.intervention) {
       this.localItem.enabled = true;
+    }
+    if (this.overrideAll) {
+      this.localItem.overrideAll = true;
     }
     this.$emit("update:item", this.localItem);
     this.isOpen = false;

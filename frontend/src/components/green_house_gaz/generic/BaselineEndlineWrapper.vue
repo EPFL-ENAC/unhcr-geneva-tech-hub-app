@@ -136,6 +136,13 @@ export default class BaselineEndlineWrapper extends Mixins(
     const newValue = cloneDeep(this.localValue);
     newValue.baseline = baseline;
     newValue.endline.items = this.updateEndlineInstancesWithBaseline(newValue);
+    // delete all overrideAll flag
+    newValue.baseline.items = newValue.baseline.items.map(
+      (item: SurveyItem) => {
+        item.overrideAll = false;
+        return item;
+      }
+    );
     this.updateValue(newValue);
   }
   public updateEndline(
@@ -183,6 +190,33 @@ export default class BaselineEndlineWrapper extends Mixins(
     );
     // add new baseline items to endline as deep copy
     results = results.concat(newEndlineItems);
+    // reset all the endline items when baselineItems have the override flag
+    const baselineItemsWithOverride = baselineItems.filter(
+      (item: SurveyItem) => item.overrideAll
+    );
+    const baselineItemIdsWithOverride = baselineItemsWithOverride.map(
+      (x) => x._id
+    );
+    results = results.map((endlineItem: SurveyItem) => {
+      if (
+        endlineItem.origin &&
+        baselineItemIdsWithOverride.includes(endlineItem.origin)
+      ) {
+        const baselineItem = baselineItems.find(
+          (item: SurveyItem) => item._id === endlineItem.origin
+        );
+        if (baselineItem) {
+          // override all but the name which is the description!
+          // we keep the name of the endline, we don't overide the name
+          endlineItem.input = {
+            ...baselineItem.input,
+            name: endlineItem.input?.name ?? undefined,
+          };
+          endlineItem.computed = baselineItem.computed; // override even the computed
+        }
+      }
+      return endlineItem;
+    });
     return results;
   }
 
