@@ -11,3 +11,8 @@
 - [ ] upgrade from vue2 to vue3 if possible (big problem with vuetify vue3)
 - [ ] Save the s3 documents 'reference/metadata' in the couchdb database while uploading/deleting
   - no reference possible should be duplicated in documents
+
+# Other
+- [ ] upgrade packages for security reasons (BONUS) #323
+- [ ] Check all the todos in the code and move them to issues
+- [ ] Add environment variable for sentry #324
