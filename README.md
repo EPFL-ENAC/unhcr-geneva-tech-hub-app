@@ -60,41 +60,6 @@ An environment file should be created; you may copy paste the following
 code, don't forget to replace by the appropriate bucket name and HOSTNAME
 
 - you could run the following script, or just run `make env-file`
-```bash
-tee -a .env << EOF
-COUCHDB_USER=admin
-COUCHDB_PASSWORD=couchdb
-COUCHDB_HOST=localhost
-# docker epfl for internal nginx-minio
-DNS=127.0.0.11
-
-# used by nginx s3 service and fast api boto api and minio
-S3_ENDPOINT_HOSTNAME=nginx-minio:9000
-S3_ENDPOINT_PROTOCOL=http://
-S3_ACCESS_KEY_ID=XXXXXX_REPLACE__ME_XXX
-S3_SECRET_ACCESS_KEY=XXXXXX_REPLACE__ME_XXX
-S3_REGION=EU
-S3_Bucket=XXXXXX_REPLACE__ME_XXX
-# for instance if S3_Key is foo/bar/ ; the url will start with: /s3/foo/bar/ we use 'unhcr-tss/' for the prod instance
-S3_Key=XXXXXX_REPLACE__ME_XXX
-
-# Mailer option for login/registering/password reset
-MAIL_USERNAME=
-MAIL_PASSWORD=
-# inside the epfl network we use "noreply+unhcr-tss@epfl.ch"
-MAIL_FROM="noreply+unhcr-tss@yourfqdn.com"
-MAIL_PORT=25
-# use whatever mail server you want but be sure to have a valid from address we use mail.epfl.ch inside the epfl network
-MAIL_SERVER=mail.yourfqdn.com
-MAIL_FROM_NAME=UNHCR-TSS
-MAIL_STARTTLS=true
-MAIL_SSL_TLS=false
-USE_CREDENTIALS=true
-
-# use in email template in rest-api should be 'https://yourfqdn.com' if you want the user to be redirected there
-HOST_NAME=http://localhost:8080
-EOF
-```
 
 #### Installation
 
