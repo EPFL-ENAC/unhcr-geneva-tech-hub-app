@@ -2,7 +2,12 @@
   <v-card flat>
     <v-card-text v-if="items">
       <v-row>
-        <v-col> Region for each known country </v-col>
+        <v-col>
+          Geographic Regions from UN M49 Standard
+          (https://unstats.un.org/unsd/methodology/m49/overview/). Regions
+          information used to calculate regional emission factors for the Solid
+          Waste module.</v-col
+        >
       </v-row>
       <v-row>
         <v-col>
