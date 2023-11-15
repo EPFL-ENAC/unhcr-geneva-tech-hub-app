@@ -82,7 +82,8 @@ export async function loginJWT(token: string): Promise<AxiosResponse> {
   // parse the jwt, and update userCTX with custom email claim
   const payload = parseJwt(token);
   if (!payload.exp) {
-    throw expireTokenAndError("no exp field in JWT token payload");
+    console.error("(no exp field in JWT token payload)");
+    throw expireTokenAndError("Authentication has expired, please login again");
   }
   const expiredDate = new Date(payload.exp * 1000).getTime();
   const ttlSeconds = parseInt(
@@ -91,7 +92,8 @@ export async function loginJWT(token: string): Promise<AxiosResponse> {
   );
   const hasExpired = ttlSeconds <= 0;
   if (hasExpired) {
-    throw expireTokenAndError("Authentication has expired: exp not in future");
+    console.error("Authentication has expired: exp not in future");
+    throw expireTokenAndError("Authentication has expired, please login again");
   }
 
   let response: AxiosResponse;
@@ -112,9 +114,9 @@ export async function loginJWT(token: string): Promise<AxiosResponse> {
       // 401 Unauthorized or other
       // {"error":"unauthorized","reason":"exp not in future"}
       throw expireTokenAndError(
-        `Authentication failed: ${error?.response?.status} ${JSON.stringify(
-          error?.response?.data ?? "unknown message"
-        )}`
+        `Authentication failed, please login again: ${
+          error?.response?.status
+        } ${JSON.stringify(error?.response?.data ?? "unknown message")}`
       );
     }
     sessionStorage.removeItem(SessionStorageKey.Token);

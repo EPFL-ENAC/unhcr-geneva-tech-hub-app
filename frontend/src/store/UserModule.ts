@@ -550,7 +550,7 @@ const actions: ActionTree<UserState, RootState> = {
               user.userCtx.loaded = true;
               context.commit("UNSET_USER_LOADING_UNIQUELY");
             }
-            // TODO: pass user.info.authenticated (jwt/cookie/default) to userCTX
+            // Find a way to pass user.info.authenticated (jwt/cookie/default) to userCTX
             context.commit("SET_USER", user.userCtx);
           } catch (e: unknown) {
             console.error(e);
@@ -560,7 +560,7 @@ const actions: ActionTree<UserState, RootState> = {
           context.commit("UNSET_USER_LOADING");
         });
     }
-    return; // probably guest
+    return; // guest user
   },
 };
 

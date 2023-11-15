@@ -536,7 +536,7 @@ export default class App extends Vue {
     this.checkAndRefresh();
     this.intervalId = window.setInterval(() => {
       this.checkAndRefresh();
-    }, 1000 * 30); // check every 30 seconds | every 15mn was not enough
+    }, 1000 * 10); // check every 10 seconds | every 15mn was not enough cf https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/542
 
     this.$store.subscribe((mutation) => {
       const shouldUpdate = ["storeMessage"];
