@@ -57,10 +57,10 @@ export function newSurveyForm(): SurveyForms {
       lighting: generateNewGenericFormSurvey(),
     },
     wash: {
-      trucking: generateNewGenericFormSurvey(),
+      watersupply: generateNewGenericFormSurvey(),
     },
     material: {
-      hhwaste: generateNewGenericFormSurvey(),
+      domesticsolidwaste: generateNewGenericFormSurvey(),
       // recycling: generateNewGenericFormSurvey(),
     },
     offset: {
@@ -152,7 +152,7 @@ export type EnergySurveyCategory = keyof EnergySurvey;
 
 // should be generic survey with import type from Trucking.vue
 export interface WashSurvey {
-  trucking: GenericFormSurvey<
+  watersupply: GenericFormSurvey<
     SurveyItem,
     SurveyResult,
     SurveyItem,
@@ -313,7 +313,7 @@ export interface MaterialSurvey {
   //   SurveyResult
   // >;
   // cri: GenericFormSurvey<SurveyItem, SurveyResult, SurveyItem, SurveyResult>;
-  hhwaste: GenericFormSurvey<
+  domesticsolidwaste: GenericFormSurvey<
     SurveyItem,
     SurveyResult,
     SurveyItem,

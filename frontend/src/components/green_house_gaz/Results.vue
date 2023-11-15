@@ -201,30 +201,16 @@ export default class Results extends Vue {
         name: "WASH - Water Supply",
         resultKey: "totalCO2Emission",
         category: "wash",
-        subcategory: "trucking",
+        subcategory: "watersupply",
         stack: "co2",
       },
-      /*
-      248, 237, 98
-      218,182,0
-      169,134,0
-      */
       {
         color: `rgba(1218,182,0,${this.delta})`,
         name: "Material - Domestic solid waste",
         category: "material",
-        subcategory: "hhwaste",
+        subcategory: "domesticsolidwaste",
         stack: "co2",
       },
-      // https://unhcr-web.github.io/unhcRstyle/docs/reference/unhcr_green.html
-      // {
-      //   sign: "neg",
-      //   color: `rgba(1,178,152,${this.omega})`,
-      //   name: "Offset - Tree planting",
-      //   category: "offset",
-      //   subcategory: "treeplanting",
-      //   stack: "offset",
-      // },
     ];
   }
 
