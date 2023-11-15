@@ -6,15 +6,15 @@
         <v-text-field
           id="email"
           :value="localForm?.generationGram ?? 0"
-          autocomplete="generation-gram-per-capita-per-day"
+          autocomplete="generation-kg-per-capita-per-day"
           outlined
-          label="generation-gram-per-capita-per-day"
+          label="Generation rate (kg/cap/day)"
           persistent-placeholder
           required
-          suffix="gram"
+          suffix="kg/cap/day"
           type="number"
           width="100"
-          name="generation-gram-per-capita-per-day"
+          name="generation-kg-per-capita-per-day"
           @change="updateGenerationGram"
           @keydown.enter.prevent="
             () => updateGenerationGram(localForm?.generationGram ?? 0)

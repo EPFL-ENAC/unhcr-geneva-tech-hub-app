@@ -323,7 +323,7 @@ export function generateComputeItem(
       populationPercentage * // Population
       generationGram * // in Gram
       numberOfDaysPerYear * // days/yr
-      0.000001; // (like / 1000000  (g/ton))
+      0.001; // (if gram ==> like 1/ 1000000  (g/ton)) (if kg ==>  (like 1/ 1000  (kg/ton)))
 
     totalCO2Emission = REF_EFF * totalwasteAmount;
     if (isNaN(totalCO2Emission)) {
