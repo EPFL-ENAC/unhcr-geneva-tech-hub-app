@@ -12,13 +12,27 @@
       <v-col :cols="6" class="d-flex justify-center">
         <h3>
           Total Baseline CO2 Emissions:
-          {{ totalBaseline | formatNumberGhg }} (tCO2e/year)
+          <span :title="String(totalBaseline)">{{
+            totalBaseline |
+              formatNumberGhg({
+                suffix: "(tCO2e/year)",
+                maximumFractionDigits: 0,
+                minimumFractionDigits: 0,
+              })
+          }}</span>
         </h3>
       </v-col>
       <v-col :cols="6" class="d-flex flex-column justify-center">
         <h3>
           Total Endline CO2 Emissions:
-          {{ totalEndline | formatNumberGhg }} (tCO2e/year)
+          <span :title="String(totalEndline)">{{
+            totalEndline |
+              formatNumberGhg({
+                suffix: "(tCO2e/year)",
+                maximumFractionDigits: 0,
+                minimumFractionDigits: 0,
+              })
+          }}</span>
         </h3>
         <br />
         <h3>
@@ -34,9 +48,18 @@
                 formatNumberGhg({
                   style: "percent",
                   signDisplay: "exceptZero",
+                  maximumFractionDigits: 0,
+                  minimumFractionDigits: 0,
                 })
             }}
-            ({{ (totalEndline - totalBaseline) | formatNumberGhg }} tCO2e/year)
+            ({{
+              (totalEndline - totalBaseline) |
+                formatNumberGhg({
+                  suffix: "tCO2e/year)",
+                  maximumFractionDigits: 0,
+                  minimumFractionDigits: 0,
+                })
+            }}
           </span>
         </h3>
       </v-col>
@@ -263,9 +286,11 @@ export default class Results extends Vue {
           },
           tooltip: {
             valueFormatter: (value): string => {
-              return `${this.$options.filters?.formatNumberGhg(
-                value
-              )} (tCO2e/year)`;
+              return `${this.$options.filters?.formatNumberGhg(value, {
+                suffix: '(tCO2e/year)',
+                maximumFractionDigits: 0,
+                minimumFractionDigits: 0,
+              })}`;
             },
           },
           type: "bar",

@@ -37,6 +37,8 @@
                     baseline.results.totalCO2Emission |
                       formatNumberGhg({
                         suffix: "tCO2e/year",
+                        maximumFractionDigits: 0,
+                        minimumFractionDigits: 0,
                       })
                   }}
                 </h3>

@@ -59,7 +59,11 @@
                   <span :title="endline.results.totalCO2Emission">
                     {{
                       endline.results.totalCO2Emission |
-                        formatNumberGhg({ suffix: "tCO2e/year" })
+                        formatNumberGhg({
+                          suffix: "tCO2e/year",
+                          maximumFractionDigits: 0,
+                          minimumFractionDigits: 0,
+                        })
                     }}
                   </span>
                 </h3>
@@ -78,7 +82,7 @@
                       endline.results.changeInEmission |
                         formatNumberGhg({
                           style: "percent",
-                          signDisplay: "exceptZero",
+                          signDisplay: "exceptZero"
                         })
                     }}</span>
                     <span
@@ -90,7 +94,9 @@
                       ({{
                         (endline.results.totalCO2Emission -
                           baseline.results.totalCO2Emission) |
-                          formatNumberGhg({ suffix: "tCO2e/year" })
+                          formatNumberGhg({ suffix: "tCO2e/year",
+                          maximumFractionDigits: 0,
+                          minimumFractionDigits: 0, })
                       }})
                     </span>
                   </span>

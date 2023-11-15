@@ -76,7 +76,11 @@ export const surveyTableHeaderCO2 = [
     value: "computed.totalCO2Emission",
     hideFooterContent: false,
     formatter: (v: number, { ...args }) => {
-      return formatNumberGhg(v, { suffix: args.suffix });
+      return formatNumberGhg(v, {
+        suffix: args.suffix,
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0,
+      });
     },
     computeResults: true,
     type: "number",
