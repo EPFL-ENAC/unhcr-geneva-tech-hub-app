@@ -452,7 +452,7 @@ export function dieselInputsProducedPer(
       value: "input.generatorLoad",
       conditional_function: showGeneratorOptionFunction,
       text: "generator load (percentage)",
-      tootltipAttrs: {
+      tooltipAttrs: {
         "open-on-click": true,
         "open-on-focus": false,
         "open-on-hover": false,

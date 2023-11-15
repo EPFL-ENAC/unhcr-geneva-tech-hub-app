@@ -130,8 +130,15 @@ export function headers() {
       value: "input.biowaste",
       text: "Type of waste",
       items: [bioWaste, nonBiowaste],
-      tooltipInfo:
-        "Definition of biowaste: comprises only biodegradable garden and park waste, food and kitchen waste from households and markets  Source: EAWAG: https://www.eawag.ch/fileadmin/Domain1/Abteilungen/sandec/schwerpunkte/swm/SOWATT/sowatt.pdf",
+      tooltipAttrs: {
+        "open-on-click": true,
+        "open-on-focus": false,
+        "open-on-hover": false,
+        "close-delay": 1000,
+      },
+      tooltipInfo: `Definition of biowaste: comprises only biodegradable garden and park waste,
+food and kitchen waste from households and markets
+<a target="_blank" href="https://www.eawag.ch/fileadmin/Domain1/Abteilungen/sandec/schwerpunkte/swm/SOWATT/sowatt.pdf">Source: EAWAG</a>`,
       style: {
         cols: "12",
       },
@@ -210,7 +217,7 @@ export function headers() {
           return "At least one of these conditions: regular cover material (e.g, soil), mechanical compacting, or leveling of the waste. Example: landfill<br/><b>WARNING</b>: Managed disposal emissions relate to anaerobic conditions that release methane. Methane has a much higher global warming potential than carbon dioxide (28 times more powerful as GHG), so the CO2e emissions considered are relatively high compared to options like burning or open pits disposal that release predominantly biogenic CO2.";
         }
         if (value === "Open burning") {
-          return "<b>WARNING</b>: This option does not account for non-climate change impacts such as issues related to air pollution and public health."
+          return "<b>WARNING</b>: This option does not account for non-climate change impacts such as issues related to air pollution and public health.";
         }
         return "";
       },
