@@ -254,7 +254,7 @@ export default class WaterSupply extends Vue {
       },
     },
     {
-      text: "Distance between water source or treatment",
+      text: "Distance between the water source and the distribution point",
       conditional_function: (input: SurveyInput) => {
         return input.WASH_TYPE === "Trucking" && input.US_UNI === KM;
       },
