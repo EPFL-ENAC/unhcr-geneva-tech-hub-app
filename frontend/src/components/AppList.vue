@@ -43,7 +43,7 @@
                     target="_blank"
                     @click.stop=""
                   >
-                    Click here for access to the Guidance Manuel
+                    Click here for access to the Guidance Manual
                   </v-btn>
                 </div>
               </v-list-item-content>
