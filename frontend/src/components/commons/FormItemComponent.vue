@@ -47,9 +47,13 @@
         <slot name="append-outer"></slot>
       </template>
       <template v-if="tooltipInfo" #prepend>
-        <info-tooltip>
+        <info-tooltip v-bind="tootltipAttrs">
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-html="tooltipInfo ?? label"></span>
+          <span
+            class="info-tooltip"
+            @click.stop
+            v-html="tooltipInfo ?? label"
+          ></span>
         </info-tooltip>
       </template>
     </v-text-field>
@@ -202,6 +206,8 @@ export default class FormItemComponent extends Vue {
   readonly label: string | undefined;
   @Prop([String, Boolean])
   readonly tooltipInfo: string | boolean | undefined;
+  @Prop({ type: [Object], default: () => ({}) })
+  readonly tootltipAttrs: Record<string, boolean> | undefined;
   @Prop([Object, Array])
   readonly options:
     | BooleanOptions
@@ -340,3 +346,33 @@ export default class FormItemComponent extends Vue {
   }
 }
 </script>
+
+<style lang="scss">
+.info-tooltip {
+  color: white;
+  pointer-events: all;
+
+  a {
+    font-weight: bold;
+  }
+  a:link {
+    text-decoration: none;
+    color: white;
+  }
+
+  a:visited {
+    text-decoration: none;
+    color: white;
+  }
+
+  a:hover {
+    text-decoration: underline;
+    color: white;
+  }
+
+  a:active {
+    text-decoration: underline;
+    color: white;
+  }
+}
+</style>
