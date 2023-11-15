@@ -90,7 +90,7 @@ const plastics = "Plastics";
 const textiles = "Textiles";
 const paper = "Paper / cardboard";
 const rubber = "Rubber / leather";
-const nappies = "Nappies";
+const nappies = "Nappies (diapers)";
 const mixed = "Mixed / unknown composition";
 const biowasteSubcategories = [
   plastics,
