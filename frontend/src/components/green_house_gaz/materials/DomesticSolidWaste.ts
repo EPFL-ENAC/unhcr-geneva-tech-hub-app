@@ -76,7 +76,7 @@ const openPits = "Open pits, unmanaged";
 const managedDisposalSite = "Managed disposal site";
 const openBurning = "Open burning";
 const compositing = "Composting";
-const anaerobicallyDigested = "Anaerobically digested";
+const anaerobicallyDigested = "Anaerobic digestion";
 const recyclingReuse = "Recycling / Reuse";
 
 const bioWaste = "Biowaste";
