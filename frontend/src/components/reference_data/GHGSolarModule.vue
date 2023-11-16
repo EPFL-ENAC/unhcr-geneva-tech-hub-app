@@ -3,26 +3,25 @@
     <v-card-text v-if="items">
       <v-row>
         <v-col>
-          Longterm daily average of solar hours per country (Source: Solar
-          Global Atlas) (Note: This value is used when the site global
+          Longterm daily average of solar hours per country (Source: <a target="_blank" href="https://globalsolaratlas.info">globalsolaratlas.info</a>) (Note: This value is used when the site global
           horizontal irradiation is not known.)
         </v-col>
       </v-row>
       <v-row>
         <v-col>
           <v-card-title>
-            <v-spacer></v-spacer>
             <v-text-field
-              v-model="search"
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
             ></v-text-field>
+            <v-spacer></v-spacer>
           </v-card-title>
           <v-data-table
             :headers="headers"
-            :items="items"
+            :items="computedItems"
             :search="search"
             dense
           >
@@ -32,9 +31,10 @@
                 hrs/day
               </span>
             </template>
-            <template #[`item._id`]="props">
-              <span :title="props.item._id"
-                >{{ countriesMap?.[props.item._id]?.name ?? "default" }}
+            <template #[`item.Country`]="props">
+              <span :title="props.item.Country"
+                >
+                {{  props.item.Country ?? "default" }}
                 <country-flag
                   v-if="props.item._id !== 'default'"
                   :country="props.item._id"
@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import { GHGSolar } from "@/store/GHGReferenceSolarModule";
+import { GHGSolar, GHGSolarExtended } from "@/store/GHGReferenceSolarModule";
 import { countriesMap } from "@/utils/countriesAsList";
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
@@ -65,9 +65,23 @@ export default class Energy extends Vue {
   items!: GHGSolar[];
   countriesMap = countriesMap;
   search = "";
+
+  public get computedItems(): GHGSolarExtended[] {
+    let newItems: GHGSolarExtended[] = [];
+    newItems = newItems.concat(this.items as GHGSolarExtended[]);
+    newItems = newItems.map((item) => {
+      item.Country = countriesMap[item._id]?.name ?? "default";
+      return item;
+    });
+    newItems.sort((a, b) => {
+      return a.Country.localeCompare(b.Country);
+    });
+    return newItems;
+  }
+
   public get headers(): HeaderInterface[] {
     return [
-      { text: "Country name", value: "_id" },
+      { text: "Country name", value: "Country" },
       {
         text: "Solar average",
         align: "start",

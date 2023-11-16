@@ -47,7 +47,8 @@
             <v-row>
               <v-col class="d-flex justify-end mx-2 mb-2">
                 <h4>
-                  Unless indicated with an S3 icon, these calculations are limited to Scope 1 and
+                  Unless indicated with an S3 icon (Scope 3),
+                  these calculations are limited to Scope 1 and
                   Scope 2 sources of emissions for purposes of simplicity.
                 </h4>
               </v-col>

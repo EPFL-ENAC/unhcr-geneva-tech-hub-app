@@ -9,6 +9,12 @@ export interface GHGSolar {
   _id: string; // 'iso two letters'
   c: number; // number of hours
 }
+
+export interface GHGSolarExtended {
+  _id: string; // 'iso two letters'
+  Country: string;
+  c: number; // number of hours
+}
 /** Getters */
 const getters: GetterTree<Record<string, never>, RootState> = {
   items: (): GHGSolar[] | null => solar_averaged,

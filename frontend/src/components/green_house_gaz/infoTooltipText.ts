@@ -10,7 +10,7 @@ export const infoTooltipText: Record<string, tooltipInfo> = {
   "Energy-Facilities": {
     title: "Energy - Facilities",
     ready: true,
-    text: "The Facilities module enables the user to calculate the emissions from facilities such as schools using either diesel, solar or national grid energy sources or a hybrid mix of these sources. <br/> The GHG Emission Calculator only considers Scope 1 and 2 emissions at this stage. Unless indicated with an S3 icon. The calculations are estimations. For solar in particular, it is assumed that the addition of solar panels will add zero emissions.",
+    text: "The Facilities module enables the user to calculate the emissions from facilities such as schools using either diesel, solar or national grid energy sources or a hybrid mix of these sources. <br/> The GHG Emission Calculator only considers Scope 1 and 2 emissions. The calculations are estimations. For solar in particular, it is assumed that the addition of solar panels will add zero emissions.",
   },
   "Energy-Cooking": {
     title: "Energy - Cooking",

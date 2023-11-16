@@ -41,6 +41,7 @@ interface TextFormItem<K> extends AbstractFormItem<K> {
 interface NumberFormItem<K> extends AbstractFormItem<K> {
   type: "number";
   subtype?: "percent";
+  tooltipAttrs?: Record<string, (boolean | number)> | undefined;
   unit?: string;
   min?: number;
   max?: number;

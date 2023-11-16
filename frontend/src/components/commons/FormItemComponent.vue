@@ -221,7 +221,7 @@ export default class FormItemComponent extends Vue {
   @Prop([String, Boolean])
   readonly tooltipInfo: string | boolean | undefined;
   @Prop({ type: [Object], default: () => ({}) })
-  readonly tooltipAttrs: Record<string, boolean> | undefined;
+  readonly tooltipAttrs: Record<string, (boolean|number)> | undefined;
   @Prop([Object, Array])
   readonly options:
     | BooleanOptions

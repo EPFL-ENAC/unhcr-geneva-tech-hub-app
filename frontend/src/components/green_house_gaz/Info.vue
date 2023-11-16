@@ -104,6 +104,7 @@ import {
 } from "@/store/GhgReferenceModule";
 import { GHGSolar } from "@/store/GHGReferenceSolarModule";
 import { CouchUser } from "@/store/UserModule";
+import { ghg } from "@/utils/apps";
 import {
   attributionMap,
   defaultCoordinates,
@@ -120,7 +121,6 @@ import { validationMixin } from "vuelidate";
 import { Validations } from "vuelidate-property-decorators";
 import { required } from "vuelidate/lib/validators";
 import { Validation } from "vuelidate/vuelidate";
-
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
@@ -265,6 +265,12 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
         type: "number",
         key: "solar",
         label: "Daily solar peak hours",
+        tooltipAttrs: {
+          "open-on-click": true,
+          "open-on-focus": false,
+          "open-on-hover": false,
+          "close-delay": 1000,
+        },
         tooltipInfo: `
         Solar peak hours, together with the installed solar capacity, are used to calculate the energy delivered by solar panels. If you are not able to assign a value for the solar peak hours, a default value will be assigned from the Reference Table (<svg
   version="1.1"
@@ -277,7 +283,8 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
       <path style="fill: white;"
       d="${iconPath}"
     />
-</svg>). The solar peak hours value is used in the Energy for Facilities, Energy for Cooking, Lighting and Water Pumping modules.`,
+</svg>). The solar peak hours value is used in the Energy for Facilities, Energy for Cooking, Lighting and Water Pumping modules.
+To extract solar hours for a specific location please refer to the <a target="_blank" href="${ghg.link}">${ghg.linkName}</a>.`,
         optional: true,
         placeholder: solarPeakPlaceholder,
       },
