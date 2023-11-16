@@ -2,6 +2,7 @@ export const ghg = {
   title: "GHG Emission Calculator",
   to: "GreenHouseGaz",
   link: "/s3/2023-05-02T083700Z/ghg_user_manual.pdf",
+  linkName: "Guidance Manual",
   logoIcon: "$vuetify.icon.ghg",
   description: `This tool is tailored to displacement
   contexts for calculating greenhouse gas emissions associated with energy, material and transport uses.<br/>
