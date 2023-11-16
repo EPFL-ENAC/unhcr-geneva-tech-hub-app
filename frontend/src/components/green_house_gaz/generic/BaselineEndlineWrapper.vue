@@ -210,7 +210,7 @@ export default class BaselineEndlineWrapper extends Mixins(
           // we keep the name of the endline, we don't overide the name
           endlineItem.input = {
             ...baselineItem.input,
-            name: endlineItem.input?.name ?? undefined,
+            description: endlineItem.input?.description ?? undefined,
           };
           endlineItem.computed = baselineItem.computed; // override even the computed
         }

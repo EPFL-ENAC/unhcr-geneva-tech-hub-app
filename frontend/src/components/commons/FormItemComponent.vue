@@ -89,6 +89,16 @@
           <span>{{ label }}</span>
         </v-tooltip>
       </template>
+      <template #item="{ item }">
+        <div style="max-width: 400px">
+          <div>{{ item.text }}</div>
+          <div v-if="item.description && $attrs.selectExtended">
+            <small>
+              <i>{{ item.description }}</i></small
+            >
+          </div>
+        </div>
+      </template>
       <template v-if="actualUnit" #append>{{ actualUnit }}</template>
     </v-select>
     <v-combobox
@@ -261,10 +271,11 @@ export default class FormItemComponent extends Vue {
           },
         ];
       case "select":
-        return (this.options as SelectOption<SelectValue>[]).map((option) => ({
-          text: option.text,
-          value: option.value,
-        }));
+        return this.options as SelectOption<SelectValue>[];
+      //   .map((option) => ({
+      //   text: option.text,
+      //   value: option.value, // why
+      // }));
       default:
         return [];
     }

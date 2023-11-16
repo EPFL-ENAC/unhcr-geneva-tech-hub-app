@@ -457,7 +457,7 @@ export default class App extends Vue {
   get GHGHelpers(): Helpers[] {
     return [
       {
-        title: "Instruction manual",
+        title: "Guidance manual",
         icon: "mdiFileDocumentOutline",
         type: "pdf",
         href: ghg.link,

@@ -88,6 +88,7 @@ export interface BooleanOptions {
 export interface SelectOption<V> {
   text: string;
   value: V;
+  description?: string
 }
 
 export type SelectValue = boolean | string | number;

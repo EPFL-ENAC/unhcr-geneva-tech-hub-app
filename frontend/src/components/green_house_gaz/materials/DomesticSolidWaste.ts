@@ -13,15 +13,15 @@ import mixedBiowaste from "@/assets/references/ghg_ef_mixed_biowaste.json";
 import mixedNonBiowaste from "@/assets/references/ghg_ef_mixed_non_biowaste.json";
 import RefKeyName from "@/assets/references/ghg_ref_key_name.json";
 
-import { SelectOption, SelectValue } from "@/components/commons/FormItem";
 import { numberOfDaysPerYear } from "@/components/green_house_gaz/energy/computeCO2cost";
 
 import {
-  ensureSurveyTableHeaders,
   SurveyTableHeader,
+  ensureSurveyTableHeaders,
   surveyTableHeaderCO2,
   surveyTableHeaderIncrements,
 } from "@/components/green_house_gaz/generic/surveyTableHeader";
+import { SelectOption, SelectValue } from "@/components/commons/FormItem";
 
 export interface MaterialSolidWasteItemInput extends SurveyInput {
   percentageOfTotalCategories?: number; // computed based on % of HH and stuffs
@@ -84,7 +84,14 @@ const nonBiowaste = "Non-biowaste";
 
 export type practiceCategoriess = "Biowaste" | "Non-biowaste";
 
-const baselinePractices = [openPits, managedDisposalSite, openBurning]; // region dependent practices
+const baselinePractices = [
+  openPits,
+  managedDisposalSite,
+  openBurning,
+  compositing,
+  anaerobicallyDigested,
+  recyclingReuse,
+]; // region dependent practices
 
 const plastics = "Plastics";
 const textiles = "Textiles";
@@ -93,10 +100,10 @@ const rubber = "Rubber / leather";
 const nappies = "Nappies (diapers)";
 const mixed = "Mixed / unknown composition";
 const biowasteSubcategories = [
-  plastics,
   textiles,
-  paper,
   rubber,
+  paper,
+  plastics,
   nappies,
   mixed,
 ];
@@ -136,9 +143,15 @@ export function headers() {
         "open-on-hover": false,
         "close-delay": 1000,
       },
-      tooltipInfo: `Definition of biowaste: comprises only biodegradable garden and park waste,
-food and kitchen waste from households and markets
-<a target="_blank" href="https://www.eawag.ch/fileadmin/Domain1/Abteilungen/sandec/schwerpunkte/swm/SOWATT/sowatt.pdf">Source: EAWAG</a>`,
+      tooltipInfoFn: function (value: string) {
+        if (value === bioWaste) {
+          return `Definition of biowaste: comprises only biodegradable garden and park waste,
+          food and kitchen waste from households and markets
+          <a target="_blank" href="https://www.eawag.ch/fileadmin/Domain1/Abteilungen/sandec/schwerpunkte/swm/SOWATT/sowatt.pdf">Source: EAWAG</a>`;
+        }
+        return undefined;
+      },
+      selectExtended: false,
       style: {
         cols: "12",
       },
@@ -209,20 +222,38 @@ food and kitchen waste from households and markets
             }
           }
         }
+        function tooltipSubText(value: string) {
+          if (value === "Open pits, unmanaged") {
+            return "Pits assumed to be shallow < 5 m depth";
+          }
+          if (value === "Managed disposal site") {
+            return "At least one of these conditions: regular cover material (e.g, soil), mechanical compacting, or leveling of the waste. Example: landfill";
+          }
+          if (value === "Open burning") {
+            // no subtext
+            return "";
+          }
+          return "";
+        }
         return result.map((item: string) => ({
           text: item,
           value: item,
+          description: tooltipSubText(item),
         }));
       },
+      selectExtended: true,
       formatter: (x: string) => x,
       tooltipInfoFn: function (value: string) {
         if (value === "Open pits, unmanaged") {
-          return "Assumed to be shallow < 5 m depth<br/><b>WARNING</b>: This option appears to have lower emissions than the managed option, however, it does not account for non-climate change impacts such as air pollution, leaching and public health concerns.";
+          // Pits assumed to be shallow < 5 m depth
+          return "Pits assumed to be shallow < 5 m depth<br/><b>WARNING</b>: This option appears to have lower emissions than the managed option, however, it does not account for non-climate change impacts such as air pollution, leaching and public health concerns.";
         }
         if (value === "Managed disposal site") {
+          // At least one of these conditions: regular cover material (e.g, soil), mechanical compacting, or leveling of the waste. Example: landfill
           return "At least one of these conditions: regular cover material (e.g, soil), mechanical compacting, or leveling of the waste. Example: landfill<br/><b>WARNING</b>: Managed disposal emissions relate to anaerobic conditions that release methane. Methane has a much higher global warming potential than carbon dioxide (28 times more powerful as GHG), so the CO2e emissions considered are relatively high compared to options like burning or open pits disposal that release predominantly biogenic CO2.";
         }
         if (value === "Open burning") {
+          // no subtext
           return "<b>WARNING</b>: This option does not account for non-climate change impacts such as issues related to air pollution and public health.";
         }
         return "";

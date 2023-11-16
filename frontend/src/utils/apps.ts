@@ -3,8 +3,8 @@ export const ghg = {
   to: "GreenHouseGaz",
   link: "/s3/2023-05-02T083700Z/ghg_user_manual.pdf",
   logoIcon: "$vuetify.icon.ghg",
-  description: `This tool is tailored to refugee camps and settlements for
-    calculating greenhouse gas emissions associated with energy, material and transport uses.<br/>
+  description: `This tool is tailored to displacement
+  contexts for calculating greenhouse gas emissions associated with energy, material and transport uses.<br/>
     The GHG Calculator only considers Scope 1 and 2 emissions at this stage. According to the <a  onclick="event.stopPropagation();" target="_blank" href="https://www.ipcc.ch/site/assets/uploads/2018/02/ipcc_wg3_ar5_annex-i.pdf">IPCC</a>,
     ‘Scope 1’ indicates direct greenhouse gas (GHG) emissions that are from sources owned or controlled by the reporting entity. ‘Scope 2’ indicates indirect GHG emissions associated with the production of electricity, heat, or steam purchased by the reporting entity.
     

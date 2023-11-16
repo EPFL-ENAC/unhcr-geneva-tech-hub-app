@@ -23,7 +23,7 @@
       </v-col>
       <v-col class="d-flex align-center">
         <a :href="domesticSolidWasteHref" target="blank"
-          >Example Waste Composition and Generation for Refugee Camps</a
+          >Example Waste Composition and Generation for Displacement Contexts</a
         >
       </v-col>
     </v-row>

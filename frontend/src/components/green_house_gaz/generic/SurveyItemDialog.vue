@@ -322,6 +322,8 @@ export default class SurveyItemDialog extends Vue {
         );
         if (res !== undefined) {
           header.tooltipInfo = res;
+        } else {
+          header.tooltipInfo = undefined;
         }
       }
       if (typeof header.text === "function") {
@@ -338,19 +340,23 @@ export default class SurveyItemDialog extends Vue {
         header.options =
           header.items?.map((item: string | SelectCustom<string>) => {
             let description;
-            if (typeof header.tooltipInfo === "string") {
-              description = header.tooltipInfo;
-            }
-
             if (typeof item === "string") {
-              if (typeof header.tooltipInfo === "function") {
+              if (typeof header.tooltipInfoFn === "function") {
                 description = header.tooltipInfoFn?.(item);
+              } else {
+                if (typeof header.tooltipInfo === "string") {
+                  description = header.tooltipInfo;
+                }
               }
               return {
                 text: header.formatter?.(item as unknown) ?? item,
                 description,
                 value: item,
               };
+            } else {
+              if (typeof header.tooltipInfo === "function") {
+                description = header.tooltipInfoFn?.(item.text);
+              }
             }
             return {
               text: item.text,
@@ -366,7 +372,7 @@ export default class SurveyItemDialog extends Vue {
           surveyItem: header,
           intervention: this.intervention,
         });
-        // todo: abstract wrapper function to make things more readable
+        // TODO: abstract wrapper function to make things more readable
         header.options = items;
       }
       return header;

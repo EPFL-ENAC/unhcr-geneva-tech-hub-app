@@ -192,6 +192,7 @@ export interface EasySurveyTableHeader {
   rulesFn?: (localInput: SurveyInput, surveyItem: SurveyTableHeader) => Rule[];
   isInput: boolean;
   label?: string;
+  selectExtended?: boolean;
   tooltipInfo?: string;
   tooltipInfoFn?: (
     value: string,
