@@ -151,6 +151,12 @@ food and kitchen waste from households and markets
       conditional: "biowaste",
       value: "input.nonBiowasteSubCategories",
       text: "Waste subcategories",
+      tooltipInfoFn: function (value: string) {
+        if (value === "Mixed / unknown composition") {
+          return "This option assumes a typical composition for non-biowaste for the country's region. Emission factors for this category can be found in the emissions factor database.";
+        }
+        return undefined;
+      },
       items: biowasteSubcategories,
       style: {
         cols: "12",

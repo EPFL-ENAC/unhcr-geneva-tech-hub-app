@@ -5,9 +5,23 @@
         <v-col>Regional EF MIXED BIOWASTE</v-col>
         <v-col>
           Emission factors per management practice (Gg CO2e/Gg waste)
-          <info-tooltip>
-            https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf
-            https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf
+          <info-tooltip
+            v-bind="{
+              'open-on-click': true,
+              'open-on-focus': false,
+              'open-on-hover': false,
+              'close-delay': 1000,
+            }"
+          >
+          <span class="info-tooltip">
+
+            <a href="https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf" target="_blank">
+              https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf
+            </a>
+            <a href="https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf" target="_blank">
+              https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf
+            </a>
+          </span>
           </info-tooltip>
         </v-col>
       </v-row>
