@@ -99,17 +99,20 @@ export const surveyTableHeaderCO2 = [
         style: "percent",
         signDisplay: "exceptZero",
       });
-      return `<span title=${String(v)}>${res}</span>`;
+      return `<span title=${String(v * 100)}>${res}</span>`;
     },
     classFormatter: (
       v: number,
       _: SurveyTableHeader,
       item: SurveyItem
     ): string => {
+      const newV = v * 100;
       const classes: string[] = [];
-      v > 0 ? classes.push("item-positive") : void 0;
-      v < 0 ? classes.push("item-negative") : void 0;
-      v === 0 ? classes.push("bold-table-content") : void 0;
+      newV >= 0.005 ? classes.push("item-positive") : void 0;
+      newV <= -0.005 ? classes.push("item-negative") : void 0;
+      newV < -0.005 && newV > 0.005
+        ? classes.push("bold-table-content")
+        : void 0;
       if (item?.enabled === false) {
         classes.push("striked");
       }
