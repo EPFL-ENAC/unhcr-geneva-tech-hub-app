@@ -24,27 +24,29 @@ Vue.use(User, { store });
 Vue.use(filters);
 Vue.component("CountryFlag", CountryFlag);
 
-Sentry.init({
-  Vue,
-  environment: process.env.VUE_APP_ENVIRONEMENT ?? "production",
-  enabled: process.env.NODE_ENV === "production",
-  dsn: "https://3b1d1325e5234f7a99ca6e735673f0aa@o4504854111387648.ingest.sentry.io/4504854113288192",
-  integrations: [
-    new BrowserTracing({
-      routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-      tracePropagationTargets: [
-        "localhost",
-        "unhcr-tss-test.epfl.ch",
-        "unhcr-tss.epfl.ch",
-        /^\//,
-      ],
-    }),
-  ],
-  // Set tracesSampleRate to 1.0 to capture 100%
-  // of transactions for performance monitoring.
-  // We recommend adjusting this value in production
-  tracesSampleRate: 0.25,
-});
+if (process.env.NODE_ENV === "production") {
+  Sentry.init({
+    Vue,
+    environment: process.env.VUE_APP_ENVIRONEMENT ?? "production",
+    enabled: process.env.NODE_ENV === "production",
+    dsn: "https://3b1d1325e5234f7a99ca6e735673f0aa@o4504854111387648.ingest.sentry.io/4504854113288192",
+    integrations: [
+      new BrowserTracing({
+        routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+        tracePropagationTargets: [
+          "localhost",
+          "unhcr-tss-test.epfl.ch",
+          "unhcr-tss.epfl.ch",
+          /^\//,
+        ],
+      }),
+    ],
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 0.25,
+  });
+}
 
 axios.interceptors.response.use(undefined, function (error: AxiosError) {
   (error as any).originalMessage = error.message;
