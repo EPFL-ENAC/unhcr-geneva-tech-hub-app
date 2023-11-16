@@ -178,6 +178,9 @@ export default class WaterSupply extends Vue {
     },
     {
       text: `Water volume (m³/year)`,
+      textWarning: "total water volume",
+      textWarningDescription:
+        "If more or less water is intended to be provided to the camp over time, this warning can be ignored.",
       tooltipInfo:
         "Even if the duration of use extends to three months, it will still be calculated on an annual basis.",
 
