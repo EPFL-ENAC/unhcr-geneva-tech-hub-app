@@ -9,6 +9,8 @@
             :subtype="subtype"
             :baseline="baseline"
             :endline="endline"
+            :description="description"
+            :text-warning="textWarning"
           />
         </v-card-text>
         <v-card-actions>
@@ -39,6 +41,10 @@ export default class WarningSurveyDialog extends Vue {
   readonly show!: boolean;
   @Prop([String])
   readonly text!: string;
+  @Prop([String])
+  readonly description!: string;
+  @Prop([String])
+  readonly textWarning!: string;
   @Prop([Number])
   readonly baseline!: number;
   @Prop([Number])

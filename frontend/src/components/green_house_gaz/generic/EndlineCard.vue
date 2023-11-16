@@ -13,6 +13,8 @@
           :dialog-open.sync="dialogs['warning-survey-dialog']"
           :show="isDiffNull"
           :text="diffDimensionText"
+          :text-warning="diffDimensionTextWarning"
+          :description="diffDimensionDescription"
           :subtype="diffDimensionSubType"
           :baseline="baseline.results[diffDimension]"
           :endline="endline.results[diffDimension]"
@@ -20,6 +22,8 @@
         <warning-message-alert
           :show="isDiffNull"
           :text="diffDimensionText"
+          :text-warning="diffDimensionTextWarning"
+          :description="diffDimensionDescription"
           :subtype="diffDimensionSubType"
           :baseline="baseline.results[diffDimension]"
           :endline="endline.results[diffDimension]"
@@ -221,8 +225,15 @@ export default class EndlineCard extends Vue {
     return this.headers.find((header) => header.key === this.diffDimension);
   }
 
+  public get diffDimensionTextWarning(): string {
+    return this.diffHeader?.textWarning ?? this.diffDimensionText;
+  }
   public get diffDimensionText(): string {
     return this.diffHeader?.label ?? "no dimension selected";
+  }
+
+  public get diffDimensionDescription(): string {
+    return this.diffHeader?.textWarningDescription ?? "";
   }
 
   public get diffDimensionSubType(): string {

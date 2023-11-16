@@ -175,6 +175,8 @@ export interface SurveyTableHeader extends EasySurveyTableHeader {
 }
 export interface EasySurveyTableHeader {
   text: string | ((v: SurveyInput) => string); //.e.g "Intervention" description or text to display for input or table header
+  textWarning: string; // e.g "Intervention" description or text to display for input or table header
+  textWarningDescription: string; // e.g "Intervention" description or text to display for input or table header
   value: string; // name of the field to use for table
   type: string; // number etc for text-field type of value in formatter by the way
   items:

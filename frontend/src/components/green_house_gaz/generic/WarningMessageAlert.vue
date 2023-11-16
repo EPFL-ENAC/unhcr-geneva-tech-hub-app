@@ -9,7 +9,7 @@
     dark
   >
     Please note that the baseline and endline
-    {{ text }} do not match.
+    {{ textWarning }} do not match.
     <br />
     Baseline:
     {{ baseline | formatNumberGhg(formatNumberGhgOptions) }}
@@ -18,6 +18,10 @@
     Endline:
     {{ endline | formatNumberGhg(formatNumberGhgOptions) }}
     {{ textFormatted }}
+    <span v-if="description">
+      <br />
+      {{ description }}
+    </span>
   </v-alert>
 </template>
 
@@ -30,6 +34,10 @@ export default class WarningMessageAlert extends Vue {
   readonly show!: boolean;
   @Prop([String])
   readonly text!: string;
+  @Prop([String])
+  readonly description!: string;
+  @Prop([String])
+  readonly textWarning!: string;
   @Prop([Number])
   readonly baseline!: number;
   @Prop([Number])
