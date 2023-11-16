@@ -309,14 +309,14 @@ export default class FormItemComponent extends Vue {
 
   get actualMin(): number | undefined {
     if (this.subtype === "percent") {
-      return 0;
+      return this.min ?? 0;
     }
     return this.min;
   }
 
   get actualMax(): number | undefined {
     if (this.subtype === "percent") {
-      return 1;
+      return this.max ?? 1;
     }
     return this.max;
   }

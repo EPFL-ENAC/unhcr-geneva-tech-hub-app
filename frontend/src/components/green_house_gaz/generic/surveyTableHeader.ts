@@ -179,6 +179,13 @@ export interface EasySurveyTableHeader {
   textWarningDescription: string; // e.g "Intervention" description or text to display for input or table header
   value: string; // name of the field to use for table
   type: string; // number etc for text-field type of value in formatter by the way
+  max?: number; // 100,
+  min?: number; // 0,
+  maxFn?: (options: {
+    localInput: SurveyInput;
+    surveyItem: SurveyTableHeader;
+    intervention: boolean;
+  }) => number | undefined;
   items:
     | string[]
     | string

@@ -15,13 +15,13 @@ import RefKeyName from "@/assets/references/ghg_ref_key_name.json";
 
 import { numberOfDaysPerYear } from "@/components/green_house_gaz/energy/computeCO2cost";
 
+import { SelectOption, SelectValue } from "@/components/commons/FormItem";
 import {
-  SurveyTableHeader,
   ensureSurveyTableHeaders,
+  SurveyTableHeader,
   surveyTableHeaderCO2,
   surveyTableHeaderIncrements,
 } from "@/components/green_house_gaz/generic/surveyTableHeader";
-import { SelectOption, SelectValue } from "@/components/commons/FormItem";
 
 export interface MaterialSolidWasteItemInput extends SurveyInput {
   percentageOfTotalCategories?: number; // computed based on % of HH and stuffs
@@ -283,7 +283,19 @@ The percentage of total waste generated is not the same between the baseline and
       style: {
         cols: "12",
       },
-      max: 100,
+      maxFn: (options: {
+        localInput: SurveyInput;
+        surveyItemHeader: SurveyTableHeader;
+        intervention: boolean;
+      }): number | undefined => {
+        // warning since it's a percentage we return 1; because it means 100%
+        if (options.intervention) {
+          // since the default is 100% for percentage, if we want to change it
+          // we need to max it out to something like 100000% which is not really possible
+          return 1000;
+        }
+        return 1;
+      },
       subtype: "percent",
       type: "number",
       hideFooterContent: false,
