@@ -3,36 +3,38 @@
     <v-card-text v-if="items">
       <v-row>
         <v-col>
-          Geographic Regions from UN M49 Standard
-          (https://unstats.un.org/unsd/methodology/m49/overview/). Regions
-          information used to calculate regional emission factors for the Solid
-          Waste module.</v-col
+          Geographic Regions from UN M49 Standard (<a
+            target="_blank"
+            href="https://unstats.un.org/unsd/methodology/m49/overview/"
+            >https://unstats.un.org/unsd/methodology/m49/overview/</a
+          >). <br />Regions information used to calculate regional emission
+          factors for the Solid Waste module.</v-col
         >
       </v-row>
       <v-row>
         <v-col>
           <v-card-title>
-            <v-spacer></v-spacer>
             <v-text-field
-              v-model="search"
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
             ></v-text-field>
+            <v-spacer></v-spacer>
           </v-card-title>
           <v-data-table
             :headers="headers"
-            :items="items"
+            :items="computedItems"
             :search="search"
             dense
           >
-            <template #[`item.c`]="props">
+            <template #[`item.Region`]="props">
               <span>{{ props.item.Region }} </span>
             </template>
-            <template #[`item._id`]="props">
-              <span :title="props.item._id"
-                >{{ countriesMap?.[props.item._id]?.name ?? "default" }}
+            <template #[`item.Country`]="props">
+              <span :title="props.item._id">
+                {{ props.item.Country ?? "default" }}
                 <country-flag
                   v-if="props.item._id !== 'default'"
                   :country="props.item._id"
@@ -64,14 +66,28 @@ export default class Energy extends Vue {
   countriesMap = countriesMap;
   search = "";
 
+  public get computedItems(): GHGRegion[] {
+    let newItems: GHGRegion[] = [];
+    newItems = newItems.concat(this.items);
+    newItems = newItems.map((item) => {
+      item.Country = countriesMap[item._id].name;
+      return item;
+    });
+    newItems.sort((a, b) => {
+      return a._id.localeCompare(b._id);
+    });
+    return newItems;
+  }
+
   public get headers(): HeaderInterface[] {
     return [
-      { text: "Country name", value: "_id" },
+      // { text: "Country name", value: "_id" },
+      { text: "Country", value: "Country" },
       {
-        text: "Solar average",
+        text: "Region",
         align: "start",
-        sortable: false,
-        value: "c",
+        sortable: true,
+        value: "Region",
       },
     ];
   }
