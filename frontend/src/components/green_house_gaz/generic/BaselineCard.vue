@@ -47,9 +47,51 @@
             <v-row>
               <v-col class="d-flex justify-end mx-2 mb-2">
                 <h4>
-                  Unless indicated with an S3 icon (Scope 3),
-                  these calculations are limited to Scope 1 and
-                  Scope 2 sources of emissions for purposes of simplicity.
+                  Unless indicated with an S3 icon (Scope
+                  <v-tooltip
+                    class="d-print-none"
+                    :bottom="'bottom' in $attrs ? $attrs['bottom'] : true"
+                    :max-width="
+                      'max-width' in $attrs ? $attrs['max-width'] : 512
+                    "
+                  >
+                    <template #activator="{ on, attrs }">
+                      <span v-bind="attrs" class="scope-decoration" v-on="on"
+                        >3</span
+                      >
+                    </template>
+                    <span>{{ scope3 }}</span> </v-tooltip
+                  >), these calculations are limited to Scope
+                  <v-tooltip
+                    class="d-print-none"
+                    :bottom="'bottom' in $attrs ? $attrs['bottom'] : true"
+                    :max-width="
+                      'max-width' in $attrs ? $attrs['max-width'] : 512
+                    "
+                  >
+                    <template #activator="{ on, attrs }">
+                      <span v-bind="attrs" class="scope-decoration" v-on="on"
+                        >1</span
+                      >
+                    </template>
+                    <span>{{ scope1 }}</span>
+                  </v-tooltip>
+                  and Scope
+                  <v-tooltip
+                    class="d-print-none"
+                    :bottom="'bottom' in $attrs ? $attrs['bottom'] : true"
+                    :max-width="
+                      'max-width' in $attrs ? $attrs['max-width'] : 512
+                    "
+                  >
+                    <template #activator="{ on, attrs }">
+                      <span v-bind="attrs" class="scope-decoration" v-on="on"
+                        >2</span
+                      >
+                    </template>
+                    <span>{{ scope2 }}</span>
+                  </v-tooltip>
+                  sources of emissions for purposes of simplicity.
                 </h4>
               </v-col>
             </v-row>
@@ -78,6 +120,7 @@ import {
   SurveyResult,
 } from "@/store/GhgInterface";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
+import { scope1, scope2, scope3 } from "@/utils/apps";
 import { cloneDeep } from "lodash";
 import Vue from "vue";
 import "vue-class-component/hooks";
@@ -107,6 +150,10 @@ export default class BaselineCard extends Vue {
     localItemInput: SurveyInput,
     ghgMapRef: ItemReferencesMap
   ) => SurveyResult;
+
+  scope1 = scope1;
+  scope2 = scope2;
+  scope3 = scope3;
 
   public toggleBaselineMode(): void {
     this.$emit("update:baselineMode", !this.baselineMode);

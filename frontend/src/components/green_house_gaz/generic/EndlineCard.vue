@@ -86,7 +86,7 @@
                       endline.results.changeInEmission |
                         formatNumberGhg({
                           style: "percent",
-                          signDisplay: "exceptZero"
+                          signDisplay: "exceptZero",
                         })
                     }}</span>
                     <span
@@ -98,9 +98,11 @@
                       ({{
                         (endline.results.totalCO2Emission -
                           baseline.results.totalCO2Emission) |
-                          formatNumberGhg({ suffix: "tCO2e/year",
-                          maximumFractionDigits: 0,
-                          minimumFractionDigits: 0, })
+                          formatNumberGhg({
+                            suffix: "tCO2e/year",
+                            maximumFractionDigits: 0,
+                            minimumFractionDigits: 0,
+                          })
                       }})
                     </span>
                   </span>
@@ -108,8 +110,51 @@
               </v-col>
               <v-col :cols="12" class="d-flex justify-end mx-2 mb-2">
                 <h4>
-                  Unless indicated with an S3 icon, these calculations are limited to Scope 1 and
-                  Scope 2 sources of emissions for purposes of simplicity.
+                  Unless indicated with an S3 icon (Scope
+                  <v-tooltip
+                    class="d-print-none"
+                    :bottom="'bottom' in $attrs ? $attrs['bottom'] : true"
+                    :max-width="
+                      'max-width' in $attrs ? $attrs['max-width'] : 512
+                    "
+                  >
+                    <template #activator="{ on, attrs }">
+                      <span v-bind="attrs" class="scope-decoration" v-on="on"
+                        >3</span
+                      >
+                    </template>
+                    <span>{{ scope3 }}</span> </v-tooltip
+                  >), these calculations are limited to Scope
+                  <v-tooltip
+                    class="d-print-none"
+                    :bottom="'bottom' in $attrs ? $attrs['bottom'] : true"
+                    :max-width="
+                      'max-width' in $attrs ? $attrs['max-width'] : 512
+                    "
+                  >
+                    <template #activator="{ on, attrs }">
+                      <span v-bind="attrs" class="scope-decoration" v-on="on"
+                        >1</span
+                      >
+                    </template>
+                    <span>{{ scope1 }}</span>
+                  </v-tooltip>
+                  and Scope
+                  <v-tooltip
+                    class="d-print-none"
+                    :bottom="'bottom' in $attrs ? $attrs['bottom'] : true"
+                    :max-width="
+                      'max-width' in $attrs ? $attrs['max-width'] : 512
+                    "
+                  >
+                    <template #activator="{ on, attrs }">
+                      <span v-bind="attrs" class="scope-decoration" v-on="on"
+                        >2</span
+                      >
+                    </template>
+                    <span>{{ scope2 }}</span>
+                  </v-tooltip>
+                  sources of emissions for purposes of simplicity.
                 </h4>
               </v-col>
             </v-row>
@@ -133,6 +178,7 @@ import InstancePieChart from "@/components/green_house_gaz/generic/InstancePieCh
 import InstanceTable from "@/components/green_house_gaz/generic/InstanceTable.vue";
 import { SurveyTableHeader } from "@/components/green_house_gaz/generic/surveyTableHeader";
 import WarningMessageAlert from "@/components/green_house_gaz/generic/WarningMessageAlert.vue";
+import { scope1, scope2, scope3 } from "@/utils/apps";
 
 import WarningSurveyDialog from "@/components/green_house_gaz/generic/WarningSurveyDialog.vue";
 import {
@@ -182,6 +228,9 @@ export default class EndlineCard extends Vue {
 
   dialogs = { "warning-survey-dialog": false } as Record<string, boolean>;
 
+  scope1 = scope1;
+  scope2 = scope2;
+  scope3 = scope3;
   @Watch("isDiffNull", { immediate: false })
   onDiffNullChange(newIsDiffNull: boolean): void {
     this.dialogs["warning-survey-dialog"] = !newIsDiffNull;

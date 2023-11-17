@@ -361,33 +361,3 @@ export default class FormItemComponent extends Vue {
   }
 }
 </script>
-
-<style lang="scss">
-.info-tooltip {
-  color: white;
-  pointer-events: all;
-
-  a {
-    font-weight: bold;
-  }
-  a:link {
-    text-decoration: none;
-    color: white;
-  }
-
-  a:visited {
-    text-decoration: none;
-    color: white;
-  }
-
-  a:hover {
-    text-decoration: underline;
-    color: white;
-  }
-
-  a:active {
-    text-decoration: underline;
-    color: white;
-  }
-}
-</style>

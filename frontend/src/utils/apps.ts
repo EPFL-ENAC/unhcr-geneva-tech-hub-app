@@ -1,8 +1,7 @@
 export const scope1 = `'Scope 1' indicates direct greenhouse gas (GHG) emissions that are from sources owned or controlled by the reporting entity.`;
-
 export const scope2 = `'Scope 2' indicates indirect GHG emissions associated with the production of electricity, heat, or steam purchased by the reporting entity.`;
-
 export const scope3 = `'Scope 3' indicates all other indirect emissions, i.e., emissions associated with the extraction and production of purchased materials, fuels, and services, including transport in vehicles not owned or controlled by the reporting entity, outsourced activities, waste disposal, etc`;
+
 export const scope3Exception = `Emissions associated with feedstock production and/or processing
 of some fuels are considered due to their high impact relative to the total emissions`;
 export const scope1and2Exception = `For solar in particular, it is assumed that the addition of solar panels will add zero emissions.`;

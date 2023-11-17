@@ -8,18 +8,20 @@
           }}</span>
         </template>
         <template #[`item.source`]="props">
-          <v-tooltip v-if="props.item.ref" right>
-            <template #activator="{ on, attrs }">
-              <a :href="props.item.source" target="_blank">{{
-                props.item.source
-              }}</a>
-              <v-btn icon v-bind="attrs" v-on="on">
-                <v-icon>$mdiInformation</v-icon>
-              </v-btn>
-            </template>
-            <span>{{ props.item.ref }}</span>
-          </v-tooltip>
-          <span v-else>
+          <info-tooltip
+            v-if="props.item.ref"
+            v-bind="{
+              'open-on-click': true,
+              'open-on-focus': true,
+              'open-on-hover': true,
+              'close-delay': 0,
+            }"
+          >
+            <span>
+              {{ props.item.ref }}
+            </span>
+          </info-tooltip>
+          <span v-if="props.item.source">
             <a :href="props.item.source" target="_blank">{{
               props.item.source
             }}</a>
@@ -33,18 +35,19 @@
 </template>
 
 <script lang="ts">
+import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import GHGMixedBiowaste from "@/components/reference_data/GHGMixedBiowaste.vue";
 import GHGMixedNonBiowaste from "@/components/reference_data/GHGMixedNonBiowaste.vue";
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
-
 @Component({
   computed: {
     ...mapGetters("GhgReferenceModule", ["items"]),
     ...mapGetters(["referenceDataDrawer"]),
   },
   components: {
+    InfoTooltip,
     GHGMixedBiowaste,
     GHGMixedNonBiowaste,
   },

@@ -1,7 +1,7 @@
 <template>
   <v-tooltip
     v-bind="$attrs"
-    class="d-print-none"
+    class="d-print-none info-tooltip"
     :bottom="'bottom' in $attrs ? $attrs['bottom'] : true"
     :max-width="'max-width' in $attrs ? $attrs['max-width'] : 512"
   >
@@ -24,3 +24,32 @@ import { Component, Vue } from "vue-property-decorator";
 @Component({ inheritAttrs: true })
 export default class InfoTooltip extends Vue {}
 </script>
+
+<style lang="scss">
+.info-tooltip {
+  color: white;
+  pointer-events: all;
+
+  a {
+    font-weight: bold;
+  }
+  a:link {
+    text-decoration: none;
+    color: white;
+  }
+
+  a:visited {
+    text-decoration: none;
+    color: white;
+  }
+
+  a:hover {
+    text-decoration: underline;
+    color: white;
+  }
+
+  a:active {
+    text-decoration: underline;
+    color: white;
+  }
+}</style>
