@@ -7,7 +7,7 @@
       <v-expansion-panel-header>
         <div v-if="countriesMap[country.key[0]]" class="panel-header">
           <span>
-            {{ countriesMap[country.key[0]].name }}
+            {{ country.countryName }}
           </span>
           <span>
             <country-flag :country="country.key[0]" size="small" />
@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import SurveyList from "@/components/green_house_gaz/SurveysList.vue";
-import { Country, GreenHouseGaz } from "@/store/GhgInterface";
+import { Country, CountryExtended, GreenHouseGaz } from "@/store/GhgInterface";
 import { countries as Countries, countriesMap } from "@/utils/countriesAsList";
 import { Component, Vue } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";
@@ -64,7 +64,7 @@ import { mapGetters } from "vuex";
 })
 /** ProjectList */
 export default class ProjectList extends Vue {
-  countries!: [];
+  countries!: CountryExtended[];
   setup = 0;
   singleExpand = true;
   expanded: ExpandedObject = {};

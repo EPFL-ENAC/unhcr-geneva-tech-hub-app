@@ -296,7 +296,7 @@ export default class NewSurveyDialog extends Vue {
         created_by: this.$userName(),
         users: [this.$user()],
         latitude: x.latitude,
-        longitude: x.longitude, // maybe ?
+        longitude: x.longitude,
         solar: x.solar_peak_hours,
         population: x.population,
         year: x.year,
@@ -336,9 +336,10 @@ export default class NewSurveyDialog extends Vue {
     this.newCampSite.id = uuidv4();
     this.newCampSite.siteId = uuidv4(); // default in case not in unhcr
     this.newCampSite.siteName = "";
-    const selectedCountry = this.countriesMap[countryCode];
-    this.newCampSite.latitude = selectedCountry?.lat ?? 0;
-    this.newCampSite.longitude = selectedCountry?.lon ?? 0;
+    // const selectedCountry = this.countriesMap[countryCode];
+    this.newCampSite.countryCode = countryCode;
+    this.newCampSite.latitude = undefined; //selectedCountry?.lat ?? 0;
+    this.newCampSite.longitude = undefined; //selectedCountry?.lon ?? 0;
     this.newName = "";
     this.newCampSite.description = "";
   }

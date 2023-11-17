@@ -1,6 +1,7 @@
 /** Config store */
-import { Country, GreenHouseGaz } from "@/store/GhgInterface";
+import { CountryExtended, GreenHouseGaz } from "@/store/GhgInterface";
 import { SyncDatabase } from "@/utils/couchdb";
+import { countriesMap } from "@/utils/countriesAsList";
 import { v4 as uuidv4 } from "uuid";
 import {
   ActionContext,
@@ -22,7 +23,7 @@ interface ProjectsState {
   projects: GreenHouseGaz[];
   project: GreenHouseGaz;
   projectLoading: boolean;
-  countries: Array<Country>;
+  countries: Array<CountryExtended>;
   sites: GreenHouseGaz[];
   siteAssessments: GreenHouseGaz[];
   siteAssessmentsLoading: boolean;
@@ -92,7 +93,7 @@ const getters: GetterTree<ProjectsState, RootState> = {
   sites: (s): GreenHouseGaz[] => s.sites,
   siteAssessments: (s): GreenHouseGaz[] => s.siteAssessments,
   siteAssessmentsLoading: (s): boolean => s.siteAssessmentsLoading,
-  countries: (s): Array<Country> => s.countries,
+  countries: (s): Array<CountryExtended> => s.countries,
 };
 
 /** Mutations */
@@ -163,7 +164,20 @@ function getGenericCountries(
       result
     ) {
       if (result?.rows) {
-        const value = result.rows.filter((item) => item !== null);
+        let value: CountryExtended[] = result.rows.filter(
+          (item) => item !== null
+        );
+        value = value.map((item: CountryExtended) => {
+          item.countryName = countriesMap[item.key[0]]?.name ?? "unknown country code";
+          // item.country = countriesMap[item.key[0]];
+          // countriesMap[country.key[0]].name
+          return item;
+        });
+        value.sort((a, b) =>
+          (a?.countryName ?? "").localeCompare(b?.countryName ?? "")
+        );
+        // add coutryName field
+        // sort by countryName !
         context.commit(COMMIT_NAME, value);
         return value;
       }

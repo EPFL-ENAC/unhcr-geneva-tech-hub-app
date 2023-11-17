@@ -10,6 +10,10 @@ export interface Country {
   value: GreenHouseGaz[];
 }
 
+export interface CountryExtended extends Country {
+  countryName?: string;
+}
+
 export interface CountryInfo {
   name: string;
   code: string;
@@ -82,8 +86,8 @@ export interface GreenHouseGaz extends SurveyForms {
   reference?: boolean; // say if the survey is a reference or not
   lat?: number; // lat of the site
   lon?: number; // lon of the site
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
   year?: number;
   // surveys: Survey[];
   users: (CouchUser | Email | string)[];
