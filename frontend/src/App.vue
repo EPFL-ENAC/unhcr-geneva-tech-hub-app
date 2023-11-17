@@ -253,7 +253,7 @@ import ReferenceData from "@/components/ReferenceData.vue";
 
 import update from "@/mixins/update.js";
 import { CouchUser } from "@/store/UserModule";
-import Apps, { ghg, shelter } from "@/utils/apps";
+import { ghg, shelter } from "@/utils/apps";
 import md5 from "@/utils/md5";
 import { AxiosError, AxiosPromise } from "axios";
 import { Component, Vue, Watch } from "vue-property-decorator";
@@ -317,8 +317,6 @@ export default class App extends Vue {
   mini = true;
   /** Snackbar visibility */
   snackbar = false;
-  // TODO: use meta.title for apps name
-  apps = Apps;
   unhcr_logo = unhcr_logo;
   intervalId!: number;
 
@@ -457,7 +455,7 @@ export default class App extends Vue {
   get GHGHelpers(): Helpers[] {
     return [
       {
-        title: "Guidance manual",
+        title: ghg.linkName,
         icon: "mdiFileDocumentOutline",
         type: "pdf",
         href: ghg.link,

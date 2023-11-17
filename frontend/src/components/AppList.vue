@@ -6,7 +6,7 @@
       </v-col>
     </v-row>
     <v-row v-if="$userIs('LoggedIn')">
-      <v-col v-for="app in apps" :key="app.title">
+      <v-col v-for="app in Apps" :key="app.title">
         <v-hover
           v-if="
             ($userIs('ShelterUser') && app.to === 'ShelterSustainability') ||
@@ -31,7 +31,12 @@
                 </v-list-item-title>
                 <div class="description">
                   <!-- eslint-disable-next-line vue/no-v-html -->
-                  <p v-html="app.description"></p>
+                  <p v-if="app.description" v-html="app.description"></p>
+                  <component
+                    :is="app.descriptionComponent"
+                    v-if="app.descriptionComponent"
+                    :app="app"
+                  />
                 </div>
                 <div class="item-btn-container">
                   <v-btn
@@ -70,12 +75,17 @@
 </template>
 
 <script lang="ts">
+import GhgDescription from "@/components/GhgDescription.vue";
 import Apps from "@/utils/apps";
 import { Component, Vue } from "vue-property-decorator";
 
-@Component
+@Component({
+  components: {
+    GhgDescription,
+  },
+})
 export default class AppList extends Vue {
-  apps = Apps;
+  Apps = Apps;
 }
 </script>
 

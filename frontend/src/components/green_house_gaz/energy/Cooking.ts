@@ -186,6 +186,12 @@ export function headers(
       },
       hideFooterContent: false,
       items: cookstoveTECHs,
+      tooltipInfoFn: (value: string) => {
+        console.log(value);
+        if (value === "1") {
+          return "No access to cooking";
+        }
+      },
       formatter: (_id: string, _: unknown, localItem: EnergyCookingItem) => {
         const cookStove =
           cookstoveTECHs.find((cookstove) => cookstove._id === _id) ??

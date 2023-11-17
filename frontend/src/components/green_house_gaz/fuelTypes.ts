@@ -54,7 +54,7 @@ export const liquidFuels = ["ETH", "PET", "DIES", "KRS"] as const;
 export type LiquidFuel = typeof liquidFuels[number];
 export const liquidFuelWithText: IdTextTypesItem<LiquidFuel>[] = [
   { _id: "ETH", text: "Ethanol/alcohol" },
-  { _id: "PET", text: "Petrol" }, // same as wash
+  { _id: "PET", text: "Petrol / Gas" }, // same as wash
   { _id: "DIES", text: "Diesel" }, // same as facilities for diesel gen
   { _id: "KRS", text: "Kerosene" },
 ];
@@ -74,7 +74,7 @@ export const gasFuelWithText: IdTextTypesItem<GasFuel>[] = [
 export const thermalFuels = ["THE"] as const;
 export type ThermalFuel = typeof thermalFuels[number];
 export const thermalFuelWithText: IdTextTypesItem<ThermalFuel>[] = [
-  { _id: "THE", text: "Thermal solar" },
+  { _id: "THE", text: "Solar thermal", description: "Solar thermal cooker cannot be used" },
 ];
 // end of thermal fuels
 

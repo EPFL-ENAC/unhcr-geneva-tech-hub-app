@@ -6,7 +6,12 @@
     :max-width="'max-width' in $attrs ? $attrs['max-width'] : 512"
   >
     <template #activator="{ on, attrs }">
-      <v-icon v-bind="attrs" class="ma-1 d-print-none" v-on="on"
+      <v-icon
+        :dense="$attrs.dense"
+        :x-small="$attrs['x-small']"
+        v-bind="attrs"
+        :class="`${$attrs?.['icon-class'] ?? 'ml-1'} d-print-none`"
+        v-on="on"
         >$mdiInformationOutline</v-icon
       >
     </template>

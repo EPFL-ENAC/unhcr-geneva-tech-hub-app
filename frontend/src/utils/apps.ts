@@ -12,10 +12,7 @@ export const ghg = {
   link: "/s3/2023-05-02T083700Z/ghg_user_manual.pdf",
   linkName: "Guidance Manual",
   logoIcon: "$vuetify.icon.ghg",
-  description: `This tool estimates greenhouse gas emissions for energy, material, and transport in displacement contexts,
-  focusing on Scope  <a onhover="" style="text-decoration: underline">1</a> and <a style="text-decoration: underline">2</a> emissions <a>(i<!-- should hover with scope1and2Exception-->)</a>.
-  Exceptionally some Scope <a onhover="" style="text-decoration: underline">3</a> emissions are included due to their high impact <a onhover="">(i<!-- should hover with scope3Exception-->)</a>.
-`,
+  descriptionComponent: "ghgDescription"
 };
 
 export const shelter = {
@@ -32,7 +29,10 @@ export const shelter = {
 };
 export default [shelter, ghg] as {
   title: string;
+  link: string;
+  linkName: string;
   to: string;
   logoIcon: string;
   description?: string;
+  descriptionComponent?: string; // component Name
 }[];

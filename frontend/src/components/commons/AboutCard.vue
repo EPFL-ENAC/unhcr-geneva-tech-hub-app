@@ -50,20 +50,9 @@
 </template>
 
 <script lang="ts">
-import AppLogo from "@/components/commons/AppLogo.vue";
-import Apps from "@/utils/apps";
-import { attributionMapFull } from "@/utils/mapWorld";
-
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
 
-@Component({
-  components: {
-    AppLogo,
-  },
-})
-export default class AboutCard extends Vue {
-  Apps = Apps;
-  attributionMapFull = attributionMapFull;
-}
+@Component
+export default class AboutCard extends Vue {}
 </script>

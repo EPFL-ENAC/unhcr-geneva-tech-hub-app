@@ -174,23 +174,24 @@ export default class Results extends Vue {
   omega = 1;
 
   public get items(): Config[] {
+    // FOR color blindness we don't use UNHCR color anymore
     return [
       {
-        color: `rgba(157,72,56,${this.alpha})`,
+        color: `rgba(111,222,110,${this.alpha})`,
         name: "Energy - Facilities",
         category: "energy",
         subcategory: "facilities",
         stack: "co2",
       },
       {
-        color: `rgba(157,72,56,${this.beta})`,
+        color: `rgba(255,66,66,${this.beta})`,
         name: "Energy - Cooking",
         category: "energy",
         subcategory: "cooking",
         stack: "co2",
       },
       {
-        color: `rgba(157,72,56,${this.delta})`,
+        color: `rgba(166,145,174,${this.delta})`,
         name: "Energy - Lighting",
         category: "energy",
         subcategory: "lighting",

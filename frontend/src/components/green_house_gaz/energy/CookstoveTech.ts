@@ -20,6 +20,7 @@ export interface CookstoveTech {
   readonly text: string;
   readonly image: string | undefined;
   readonly defaults?: PartialRecord<AllFuel, number>;
+  readonly tooltipInfo?: string;
 }
 
 export const cookstoveIdWithoutAccess = "1";
@@ -118,7 +119,8 @@ export const cookstoveTECHs: CookstoveTech[] = [
   {
     _id: cookstoveIdSolarCooker,
     fuelTypes: thermalFuels,
-    text: "Solar cooker",
+    text: "Solar thermal cooker",
+    tooltipInfo: "Solar thermal cooker cannot be used",
     image: "/images/energy/cookstoves/solar-parabolic.png",
     defaults: {
       THE: 0.02, // of: ~0.02 kWh/d/person.
