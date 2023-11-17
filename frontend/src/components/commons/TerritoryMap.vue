@@ -18,7 +18,7 @@
         v-for="(markerCoordinate, key) in internalCoordinates"
         :key="key"
         :lat-lng="getLatLng(markerCoordinate)"
-        :icon="getIcon('pin', markerCoordinate[2])"
+        :icon="getIcon(mdiIconName, markerCoordinate[2])"
         @click="() => goToMarker(markerCoordinate[3])"
       >
         <l-tooltip v-if="markerCoordinate[3]">
@@ -34,7 +34,7 @@ import { ShelterType } from "@/store/ShelterInterface";
 import {
   attributionMap,
   defaultCoordinates,
-  defaultZoom,
+  defaultZoom as defaultZoomConstant,
   urlMap,
 } from "@/utils/mapWorld";
 import {
@@ -70,10 +70,13 @@ export default class TerritoryMap extends Vue {
   readonly aspectRatio: number | string | undefined;
   @Prop({ type: Array, required: false, default: () => [] })
   readonly value!: (number | string)[];
-  @Prop({ type: Number, required: false, default: defaultZoom })
+  @Prop({ type: Number, required: false, default: defaultZoomConstant })
   readonly defaultZoom!: number;
   @Prop({ type: Number, default: 2 })
   readonly zoom!: number;
+
+  @Prop({ type: String, default: "mdiPin" })
+  readonly mdiIconName!: string;
 
   readonly url = urlMap;
   readonly attribution = attributionMap;
@@ -92,7 +95,7 @@ export default class TerritoryMap extends Vue {
 
   public getIcon(defaultIcon: string, shelterType: ShelterType): L.DivIcon {
     let className = `customIcon`;
-    let iconPath = this.$vuetify.icons.values.mdiPin;
+    let iconPath = this.$vuetify.icons.values?.[defaultIcon];
     if (shelterType) {
       className = `c-${this.shelterColors[shelterType].name} customIcon`;
       iconPath = this.$vuetify.icons.values[this.shelterIcons[shelterType]];

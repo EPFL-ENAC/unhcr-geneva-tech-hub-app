@@ -74,7 +74,9 @@
                 <v-divider vertical></v-divider>
                 <v-col cols="6" class="map-countries">
                   <territory-map
+                    :default-zoom="zoom"
                     :value="latLng"
+                    :mdi-icon-name="mdiIconName"
                     :aspect-ratio="16 / 9"
                     @update:value="updateLatLng"
                   />
@@ -103,8 +105,10 @@ import {
   ReferenceItemInterface,
 } from "@/store/GhgReferenceModule";
 import { GHGSolar } from "@/store/GHGReferenceSolarModule";
+import { UNHCRLocation } from "@/store/UNHCRLocationModule";
 import { CouchUser } from "@/store/UserModule";
 import { ghg } from "@/utils/apps";
+import { countriesMap } from "@/utils/countriesAsList";
 import {
   attributionMap,
   defaultCoordinates,
@@ -130,6 +134,7 @@ import { mapActions, mapGetters } from "vuex";
     ...mapGetters("UserModule", ["user"]),
     ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
     ...mapGetters("GHGReferencefNRB", ["items"]),
+    ...mapGetters("UNHCRLocationModule", { unhcrLocationMap: "items" }),
     ...mapGetters("GhgReferenceSolarModule", {
       GhgReferenceSolarMap: "itemsMap",
     }),
@@ -159,7 +164,7 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
   user!: CouchUser;
   items!: GHGfNRB[];
   GhgReferenceSolarMap!: Record<string, GHGSolar>;
-
+  unhcrLocationMap!: UNHCRLocation[];
   project_REF_GRD!: ReferenceItemInterface;
   ghgMapRef!: ItemReferencesMap;
 
@@ -185,7 +190,6 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
     $v: Validation;
   };
 
-  readonly zoom = defaultZoom;
   readonly defaultCoordinates = defaultCoordinates;
   readonly url = urlMap;
   readonly attribution = attributionMap;
@@ -193,19 +197,61 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
 
   saveInProgress = false;
 
+  get mdiIconName(): string {
+    if (this.localProject?.latitude === undefined) {
+      return "mdiMapMarkerOffOutline";
+    }
+    return "mdiMapMarkerCircle";
+  }
+
+  get existingLocation(): UNHCRLocation | undefined {
+    return this.unhcrLocationMap.find(
+      (v) => v.location_pcode === this.localProject.location_pcode
+    );
+  }
+
+  zoomLevel = 5;
+  get zoom(): number {
+    if (this.localProject?.countryCode === undefined) {
+      return defaultZoom;
+    }
+    return this.zoomLevel;
+  }
+
+  @Watch("localProject.countryCode", { immediate: true, deep: true })
+  onProject(): void {
+    this.zoomLevel = 4;
+    this.zoomLevel = 5;
+  }
+
+  get defaultCoordinatesForCountry(): LatLngExpression {
+    const { countryCode } = this.localProject;
+    const lat = countriesMap[countryCode]?.lat ?? 0;
+    const long = countriesMap[countryCode]?.lon ?? 0;
+    return [lat, long] as LatLngExpression;
+  }
+
   get latLng(): LatLngExpression {
     const { latitude, longitude } = this.localProject;
     if (latitude !== undefined) {
       return [latitude ?? 0, longitude ?? 0];
     }
-    return defaultCoordinates as LatLngExpression;
+    return this.defaultCoordinatesForCountry as LatLngExpression;
   }
 
   get defaultSolarPeak(): string {
-    const key = this.project?.countryCode ?? "default";
+    // find out if existing site or not ang et site solar here!
+    const key = this.localProject?.countryCode ?? "default";
+    if (this.existingLocation) {
+      return (
+        formatNumberGhg(this.existingLocation.solar_peak_hours) + " site data"
+      );
+    }
     const countrySolar = this.GhgReferenceSolarMap[key]?.c;
     const defaultSolar = this.GhgReferenceSolarMap?.default?.c;
-    return formatNumberGhg(countrySolar ?? defaultSolar);
+    // "default value" "average per country" "site data peak hours"
+    const suffix = countrySolar ? "average per country" : "default value";
+    return formatNumberGhg(countrySolar ?? defaultSolar) + ` ${suffix}`;
   }
 
   get generalItems(): (FormItem & {
@@ -227,6 +273,7 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
       },
       {
         type: "number",
+        optional: true,
         key: "latitude",
         label: "Latitude of the site",
         unit: "Decimal Degrees",
@@ -235,6 +282,7 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
       },
       {
         type: "number",
+        optional: true,
         key: "longitude",
         label: "Longitude of the site",
         unit: "Decimal Degrees",
@@ -342,11 +390,16 @@ To extract solar hours for a specific location please refer to the <a target="_b
   }
 
   public updateLatitude(lat: number): void {
-    this.$set(this.localProject, "latitude", parseFloat(lat.toFixed(3)));
+    // instead of updating the latitude of the project,
+    // we update the latitude for the map only
+    // and we hint for the new latitude in the form
+    this.$set(this.localProject, "latitude", undefined);
+    // this.$set(this.localProject, "latitude", parseFloat(lat.toFixed(3)));
   }
 
   public updateLongitude(lon: number): void {
-    this.$set(this.localProject, "longitude", parseFloat(lon.toFixed(3)));
+    this.$set(this.localProject, "longitude", undefined);
+    // this.$set(this.localProject, "longitude", parseFloat(lon.toFixed(3)));
   }
 
   public updateLatLng(latLng: number[]): void {
@@ -373,6 +426,10 @@ To extract solar hours for a specific location please refer to the <a target="_b
   }
 
   public updateSurveyForm(value: GreenHouseGaz): GreenHouseGaz {
+    // TODO: we need to update the survey form computed on each update for every module
+    // it's not implemented. It's a bug. It was not envisioned in the first place as
+    // a possibility. We need to update the survey form for each module
+    // The following code is a POC for the cooking module
     // TODO: it's working but it seems some variable are not always called
     //  need to find out why
     // if (surveyIndex !== undefined) {
