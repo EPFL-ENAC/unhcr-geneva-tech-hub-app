@@ -42,7 +42,7 @@ export type BioMassFuel = typeof biomassFuels[number];
 export const biomassFuelsForGasifier = ["FWD", "BRQ", "PLTS"] as const;
 export type BioMassFuelWithoutCHC = typeof biomassFuelsForGasifier[number];
 export const biomassFuelWithText: IdTextTypesItem<BioMassFuel>[] = [
-  { _id: "FWD", text: "Wood" },
+  { _id: "FWD", text: "Wood", default: 0.44 }, // 2.14kg/capita/day -1.7 kg/cap/day =0.44 kg/capita/day
   { _id: "CHC", text: "Charcoal" },
   { _id: "PLTS", text: "Pellets" },
   { _id: "BRQ", text: "Briquette" },
@@ -93,7 +93,7 @@ export const lightingFuels = [
 ] as const;
 export type LightingFuel = typeof lightingFuels[number];
 export const lightingFuelsWithText: IdTextTypesItem<LightingFuel>[] = [
-  { _id: "CNDL", text: "Candle (paraffin)" },
+  { _id: "CNDL", text: "Candle (paraffin)", default: 0.026 },
   {
     _id: "LIGHT_HYB",
     text: "Hybrid fuel mix (Firewood + paraffin + kerosene)",

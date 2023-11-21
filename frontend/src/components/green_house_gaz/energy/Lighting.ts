@@ -644,6 +644,7 @@ export function headers(
         return result.map((item: string) => ({
           text: AllLightingFuelsWithTextById?.[item as AllFuel]?.text,
           value: item,
+          default: AllLightingFuelsWithTextById?.[item as AllFuel]?.default,
         }));
       },
       style: {
@@ -743,7 +744,7 @@ export function headers(
         args: any,
         localItem: EnergyLightingItem
       ) => {
-        if (localItem?.input?.fuelType === "ELE_HYB") {
+        if (localItem?.input?.fuelType === "ELE_HYB" || value === "ELE_HYB") {
           return `
           Hybrid mix percentages:<br/>
           Diesel generator: ${formatNumberGhg(
@@ -762,6 +763,15 @@ export function headers(
             style: "percent",
           })}`;
         }
+        if (localItem?.input?.fuelType === "CNDL" || value === "CNDL") {
+          return `default 0.026 kg/d: Based on a mean weight loss of wax 6.75 g/h). Reference: <a href="https://iopscience.iop.org/article/10.1088/1757-899X/1252/1/012011/pdf">https://iopscience.iop.org/article/10.1088/1757-899X/1252/1/012011/pdf</a>`;
+        }
+      },
+      tooltipAttrs: {
+        "open-on-click": true,
+        "open-on-focus": false,
+        "open-on-hover": false,
+        "close-delay": 1000,
       },
       formatterTableComponent: (
         fuelType: AllFuel,
@@ -798,6 +808,7 @@ export function headers(
         if (fuelType === "FWD") {
           localInput.dryWood = true;
         }
+        localInput.fuelUsage = AllLightingFuelsWithTextById?.[fuelType as AllFuel]?.default ?? 0;
         return localInput;
       },
       type: "select",
