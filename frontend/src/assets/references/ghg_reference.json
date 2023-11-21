@@ -387,7 +387,6 @@
       "wash"
     ],
     "subcat": [
-      "facilities",
       "lighting",
       "water-supply"
     ],
@@ -436,7 +435,7 @@
     "subcat": [
       "lighting"
     ],
-    "description": "Emission Factor - Torch or phone with battery [kg CO2e/kWh]",
+    "description": "Emission Factor - Single Use Batteries [kg CO2e/kWh]",
     "value": 0,
     "source": null,
     "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions.",
