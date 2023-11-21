@@ -77,6 +77,7 @@ export interface GreenHouseGaz extends SurveyForms {
   _id?: string;
   _rev?: string;
   id: string; // uuid4 mandatory // it's optional because if we create a new one, it's not there yet
+  rev?: string; // only for some views
   description: string; // assessment description  // was called survey name before
   siteId: string; // in old times it was the location_id or a uuid, now it's a string: location_pcode or uuidv4
   location_id?: number;

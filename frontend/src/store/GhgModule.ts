@@ -19,6 +19,14 @@ import { CouchUser } from "./UserModule";
 const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 const MSG_USER_NOT_PRESENT = "Could not find user information";
 
+const timeoutIds: NodeJS.Timeout[] = [];
+
+function cleartimeouts(timeoutIds: NodeJS.Timeout[]): void {
+  timeoutIds.forEach((id) => {
+    clearTimeout(id);
+  });
+}
+
 interface ProjectsState {
   projects: GreenHouseGaz[];
   project: GreenHouseGaz;
@@ -210,6 +218,10 @@ function getGenericSite(
     // third get data
     // fourth reset loading
     context.commit("SET_SITE_ASSESSMENTS_LOADING", true);
+    const timeId: NodeJS.Timeout = setTimeout(function () {
+      context.dispatch("setLoading", true, { root: true });
+    }, 300);
+    timeoutIds.push(timeId);
     context.commit(COMMIT_NAME, []);
     const db = context.state.localCouch?.remoteDB;
     if (!db) {
@@ -231,9 +243,13 @@ function getGenericSite(
           return value;
         }
         context.commit("SET_SITE_ASSESSMENTS_LOADING", false);
+        cleartimeouts(timeoutIds);
+        context.dispatch("setLoading", false, { root: true });
         throw new Error("undefined 'project/sites_with_assessments' response");
       })
       .finally(() => {
+        cleartimeouts(timeoutIds);
+        context.dispatch("setLoading", false, { root: true });
         context.commit("SET_SITE_ASSESSMENTS_LOADING", false);
       });
   };
@@ -402,6 +418,34 @@ const actions: ActionTree<ProjectsState, RootState> = {
   },
   resetSitesAssessments: (context: ActionContext<ProjectsState, RootState>) => {
     context.commit("SET_SITE_ASSESSMENTS", []);
+  },
+  removeDrafts(context: ActionContext<ProjectsState, RootState>) {
+    // WARNING: Draft has priority over 'reference'! even if it's a reference it is considered a draft
+    function isDraft(assessment: GreenHouseGaz) {
+      return !assessment.public;
+    }
+    const remoteDB = context.state.localCouch?.remoteDB;
+    if (!remoteDB) {
+      throw new Error(MSG_DB_DOES_NOT_EXIST);
+    }
+    context.commit("SET_SITE_ASSESSMENTS_LOADING", true);
+
+    const timeId: NodeJS.Timeout = setTimeout(function () {
+      context.dispatch("setLoading", true, { root: true });
+    }, 300);
+    timeoutIds.push(timeId);
+    const draftsToDelete: any[] = context.state.sites
+      .filter(isDraft)
+      .map((assessment: GreenHouseGaz) => ({
+        _id: assessment.id,
+        _rev: assessment.rev,
+        _deleted: true,
+      }));
+    return remoteDB.bulkDocs(draftsToDelete).finally(() => {
+      context.commit("SET_SITE_ASSESSMENTS_LOADING", false);
+      cleartimeouts(timeoutIds);
+      context.dispatch("setLoading", false, { root: true });
+    });
   },
 };
 

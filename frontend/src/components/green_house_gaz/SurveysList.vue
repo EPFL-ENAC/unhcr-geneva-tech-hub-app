@@ -50,9 +50,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-data-table
+    <v-data-table v-if="filteredAssessments.length > 0"
       :headers="headersSurvey"
-      :items="siteAssessments"
+      :items="filteredAssessments"
       sort-by="created_at"
       hide-default-footer
       :items-per-page="-1"
@@ -154,6 +154,9 @@
         </div>
       </template>
     </v-data-table>
+    <span v-else>
+      <i>no public assessments for this site</i>
+    </span>
   </div>
 </template>
 
@@ -205,6 +208,12 @@ export default class SurveysList extends Vue {
   getSites!: () => Promise<null>;
 
   user!: CouchUser;
+
+  public get filteredAssessments(): GreenHouseGaz[] {
+    return this.siteAssessments.filter((assessment: GreenHouseGaz) => {
+      return this.$can('view', assessment) || assessment.public;
+    });
+  }
 
   headersSurvey = [
     { text: "Description", value: "description" },

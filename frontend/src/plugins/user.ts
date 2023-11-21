@@ -111,6 +111,10 @@ export default new (class User {
           return isAuthor || isAdmin;
         }
 
+        if (actionName === "view") {
+          return isAuthor || isAdmin;
+        }
+
         if (actionName === "delete") {
           return isAuthor || isAdmin;
         }

@@ -3,13 +3,16 @@
     <v-sheet class="country-list overflow-y-auto">
       <v-container fluid>
         <v-row>
-          <v-col class="country-list__actions d-flex justify-end align-center">
+          <v-col
+            v-if="$can('admin')"
+            class="country-list__actions d-flex justify-end align-center"
+          >
             <v-btn
               class="float-right"
               color="error"
-              :disabled="!$can('create')"
+              :disabled="!$can('admin')"
               text
-              @click.stop.prevent=""
+              @click.stop.prevent="deleteDrafts"
             >
               <v-icon left>$mdiDelete</v-icon>
               delete all drafts
@@ -40,6 +43,22 @@
       <territory-map :coordinates="coordinates" @click:item="openSite" />
     </div>
     <new-survey-dialog :open.sync="siteDialog" />
+    <v-dialog v-model="dialogDeleteDraft" max-width="500px">
+      <v-card>
+        <v-card-title class="text-h5"
+          >Confirm deletion of all the drafts? this will be
+          permanent</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="closeDialog">Cancel</v-btn>
+          <v-btn color="blue darken-1" text @click="deleteDraftsConfirm"
+            >OK</v-btn
+          >
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </main>
 </template>
 
@@ -52,10 +71,16 @@ import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("GhgModule", ["sites"]),
+    // sites is set by vuex in getCountries
+    ...mapGetters("GhgModule", ["sites", "siteAssessmentsLoading"]),
   },
   methods: {
-    ...mapActions("GhgModule", ["syncDB", "closeDB", "getCountries"]),
+    ...mapActions("GhgModule", [
+      "syncDB",
+      "closeDB",
+      "getCountries",
+      "removeDrafts",
+    ]),
   },
   components: {
     TerritoryMap,
@@ -67,10 +92,32 @@ export default class ProjectList extends Vue {
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
   getCountries!: () => Promise<null>;
+  removeDrafts!: () => Promise<null>;
+  siteAssessmentsLoading!: boolean;
 
   siteDialog = false;
 
   sites!: GreenHouseGaz[];
+
+  dialogDeleteDraft = false;
+
+  deleteDrafts(): void {
+    this.dialogDeleteDraft = true;
+  }
+
+  async deleteDraftsConfirm(): Promise<void> {
+    await this.removeDrafts().then(() => {
+      this.$store.dispatch("notifyUser", {
+        type: "info",
+        message: `successfuly removing all drafts`,
+      });
+    });
+    await this.closeDialog();
+  }
+
+  closeDialog(): void {
+    this.dialogDeleteDraft = false;
+  }
 
   public get coordinates(): (number | undefined | GreenHouseGaz)[][] {
     return this.sites
