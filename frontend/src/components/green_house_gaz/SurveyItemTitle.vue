@@ -10,7 +10,10 @@
             v-if="infoTooltipText[titleKey]?.tooltipDisabled"
             class="text-caption font-italic"
           >
-            <p v-html="infoTooltipText[titleKey].text"></p>
+            <p v-if="infoTooltipText[titleKey].textComponentName">
+              <component :is="infoTooltipText[titleKey].textComponentName" />
+            </p>
+            <p v-else v-html="infoTooltipText[titleKey].text"></p>
           </h5>
         </div>
         <info-tooltip v-if="!infoTooltipText[titleKey]?.tooltipDisabled">
@@ -57,10 +60,13 @@ import { infoTooltipText } from "@/components/green_house_gaz/infoTooltipText";
 import "vue-class-component/hooks";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
+import ResultsTooltip from "@/components/green_house_gaz/ResultsTooltip.vue";
+
 @Component({
   name: "SurveyItemTitle",
   components: {
     InfoTooltip,
+    ResultsTooltip,
   },
 })
 export default class SurveyItemTitle extends Vue {

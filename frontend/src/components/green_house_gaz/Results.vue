@@ -113,7 +113,7 @@ use([
   },
   components: {
     VChart,
-    SurveyItemTitle,
+    SurveyItemTitle
   },
 })
 export default class Results extends Vue {

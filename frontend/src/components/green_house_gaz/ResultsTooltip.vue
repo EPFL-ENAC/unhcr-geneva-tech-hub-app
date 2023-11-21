@@ -1,7 +1,6 @@
 <template>
   <p>
-    This tool estimates greenhouse gas emissions for energy, material, and
-    transport in displacement contexts, focusing on Scope
+    The GHG Emission Calculator only considers Scope
     <v-tooltip
       class="d-print-none"
       :bottom="'bottom' in $attrs ? $attrs['bottom'] : true"
@@ -23,14 +22,10 @@
       </template>
       <span>{{ scope2 }}</span>
     </v-tooltip>
-    emissions
-    <info-tooltip icon-class="ml-0" x-small dense>
-      <span
-        class="info-tooltip"
-        @click.stop
-        v-html="scope1and2Exception"
-      ></span> </info-tooltip
-    >. Exceptionally some Scope
+    emissions at this stage. The calculations are estimations. For solar in
+    particular, it is assumed that the addition of solar panels will add zero
+    emissions.<br />
+    Exceptionally, Scope
     <v-tooltip
       class="d-print-none"
       :bottom="'bottom' in $attrs ? $attrs['bottom'] : true"
@@ -41,14 +36,9 @@
       </template>
       <span>{{ scope3 }}</span>
     </v-tooltip>
-    emissions are included due to their high impact
-    <info-tooltip icon-class="ml-0" x-small dense>
-      <span
-        class="info-tooltip"
-        @click.stop
-        v-html="scope3Exception"
-      ></span> </info-tooltip
-    >.
+    emissions associated with feedstock production and/or processing of
+    charcoal, ethanol and vegetable oil are considered due to their high impact
+    relative to the total emissions.
   </p>
 </template>
 
@@ -68,7 +58,7 @@ import { Component, Vue } from "vue-property-decorator";
     InfoTooltip,
   },
 })
-export default class GhgDescription extends Vue {
+export default class ResultsTooltip extends Vue {
   scope1 = scope1;
   scope2 = scope2;
   scope3 = scope3;
