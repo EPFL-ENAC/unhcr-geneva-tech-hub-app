@@ -24,6 +24,7 @@ import {
   KM,
   LITERS,
   PETROL,
+  WashTruckingItem,
   WashTruckingItemInput,
   WashTruckingItemResults,
   WashTruckingSurvey,
@@ -225,6 +226,29 @@ export default class WaterSupply extends Vue {
         };
         // delete localInput.WACL;
         return localInput;
+      },
+      formatterTableComponent: (
+        fuelType: string,
+        _: unknown,
+        localItem: WashTruckingItem
+      ) => {
+        const result = [];
+        const washType = localItem?.input?.WASH_TYPE as string;
+        if (washType === "Pumping") {
+          result.push({
+            icon: "$mdiWaterPump",
+            description: "Pumping from a water source",
+            fill: "blue",
+          });
+        }
+        if (washType === "Trucking") {
+          result.push({
+            icon: "$mdiTankerTruck",
+            description: "Trucking from a water source",
+            fill: "blue",
+          });
+        }
+        return result;
       },
       items: ["Pumping", "Trucking"], // should be dynamic ? // todo: maybe dissplay only when it's WATER ? what are the rules ?
     },
