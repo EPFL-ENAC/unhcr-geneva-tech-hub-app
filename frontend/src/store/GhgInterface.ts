@@ -94,6 +94,7 @@ export interface GreenHouseGaz extends SurveyForms {
   solar?: number;
   population: number; // total population
   pp_per_hh: number; // ave people per hhtotalHH
+  public?: boolean; // true if public; false|undefined if private ; default is private
   totalHH: number;
   created_by: string;
   created_at: string;

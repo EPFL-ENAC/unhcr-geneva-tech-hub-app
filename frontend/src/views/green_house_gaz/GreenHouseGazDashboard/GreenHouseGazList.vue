@@ -52,7 +52,7 @@ import { Country, CountryExtended, GreenHouseGaz } from "@/store/GhgInterface";
 import { countries as Countries, countriesMap } from "@/utils/countriesAsList";
 import { Component, Vue } from "vue-property-decorator";
 import { DataTableHeader } from "vuetify";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 @Component({
   computed: {
@@ -61,10 +61,14 @@ import { mapGetters } from "vuex";
   components: {
     SurveyList,
   },
+  methods: {
+    ...mapActions("GhgModule", ["resetSitesAssessments"]),
+  },
 })
 /** ProjectList */
 export default class ProjectList extends Vue {
   countries!: CountryExtended[];
+  resetSitesAssessments!: () => Promise<null>;
   setup = 0;
   singleExpand = true;
   expanded: ExpandedObject = {};
@@ -107,6 +111,8 @@ export default class ProjectList extends Vue {
   public set panel(value: number) {
     if (value !== undefined) {
       const country = this.countries[value];
+      this.resetSitesAssessments();
+      this.expanded = {};
       this.setCountry(country);
     } else {
       this.unsetCountry();

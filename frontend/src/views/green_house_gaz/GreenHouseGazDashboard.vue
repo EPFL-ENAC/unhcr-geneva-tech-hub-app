@@ -6,6 +6,18 @@
           <v-col class="country-list__actions d-flex justify-end align-center">
             <v-btn
               class="float-right"
+              color="error"
+              :disabled="!$can('create')"
+              text
+              @click.stop.prevent=""
+            >
+              <v-icon left>$mdiDelete</v-icon>
+              delete all drafts
+            </v-btn>
+          </v-col>
+          <v-col class="country-list__actions d-flex justify-end align-center">
+            <v-btn
+              class="float-right"
               color="primary"
               :disabled="!$can('create')"
               text
@@ -43,12 +55,7 @@ import { mapActions, mapGetters } from "vuex";
     ...mapGetters("GhgModule", ["sites"]),
   },
   methods: {
-    ...mapActions("GhgModule", [
-      "syncDB",
-      "closeDB",
-      "getCountries",
-      "getSites",
-    ]),
+    ...mapActions("GhgModule", ["syncDB", "closeDB", "getCountries"]),
   },
   components: {
     TerritoryMap,
@@ -60,7 +67,6 @@ export default class ProjectList extends Vue {
   syncDB!: () => null;
   closeDB!: () => Promise<null>;
   getCountries!: () => Promise<null>;
-  getSites!: () => Promise<null>;
 
   siteDialog = false;
 
@@ -80,7 +86,20 @@ export default class ProjectList extends Vue {
   mounted(): void {
     this.syncDB();
     this.getCountries();
-    this.getSites();
+    this.listenToSetProjectAndRetrieveAssessments();
+  }
+
+  public listenToSetProjectAndRetrieveAssessments(): void {
+    this.$store.subscribe((mutation) => {
+      const shouldUpdate = [
+        "GhgModule/NEW_ASSESSEMENT",
+        "GhgModule/REMOVE_ASSESSEMENT",
+        "GhgModule/UPDATE_ASSESSEMENT",
+      ];
+      if (shouldUpdate.includes(mutation.type)) {
+        this.getCountries();
+      }
+    });
   }
 
   destroyed(): void {

@@ -1,0 +1,9 @@
+{
+  "index": {
+     "fields": [
+        "countryCode"
+     ]
+  },
+  "name": "countryCode-json-index",
+  "type": "json"
+}

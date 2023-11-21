@@ -115,6 +115,9 @@ const mutations: MutationTree<ProjectsState> = {
   },
   SET_COUNTRIES(state, countries) {
     state.countries = countries;
+    state.sites = countries
+      .map((x: any) => x.value)
+      .reduce((acc: any[], el: any) => acc.concat(el));
   },
   SET_SITE_ASSESSMENTS(state, siteAssessments) {
     state.siteAssessments = siteAssessments;
@@ -153,7 +156,7 @@ function getGenericCountries(
   },
   COMMIT_NAME = "SET_COUNTRIES"
 ) {
-  return function getCountries(
+  return function getCountriesGenerated(
     context: ActionContext<ProjectsState, RootState>
   ) {
     const db = context.state.localCouch?.remoteDB;
@@ -168,7 +171,8 @@ function getGenericCountries(
           (item) => item !== null
         );
         value = value.map((item: CountryExtended) => {
-          item.countryName = countriesMap[item.key[0]]?.name ?? "unknown country code";
+          item.countryName =
+            countriesMap[item.key[0]]?.name ?? "unknown country code";
           // item.country = countriesMap[item.key[0]];
           // countriesMap[country.key[0]].name
           return item;
@@ -395,6 +399,9 @@ const actions: ActionTree<ProjectsState, RootState> = {
   },
   hasDB: async (context: ActionContext<ProjectsState, RootState>) => {
     return context.state.localCouch?.remoteDB;
+  },
+  resetSitesAssessments: (context: ActionContext<ProjectsState, RootState>) => {
+    context.commit("SET_SITE_ASSESSMENTS", []);
   },
 };
 

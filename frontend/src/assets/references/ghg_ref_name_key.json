@@ -1,6 +1,6 @@
 {
   "COM": "Composting",
-  "AD": "Anaerobically digested",
+  "AD": "Anaerobic Digestion",
   "REC": "Recycling / Reuse",
   "PIT": "Open pits, unmanaged",
   "MAN": "Managed disposal site",
@@ -9,6 +9,6 @@
   "TEX": "Textiles",
   "PAP": "Paper / cardboard",
   "RUB": "Rubber / leather",
-  "NAP": "Nappies",
+  "NAP": "Nappies (diapers)",
   "": "Mixed / unknown composition"
 }

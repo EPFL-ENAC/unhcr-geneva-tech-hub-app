@@ -2,7 +2,7 @@
   <div v-if="project && currentProject" class="fluid surveys-item">
     <header v-if="currentProject && currentProject.siteName" class="ma-5">
       <v-row>
-        <v-col>
+        <v-col class="d-flex align-center">
           <h2 class="d-flex">
             <span
               v-if="currentProject && currentProject.countryCode !== undefined"
@@ -26,11 +26,22 @@
             </span>
           </h2>
         </v-col>
-        <v-col class="col-auto">
+        <v-col class="col-auto d-flex align-center flex-row">
           <user-manager
             v-model="currentProject.users"
-            @change="submitForm"
+            @change="(v) => updateFormInput('users', v)"
           ></user-manager>
+          <!-- Make project public -->
+          <v-switch
+            v-model="currentProject.public"
+            :label="`${currentProject?.public ? 'Public' : 'Draft'} project`"
+            @change="(v) => updateFormInput('public', v)"
+          ></v-switch>
+          <info-tooltip>
+            Public projects are visible for all users, enabling dissemination of
+            assessments. Draft projects are visible to the project owner only.
+            It's the default option.
+          </info-tooltip>
         </v-col>
       </v-row>
     </header>
@@ -127,6 +138,7 @@ import TreePlanting from "@/components/green_house_gaz/offset/TreePlanting.vue";
 import Results from "@/components/green_house_gaz/Results.vue";
 import WaterSupply from "@/components/green_house_gaz/wash/WaterSupply.vue";
 
+import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import { infoTooltipText } from "@/components/green_house_gaz/infoTooltipText";
 import {
   GenericFormSurvey,
@@ -162,6 +174,7 @@ import { mapActions, mapGetters } from "vuex";
     Results,
     UserManager,
     Info,
+    InfoTooltip,
   },
 })
 /** ProjectList */
@@ -225,6 +238,13 @@ export default class SurveyList extends Vue {
       // redirect: "Results-Results",
     },
   ];
+
+  public updateFormInput(key: string, value: any): void {
+    if (this.currentProject != undefined) {
+      this.$set(this.currentProject, key, value);
+    }
+    this.submitForm(this.currentProject);
+  }
 
   public get category(): string {
     return (this.$route.query.category as string) ?? "";

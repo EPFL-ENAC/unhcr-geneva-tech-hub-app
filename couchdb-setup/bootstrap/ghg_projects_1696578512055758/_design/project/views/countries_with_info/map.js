@@ -1,5 +1,5 @@
 function (doc) {
-  emit([doc.countryCode, doc.siteName], {
+  emit([doc.countryCode, doc.siteId], {
     id: doc._id,
     siteName: doc.siteName,
     siteId: doc.siteId,

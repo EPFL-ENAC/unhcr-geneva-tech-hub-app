@@ -67,7 +67,10 @@
         {{ item.updated_at | formatDate }}
       </template>
       <template #[`item.actions`]="{ item }">
-        <div class="survey-list__actions">
+        <div
+          class="survey-list__actions"
+          :style="`--amazing-number: ${!item.public ? '4' : '3'};`"
+        >
           <v-tooltip bottom>
             <template #activator="{ on, attrs }">
               <v-btn
@@ -104,7 +107,6 @@
             </template>
             <span>Delete</span>
           </v-tooltip>
-          <!-- show reference only as admin ? -->
           <v-tooltip bottom>
             <template #activator="{ on, attrs }">
               <v-btn
@@ -123,7 +125,7 @@
                   $mdiOctagramOutline
                 </v-icon>
               </v-btn>
-              <span v-else v-bind="attrs" v-on="on">
+              <span v-else v-bind="attrs" v-on="on" @click.stop.prevent="">
                 <v-icon v-if="item.reference" small> $mdiOctagram </v-icon>
               </span>
             </template>
@@ -134,6 +136,20 @@
             <div v-else>
               <span v-if="item.reference">Reference</span>
             </div>
+          </v-tooltip>
+          <v-tooltip v-if="!item.public" bottom>
+            <template #activator="{ on, attrs }">
+              <span
+                class="better-click"
+                v-bind="attrs"
+                style="margin-left: 0.35rem"
+                v-on="on"
+                @click.stop.prevent=""
+              >
+                <v-icon class="better-click" small>$mdiLock</v-icon>
+              </span>
+            </template>
+            <span>Draft</span>
           </v-tooltip>
         </div>
       </template>
@@ -361,7 +377,7 @@ export default class SurveysList extends Vue {
   display: grid;
   justify-content: flex-end;
   align-items: center;
-  grid-template-columns: repeat(3, 22px);
+  grid-template-columns: repeat(var(--amazing-number, 4), 22px);
 }
 
 ::v-deep .site-row-pointer {

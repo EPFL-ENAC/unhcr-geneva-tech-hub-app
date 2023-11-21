@@ -105,6 +105,7 @@ export default new (class User {
         const isAuthor = checkIfUserExist(user, obj?.users);
         if (actionName === "edit") {
           if (obj.reference) {
+            // if reference, even admin cannot edit; first we need to remove 'as reference' in the list
             return false;
           }
           return isAuthor || isAdmin;

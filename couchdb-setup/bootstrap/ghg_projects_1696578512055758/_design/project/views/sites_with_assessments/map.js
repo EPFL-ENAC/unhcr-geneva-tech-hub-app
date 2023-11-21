@@ -11,6 +11,7 @@ function (doc) {
     users: doc.users,
     countryCode: doc.countryCode,
     reference: doc.reference,
+    public: doc.public,
     latitude: doc.latitude,
     longitude: doc.longitude,
   });

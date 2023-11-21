@@ -1,0 +1,9 @@
+{
+  "index": {
+     "fields": [
+        "siteId"
+     ]
+  },
+  "name": "siteId-json-index",
+  "type": "json"
+}
