@@ -8,10 +8,10 @@ export const scope1and2Exception = `For solar in particular, it is assumed that 
 export const ghg = {
   title: "GHG Emission Calculator",
   to: "GreenHouseGaz",
-  link: "/s3/2023-05-02T083700Z/ghg_user_manual.pdf",
+  link: "/s3/2023-11-21T153200Z/ghg_user_manual.pdf",
   linkName: "Guidance Manual",
   logoIcon: "$vuetify.icon.ghg",
-  descriptionComponent: "ghgDescription"
+  descriptionComponent: "ghgDescription",
 };
 
 export const shelter = {
