@@ -4,9 +4,9 @@
     style="`height: calc(100vh - 48px); width: ${drawer ? '80%' : '0px'}`"
     app
     absolute
+    temporary
     width="80%"
     right
-    temporary
   >
     <v-list-item>
       <v-list-item-content>
