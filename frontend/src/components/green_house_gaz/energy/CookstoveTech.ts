@@ -31,6 +31,7 @@ export const cookstoveTECHs: CookstoveTech[] = [
     _id: cookstoveIdWithoutAccess,
     fuelTypes: noAccessFuels,
     text: "Without any access (no possibility to cook)",
+    tooltipInfo: "No access to cooking",
     image: undefined,
   },
   {
@@ -120,7 +121,8 @@ export const cookstoveTECHs: CookstoveTech[] = [
     _id: cookstoveIdSolarCooker,
     fuelTypes: thermalFuels,
     text: "Solar thermal cooker",
-    tooltipInfo: "Solar thermal cooker cannot be used",
+    tooltipInfo:
+      "A solar thermal cooker cannot be used as a primary cooking solution to prepare 3 meals per day due to limitations with solar hours.",
     image: "/images/energy/cookstoves/solar-parabolic.png",
     defaults: {
       THE: 0.02, // of: ~0.02 kWh/d/person.

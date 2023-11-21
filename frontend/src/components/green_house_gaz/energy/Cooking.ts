@@ -187,9 +187,11 @@ export function headers(
       hideFooterContent: false,
       items: cookstoveTECHs,
       tooltipInfoFn: (value: string) => {
-        console.log(value);
-        if (value === "1") {
-          return "No access to cooking";
+        if (value === cookstoveIdWithoutAccess) {
+          return cookstoveTECHs.find((x) => x._id === value)?.tooltipInfo;
+        }
+        if (value === cookstoveIdSolarCooker) {
+          return cookstoveTECHs.find((x) => x._id === value)?.tooltipInfo;
         }
       },
       formatter: (_id: string, _: unknown, localItem: EnergyCookingItem) => {
