@@ -33,7 +33,7 @@ export const lightingTECHs: LightingTech[] = [
     _id: "2",
     fuelTypes: biomassFuels,
     text: "Traditional three stone fire",
-    image: "/images/energy/lightings/traditional-wood.png",
+    image: "/images/energy/cookstoves/traditional-wood.png",
     defaults: {
       FWD: 1.7,
       CHC: 0.898983050847458,
@@ -45,7 +45,7 @@ export const lightingTECHs: LightingTech[] = [
     _id: "3",
     fuelTypes: biomassFuels,
     text: "Traditional lighting with solid biomass fuel",
-    image: "/images/energy/lightings/traditional-bricket.jpg",
+    image: "/images/energy/cookstoves/traditional-bricket.jpg",
     defaults: {
       FWD: 1.578571429,
       CHC: 0.834769976,
@@ -57,7 +57,7 @@ export const lightingTECHs: LightingTech[] = [
     _id: "4",
     fuelTypes: biomassFuels,
     text: "Improved lighting with solid biomass fuel",
-    image: "/images/energy/lightings/improved-bricket.jpg",
+    image: "/images/energy/cookstoves/improved-bricket.jpg",
     defaults: {
       FWD: 1.163157895,
       CHC: 0.615093666,
@@ -69,7 +69,7 @@ export const lightingTECHs: LightingTech[] = [
     _id: "5",
     fuelTypes: biomassFuelsForGasifier,
     text: "Gasifier stove",
-    image: "/images/energy/lightings/gasifier.png",
+    image: "/images/energy/cookstoves/gasifier.png",
     defaults: {
       FWD: 0.631428571,
       BRQ: 0.849162562,
@@ -80,7 +80,7 @@ export const lightingTECHs: LightingTech[] = [
     _id: "6",
     fuelTypes: liquidFuels,
     text: "Liquid fuel lighting",
-    image: "/images/energy/lightings/kerosene.png",
+    image: "/images/energy/cookstoves/kerosene.png",
     defaults: {
       ETH: 0.354443685,
       PET: 0.226270184,
@@ -92,7 +92,7 @@ export const lightingTECHs: LightingTech[] = [
     _id: "7",
     fuelTypes: gasFuels,
     text: "Gas powered lighting",
-    image: "/images/energy/lightings/lpg.webp",
+    image: "/images/energy/cookstoves/lpg.jpg",
     defaults: {
       LPG: 0.086,
       BGS: 0.155112839,
@@ -103,7 +103,7 @@ export const lightingTECHs: LightingTech[] = [
     _id: "8",
     fuelTypes: electricFuelsWithoutNone,
     text: "Electric lighting",
-    image: "/images/energy/lightings/induction.png",
+    image: "/images/energy/cookstoves/induction.png",
     defaults: {
       ELE_DIES: 0.2,
       ELE_GRID: 0.6,
@@ -116,7 +116,7 @@ export const lightingTECHs: LightingTech[] = [
     _id: "9",
     fuelTypes: thermalFuels,
     text: "Solar cooker",
-    image: "/images/energy/lightings/solar-parabolic.png",
+    image: "/images/energy/cookstoves/solar-parabolic.png",
     defaults: {
       THE: 0,
     },

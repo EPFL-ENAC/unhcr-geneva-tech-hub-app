@@ -96,7 +96,7 @@ export const cookstoveTECHs: CookstoveTech[] = [
     _id: "7",
     fuelTypes: gasFuels,
     text: "Gas powered cookstove",
-    image: "/images/energy/cookstoves/lpg.webp",
+    image: "/images/energy/cookstoves/lpg.jpg",
     defaults: {
       LPG: 0.086,
       BGS: 0.155112839,
