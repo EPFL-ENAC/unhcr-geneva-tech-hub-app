@@ -460,6 +460,36 @@ export default class App extends Vue {
         type: "pdf",
         href: ghg.link,
       },
+      {
+        title: "CookingTutorial",
+        type: "video",
+        icon: "mdiPlayCircle",
+        href: "/s3/2023-11-21T153200Z/GMT20231116-085803_Clip_CookingTutorial.mp4",
+      },
+      {
+        title: "IntroTutorial",
+        type: "video",
+        icon: "mdiPlayCircle",
+        href: "/s3/2023-11-21T153200Z/GMT20231114-160252_Clip_IntroTutorial.mp4",
+      },
+      {
+        title: "New Assessment and Databases",
+        type: "video",
+        icon: "mdiPlayCircle",
+        href: "/s3/2023-11-21T153200Z/GMT20231114-162258_Clip_GHG New Assessment and Databases.mp4",
+      },
+      {
+        title: "WaterSupplyTutorial",
+        type: "video",
+        icon: "mdiPlayCircle",
+        href: "/s3/2023-11-21T153200Z/GMT20231116-091015_Clip_WaterSupplyTutorial.mp4",
+      },
+      {
+        title: "SolidWasteModule",
+        type: "video",
+        icon: "mdiPlayCircle",
+        href: "/s3/2023-11-21T153200Z/GMT20231116-091856_Clip_SolidWasteModule.mp4",
+      },
     ];
   }
   @Watch("themeDark")
