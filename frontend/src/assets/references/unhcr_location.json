@@ -2312,7 +2312,7 @@
     "solar_peak_hours": 5.140999794,
     "year": 2022,
     "country_code_2": "IQ",
-    "_id": "Erbil District: Erbil Governorate",
+    "_id": "Erbil and Khabat Districts: Erbil Governorate",
     "index": 192
   },
   {
@@ -6953,7 +6953,7 @@
     "location_id": 535,
     "latitude": 60.72319025,
     "longitude": -119.6636475,
-    "solar_peak_hours": 5.28712776,
+    "solar_peak_hours": 2,
     "year": 2022,
     "country_code_2": "CA",
     "_id": "Dispersed in the country / territory",
@@ -9308,7 +9308,7 @@
     "solar_peak_hours": 5.389999866,
     "year": 2022,
     "country_code_2": "CD",
-    "_id": "Mole-Zongo",
+    "_id": "Mole-Zongo and Worobe",
     "index": 775
   },
   {
@@ -10820,7 +10820,7 @@
     "solar_peak_hours": 5.116000175,
     "year": 2022,
     "country_code_2": "IQ",
-    "_id": "Akre District : Duhok Governorate",
+    "_id": "Akre Camp and District : Duhok Governorate",
     "index": 901
   },
   {
@@ -10913,7 +10913,7 @@
     "location_id": 1370,
     "latitude": 64.82722201,
     "longitude": -19.01892,
-    "solar_peak_hours": 5.28712776,
+    "solar_peak_hours": 2,
     "year": 2022,
     "country_code_2": "IS",
     "_id": "Dispersed in the country / territory",
@@ -12329,7 +12329,7 @@
     "location_id": 2478,
     "latitude": 64.01244826,
     "longitude": 100.8240731,
-    "solar_peak_hours": 5.28712776,
+    "solar_peak_hours": 2,
     "year": 2022,
     "country_code_2": "RU",
     "_id": "Dispersed in the country / territory",
@@ -13145,7 +13145,7 @@
     "location_id": 3041,
     "latitude": 66.5851112,
     "longitude": 20.90359,
-    "solar_peak_hours": 5.28712776,
+    "solar_peak_hours": 2,
     "year": 2022,
     "country_code_2": "SE",
     "_id": "Dispersed in the country / territory",

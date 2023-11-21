@@ -2,7 +2,16 @@
   {
     "_id": "REF_EFF_DIES",
     "type": "number",
-    "category": "ENERGY",
+    "category": [
+      "energy",
+      "wash"
+    ],
+    "subcat": [
+      "facilities",
+      "cooking",
+      "lighting",
+      "water-supply"
+    ],
     "description": "Emission Factor - Diesel (100% mineral diesel) [kg CO2e/l]",
     "value": 2.72440045,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
@@ -12,7 +21,15 @@
   {
     "_id": "REF_EFF_PET",
     "type": "number",
-    "category": "ENERGY",
+    "category": [
+      "energy",
+      "wash"
+    ],
+    "subcat": [
+      "facilities",
+      "lighting",
+      "water-supply"
+    ],
     "description": "Emission Factor - Gasoline (100% mineral gasoline) [kg CO2e/l]",
     "value": 2.34,
     "source": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022",
@@ -22,7 +39,16 @@
   {
     "_id": "REF_RNW",
     "type": "number",
-    "category": "ENERGY",
+    "category": [
+      "energy",
+      "wash"
+    ],
+    "subcat": [
+      "facilities",
+      "cooking",
+      "lighting",
+      "water-supply"
+    ],
     "description": "Energy - Electricity - Emission Factor - Solar [kg CO2e/kWh]",
     "value": 0,
     "source": null,
@@ -32,7 +58,16 @@
   {
     "_id": "REF_GRD",
     "type": "number",
-    "category": "ENERGY",
+    "category": [
+      "energy",
+      "wash"
+    ],
+    "subcat": [
+      "facilities",
+      "cooking",
+      "lighting",
+      "water-supply"
+    ],
     "description": "Energy - Electricity - Emission Factor - National Grid [kg CO2e/kWh]",
     "value": 0.6448,
     "source": "https://www.iges.or.jp/en/pub/list-grid-emission-factor/en",
@@ -42,7 +77,16 @@
   {
     "_id": "REF_EFF_DIES_L",
     "type": "number",
-    "category": "ENERGY",
+    "category": [
+      "energy",
+      "wash"
+    ],
+    "subcat": [
+      "facilities",
+      "cooking",
+      "lighting",
+      "water-supply"
+    ],
     "description": "Energy - Electricity - Efficiency - Diesel Generators [l/kWh]",
     "value": 0.267,
     "source": "https://plan.sa.gov.au/__data/assets/pdf_file/0007/574531/Appendix-O-Greenhouse-Gas-Calculations.pdf",
@@ -52,8 +96,13 @@
   {
     "_id": "REF_WSH_D",
     "type": "number",
-    "category": "WASH",
-    "description": "WASH - Trucking - Emission Factor - Diesel (up to 3.5 tonnes) [kg CO2e/km]",
+    "category": [
+      "wash"
+    ],
+    "subcat": [
+      "water-supply"
+    ],
+    "description": "Emission Factor - Diesel (up to 3.5 tonnes) [kg CO2e/km]",
     "value": 0.23135,
     "source": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022",
     "ref": null,
@@ -62,8 +111,13 @@
   {
     "_id": "REF_WSH_G",
     "type": "number",
-    "category": "WASH",
-    "description": "WASH - Trucking - Emission Factor - Gasoline (up to 3.5 tonnes) [kg CO2e/km]",
+    "category": [
+      "wash"
+    ],
+    "subcat": [
+      "water-supply"
+    ],
+    "description": "Emission Factor - Gasoline (up to 3.5 tonnes) [kg CO2e/km]",
     "value": 0.21329,
     "source": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022",
     "ref": null,
@@ -72,8 +126,14 @@
   {
     "_id": "REF_FNRB",
     "type": "number",
-    "category": "ENERGY",
-    "description": "Energy - Cookstove - Fraction of Non renewable biomass (fNRB)",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking",
+      "lighting"
+    ],
+    "description": "Fraction of Non renewable biomass (fNRB)",
     "value": 0.85,
     "source": "https://cdm.unfccc.int/DNA/fNRB/index.html",
     "ref": null,
@@ -82,8 +142,14 @@
   {
     "_id": "REF_EFF_FWD",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Emission Factor - Wood [kg CO2e/kg]",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking",
+      "lighting"
+    ],
+    "description": "Emission Factor - Wood [kg CO2e/kg]",
     "value": 1.894776,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
@@ -92,8 +158,13 @@
   {
     "_id": "REF_EFF_CHC_C",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Emission Factor - Charcoal combustion [kg CO2e/kg]",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Emission Factor - Charcoal combustion [kg CO2e/kg]",
     "value": 3.4770175,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
@@ -102,8 +173,13 @@
   {
     "_id": "REF_EFF_CHC_P",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Emission Factor - Charcoal production [kg CO2e/kg]",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Emission Factor - Charcoal production [kg CO2e/kg]",
     "value": 2.7196,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf",
     "ref": null,
@@ -112,8 +188,13 @@
   {
     "_id": "REF_EFF_BRQ",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Emission Factor - Briquette non-carbonized [kg CO2e/kg]",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Emission Factor - Briquette non-carbonized [kg CO2e/kg]",
     "value": 1.269736,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
@@ -122,8 +203,13 @@
   {
     "_id": "REF_EFF_BRQ_C_C",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Emission Factor - Briquette carbonized combustion [kg CO2e/kg]",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Emission Factor - Briquette carbonized combustion [kg CO2e/kg]",
     "value": 2.0879,
     "source": "https://www.sciencedirect.com/science/article/pii/S246822761930763X",
     "ref": null,
@@ -132,8 +218,13 @@
   {
     "_id": "REF_EFF_BRQ_C_P",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Emission Factor - Briquette carbonized production [kg CO2e/kg]",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Emission Factor - Briquette carbonized production [kg CO2e/kg]",
     "value": 2.5836,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf",
     "ref": null,
@@ -142,8 +233,13 @@
   {
     "_id": "REF_EFF_PLTS",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Emission Factor - Pellets [kg CO2e/kg]",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Emission Factor - Pellets [kg CO2e/kg]",
     "value": 1.269736,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
@@ -152,8 +248,13 @@
   {
     "_id": "REF_EFF_CNDL",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Emission Factor - Candle (paraffin) [kg CO2e/kg]",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "lighting"
+    ],
+    "description": "Emission Factor - Candle (paraffin) [kg CO2e/kg]",
     "value": 2.9643078,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
@@ -162,18 +263,28 @@
   {
     "_id": "REF_EFF_ETH",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Emission Factor - Ethanol [kg CO2e/L]",
-    "value": 1.23910872,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/vol2.html",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Emission Factor - Ethanol [kg CO2e/L]",
+    "value": 0.945452,
+    "source": "https://cfpub.epa.gov/si/si_public_record_report.cfm?Lab=NRMRL&dirEntryId=339679",
     "ref": null,
     "index": 16
   },
   {
     "_id": "REF_EFF_LPG",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Emission Factor - LPG [kg CO2e/kg]",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Emission Factor - LPG [kg CO2e/kg]",
     "value": 2.99250545,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
@@ -182,8 +293,13 @@
   {
     "_id": "REF_EFF_BGS",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Emission Factor - Biogas [kg CO2e/m3]",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Emission Factor - Biogas [kg CO2e/m3]",
     "value": 0.0076,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
@@ -192,8 +308,13 @@
   {
     "_id": "REF_EFF_PNG",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Emission Factor - Piped Natural Gas [kgCO2e/m3]",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Emission Factor - Piped Natural Gas [kgCO2e/m3]",
     "value": 2.13362568,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
@@ -202,8 +323,14 @@
   {
     "_id": "REF_EFF_KRS",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Emission Factor - Kerosene [kg CO2e/L]",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking",
+      "lighting"
+    ],
+    "description": "Emission Factor - Kerosene [kg CO2e/L]",
     "value": 2.566443042,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
@@ -212,8 +339,14 @@
   {
     "_id": "REF_NONCO2_FWD",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Fraction of nonCO2 emissions - Wood",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking",
+      "lighting"
+    ],
+    "description": "Fraction of nonCO2Emissions - Wood",
     "value": 0.077885724,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
@@ -222,8 +355,13 @@
   {
     "_id": "REF_NONCO2_CHC_C",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Fraction of nonCO2 emissions - Charcoal combustion",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Fraction of nonCO2Emissions - Charcoal combustion",
     "value": 0.049760319,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
@@ -232,8 +370,13 @@
   {
     "_id": "REF_NONCO2_CHC_P",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Fraction of nonCO2 emissions - Charcoal production",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Fraction of nonCO2Emissions - Charcoal production",
     "value": 0.422709222,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf",
     "ref": null,
@@ -242,8 +385,13 @@
   {
     "_id": "REF_NONCO2_BRQ",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Fraction of nonCO2 emissions - Non-carbonized briquette",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Fraction of nonCO2Emissions - Non-carbonized briquette",
     "value": 0.086424265,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
@@ -252,8 +400,13 @@
   {
     "_id": "REF_NONCO2_BRQ_C_C",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Fraction of nonCO2 emissions - Carbonized briquette combustion",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Fraction of nonCO2Emissions - Carbonized briquette combustion",
     "value": 0.1202,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
@@ -262,8 +415,13 @@
   {
     "_id": "REF_NONCO2_BRQ_C_P",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Fraction of nonCO2 emissions - Carbonized briquette production",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Fraction of nonCO2Emissions - Carbonized briquette production",
     "value": 0.4227,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf",
     "ref": null,
@@ -272,8 +430,13 @@
   {
     "_id": "REF_NONCO2_PLTS",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Cookstove - Fraction of nonCO2 emissions - Pellets",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Fraction of nonCO2Emissions - Pellets",
     "value": 0.086424265,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
@@ -282,18 +445,28 @@
   {
     "_id": "REF_EFF_OIL",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Lighting - Emission Factor - Vegetable oil [kg CO2e/kg]",
-    "value": 2.58736961,
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "lighting"
+    ],
+    "description": "Emission Factor - Vegetable oil [kg CO2e/kg]",
+    "value": 1.878252,
     "source": "https://www.epa.gov/system/files/documents/2023-03/ghg_emission_factors_hub.pdf",
-    "ref": null,
+    "ref": "https://www.sciencedirect.com/science/article/pii/S0048969722016321",
     "index": 28
   },
   {
     "_id": "REF_EFF_BAT",
     "type": "number",
-    "category": "Energy",
-    "description": "Energy - Lighting - Emission Factor - Torch or phone with battery [kg CO2e/kWh]",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "lighting"
+    ],
+    "description": "Emission Factor - Torch or phone with battery [kg CO2e/kWh]",
     "value": 0,
     "source": null,
     "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions.",
@@ -302,145 +475,271 @@
   {
     "_id": "REF_EFF_BIO_COM",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Biowaste - Emission Factor - Composting [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "BioEmission Factor - Composting [kgCO2e/kg]",
     "value": 0.1756,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/5_Volume5/V5_4_Ch4_Bio_Treat.pdf"
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/5_Volume5/V5_4_Ch4_Bio_Treat.pdf",
+    "ref": null,
+    "index": 30
   },
   {
     "_id": "REF_EFF_BIO_AD",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Biowaste - Emission Factor - Anaerobic Digestion [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "BioEmission Factor - Anaerobic Digestion [kgCO2e/kg]",
     "value": 0.0224,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/5_Volume5/V5_4_Ch4_Bio_Treat.pdf"
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/5_Volume5/V5_4_Ch4_Bio_Treat.pdf",
+    "ref": null,
+    "index": 31
   },
   {
     "_id": "REF_EFF_REC",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Emission Factor - Recycling/Reuse [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "Emission Factor - Recycling/Reuse [kgCO2e/kg]",
     "value": 0,
-    "source": ""
+    "source": null,
+    "ref": null,
+    "index": 32
   },
   {
     "_id": "REF_EFF_PLT_PIT",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Plastic - Emission Factor - Open pits [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "Plastic - Emission Factor - Open pits [kgCO2e/kg]",
     "value": 0,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
+    "ref": null,
+    "index": 33
   },
   {
     "_id": "REF_EFF_PLT_MAN",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Plastic - Emission Factor - Managed disposal site [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "Plastic - Emission Factor - Managed disposal site [kgCO2e/kg]",
     "value": 0,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
+    "ref": null,
+    "index": 34
   },
   {
     "_id": "REF_EFF_PLT_BUR",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Plastic - Emission Factor - Open burning [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "Plastic - Emission Factor - Open burning [kgCO2e/kg]",
     "value": 2.17425,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf"
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf",
+    "ref": null,
+    "index": 35
   },
   {
     "_id": "REF_EFF_TEX_PIT",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Textiles - Emission Factor - Open pits [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "Textiles - Emission Factor - Open pits [kgCO2e/kg]",
     "value": 0.896,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
+    "ref": null,
+    "index": 36
   },
   {
     "_id": "REF_EFF_TEX_MAN",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Textiles - Emission Factor - Managed disposal site [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "Textiles - Emission Factor - Managed disposal site [kgCO2e/kg]",
     "value": 2.24,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
+    "ref": null,
+    "index": 37
   },
   {
     "_id": "REF_EFF_TEX_BUR",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Textiles - Emission Factor - Open burning [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "Textiles - Emission Factor - Open burning [kgCO2e/kg]",
     "value": 0.422066667,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf"
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf",
+    "ref": null,
+    "index": 38
   },
   {
     "_id": "REF_EFF_PAP_PIT",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Paper/cardboard - Emission Factor - Open pits [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "Paper/cardboard - Emission Factor - Open pits [kgCO2e/kg]",
     "value": 1.493333333,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
+    "ref": null,
+    "index": 39
   },
   {
     "_id": "REF_EFF_PAP_MAN",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Paper/cardboard - Emission Factor - Managed disposal site [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "Paper/cardboard - Emission Factor - Managed disposal site [kgCO2e/kg]",
     "value": 3.733333333,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
+    "ref": null,
+    "index": 40
   },
   {
     "_id": "REF_EFF_PAP_BUR",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Paper/cardboard - Emission Factor - Open burning [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "Paper/cardboard - Emission Factor - Open burning [kgCO2e/kg]",
     "value": 0.2285528,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf"
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf",
+    "ref": null,
+    "index": 41
   },
   {
     "_id": "REF_EFF_RUB_PIT",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Rubber / leather - Emission Factor - Open pits [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "Rubber / leather - Emission Factor - Open pits [kgCO2e/kg]",
     "value": 0,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
+    "ref": null,
+    "index": 42
   },
   {
     "_id": "REF_EFF_RUB_MAN",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Rubber / leather - Emission Factor - Managed disposal site [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "Rubber / leather - Emission Factor - Managed disposal site [kgCO2e/kg]",
     "value": 0,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
+    "ref": null,
+    "index": 43
   },
   {
     "_id": "REF_EFF_RUB_BUR",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Rubber / leather - Emission Factor - Open burning [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "Rubber / leather - Emission Factor - Open burning [kgCO2e/kg]",
     "value": 0.5084212,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf"
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf",
+    "ref": null,
+    "index": 44
   },
   {
     "_id": "REF_EFF_NAP_PIT",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Nappies - Emission Factor - Open pits [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "Nappies - Emission Factor - Open pits [kgCO2e/kg]",
     "value": 0.896,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
+    "ref": null,
+    "index": 45
   },
   {
     "_id": "REF_EFF_NAP_MAN",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Nappies - Emission Factor - Managed disposal site [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "Nappies - Emission Factor - Managed disposal site [kgCO2e/kg]",
     "value": 2.24,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
+    "ref": null,
+    "index": 46
   },
   {
     "_id": "REF_EFF_NAP_BUR",
     "type": "number",
-    "category": "WASTE",
-    "description": "Waste - Nappies - Emission Factor - Open burning [kgCO2e/kg]",
+    "category": [
+      "materials"
+    ],
+    "subcat": [
+      "waste"
+    ],
+    "description": "Nappies - Emission Factor - Open burning [kgCO2e/kg]",
     "value": 0.270793333,
-    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf"
+    "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf",
+    "ref": null,
+    "index": 47
   }
 ]

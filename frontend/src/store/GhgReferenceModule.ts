@@ -10,7 +10,8 @@ export interface ReferenceItemInterface {
   value: number;
   type?: string; // number or percentage
   source?: string | null;
-  category?: string;
+  category?: string[];
+  subcat?: string[];
   index?: number;
 }
 
