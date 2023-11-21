@@ -56,7 +56,7 @@ export const liquidFuelWithText: IdTextTypesItem<LiquidFuel>[] = [
   { _id: "ETH", text: "Ethanol/alcohol" },
   { _id: "PET", text: "Petrol / Gas" }, // same as wash
   { _id: "DIES", text: "Diesel" }, // same as facilities for diesel gen
-  { _id: "KRS", text: "Kerosene" },
+  { _id: "KRS", text: "Kerosene", default: 0.03276 }, // default for lighting
 ];
 // end of liquid fuels
 
@@ -93,7 +93,7 @@ export const lightingFuels = [
 ] as const;
 export type LightingFuel = typeof lightingFuels[number];
 export const lightingFuelsWithText: IdTextTypesItem<LightingFuel>[] = [
-  { _id: "CNDL", text: "Candle (paraffin)", default: 0.026 },
+  { _id: "CNDL", text: "Candle (paraffin)", default: 0.0053 },
   {
     _id: "LIGHT_HYB",
     text: "Hybrid fuel mix (Firewood + paraffin + kerosene)",
@@ -103,11 +103,13 @@ export const lightingFuelsWithText: IdTextTypesItem<LightingFuel>[] = [
     _id: "PET",
     text: "Gasoline",
     description: "",
+    default: 0,
   },
   {
     _id: "OIL",
     text: "Vegetable oil",
     description: "",
+    default: 0.14,
   },
   {
     _id: "LIGHT_SOLAR",

@@ -612,7 +612,7 @@ export function hybridLightingElectricHeaders() {
 export function headers(
   countryCode: CountryIrradianceKeys,
   projectSolar: number | undefined,
-  pp_per_hh: number | undefined
+  pp_per_hh: number
 ) {
   return [
     ...surveyTableHeaderIncrements,
@@ -763,12 +763,12 @@ export function headers(
             style: "percent",
           })}`;
         }
-        if (localItem?.input?.fuelType === "CNDL" || value === "CNDL") {
-          return `default 0.026 kg/d: Based on a mean weight loss of wax 6.75 g/h). Reference: <a target="_blank" href="https://iopscience.iop.org/article/10.1088/1757-899X/1252/1/012011/pdf">https://iopscience.iop.org/article/10.1088/1757-899X/1252/1/012011/pdf</a>`;
-        }
-        if (localItem?.input?.fuelType === "FWD" || value === "FWD") {
-          return `default value is 1.7 kg wood/cap/day. Then, the wood consumed for Lighting would be: 2.14kg/capita/day -1.7 kg/cap/day =0.44 kg/capita/day kg/d: Based on a mean weight loss of wax 6.75 g/h). Reference: <a target="_blank" href="https://www.sciencedirect.com/science/article/pii/S0961953400000726">https://www.sciencedirect.com/science/article/pii/S0961953400000726</a>`;
-        }
+        // if (localItem?.input?.fuelType === "CNDL" || value === "CNDL") {
+        //   return `default (5 person/hh) 0.026 kg/d: Based on a mean weight loss of wax 6.75 g/h). Reference: <a target="_blank" href="https://iopscience.iop.org/article/10.1088/1757-899X/1252/1/012011/pdf">https://iopscience.iop.org/article/10.1088/1757-899X/1252/1/012011/pdf</a>`;
+        // }
+        // if (localItem?.input?.fuelType === "FWD" || value === "FWD") {
+        //   return `default (5 person/hh) value is 1.7 kg wood/cap/day. Then, the wood consumed for Lighting would be: 2.14kg/capita/day -1.7 kg/cap/day =0.44 kg/capita/day kg/d: Based on a mean weight loss of wax 6.75 g/h). Reference: <a target="_blank" href="https://www.sciencedirect.com/science/article/pii/S0961953400000726">https://www.sciencedirect.com/science/article/pii/S0961953400000726</a>`;
+        // }
       },
       tooltipAttrs: {
         "open-on-click": true,
@@ -811,7 +811,9 @@ export function headers(
         if (fuelType === "FWD") {
           localInput.dryWood = true;
         }
-        localInput.fuelUsage = AllLightingFuelsWithTextById?.[fuelType as AllFuel]?.default ?? 0;
+        const defaultValue =
+          AllLightingFuelsWithTextById?.[fuelType as AllFuel]?.default ?? 0;
+        localInput.fuelUsage = defaultValue * pp_per_hh;
         return localInput;
       },
       type: "select",
