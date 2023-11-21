@@ -11,9 +11,31 @@
               <country-flag :country="currentProject.countryCode" />
             </span>
             <span>
-              {{ currentProjectCountryName }}, {{ currentProject.siteName }} ({{
-                (currentProject.siteId + "").substr(0, 8)
-              }}),
+              {{ currentProjectCountryName }}, {{ currentProject.siteName }}
+
+              <v-tooltip top>
+                <template #activator="{ on, attrs }">
+                  <span v-bind="attrs" v-on="on">
+                    <v-icon
+                      v-if="currentProject.siteId.length <= 10"
+                      color="primary"
+                      v-bind="attrs"
+                      v-on="on"
+                      >$mdiLicense</v-icon
+                    >
+                    <v-icon v-else color="gray" v-bind="attrs" v-on="on"
+                      >$mdiAccountHardHat</v-icon
+                    >
+                  </span>
+                </template>
+                <span>
+                  <span v-if="currentProject.siteId.length <= 10"
+                    >original site from unhcr data:
+                  </span>
+                  <span v-else>user created site: </span>
+                  ({{ (currentProject.siteId + "").substr(0, 8) }})</span
+                >
+              </v-tooltip>
               {{ currentProject.description }}
               {{
                 $can("edit", {

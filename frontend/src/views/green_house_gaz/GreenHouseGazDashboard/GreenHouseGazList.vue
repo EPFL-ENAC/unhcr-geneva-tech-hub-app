@@ -31,9 +31,34 @@
         >
           <template #[`item.siteName`]="slotProps">
             {{ slotProps.value }}
-            <span :title="slotProps.item.siteId"
+            <v-tooltip top>
+              <template #activator="{ on, attrs }">
+                <span v-bind="attrs" v-on="on">
+                  {{ slotProps.item.siteId.length }}
+                  <v-icon
+                    v-if="slotProps.item.siteId.length <= 10"
+                    color="primary"
+                    v-bind="attrs"
+                    v-on="on"
+                    >$mdiLicense</v-icon
+                  >
+                  <v-icon v-else color="gray" v-bind="attrs" v-on="on"
+                    >$mdiAccountHardHat</v-icon
+                  >
+                </span>
+              </template>
+              <span>
+                <span v-if="slotProps.item.siteId.length <= 10"
+                  >original site from unhcr data:
+                </span>
+                <span v-else>user created site: </span>
+                ({{ (slotProps.item.siteId + "").substr(0, 8) }})</span
+              >
+            </v-tooltip>
+
+            <!-- <span :title="slotProps.item.siteId"
               >({{ (slotProps.item.siteId + "").substr(0, 8) }})</span
-            >
+            > -->
           </template>
           <template #expanded-item="{ headers, item }">
             <td :colspan="headers.length">
