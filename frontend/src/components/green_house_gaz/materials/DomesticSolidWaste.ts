@@ -57,6 +57,11 @@ export interface MaterialSolidWasteSurvey
 export const diffDimension: keyof MaterialSolidWasteItemInput =
   "percentageOfTotalCategories";
 
+export function resetSurveySolidWaste(localInput: MaterialSolidWasteItemInput): MaterialSolidWasteItemInput {
+  localInput.nonBiowasteSubCategories = undefined;
+  return localInput;
+}
+
 export function resetSurveyInput(
   localInput: MaterialSolidWasteItemInput
 ): MaterialSolidWasteItemInput {
@@ -76,7 +81,7 @@ const openPits = "Open pits, unmanaged";
 const managedDisposalSite = "Managed disposal site";
 const openBurning = "Open burning";
 const compositing = "Composting";
-const anaerobicallyDigested = "Anaerobic digestion";
+const anaerobicallyDigested = "Anaerobic Digestion";
 const recyclingReuse = "Recycling / Reuse";
 
 const bioWaste = "Biowaste";
@@ -144,6 +149,12 @@ export function headers() {
         "open-on-focus": false,
         "open-on-hover": false,
         "close-delay": 1000,
+      },
+      customEventInput: (
+        biowaste: string,
+        localInput: MaterialSolidWasteItemInput
+      ) => {
+        localInput = resetSurveySolidWaste(localInput);
       },
       tooltipInfoFn: function (value: string) {
         if (value === bioWaste) {
@@ -220,7 +231,7 @@ export function headers() {
           }
         }
         function tooltipSubText(value: string) {
-          if (value === "Open pits, unmanaged") {
+          if (value === openPits) {
             return "Pits assumed to be shallow < 5 m depth";
           }
           if (value === "Managed disposal site") {
@@ -241,7 +252,7 @@ export function headers() {
       selectExtended: true,
       formatter: (x: string) => x,
       tooltipInfoFn: function (value: string) {
-        if (value === "Open pits, unmanaged") {
+        if (value === openPits) {
           // Pits assumed to be shallow < 5 m depth
           return "Pits assumed to be shallow < 5 m depth<br/><b>WARNING</b>: This option appears to have lower emissions than the managed option, however, it does not account for non-climate change impacts such as air pollution, leaching and public health concerns.";
         }
