@@ -198,28 +198,23 @@ export function headers() {
         surveyItemHeader: SurveyTableHeader;
         intervention: boolean;
       }): SelectOption<SelectValue>[] => {
-        let result = baselinePractices;
-        if (options.intervention) {
-          result = [];
+        let result: string[] = [];
+        if (
+          [bioWaste, nonBiowaste].includes(
+            options.localInput.biowaste as string
+          )
+        ) {
+          const practices =
+            endLinePractices[
+              options.localInput.biowaste as practiceCategoriess
+            ];
+          result = practices?.default ?? [];
           if (
-            [bioWaste, nonBiowaste].includes(
-              options.localInput.biowaste as string
-            )
+            options.localInput.nonBiowasteSubCategories &&
+            options.localInput.biowaste === nonBiowaste
           ) {
-            const practices =
-              endLinePractices[
-                options.localInput.biowaste as practiceCategoriess
-              ];
-            result = practices?.default ?? [];
-            if (
-              options.localInput.nonBiowasteSubCategories &&
-              options.localInput.biowaste === nonBiowaste
-            ) {
-              result =
-                practices[
-                  options.localInput.nonBiowasteSubCategories as string
-                ];
-            }
+            result =
+              practices[options.localInput.nonBiowasteSubCategories as string];
           }
         }
         function tooltipSubText(value: string) {
