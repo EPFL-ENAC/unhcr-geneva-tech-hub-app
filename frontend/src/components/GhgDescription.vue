@@ -48,7 +48,12 @@
         @click.stop
         v-html="scope3Exception"
       ></span> </info-tooltip
-    >.
+    >. (Scopes definitions from
+    <a
+      target="_blank"
+      href="https://www.ipcc.ch/site/assets/uploads/2018/02/ipcc_wg3_ar5_annex-i.pdf"
+      >IPCC</a
+    >)
   </p>
 </template>
 

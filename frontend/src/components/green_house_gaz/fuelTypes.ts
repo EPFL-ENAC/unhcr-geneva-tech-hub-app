@@ -54,7 +54,7 @@ export const liquidFuels = ["ETH", "PET", "DIES", "KRS"] as const;
 export type LiquidFuel = typeof liquidFuels[number];
 export const liquidFuelWithText: IdTextTypesItem<LiquidFuel>[] = [
   { _id: "ETH", text: "Ethanol/alcohol" },
-  { _id: "PET", text: "Petrol / Gas" }, // same as wash
+  { _id: "PET", text: "Petrol / Gas", default: 0.0351 }, // same as wash
   { _id: "DIES", text: "Diesel" }, // same as facilities for diesel gen
   { _id: "KRS", text: "Kerosene", default: 0.03276 }, // default for lighting
 ];
@@ -103,7 +103,7 @@ export const lightingFuelsWithText: IdTextTypesItem<LightingFuel>[] = [
     _id: "PET",
     text: "Gasoline",
     description: "",
-    default: 0,
+    default: 0.0351,
   },
   {
     _id: "OIL",

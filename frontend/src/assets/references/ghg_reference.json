@@ -453,7 +453,7 @@
     "description": "Emission Factor - Biowaste - Composting [kgCO2e/kg]",
     "value": 0.1756,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/5_Volume5/V5_4_Ch4_Bio_Treat.pdf",
-    "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions. All waste categories can be recycled/reused except nappies (diapers).",
+    "ref": null,
     "index": 28
   },
   {
@@ -468,7 +468,7 @@
     "description": "Emission Factor - Biowaste - Anaerobic Digestion [kgCO2e/kg]",
     "value": 0.0224,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/5_Volume5/V5_4_Ch4_Bio_Treat.pdf",
-    "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions. All waste categories can be recycled/reused except nappies (diapers).",
+    "ref": null,
     "index": 29
   },
   {
