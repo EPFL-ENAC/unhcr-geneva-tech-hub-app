@@ -93,6 +93,8 @@ const baselinePractices = [
   recyclingReuse,
 ]; // region dependent practices
 
+const regionDependentPractices = [openPits, managedDisposalSite, openBurning];
+
 const plastics = "Plastics";
 const textiles = "Textiles";
 const paper = "Paper / cardboard";
@@ -342,7 +344,7 @@ export function generateComputeItem(
         localItemInput.practiceType as string
       ] ?? "";
     if (localItemInput.biowaste === bioWaste) {
-      if (baselinePractices.includes(practiceType)) {
+      if (regionDependentPractices.includes(practiceType)) {
         // retrieve region dependant
         REF_EFF =
           (mixedBiowaste as Record<string, Record<string, number>>)?.[
@@ -355,7 +357,7 @@ export function generateComputeItem(
     if (localItemInput.biowaste === nonBiowaste) {
       if (localItemInput.nonBiowasteSubCategories === mixed) {
         // region dependant
-        if (baselinePractices.includes(practiceType)) {
+        if (regionDependentPractices.includes(practiceType)) {
           // retrieve region dependant
           REF_EFF =
             (mixedNonBiowaste as Record<string, Record<string, number>>)?.[
