@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.0.0...v1.1.0) (2023-11-22)
+
+
+### Features
+
+* **ghg:** add warning when over 100% ([3050739](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/305073943c523bf5fbf204490e2b0455af600e96))
+
+
+### Bug Fixes
+
+* **ghg:** add kWh/year for poweredBy ([bc8a26a](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/bc8a26a94627dfccf31a0b1d7595ce74bc434d14))
+* **ghg:** add location_pcode to differentiate original site ([154ca6f](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/154ca6f0c51644b153e8ed32080aba97fce83c91))
+* **ghg:** better domestic solid waste for non-biowaste ([78f90ee](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/78f90eee95fd7ad67fdc6eac1c5bd009095680d0))
+* **ghg:** correct typo for country ([34fdfb7](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/34fdfb7537183d39a7cdf3f9b5623ee9568da378))
+* **ghg:** remove reference description for non recyclable ([94cb9c4](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/94cb9c454cce1528380045206efbdbe4ff02abe0))
+* **ghg:** use region dependant variable for domestic solid waste ([f22115c](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f22115c65177df3b6cf66a3486ec912cf3cea3df))
+
 ## [1.0.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v0.16.0...v1.0.0) (2023-11-21)
 
 
