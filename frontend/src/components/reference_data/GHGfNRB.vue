@@ -2,7 +2,7 @@
   <v-card flat>
     <v-card-text v-if="items">
       <v-row>
-        <v-col> fNRB per countryn <a target="_blank" src="https://cdm.unfccc.int/DNA/fNRB/index.html">cdm.unfccc.int </a> </v-col>
+        <v-col> fNRB per country <a target="_blank" src="https://cdm.unfccc.int/DNA/fNRB/index.html">cdm.unfccc.int </a> </v-col>
       </v-row>
       <v-row>
         <v-col>
