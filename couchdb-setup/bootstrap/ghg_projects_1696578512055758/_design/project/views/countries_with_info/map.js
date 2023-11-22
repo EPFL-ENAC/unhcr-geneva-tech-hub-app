@@ -9,6 +9,7 @@ function (doc) {
     rev: doc._rev,
     siteName: doc.siteName,
     siteId: doc.siteId,
+    location_pcode: doc.location_pcode,
     name: doc.name,
     created_by: doc.created_by,
     updated_at: doc.updated_at,
