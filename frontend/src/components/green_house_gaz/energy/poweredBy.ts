@@ -202,7 +202,7 @@ export function poweredByInputs(
       // end of national grid\
       ...solarInputs,
       {
-        text: `Annual fuel / Energy consumption`,
+        text: `(kWh/yr) Annual fuel / Energy consumption`,
         textWarning: `Annual fuel / Energy consumption`,
         textWarningDescription: `If more or less energy is intended (such as due to extra demand during emergency health clinic events), this warning can be ignored.`,
         value: "computed.totalPower",
