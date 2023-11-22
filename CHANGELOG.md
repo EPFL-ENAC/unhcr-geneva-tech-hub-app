@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.1.0...v1.1.1) (2023-11-22)
+
+
+### Bug Fixes
+
+* **ghg:** add latest correction before demo prod tomorrow ([f373ca8](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f373ca81b5c2dc8dfc82366b9b0402c970fa4e94))
+* **ghg:** correct domestic solid waste bugs ([4e0e3d4](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/4e0e3d46124b347467e5a6a63ddc92afc451387e))
+* **ghg:** correct map-reduce and delete drafts to avoid conflicts and overflow ([5cde504](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/5cde504f8454b7a26a2ead1d76dff79946f0c8da))
+
 ## [1.1.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.0.0...v1.1.0) (2023-11-22)
 
 
