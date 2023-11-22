@@ -37,6 +37,7 @@ interface ProjectsState {
   siteAssessmentsLoading: boolean;
   newAssessment: boolean;
   removeAssessment: boolean;
+  removeAssessments: boolean;
   updateAssessment: boolean;
   localCouch: SyncDatabase<GreenHouseGaz> | null;
 }
@@ -55,6 +56,7 @@ function generateState(): ProjectsState {
     localCouch: null,
     newAssessment: false,
     removeAssessment: false,
+    removeAssessments: false,
     updateAssessment: false,
   };
 }
@@ -145,6 +147,9 @@ const mutations: MutationTree<ProjectsState> = {
   REMOVE_ASSESSEMENT(state, value) {
     state.removeAssessment = value;
   },
+  REMOVE_ASSESSMENTS(state, value) {
+    state.removeAssessments = value;
+  },
   UPDATE_ASSESSEMENT(state, value) {
     state.updateAssessment = value;
   },
@@ -178,9 +183,16 @@ function getGenericCountries(
         let value: CountryExtended[] = result.rows.filter(
           (item) => item !== null
         );
+        let error: boolean | string = false;
         value = value.map((item: CountryExtended) => {
+          const countryCode = item?.key?.[0] ?? "";
+          if (countryCode === "" && item.key == null) {
+            item.key = ["unknown"];
+            item.value = [];
+            error = "reduce overflow in 'project/countries_with_info'";
+          }
           item.countryName =
-            countriesMap[item.key[0]]?.name ?? "unknown country code";
+            countriesMap[countryCode]?.name ?? "unknown country code";
           // item.country = countriesMap[item.key[0]];
           // countriesMap[country.key[0]].name
           return item;
@@ -191,6 +203,9 @@ function getGenericCountries(
         // add coutryName field
         // sort by countryName !
         context.commit(COMMIT_NAME, value);
+        if (error !== false) {
+          throw new Error(error);
+        }
         return value;
       }
       throw new Error("undefined 'project/countries_with_info' response");
@@ -266,19 +281,15 @@ const actions: ActionTree<ProjectsState, RootState> = {
   closeDB: (context: ActionContext<ProjectsState, RootState>) => {
     context.commit("CLOSE_DB");
   },
-  getDB: (context: ActionContext<ProjectsState, RootState>) => {
+  getDB: async (context: ActionContext<ProjectsState, RootState>) => {
     const db = context.state.localCouch?.remoteDB;
     if (db) {
-      db?.query("project/list")
-        .then(function (result) {
-          context.commit(
-            "SET_PROJECTS",
-            result.rows.map((x) => x.value)
-          );
-        })
-        .catch(function (err: Error) {
-          console.log(err);
-        });
+      const result = await db?.query("project/list", {
+        limit: 10000,
+      });
+      const projects = result.rows.map((x) => ({ _id: x.id, _rev: x.key }));
+      context.commit("SET_PROJECTS", projects);
+      return projects;
     } else {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
@@ -419,11 +430,8 @@ const actions: ActionTree<ProjectsState, RootState> = {
   resetSitesAssessments: (context: ActionContext<ProjectsState, RootState>) => {
     context.commit("SET_SITE_ASSESSMENTS", []);
   },
-  removeDrafts(context: ActionContext<ProjectsState, RootState>) {
+  removeDrafts: async (context: ActionContext<ProjectsState, RootState>) => {
     // WARNING: Draft has priority over 'reference'! even if it's a reference it is considered a draft
-    function isDraft(assessment: GreenHouseGaz) {
-      return !assessment.public;
-    }
     const remoteDB = context.state.localCouch?.remoteDB;
     if (!remoteDB) {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
@@ -434,18 +442,20 @@ const actions: ActionTree<ProjectsState, RootState> = {
       context.dispatch("setLoading", true, { root: true });
     }, 300);
     timeoutIds.push(timeId);
-    const draftsToDelete: any[] = context.state.sites
-      .filter(isDraft)
-      .map((assessment: GreenHouseGaz) => ({
-        _id: assessment.id,
-        _rev: assessment.rev,
+    // getDB retrieve allDrafts already
+    const allDrafts = await context.dispatch("getDB");
+    const draftsToDelete: any[] = allDrafts.map(
+      (assessment: GreenHouseGaz) => ({
+        ...assessment,
         _deleted: true,
-      }));
-    return remoteDB.bulkDocs(draftsToDelete).finally(() => {
-      context.commit("SET_SITE_ASSESSMENTS_LOADING", false);
-      cleartimeouts(timeoutIds);
-      context.dispatch("setLoading", false, { root: true });
-    });
+      })
+    );
+    const bulkResult = await remoteDB.bulkDocs(draftsToDelete);
+    console.log(bulkResult);
+    context.commit("SET_SITE_ASSESSMENTS_LOADING", false);
+    context.commit("REMOVE_ASSESSMENTS", true);
+    cleartimeouts(timeoutIds);
+    context.dispatch("setLoading", false, { root: true });
   },
 };
 

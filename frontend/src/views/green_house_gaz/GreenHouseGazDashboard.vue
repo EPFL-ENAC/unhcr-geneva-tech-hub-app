@@ -142,6 +142,7 @@ export default class ProjectList extends Vue {
         "GhgModule/NEW_ASSESSEMENT",
         "GhgModule/REMOVE_ASSESSEMENT",
         "GhgModule/UPDATE_ASSESSEMENT",
+        "GHGModule/REMOVE_ASSESSMENTS",
       ];
       if (shouldUpdate.includes(mutation.type)) {
         this.getCountries();
