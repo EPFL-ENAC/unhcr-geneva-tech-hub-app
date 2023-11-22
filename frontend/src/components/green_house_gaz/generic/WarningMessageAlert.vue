@@ -8,6 +8,9 @@
     color="error"
     dark
   >
+    <p v-if="subtype === 'percent' && baseline > 1">
+      Baseline total is above 100%, please check your data.
+    </p>
     Please note that the baseline and endline
     {{ textWarning }} do not match.
     <br />
