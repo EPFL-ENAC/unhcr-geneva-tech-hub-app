@@ -34,9 +34,8 @@
             <v-tooltip top>
               <template #activator="{ on, attrs }">
                 <span v-bind="attrs" v-on="on">
-                  {{ slotProps.item.siteId.length }}
                   <v-icon
-                    v-if="slotProps.item.siteId.length <= 10"
+                    v-if="slotProps.item.location_pcode"
                     color="primary"
                     v-bind="attrs"
                     v-on="on"
@@ -48,7 +47,7 @@
                 </span>
               </template>
               <span>
-                <span v-if="slotProps.item.siteId.length <= 10"
+                <span v-if="slotProps.item.location_pcode"
                   >original site from unhcr data:
                 </span>
                 <span v-else>user created site: </span>

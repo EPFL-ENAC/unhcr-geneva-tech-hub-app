@@ -7,6 +7,22 @@
     <v-card-title>
       <h3 class="baseline-title font-weight-medium">Baseline</h3>
     </v-card-title>
+    <v-card-subtitle>
+      <v-alert
+        v-if="
+          diffDimensionSubType === 'percent' &&
+          baseline.results[diffDimension] > 1
+        "
+        dense
+        outlined
+        border="left"
+        close-text="Close Alert"
+        color="error"
+        dark
+      >
+        <p>Baseline total is above 100%, please check your data.</p>
+      </v-alert>
+    </v-card-subtitle>
     <v-card-text>
       <instance-table
         :items="baseline.items"
@@ -142,7 +158,7 @@ export default class BaselineCard extends Vue {
   @Prop([String])
   readonly name!: string;
   @Prop([Array])
-  readonly headers!: SurveyTableHeader;
+  readonly headers!: SurveyTableHeader[];
   @Prop({ type: Boolean, default: false })
   readonly activatePie!: boolean;
   @Prop([Function])
@@ -165,6 +181,25 @@ export default class BaselineCard extends Vue {
     const newBaseline = cloneDeep(this.baseline);
     newBaseline.items = value;
     this.$emit("update:baseline", newBaseline);
+  }
+
+  public get diffHeader(): SurveyTableHeader | undefined {
+    return this.headers?.find((header) => header.key === this.diffDimension);
+  }
+
+  public get diffDimensionTextWarning(): string {
+    return this.diffHeader?.textWarning ?? this.diffDimensionText;
+  }
+  public get diffDimensionText(): string {
+    return this.diffHeader?.label ?? "no dimension selected";
+  }
+
+  public get diffDimensionDescription(): string {
+    return this.diffHeader?.textWarningDescription ?? "";
+  }
+
+  public get diffDimensionSubType(): string {
+    return this.diffHeader?.subtype ?? "number";
   }
 }
 </script>

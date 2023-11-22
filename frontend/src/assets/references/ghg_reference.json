@@ -498,7 +498,7 @@
     "description": "Emission Factor - Plastic - Open pits [kgCO2e/kg]",
     "value": 0,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
-    "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions. All waste categories can be recycled/reused except nappies (diapers).",
+    "ref": null,
     "index": 31
   },
   {
@@ -513,7 +513,7 @@
     "description": "Emission Factor - Plastic - Managed disposal site [kgCO2e/kg]",
     "value": 0,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
-    "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions. All waste categories can be recycled/reused except nappies (diapers).",
+    "ref": null,
     "index": 32
   },
   {
@@ -528,7 +528,7 @@
     "description": "Emission Factor - Plastic - Open burning [kgCO2e/kg]",
     "value": 2.17425,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf",
-    "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions. All waste categories can be recycled/reused except nappies (diapers).",
+    "ref": null,
     "index": 33
   },
   {
@@ -543,7 +543,7 @@
     "description": "Emission Factor - Textiles - Open pits [kgCO2e/kg]",
     "value": 0.896,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
-    "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions. All waste categories can be recycled/reused except nappies (diapers).",
+    "ref": null,
     "index": 34
   },
   {
@@ -558,7 +558,7 @@
     "description": "Emission Factor - Textiles - Managed disposal site [kgCO2e/kg]",
     "value": 2.24,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
-    "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions. All waste categories can be recycled/reused except nappies (diapers).",
+    "ref": null,
     "index": 35
   },
   {
@@ -573,7 +573,7 @@
     "description": "Emission Factor - Textiles - Open burning [kgCO2e/kg]",
     "value": 0.422066667,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf",
-    "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions. All waste categories can be recycled/reused except nappies (diapers).",
+    "ref": null,
     "index": 36
   },
   {
@@ -588,7 +588,7 @@
     "description": "Emission Factor - Paper/cardboard - Open pits [kgCO2e/kg]",
     "value": 1.493333333,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
-    "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions. All waste categories can be recycled/reused except nappies (diapers).",
+    "ref": null,
     "index": 37
   },
   {
@@ -603,7 +603,7 @@
     "description": "Emission Factor - Paper/cardboard - Managed disposal site [kgCO2e/kg]",
     "value": 3.733333333,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
-    "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions. All waste categories can be recycled/reused except nappies (diapers).",
+    "ref": null,
     "index": 38
   },
   {
@@ -618,7 +618,7 @@
     "description": "Emission Factor - Paper/cardboard - Open burning [kgCO2e/kg]",
     "value": 0.2285528,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf",
-    "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions. All waste categories can be recycled/reused except nappies (diapers).",
+    "ref": null,
     "index": 39
   },
   {
@@ -633,7 +633,7 @@
     "description": "Emission Factor - Rubber / leather - Open pits [kgCO2e/kg]",
     "value": 0,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
-    "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions. All waste categories can be recycled/reused except nappies (diapers).",
+    "ref": null,
     "index": 40
   },
   {
@@ -648,7 +648,7 @@
     "description": "Emission Factor - Rubber / leather - Managed disposal site [kgCO2e/kg]",
     "value": 0,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
-    "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions. All waste categories can be recycled/reused except nappies (diapers).",
+    "ref": null,
     "index": 41
   },
   {
@@ -663,7 +663,7 @@
     "description": "Emission Factor - Rubber / leather - Open burning [kgCO2e/kg]",
     "value": 0.5084212,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf",
-    "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions. All waste categories can be recycled/reused except nappies (diapers).",
+    "ref": null,
     "index": 42
   },
   {

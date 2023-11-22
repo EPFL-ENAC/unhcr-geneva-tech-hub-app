@@ -17,7 +17,7 @@
                 <template #activator="{ on, attrs }">
                   <span v-bind="attrs" v-on="on">
                     <v-icon
-                      v-if="currentProject.siteId.length <= 10"
+                      v-if="currentProject.location_pcode"
                       color="primary"
                       v-bind="attrs"
                       v-on="on"
@@ -29,7 +29,7 @@
                   </span>
                 </template>
                 <span>
-                  <span v-if="currentProject.siteId.length <= 10"
+                  <span v-if="currentProject.location_pcode"
                     >original site from unhcr data:
                   </span>
                   <span v-else>user created site: </span>
