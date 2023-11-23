@@ -174,10 +174,8 @@ import { mapActions, mapGetters } from "vuex";
   methods: {
     ...mapActions("GhgModule", [
       "addDoc",
-      "updateDoc",
       "getDoc",
       "getSite",
-      "setDoc",
       "resetDoc",
     ]),
   },
@@ -195,9 +193,7 @@ export default class NewSurveyDialog extends Vue {
   siteAssessments!: GreenHouseGaz[];
   getSite!: (id: number | string) => null;
   addDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;
-  updateDoc!: (obj: GreenHouseGaz) => PromiseLike<GreenHouseGaz>;
   getDoc!: (id: string) => PromiseLike<GreenHouseGaz>;
-  setDoc!: (obj: GreenHouseGaz) => PromiseLike<void>;
   resetDoc!: () => PromiseLike<void>;
 
   $refs!: {
