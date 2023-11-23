@@ -30,6 +30,10 @@ if (process.env.NODE_ENV === "production") {
     environment: process.env.VUE_APP_ENVIRONEMENT ?? "production",
     enabled: process.env.NODE_ENV === "production",
     dsn: "https://3b1d1325e5234f7a99ca6e735673f0aa@o4504854111387648.ingest.sentry.io/4504854113288192",
+    ignoreErrors: [
+      "ResizeObserver loop limit exceeded",
+      "The fetching process for the media resource was aborted by the user agent at the user's request.",
+    ],
     integrations: [
       new BrowserTracing({
         routingInstrumentation: Sentry.vueRouterInstrumentation(router),

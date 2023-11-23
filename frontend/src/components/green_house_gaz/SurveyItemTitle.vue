@@ -30,7 +30,9 @@
           <span> {{ disabledText }} </span>
           <template #activator="{ on }">
             <v-alert type="warning" v-on="on">
-              <i> <span v-text="disabledTitle"></span></i>
+              <i>
+                <span> {{ disabledTitle }}</span></i
+              >
             </v-alert>
           </template>
         </v-tooltip>
