@@ -31,7 +31,7 @@
                 </v-list-item-title>
                 <div class="description">
                   <!-- eslint-disable-next-line vue/no-v-html -->
-                  <p v-if="app.description" v-html="app.description"></p>
+                  <p v-if="app.description" v-html="app.description" />
                   <component
                     :is="app.descriptionComponent"
                     v-if="app.descriptionComponent"
