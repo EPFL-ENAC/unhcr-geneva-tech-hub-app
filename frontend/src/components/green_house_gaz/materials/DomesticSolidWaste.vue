@@ -83,7 +83,7 @@ export default class Cooking extends Mixins(ComputeGenericFormSurveyMixin) {
   diffDimension = diffDimension;
   name = "solid waste";
 
-  domesticSolidWasteHref = "/s3/2023-11-21T153200Z/RefugeeWasteExamples-2023-11-15.pdf";
+  domesticSolidWasteHref = "/s3/2023-11-23/RefugeeWasteExamples-2023-11-15.pdf";
 
   public get title(): string {
     return this.titleKey;
