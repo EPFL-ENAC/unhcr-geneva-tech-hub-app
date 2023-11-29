@@ -7,6 +7,7 @@ install:
 
 env-file:
 	cp .env.example .env
+	cp frontend/.env.example frontend/.env
 
 run-frontend:
 	$(MAKE) -C frontend run

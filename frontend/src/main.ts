@@ -1,3 +1,4 @@
+import { env } from "@/config";
 import filters from "@/plugins/filters";
 import "@/plugins/leaflet";
 import User from "@/plugins/user";
@@ -17,19 +18,19 @@ import "./registerServiceWorker";
 import router from "./router";
 import store from "./store";
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = env.NODE_ENV === "production";
 Vue.prototype.window = window;
 
 Vue.use(User, { store });
 Vue.use(filters);
 Vue.component("CountryFlag", CountryFlag);
 
-if (process.env.NODE_ENV === "production") {
+if (env.NODE_ENV === "production" && env.VUE_APP_DSN) {
   Sentry.init({
     Vue,
-    environment: process.env.VUE_APP_ENVIRONEMENT ?? "production",
-    enabled: process.env.NODE_ENV === "production",
-    dsn: "https://3b1d1325e5234f7a99ca6e735673f0aa@o4504854111387648.ingest.sentry.io/4504854113288192",
+    environment: env.VUE_APP_ENVIRONEMENT ?? "production",
+    enabled: env.NODE_ENV === "production",
+    dsn: env.VUE_APP_DSN,
     ignoreErrors: [
       "ResizeObserver loop limit exceeded",
       "The fetching process for the media resource was aborted by the user agent at the user's request.",
@@ -103,13 +104,20 @@ window.addEventListener("unhandledrejection", function (event) {
   //handle error here
   //event.promise contains the promise object
   //event.reason contains the reason for the rejection
-  console.trace(event.reason?.stack ?? JSON.stringify(event.promise));
-  store.dispatch("notifyUser", {
-    title: event.reason?.title ?? "unhandled rejection",
-    message: event.reason?.message ?? event.reason,
-    stack: event.reason?.stack ?? JSON.stringify(event.promise),
-    type: "error",
-  });
+
+  if (axios.isAxiosError(event.reason)) {
+    // we already have an axios error interceptor, we don't need to notify the user again
+    console.log(event.reason.status);
+    console.error(event.reason.response);
+  } else {
+    console.trace(event.reason?.stack ?? JSON.stringify(event.promise));
+    store.dispatch("notifyUser", {
+      title: event.reason?.title ?? "unhandled rejection",
+      message: event.reason?.message ?? event.reason,
+      stack: event.reason?.stack ?? JSON.stringify(event.promise),
+      type: "error",
+    });
+  }
 });
 
 /*

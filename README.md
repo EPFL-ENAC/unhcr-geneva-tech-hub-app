@@ -56,8 +56,12 @@ In the example depicted below, two containers, named “hwchiu” and “hwchiu2
 
 #### Create .env file to hold your Secrets
 
-An environment file should be created; you may copy paste the following
-code, don't forget to replace by the appropriate bucket name and HOSTNAME
+We use two env files `./.env` and `./frontend/.env`
+
+- ./.env
+  is used by every service
+- ./frontend/.env
+  is used by the frontend
 
 - you could run the following script, or just run `make env-file`
 

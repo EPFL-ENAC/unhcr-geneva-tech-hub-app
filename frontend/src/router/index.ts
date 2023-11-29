@@ -4,6 +4,7 @@ import userRouter from "@/router/userRouter";
 import Apps from "@/views/AppListView.vue";
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
+import { env } from "@/config";
 
 Vue.use(VueRouter);
 
@@ -39,7 +40,7 @@ routes.push(shelterRouter);
 
 const router = new VueRouter({
   mode: "history",
-  base: process.env.BASE_URL,
+  base: env.BASE_URL,
   routes,
 });
 

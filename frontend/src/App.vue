@@ -22,13 +22,20 @@
       <v-menu offset-y bottom min-width="330px" max-width="330px">
         <template #activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" aria-label="shelter-help" v-on="on">
-            <v-avatar>
-              <v-icon v-if="$can('admin')" large title="admin"
-                >$mdiShieldAccount</v-icon
+            <v-avatar class="custom-avatar">
+              <v-badge
+                :content="notificationsLength"
+                :value="notificationsLength"
+                :color="notificationColor"
+                overlap
               >
-              <v-icon v-else large class="account-color"
-                >$mdiAccountCircle
-              </v-icon>
+                <v-icon v-if="$can('admin')" large title="admin"
+                  >$mdiShieldAccount</v-icon
+                >
+                <v-icon v-else large class="account-color"
+                  >$mdiAccountCircle
+                </v-icon>
+              </v-badge>
             </v-avatar>
           </v-btn>
         </template>
@@ -261,6 +268,8 @@ import { Route, RouteRecordPublic } from "vue-router";
 import { mapActions, mapGetters } from "vuex";
 import { UnhcrNotification } from "./store";
 
+import { env } from "@/config";
+
 @Component({
   computed: {
     ...mapGetters("UserModule", ["user"]),
@@ -311,7 +320,7 @@ export default class App extends Vue {
   refreshToken!: () => AxiosPromise;
   user!: CouchUser;
   md5Function: (v: string) => string = md5;
-  title = "UNHCR-TSS"; // use env variable,
+  title = env.VUE_APP_TITLE ?? "UNHCR-TSS"; // use env variable,
   /** Drawer menu visibility */
   drawer = true;
   mini = true;
@@ -319,7 +328,6 @@ export default class App extends Vue {
   snackbar = false;
   unhcr_logo = unhcr_logo;
   intervalId!: number;
-
   rootRoute = {} as RouteRecordPublic;
   currentRouteName = "";
   rootRouteTitle = "";
@@ -707,5 +715,11 @@ interface Helpers {
 .shelter-title-tab {
   max-width: 100%;
   justify-content: left;
+}
+.custom-avatar {
+  min-height: 48px;
+  min-width: 52px;
+  border-radius: 0px;
+  margin-right: 10px;
 }
 </style>

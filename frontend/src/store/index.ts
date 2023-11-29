@@ -24,6 +24,7 @@ import Vuex, {
   StoreOptions,
 } from "vuex";
 import VuexPersistence from "vuex-persist";
+import { env } from "@/config";
 
 // import createPersistedState from 'vuex-persist-indexeddb';
 
@@ -335,7 +336,7 @@ const store: StoreOptions<RootState> = {
   plugins: [
     // store as session storage
     new VuexPersistence({
-      key: process.env.VUE_APP_USER_NAMESPACE,
+      key: env.VUE_APP_USER_NAMESPACE,
       storage: window.sessionStorage, //   storage: window.localStorage,
       modules: ["UserModule"],
     }).plugin,
