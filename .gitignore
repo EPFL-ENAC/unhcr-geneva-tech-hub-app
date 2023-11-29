@@ -1,10 +1,11 @@
 node_modules
 .DS_Store
-
+frontend/public/injectEnv.js
 
 .vscode/configurationCache.log
 .vscode/dryrun.log
 .vscode/targets.log
 
 .env
+frontend/.env*
 unhcr-tss_couchdb_data_docker_volume

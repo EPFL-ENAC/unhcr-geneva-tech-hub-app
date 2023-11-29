@@ -8,5 +8,11 @@ declare namespace NodeJS {
     readonly VUE_APP_USER_NAMESPACE: string;
     readonly VUE_APP_AUTH_TENANT_ID: string;
     readonly VUE_APP_AUTH_CLIENT_ID: string;
+    readonly VUE_APP_ENVIRONEMENT: string;
+    readonly VUE_APP_DSN: string;
+    readonly VUE_APP_API_URL: string;
+    readonly VUE_APP_TITLE: string;
   }
 }
+
+export {};

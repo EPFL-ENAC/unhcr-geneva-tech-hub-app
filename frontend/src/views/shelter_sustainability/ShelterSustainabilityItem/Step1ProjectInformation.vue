@@ -376,6 +376,7 @@ import {
 } from "@/utils/mapWorld";
 import { LatLngExpression } from "leaflet";
 
+import { env } from "@/config";
 import {
   ImageShelter,
   imageShelterTypes,
@@ -383,7 +384,7 @@ import {
   Shelter,
 } from "@/store/ShelterInterface";
 import { cloneDeep } from "lodash";
-import { Component, VModel, Vue, Prop } from "vue-property-decorator";
+import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 
 @Component({
   components: {
@@ -441,7 +442,7 @@ export default class Step1 extends Vue {
         "Content-Type": "application/json",
       },
     };
-    fetch("/api/files", options)
+    fetch(`${env.VUE_APP_API_URL}/files`, options)
       .then(async (response) => {
         if (response.ok && response.status === 204) {
           return response;
@@ -569,7 +570,7 @@ export default class Step1 extends Vue {
           Authorization: `Bearer ${this.$store.getters["UserModule/token"]}`,
         },
       };
-      fetch("/api/files", options)
+      fetch(`${env.VUE_APP_API_URL}/files`, options)
         .then(async (response) => {
           let responseJson;
           try {

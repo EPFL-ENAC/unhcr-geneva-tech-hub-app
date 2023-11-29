@@ -10,6 +10,7 @@ import { SessionStorageKey } from "@/utils/storage";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { v4 as uuidv4 } from "uuid";
 
+import { env } from "@/config";
 import {
   ActionContext,
   ActionTree,
@@ -215,9 +216,9 @@ const actions: ActionTree<UserState, RootState> = {
     try {
       const suffix = window.location.hostname === "localhost" ? "" : "/auth";
       const response = await axios.post(
-        `https://login.microsoftonline.com/${process.env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/token`,
+        `https://login.microsoftonline.com/${env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/token`,
         new URLSearchParams({
-          client_id: process.env.VUE_APP_AUTH_CLIENT_ID,
+          client_id: env.VUE_APP_AUTH_CLIENT_ID,
           grant_type: "authorization_code",
           code,
           code_verifier, // web_message ?
@@ -248,9 +249,9 @@ const actions: ActionTree<UserState, RootState> = {
         return;
       }
       const response = await axios.post(
-        `https://login.microsoftonline.com/${process.env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/token`,
+        `https://login.microsoftonline.com/${env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/token`,
         new URLSearchParams({
-          client_id: process.env.VUE_APP_AUTH_CLIENT_ID,
+          client_id: env.VUE_APP_AUTH_CLIENT_ID,
           grant_type: "refresh_token",
           refresh_token,
         }),
@@ -294,9 +295,9 @@ const actions: ActionTree<UserState, RootState> = {
     try {
       const suffix = window.location.hostname === "localhost" ? "" : "/auth";
       const url: URL = new URL(
-        `https://login.microsoftonline.com/${process.env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/authorize`
+        `https://login.microsoftonline.com/${env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/authorize`
       );
-      url.searchParams.append("client_id", process.env.VUE_APP_AUTH_CLIENT_ID);
+      url.searchParams.append("client_id", env.VUE_APP_AUTH_CLIENT_ID);
       url.searchParams.append("nonce", uuidv4());
       url.searchParams.append("response_type", "token id_token");
       url.searchParams.append("redirect_uri", window.location.origin + suffix);
@@ -339,6 +340,7 @@ const actions: ActionTree<UserState, RootState> = {
             },
             { root: true }
           );
+          // We don't throw the error, we just return it; we want to keep the user not logged in
           return response;
         } else {
           throw response;
@@ -360,7 +362,7 @@ const actions: ActionTree<UserState, RootState> = {
     let response;
     try {
       response = await axios.post(
-        `/api/register`,
+        `${env.VUE_APP_API_URL}/register`,
         { name: username, password },
         {
           headers: {
@@ -385,7 +387,7 @@ const actions: ActionTree<UserState, RootState> = {
     let response;
     try {
       response = await axios.post(
-        `/api/forgot-password`,
+        `${env.VUE_APP_API_URL}/forgot-password`,
         { name: payload.username },
         {
           headers: {
@@ -411,7 +413,7 @@ const actions: ActionTree<UserState, RootState> = {
     let response;
     try {
       response = await axios.post(
-        `/api/reset-password`,
+        `${env.VUE_APP_API_URL}/reset-password`,
         { password, token: payload.token },
         {
           headers: {
@@ -435,12 +437,16 @@ const actions: ActionTree<UserState, RootState> = {
     removeAllOauthTokens();
     let response;
     try {
-      response = await axios.post(`/api/confirm-registration`, payload, {
-        headers: {
-          Accept: "application/json",
-        },
-        withCredentials: true,
-      });
+      response = await axios.post(
+        `${env.VUE_APP_API_URL}/confirm-registration`,
+        payload,
+        {
+          headers: {
+            Accept: "application/json",
+          },
+          withCredentials: true,
+        }
+      );
     } finally {
       context.commit("UNSET_USER_LOADING");
     }
@@ -456,12 +462,16 @@ const actions: ActionTree<UserState, RootState> = {
     removeAllOauthTokens();
     let response;
     try {
-      response = await axios.post(`/api/send-confirmation`, payload, {
-        headers: {
-          Accept: "application/json",
-        },
-        withCredentials: true,
-      });
+      response = await axios.post(
+        `${env.VUE_APP_API_URL}/send-confirmation`,
+        payload,
+        {
+          headers: {
+            Accept: "application/json",
+          },
+          withCredentials: true,
+        }
+      );
     } finally {
       context.commit("UNSET_USER_LOADING");
     }
@@ -533,6 +543,7 @@ const actions: ActionTree<UserState, RootState> = {
         byPassLoading,
       });
     }
+
     if (
       typeof currentUser.name === "string" &&
       currentUser.name !== GUEST_NAME
@@ -541,6 +552,7 @@ const actions: ActionTree<UserState, RootState> = {
       if (!byPassLoading) {
         context.commit("SET_USER_LOADING");
       }
+
       return await getSessionWithCookie()
         .then((response) => {
           const user = response.data;
@@ -555,6 +567,10 @@ const actions: ActionTree<UserState, RootState> = {
           } catch (e: unknown) {
             console.error(e);
           }
+        })
+        .catch((e: unknown) => {
+          // ExpireError mostly we should try to refresh
+          throw e;
         })
         .finally(() => {
           context.commit("UNSET_USER_LOADING");

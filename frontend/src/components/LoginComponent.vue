@@ -99,6 +99,7 @@ import { v4 as uuidv4 } from "uuid";
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
+import { env } from "@/config";
 
 @Component({
   computed: {
@@ -225,9 +226,9 @@ export default class LoginComponent extends Vue {
     sessionStorage.setItem("verifier", verifier);
     sessionStorage.setItem("challenge", challenge);
     const url: URL = new URL(
-      `https://login.microsoftonline.com/${process.env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/authorize`
+      `https://login.microsoftonline.com/${env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/authorize`
     );
-    url.searchParams.append("client_id", process.env.VUE_APP_AUTH_CLIENT_ID);
+    url.searchParams.append("client_id", env.VUE_APP_AUTH_CLIENT_ID);
     url.searchParams.append("nonce", uuidv4());
     // url.searchParams.append("response_type", "id_token"); for implicit flow
     url.searchParams.append("response_type", "code");

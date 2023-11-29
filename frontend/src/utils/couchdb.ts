@@ -1,12 +1,13 @@
 import { ExistingDocument } from "@/models/couchdbModel";
 // import store from "@/store";
+import { env } from "@/config";
 import { SessionStorageKey } from "@/utils/storage";
 import axios, { AxiosError, AxiosPromise, AxiosResponse } from "axios";
 import { JwtPayload } from "jsonwebtoken";
 import PouchDB from "pouchdb-browser";
 import qs from "qs";
 
-const databaseUrl: string = url(process.env.VUE_APP_COUCHDB_URL);
+const databaseUrl: string = url(env.VUE_APP_COUCHDB_URL);
 const designDocumentPrefix = "_design/";
 
 export function parseJwt(token: string): JwtPayload {
@@ -92,7 +93,9 @@ export async function loginJWT(token: string): Promise<AxiosResponse> {
   );
   const hasExpired = ttlSeconds <= 0;
   if (hasExpired) {
-    console.error("Authentication has expired: exp not in future");
+    console.error(
+      "Authentication has expired, please login again: expiration (exp) not in future"
+    );
     throw expireTokenAndError("Authentication has expired, please login again");
   }
 
