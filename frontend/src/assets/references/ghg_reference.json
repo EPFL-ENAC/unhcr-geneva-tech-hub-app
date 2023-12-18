@@ -445,7 +445,7 @@
     "_id": "REF_EFF_BIO_COM",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
@@ -460,7 +460,7 @@
     "_id": "REF_EFF_BIO_AD",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
@@ -475,7 +475,7 @@
     "_id": "REF_EFF_REC",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
@@ -490,7 +490,7 @@
     "_id": "REF_EFF_PLT_PIT",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
@@ -505,7 +505,7 @@
     "_id": "REF_EFF_PLT_MAN",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
@@ -520,7 +520,7 @@
     "_id": "REF_EFF_PLT_BUR",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
@@ -535,7 +535,7 @@
     "_id": "REF_EFF_TEX_PIT",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
@@ -550,7 +550,7 @@
     "_id": "REF_EFF_TEX_MAN",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
@@ -565,7 +565,7 @@
     "_id": "REF_EFF_TEX_BUR",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
@@ -580,7 +580,7 @@
     "_id": "REF_EFF_PAP_PIT",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
@@ -595,7 +595,7 @@
     "_id": "REF_EFF_PAP_MAN",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
@@ -610,7 +610,7 @@
     "_id": "REF_EFF_PAP_BUR",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
@@ -625,7 +625,7 @@
     "_id": "REF_EFF_RUB_PIT",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
@@ -640,7 +640,7 @@
     "_id": "REF_EFF_RUB_MAN",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
@@ -655,7 +655,7 @@
     "_id": "REF_EFF_RUB_BUR",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
@@ -670,7 +670,7 @@
     "_id": "REF_EFF_NAP_PIT",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
@@ -685,7 +685,7 @@
     "_id": "REF_EFF_NAP_MAN",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
@@ -700,7 +700,7 @@
     "_id": "REF_EFF_NAP_BUR",
     "type": "number",
     "category": [
-      "materials"
+      "wash"
     ],
     "subcat": [
       "waste"
