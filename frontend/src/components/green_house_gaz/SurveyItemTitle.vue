@@ -1,25 +1,25 @@
 <template>
   <v-container v-if="titleKey" fluid>
     <v-row>
-      <v-col class="d-flex">
+      <v-col v-if="selectedInfoTooltipText" class="d-flex">
         <div>
           <h2 class="text-h4 project__h3 font-weight-medium">
-            {{ infoTooltipText[titleKey].title }}
+            {{ selectedInfoTooltipText.title }}
           </h2>
           <h5
-            v-if="infoTooltipText[titleKey]?.tooltipDisabled"
+            v-if="selectedInfoTooltipText?.tooltipDisabled"
             class="text-caption font-italic"
           >
-            <p v-if="infoTooltipText[titleKey].textComponentName">
-              <component :is="infoTooltipText[titleKey].textComponentName" />
+            <p v-if="selectedInfoTooltipText.textComponentName">
+              <component :is="selectedInfoTooltipText.textComponentName" />
             </p>
-            <p v-else v-html="infoTooltipText[titleKey].text"></p>
+            <p v-else v-html="selectedInfoTooltipText.text"></p>
           </h5>
         </div>
-        <info-tooltip v-if="!infoTooltipText[titleKey]?.tooltipDisabled">
+        <info-tooltip v-if="!selectedInfoTooltipText?.tooltipDisabled">
           <!-- If the tooltip is enabled, show the tooltip component -->
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <p v-html="infoTooltipText[titleKey].text"></p>
+          <p v-html="selectedInfoTooltipText.text"></p>
         </info-tooltip>
       </v-col>
     </v-row>
@@ -38,7 +38,7 @@
         </v-tooltip>
       </v-col>
     </v-row>
-    <v-row v-if="!infoTooltipText[titleKey].ready">
+    <v-row v-if="!selectedInfoTooltipText.ready">
       <v-col>
         <v-alert type="warning">
           <i
@@ -94,6 +94,10 @@ export default class SurveyItemTitle extends Vue {
   readonly disabled!: boolean;
 
   infoTooltipText = infoTooltipText;
+
+  public get selectedInfoTooltipText() {
+    return this.infoTooltipText?.[this.titleKey] ?? {};
+  }
 }
 </script>
 

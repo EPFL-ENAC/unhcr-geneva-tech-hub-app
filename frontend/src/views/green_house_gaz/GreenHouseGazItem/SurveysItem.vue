@@ -155,11 +155,8 @@ import Cooking from "@/components/green_house_gaz/energy/Cooking.vue";
 import Facilities from "@/components/green_house_gaz/energy/Facilities.vue";
 import Lighting from "@/components/green_house_gaz/energy/Lighting.vue";
 import Info from "@/components/green_house_gaz/Info.vue";
-// import CRI from "@/components/green_house_gaz/materials/CRI.vue";
-import DomesticSolidWaste from "@/components/green_house_gaz/materials/DomesticSolidWaste.vue";
-// import Shelter from "@/components/green_house_gaz/materials/Shelter.vue";
-import TreePlanting from "@/components/green_house_gaz/offset/TreePlanting.vue";
 import Results from "@/components/green_house_gaz/Results.vue";
+import DomesticSolidWaste from "@/components/green_house_gaz/wash/DomesticSolidWaste.vue";
 import WaterSupply from "@/components/green_house_gaz/wash/WaterSupply.vue";
 
 import InfoTooltip from "@/components/commons/InfoTooltip.vue";
@@ -190,11 +187,10 @@ import { mapActions, mapGetters } from "vuex";
     Cooking,
     Facilities,
     Lighting,
-    // CRI,
+
     DomesticSolidWaste,
-    // Shelter,
     WaterSupply,
-    TreePlanting,
+
     Results,
     UserManager,
     Info,
@@ -239,15 +235,6 @@ export default class SurveyList extends Vue {
       redirect: "WASH-WaterSupply",
       children: [
         { text: "Water Supply", to: "WaterSupply", icon: "$mdiWaterPump" },
-      ],
-    },
-    {
-      icon: "$mdiHome",
-      // text: "Shelter, Site and material",
-      text: "Material",
-      to: "Material",
-      redirect: "Material-DomesticSolidWaste",
-      children: [
         {
           text: "Domestic solid waste",
           to: "DomesticSolidWaste",
@@ -259,7 +246,6 @@ export default class SurveyList extends Vue {
       icon: "$mdiNewspaperVariantOutline",
       text: "Results",
       to: "Results",
-      // redirect: "Results-Results",
     },
   ];
 

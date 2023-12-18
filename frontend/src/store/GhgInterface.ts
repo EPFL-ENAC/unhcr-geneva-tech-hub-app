@@ -28,8 +28,6 @@ type Email = string;
 export interface SurveyForms {
   energy: EnergySurvey;
   wash: WashSurvey;
-  material: MaterialSurvey;
-  offset: OffsetSurvey;
 }
 export const DEFAULT_PP_PER_HH = 5;
 
@@ -62,13 +60,7 @@ export function newSurveyForm(): SurveyForms {
     },
     wash: {
       watersupply: generateNewGenericFormSurvey(),
-    },
-    material: {
       domesticsolidwaste: generateNewGenericFormSurvey(),
-      // recycling: generateNewGenericFormSurvey(),
-    },
-    offset: {
-      treeplanting: generateNewGenericFormSurvey(),
     },
   };
 }
@@ -103,10 +95,6 @@ export interface GreenHouseGaz extends SurveyForms {
   updated_at?: string;
   isUNHCR?: boolean;
 }
-
-// export type SurveyCategory = "energy" | "wash" | "material" | "offset";
-
-// export type SurveyCategory = keyof GreenHouseGaz;
 
 export type SurveyKey = keyof GreenHouseGaz;
 
@@ -147,12 +135,6 @@ export interface EnergySurvey {
     SurveyItem,
     SurveyResult
   >;
-  // pumping: GenericFormSurvey<
-  //   SurveyItem,
-  //   SurveyResult,
-  //   SurveyItem,
-  //   SurveyResult
-  // >;
 }
 export type EnergySurveyCategory = keyof EnergySurvey;
 
@@ -164,12 +146,17 @@ export interface WashSurvey {
     SurveyItem,
     SurveyResult
   >;
+  domesticsolidwaste: GenericFormSurvey<
+    SurveyItem,
+    SurveyResult,
+    SurveyItem,
+    SurveyResult
+  >;
 }
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 // TODO replace by GenericFormSurvey
-// TODO: remove everywehre!
 export interface FormSurvey {
   baseline: {
     inputs: FormSurveyInput[];
@@ -198,7 +185,6 @@ export type SurveyInputValue =
   | number
   | string
   | boolean
-  // | boolean[]
   | string[] // exception for fuelTypes that should not be there
   | undefined;
 export type SurveyInput = Record<string, SurveyInputValue>;
@@ -242,6 +228,7 @@ export interface GenericEndline<
 }
 
 // GENERIC STOP
+
 // start of energy facility survey
 export interface EnergyFacilitySurvey {
   baseline: {
@@ -310,34 +297,4 @@ export type EnergyFacilityInterventionItemResult = Omit<
   "description" | "name"
 >;
 
-// start of material survey
-export interface MaterialSurvey {
-  // shelter: GenericFormSurvey<
-  //   SurveyItem,
-  //   SurveyResult,
-  //   SurveyItem,
-  //   SurveyResult
-  // >;
-  // cri: GenericFormSurvey<SurveyItem, SurveyResult, SurveyItem, SurveyResult>;
-  domesticsolidwaste: GenericFormSurvey<
-    SurveyItem,
-    SurveyResult,
-    SurveyItem,
-    SurveyResult
-  >;
-}
-
-export interface OffsetSurvey {
-  treeplanting: GenericFormSurvey<
-    SurveyItem,
-    SurveyResult,
-    SurveyItem,
-    SurveyResult
-  >;
-}
-
-export type SurveySubcategory =
-  | keyof EnergySurvey
-  | keyof WashSurvey
-  | keyof MaterialSurvey
-  | keyof OffsetSurvey;
+export type SurveySubcategory = keyof EnergySurvey | keyof WashSurvey;

@@ -105,8 +105,6 @@ import {
   EnergySurvey,
   FormSurvey,
   GreenHouseGaz,
-  MaterialSurvey,
-  OffsetSurvey,
   WashSurvey,
 } from "@/store/GhgInterface";
 
@@ -239,8 +237,8 @@ export default class Results extends Vue {
       },
       {
         color: `rgba(1218,182,0,${this.delta})`,
-        name: "Material - Domestic solid waste",
-        category: "material",
+        name: "Domestic solid waste",
+        category: "wash",
         subcategory: "domesticsolidwaste",
         stack: "co2",
       },
@@ -256,7 +254,9 @@ export default class Results extends Vue {
       baseline: this.$options.filters?.formatNumberGhg(
         _get(
           this.project,
-          `${item.category}.${item.subcategory}.baseline.results.totalCO2Emission`
+          `${item.category}.${String(
+            item.subcategory
+          )}.baseline.results.totalCO2Emission`
         ),
         {
           suffix: "(tCO2e/year)",
@@ -268,7 +268,9 @@ export default class Results extends Vue {
       endline: this.$options.filters?.formatNumberGhg(
         _get(
           this.project,
-          `${item.category}.${item.subcategory}.endline.results.totalCO2Emission`
+          `${item.category}.${String(
+            item.subcategory
+          )}.endline.results.totalCO2Emission`
         ),
         {
           suffix: "(tCO2e/year)",
@@ -374,7 +376,7 @@ export default class Results extends Vue {
   }
 }
 
-type Config = EnergyConfig | WashConfig | MaterialConfig | OffsetConfig;
+type Config = EnergyConfig | WashConfig;
 
 interface ConfigBase {
   sign?: string;
@@ -392,21 +394,11 @@ interface WashConfig extends ConfigBase {
   category: "wash";
   subcategory: keyof WashSurvey;
 }
-interface MaterialConfig extends ConfigBase {
-  category: "material";
-  subcategory: keyof MaterialSurvey;
-}
-interface OffsetConfig extends ConfigBase {
-  category: "offset";
-  subcategory: keyof OffsetSurvey;
-}
-
 
 interface HeaderInterface {
   text: string;
   value: string;
 }
-
 </script>
 
 <style lang="scss" scoped>
