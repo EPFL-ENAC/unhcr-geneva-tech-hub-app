@@ -1,9 +1,10 @@
-.PHONY: backup-dump
+.PHONY: backup-dump env-file install run-frontend run-database azure setup-database setup-data setup-reference test lint lint-staged dump-prod-to-local restore-local-to-test restore-local setup run run-local run-dev
 
-install:
+install: env-file
 	npm install
 	npx husky install
 	$(MAKE) -C frontend install
+	$(MAKE) -C rest-api install
 
 env-file:
 	cp .env.example .env
@@ -23,6 +24,9 @@ setup-database:
 
 setup-data:
 	docker compose up --build --force-recreate --no-deps data-setup
+
+setup-reference:
+	$(MAKE) -C couchdb-setup/rawdata
 
 test:
 	$(MAKE) -C frontend test

@@ -1,12 +1,10 @@
 {
-  "python.analysis.stubPath": "${workspaceFolder}/backend/",
+  "python.analysis.stubPath": "${workspaceFolder}/rest-api/",
   "python.analysis.extraPaths": [
-    "${workspaceFolder}/backend/.venv/Lib/site-packages"
+    "${workspaceFolder}/rest-api/.venv/Lib/site-packages"
   ],
   "python.analysis.typeCheckingMode": "strict",
-  "python.defaultInterpreterPath": "${workspaceFolder}/backend/.venv",
-  "python.formatting.provider": "yapf",
-  "python.linting.flake8Enabled": true,
+  "python.defaultInterpreterPath": "${workspaceFolder}/rest-api/.venv",
   "python.testing.pytestEnabled": true,
-  "python.testing.pytestPath": "${workspaceFolder}/backend/tests"
+  "python.testing.pytestPath": "${workspaceFolder}/rest-api/tests"
 }

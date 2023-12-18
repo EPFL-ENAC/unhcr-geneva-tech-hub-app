@@ -3,27 +3,11 @@
 UNHCR Geneva Technical Hub App
 
 ## Status
-Currently under development, release 1.0 expected March 2023, then user testing.
+Currently under development, final release expected for end of March 2024.
 
-## Update references files
-1. go to https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/blob/main/frontend/src/assets/references/ghg_reference.json
-2. Click on the 'edit this file' button (small pencil icon on the top)
-  - <img width="1740" alt="click_on_edit" src="https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/assets/161889/45f7ce45-0034-4c85-8811-562898788941">
-
-4. Edit file and click on 'commit changes' button
-  - <img width="1740" alt="commit-changes" src="https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/assets/161889/bbf96be1-b91b-4cf5-bcc3-ad01b4492ad9">
-
-5. On the popup select 'create a new branch' instead of 'commit directly to main branch'
-  - Change the name of the branch so it reflects your changes
-  - Click on 'propose changes'
-  - <img width="1725" alt="create-new-branch" src="https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/assets/161889/1a719328-4d0b-4afd-8c33-92674a9c73d5">
-
-5. On the pull request page
-  - Edit the description
-  - Add the 'ghg' tag at least
-  - Add the appropriates assignees, milestones and projects
-  - Click on 'create pull request
-  <img width="1719" alt="create_pull-request" src="https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/assets/161889/8b099d0d-dfce-4e4b-ba09-8d9d8b68c4fa">
+## Update references variable and UNHCR locations
+- Follow this CF [Data ref](couchdb-setup/rawdata/README.md)
+- And then you may run `make setup-reference`
 
 ## Development
 
@@ -42,7 +26,7 @@ Prerequisites:
 - [Docker](https://www.docker.com/)
   - [Docker Compose](https://docs.docker.com/compose/) 1.27.0+
 
-### Run for development
+### Run for development using docker compose
 
 #### information about 127.0.0.11 as the static docker dns ip
 From: https://hwchiu.medium.com/fun-dns-facts-learned-from-the-kind-environment-241e0ea8c6d4
@@ -57,13 +41,12 @@ In the example depicted below, two containers, named “hwchiu” and “hwchiu2
 #### Create .env file to hold your Secrets
 
 We use two env files `./.env` and `./frontend/.env`
+Create the files by running `make env-file`
 
 - ./.env
   is used by every service
 - ./frontend/.env
   is used by the frontend
-
-- you could run the following script, or just run `make env-file`
 
 #### Installation
 
@@ -74,8 +57,19 @@ make install
 #### CLI
 
 ```bash
+# to run all the docker compose services
+make run-local
+
+
+# to run only some services
 make run-database;
+# setup the database if changes are made locally (change files et c)
 make setup-database;
+# donwload files to upload to local minio service (pdfs and videos mainly)
+make setup-data;
+# regenerate reference json files from csv in case changes are made locally
+make setup-reference;
+# run the dev server for the frontend on port 8080
 make run-frontend;
 # http://127.0.0.1:8080
 ```
@@ -89,28 +83,11 @@ Run configurations are in `.vscode`: https://code.visualstudio.com/docs/editor/d
 ### Local build with Docker Compose
 
 ```bash
-make run # will build with docker-compose and run docker-compose up -d
+make run # will build with docker-compose and run docker-compose up -d with ghcr.io built images
 ```
 
-### Server
-
-We use enacit-ansible to automate our process
-
-Just run the following command and it will install the latest commit from the main branch
-
-```
-ansible-playbook -v -i inventory/unhcr-tss.epfl.ch.yml  playbooks/deploy-app.yml
-```
-
-- If you change couchdb-setup/etc/config.ini file
-  - You'll need to do the following:
-    ```
-    ssh unhcr-tss.epfl.ch
-    # wait to be connected
-    cd /opt/unhcr-tss;
-    docker-compose restart couchdb;
-    ```
-  - same for unhcr-tss-test.epfl.ch
+### Server @EPFL
+We use enacit-ansible to automate our process with the CD service
 
 ### Deployment process
 
@@ -167,6 +144,7 @@ add the above json result as new file in `couchdb-setup/bootstrap/_users/newuser
   "password": "plain_text_that_will_be_hash_by_couchdb",
 }
 ```
+*BEWARE*:  this change should not be commited to github since the password is not encrypted
 - run the following command:
 
 ```bash
@@ -178,7 +156,7 @@ make setup-database
 - save the document by deplacing `couchdb-setup/bootstrap/_users/new_username.json`
 - remove the `'_rev'` field and commit the file
 
-## Update public keys for unhcr azure server
+## Update public keys for unhcr azure server (change may happen)
 - run make azure
 ```bash
 make azure
@@ -187,11 +165,13 @@ make azure
 - verify that the json is valid
 
 ## file uploads
-- 2 services necessary
-  - nginx proxy to our custom epfl s3 instance
-  - python fast api using boto3 to upload files to the s3 instance
-We don't store the uploaded file directly to a database, it should be done by the frontend by talking directly to couchdb. The API just return the path served by the nginx reverse proxy
+- 2 services (docker compose) necessary
+  - (s3_server) nginx proxy to our minio s3 instance (cf docker-compose file in [minio doc](./minio/README.md)
+  - (rest-api)  python fast api
+    - use boto3 to upload files to the s3 instance
+    - use custom user management system for couchdb user creation and registering new users (also send email and password verification)
 
+We don't store the uploaded file directly to a database, it should be done by the frontend by talking directly to couchdb. The API just return the path served by the nginx reverse proxy
 
 
 ## Collaborators
@@ -202,7 +182,6 @@ We don't store the uploaded file directly to a database, it should be done by th
 
 
 ## Registration process
-
 
 /register
 /confirm
