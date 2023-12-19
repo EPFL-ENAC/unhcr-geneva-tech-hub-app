@@ -1,12 +1,7 @@
 import {
   AllFuel,
   biomassFuels,
-  biomassFuelsForGasifier,
-  electricFuelsWithoutNone,
-  gasFuels,
-  liquidFuels,
   noAccessFuels,
-  thermalFuels,
 } from "@/components/green_house_gaz/fuelTypes";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,7 +23,7 @@ export const lightingTECHs: LightingTech[] = [
     fuelTypes: noAccessFuels,
     text: "Without any access",
     image: undefined,
-  
+  },
 ];
 
 export const lightingTECHsWithAccess = lightingTECHs.slice(1);
