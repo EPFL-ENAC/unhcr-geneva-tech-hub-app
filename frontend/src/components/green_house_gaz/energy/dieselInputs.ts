@@ -484,6 +484,19 @@ export function dieselInputsProducedPer(
         "from daily log and application will extrapolate this information to be annual",
       suffix: operatingHoursSuffix,
       min: 0,
+      // max: 24 * 7, // not logical to have more than 24*7 hours per week
+      maxFn: (): number | undefined => {
+        // warning since it's a percentage we return 1; because it means 100%
+        if (operatingHoursSuffix === "hrs/week") {
+          // since the default is 100% for percentage, if we want to change it
+          // we need to max it out to something like 100000% which is not really possible
+          return 24 * 7;
+        }
+        if (operatingHoursSuffix === "hrs/day") {
+          return 24;
+        }
+        return 1;
+      },
       style: {
         cols: "12",
       },
