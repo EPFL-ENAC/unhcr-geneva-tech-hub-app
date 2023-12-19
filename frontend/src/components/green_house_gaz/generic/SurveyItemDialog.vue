@@ -68,6 +68,14 @@
                       :src="localItem.input.image"
                     />
                   </div>
+                  <div
+                    v-if="surveyItem.image"
+                    class="d-flex flex-row justify-center align-center"
+                  >
+                    <span v-if="localItem.input.comment">
+                      {{ localItem.input.comment }}</span
+                    >
+                  </div>
                   <form-item-component
                     v-if="!surveyItem.hideInput"
                     v-bind="surveyItem"

@@ -21,6 +21,7 @@ export interface CookstoveTech {
   readonly image: string | undefined;
   readonly defaults?: PartialRecord<AllFuel, number>;
   readonly tooltipInfo?: string;
+  readonly comment?: string;
 }
 
 export const cookstoveIdWithoutAccess = "1";
@@ -37,8 +38,9 @@ export const cookstoveTECHs: CookstoveTech[] = [
   {
     _id: "2",
     fuelTypes: biomassFuels,
-    text: "Traditional three stone fire",
-    image: "/images/energy/cookstoves/traditional-wood.png",
+    text: "Three stone fire",
+    comment: "Photo: Manuel Krähenbühl",
+    image: "/images/energy/cookstoves/three-stone-fire.webp",
     defaults: {
       FWD: 1.7,
       CHC: 0.898983050847458,
@@ -49,8 +51,9 @@ export const cookstoveTECHs: CookstoveTech[] = [
   {
     _id: "3",
     fuelTypes: biomassFuels,
-    text: "Traditional cookstove with solid biomass fuel",
-    image: "/images/energy/cookstoves/traditional-bricket.jpg",
+    text: "Artisanal cookstove with solid biomass fuel",
+    comment: "Photo: Manuel Krähenbühl",
+    image: "/images/energy/cookstoves/artisanal-cookstove.webp",
     defaults: {
       FWD: 1.578571429,
       CHC: 0.834769976,
@@ -97,7 +100,8 @@ export const cookstoveTECHs: CookstoveTech[] = [
     _id: "7",
     fuelTypes: gasFuels,
     text: "Gas powered cookstove",
-    image: "/images/energy/cookstoves/lpg.jpg",
+    comment: "Photo: Manuel Krähenbühl",
+    image: "/images/energy/cookstoves/gas-powered-cookstove.webp",
     defaults: {
       LPG: 0.086,
       BGS: 0.155112839,
