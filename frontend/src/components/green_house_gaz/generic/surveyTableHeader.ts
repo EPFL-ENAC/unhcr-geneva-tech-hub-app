@@ -98,6 +98,8 @@ export const surveyTableHeaderCO2 = [
       const res = formatNumberGhg(v, {
         style: "percent",
         signDisplay: "exceptZero",
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0,
       });
       return `<span title=${String(v * 100)}>${res}</span>`;
     },

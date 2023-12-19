@@ -361,9 +361,15 @@ export function dieselInputsProducedPer(
       if (typeof dieselPower === "number") {
         return `${
           item?.input?.dieselPowerEstimated ? "~" : ""
-        }${formatNumberGhg(dieselPower)} ${suffix} (${
+        }${formatNumberGhg(dieselPower, {
+          maximumFractionDigits: 0,
+          minimumFractionDigits: 0,
+        })} ${suffix} (${
           item?.input?.dieselLitersEstimated ? "~" : ""
-        }${formatNumberGhg(item?.input?.fuelUsage as number)}L) `;
+        }${formatNumberGhg(item?.input?.fuelUsage as number, {
+          maximumFractionDigits: 0,
+          minimumFractionDigits: 0,
+        })}L) `;
       }
       return dieselPower;
     },

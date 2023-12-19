@@ -87,6 +87,8 @@
                         formatNumberGhg({
                           style: "percent",
                           signDisplay: "exceptZero",
+                          maximumFractionDigits: 0,
+                          minimumFractionDigits: 0,
                         })
                     }}</span>
                     <span

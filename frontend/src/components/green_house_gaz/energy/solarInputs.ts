@@ -128,13 +128,11 @@ export function solarInputsProducedPer(
       computeSolarInstalled = computeKWInstalledWithKwhPerDayPerCountry;
       suffix = "kWh/day";
       break;
-    // case "Month":
-    //   break;
     case "Week":
       throw new Error("Week is not supported for Solar");
       break;
     case "Year":
-      suffix = "kWh/year";
+      suffix = "kWh/yr";
       computeSolarPower = computeKWHPerYearPerCountry;
       computeSolarInstalled = computeKWInstalledWithKwhPerYearPerCountry;
       break;
@@ -174,7 +172,11 @@ export function solarInputsProducedPer(
       disabled: false,
       text: getSolarPowerText(),
       formatter: (v: number) => {
-        return formatNumberGhg(v);
+        return formatNumberGhg(v, {
+          maximumFractionDigits: 0,
+          minimumFractionDigits: 0,
+          suffix,
+        });
       },
       customEventInput: (renewablePower: number, localInput: EnergyItem) => {
         localInput.solarInstalled = computeSolarInstalled(

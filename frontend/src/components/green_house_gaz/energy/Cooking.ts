@@ -704,7 +704,8 @@ export function headers(
       formatter: (v: number) => {
         return formatNumberGhg(v, {
           style: "percent",
-          // maximumFractionDigits: 0,
+          maximumFractionDigits: 0,
+          minimumFractionDigits: 0,
         });
       },
     },
