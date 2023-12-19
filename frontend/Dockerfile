@@ -1,6 +1,8 @@
 FROM node:16-alpine as build-stage
 WORKDIR /app
 COPY package*.json ./
+COPY .npmrc ./
+COPY npm-shrinkwrap.json ./
 RUN npm ci
 COPY public ./public
 COPY src ./src
