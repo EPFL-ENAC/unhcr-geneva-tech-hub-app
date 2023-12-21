@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rest-api-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: rest-api-pod
+  template:
+    metadata:
+      labels:
+        component: rest-api-pod
+    spec:
+      containers:
+        - name: rest-api-container
+          image: {{ .Values.global.__common__.image.registry }}/{{ .Values.global.__common__.image.repository }}-rest-api:{{ .Values.global.__common__.image.tag }}
+          ports:
+            - containerPort: 5050
+          envFrom:
+            - configMapRef:
+                name: {{ include "tss.fullname" . }}-configmap
+            - secretRef:
+                name: {{ include "tss.fullname" . }}-secret

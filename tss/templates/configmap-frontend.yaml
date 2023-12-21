@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "tss.fullname" . }}-configmap-frontend
+  labels:
+    {{- include "tss.labels" . | nindent 4 }}
+data:
+  # Add more configuration data as needed
+  # VueI18n locale
+  VUE_APP_I18N_LOCALE: en
+  # VueI18n fallback locale
+  VUE_APP_I18N_FALLBACK_LOCALE: en
+  # The key used by VuexPersistence to store the user in the session storage
+  VUE_APP_USER_NAMESPACE: unhcr
+  # The environment name (used for Sentry); should be local, developement, staging or production
+  VUE_APP_ENVIRONEMENT: local
+  # The title of the application
+  VUE_APP_TITLE: UNHCR TSS TEST
+  # The path to the couchdb database unhcr-tss.epfl.ch/db for instance
+  VUE_APP_COUCHDB_URL: /db
+  # The path to the API (rest-api service)
+  VUE_APP_API_URL: /api
+  # The path to the S3 server (s3 service)
+  VUE_APP_S3_URL: /s3
+
+
+

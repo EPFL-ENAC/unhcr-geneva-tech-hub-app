@@ -1,0 +1,9 @@
+dependencies:
+- name: couchdb
+  repository: https://apache.github.io/couchdb-helm
+  version: 4.5.0
+- name: minio
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 13.3.4
+digest: sha256:9c53b034fe482cebfc6cc1add8980f63d8d47c8e226c7335f3bbc86bbb38230f
+generated: "2024-02-08T15:51:33.329056+01:00"

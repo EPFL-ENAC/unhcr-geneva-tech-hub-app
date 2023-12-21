@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s3-server-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: s3-server-pod
+  template:
+    metadata:
+      labels:
+        component: s3-server-pod
+    spec:
+      initContainers:
+      containers:
+        - name: s3-server
+          image: {{ .Values.global.__common__.image.registry }}/{{ .Values.global.__common__.image.repository }}-s3_server:{{ .Values.global.__common__.image.tag }}
+          ports:
+            - containerPort: 5660
+          envFrom:
+            - configMapRef:
+                name: {{ include "tss.fullname" . }}-configmap
+            - secretRef:
+                name: {{ include "tss.fullname" . }}-secret

@@ -91,7 +91,7 @@ services:
     environment:
       - COUCHDB_USER=${COUCHDB_USER}
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
-      - COUCHDB_HOST=couchdb
+      - COUCHDB_HOST=${COUCHDB_HOST}
     labels:
       - "traefik.http.services.couchdb-setup.loadbalancer.server.port=9999"
     build: ./couchdb-setup
@@ -117,7 +117,7 @@ services:
     env_file:
       - .env
     environment:
-      - AUTH_SERVER="http://couchdb:5984"
+      - AUTH_SERVER="http://${COUCHDB_HOST}:5984"
     ports:
       - '5050:5050'
     labels:
