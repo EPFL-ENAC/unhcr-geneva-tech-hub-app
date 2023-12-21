@@ -80,7 +80,11 @@ export default class InstancePieChart extends Vue {
     return {
       title: {
         text: `Energy Mix (${this.$options.filters?.formatNumberGhg(
-          item.totalPower
+          item.totalPower,
+          {
+            maximumFractionDigits: 0,
+            minimumFractionDigits: 0,
+          }
         )} kWh)`, //"Distribution of tCO2e/year per facilities",
         textStyle: {
           fontSize: 12,
@@ -101,7 +105,10 @@ export default class InstancePieChart extends Vue {
           radius: "60%",
           tooltip: {
             valueFormatter: (value) =>
-              this.$options.filters?.formatNumberGhg(value) + " (kWh)",
+              this.$options.filters?.formatNumberGhg(value, {
+                maximumFractionDigits: 0,
+                minimumFractionDigits: 0,
+              }) + " (kWh)",
           },
           label: {
             overflow: "break",

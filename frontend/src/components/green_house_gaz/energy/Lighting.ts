@@ -198,7 +198,7 @@ export const plugingRecheargeableDevices = [
   "RECHARGEABLE_BAT_LANTERN",
 ] as const;
 export type PlugingRecheargeableDevice =
-  typeof plugingRecheargeableDevices[number];
+  (typeof plugingRecheargeableDevices)[number];
 export const plugingRecheargeableDevicesWithText: IdTextTypesItem<PlugingRecheargeableDevice>[] =
   [
     { _id: "POWER_KNOWN", text: "Power of device known", default: 10 },
@@ -234,7 +234,7 @@ export const singleUseBatteryDevices = [
   "TORCH_BIG",
   "LANTERN",
 ] as const;
-export type SingleUseBatteryDevices = typeof singleUseBatteryDevices[number];
+export type SingleUseBatteryDevices = (typeof singleUseBatteryDevices)[number];
 export const singleUseBatteryDevicesWithText: IdTextTypesItem<SingleUseBatteryDevices>[] =
   [
     { _id: "TORCH", text: "Small handheld torch", default: 1 },
@@ -263,14 +263,14 @@ export const energyTypes = [
   liquidFuelsEnergyType,
   electricFuelsEnergyType,
 ] as const;
-export type EnergyType = typeof energyTypes[number];
+export type EnergyType = (typeof energyTypes)[number];
 
 export const energySubTypes = [
   "SOLAR_LANTERN",
   "SINGLE_USE_BAT",
   "PLUG_IN_OR_CHARGE_BAT",
 ] as const;
-export type EnergySubType = typeof energySubTypes[number];
+export type EnergySubType = (typeof energySubTypes)[number];
 
 export function conditionalFunctionElectricSolarDevices(
   itemInput: SurveyInput
@@ -413,11 +413,15 @@ export function commonElectricSolarDevicesHeaders() {
         if (localInput?.input?.energyType === solidFuelsEnergyType) {
           return formatNumberGhg(localInput?.input?.fuelUsage * 365.25, {
             suffix: "kg/yr",
+            maximumFractionDigits: 0,
+            minimumFractionDigits: 0,
           });
         }
         if (localInput?.input?.energyType === liquidFuelsEnergyType) {
           return formatNumberGhg(localInput?.input?.fuelUsage * 365.25, {
             suffix: "L/yr",
+            maximumFractionDigits: 0,
+            minimumFractionDigits: 0,
           });
         }
         if (
@@ -427,19 +431,31 @@ export function commonElectricSolarDevicesHeaders() {
           // localInput?.input?.fuelType === "ELE_DIES"
         ) {
           // use the formater of the correct input!
-          return formatNumberGhg(v, { suffix });
+          return formatNumberGhg(v, {
+            suffix,
+            maximumFractionDigits: 0,
+            minimumFractionDigits: 0,
+          });
         }
         if (localInput?.input?.fuelType === "ELE_DIES") {
           // return dieselFormatter(v, args, localInput);
           return formatNumberGhg(localInput?.input?.fuelUsage, {
             suffix: "L/yr",
+            maximumFractionDigits: 0,
+            minimumFractionDigits: 0,
           });
         }
         if (localInput?.input?.fuelType === "NO_ACCESS") {
-          return formatNumberGhg(v, { suffix });
+          return formatNumberGhg(v, {
+            suffix,
+            maximumFractionDigits: 0,
+            minimumFractionDigits: 0,
+          });
         }
         return formatNumberGhg(localInput?.input?.fuelUsage, {
           suffix: "L/yr",
+          maximumFractionDigits: 0,
+          minimumFractionDigits: 0,
         });
       },
       tooltipInfoFn: (value: string, args: any, localItem: any) => {
@@ -963,6 +979,8 @@ export function headers(
       formatter: (v: number) => {
         return formatNumberGhg(v, {
           style: "percent",
+          maximumFractionDigits: 0,
+          minimumFractionDigits: 0,
         });
       },
     },

@@ -252,6 +252,7 @@ export function headers(
           throw new Error("no cookstove matched");
         }
         localInput.image = currentStove.image;
+        localInput.comment = currentStove.comment;
         localInput.fuelTypes = currentStove.fuelTypes as AllFuel[];
         if (currentStove._id === cookstoveIdWithoutAccess) {
           localInput.fuelType = noAccessFuels[0];
@@ -703,7 +704,8 @@ export function headers(
       formatter: (v: number) => {
         return formatNumberGhg(v, {
           style: "percent",
-          // maximumFractionDigits: 0,
+          maximumFractionDigits: 0,
+          minimumFractionDigits: 0,
         });
       },
     },

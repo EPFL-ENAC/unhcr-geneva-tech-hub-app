@@ -58,7 +58,7 @@ import {
   MaterialSolidWasteItemResults,
   MaterialSolidWasteItemResultsBalance,
   MaterialSolidWasteSurvey,
-} from "@/components/green_house_gaz/materials/DomesticSolidWaste";
+} from "@/components/green_house_gaz/wash/DomesticSolidWaste";
 
 @Component({
   components: {

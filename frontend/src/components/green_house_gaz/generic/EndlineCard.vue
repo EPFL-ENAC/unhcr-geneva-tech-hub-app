@@ -30,7 +30,7 @@
         />
       </v-col>
     </v-card-subtitle>
-    <div v-if="showEndLines">
+    <div :class="`${showEndLines ? '' : 'd-none d-print-block'}`">
       <v-card-text>
         <instance-table
           :items="endline.items"
@@ -87,6 +87,8 @@
                         formatNumberGhg({
                           style: "percent",
                           signDisplay: "exceptZero",
+                          maximumFractionDigits: 0,
+                          minimumFractionDigits: 0,
                         })
                     }}</span>
                     <span
@@ -163,7 +165,10 @@
       </v-container>
     </div>
 
-    <div v-else class="container container--fluid">
+    <div
+      class="container container--fluid"
+      :class="`${showEndLines ? 'd-none' : 'd-block d-print-none'}`"
+    >
       <v-row>
         <v-col class="d-flex justify-end mx-2 mb-2">
           <h3>{{ endlineText }}</h3>

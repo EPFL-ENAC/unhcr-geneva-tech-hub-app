@@ -29,8 +29,8 @@ const defaultOptions: ExtendedFormatOptions = {
 };
 
 const defaultGhgOptions: ExtendedFormatOptions = {
-  maximumFractionDigits: 2,
-  minimumFractionDigits: 2, // to remove an deplace to ghg default Options
+  maximumFractionDigits: 0,
+  minimumFractionDigits: 0, // to remove an deplace to ghg default Options
 };
 // how to use
 // formatNumber(0.43433333345)

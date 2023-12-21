@@ -16,7 +16,7 @@
         <v-btn
           color="primary"
           dark
-          class="mb-2"
+          class="mb-2 d-print-none"
           :disabled="disabled"
           @click="() => openDialog(newDefaultItem(), 'survey-item-dialog')"
         >
@@ -144,7 +144,7 @@
       </div>
     </template>
     <template #[`item.actions`]="{ item }">
-      <div class="actions-container">
+      <div class="actions-container d-print-noneq">
         <v-tooltip bottom>
           <template #activator="{ on, attrs }">
             <v-btn

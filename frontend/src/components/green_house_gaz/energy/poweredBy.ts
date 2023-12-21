@@ -135,7 +135,11 @@ export function poweredByInputs(
       solarInputs.find((item) => item.value === "input.renewablePower")
         ?.formatter ?? (() => "");
     const gridPowerFormatter = (v: number) => {
-      return formatNumberGhg(v);
+      return formatNumberGhg(v, {
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0,
+        suffix,
+      });
     };
     return [
       {
@@ -181,7 +185,8 @@ export function poweredByInputs(
         value: "input.gridPower", // maybe use like in DieselGeneratorWithoutLitres
         computeResults: true,
         // text: "Total kWh used per yr for instance",
-        tooltipInfo: "The grid emission factor database (IGES) does not have values for all the countries, so an average for countries hosting refugees is used. The default grid emission factor is an average of all IGES 2022 emission factors for countries hosting refugees.",
+        tooltipInfo:
+          "The grid emission factor database (IGES) does not have values for all the countries, so an average for countries hosting refugees is used. The default grid emission factor is an average of all IGES 2022 emission factors for countries hosting refugees.",
         text: getGridPowerText(),
         suffix,
         style: {
@@ -216,7 +221,11 @@ export function poweredByInputs(
             // localInput?.input?.fuelType === "ELE_DIES"
           ) {
             // use the formater of the correct input!
-            return formatNumberGhg(v, { suffix });
+            return formatNumberGhg(v, {
+              suffix,
+              maximumFractionDigits: 0,
+              minimumFractionDigits: 0,
+            });
           }
           if (localInput?.input?.fuelType === "ELE_DIES") {
             return dieselFormatter(v, args, localInput);
@@ -225,15 +234,18 @@ export function poweredByInputs(
             return "No access";
           }
           if (localInput?.input?.US_UNI === KM) {
-            return `~${formatNumberGhg(
-              localInput?.computed?.fuelUsage
-            )} L${suffixTimePeriod}`;
+            return `~${formatNumberGhg(localInput?.computed?.fuelUsage, {
+              suffix: `L${suffixTimePeriod}`,
+              maximumFractionDigits: 0,
+              minimumFractionDigits: 0,
+            })}`;
           }
 
           if (localInput?.input?.US_UNI === LITERS) {
             return `${formatNumberGhg(localInput?.input?.fuelUsage, {
               suffix: `L${suffixTimePeriod}`,
-              minimumFractionDigits: 2,
+              maximumFractionDigits: 0,
+              minimumFractionDigits: 0,
             })}`;
           }
         },

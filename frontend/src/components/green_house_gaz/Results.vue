@@ -64,6 +64,37 @@
         </h3>
       </v-col>
     </v-row>
+    <v-row class="d-none d-print-flex">
+      <v-col>
+        <v-data-table
+          :headers="headers"
+          :items="resultTable"
+          :search="search"
+          dense
+        >
+          <template #[`item.value`]="props">
+            <span :title="props.item.value"
+              >{{
+                props.item.value |
+                  formatNumberGhg({
+                    style: "percent",
+                  })
+              }}
+            </span>
+          </template>
+          <template #[`item._id`]="props">
+            <span :title="props.item._id"
+              >{{ countriesMap?.[props.item._id]?.name ?? "default" }}
+              <country-flag
+                v-if="props.item._id !== 'default'"
+                :country="props.item._id"
+                size="small"
+              />
+            </span>
+          </template>
+        </v-data-table>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -74,8 +105,6 @@ import {
   EnergySurvey,
   FormSurvey,
   GreenHouseGaz,
-  MaterialSurvey,
-  OffsetSurvey,
   WashSurvey,
 } from "@/store/GhgInterface";
 
@@ -91,6 +120,7 @@ import {
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
 import { BarSeriesOption, EChartsOption } from "echarts/types/dist/shared";
+import { get as _get } from "lodash";
 import "vue-class-component/hooks";
 import VChart from "vue-echarts";
 import { Component, Vue } from "vue-property-decorator";
@@ -113,7 +143,7 @@ use([
   },
   components: {
     VChart,
-    SurveyItemTitle
+    SurveyItemTitle,
   },
 })
 export default class Results extends Vue {
@@ -207,10 +237,65 @@ export default class Results extends Vue {
       },
       {
         color: `rgba(1218,182,0,${this.delta})`,
-        name: "Material - Domestic solid waste",
-        category: "material",
+        name: "WASH - Domestic solid waste",
+        category: "wash",
         subcategory: "domesticsolidwaste",
         stack: "co2",
+      },
+    ];
+  }
+
+  public get resultTable(): Record<
+    string,
+    number | boolean | undefined | string
+  >[] {
+    return this.items.map((item) => ({
+      name: item.name,
+      baseline: this.$options.filters?.formatNumberGhg(
+        _get(
+          this.project,
+          `${item.category}.${String(
+            item.subcategory
+          )}.baseline.results.totalCO2Emission`
+        ),
+        {
+          suffix: "(tCO2e/year)",
+          maximumFractionDigits: 0,
+          minimumFractionDigits: 0,
+        }
+      ),
+
+      endline: this.$options.filters?.formatNumberGhg(
+        _get(
+          this.project,
+          `${item.category}.${String(
+            item.subcategory
+          )}.endline.results.totalCO2Emission`
+        ),
+        {
+          suffix: "(tCO2e/year)",
+          maximumFractionDigits: 0,
+          minimumFractionDigits: 0,
+        }
+      ),
+    }));
+  }
+
+  search = "";
+
+  public get headers(): HeaderInterface[] {
+    return [
+      {
+        text: "Type",
+        value: "name",
+      },
+      {
+        text: "Baseline",
+        value: "baseline",
+      },
+      {
+        text: "Endline",
+        value: "endline",
       },
     ];
   }
@@ -274,7 +359,7 @@ export default class Results extends Vue {
           tooltip: {
             valueFormatter: (value): string => {
               return `${this.$options.filters?.formatNumberGhg(value, {
-                suffix: '(tCO2e/year)',
+                suffix: "(tCO2e/year)",
                 maximumFractionDigits: 0,
                 minimumFractionDigits: 0,
               })}`;
@@ -291,7 +376,7 @@ export default class Results extends Vue {
   }
 }
 
-type Config = EnergyConfig | WashConfig | MaterialConfig | OffsetConfig;
+type Config = EnergyConfig | WashConfig;
 
 interface ConfigBase {
   sign?: string;
@@ -309,13 +394,10 @@ interface WashConfig extends ConfigBase {
   category: "wash";
   subcategory: keyof WashSurvey;
 }
-interface MaterialConfig extends ConfigBase {
-  category: "material";
-  subcategory: keyof MaterialSurvey;
-}
-interface OffsetConfig extends ConfigBase {
-  category: "offset";
-  subcategory: keyof OffsetSurvey;
+
+interface HeaderInterface {
+  text: string;
+  value: string;
 }
 </script>
 
