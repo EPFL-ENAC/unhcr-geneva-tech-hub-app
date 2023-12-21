@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.1.2...v1.2.0) (2023-12-21)
+
+
+### Features
+
+* **frontend:** add dynamic way of loading env variable via docker and locally [#324](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/324) ([f4ff3c6](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f4ff3c641558dab4c2d8301a333acc32f0d221c1))
+* **ghg:** add print capability [#591](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/591) [#592](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/592) ([d7e79e0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d7e79e03838f718955d62a23c9f69246a30a56e3))
+* **ghg:** move domestic solid waste from materials to wash ([d9361ea](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d9361ea03f3dec3329cf093a5c54dd9d0865bf41))
+* **ghg:** move domestic solid waste to WASH module [#587](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/587) ([8083821](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/80838211935a26830bf76d6868efe815e4f6ba6e))
+* **ghg:** rename domestic solid waste to WASH module for the Results [#587](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/587) ([e22ec86](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/e22ec860e9c7cb58df888db1486928de4fb8bc88))
+
+
+### Bug Fixes
+
+* **audit:** run audit fix on root package-lock.json ([7bcd3d8](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/7bcd3d8da110a3dadf19008dd968a3195644e238))
+* **ghg:** add limit per week and per day for number hours of diesel generator [#335](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/335) ([1511811](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/1511811d4896e2e383819859cf9838eedbe43f00))
+* **ghg:** change cooktstove images [#590](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/590) ([5f12991](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/5f129915725f80d86e4d25e08f0d9b6f802c00eb))
+* **ghg:** correct typescript error ([dc3b915](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/dc3b91518c4e907c90c6f208d7876109c04b747b))
+* **ghg:** set to 0 digits min and max for all numbers [#589](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/589) ([d47bcc3](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d47bcc3012a3f6bfccf59f5defd7d1a246fbac9b))
+* **sentry:** add exception for some errors and remove v-text ([3232932](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/323293263230cc0ca97869102b2e23d317ed5048))
+
 ## [1.1.2](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.1.1...v1.1.2) (2023-11-23)
 
 
