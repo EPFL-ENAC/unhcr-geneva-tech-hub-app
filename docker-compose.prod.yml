@@ -11,6 +11,9 @@ services:
   couchdb-setup:
     image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-couchdb-setup:main
     build: !reset null
+  data-setup:
+    image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-data-setup:main
+    build: !reset null
   s3_server:
     image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-s3_server:main
     build: !reset null
