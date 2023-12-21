@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.3.0...v1.3.1) (2023-12-21)
+
+
+### Bug Fixes
+
+* **release-please:** remove invalid changelog-types attributes ([de628f6](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/de628f6c7238624ee6ee7cf0b96d73a65d315c8a))
+
 ## [1.3.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.2.0...v1.3.0) (2023-12-21)
 
 
