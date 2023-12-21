@@ -22,11 +22,3 @@ jobs:
           # this is a built-in strategy in release-please, see "Action Inputs"
           # for more options
           release-type: node
-          changelog-types: >
-            [
-              {"type":"feat","section":"Features","hidden":false},
-              {"type":"fix","section":"Bug Fixes","hidden":false},
-              {"type":"docs","section":"Documentation","hidden":false},
-              {"type":"deps","section":"Dependencies","hidden":false},
-              {"type":"chore","section": "Repository maintenance","hidden":false}
-            ]
