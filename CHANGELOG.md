@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.4.1...v1.5.0) (2023-12-21)
+
+
+### Features
+
+* **Makefile:** add tag in environment for prod deployment ([ec3a7f5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/ec3a7f58752d657531b0f1201c3047571db4236f))
+
 ## [1.4.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.4.0...v1.4.1) (2023-12-21)
 
 
