@@ -1,24 +1,24 @@
 version: '3.9'
 services:
   frontend:
-    image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-frontend:main
+    image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-frontend:${IMAGE_VERSION:-latest}
     build: !reset null
     restart: always
   couchdb:
-    image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-couchdb:main
+    image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-couchdb:${IMAGE_VERSION:-latest}
     build: !reset null
     restart: always
   couchdb-setup:
-    image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-couchdb-setup:main
+    image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-couchdb-setup:${IMAGE_VERSION:-latest}
     build: !reset null
   data-setup:
-    image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-data-setup:main
+    image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-data-setup:${IMAGE_VERSION:-latest}
     build: !reset null
   s3_server:
-    image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-s3_server:main
+    image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-s3_server:${IMAGE_VERSION:-latest}
     build: !reset null
     restart: always
   rest-api:
-    image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-rest-api:main
+    image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-rest-api:${IMAGE_VERSION:-latest}
     build: !reset null
     restart: always
