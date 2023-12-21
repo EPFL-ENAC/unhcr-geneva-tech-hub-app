@@ -14,6 +14,12 @@ Currently under development, final release expected for end of March 2024.
 - We use husky for git hooks: https://typicode.github.io/husky/#/?id=install
 - We use standard version and commitlint for automatic release log and proper commit message
 
+## CI/CD
+- We use the following workflows
+  - release-please to trigger tags and changelogs also releases (on push to main)
+  - deploy-test that builds the images and push them to the ghcr registry then deploy them to unhcr-tss-test.epfl.ch for every push to the 'dev' branch
+  - deploy-prod that builds the images and push them to the ghcr registry then deploy them to unhcr-tss.epfl.ch for every 'release created by release-please'
+
 ### Prerequisites
 
 Prerequisites:
