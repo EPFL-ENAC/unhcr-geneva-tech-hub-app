@@ -1,16 +1,13 @@
----
-  # https://github.com/EPFL-ENAC/github-actions-runner#readme
-  name: deploy-prod
-  "on":
-    release:
-      types:
-        - published
-  env:
-    REGISTRY: ghcr.io
-    IMAGE_NAME: ${{ github.repository }}
-        
-  
-  jobs:
+"on":
+  release:
+    types:
+      - created
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+      
+
+jobs:
     build-and-push-image:
       runs-on: ubuntu-latest
       strategy:
