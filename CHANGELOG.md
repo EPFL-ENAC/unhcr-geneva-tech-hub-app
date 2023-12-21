@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.4.0...v1.4.1) (2023-12-21)
+
+
+### Bug Fixes
+
+* **data-setup:** correct alpine upgrade with package manager ([3e3c5b5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/3e3c5b5a826b73ebcad216bc00ccff515c15ae8d))
+
 ## [1.4.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.3.1...v1.4.0) (2023-12-21)
 
 
