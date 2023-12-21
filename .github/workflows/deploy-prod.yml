@@ -2,10 +2,9 @@
   # https://github.com/EPFL-ENAC/github-actions-runner#readme
   name: deploy-prod
   "on":
-    push:
-      branches:
-        - main
-  
+    release:
+      types:
+        - published
   env:
     REGISTRY: ghcr.io
     IMAGE_NAME: ${{ github.repository }}
@@ -60,7 +59,7 @@
             context: ${{ matrix.context }}
             push: true
             file: ${{ matrix.dockerfile }}
-            tags: ${{ steps.meta.outputs.tags }},${{ matrix.image }}:${{ github.sha }},${{ matrix.image }}:latest
+            tags: ${{ steps.meta.outputs.tags }},${{ matrix.image }}:${{ github.sha }},${{ matrix.image }}:latest,${{ matrix.image }}:${{ github.ref }}
             labels: ${{ steps.meta.outputs.labels }}
     
     deploy:
