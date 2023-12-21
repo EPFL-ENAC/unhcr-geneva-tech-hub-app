@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.3.1...v1.4.0) (2023-12-21)
+
+
+### Features
+
+* **data-setup:** add data-setup build in github action ([08d9660](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/08d9660a786dec2de8f244bb3f6ce6b8bd499c80))
+
 ## [1.3.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.3.0...v1.3.1) (2023-12-21)
 
 
