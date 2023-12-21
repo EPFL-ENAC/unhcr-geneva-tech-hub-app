@@ -56,7 +56,7 @@ jobs:
             context: ${{ matrix.context }}
             push: true
             file: ${{ matrix.dockerfile }}
-            tags: ${{ steps.meta.outputs.tags }},${{ matrix.image }}:${{ github.sha }},${{ matrix.image }}:latest,${{ matrix.image }}:${{ github.ref }}
+            tags: ${{ steps.meta.outputs.tags }},${{ matrix.image }}:${{ github.sha }},${{ matrix.image }}:latest,${{ matrix.image }}:${{ github.ref_name }}
             labels: ${{ steps.meta.outputs.labels }}
     
     deploy:
