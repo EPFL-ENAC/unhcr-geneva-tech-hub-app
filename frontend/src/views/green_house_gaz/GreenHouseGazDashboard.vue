@@ -2,7 +2,8 @@
   <main class="green-house-gaz__list" :style="computedGridTemplate">
     <v-sheet class="country-list overflow-y-auto">
       <v-container fluid>
-        <v-row>
+        <v-row class="align-center">
+          <v-col><h4>List of assessments</h4> </v-col>
           <v-col
             v-if="$can('admin')"
             class="country-list__actions d-flex justify-end align-center"
