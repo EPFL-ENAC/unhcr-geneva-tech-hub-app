@@ -59,7 +59,7 @@
               </v-col>
               <v-col :cols="6" class="d-flex flex-column justify-end">
                 <h3>
-                  Total CO2 Emissions:
+                  Total CO2 Emissions (for indicated population):
                   <span :title="endline.results.totalCO2Emission">
                     {{
                       endline.results.totalCO2Emission |
