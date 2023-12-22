@@ -94,6 +94,18 @@ export function computeDieselPowerAndUpdateKey(
   ): EnergyItem => {
     localInput[key] = valueOfKey as unknown as undefined;
 
+    if (key === "generatorSizekVA") {
+      let generatorSize = (valueOfKey as number) / 0.8;
+      // truncate the above value to two decimals points after zero
+      generatorSize = parseInt(generatorSize.toFixed(0));
+      localInput.generatorSize = generatorSize;
+    }
+    if (key === "generatorSize") {
+      let generatorSizekVA = (valueOfKey as number) * 0.8;
+      generatorSizekVA = parseInt(generatorSizekVA.toFixed(0));
+      localInput.generatorSizekVA = generatorSizekVA;
+    }
+
     if (key === "disableDieselLiters" && cookingMode) {
       // set default VALUE for fuelUsage here...
       // for cookstove
@@ -445,11 +457,30 @@ export function dieselInputsProducedPer(
       suffix: "kW",
       min: 0,
       style: {
-        cols: "12",
+        cols: "6",
       },
       type: "number",
       customEventInput: computeDieselPowerAndUpdateKey(
         "generatorSize",
+        computeLiters,
+        computePower,
+        cookingMode,
+        pp_per_hh
+      ),
+    },
+    {
+      value: "input.generatorSizekVA", // maybe like in DieselGeneratorWithoutLitres
+      conditional_function: showGeneratorOptionFunction,
+      text: "generator size (kVA)",
+      tooltipInfo: "read from nameplate",
+      suffix: "kVA",
+      min: 0,
+      style: {
+        cols: "6",
+      },
+      type: "number",
+      customEventInput: computeDieselPowerAndUpdateKey(
+        "generatorSizekVA",
         computeLiters,
         computePower,
         cookingMode,
