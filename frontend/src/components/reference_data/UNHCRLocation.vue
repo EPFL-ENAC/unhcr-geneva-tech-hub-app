@@ -32,12 +32,12 @@
           >
             <template #[`item.population`]="props">
               <span :title="props.item.population">{{
-                props.item.population | formatNumberGhg
+                props.item.population | formatNumberGhgRef
               }}</span>
             </template>
             <template #[`item.solar_peak_hours`]="props">
               <span :title="props.item.solar_peak_hours">{{
-                props.item.solar_peak_hours | formatNumberGhg
+                props.item.solar_peak_hours | formatNumberGhgRef
               }}</span>
             </template>
             <template #[`item.country_name`]="props">

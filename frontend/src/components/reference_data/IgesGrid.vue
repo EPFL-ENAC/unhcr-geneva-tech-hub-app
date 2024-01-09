@@ -31,7 +31,7 @@
           >
             <template #[`item.value`]="props">
               <span :title="props.item.value">{{
-                props.item.value | formatNumberGhg
+                props.item.value | formatNumberGhgRef
               }}</span>
             </template>
           </v-data-table>

@@ -27,7 +27,7 @@
           >
             <template #[`item.c`]="props">
               <span :title="props.item.c"
-                >{{ props.item.c | formatNumberGhg }}
+                >{{ props.item.c | formatNumberGhgRef }}
                 hrs/day
               </span>
             </template>
