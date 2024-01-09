@@ -67,7 +67,7 @@
                     </template>
                   </v-row>
                   <v-row v-if="localProject.year">
-                    <v-col> UNHCR site year: {{ localProject.year }} </v-col>
+                    <v-col> UNHCR data: {{ localProject.year }} </v-col>
                   </v-row>
                 </v-col>
 
