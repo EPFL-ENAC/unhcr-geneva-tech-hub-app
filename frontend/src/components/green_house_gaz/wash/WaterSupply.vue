@@ -110,36 +110,28 @@ export default class WaterSupply extends Vue {
         itemComputed.totalPower = computeTotalPower(localItemInput);
         return itemComputed;
       } else {
-        const washFactorL =
+        const emissionFactor =
           TR_TYP === DIESEL ? REF_EFF_DIES?.value : REF_EFF_PET?.value;
-        const washFactorKM =
+        const emissionFactorPerKm =
           TR_TYP === DIESEL ? REF_WSH_D?.value : REF_WSH_G?.value;
+
+        const defaultFuelEfficiency = emissionFactor / emissionFactorPerKm;
+
+        const fuelEfficiency =
+          (localItemInput?.fuelEfficiency as number) ?? defaultFuelEfficiency;
+
+        let totalFuel = fuelUsage;
         if (US_UNI === KM) {
-          if (!washFactorKM) {
-            throw new Error(`washFactorKM undefined`);
-          }
           itemComputed.TR_NUM = Math.ceil(volumeCollected / TR_VOL);
           /* roundtrip distance by multiplying by 2 */
           itemComputed.TR_DIST = itemComputed.TR_NUM * TOT_WS * 2;
 
-          itemComputed.totalCO2Emission =
-            washFactorKM * itemComputed.TR_DIST * 0.001; // 1/1000 (kg)
-
           // estimated
-          itemComputed.fuelUsage =
-            (itemComputed.TR_DIST * washFactorKM) / washFactorL;
+          itemComputed.fuelUsage = itemComputed.TR_DIST * fuelEfficiency;
+          totalFuel = itemComputed.fuelUsage;
         }
-
-        // --> washFactorKM * tr_dist === washFactorL * fuelUsage
-        // --> fuelUsage === (washFactorKM * tr_dist) / washFactorL
-
-        if (US_UNI === LITERS) {
-          if (!washFactorL) {
-            throw new Error(`washFactorL undefined`);
-          }
-          itemComputed.totalCO2Emission =
-            washFactorL * (fuelUsage ?? 0) * 0.001; // 1/1000 (kg)
-        }
+        itemComputed.totalCO2Emission =
+          emissionFactor * (totalFuel ?? 0) * 0.001; // 1/1000 (kg)
       }
 
       return itemComputed;
@@ -269,7 +261,11 @@ export default class WaterSupply extends Vue {
       },
       items: [KM, LITERS],
       hideFooterContent: true,
-      customEventInput: (truckId: string, localInput: SurveyInput) => {
+      customEventInput: (
+        truckUnit: string,
+        localInput: SurveyInput,
+        ghgMapRef: ItemReferencesMap
+      ) => {
         // does not work with reference ?
         // reset all values
         // localInput.fuelType = "CHC";
@@ -277,6 +273,17 @@ export default class WaterSupply extends Vue {
         delete localInput.TR_VOL;
         delete localInput.fuelUsage;
         // delete localInput.WACL;
+
+        const emissionFactor =
+          localInput.truckType === DIESEL
+            ? ghgMapRef.REF_EFF_DIES?.value
+            : ghgMapRef.REF_EFF_PET?.value;
+        const emissionFactorPerKm =
+          localInput.truckType === DIESEL
+            ? ghgMapRef.REF_WSH_D?.value
+            : ghgMapRef.REF_WSH_G?.value;
+
+        localInput.fuelEfficiency = emissionFactor / emissionFactorPerKm;
         return localInput;
       },
     },
@@ -315,6 +322,26 @@ export default class WaterSupply extends Vue {
       },
     },
     {
+      text: "Truck fuel effiency (L/100km)",
+      value: "input.fuelEfficiency",
+      style: {
+        cols: "12",
+      },
+      type: "number",
+      conditional_function: (input: SurveyInput) => {
+        return input.WASH_TYPE === "Trucking" && input.US_UNI === KM;
+      },
+      hideFooterContent: true,
+      suffix: "L/100km",
+      formatter: (v: number, { ...args }) => {
+        return formatNumberGhg(v, {
+          suffix: args.suffix,
+          minimumFractionDigits: 3,
+          maximumFractionDigits: 3,
+        });
+      },
+    },
+    {
       text: "Volume of one water truck (m³)",
       value: "input.TR_VOL",
       conditional_function: (input: SurveyInput) => {
@@ -333,6 +360,22 @@ export default class WaterSupply extends Vue {
       items: [DIESEL, PETROL],
       conditional_function: (input: SurveyInput) => {
         return input.WASH_TYPE === "Trucking";
+      },
+      customEventInput: (
+        truckType: string,
+        localInput: SurveyInput,
+        ghgMapRef: ItemReferencesMap
+      ) => {
+        const emissionFactor =
+          truckType === DIESEL
+            ? ghgMapRef.REF_EFF_DIES?.value
+            : ghgMapRef.REF_EFF_PET?.value;
+        const emissionFactorPerKm =
+          truckType === DIESEL
+            ? ghgMapRef.REF_WSH_D?.value
+            : ghgMapRef.REF_WSH_G?.value;
+
+        localInput.fuelEfficiency = emissionFactor / emissionFactorPerKm;
       },
     },
     {
