@@ -334,7 +334,10 @@ export function headers(
         }
         localInput.fuelType = fuelType;
 
-        localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
+        const defaultFuel = getDefaultFuel(localInput, pp_per_hh);
+        localInput.fuelUsage = defaultFuel;
+        localInput.hint = defaultFuel;
+        localInput.persistentHint = true;
 
         // for hybrid mix NO DEFAULT VALUE
         if (localInput.fuelType === "ELE_HYB") {
@@ -342,11 +345,11 @@ export function headers(
         }
         if (localInput.fuelType === "ELE_GRID") {
           localInput.fuelUsage = undefined;
-          localInput.gridPower = getDefaultFuel(localInput, pp_per_hh);
+          localInput.gridPower = defaultFuel;
         }
         if (localInput.fuelType === "ELE_SOLAR") {
           localInput.fuelUsage = undefined;
-          localInput.renewablePower = getDefaultFuel(localInput, pp_per_hh);
+          localInput.renewablePower = defaultFuel;
           localInput.solarInstalled =
             computeKWInstalledWithKwhPerYearPerCountry(
               localInput.renewablePower,
@@ -521,6 +524,8 @@ export function headers(
         cols: "12",
       },
       type: "number",
+      hint: "default", // find a way to do that!
+      persistentHint: true,
       disabledWithConditions: "disabledFuelUsage",
       disabledWithConditions_value: false,
       customEventInput: (
