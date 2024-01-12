@@ -94,7 +94,7 @@ export function computeDieselPowerAndUpdateKey(
   ): EnergyItem => {
     localInput[key] = valueOfKey as unknown as undefined;
 
-    const powerFactor = 0.8;
+    const powerFactor = ghgMapRef?.REF_POW_FAC?.value ?? 0.8;
     if (key === "generatorSizekVA") {
       let generatorSize = (valueOfKey as number) * powerFactor;
       // truncate the above value to two decimals points after zero
@@ -474,7 +474,7 @@ export function dieselInputsProducedPer(
       conditional_function: showGeneratorOptionFunction,
       text: "generator size (kVA)",
       tooltipInfo: "read from nameplate",
-      hint: "kVA * 0.8 (default factor) = kW",
+      hint: `kVA * (default power factor) = kW`,
       persistentHint: true,
       suffix: "kVA",
       min: 0,

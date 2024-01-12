@@ -47,3 +47,4 @@ REF_EFF_NAP_MAN,number,[wash],[waste],Emission Factor - Nappies (Diapers) - Mana
 REF_EFF_NAP_BUR,number,[wash],[waste],Emission Factor - Nappies (Diapers) - Open burning [kgCO2e/kg],0.270793333,https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf,null,44
 REF_WSH_D,number,[wash],[water-supply],Emission Factor - Diesel (up to 3.5 tonnes) [kg CO2e/km],0.23135,https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022,null,45
 REF_WSH_G,number,[wash],[water-supply],Emission Factor - Gasoline (up to 3.5 tonnes) [kg CO2e/km],0.21329,https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022,null,46
+REF_POW_FAC,number,"[energy,wash]","[facilities,cooking,lighting,water-supply]",Power factor - Diesel generator,0.8,https://www.globalpwr.com/power-calculator/,factor to convert kVA to kW,47
