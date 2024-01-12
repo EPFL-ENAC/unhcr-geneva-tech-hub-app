@@ -115,21 +115,25 @@ export default class WaterSupply extends Vue {
         const emissionFactorPerKm =
           TR_TYP === DIESEL ? REF_WSH_D?.value : REF_WSH_G?.value;
 
-        const defaultFuelEfficiency = emissionFactor / emissionFactorPerKm;
+        // to convert km / L to L / 100km we need to be divided by 100
+        const defaultFuelEfficiency =
+          100 / (emissionFactor / emissionFactorPerKm);
 
         const fuelEfficiency =
           (localItemInput?.fuelEfficiency as number) ?? defaultFuelEfficiency;
 
         let totalFuel = fuelUsage;
+
         if (US_UNI === KM) {
           itemComputed.TR_NUM = Math.ceil(volumeCollected / TR_VOL);
           /* roundtrip distance by multiplying by 2 */
           itemComputed.TR_DIST = itemComputed.TR_NUM * TOT_WS * 2;
 
           // estimated
-          itemComputed.fuelUsage = itemComputed.TR_DIST * fuelEfficiency;
+          itemComputed.fuelUsage = itemComputed.TR_DIST * fuelEfficiency * 0.01;
           totalFuel = itemComputed.fuelUsage;
         }
+
         itemComputed.totalCO2Emission =
           emissionFactor * (totalFuel ?? 0) * 0.001; // 1/1000 (kg)
       }
@@ -283,7 +287,8 @@ export default class WaterSupply extends Vue {
             ? ghgMapRef.REF_WSH_D?.value
             : ghgMapRef.REF_WSH_G?.value;
 
-        localInput.fuelEfficiency = emissionFactor / emissionFactorPerKm;
+        localInput.fuelEfficiency =
+          100 / (emissionFactor / emissionFactorPerKm);
         return localInput;
       },
     },
@@ -331,6 +336,8 @@ export default class WaterSupply extends Vue {
       conditional_function: (input: SurveyInput) => {
         return input.WASH_TYPE === "Trucking" && input.US_UNI === KM;
       },
+      hint: `default fuel efficiency: 12L/100km for diesel and 15L/100km for petrol`,
+      persisenteHint: true,
       hideFooterContent: true,
       suffix: "L/100km",
       formatter: (v: number, { ...args }) => {
@@ -375,7 +382,8 @@ export default class WaterSupply extends Vue {
             ? ghgMapRef.REF_WSH_D?.value
             : ghgMapRef.REF_WSH_G?.value;
 
-        localInput.fuelEfficiency = emissionFactor / emissionFactorPerKm;
+        localInput.fuelEfficiency =
+          100 / (emissionFactor / emissionFactorPerKm);
       },
     },
     {

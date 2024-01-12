@@ -94,15 +94,16 @@ export function computeDieselPowerAndUpdateKey(
   ): EnergyItem => {
     localInput[key] = valueOfKey as unknown as undefined;
 
+    const powerFactor = 0.8;
     if (key === "generatorSizekVA") {
-      let generatorSize = (valueOfKey as number) / 0.8;
+      let generatorSize = (valueOfKey as number) * powerFactor;
       // truncate the above value to two decimals points after zero
-      generatorSize = parseInt(generatorSize.toFixed(0));
+      generatorSize = parseFloat(generatorSize.toFixed(2));
       localInput.generatorSize = generatorSize;
     }
     if (key === "generatorSize") {
-      let generatorSizekVA = (valueOfKey as number) * 0.8;
-      generatorSizekVA = parseInt(generatorSizekVA.toFixed(0));
+      let generatorSizekVA = (valueOfKey as number) / powerFactor;
+      generatorSizekVA = parseFloat(generatorSizekVA.toFixed(2));
       localInput.generatorSizekVA = generatorSizekVA;
     }
 
@@ -473,6 +474,8 @@ export function dieselInputsProducedPer(
       conditional_function: showGeneratorOptionFunction,
       text: "generator size (kVA)",
       tooltipInfo: "read from nameplate",
+      hint: "kVA * 0.8 (default factor) = kW",
+      persistentHint: true,
       suffix: "kVA",
       min: 0,
       style: {

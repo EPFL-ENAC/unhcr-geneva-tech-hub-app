@@ -72,7 +72,7 @@ export const ensureSurveyTableHeaders = (item: any): SurveyTableHeader => {
 
 export const surveyTableHeaderCO2 = [
   {
-    text: "Total CO2 Emissions (for indicated population in gitCO2e/yr)",
+    text: "Total CO2 Emissions (for indicated population in tCO2e/yr)",
     value: "computed.totalCO2Emission",
     hideFooterContent: false,
     formatter: (v: number, { ...args }) => {
