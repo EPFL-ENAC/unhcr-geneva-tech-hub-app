@@ -12,7 +12,7 @@ import GhgCountryRegionMap from "@/assets/references/ghg_country_region_map.json
 import mixedBiowaste from "@/assets/references/ghg_ef_mixed_biowaste.json";
 import mixedNonBiowaste from "@/assets/references/ghg_ef_mixed_non_biowaste.json";
 import RefKeyName from "@/assets/references/ghg_ref_key_name.json";
-
+import {mdiDatabaseArrowRight} from "@mdi/js";
 import { numberOfDaysPerYear } from "@/components/green_house_gaz/energy/computeCO2cost";
 
 import { SelectOption, SelectValue } from "@/components/commons/FormItem";
@@ -57,7 +57,9 @@ export interface MaterialSolidWasteSurvey
 export const diffDimension: keyof MaterialSolidWasteItemInput =
   "percentageOfTotalCategories";
 
-export function resetSurveySolidWaste(localInput: MaterialSolidWasteItemInput): MaterialSolidWasteItemInput {
+export function resetSurveySolidWaste(
+  localInput: MaterialSolidWasteItemInput
+): MaterialSolidWasteItemInput {
   localInput.nonBiowasteSubCategories = undefined;
   return localInput;
 }
@@ -177,9 +179,27 @@ export function headers() {
       conditional: "biowaste",
       value: "input.nonBiowasteSubCategories",
       text: "Waste subcategories",
+      tooltipAttrs: {
+        "open-on-click": true,
+        "open-on-focus": false,
+        "open-on-hover": false,
+        "close-delay": 1000,
+      },
       tooltipInfoFn: function (value: string) {
         if (value === "Mixed / unknown composition") {
-          return "This option assumes a typical composition for non-biowaste for the country's region. Emission factors for this category can be found in the emissions factor database.";
+          return `This option assumes a typical composition for non-biowaste for the country's region.
+          <br/>Emission factors for this category can be found in the <a href="#reference-data">emissions factor database (<svg
+            version="1.1"
+            viewBox="0 0 26 26"
+            width="18"
+              height="18"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:svg="http://www.w3.org/2000/svg"
+          >
+                <path style="fill: grey;"
+                d="${mdiDatabaseArrowRight}"
+              />
+          </svg>).</a>`;
         }
         return undefined;
       },
