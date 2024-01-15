@@ -26,7 +26,7 @@ export const electricFuelsWithoutNone = [
   "ELE_SOLAR",
   "ELE_HYB",
 ] as const;
-export type ElectricFuel = typeof electricFuels[number];
+export type ElectricFuel = (typeof electricFuels)[number];
 export const electricFuelWithText: IdTextTypesItem<ElectricFuel>[] = [
   { _id: "ELE_DIES", text: "Diesel generators" },
   { _id: "ELE_GRID", text: "National Grid" },
@@ -38,9 +38,9 @@ export const electricFuelWithText: IdTextTypesItem<ElectricFuel>[] = [
 
 // biomass fuels
 export const biomassFuels = ["FWD", "CHC", "BRQ", "PLTS"] as const;
-export type BioMassFuel = typeof biomassFuels[number];
+export type BioMassFuel = (typeof biomassFuels)[number];
 export const biomassFuelsForGasifier = ["FWD", "BRQ", "PLTS"] as const;
-export type BioMassFuelWithoutCHC = typeof biomassFuelsForGasifier[number];
+export type BioMassFuelWithoutCHC = (typeof biomassFuelsForGasifier)[number];
 export const biomassFuelWithText: IdTextTypesItem<BioMassFuel>[] = [
   { _id: "FWD", text: "Wood", default: 0.44 }, // 2.14kg/capita/day -1.7 kg/cap/day =0.44 kg/capita/day
   { _id: "CHC", text: "Charcoal" },
@@ -51,7 +51,7 @@ export const biomassFuelWithText: IdTextTypesItem<BioMassFuel>[] = [
 
 // liquid fuels
 export const liquidFuels = ["ETH", "PET", "DIES", "KRS"] as const;
-export type LiquidFuel = typeof liquidFuels[number];
+export type LiquidFuel = (typeof liquidFuels)[number];
 export const liquidFuelWithText: IdTextTypesItem<LiquidFuel>[] = [
   { _id: "ETH", text: "Ethanol/alcohol" },
   { _id: "PET", text: "Petrol / Gas", default: 0.0351 }, // same as wash
@@ -62,7 +62,7 @@ export const liquidFuelWithText: IdTextTypesItem<LiquidFuel>[] = [
 
 // gasFuels fuels
 export const gasFuels = ["LPG", "BGS", "PNG"] as const;
-export type GasFuel = typeof gasFuels[number];
+export type GasFuel = (typeof gasFuels)[number];
 export const gasFuelWithText: IdTextTypesItem<GasFuel>[] = [
   { _id: "LPG", text: "LPG" },
   { _id: "BGS", text: "BIOGAS" },
@@ -72,9 +72,13 @@ export const gasFuelWithText: IdTextTypesItem<GasFuel>[] = [
 
 // thermal fuels
 export const thermalFuels = ["THE"] as const;
-export type ThermalFuel = typeof thermalFuels[number];
+export type ThermalFuel = (typeof thermalFuels)[number];
 export const thermalFuelWithText: IdTextTypesItem<ThermalFuel>[] = [
-  { _id: "THE", text: "Solar thermal", description: "Solar thermal cooker cannot be used" },
+  {
+    _id: "THE",
+    text: "Solar thermal",
+    description: "Solar thermal cooker cannot be used",
+  },
 ];
 // end of thermal fuels
 
@@ -91,7 +95,7 @@ export const lightingFuels = [
   "ELE_SOLAR",
   "ELE_HYB",
 ] as const;
-export type LightingFuel = typeof lightingFuels[number];
+export type LightingFuel = (typeof lightingFuels)[number];
 export const lightingFuelsWithText: IdTextTypesItem<LightingFuel>[] = [
   { _id: "CNDL", text: "Candle (paraffin)", default: 0.0053 },
   {
@@ -125,7 +129,7 @@ export const lightingFuelsWithText: IdTextTypesItem<LightingFuel>[] = [
 
 // no access
 export const noAccessFuels = ["NO_ACCESS"] as const;
-export type NoAccessFuel = typeof noAccessFuels[number];
+export type NoAccessFuel = (typeof noAccessFuels)[number];
 export const noAcessWithText: IdTextTypesItem<NoAccessFuel>[] = [
   { _id: "NO_ACCESS", text: "Without any access" }, /// anciently No access
 ];
@@ -138,7 +142,7 @@ export const electricDevices = [
   singleUseBatteryDevice,
   plugInOrChargeBatteryDevice,
 ] as const;
-export type ElectricDevices = typeof electricDevices[number];
+export type ElectricDevices = (typeof electricDevices)[number];
 export const electricDevicesWithText: IdTextTypesItem<ElectricDevices>[] = [
   { _id: "SOLAR_LANTERN", text: "Solar lantern", default: 0.3 },
   {

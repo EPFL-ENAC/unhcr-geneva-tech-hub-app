@@ -55,6 +55,7 @@ import {
 } from "@/components/green_house_gaz/energy/thermalInputs";
 import {
   ensureSurveyTableHeaders,
+  SurveyTableHeader,
   surveyTableHeaderCO2,
   surveyTableHeaderIncrements,
 } from "@/components/green_house_gaz/generic/surveyTableHeader";
@@ -219,7 +220,7 @@ export function headers(
         localItem: EnergyCookingItem
       ) => {
         let appIcon;
-        const appliance  = localItem.input.appliance;
+        const appliance = localItem.input.appliance;
         switch (appliance) {
           case COOK_APP_Pressure:
             appIcon = "$mdiPotOutline";
@@ -524,8 +525,15 @@ export function headers(
         cols: "12",
       },
       type: "number",
-      hint: "default", // find a way to do that!
       persistentHint: true,
+      hintFn: (options: {
+        localInput: EnergyCookingItemInput;
+        surveyItemHeader: SurveyTableHeader;
+        intervention: boolean;
+      }): string | undefined => {
+        // warning since it's a percentage we return 1; because it means 100%
+        return `default: ${getDefaultFuel(options?.localInput, pp_per_hh)}`;
+      },
       disabledWithConditions: "disabledFuelUsage",
       disabledWithConditions_value: false,
       customEventInput: (

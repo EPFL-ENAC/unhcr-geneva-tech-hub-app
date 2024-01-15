@@ -261,4 +261,12 @@ export interface EasySurveyTableHeader {
   hideFooterContent: boolean; // default to true only for table
   hideInput: boolean; // default to false only for surveyItemDialog
   computeResults: boolean; // false,
+
+  hint: string | undefined;
+  hintFn?: (options: {
+    localInput: SurveyInput;
+    surveyItem: SurveyTableHeader;
+    intervention: boolean;
+  }) => string;
+  hintPersistent: boolean | undefined;
 }

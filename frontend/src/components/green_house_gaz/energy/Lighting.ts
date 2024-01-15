@@ -343,6 +343,15 @@ export function commonElectricSolarDevicesHeaders() {
       },
       value: "input.electricPower",
       suffix: "W",
+      hintFn: (options: {
+        localInput: EnergyLightingItemInput;
+        surveyItemHeader: SurveyTableHeader;
+        intervention: boolean;
+      }): string | undefined => {
+        const defaultPower = getDefaultPower(options?.localInput);
+        // warning since it's a percentage we return 1; because it means 100%
+        return `default: ${defaultPower}`;
+      },
       hideFooterContent: true,
       conditional_function: conditionalFunctionElectricSolarDevices,
     },
@@ -523,6 +532,42 @@ export function conditionalFunctionElectricHybDevices(itemInput: SurveyInput) {
     return true;
   }
   return false;
+}
+
+export function getDefaultFuel(
+  localInput: EnergyLightingItemInput,
+  pp_per_hh: number | undefined
+): number {
+  if (pp_per_hh === undefined) {
+    // should be defined, so no error
+    return 0;
+  }
+
+  const currentFuelType = localInput?.fuelType ?? "NO_ACCESS";
+  const currentDefault =
+    AllLightingFuelsWithTextById?.[currentFuelType]?.default ?? 0;
+  return currentDefault * pp_per_hh;
+}
+
+export function getDefaultPower(localInput: EnergyLightingItemInput): number {
+  const currentEnergySubType = localInput.energySubType;
+  const currentEnergyType = localInput.energyType;
+  let defaultElectricPower = 0;
+  if (currentEnergyType == electricFuelsEnergyType) {
+    if (currentEnergySubType !== solarLanternDevice) {
+      if (localInput.deviceType !== undefined) {
+        defaultElectricPower =
+          AllDevicesWithTextById[localInput.deviceType]?.default ?? 0;
+      }
+    } else {
+      if (currentEnergySubType !== undefined) {
+        defaultElectricPower =
+          AllDevicesWithTextById[currentEnergySubType]?.default ?? 0;
+      }
+    }
+  }
+
+  return defaultElectricPower;
 }
 
 export function hybridLightingElectricHeaders() {
@@ -827,9 +872,8 @@ export function headers(
         if (fuelType === "FWD") {
           localInput.dryWood = true;
         }
-        const defaultValue =
-          AllLightingFuelsWithTextById?.[fuelType as AllFuel]?.default ?? 0;
-        localInput.fuelUsage = defaultValue * pp_per_hh;
+        localInput.fuelType = fuelType;
+        localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
         return localInput;
       },
       type: "select",
@@ -922,6 +966,15 @@ export function headers(
       },
       style: {
         cols: "12",
+      },
+      persistentHint: true,
+      hintFn: (options: {
+        localInput: EnergyLightingItemInput;
+        surveyItemHeader: SurveyTableHeader;
+        intervention: boolean;
+      }): string | undefined => {
+        // warning since it's a percentage we return 1; because it means 100%
+        return `default: ${getDefaultFuel(options?.localInput, pp_per_hh)}`;
       },
       type: "number",
       disabledWithConditions: "disabledFuelUsage",

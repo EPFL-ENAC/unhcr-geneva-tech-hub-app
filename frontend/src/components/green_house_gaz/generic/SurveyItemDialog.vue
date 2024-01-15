@@ -390,6 +390,13 @@ export default class SurveyItemDialog extends Vue {
           intervention: this.intervention,
         });
       }
+      if (typeof header.hintFn == "function") {
+        header.hint = header.hintFn({
+          localInput: this.localItem?.input ?? {},
+          surveyItem: header,
+          intervention: this.intervention,
+        });
+      }
       return header;
     });
   }
