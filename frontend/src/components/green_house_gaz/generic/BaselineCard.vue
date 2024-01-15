@@ -48,7 +48,7 @@
             <v-row>
               <v-col class="d-flex justify-end mx-2 mb-2">
                 <h3>
-                  Total CO2 Emissions:
+                  Total CO2 Emissions (for indicated population):
                   {{
                     baseline.results.totalCO2Emission |
                       formatNumberGhg({

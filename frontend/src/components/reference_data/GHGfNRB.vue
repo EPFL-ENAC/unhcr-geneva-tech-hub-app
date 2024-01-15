@@ -26,7 +26,7 @@
               <span :title="props.item.value"
                 >{{
                   props.item.value |
-                    formatNumberGhg({
+                    formatNumberGhgRef({
                       style: "percent",
                     })
                 }}

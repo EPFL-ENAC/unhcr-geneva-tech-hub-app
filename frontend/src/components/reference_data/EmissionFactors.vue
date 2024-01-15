@@ -21,7 +21,7 @@
       <v-data-table :headers="headers" :items="filteredItems" dense>
         <template #[`item.value`]="props">
           <span :title="props.item._id">{{
-            props.item.value | formatNumberGhg
+            props.item.value | formatNumberGhgRef
           }}</span>
         </template>
         <template #[`item.source`]="props">

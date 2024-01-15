@@ -740,5 +740,24 @@
     "source": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022",
     "ref": null,
     "index": 47
+  },
+  {
+    "_id": "REF_POW_FAC",
+    "type": "number",
+    "category": [
+      "energy",
+      "wash"
+    ],
+    "subcat": [
+      "facilities",
+      "cooking",
+      "lighting",
+      "water-supply"
+    ],
+    "description": "Power factor - Diesel generator",
+    "value": 0.8,
+    "source": "https://www.globalpwr.com/power-calculator/",
+    "ref": "factor to convert kVA to kW",
+    "index": 48
   }
 ]

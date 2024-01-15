@@ -94,6 +94,19 @@ export function computeDieselPowerAndUpdateKey(
   ): EnergyItem => {
     localInput[key] = valueOfKey as unknown as undefined;
 
+    const powerFactor = ghgMapRef?.REF_POW_FAC?.value ?? 0.8;
+    if (key === "generatorSizekVA") {
+      let generatorSize = (valueOfKey as number) * powerFactor;
+      // truncate the above value to two decimals points after zero
+      generatorSize = parseFloat(generatorSize.toFixed(2));
+      localInput.generatorSize = generatorSize;
+    }
+    if (key === "generatorSize") {
+      let generatorSizekVA = (valueOfKey as number) / powerFactor;
+      generatorSizekVA = parseFloat(generatorSizekVA.toFixed(2));
+      localInput.generatorSizekVA = generatorSizekVA;
+    }
+
     if (key === "disableDieselLiters" && cookingMode) {
       // set default VALUE for fuelUsage here...
       // for cookstove
@@ -445,11 +458,32 @@ export function dieselInputsProducedPer(
       suffix: "kW",
       min: 0,
       style: {
-        cols: "12",
+        cols: "6",
       },
       type: "number",
       customEventInput: computeDieselPowerAndUpdateKey(
         "generatorSize",
+        computeLiters,
+        computePower,
+        cookingMode,
+        pp_per_hh
+      ),
+    },
+    {
+      value: "input.generatorSizekVA", // maybe like in DieselGeneratorWithoutLitres
+      conditional_function: showGeneratorOptionFunction,
+      text: "generator size (kVA)",
+      tooltipInfo: "read from nameplate",
+      hint: `kVA * (default power factor) = kW`,
+      persistentHint: true,
+      suffix: "kVA",
+      min: 0,
+      style: {
+        cols: "6",
+      },
+      type: "number",
+      customEventInput: computeDieselPowerAndUpdateKey(
+        "generatorSizekVA",
         computeLiters,
         computePower,
         cookingMode,
@@ -472,6 +506,7 @@ export function dieselInputsProducedPer(
       style: {
         cols: "12",
       },
+      hint: "default: 60%",
       type: "number",
       subtype: "percent",
       customEventInput: computeDieselPowerAndUpdateKey(

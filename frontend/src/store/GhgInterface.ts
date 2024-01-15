@@ -252,7 +252,8 @@ export interface DieselItem {
   fuelUsage?: number; // L/day
   disableDieselLiters?: boolean;
   disabledFuelUsage?: boolean;
-  generatorSize?: number; // replace the diesel liter
+  generatorSize?: number; // kW
+  generatorSizekVA?: number; // kVA = 0.8 * kW
   operatingHours?: number; // replace the diesel liter
   generatorLoad?: number; // load of generator (should be default to 60%)
   dieselPowerEstimated?: boolean;

@@ -4,6 +4,7 @@ export default {
   install(Vue: VueConstructor): void {
     Vue.filter("formatNumber", formatNumber);
     Vue.filter("formatNumberGhg", formatNumberGhg);
+    Vue.filter("formatNumberGhgRef", formatNumberGhgRef);
 
     const defaultFormatDate: Intl.DateTimeFormatOptions = {
       dateStyle: "short",
@@ -31,6 +32,11 @@ const defaultOptions: ExtendedFormatOptions = {
 const defaultGhgOptions: ExtendedFormatOptions = {
   maximumFractionDigits: 0,
   minimumFractionDigits: 0, // to remove an deplace to ghg default Options
+};
+
+const defaultGhgRefOptions: ExtendedFormatOptions = {
+  maximumFractionDigits: 2,
+  minimumFractionDigits: 2, // to remove an deplace to ghg default Options
 };
 // how to use
 // formatNumber(0.43433333345)
@@ -60,6 +66,17 @@ export function formatNumberGhg(
   { ...options } = defaultGhgOptions
 ): string {
   return formatNumber(n, { ...defaultGhgOptions, ...options }, "en-mathmono");
+}
+
+export function formatNumberGhgRef(
+  n: number,
+  { ...options } = defaultGhgRefOptions
+): string {
+  return formatNumber(
+    n,
+    { ...defaultGhgRefOptions, ...options },
+    "en-mathmono"
+  );
 }
 
 export interface ExtendedFormatOptions extends Intl.NumberFormatOptions {

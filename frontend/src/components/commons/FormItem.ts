@@ -32,6 +32,9 @@ interface AbstractFormItem<K> {
   optional?: boolean;
   readonly?: boolean;
   disabled?: boolean;
+  messages?: string[];
+  hint?: string;
+  persistentHint?: boolean;
 }
 
 interface TextFormItem<K> extends AbstractFormItem<K> {

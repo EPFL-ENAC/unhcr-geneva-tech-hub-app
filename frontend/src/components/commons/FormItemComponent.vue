@@ -8,6 +8,9 @@
       :rules="actualRules"
       :readonly="readonly"
       :disabled="disabled"
+      :messages="messages"
+      :hint="hint"
+      :persistent-hint="persistentHint"
       @change="$emit('change', $event)"
     >
       <template #label>
@@ -27,6 +30,8 @@
       :required="!optional"
       :placeholder="placeholder"
       :messages="messages"
+      :hint="hint"
+      :persistent-hint="persistentHint"
       :suffix="suffix"
       :rules="actualRules"
       :readonly="readonly"
@@ -234,6 +239,10 @@ export default class FormItemComponent extends Vue {
   readonly suffix: string | undefined;
   @Prop({ type: Array as () => string[] })
   readonly messages: string[] | undefined;
+  @Prop(String)
+  readonly hint: string | undefined;
+  @Prop(Boolean)
+  readonly persistentHint: boolean | undefined;
   @Prop(Number)
   readonly min: number | undefined;
   @Prop(Number)

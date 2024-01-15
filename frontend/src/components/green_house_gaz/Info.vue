@@ -67,7 +67,7 @@
                     </template>
                   </v-row>
                   <v-row v-if="localProject.year">
-                    <v-col> UNHCR site year: {{ localProject.year }} </v-col>
+                    <v-col> UNHCR data: {{ localProject.year }} </v-col>
                   </v-row>
                 </v-col>
 
@@ -95,7 +95,7 @@ import CountrySelect from "@/components/commons/CountrySelect.vue";
 import { FormItem } from "@/components/commons/FormItem";
 import FormItemComponent from "@/components/commons/FormItemComponent.vue";
 import TerritoryMap from "@/components/commons/TerritoryMap.vue";
-import { formatNumberGhg } from "@/plugins/filters";
+import { formatNumberGhgRef } from "@/plugins/filters";
 import { GHGfNRB } from "@/store/GHGReferencefNRB";
 
 import ComputeGenericFormSurveyMixin from "@/components/green_house_gaz/generic/ComputeGenericFormSurveyMixin.vue";
@@ -175,12 +175,10 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
       countryCode: { required }, //string;
       latitude: { required }, //number;
       longitude: { required }, //number;
-      // surveys: { required }, //Survey[];
       solar: {}, //number;
       population: { required }, //number; // total population
       pp_per_hh: { required }, //number; // ave people per hhtotalHH
       totalHH: { required }, //number;
-      // what about surveys ?? HEELL
     },
   };
 
@@ -240,18 +238,21 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
   }
 
   get defaultSolarPeak(): string {
-    // find out if existing site or not ang et site solar here!
     const key = this.localProject?.countryCode ?? "default";
     if (this.existingLocation) {
-      return (
-        formatNumberGhg(this.existingLocation.solar_peak_hours) + " site data"
-      );
+      return `${formatNumberGhgRef(this.existingLocation.solar_peak_hours, {
+        suffix: "h",
+      })} (from ${this.existingLocation?.year} site data)`;
     }
     const countrySolar = this.GhgReferenceSolarMap[key]?.c;
     const defaultSolar = this.GhgReferenceSolarMap?.default?.c;
-    // "default value" "average per country" "site data peak hours"
-    const suffix = countrySolar ? "average per country" : "default value";
-    return formatNumberGhg(countrySolar ?? defaultSolar) + ` ${suffix}`;
+    const suffix = countrySolar
+      ? "(from country average)"
+      : "(from default value)";
+    return (
+      formatNumberGhgRef(countrySolar ?? defaultSolar, { suffix: "h" }) +
+      ` ${suffix}`
+    );
   }
 
   get generalItems(): (FormItem & {
@@ -277,6 +278,12 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
         key: "latitude",
         label: "Latitude of the site",
         unit: "Decimal Degrees",
+        hint: "Please use the map to select the location",
+        messages: [
+          this.existingLocation?.latitude
+            ? `default: ${this.existingLocation?.latitude}`
+            : "",
+        ],
         min: -90,
         max: 90,
       },
@@ -286,6 +293,12 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
         key: "longitude",
         label: "Longitude of the site",
         unit: "Decimal Degrees",
+        hint: "Please use the map to select the location",
+        messages: [
+          this.existingLocation?.longitude
+            ? `default: ${this.existingLocation?.longitude}`
+            : "",
+        ],
         min: -180,
         max: 180,
       },
@@ -299,7 +312,10 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
         key: "population",
         label: "Total population",
         min: 0,
-
+        persistentHint: true,
+        hint: this.existingLocation?.year
+          ? `original population (${this.existingLocation?.year}): ${this.existingLocation?.population}`
+          : "",
         customEventInput: (population: number, localInput: GreenHouseGaz) => {
           localInput.population = population;
           localInput.totalHH = parseInt(
@@ -335,6 +351,10 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
 To extract solar hours for a specific location please refer to the <a target="_blank" href="${ghg.link}">${ghg.linkName}</a>.`,
         optional: true,
         placeholder: solarPeakPlaceholder,
+        hint: solarPeakPlaceholder,
+        persistentHint: true,
+        max: 8,
+        min: 2,
       },
       {
         type: "number",
@@ -363,8 +383,6 @@ To extract solar hours for a specific location please refer to the <a target="_b
   public async submitForm(value: GreenHouseGaz): Promise<void> {
     if (value.siteName !== "") {
       this.saveInProgress = true;
-      // do nothing right now
-      value = this.updateSurveyForm(value);
       try {
         await this.updateDoc(value);
       } finally {
@@ -378,8 +396,7 @@ To extract solar hours for a specific location please refer to the <a target="_b
 
   public updateSurveyValues(): void {
     if (this.surveyIndex !== undefined) {
-      // const currentSurvey: Survey = this.localProject.surveys[this.surveyIndex];
-      const currentSurvey: GreenHouseGaz = this.localProject; //.surveys[this.surveyIndex];
+      const currentSurvey: GreenHouseGaz = this.localProject;
       currentSurvey.updated_at = new Date().toISOString();
       currentSurvey.updated_by = this.$user().name ?? "user with no name";
       this.localProject = Object.assign({}, currentSurvey);
@@ -389,17 +406,12 @@ To extract solar hours for a specific location please refer to the <a target="_b
     }
   }
 
-  public updateLatitude(lat: number): void {
-    // instead of updating the latitude of the project,
-    // we update the latitude for the map only
-    // and we hint for the new latitude in the form
+  public updateLatitude(): void {
     this.$set(this.localProject, "latitude", undefined);
-    // this.$set(this.localProject, "latitude", parseFloat(lat.toFixed(3)));
   }
 
-  public updateLongitude(lon: number): void {
+  public updateLongitude(): void {
     this.$set(this.localProject, "longitude", undefined);
-    // this.$set(this.localProject, "longitude", parseFloat(lon.toFixed(3)));
   }
 
   public updateLatLng(latLng: number[]): void {
@@ -414,7 +426,6 @@ To extract solar hours for a specific location please refer to the <a target="_b
   }
 
   public syncLocalShelter(): void {
-    // init function
     this.setLocalShelter(this.project);
 
     this.$store.subscribe((mutation) => {
@@ -423,42 +434,6 @@ To extract solar hours for a specific location please refer to the <a target="_b
         this.setLocalShelter(mutation.payload);
       }
     });
-  }
-
-  public updateSurveyForm(value: GreenHouseGaz): GreenHouseGaz {
-    // TODO: we need to update the survey form computed on each update for every module
-    // it's not implemented. It's a bug. It was not envisioned in the first place as
-    // a possibility. We need to update the survey form for each module
-    // The following code is a POC for the cooking module
-    // TODO: it's working but it seems some variable are not always called
-    //  need to find out why
-    // if (surveyIndex !== undefined) {
-    // localProject.surveys[surveyIndex].energy.cooking
-    // const currentSurvey = value.surveys[surveyIndex];
-    // if (currentSurvey.energy?.cooking) {
-    //   currentSurvey.energy.cooking = this.updateGenericFormSurvey(
-    //     currentSurvey.energy.cooking,
-    //     cookingDiffDimension as string,
-    //     cookingHeaders(
-    //       value.countryCode as CountryIrradianceKeys,
-    //       value.solar,
-    //       value.pp_per_hh
-    //     ),
-    //     cookingGenerateComputeItem(
-    //       value.countryCode,
-    //       value.totalHH,
-    //       this.items, // being GHGReferencefNRB
-    //       this.project_REF_GRD
-    //     ) as unknown as (
-    //       localItemInput: SurveyInput,
-    //       ghgMapRef: ItemReferencesMap
-    //     ) => SurveyResult,
-    //     this.ghgMapRef
-    //   );
-    // }
-    // value.surveys[surveyIndex] = currentSurvey;
-    // }
-    return value;
   }
 
   // hack to force revalidate on open

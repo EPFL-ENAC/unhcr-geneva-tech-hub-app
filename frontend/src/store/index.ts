@@ -1,4 +1,6 @@
+import { env } from "@/config";
 import { themeColor } from "@/plugins/vuetify";
+import router from "@/router/index";
 import ConfigModule from "@/store/ConfigModule";
 import EnergyModule from "@/store/EnergyModule";
 import GhgModule from "@/store/GhgModule";
@@ -24,7 +26,6 @@ import Vuex, {
   StoreOptions,
 } from "vuex";
 import VuexPersistence from "vuex-persist";
-import { env } from "@/config";
 
 // import createPersistedState from 'vuex-persist-indexeddb';
 
@@ -163,7 +164,18 @@ const mutations: MutationTree<RootState> = {
    * @param error - Payload
    */
   storeReferenceDataDrawer(s, value: boolean) {
+    let changed = false;
+    if (value !== s.referenceDataDrawer) {
+      changed = true;
+    }
     s.referenceDataDrawer = value;
+    const hash = value ? "reference-data" : "";
+    if (router.currentRoute?.hash !== `#${hash}` && changed) {
+      router.push({
+        query: router.currentRoute?.query,
+        hash,
+      });
+    }
   },
   storeOverviewDataDrawer(s, value: boolean) {
     s.overviewDataDrawer = value;

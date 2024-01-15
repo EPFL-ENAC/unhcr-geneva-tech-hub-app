@@ -185,8 +185,10 @@ export function poweredByInputs(
         value: "input.gridPower", // maybe use like in DieselGeneratorWithoutLitres
         computeResults: true,
         // text: "Total kWh used per yr for instance",
-        tooltipInfo:
-          "The grid emission factor database (IGES) does not have values for all the countries, so an average for countries hosting refugees is used. The default grid emission factor is an average of all IGES 2022 emission factors for countries hosting refugees.",
+        tooltipInfo: `The grid emission factor database (IGES) does not have values for all the countries,
+          so an average for countries hosting refugees is used.
+          The default grid emission factor is an average of all IGES 2022 emission factors
+          for countries hosting refugees.`,
         text: getGridPowerText(),
         suffix,
         style: {

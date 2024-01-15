@@ -288,6 +288,7 @@ import { env } from "@/config";
       refreshToken: "refreshToken",
     }),
     ...mapActions([
+      "setReferenceDataDrawer",
       "toggleReferenceData",
       "toggleOverviewData",
       "toggleNotificationCenter",
@@ -308,6 +309,7 @@ export default class App extends Vue {
   overviewDataDrawer!: boolean;
   notificationDialog!: boolean;
   toggleReferenceData!: () => AxiosPromise;
+  setReferenceDataDrawer!: (value: boolean) => AxiosPromise;
   toggleNotificationCenter!: () => void;
   setHelper!: () => void;
 
@@ -534,6 +536,9 @@ export default class App extends Vue {
     this.rootRoute = newRoute.matched[0];
     this.rootRouteTitle = this.rootRoute?.meta?.title ?? "Unknown title";
     this.currentRouteName = newRoute.name ?? "Unknown Route name";
+    if (newRoute.hash.includes("reference-data")) {
+      this.setReferenceDataDrawer(true);
+    }
     /** When route change, hide snackbar */
     this.snackbar = false;
   }
