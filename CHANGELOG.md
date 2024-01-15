@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.5.0...v1.6.0) (2024-01-15)
+
+
+### Features
+
+* **ghg:** add default subtext for cookies ([cc8f3da](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/cc8f3da4f6120c7a19cea236c6e00b755504e8d3))
+* **ghg:** add default value for cooking and lighting [#468](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/468) ([eff9964](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/eff996492cd8431f44901bccf7859310d71bead8))
+* **ghg:** add fuel efficiency ([66d5be7](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/66d5be7d03044757e71c4fdbd9b962a22fed1de9))
+* **ghg:** add kVA and kW automatic conversion #[#585](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/585) ([c081686](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c0816863b3b00225a40e074fae782b36f7a09ff0))
+* **ghg:** add REF_POW_FAC to the list of reference ([6055694](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/60556945d92134ee1ad1fa6722a0700ed23ab59e))
+* **ghg:** add toggle reference to be persistent in route hash [#578](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/578) ([80a866a](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/80a866a23223da43f75f55e9c1df1d14e25b1303))
+* **ghg:** remove dead code and add default value for info ([09b3f92](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/09b3f921ab855d49a8e735596a3d3e54572f618a))
+* **ghg:** replace  UNHCR site year by UNHCR data ([b03de61](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/b03de61ca9e07bace2b3964b5a989607f81e5d4e))
+* **ghg:** update solad and unhcr_location ([f838e6f](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f838e6fb6e252cca5d4c49106c34dde90d2ae9a8))
+
+
+### Bug Fixes
+
+* **azure:** update azure public keys ([9a7b23b](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/9a7b23b617ac478c8e719337a7b60e312af0b59b))
+* **ghg:** add (for indicated population) next to Total CO2 Emissions [#588](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/588) ([39db644](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/39db6449c34f38ad41dc9dc68f0cb5daddf4d6dc))
+* **ghg:** add default for diesel and water-supply [#468](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/468) ([e56163b](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/e56163b9ae577f0c5d1b881305b41a301a49c161))
+* **ghg:** add List of assessments text [#586](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/586) ([5b98543](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/5b98543c0a11d1c43502b223bed612c26ca0efab))
+* **ghg:** correct efficiency [#579](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/579) ([dfda6c5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/dfda6c568d076edf9267f42225a167953b2e4f80))
+* **ghg:** correct number floating formating for references ([17dc89b](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/17dc89b1769d35ec5ac0d6d332ea9169f1e2fb9d))
+
 ## [1.5.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.4.1...v1.5.0) (2023-12-21)
 
 
