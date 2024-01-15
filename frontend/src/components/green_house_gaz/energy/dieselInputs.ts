@@ -506,6 +506,7 @@ export function dieselInputsProducedPer(
       style: {
         cols: "12",
       },
+      hint: "default: 60%",
       type: "number",
       subtype: "percent",
       customEventInput: computeDieselPowerAndUpdateKey(
