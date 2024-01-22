@@ -473,8 +473,15 @@ export function dieselInputsProducedPer(
       value: "input.generatorSizekVA", // maybe like in DieselGeneratorWithoutLitres
       conditional_function: showGeneratorOptionFunction,
       text: "generator size (kVA)",
-      tooltipInfo: "read from nameplate",
-      hint: `kVA * (default power factor) = kW`,
+      tooltipAttrs: {
+        "open-on-click": true,
+        "open-on-focus": false,
+        "open-on-hover": false,
+        "close-delay": 1000,
+      },
+      tooltipInfo:
+        "kVA * Default Power Factor = kW \n Default Power Factor found in <a href='#reference-data'>databases for diesel generators</a>",
+      hint: `kVA * Default Power Factor = kW \n Default Power Factor found in databases for diesel generators`,
       persistentHint: true,
       suffix: "kVA",
       min: 0,
