@@ -26,9 +26,23 @@
         </template>
         <template #[`item.source`]="props">
           <span v-if="props.item.source">
-            <a :href="props.item.source" target="_blank">{{
-              props.item.source
-            }}</a>
+            <template
+              v-if="
+                typeof props.item.source === 'object' &&
+                props.item.source.length
+              "
+            >
+              <ul>
+                <ol v-for="(source, $key) in props.item.source" :key="$key">
+                  <a :href="source" target="_blank">{{ source }}</a>
+                </ol>
+              </ul>
+            </template>
+            <template v-else>
+              <a :href="props.item.source" target="_blank">{{
+                props.item.source
+              }}</a>
+            </template>
           </span>
           <info-tooltip
             v-if="props.item.ref"
