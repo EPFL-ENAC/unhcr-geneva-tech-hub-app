@@ -58,7 +58,8 @@ import InfoTooltip from "@/components/commons/InfoTooltip.vue";
 import GHGMixedBiowaste from "@/components/reference_data/GHGMixedBiowaste.vue";
 import GHGMixedNonBiowaste from "@/components/reference_data/GHGMixedNonBiowaste.vue";
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
+import { Route } from "vue-router";
 import { mapGetters } from "vuex";
 
 @Component({
@@ -117,12 +118,22 @@ export default class EmissionFactors extends Vue {
       icon: "$mdiTrashCanOutline",
     },
   ];
+
+  @Watch("$route", { immediate: true, deep: true })
+  onRouteChanged(newRoute: Route): void {
+    if (newRoute.hash.includes("reference-data")) {
+      const tabName = newRoute.hash.split("_")[2];
+      const tabIndex = this.menuItems.findIndex((item) => item.to === tabName);
+      if (tabIndex !== -1) {
+        this.selectedTab = tabName;
+      }
+    }
+  }
   selectedTab = this.menuItems[0].to;
 
   public get tabSelected(): string | number {
     const tabIndex = this.menuItems.findIndex((value: MenuItem) => {
-      const [category] = value.to;
-      return category === this.selectedTab;
+      return value.to === this.selectedTab;
     });
     return tabIndex;
   }

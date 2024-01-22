@@ -169,8 +169,9 @@ const mutations: MutationTree<RootState> = {
       changed = true;
     }
     s.referenceDataDrawer = value;
-    const hash = value ? "reference-data" : "";
-    if (router.currentRoute?.hash !== `#${hash}` && changed) {
+    const hash = value ? router.currentRoute?.hash || "reference-data" : "";
+    const currentHash = router.currentRoute?.hash;
+    if (currentHash !== hash && changed) {
       router.push({
         query: router.currentRoute?.query,
         hash,

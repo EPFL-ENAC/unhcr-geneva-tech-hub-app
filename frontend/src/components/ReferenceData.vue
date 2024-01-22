@@ -1,13 +1,20 @@
 <template>
   <v-navigation-drawer
     v-model="drawer"
-    style="`height: calc(100vh - 48px); width: ${drawer ? '80%' : '0px'}`"
+    style="
+      `height: calc(100vh - 48px);
+      width: 80%;
+      max-width: 80%;
+      z-index: 1000;
+    "
     app
-    absolute
+    fixed
+    clipped
     temporary
     width="80%"
     right
     stateless
+    :hide-overlay="false"
   >
     <v-list-item>
       <v-list-item-content>
@@ -44,7 +51,8 @@ import IgesGrid from "@/components/reference_data/IgesGrid.vue";
 import Materials from "@/components/reference_data/Materials.vue";
 import MaterialsTransport from "@/components/reference_data/MaterialsTransport.vue";
 import UNHCRLocation from "@/components/reference_data/UNHCRLocation.vue";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
+import { Route } from "vue-router";
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
@@ -92,6 +100,19 @@ export default class App extends Vue {
     },
   ];
   tab = 1;
+
+  @Watch("$route", { immediate: true, deep: true })
+  onRouteChanged(newRoute: Route): void {
+    if (newRoute.hash.includes("reference-data")) {
+      const tabName = newRoute.hash.split("_")[1];
+      const tabIndex = this.menuItems.findIndex((item) => item.componentName === tabName);
+      if (tabIndex !== -1) {
+        this.tab = tabIndex;
+      }
+    } else {
+      this.tab = 1; // reset to default tab
+    }
+  }
 }
 
 interface MenuSurveyItem {
