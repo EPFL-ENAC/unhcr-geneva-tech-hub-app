@@ -369,6 +369,7 @@ import { constructionImpacts } from "@/views/shelter_sustainability/ShelterSusta
 import { environmentalImpacts } from "@/views/shelter_sustainability/ShelterSustainabilityItem/environmentalImpacts";
 import { generateScorecardOptions } from "@/views/shelter_sustainability/ShelterSustainabilityItem/generateScorecardOptions";
 
+import { printFunction } from "@/utils/printFunction";
 import {
   geometriesName,
   geometriesUrl,
@@ -459,18 +460,7 @@ export default class ShelterSustainabilityCompare extends Vue {
   shelterColors = shelterColors;
   shelterIcons = shelterIcons;
   loaded = false;
-
-  public printFunction() {
-    document.title = " ";
-    try {
-      // https://stackoverflow.com/questions/31171099/window-print-does-not-work-in-safari
-      if (!document.execCommand("print", false, undefined)) {
-        window.print();
-      }
-    } catch {
-      window.print();
-    }
-  }
+  printFunction = printFunction;
 
   get optionsAffordabilities(): EChartsOption[] {
     return generateScorecardOptions(

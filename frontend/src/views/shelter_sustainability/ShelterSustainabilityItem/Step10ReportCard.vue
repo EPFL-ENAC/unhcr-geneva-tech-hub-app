@@ -10,7 +10,7 @@
         </info-tooltip>
       </v-col>
       <v-col class="d-flex align-center justify-end">
-        <v-btn class="d-print-none" @click="printOnClick"
+        <v-btn class="d-print-none" @click="printFunction"
           >Export Assessment report</v-btn
         >
       </v-col>
@@ -146,6 +146,7 @@ import TerritoryMap from "@/components/commons/TerritoryMap.vue";
 import { infoTooltipText } from "@/components/shelter_sustainability/infoTooltipText";
 import { ImageShelter, Shelter } from "@/store/ShelterInterface";
 import { countriesMap } from "@/utils/countriesAsList";
+import { printFunction } from "@/utils/printFunction";
 import Step1ProjectInformation from "@/views/shelter_sustainability/ShelterSustainabilityItem/Step1ProjectInformation.vue";
 import Step2Geometry from "@/views/shelter_sustainability/ShelterSustainabilityItem/Step2Geometry.vue";
 import Step5EnvironmentalImpact from "@/views/shelter_sustainability/ShelterSustainabilityItem/Step5EnvironmentalImpact.vue";
@@ -195,6 +196,7 @@ export default class Step10ReportCard extends Vue {
   countriesMap = countriesMap;
   shelterColors = shelterColors;
   shelterIcons = shelterIcons;
+  printFunction = printFunction;
   public get shelterWithImage(): Shelter {
     if (this.shelter) {
       const newShelter = cloneDeep(this.shelter);
@@ -212,17 +214,6 @@ export default class Step10ReportCard extends Vue {
       return [latitude ?? 0, longitude ?? 0];
     }
     return [0, 0] as LatLngExpression;
-  }
-
-  public printOnClick() {
-    try {
-      // https://stackoverflow.com/questions/31171099/window-print-does-not-work-in-safari
-      if (!document.execCommand("print", false, undefined)) {
-        window.print();
-      }
-    } catch {
-      window.print();
-    }
   }
 }
 </script>

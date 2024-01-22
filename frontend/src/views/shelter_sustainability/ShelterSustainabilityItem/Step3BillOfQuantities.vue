@@ -249,6 +249,7 @@ import ItemDialog from "@/components/shelter_sustainability/billOfQuantities/Ite
 import { infoTooltipText } from "@/components/shelter_sustainability/infoTooltipText";
 import { Item, Shelter, UnitsRef } from "@/store/ShelterInterface";
 import { countriesMap } from "@/utils/countriesAsList";
+import { printFunction } from "@/utils/printFunction";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
@@ -291,6 +292,7 @@ export default class Step3Materials extends Vue {
   setItemsIndividualShelter!: (v: number) => void;
   updateDoc!: (doc: Shelter) => void;
   duplicate!: (item: Item) => void;
+  printFunction = printFunction;
 
   public get localShelter(): Shelter {
     return cloneDeep(this.shelter);
@@ -303,17 +305,6 @@ export default class Step3Materials extends Vue {
     const valueInteger = parseInt(value, 10);
     if (this.items_individual_shelter !== valueInteger) {
       this.setItemsIndividualShelter(valueInteger);
-    }
-  }
-  public printFunction() {
-    document.title = " ";
-    try {
-      // https://stackoverflow.com/questions/31171099/window-print-does-not-work-in-safari
-      if (!document.execCommand("print", false, undefined)) {
-        window.print();
-      }
-    } catch {
-      window.print();
     }
   }
 

@@ -650,6 +650,8 @@ interface Helpers {
   @page {
     size: A4;
     margin: 1cm;
+    margin-top: 4mm;
+    margin-bottom: 0mm;
     padding: 5px;
     width: 100%;
   }

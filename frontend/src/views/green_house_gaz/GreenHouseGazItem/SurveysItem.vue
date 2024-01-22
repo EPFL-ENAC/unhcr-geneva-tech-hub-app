@@ -50,7 +50,7 @@
         </v-col>
 
         <v-col class="d-print-none col-auto d-flex align-center flex-row">
-          <v-btn @click="printFunction()">Print</v-btn>
+          <v-btn data-print-btn @click="printFunction()">Print</v-btn>
           <user-manager
             v-model="currentProject.users"
             @change="(v) => updateFormInput('users', v)"
@@ -172,6 +172,7 @@ import {
   SurveySubcategory,
 } from "@/store/GhgInterface";
 import getCountryName from "@/utils/getCountryName";
+import { printFunction } from "@/utils/printFunction";
 import { cloneDeep, isEqual } from "lodash";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
@@ -203,6 +204,7 @@ export default class SurveyList extends Vue {
   updateDoc!: (doc: GreenHouseGaz) => Promise<void>;
   updateLocalStore!: (doc: GreenHouseGaz) => Promise<void>;
 
+  printFunction = printFunction;
   readonly menuItems: MenuItem[] = [
     {
       to: "Info",
@@ -383,18 +385,6 @@ export default class SurveyList extends Vue {
       newProject.updated_by = this.$user().name ?? "user with no name";
     }
     this.submitForm(newProject);
-  }
-
-  public printFunction() {
-    document.title = " ";
-    try {
-      // https://stackoverflow.com/questions/31171099/window-print-does-not-work-in-safari
-      if (!document.execCommand("print", false, undefined)) {
-        window.print();
-      }
-    } catch {
-      window.print();
-    }
   }
 
   public submitForm(value: GreenHouseGaz = this.project): void {
