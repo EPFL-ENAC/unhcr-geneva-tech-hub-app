@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.6.0...v1.6.1) (2024-01-22)
+
+
+### Bug Fixes
+
+* **ghg:** correct note on solar reference data [#605](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/605) ([6f330f9](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/6f330f93b1e87e9362b2a6bd5a041a2302f16937))
+* **ghg:** force scale to 0.5 if devicePixelRatio 1 ([391ec64](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/391ec646e15c0ef9c64639320ee6ec893e8171d4))
+* **ghg:** improve ghg reference for diesel generator [#605](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/605) ([6280c6b](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/6280c6b3aaa42a8a7ff8f5a2eb2fec72ca84b7aa))
+* **ghg:** improve ghg reference for icons and sources  [#609](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/609) ([1f2ce64](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/1f2ce64403478c2a4d1e07ead6f412be20166a14))
+* **ghg:** try to dynamically tackle the dpi problem with print ([36735ad](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/36735ad174db0d5b8c65c69cdd2d74e18eef63db))
+* **reference-data:** clip the modal and make it permanent with a better z-index [#605](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/605) ([98d6101](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/98d61012c6a433fd19a1a7ae88d48bd57f09e204))
+
 ## [1.6.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.5.0...v1.6.0) (2024-01-15)
 
 
