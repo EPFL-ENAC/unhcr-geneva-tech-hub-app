@@ -188,7 +188,7 @@ export function headers() {
       tooltipInfoFn: function (value: string) {
         if (value === "Mixed / unknown composition") {
           return `This option assumes a typical composition for non-biowaste for the country's region.
-          <br/>Emission factors for this category can be found in the <a href="#reference-data">emissions factor database (<svg
+          <br/>Emission factors for this category can be found in the <a href="#reference-data_EmissionFactors_waste">emissions factor database (<svg
             version="1.1"
             viewBox="0 0 26 26"
             width="18"

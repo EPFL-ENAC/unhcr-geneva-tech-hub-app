@@ -18,7 +18,7 @@
     <hr
       class="d-none d-print-flex font-weight-bold justify-space-between align-center primary"
     />
-    <v-app-bar app dense>
+    <v-app-bar app dense clipped-right>
       <v-menu offset-y bottom min-width="330px" max-width="330px">
         <template #activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" aria-label="shelter-help" v-on="on">

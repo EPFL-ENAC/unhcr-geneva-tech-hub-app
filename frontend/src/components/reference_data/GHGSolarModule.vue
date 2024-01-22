@@ -3,8 +3,10 @@
     <v-card-text v-if="items">
       <v-row>
         <v-col>
-          Longterm daily average of solar hours per country (Source: <a target="_blank" href="https://globalsolaratlas.info">globalsolaratlas.info</a>) (Note: This value is used when the site global
-          horizontal irradiation is not known.)
+          Longterm daily average of solar hours per country (Source: <a target="_blank" href="https://globalsolaratlas.info">globalsolaratlas.info</a>)
+          <p class="mb-0">
+            (Note: This value is calculated as the average of solar hours for the camps in the country and is used when the site global horizontal irradiation for the site is unknown.)
+          </p>
         </v-col>
       </v-row>
       <v-row>

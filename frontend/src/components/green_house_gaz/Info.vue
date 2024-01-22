@@ -336,7 +336,8 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
           "close-delay": 1000,
         },
         tooltipInfo: `
-        Solar peak hours, together with the installed solar capacity, are used to calculate the energy delivered by solar panels. If you are not able to assign a value for the solar peak hours, a default value will be assigned from the Reference Table (<svg
+        Solar peak hours, together with the installed solar capacity, are used to calculate the energy delivered by solar panels.
+        If you are not able to assign a value for the solar peak hours, a default value will be assigned from <a href="#reference-data_UNHCRLocation">the Reference Table (<svg
   version="1.1"
   viewBox="0 0 26 26"
   width="18"
@@ -347,7 +348,7 @@ export default class GhgInfo extends Mixins(ComputeGenericFormSurveyMixin) {
       <path style="fill: white;"
       d="${iconPath}"
     />
-</svg>). The solar peak hours value is used in the Energy for Facilities, Energy for Cooking, Lighting and Water Pumping modules.
+</svg>)</a>. The solar peak hours value is used in the Energy for Facilities, Energy for Cooking, Lighting and Water Pumping modules.
 To extract solar hours for a specific location please refer to the <a target="_blank" href="${ghg.link}">${ghg.linkName}</a>.`,
         optional: true,
         placeholder: solarPeakPlaceholder,

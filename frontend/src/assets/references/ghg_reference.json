@@ -165,7 +165,7 @@
     "description": "Emission Factor - Ethanol [kg CO2e/L]",
     "value": 0.945452,
     "source": "https://cfpub.epa.gov/si/si_public_record_report.cfm?Lab=NRMRL&dirEntryId=339679",
-    "ref": null,
+    "ref": "Exceptionally, Scope 3 emissions associated with feedstock production and/or processing of this fuel are being considered due to their high impact relative to total emissions.",
     "index": 10
   },
   {
@@ -240,7 +240,7 @@
     "description": "Fraction of nonCO2Emissions - Charcoal production",
     "value": 0.422709222,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf",
-    "ref": null,
+    "ref": "Exceptionally, Scope 3 emissions associated with feedstock production and/or processing of this fuel are being considered due to their high impact relative to total emissions.",
     "index": 15
   },
   {
@@ -285,7 +285,7 @@
     "description": "Fraction of nonCO2Emissions - Carbonized briquette production",
     "value": 0.4227,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf",
-    "ref": null,
+    "ref": "Exceptionally, Scope 3 emissions associated with feedstock production and/or processing of this fuel are being considered due to their high impact relative to total emissions.",
     "index": 18
   },
   {
@@ -422,8 +422,11 @@
     ],
     "description": "Emission Factor - Vegetable oil [kg CO2e/kg]",
     "value": 1.878252,
-    "source": "https://www.epa.gov/system/files/documents/2023-03/ghg_emission_factors_hub.pdf",
-    "ref": "https://www.sciencedirect.com/science/article/pii/S0048969722016321",
+    "source": [
+      "https://www.epa.gov/system/files/documents/2023-03/ghg_emission_factors_hub.pdf",
+      "https://www.sciencedirect.com/science/article/pii/S0048969722016321"
+    ],
+    "ref": "Exceptionally, Scope 3 emissions associated with feedstock production and/or processing of this fuel are being considered due to their high impact relative to total emissions.",
     "index": 26
   },
   {
