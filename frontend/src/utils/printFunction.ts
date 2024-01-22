@@ -9,11 +9,14 @@ export function printFunction() {
       window.print();
     }
   }
-  document.body.style.setProperty("width", `${100 * window.devicePixelRatio}%`);
-  document.body.style.setProperty(
-    "transform",
-    `scale(${1 / window.devicePixelRatio})`
-  );
+  // document.body.style.setProperty("width", `${100 * window.devicePixelRatio}%`);
+  // document.body.style.setProperty(
+  //   "transform",
+  //   `scale(${1 / window.devicePixelRatio})`
+  // );
+  // force to 0.5 when printing
+  document.body.style.setProperty("width", `200%`);
+  document.body.style.setProperty("transform", `scale(0.5)`);
   document.body.style.setProperty("transform-origin", "0 0");
   printSubcommand();
   document.body.style.setProperty("width", "100%");
