@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.6.1...v1.7.0) (2024-01-23)
+
+
+### Features
+
+* **common:** add better error message for read-only [#340](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/340) ([8c41628](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/8c416282fa809023c0633cf7921dbab6c308e8fc))
+
+
+### Bug Fixes
+
+* **common:** countriesAsList for greece [#336](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/336) and print function ([1201108](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/120110816bc6193f9e99faeeddcc56d0348ec4ba))
+* **shelter:** add filter by country for transport [#345](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/345) ([dbb5e1d](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/dbb5e1d12900c491a509b163fbe698b2d45bec69))
+
 ## [1.6.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.6.0...v1.6.1) (2024-01-22)
 
 
