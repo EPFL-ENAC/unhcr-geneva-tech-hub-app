@@ -43,7 +43,7 @@
                   reference: currentProject.reference,
                 })
                   ? ""
-                  : "(Read only)"
+                  : "(This assessment is the Reference for this site so it cannot be modified.)"
               }}
             </span>
           </h2>
@@ -395,8 +395,9 @@ export default class SurveyList extends Vue {
         throw new Error("please fill the new Name");
       }
     } else {
+      const msg1 = `you don't have "Write" access to this site, ask its admin/creator for "Write" access to modify it`;
       this.$store.dispatch("notifyUser", {
-        message: "You're on read only mode",
+        message: `Read-Only mode (${msg1}). Your changes will be displayed, but not saved!`,
         type: "info",
       });
       this.updateLocalStore(value);

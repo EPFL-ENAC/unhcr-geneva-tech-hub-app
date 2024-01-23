@@ -147,8 +147,9 @@ export default class ShelterSustainabilityItem extends Vue {
         throw new Error("please fill the new Name");
       }
     } else {
+      const msg1 = `you don't have "Write" access to this site, ask its admin/creator for "Write" access to modify it`;
       this.$store.dispatch("notifyUser", {
-        message: "You're on read only mode",
+        message: `Read-Only mode (${msg1}). Your changes will be displayed, but not saved!`,
         type: "info",
       });
       this.updateLocalDoc(value);
