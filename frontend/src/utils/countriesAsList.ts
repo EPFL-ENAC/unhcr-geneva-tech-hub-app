@@ -66,6 +66,7 @@ export const isoToRegion: Record<string, ShelterRegions> = {
   GA: "West and Central Africa",
   GM: "West and Central Africa",
   GE: "Europe",
+  GR: "Europe",
   GH: "West and Central Africa",
   GD: "The Americas",
   GT: "The Americas",

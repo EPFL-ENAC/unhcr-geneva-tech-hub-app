@@ -1,10 +1,15 @@
 export function printFunction() {
-  document.title = " ";
+  const savedTitle = document.title;
+  document.title = `${window.location.hostname}-print`;
   function printSubcommand() {
     try {
       // https://stackoverflow.com/questions/31171099/window-print-does-not-work-in-safari
       // Print for Safari browser
-      document.execCommand("print", false, undefined);
+      if (navigator.userAgent.indexOf("Safari") > -1) {
+        document.execCommand("print", false, undefined);
+      } else {
+        window.print();
+      }
     } catch {
       window.print();
     }
@@ -22,4 +27,5 @@ export function printFunction() {
   document.body.style.setProperty("width", "100%");
   document.body.style.setProperty("transform", "scale(1)");
   document.body.style.setProperty("transform-origin", "0 0");
+  document.title = savedTitle;
 }
