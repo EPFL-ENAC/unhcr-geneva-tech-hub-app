@@ -115,7 +115,36 @@
           </ol>
         </v-col>
       </v-row>
-      <v-data-table :headers="headers" :items="items" dense>
+      <v-data-table
+        :headers="headers"
+        :items="items"
+        dense
+        :footer-props="{
+          'items-per-page-options': [5, 10, 25, 50, 100],
+        }"
+      >
+        <template #top>
+          <v-row>
+            <v-col>
+              <v-text-field
+                v-model="searchOrigin"
+                append-icon="mdi-magnify"
+                label="Search Origin"
+                single-line
+                hide-details
+              ></v-text-field>
+            </v-col>
+            <v-col>
+              <v-text-field
+                v-model="searchDestination"
+                append-icon="mdi-magnify"
+                label="Search Destination"
+                single-line
+                hide-details
+              ></v-text-field>
+            </v-col>
+          </v-row>
+        </template>
         <template #[`item.source`]="slotProps">
           {{ getText(slotProps.item._id.split("_")[0]) }}
           <country-flag
@@ -147,16 +176,33 @@ const { default: SheltersTransportModule } = await import(
 import { countriesMap } from "@/utils/countriesAsList";
 import { iso3166_3_to_2 } from "@/utils/iso3166";
 import { Component, Vue } from "vue-property-decorator";
-import { mapGetters } from "vuex";
+// import { mapGetters } from "vuex";
 
 @Component({
-  computed: {
-    ...mapGetters("SheltersTransportModuleREF", ["items"]),
-  },
+  // computed: {
+  //   ...mapGetters("SheltersTransportModuleREF", ["items"]),
+  // },
 })
 export default class MaterialsTransport extends Vue {
   iso3166_3_to_2 = iso3166_3_to_2;
   countriesMap = countriesMap;
+  searchOrigin = "";
+  searchDestination = "";
+
+  get items() {
+    return this.$store.getters["SheltersTransportModuleREF/items"].filter(
+      (item: any) => {
+        const source = this.getText(item._id.split("_")[0]);
+        const destination = this.getText(item._id.split("_")[1]);
+        return (
+          source.toLowerCase().includes(this.searchOrigin.toLowerCase()) &&
+          destination
+            .toLowerCase()
+            .includes(this.searchDestination.toLowerCase())
+        );
+      }
+    );
+  }
 
   beforeCreate() {
     this.$store.registerModule(
