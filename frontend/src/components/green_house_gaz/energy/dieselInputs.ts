@@ -85,16 +85,18 @@ export function computeDieselPowerAndUpdateKey(
 ): (
   valueOfKey: number | boolean,
   localInput: EnergyItem,
-  ghgMapRef: ItemReferencesMap
+  ghgMapRef: ItemReferencesMap,
+  ghgMapDefaultValue: ItemReferencesMap
 ) => EnergyItem {
   return (
     valueOfKey: number | boolean,
     localInput: EnergyItem,
-    ghgMapRef: ItemReferencesMap
+    ghgMapRef: ItemReferencesMap,
+    ghgMapDefaultValue: ItemReferencesMap
   ): EnergyItem => {
     localInput[key] = valueOfKey as unknown as undefined;
 
-    const powerFactor = ghgMapRef?.REF_POW_FAC?.value ?? 0.8;
+    const powerFactor = ghgMapDefaultValue?.REF_POW_FAC?.value ?? 0.8;
     if (key === "generatorSizekVA") {
       let generatorSize = (valueOfKey as number) * powerFactor;
       // truncate the above value to two decimals points after zero

@@ -18,7 +18,7 @@ export interface ReferenceItemInterface {
 /** Getters */
 const getters: GetterTree<null, RootState> = {
   items: (): ReferenceItemInterface[] | null => ghg_default_value,
-  ghgMapRef: (): ItemReferencesMap | undefined => {
+  ghgMapDefaultValue: (): ItemReferencesMap | undefined => {
     if (!ghg_default_value) {
       return undefined;
     }

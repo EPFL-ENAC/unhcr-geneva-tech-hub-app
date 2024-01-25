@@ -219,7 +219,8 @@ export interface EasySurveyTableHeader {
   customEventInput?: (
     v: SurveyInputValue,
     localInput: SurveyInput,
-    ghgMapRef?: ItemReferencesMap
+    ghgMapRef?: ItemReferencesMap,
+    ghgMapDefaultValue?: ItemReferencesMap,
   ) => SurveyInput;
   formatter?: (
     v: unknown,

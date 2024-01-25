@@ -151,6 +151,7 @@ import { mapGetters } from "vuex";
   },
   computed: {
     ...mapGetters("GhgReferenceModule", ["ghgMapRef"]),
+    ...mapGetters("GhgDefaultValuesModule", ["ghgMapDefaultValue"]),
   },
   methods: {
     _get,
@@ -188,6 +189,7 @@ export default class SurveyItemDialog extends Vue {
     form: VForm;
   };
   ghgMapRef!: ItemReferencesMap;
+  ghgMapDefaultValue!: ItemReferencesMap;
 
   formValid = false;
   refreshKey = 0;
@@ -256,7 +258,8 @@ export default class SurveyItemDialog extends Vue {
     const newLocalInput = (surveyItem?.customEventInput?.(
       newInputValue,
       localInput,
-      this.ghgMapRef
+      this.ghgMapRef,
+      this.ghgMapDefaultValue,
     ) ?? cloneDeep(localInput)) as SurveyInput;
     const newLocalItem = cloneDeep(this.localItem);
     newLocalItem.input = newLocalInput;
