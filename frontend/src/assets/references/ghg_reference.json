@@ -1,21 +1,5 @@
 [
   {
-    "_id": "REF_FNRB",
-    "type": "number",
-    "category": [
-      "energy"
-    ],
-    "subcat": [
-      "cooking",
-      "lighting"
-    ],
-    "description": "Fraction of Non renewable biomass (fNRB)",
-    "value": 0.85,
-    "source": "https://cdm.unfccc.int/DNA/fNRB/index.html",
-    "ref": null,
-    "index": 0
-  },
-  {
     "_id": "REF_EFF_FWD",
     "type": "number",
     "category": [
@@ -29,7 +13,7 @@
     "value": 1.894776,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 1
+    "index": 0
   },
   {
     "_id": "REF_EFF_KRS",
@@ -42,10 +26,10 @@
       "lighting"
     ],
     "description": "Emission Factor - Kerosene [kg CO2e/L]",
-    "value": 2.566443042,
+    "value": 2.56644304,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 2
+    "index": 1
   },
   {
     "_id": "REF_NONCO2_FWD",
@@ -58,10 +42,10 @@
       "lighting"
     ],
     "description": "Fraction of nonCO2Emissions - Wood",
-    "value": 0.077885724,
+    "value": 0.07788572,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 3
+    "index": 2
   },
   {
     "_id": "REF_EFF_CHC_C",
@@ -76,7 +60,7 @@
     "value": 3.4770175,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 4
+    "index": 3
   },
   {
     "_id": "REF_EFF_CHC_P",
@@ -91,7 +75,7 @@
     "value": 2.7196,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf",
     "ref": null,
-    "index": 5
+    "index": 4
   },
   {
     "_id": "REF_EFF_BRQ",
@@ -106,7 +90,7 @@
     "value": 1.269736,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 6
+    "index": 5
   },
   {
     "_id": "REF_EFF_BRQ_C_C",
@@ -121,7 +105,7 @@
     "value": 2.0879,
     "source": "https://www.sciencedirect.com/science/article/pii/S246822761930763X",
     "ref": null,
-    "index": 7
+    "index": 6
   },
   {
     "_id": "REF_EFF_BRQ_C_P",
@@ -136,7 +120,7 @@
     "value": 2.5836,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf",
     "ref": null,
-    "index": 8
+    "index": 7
   },
   {
     "_id": "REF_EFF_PLTS",
@@ -151,7 +135,7 @@
     "value": 1.269736,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 9
+    "index": 8
   },
   {
     "_id": "REF_EFF_ETH",
@@ -165,8 +149,8 @@
     "description": "Emission Factor - Ethanol [kg CO2e/L]",
     "value": 0.945452,
     "source": "https://cfpub.epa.gov/si/si_public_record_report.cfm?Lab=NRMRL&dirEntryId=339679",
-    "ref": "Exceptionally, Scope 3 emissions associated with feedstock production and/or processing of this fuel are being considered due to their high impact relative to total emissions.",
-    "index": 10
+    "ref": "It is assumed that this fuel comes from sustainably sourced biomass . Thus biogenic CO2 emissions from combustion are compensated, and only non-CO2\r\nemissions are considered in the inventory. Exceptionally, Scope 3 emissions associated with feedstock production and/or processing of this fuel are being considered due to their high impact relative to total emissions.",
+    "index": 9
   },
   {
     "_id": "REF_EFF_LPG",
@@ -181,7 +165,7 @@
     "value": 2.99250545,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 11
+    "index": 10
   },
   {
     "_id": "REF_EFF_BGS",
@@ -195,8 +179,8 @@
     "description": "Emission Factor - Biogas [kg CO2e/m3]",
     "value": 0.0076,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
-    "ref": null,
-    "index": 12
+    "ref": "It is assumed that this fuel comes from sustainably sourced biomass. Thus biogenic CO2 emissions from combustion are compensated, and only non-CO2 emissions are considered in the inventory. Exceptionally, Scope 3 emissions associated with feedstock production and/or processing of this fuel are being considered due to their high impact relative to total emissions.",
+    "index": 11
   },
   {
     "_id": "REF_EFF_PNG",
@@ -211,7 +195,7 @@
     "value": 2.13362568,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 13
+    "index": 12
   },
   {
     "_id": "REF_NONCO2_CHC_C",
@@ -223,10 +207,10 @@
       "cooking"
     ],
     "description": "Fraction of nonCO2Emissions - Charcoal combustion",
-    "value": 0.049760319,
+    "value": 0.04976032,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 14
+    "index": 13
   },
   {
     "_id": "REF_NONCO2_CHC_P",
@@ -238,10 +222,10 @@
       "cooking"
     ],
     "description": "Fraction of nonCO2Emissions - Charcoal production",
-    "value": 0.422709222,
+    "value": 0.42270922,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf",
     "ref": "Exceptionally, Scope 3 emissions associated with feedstock production and/or processing of this fuel are being considered due to their high impact relative to total emissions.",
-    "index": 15
+    "index": 14
   },
   {
     "_id": "REF_NONCO2_BRQ",
@@ -253,10 +237,10 @@
       "cooking"
     ],
     "description": "Fraction of nonCO2Emissions - Non-carbonized briquette",
-    "value": 0.086424265,
+    "value": 0.08642427,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 16
+    "index": 15
   },
   {
     "_id": "REF_NONCO2_BRQ_C_C",
@@ -271,7 +255,7 @@
     "value": 0.1202,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 17
+    "index": 16
   },
   {
     "_id": "REF_NONCO2_BRQ_C_P",
@@ -286,7 +270,7 @@
     "value": 0.4227,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/2_Volume2/19R_V2_4_Ch04_Fugitive_Emissions.pdf",
     "ref": "Exceptionally, Scope 3 emissions associated with feedstock production and/or processing of this fuel are being considered due to their high impact relative to total emissions.",
-    "index": 18
+    "index": 17
   },
   {
     "_id": "REF_NONCO2_PLTS",
@@ -298,10 +282,10 @@
       "cooking"
     ],
     "description": "Fraction of nonCO2Emissions - Pellets",
-    "value": 0.086424265,
+    "value": 0.08642427,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 19
+    "index": 18
   },
   {
     "_id": "REF_EFF_DIES",
@@ -320,7 +304,7 @@
     "value": 2.72440045,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 20
+    "index": 19
   },
   {
     "_id": "REF_RNW",
@@ -339,7 +323,7 @@
     "value": 0,
     "source": null,
     "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions.",
-    "index": 21
+    "index": 20
   },
   {
     "_id": "REF_GRD",
@@ -358,7 +342,7 @@
     "value": 0.6448,
     "source": "https://www.iges.or.jp/en/pub/list-grid-emission-factor/en",
     "ref": "The default grid emission factor is an average of all IGES 2022 emission factors for countries hosting refugees.",
-    "index": 22
+    "index": 21
   },
   {
     "_id": "REF_EFF_DIES_L",
@@ -377,7 +361,7 @@
     "value": 0.267,
     "source": "https://plan.sa.gov.au/__data/assets/pdf_file/0007/574531/Appendix-O-Greenhouse-Gas-Calculations.pdf",
     "ref": null,
-    "index": 23
+    "index": 22
   },
   {
     "_id": "REF_EFF_PET",
@@ -394,7 +378,7 @@
     "value": 2.34,
     "source": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022",
     "ref": null,
-    "index": 24
+    "index": 23
   },
   {
     "_id": "REF_EFF_CNDL",
@@ -409,7 +393,7 @@
     "value": 2.9643078,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf",
     "ref": null,
-    "index": 25
+    "index": 24
   },
   {
     "_id": "REF_EFF_OIL",
@@ -426,8 +410,8 @@
       "https://www.epa.gov/system/files/documents/2023-03/ghg_emission_factors_hub.pdf",
       "https://www.sciencedirect.com/science/article/pii/S0048969722016321"
     ],
-    "ref": "Exceptionally, Scope 3 emissions associated with feedstock production and/or processing of this fuel are being considered due to their high impact relative to total emissions.",
-    "index": 26
+    "ref": "It is assumed that this fuel comes from sustainably sourced biomass. Thus biogenic CO2 emissions from combustion are compensated, and only non-CO2 emissions are considered in the inventory. Exceptionally, Scope 3 emissions associated with feedstock production and/or processing of this fuel are being considered due to their high impact relative to total emissions.",
+    "index": 25
   },
   {
     "_id": "REF_EFF_BAT",
@@ -442,7 +426,7 @@
     "value": 0,
     "source": null,
     "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions.",
-    "index": 27
+    "index": 26
   },
   {
     "_id": "REF_EFF_BIO_COM",
@@ -457,7 +441,7 @@
     "value": 0.1756,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/5_Volume5/V5_4_Ch4_Bio_Treat.pdf",
     "ref": null,
-    "index": 28
+    "index": 27
   },
   {
     "_id": "REF_EFF_BIO_AD",
@@ -472,7 +456,7 @@
     "value": 0.0224,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/5_Volume5/V5_4_Ch4_Bio_Treat.pdf",
     "ref": null,
-    "index": 29
+    "index": 28
   },
   {
     "_id": "REF_EFF_REC",
@@ -487,7 +471,7 @@
     "value": 0,
     "source": null,
     "ref": "The GHG Emission Calculator only considers Scope 1 and 2 emissions. All waste categories can be recycled/reused except nappies (diapers).",
-    "index": 30
+    "index": 29
   },
   {
     "_id": "REF_EFF_PLT_PIT",
@@ -502,7 +486,7 @@
     "value": 0,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
     "ref": null,
-    "index": 31
+    "index": 30
   },
   {
     "_id": "REF_EFF_PLT_MAN",
@@ -517,7 +501,7 @@
     "value": 0,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
     "ref": null,
-    "index": 32
+    "index": 31
   },
   {
     "_id": "REF_EFF_PLT_BUR",
@@ -532,7 +516,7 @@
     "value": 2.17425,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf",
     "ref": null,
-    "index": 33
+    "index": 32
   },
   {
     "_id": "REF_EFF_TEX_PIT",
@@ -547,7 +531,7 @@
     "value": 0.896,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
     "ref": null,
-    "index": 34
+    "index": 33
   },
   {
     "_id": "REF_EFF_TEX_MAN",
@@ -562,7 +546,7 @@
     "value": 2.24,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
     "ref": null,
-    "index": 35
+    "index": 34
   },
   {
     "_id": "REF_EFF_TEX_BUR",
@@ -574,10 +558,10 @@
       "waste"
     ],
     "description": "Emission Factor - Textiles - Open burning [kgCO2e/kg]",
-    "value": 0.422066667,
+    "value": 0.42206667,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf",
     "ref": null,
-    "index": 36
+    "index": 35
   },
   {
     "_id": "REF_EFF_PAP_PIT",
@@ -589,10 +573,10 @@
       "waste"
     ],
     "description": "Emission Factor - Paper/cardboard - Open pits [kgCO2e/kg]",
-    "value": 1.493333333,
+    "value": 1.49333333,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
     "ref": null,
-    "index": 37
+    "index": 36
   },
   {
     "_id": "REF_EFF_PAP_MAN",
@@ -604,10 +588,10 @@
       "waste"
     ],
     "description": "Emission Factor - Paper/cardboard - Managed disposal site [kgCO2e/kg]",
-    "value": 3.733333333,
+    "value": 3.73333333,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
     "ref": null,
-    "index": 38
+    "index": 37
   },
   {
     "_id": "REF_EFF_PAP_BUR",
@@ -622,7 +606,7 @@
     "value": 0.2285528,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf",
     "ref": null,
-    "index": 39
+    "index": 38
   },
   {
     "_id": "REF_EFF_RUB_PIT",
@@ -637,7 +621,7 @@
     "value": 0,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
     "ref": null,
-    "index": 40
+    "index": 39
   },
   {
     "_id": "REF_EFF_RUB_MAN",
@@ -652,7 +636,7 @@
     "value": 0,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
     "ref": null,
-    "index": 41
+    "index": 40
   },
   {
     "_id": "REF_EFF_RUB_BUR",
@@ -667,7 +651,7 @@
     "value": 0.5084212,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf",
     "ref": null,
-    "index": 42
+    "index": 41
   },
   {
     "_id": "REF_EFF_NAP_PIT",
@@ -682,7 +666,7 @@
     "value": 0.896,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
     "ref": null,
-    "index": 43
+    "index": 42
   },
   {
     "_id": "REF_EFF_NAP_MAN",
@@ -697,7 +681,7 @@
     "value": 2.24,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf",
     "ref": null,
-    "index": 44
+    "index": 43
   },
   {
     "_id": "REF_EFF_NAP_BUR",
@@ -709,10 +693,10 @@
       "waste"
     ],
     "description": "Emission Factor - Nappies (Diapers) - Open burning [kgCO2e/kg]",
-    "value": 0.270793333,
+    "value": 0.27079333,
     "source": "https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf",
     "ref": null,
-    "index": 45
+    "index": 44
   },
   {
     "_id": "REF_WSH_D",
@@ -727,7 +711,7 @@
     "value": 0.23135,
     "source": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022",
     "ref": null,
-    "index": 46
+    "index": 45
   },
   {
     "_id": "REF_WSH_G",
@@ -742,25 +726,22 @@
     "value": 0.21329,
     "source": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022",
     "ref": null,
-    "index": 47
+    "index": 46
   },
   {
-    "_id": "REF_POW_FAC",
+    "_id": "REF_FNRB",
     "type": "number",
     "category": [
-      "energy",
-      "wash"
+      "energy"
     ],
     "subcat": [
-      "facilities",
       "cooking",
-      "lighting",
-      "water-supply"
+      "lighting"
     ],
-    "description": "Power factor - Diesel generator",
-    "value": 0.8,
-    "source": "https://www.globalpwr.com/power-calculator/",
-    "ref": "factor to convert kVA to kW",
-    "index": 48
+    "description": "Fraction of Non renewable biomass (fNRB)",
+    "value": 0.85,
+    "source": "https://cdm.unfccc.int/DNA/fNRB/index.html",
+    "ref": null,
+    "index": 47
   }
 ]

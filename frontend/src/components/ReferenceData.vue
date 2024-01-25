@@ -44,6 +44,7 @@
 </template>
 
 <script lang="ts">
+import DefaultValues from "@/components/reference_data/DefaultValues.vue";
 import EmissionFactors from "@/components/reference_data/EmissionFactors.vue";
 import GHGfNRB from "@/components/reference_data/GHGfNRB.vue";
 import GHGSolarModule from "@/components/reference_data/GHGSolarModule.vue";
@@ -70,6 +71,7 @@ import { mapActions, mapGetters } from "vuex";
     IgesGrid,
     UNHCRLocation,
     GHGSolarModule,
+    DefaultValues,
   },
 })
 /** ProjectList */
@@ -90,6 +92,7 @@ export default class App extends Vue {
       componentName: "IgesGrid",
     },
     { tab: "Emission Factors", componentName: "EmissionFactors" },
+    { tab: "Default Values", componentName: "DefaultValues" },
     { tab: "UNHCR Locations", componentName: "UNHCRLocation" },
     // { tab: "GHG Solar average", componentName: "GHGSolarModule" },
     { tab: "GHG fNRB", componentName: "GHGfNRB" },
@@ -105,7 +108,9 @@ export default class App extends Vue {
   onRouteChanged(newRoute: Route): void {
     if (newRoute.hash.includes("reference-data")) {
       const tabName = newRoute.hash.split("_")[1];
-      const tabIndex = this.menuItems.findIndex((item) => item.componentName === tabName);
+      const tabIndex = this.menuItems.findIndex(
+        (item) => item.componentName === tabName
+      );
       if (tabIndex !== -1) {
         this.tab = tabIndex;
       }

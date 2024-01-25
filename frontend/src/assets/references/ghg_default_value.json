@@ -1,0 +1,263 @@
+[
+  {
+    "_id": "REF_POW_FAC",
+    "type": "number",
+    "category": [
+      "energy",
+      "wash"
+    ],
+    "subcat": [
+      "facilities",
+      "cooking",
+      "lighting",
+      "water-supply"
+    ],
+    "description": "Power factor - Diesel generator",
+    "value": 0.8,
+    "source": "https://www.globalpwr.com/power-calculator/",
+    "ref": "factor to convert kVA to kW",
+    "index": 0
+  },
+  {
+    "_id": "REF_FWD",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Firewood [kg/capita/day]",
+    "value": 0.44,
+    "source": null,
+    "ref": null,
+    "index": 1
+  },
+  {
+    "_id": "REF_BGS",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Biogas [m3/capita/day]",
+    "value": 0.4,
+    "source": "https://energypedia.info/images/2/2c/Biogas_gate_volume_2.pdf",
+    "ref": null,
+    "index": 2
+  },
+  {
+    "_id": "REF_PET",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Gasoline [kg/capita/day]",
+    "value": 0.351,
+    "source": null,
+    "ref": null,
+    "index": 3
+  },
+  {
+    "_id": "REF_KRS",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Kerosene [kg/capita/day]",
+    "value": 0.03276,
+    "source": null,
+    "ref": null,
+    "index": 4
+  },
+  {
+    "_id": "REF_OIL",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "lighting"
+    ],
+    "description": "Vegetable oil [kg/capita/day]",
+    "value": 0.14,
+    "source": null,
+    "ref": null,
+    "index": 5
+  },
+  {
+    "_id": "REF_CNDL",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "lighting"
+    ],
+    "description": "Candle (paraffin) [kg/capita/day]",
+    "value": 0.0053,
+    "source": null,
+    "ref": null,
+    "index": 6
+  },
+  {
+    "_id": "REF_SOLAR_LANTERN",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "lighting"
+    ],
+    "description": "Solar lantern [watt/device]",
+    "value": 0.3,
+    "source": null,
+    "ref": null,
+    "index": 7
+  },
+  {
+    "_id": "REF_PLUGIN_LIGHT_BULB_INC",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "lighting"
+    ],
+    "description": "Incandescent light bulb (plug-in) [watt/device]",
+    "value": 60,
+    "source": null,
+    "ref": null,
+    "index": 8
+  },
+  {
+    "_id": "REF_PLUGIN_LIGHT_BULB_LED",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "lighting"
+    ],
+    "description": "LED light bulb (plug-in) [watt/device]",
+    "value": 10,
+    "source": null,
+    "ref": null,
+    "index": 9
+  },
+  {
+    "_id": "REF_RECHARGEABLE_BAT_TORCH",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "lighting"
+    ],
+    "description": "Small handheld torch (rechargeable batteries) [watt/device]",
+    "value": 1,
+    "source": null,
+    "ref": null,
+    "index": 10
+  },
+  {
+    "_id": "REF_RECHARGEABLE_BAT_BIG_TORCH",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "lighting"
+    ],
+    "description": "Big handheld torch (rechargeable batteries) [watt/device]",
+    "value": 5,
+    "source": null,
+    "ref": null,
+    "index": 11
+  },
+  {
+    "_id": "REF_RECHARGEABLE_BAT_LANTERN",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "lighting"
+    ],
+    "description": "Lantern (rechargeable batteries) [watt/device]",
+    "value": 3,
+    "source": null,
+    "ref": null,
+    "index": 12
+  },
+  {
+    "_id": "REF_TORCH",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "lighting"
+    ],
+    "description": "Small handheld torc [watt/device]",
+    "value": 1,
+    "source": null,
+    "ref": null,
+    "index": 13
+  },
+  {
+    "_id": "REF_TORCH_BIG",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "lighting"
+    ],
+    "description": "Big handheld torch [watt/device]",
+    "value": 3,
+    "source": null,
+    "ref": null,
+    "index": 14
+  },
+  {
+    "_id": "REF_LANTERN",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "lighting"
+    ],
+    "description": "Lantern [watt/device]",
+    "value": 1,
+    "source": null,
+    "ref": null,
+    "index": 15
+  },
+  {
+    "_id": "REG_GEN_LOAD",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "facilities",
+      "cooking",
+      "lighting"
+    ],
+    "description": "Generator load [percentage]",
+    "value": 0.6,
+    "source": null,
+    "ref": null,
+    "index": 16
+  }
+]
