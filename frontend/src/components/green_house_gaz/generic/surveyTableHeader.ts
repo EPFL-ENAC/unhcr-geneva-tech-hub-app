@@ -268,6 +268,7 @@ export interface EasySurveyTableHeader {
     localInput: SurveyInput;
     surveyItem: SurveyTableHeader;
     intervention: boolean;
+    ghgMapDefaultValues?: ItemReferencesMap;
   }) => string;
   hintPersistent: boolean | undefined;
 }

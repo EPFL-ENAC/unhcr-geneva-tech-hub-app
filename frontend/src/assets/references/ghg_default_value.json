@@ -19,13 +19,13 @@
     "index": 0
   },
   {
-    "_id": "REF_FWD",
+    "_id": "REF_LIGHTING_FWD",
     "type": "number",
     "category": [
       "energy"
     ],
     "subcat": [
-      "cooking"
+      "lighting"
     ],
     "description": "Firewood [kg/capita/day]",
     "value": 0.44,
@@ -34,13 +34,13 @@
     "index": 1
   },
   {
-    "_id": "REF_BGS",
+    "_id": "REF_LIGHTING_BGS",
     "type": "number",
     "category": [
       "energy"
     ],
     "subcat": [
-      "cooking"
+      "lighting"
     ],
     "description": "Biogas [m3/capita/day]",
     "value": 0.4,
@@ -49,13 +49,13 @@
     "index": 2
   },
   {
-    "_id": "REF_PET",
+    "_id": "REF_LIGHTING_PET",
     "type": "number",
     "category": [
       "energy"
     ],
     "subcat": [
-      "cooking"
+      "lighting"
     ],
     "description": "Gasoline [kg/capita/day]",
     "value": 0.351,
@@ -64,13 +64,13 @@
     "index": 3
   },
   {
-    "_id": "REF_KRS",
+    "_id": "REF_LIGHTING_KRS",
     "type": "number",
     "category": [
       "energy"
     ],
     "subcat": [
-      "cooking"
+      "lighting"
     ],
     "description": "Kerosene [kg/capita/day]",
     "value": 0.03276,
@@ -79,7 +79,7 @@
     "index": 4
   },
   {
-    "_id": "REF_OIL",
+    "_id": "REF_LIGHTING_OIL",
     "type": "number",
     "category": [
       "energy"
@@ -94,7 +94,7 @@
     "index": 5
   },
   {
-    "_id": "REF_CNDL",
+    "_id": "REF_LIGHTING_CNDL",
     "type": "number",
     "category": [
       "energy"
@@ -109,7 +109,7 @@
     "index": 6
   },
   {
-    "_id": "REF_SOLAR_LANTERN",
+    "_id": "REF_LIGHTING_SOLAR_LANTERN",
     "type": "number",
     "category": [
       "energy"
@@ -124,7 +124,7 @@
     "index": 7
   },
   {
-    "_id": "REF_PLUGIN_LIGHT_BULB_INC",
+    "_id": "REF_LIGHTING_PLUGIN_LIGHT_BULB_INC",
     "type": "number",
     "category": [
       "energy"
@@ -139,7 +139,7 @@
     "index": 8
   },
   {
-    "_id": "REF_PLUGIN_LIGHT_BULB_LED",
+    "_id": "REF_LIGHTING_PLUGIN_LIGHT_BULB_LED",
     "type": "number",
     "category": [
       "energy"
@@ -154,7 +154,7 @@
     "index": 9
   },
   {
-    "_id": "REF_RECHARGEABLE_BAT_TORCH",
+    "_id": "REF_LIGHTING_RECHARGEABLE_BAT_TORCH",
     "type": "number",
     "category": [
       "energy"
@@ -169,7 +169,7 @@
     "index": 10
   },
   {
-    "_id": "REF_RECHARGEABLE_BAT_BIG_TORCH",
+    "_id": "REF_LIGHTING_RECHARGEABLE_BAT_BIG_TORCH",
     "type": "number",
     "category": [
       "energy"
@@ -184,7 +184,7 @@
     "index": 11
   },
   {
-    "_id": "REF_RECHARGEABLE_BAT_LANTERN",
+    "_id": "REF_LIGHTING_RECHARGEABLE_BAT_LANTERN",
     "type": "number",
     "category": [
       "energy"
@@ -199,7 +199,7 @@
     "index": 12
   },
   {
-    "_id": "REF_TORCH",
+    "_id": "REF_LIGHTING_TORCH",
     "type": "number",
     "category": [
       "energy"
@@ -214,7 +214,7 @@
     "index": 13
   },
   {
-    "_id": "REF_TORCH_BIG",
+    "_id": "REF_LIGHTING_TORCH_BIG",
     "type": "number",
     "category": [
       "energy"
@@ -229,7 +229,7 @@
     "index": 14
   },
   {
-    "_id": "REF_LANTERN",
+    "_id": "REF_LIGHTING_LANTERN",
     "type": "number",
     "category": [
       "energy"
@@ -242,6 +242,426 @@
     "source": null,
     "ref": null,
     "index": 15
+  },
+  {
+    "_id": "REF_COOKING_2_FWD",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Three stone fire Firewood [watt/device]",
+    "value": 1.7,
+    "source": null,
+    "ref": null,
+    "index": 16
+  },
+  {
+    "_id": "REF_COOKING_2_CHC",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Three stone fire Charcoal [watt/device]",
+    "value": 0.898983051,
+    "source": null,
+    "ref": null,
+    "index": 17
+  },
+  {
+    "_id": "REF_COOKING_2_PLTS",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Three stone fire Pellets [watt/device]",
+    "value": 2.286206897,
+    "source": null,
+    "ref": null,
+    "index": 18
+  },
+  {
+    "_id": "REF_COOKING_2_BRQ",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Three stone fire Brickets [watt/device]",
+    "value": 2.286206897,
+    "source": null,
+    "ref": null,
+    "index": 19
+  },
+  {
+    "_id": "REF_COOKING_3_FWD",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Artisanal cookstove Firewood [watt/device]",
+    "value": 1.578571429,
+    "source": null,
+    "ref": null,
+    "index": 20
+  },
+  {
+    "_id": "REF_COOKING_3_CHC",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Artisanal cookstove Charcoal [watt/device]",
+    "value": 0.834769976,
+    "source": null,
+    "ref": null,
+    "index": 21
+  },
+  {
+    "_id": "REF_COOKING_3_BRQ",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Artisanal cookstove Brickets [watt/device]",
+    "value": 2.122906404,
+    "source": null,
+    "ref": null,
+    "index": 22
+  },
+  {
+    "_id": "REF_COOKING_3_PLTS",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Artisanal cookstove Pellets [watt/device]",
+    "value": 2.122906404,
+    "source": null,
+    "ref": null,
+    "index": 23
+  },
+  {
+    "_id": "REF_COOKING_4_FWD",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Improved cookstove Firewood [watt/device]",
+    "value": 1.163157895,
+    "source": null,
+    "ref": null,
+    "index": 24
+  },
+  {
+    "_id": "REF_COOKING_4_CHC",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Improved cookstove Charcoal [watt/device]",
+    "value": 0.615093666,
+    "source": null,
+    "ref": null,
+    "index": 25
+  },
+  {
+    "_id": "REF_COOKING_4_BRQ",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Improved cookstove Brickets [watt/device]",
+    "value": 1.564246824,
+    "source": null,
+    "ref": null,
+    "index": 26
+  },
+  {
+    "_id": "REF_COOKING_4_PLTS",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Improved cookstove Pellets [watt/device]",
+    "value": 1.564246824,
+    "source": null,
+    "ref": null,
+    "index": 27
+  },
+  {
+    "_id": "REF_COOKING_5_FWD",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Gasifier stove Firewood [watt/device]",
+    "value": 0.631428571,
+    "source": null,
+    "ref": null,
+    "index": 28
+  },
+  {
+    "_id": "REF_COOKING_5_BRQ",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Gasifier stove Brickets [watt/device]",
+    "value": 0.84916256,
+    "source": null,
+    "ref": null,
+    "index": 29
+  },
+  {
+    "_id": "REF_COOKING_5_PLTS",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Gasifier stove Pellets [watt/device]",
+    "value": 0.849162562,
+    "source": null,
+    "ref": null,
+    "index": 30
+  },
+  {
+    "_id": "REF_COOKING_6_ETH",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Liquid fuel cookstove Ethanol [L/day]",
+    "value": 0.354443685,
+    "source": null,
+    "ref": null,
+    "index": 31
+  },
+  {
+    "_id": "REF_COOKING_6_PET",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Liquid fuel cookstove Gasoline [L/day]",
+    "value": 0.226270184,
+    "source": null,
+    "ref": null,
+    "index": 32
+  },
+  {
+    "_id": "REF_COOKING_6_DIES",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Liquid fuel cookstove Diesel [L/day]",
+    "value": 0.205055612,
+    "source": null,
+    "ref": null,
+    "index": 33
+  },
+  {
+    "_id": "REF_COOKING_6_KRS",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Gas powered cookstove Kerosene [L/day]",
+    "value": 0.211251553,
+    "source": null,
+    "ref": null,
+    "index": 34
+  },
+  {
+    "_id": "REF_COOKING_7_LPG",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Gas powered cookstove LPG [kg/day]",
+    "value": 0.086,
+    "source": null,
+    "ref": null,
+    "index": 35
+  },
+  {
+    "_id": "REF_COOKING_7_BGS",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Gas powered cookstove Biogas [m3/day]",
+    "value": 0.155112839,
+    "source": null,
+    "ref": null,
+    "index": 36
+  },
+  {
+    "_id": "REF_COOKING_7_PNG",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Gas powered cookstove Piped Natural Gas [m3/day]",
+    "value": 0.18554637,
+    "source": null,
+    "ref": null,
+    "index": 37
+  },
+  {
+    "_id": "REF_COOKING_8_ELE_DIES",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Electric cookstove Diesel generator [kWh/capita/day]",
+    "value": 0.2,
+    "source": null,
+    "ref": null,
+    "index": 38
+  },
+  {
+    "_id": "REF_COOKING_8_ELE_GRID",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Electric cookstove Grid [kWh/capita/day]",
+    "value": 0.6,
+    "source": null,
+    "ref": null,
+    "index": 39
+  },
+  {
+    "_id": "REF_COOKING_8_ELE_HYB",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Electric cookstove Hybrid grid [kWh/capita/day]",
+    "value": 0.6,
+    "source": null,
+    "ref": null,
+    "index": 40
+  },
+  {
+    "_id": "REF_COOKING_8_ELE_NONE",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Electric cookstove None [kWh/capita/day]",
+    "value": 0,
+    "source": null,
+    "ref": null,
+    "index": 41
+  },
+  {
+    "_id": "REF_COOKING_8_ELE_SOLAR",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Electric cookstove Solar electric [kWh/capita/day]",
+    "value": 0.6,
+    "source": null,
+    "ref": null,
+    "index": 42
+  },
+  {
+    "_id": "REF_COOKING_9_THE",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Solar thermal cooker [kWh/capita/day]",
+    "value": 0.02,
+    "source": null,
+    "ref": null,
+    "index": 43
   },
   {
     "_id": "REG_GEN_LOAD",
@@ -258,6 +678,6 @@
     "value": 0.6,
     "source": null,
     "ref": null,
-    "index": 16
+    "index": 44
   }
 ]

@@ -18,7 +18,13 @@
       </template>
     </v-tabs>
     <v-card-text v-if="filteredItems">
-      <v-data-table :headers="headers" :items="filteredItems" dense>
+      <v-data-table
+        :headers="headers"
+        :items="filteredItems"
+        dense
+        disable-pagination
+        hide-default-footer
+      >
         <template #[`item.value`]="props">
           <span :title="props.item._id">{{
             props.item.value | formatNumberGhgRef
@@ -60,17 +66,11 @@
         </template>
       </v-data-table>
     </v-card-text>
-    <div v-if="DomesticSolidWaste === selectedTab">
-      <GHGMixedBiowaste />
-      <GHGMixedNonBiowaste />
-    </div>
   </v-card>
 </template>
 
 <script lang="ts">
 import InfoTooltip from "@/components/commons/InfoTooltip.vue";
-import GHGMixedBiowaste from "@/components/reference_data/GHGMixedBiowaste.vue";
-import GHGMixedNonBiowaste from "@/components/reference_data/GHGMixedNonBiowaste.vue";
 import { ReferenceItemInterface } from "@/store/GhgReferenceModule";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { Route } from "vue-router";
@@ -83,8 +83,6 @@ import { mapGetters } from "vuex";
   },
   components: {
     InfoTooltip,
-    GHGMixedBiowaste,
-    GHGMixedNonBiowaste,
   },
 })
 export default class DefaultValues extends Vue {
@@ -126,11 +124,11 @@ export default class DefaultValues extends Vue {
       to: "Lighting",
     },
     { text: "Water Supply", to: "Water-Supply", icon: "$mdiWaterPump" },
-    {
-      text: "Domestic solid waste",
-      to: this.DomesticSolidWaste,
-      icon: "$mdiTrashCanOutline",
-    },
+    // {
+    //   text: "Domestic solid waste",
+    //   to: this.DomesticSolidWaste,
+    //   icon: "$mdiTrashCanOutline",
+    // },
   ];
 
   @Watch("$route", { immediate: true, deep: true })

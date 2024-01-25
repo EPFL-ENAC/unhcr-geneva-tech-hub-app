@@ -1,18 +1,46 @@
 _id,type,category,subcat,description,value,source,ref,index
 REF_POW_FAC,number,"[energy,wash]","[facilities,cooking,lighting,water-supply]",Power factor - Diesel generator,0.8,https://www.globalpwr.com/power-calculator/,factor to convert kVA to kW,0
-REF_FWD,number,[energy],[cooking],Firewood [kg/capita/day],0.44,,,1
-REF_BGS,number,[energy],[cooking],Biogas [m3/capita/day],0.4,https://energypedia.info/images/2/2c/Biogas_gate_volume_2.pdf,,16
-REF_PET,number,[energy],[cooking],Gasoline [kg/capita/day],0.351,,,2
-REF_KRS,number,[energy],[cooking],Kerosene [kg/capita/day],0.03276,,,3
-REF_OIL,number,[energy],[lighting],Vegetable oil [kg/capita/day],0.14,,,4
-REF_CNDL,number,[energy],[lighting],Candle (paraffin) [kg/capita/day],0.0053,,,5
-REF_SOLAR_LANTERN,number,[energy],[lighting],Solar lantern [watt/device],0.3,,,6
-REF_PLUGIN_LIGHT_BULB_INC,number,[energy],[lighting],Incandescent light bulb (plug-in) [watt/device],60,,,7
-REF_PLUGIN_LIGHT_BULB_LED,number,[energy],[lighting],LED light bulb (plug-in) [watt/device],10,,,8
-REF_RECHARGEABLE_BAT_TORCH,number,[energy],[lighting],Small handheld torch (rechargeable batteries) [watt/device],1,,,9
-REF_RECHARGEABLE_BAT_BIG_TORCH,number,[energy],[lighting],Big handheld torch (rechargeable batteries) [watt/device],5,,,10
-REF_RECHARGEABLE_BAT_LANTERN,number,[energy],[lighting],Lantern (rechargeable batteries) [watt/device],3,,,11
-REF_TORCH,number,[energy],[lighting],Small handheld torc [watt/device],1,,,12
-REF_TORCH_BIG,number,[energy],[lighting],Big handheld torch [watt/device],3,,,13
-REF_LANTERN,number,[energy],[lighting],Lantern [watt/device],1,,,14
-REG_GEN_LOAD,number,[energy],"[facilities,cooking,lighting]",Generator load [percentage],0.6,,,15
+REF_LIGHTING_FWD,number,[energy],[lighting],Firewood [kg/capita/day],0.44,,,1
+REF_LIGHTING_BGS,number,[energy],[lighting],Biogas [m3/capita/day],0.4,https://energypedia.info/images/2/2c/Biogas_gate_volume_2.pdf,,2
+REF_LIGHTING_PET,number,[energy],[lighting],Gasoline [kg/capita/day],0.351,,,3
+REF_LIGHTING_KRS,number,[energy],[lighting],Kerosene [kg/capita/day],0.03276,,,4
+REF_LIGHTING_OIL,number,[energy],[lighting],Vegetable oil [kg/capita/day],0.14,,,5
+REF_LIGHTING_CNDL,number,[energy],[lighting],Candle (paraffin) [kg/capita/day],0.0053,,,6
+REF_LIGHTING_SOLAR_LANTERN,number,[energy],[lighting],Solar lantern [watt/device],0.3,,,7
+REF_LIGHTING_PLUGIN_LIGHT_BULB_INC,number,[energy],[lighting],Incandescent light bulb (plug-in) [watt/device],60,,,8
+REF_LIGHTING_PLUGIN_LIGHT_BULB_LED,number,[energy],[lighting],LED light bulb (plug-in) [watt/device],10,,,9
+REF_LIGHTING_RECHARGEABLE_BAT_TORCH,number,[energy],[lighting],Small handheld torch (rechargeable batteries) [watt/device],1,,,10
+REF_LIGHTING_RECHARGEABLE_BAT_BIG_TORCH,number,[energy],[lighting],Big handheld torch (rechargeable batteries) [watt/device],5,,,11
+REF_LIGHTING_RECHARGEABLE_BAT_LANTERN,number,[energy],[lighting],Lantern (rechargeable batteries) [watt/device],3,,,12
+REF_LIGHTING_TORCH,number,[energy],[lighting],Small handheld torc [watt/device],1,,,13
+REF_LIGHTING_TORCH_BIG,number,[energy],[lighting],Big handheld torch [watt/device],3,,,14
+REF_LIGHTING_LANTERN,number,[energy],[lighting],Lantern [watt/device],1,,,15
+REF_COOKING_2_FWD,number,[energy],[cooking],Three stone fire Firewood [watt/device],1.7,,,16
+REF_COOKING_2_CHC,number,[energy],[cooking],Three stone fire Charcoal [watt/device],0.898983051,,,17
+REF_COOKING_2_PLTS,number,[energy],[cooking],Three stone fire Pellets [watt/device],2.286206897,,,18
+REF_COOKING_2_BRQ,number,[energy],[cooking],Three stone fire Brickets [watt/device],2.286206897,,,19
+REF_COOKING_3_FWD,number,[energy],[cooking],Artisanal cookstove Firewood [watt/device],1.578571429,,,20
+REF_COOKING_3_CHC,number,[energy],[cooking],Artisanal cookstove Charcoal [watt/device],0.834769976,,,21
+REF_COOKING_3_BRQ,number,[energy],[cooking],Artisanal cookstove Brickets [watt/device],2.122906404,,,22
+REF_COOKING_3_PLTS,number,[energy],[cooking],Artisanal cookstove Pellets [watt/device],2.122906404,,,23
+REF_COOKING_4_FWD,number,[energy],[cooking],Improved cookstove Firewood [watt/device],1.163157895,,,24
+REF_COOKING_4_CHC,number,[energy],[cooking],Improved cookstove Charcoal [watt/device],0.615093666,,,25
+REF_COOKING_4_BRQ,number,[energy],[cooking],Improved cookstove Brickets [watt/device],1.564246824,,,26
+REF_COOKING_4_PLTS,number,[energy],[cooking],Improved cookstove Pellets [watt/device],1.564246824,,,27
+REF_COOKING_5_FWD,number,[energy],[cooking],Gasifier stove Firewood [watt/device],0.631428571,,,28
+REF_COOKING_5_BRQ,number,[energy],[cooking],Gasifier stove Brickets [watt/device],0.84916256,,,29
+REF_COOKING_5_PLTS,number,[energy],[cooking],Gasifier stove Pellets [watt/device],0.849162562,,,30
+REF_COOKING_6_ETH,number,[energy],[cooking],Liquid fuel cookstove Ethanol [L/day],0.354443685,,,31
+REF_COOKING_6_PET,number,[energy],[cooking],Liquid fuel cookstove Gasoline [L/day],0.226270184,,,32
+REF_COOKING_6_DIES,number,[energy],[cooking],Liquid fuel cookstove Diesel [L/day],0.205055612,,,33
+REF_COOKING_6_KRS,number,[energy],[cooking],Gas powered cookstove Kerosene [L/day],0.211251553,,,34
+REF_COOKING_7_LPG,number,[energy],[cooking],Gas powered cookstove LPG [kg/day],0.086,,,35
+REF_COOKING_7_BGS,number,[energy],[cooking],Gas powered cookstove Biogas [m3/day],0.155112839,,,36
+REF_COOKING_7_PNG,number,[energy],[cooking],Gas powered cookstove Piped Natural Gas [m3/day],0.18554637,,,37
+REF_COOKING_8_ELE_DIES,number,[energy],[cooking],Electric cookstove Diesel generator [kWh/capita/day],0.2,,,38
+REF_COOKING_8_ELE_GRID,number,[energy],[cooking],Electric cookstove Grid [kWh/capita/day],0.6,,,39
+REF_COOKING_8_ELE_HYB,number,[energy],[cooking],Electric cookstove Hybrid grid [kWh/capita/day],0.6,,,40
+REF_COOKING_8_ELE_NONE,number,[energy],[cooking],Electric cookstove None [kWh/capita/day],0,,,41
+REF_COOKING_8_ELE_SOLAR,number,[energy],[cooking],Electric cookstove Solar electric [kWh/capita/day],0.6,,,42
+REF_COOKING_9_THE,number,[energy],[cooking],Solar thermal cooker [kWh/capita/day],0.02,,,43
+REG_GEN_LOAD,number,[energy],"[facilities,cooking,lighting]",Generator load [percentage],0.6,,,44

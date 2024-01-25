@@ -227,10 +227,6 @@ export default class SurveyItemDialog extends Vue {
       // it's on purpose we don't want to show the error
       // A better way of doing this, would be to have a partial computed, that does not fail on error
       // but we don't have time for that right now
-      // console.log(
-      //   "warning in computeItem, due to unfinished/not valid form",
-      //   e
-      // );
     }
   }
 
@@ -398,6 +394,7 @@ export default class SurveyItemDialog extends Vue {
           localInput: this.localItem?.input ?? {},
           surveyItem: header,
           intervention: this.intervention,
+          ghgMapDefaultValues: this.ghgMapDefaultValue,
         });
       }
       return header;
