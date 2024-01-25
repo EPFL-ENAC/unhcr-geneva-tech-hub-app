@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.7.0...v1.8.0) (2024-01-25)
+
+
+### Features
+
+* **ghg:** add default values in raw data and json format and ref table [#608](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/608) ([c525998](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c5259986f6cc63e62878d5652dcf8567a787fcbd))
+* **ghg:** use default values reference for power factor [#608](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/608) ([ed51ed4](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/ed51ed45ab27e509ee23e1cac69748b51e3460a1))
+
+
+### Bug Fixes
+
+* **azure:** update latest public key ([32295c2](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/32295c223a6ec6025bfb7c47ee2f1f18e28debab))
+
 ## [1.7.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.6.1...v1.7.0) (2024-01-23)
 
 
