@@ -8,6 +8,7 @@ import GHGReferenceBioWasteModule from "@/store/GHGReferenceBioWasteModule";
 import GHGReferencefNRB from "@/store/GHGReferencefNRB";
 import GhgReferenceIgesGridModule from "@/store/GhgReferenceIgesGridModule";
 import GhgReferenceModule from "@/store/GhgReferenceModule";
+import GhgDefaultValuesModule from "@/store/GhgDefaultValuesModule";
 import GHGReferenceNonBioWasteModule from "@/store/GHGReferenceNonBioWasteModule";
 import GhgReferenceRegionModule from "@/store/GHGReferenceRegionModule";
 import GhgReferenceSolarModule from "@/store/GHGReferenceSolarModule";
@@ -338,6 +339,7 @@ const store: StoreOptions<RootState> = {
     GHGReferenceBioWasteModule,
     GHGReferenceNonBioWasteModule,
     GhgReferenceModule,
+    GhgDefaultValuesModule,
     GhgReferenceIgesGridModule,
     GhgReferenceRegionModule,
     GhgReferenceSolarModule,

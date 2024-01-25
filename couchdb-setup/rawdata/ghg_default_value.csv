@@ -1,0 +1,18 @@
+_id,type,category,subcat,description,value,source,ref,index
+REF_POW_FAC,number,"[energy,wash]","[facilities,cooking,lighting,water-supply]",Power factor - Diesel generator,0.8,https://www.globalpwr.com/power-calculator/,factor to convert kVA to kW,0
+REF_FWD,number,[energy],[cooking],Firewood [kg/capita/day],0.44,,,1
+REF_BGS,number,[energy],[cooking],Biogas [m3/capita/day],0.4,https://energypedia.info/images/2/2c/Biogas_gate_volume_2.pdf,,16
+REF_PET,number,[energy],[cooking],Gasoline [kg/capita/day],0.351,,,2
+REF_KRS,number,[energy],[cooking],Kerosene [kg/capita/day],0.03276,,,3
+REF_OIL,number,[energy],[lighting],Vegetable oil [kg/capita/day],0.14,,,4
+REF_CNDL,number,[energy],[lighting],Candle (paraffin) [kg/capita/day],0.0053,,,5
+REF_SOLAR_LANTERN,number,[energy],[lighting],Solar lantern [watt/device],0.3,,,6
+REF_PLUGIN_LIGHT_BULB_INC,number,[energy],[lighting],Incandescent light bulb (plug-in) [watt/device],60,,,7
+REF_PLUGIN_LIGHT_BULB_LED,number,[energy],[lighting],LED light bulb (plug-in) [watt/device],10,,,8
+REF_RECHARGEABLE_BAT_TORCH,number,[energy],[lighting],Small handheld torch (rechargeable batteries) [watt/device],1,,,9
+REF_RECHARGEABLE_BAT_BIG_TORCH,number,[energy],[lighting],Big handheld torch (rechargeable batteries) [watt/device],5,,,10
+REF_RECHARGEABLE_BAT_LANTERN,number,[energy],[lighting],Lantern (rechargeable batteries) [watt/device],3,,,11
+REF_TORCH,number,[energy],[lighting],Small handheld torc [watt/device],1,,,12
+REF_TORCH_BIG,number,[energy],[lighting],Big handheld torch [watt/device],3,,,13
+REF_LANTERN,number,[energy],[lighting],Lantern [watt/device],1,,,14
+REG_GEN_LOAD,number,[energy],"[facilities,cooking,lighting]",Generator load [percentage],0.6,,,15

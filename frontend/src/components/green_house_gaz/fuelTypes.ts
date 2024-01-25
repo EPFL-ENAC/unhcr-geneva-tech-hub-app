@@ -65,7 +65,7 @@ export const gasFuels = ["LPG", "BGS", "PNG"] as const;
 export type GasFuel = (typeof gasFuels)[number];
 export const gasFuelWithText: IdTextTypesItem<GasFuel>[] = [
   { _id: "LPG", text: "LPG" },
-  { _id: "BGS", text: "BIOGAS" },
+  { _id: "BGS", text: "BIOGAS", default: 0.0400 },
   { _id: "PNG", text: "Piped Natural Gas" },
 ];
 // end of gasFuels fuels
