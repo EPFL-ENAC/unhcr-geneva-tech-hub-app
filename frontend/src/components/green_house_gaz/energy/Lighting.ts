@@ -201,31 +201,26 @@ export type PlugingRecheargeableDevice =
   (typeof plugingRecheargeableDevices)[number];
 export const plugingRecheargeableDevicesWithText: IdTextTypesItem<PlugingRecheargeableDevice>[] =
   [
-    { _id: "POWER_KNOWN", text: "Power of device known", default: 10 },
+    { _id: "POWER_KNOWN", text: "Power of device known" },
     {
       _id: "PLUGIN_LIGHT_BULB_INC",
       text: "Incandescent light bulb (plug-in)",
-      default: 60,
     },
     {
       _id: "PLUGIN_LIGHT_BULB_LED",
       text: "LED light bulb (plug-in)",
-      default: 10,
     },
     {
       _id: "RECHARGEABLE_BAT_TORCH",
       text: "Small handheld torch (rechargeable batteries)",
-      default: 1,
     },
     {
       _id: "RECHARGEABLE_BAT_BIG_TORCH",
       text: "Big handheld torch (rechargeable batteries)",
-      default: 5,
     },
     {
       _id: "RECHARGEABLE_BAT_LANTERN",
       text: "Lantern (rechargeable batteries)",
-      default: 3,
     },
   ];
 
@@ -237,9 +232,9 @@ export const singleUseBatteryDevices = [
 export type SingleUseBatteryDevices = (typeof singleUseBatteryDevices)[number];
 export const singleUseBatteryDevicesWithText: IdTextTypesItem<SingleUseBatteryDevices>[] =
   [
-    { _id: "TORCH", text: "Small handheld torch", default: 1 },
-    { _id: "TORCH_BIG", text: "Big handheld torch", default: 3 },
-    { _id: "LANTERN", text: "Lantern", default: 1 },
+    { _id: "TORCH", text: "Small handheld torch" },
+    { _id: "TORCH_BIG", text: "Big handheld torch" },
+    { _id: "LANTERN", text: "Lantern" },
   ];
 export type AllDevices =
   | SingleUseBatteryDevices
@@ -254,7 +249,6 @@ export const AllDevicesWithTextById = [
   return acc;
 }, {} as Record<AllDevices, IdTextTypesItem<AllDevices>>);
 
-// TODO: use unique id instead of text
 export const solidFuelsEnergyType = "Solid fuels";
 export const liquidFuelsEnergyType = "Liquid fuels";
 export const electricFuelsEnergyType = "Electric / Battery / Solar";
@@ -314,9 +308,14 @@ export function commonElectricSolarDevicesHeaders() {
       formatter: (v: AllDevices) => {
         return AllDevicesWithTextById[v]?.text;
       },
-      customEventInput: (deviceType: AllDevices, localInput: SurveyInput) => {
+      customEventInput: (
+        deviceType: AllDevices,
+        localInput: SurveyInput,
+        _: ItemReferencesMap,
+        ghgMapDefaultValue: ItemReferencesMap
+      ) => {
         localInput.electricPower =
-          AllDevicesWithTextById[deviceType]?.default ?? 0;
+          ghgMapDefaultValue?.[`REF_LIGHTING_${deviceType}`]?.value ?? 0;
         return localInput;
       },
       suffix: "W",
@@ -347,8 +346,12 @@ export function commonElectricSolarDevicesHeaders() {
         localInput: EnergyLightingItemInput;
         surveyItemHeader: SurveyTableHeader;
         intervention: boolean;
+        ghgMapDefaultValues?: ItemReferencesMap;
       }): string | undefined => {
-        const defaultPower = getDefaultPower(options?.localInput);
+        const defaultPower = getDefaultPower(
+          options?.localInput,
+          options?.ghgMapDefaultValues
+        );
         // warning since it's a percentage we return 1; because it means 100%
         return `default: ${defaultPower}`;
       },
@@ -536,7 +539,8 @@ export function conditionalFunctionElectricHybDevices(itemInput: SurveyInput) {
 
 export function getDefaultFuel(
   localInput: EnergyLightingItemInput,
-  pp_per_hh: number | undefined
+  pp_per_hh: number | undefined,
+  ghgMapDefaultValues?: ItemReferencesMap
 ): number {
   if (pp_per_hh === undefined) {
     // should be defined, so no error
@@ -545,11 +549,14 @@ export function getDefaultFuel(
 
   const currentFuelType = localInput?.fuelType ?? "NO_ACCESS";
   const currentDefault =
-    AllLightingFuelsWithTextById?.[currentFuelType]?.default ?? 0;
+    ghgMapDefaultValues?.[`REF_LIGHTING_${currentFuelType}`]?.value ?? 0;
   return currentDefault * pp_per_hh;
 }
 
-export function getDefaultPower(localInput: EnergyLightingItemInput): number {
+export function getDefaultPower(
+  localInput: EnergyLightingItemInput,
+  ghgMapDefaultValues?: ItemReferencesMap
+): number {
   const currentEnergySubType = localInput.energySubType;
   const currentEnergyType = localInput.energyType;
   let defaultElectricPower = 0;
@@ -557,12 +564,14 @@ export function getDefaultPower(localInput: EnergyLightingItemInput): number {
     if (currentEnergySubType !== solarLanternDevice) {
       if (localInput.deviceType !== undefined) {
         defaultElectricPower =
-          AllDevicesWithTextById[localInput.deviceType]?.default ?? 0;
+          ghgMapDefaultValues?.[`REF_LIGHTING_${localInput.deviceType}`]
+            ?.value ?? 0;
       }
     } else {
       if (currentEnergySubType !== undefined) {
         defaultElectricPower =
-          AllDevicesWithTextById[currentEnergySubType]?.default ?? 0;
+          ghgMapDefaultValues?.[`REF_LIGHTING_${currentEnergySubType}`]
+            ?.value ?? 0;
       }
     }
   }
@@ -865,7 +874,9 @@ export function headers(
       },
       customEventInput: (
         fuelType: AllFuel,
-        localInput: EnergyLightingItemInput
+        localInput: EnergyLightingItemInput,
+        _?: ItemReferencesMap,
+        ghgMapDefaultValues?: ItemReferencesMap
       ) => {
         resetSurveyFuelOption(localInput);
         // setup default value based on fueltype
@@ -873,7 +884,11 @@ export function headers(
           localInput.dryWood = true;
         }
         localInput.fuelType = fuelType;
-        localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
+        localInput.fuelUsage = getDefaultFuel(
+          localInput,
+          pp_per_hh,
+          ghgMapDefaultValues
+        );
         return localInput;
       },
       type: "select",
@@ -972,9 +987,14 @@ export function headers(
         localInput: EnergyLightingItemInput;
         surveyItemHeader: SurveyTableHeader;
         intervention: boolean;
+        ghgMapDefaultValues?: ItemReferencesMap;
       }): string | undefined => {
         // warning since it's a percentage we return 1; because it means 100%
-        return `default: ${getDefaultFuel(options?.localInput, pp_per_hh)}`;
+        return `default: ${getDefaultFuel(
+          options?.localInput,
+          pp_per_hh,
+          options?.ghgMapDefaultValues
+        )}`;
       },
       type: "number",
       disabledWithConditions: "disabledFuelUsage",

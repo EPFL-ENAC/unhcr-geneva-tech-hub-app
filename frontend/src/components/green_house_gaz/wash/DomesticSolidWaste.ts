@@ -12,8 +12,8 @@ import GhgCountryRegionMap from "@/assets/references/ghg_country_region_map.json
 import mixedBiowaste from "@/assets/references/ghg_ef_mixed_biowaste.json";
 import mixedNonBiowaste from "@/assets/references/ghg_ef_mixed_non_biowaste.json";
 import RefKeyName from "@/assets/references/ghg_ref_key_name.json";
-import {mdiDatabaseArrowRight} from "@mdi/js";
 import { numberOfDaysPerYear } from "@/components/green_house_gaz/energy/computeCO2cost";
+import { mdiDatabaseArrowRight } from "@mdi/js";
 
 import { SelectOption, SelectValue } from "@/components/commons/FormItem";
 import {
@@ -352,7 +352,6 @@ export function generateComputeItem(
   ): MaterialSolidWasteItemResults {
     const { percentageOfTotalCategories } = localItemInput;
     if (percentageOfTotalCategories === undefined) {
-      console.log(ghgMapRef);
       throw new Error("number of cooktsove not defined");
     }
     if (population === undefined) {

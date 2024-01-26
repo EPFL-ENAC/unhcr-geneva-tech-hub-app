@@ -41,12 +41,6 @@ export const cookstoveTECHs: CookstoveTech[] = [
     text: "Three stone fire",
     comment: "Photo: Manuel Krähenbühl",
     image: "/images/energy/cookstoves/three-stone-fire.webp",
-    defaults: {
-      FWD: 1.7,
-      CHC: 0.898983050847458,
-      PLTS: 2.28620689655172,
-      BRQ: 2.28620689655172,
-    },
   },
   {
     _id: "3",
@@ -54,47 +48,24 @@ export const cookstoveTECHs: CookstoveTech[] = [
     text: "Artisanal cookstove with solid biomass fuel",
     comment: "Photo: Manuel Krähenbühl",
     image: "/images/energy/cookstoves/artisanal-cookstove.webp",
-    defaults: {
-      FWD: 1.578571429,
-      CHC: 0.834769976,
-      BRQ: 2.122906404,
-      PLTS: 2.122906404,
-    },
   },
   {
     _id: "4",
     fuelTypes: biomassFuels,
     text: "Improved cookstove with solid biomass fuel",
     image: "/images/energy/cookstoves/improved-bricket.jpg",
-    defaults: {
-      FWD: 1.163157895,
-      CHC: 0.615093666,
-      BRQ: 1.564246824,
-      PLTS: 1.564246824,
-    },
   },
   {
     _id: "5",
     fuelTypes: biomassFuelsForGasifier,
     text: "Gasifier stove",
     image: "/images/energy/cookstoves/gasifier.png",
-    defaults: {
-      FWD: 0.631428571,
-      BRQ: 0.849162562,
-      PLTS: 0.849162562,
-    },
   },
   {
     _id: "6",
     fuelTypes: liquidFuels,
     text: "Liquid fuel cookstove",
     image: "/images/energy/cookstoves/kerosene.png",
-    defaults: {
-      ETH: 0.354443685,
-      PET: 0.226270184,
-      DIES: 0.205055612,
-      KRS: 0.211251553,
-    },
   },
   {
     _id: "7",
@@ -102,24 +73,12 @@ export const cookstoveTECHs: CookstoveTech[] = [
     text: "Gas powered cookstove",
     comment: "Photo: Manuel Krähenbühl",
     image: "/images/energy/cookstoves/gas-powered-cookstove.webp",
-    defaults: {
-      LPG: 0.086,
-      BGS: 0.155112839,
-      PNG: 0.18554637,
-    },
   },
   {
     _id: "8",
     fuelTypes: electricFuelsWithoutNone,
     text: "Electric cookstove",
     image: "/images/energy/cookstoves/induction.png",
-    defaults: {
-      ELE_DIES: 0.2,
-      ELE_GRID: 0.6,
-      ELE_HYB: 0.6,
-      ELE_NONE: 0,
-      ELE_SOLAR: 0.6,
-    },
   },
   {
     _id: cookstoveIdSolarCooker,
@@ -128,9 +87,6 @@ export const cookstoveTECHs: CookstoveTech[] = [
     tooltipInfo:
       "A solar thermal cooker cannot be used as a primary cooking solution to prepare 3 meals per day due to limitations with solar hours.",
     image: "/images/energy/cookstoves/solar-parabolic.png",
-    defaults: {
-      THE: 0.02, // of: ~0.02 kWh/d/person.
-    },
   },
 ];
 

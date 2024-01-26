@@ -18,7 +18,13 @@
       </template>
     </v-tabs>
     <v-card-text v-if="filteredItems">
-      <v-data-table :headers="headers" :items="filteredItems" dense>
+      <v-data-table
+        :headers="headers"
+        :items="filteredItems"
+        dense
+        disable-pagination
+        hide-default-footer
+      >
         <template #[`item.value`]="props">
           <span :title="props.item._id">{{
             props.item.value | formatNumberGhgRef

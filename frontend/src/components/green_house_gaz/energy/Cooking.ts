@@ -141,7 +141,8 @@ export function resetSurveyFuelOption(
 
 export function getDefaultFuel(
   localInput: EnergyCookingItemInput,
-  pp_per_hh: number | undefined
+  pp_per_hh: number | undefined,
+  ghgMapDefaultValues?: ItemReferencesMap
 ): number {
   const currentStove = cookstoveTECHs.find(
     (cookstove) => cookstove._id === localInput.cookstove
@@ -156,8 +157,11 @@ export function getDefaultFuel(
     return 0;
   }
 
-  let fuelUsage =
-    (currentStove.defaults?.[localInput.fuelType] ?? 0) * pp_per_hh;
+  const defaultFuelCapita =
+    ghgMapDefaultValues?.[
+      `REF_COOKING_${currentStove._id}_${localInput.fuelType}`
+    ]?.value ?? 0;
+  let fuelUsage = defaultFuelCapita * pp_per_hh;
 
   // for electric we don't use fuelUsage; fix for gridPower solarPower
 
@@ -242,7 +246,9 @@ export function headers(
       },
       customEventInput: (
         cookstoveId: string,
-        localInput: EnergyCookingItemInput
+        localInput: EnergyCookingItemInput,
+        _: ItemReferencesMap,
+        ghgMapDefaultValues?: ItemReferencesMap
       ) => {
         const currentStove = cookstoveTECHs.find(
           (cookstove) => cookstove._id === cookstoveId
@@ -264,7 +270,11 @@ export function headers(
         if (currentStove._id === cookstoveIdSolarCooker) {
           localInput.cookstove = cookstoveId;
           localInput.fuelType = thermalFuels[0];
-          localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
+          localInput.fuelUsage = getDefaultFuel(
+            localInput,
+            pp_per_hh,
+            ghgMapDefaultValues
+          );
           // compute default according to type
           localInput.renewablePower = computeThermalKWHPerYearFromPerDay(
             localInput.fuelUsage
@@ -325,7 +335,8 @@ export function headers(
       customEventInput: (
         fuelType: AllFuel,
         localInput: EnergyCookingItemInput,
-        ghgMapRef: ItemReferencesMap
+        ghgMapRef: ItemReferencesMap,
+        ghgMapDefaultValues?: ItemReferencesMap
       ) => {
         resetSurveyFuelOption(localInput);
         localInput.appliance = COOK_APP_Default;
@@ -335,7 +346,11 @@ export function headers(
         }
         localInput.fuelType = fuelType;
 
-        const defaultFuel = getDefaultFuel(localInput, pp_per_hh);
+        const defaultFuel = getDefaultFuel(
+          localInput,
+          pp_per_hh,
+          ghgMapDefaultValues
+        );
         localInput.fuelUsage = defaultFuel;
         localInput.hint = defaultFuel;
         localInput.persistentHint = true;
@@ -440,16 +455,26 @@ export function headers(
       type: "boolean",
       customEventInput: (
         disabledFuelUsage: boolean,
-        localInput: EnergyCookingItemInput
+        localInput: EnergyCookingItemInput,
+        _: ItemReferencesMap,
+        ghgMapDefaultValues?: ItemReferencesMap
       ) => {
         if (!localInput.fuelType) {
           return localInput;
         }
         if (!disabledFuelUsage) {
-          localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
+          localInput.fuelUsage = getDefaultFuel(
+            localInput,
+            pp_per_hh,
+            ghgMapDefaultValues
+          );
         } else {
           if (localInput.disableDieselLiters) {
-            localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
+            localInput.fuelUsage = getDefaultFuel(
+              localInput,
+              pp_per_hh,
+              ghgMapDefaultValues
+            );
           }
         }
         localInput.appliance = COOK_APP_Default;
@@ -474,14 +499,20 @@ export function headers(
       type: "boolean",
       customEventInput: (
         dryWood: boolean,
-        localInput: EnergyCookingItemInput
+        localInput: EnergyCookingItemInput,
+        _: ItemReferencesMap,
+        ghgMapDefaultValues: ItemReferencesMap
       ) => {
         if (!localInput.fuelUsage) {
           return localInput;
         }
 
         localInput.dryWood = dryWood;
-        localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
+        localInput.fuelUsage = getDefaultFuel(
+          localInput,
+          pp_per_hh,
+          ghgMapDefaultValues
+        );
         return localInput;
       },
     },
@@ -530,9 +561,14 @@ export function headers(
         localInput: EnergyCookingItemInput;
         surveyItemHeader: SurveyTableHeader;
         intervention: boolean;
+        ghgMapDefaultValues: ItemReferencesMap;
       }): string | undefined => {
         // warning since it's a percentage we return 1; because it means 100%
-        return `default: ${getDefaultFuel(options?.localInput, pp_per_hh)}`;
+        return `default: ${getDefaultFuel(
+          options?.localInput,
+          pp_per_hh,
+          options?.ghgMapDefaultValues
+        )}`;
       },
       disabledWithConditions: "disabledFuelUsage",
       disabledWithConditions_value: false,
@@ -623,13 +659,18 @@ export function headers(
       customEventInput: (
         appliance: string,
         localInput: EnergyCookingItemInput,
-        ghgMapRef: ItemReferencesMap
+        ghgMapRef: ItemReferencesMap,
+        ghgMapDefaultValues?: ItemReferencesMap
       ) => {
         if (!localInput.fuelUsage) {
           return localInput;
         }
         localInput.appliance = appliance;
-        localInput.fuelUsage = getDefaultFuel(localInput, pp_per_hh);
+        localInput.fuelUsage = getDefaultFuel(
+          localInput,
+          pp_per_hh,
+          ghgMapDefaultValues
+        );
         // exception
         if (localInput.fuelType === "ELE_DIES") {
           // localInput = dieselEstimated(localInput, true);
@@ -646,10 +687,18 @@ export function headers(
           );
         }
         if (localInput.fuelType === "ELE_GRID") {
-          localInput.gridPower = getDefaultFuel(localInput, pp_per_hh);
+          localInput.gridPower = getDefaultFuel(
+            localInput,
+            pp_per_hh,
+            ghgMapDefaultValues
+          );
         }
         if (localInput.fuelType === "ELE_SOLAR") {
-          localInput.renewablePower = getDefaultFuel(localInput, pp_per_hh);
+          localInput.renewablePower = getDefaultFuel(
+            localInput,
+            pp_per_hh,
+            ghgMapDefaultValues
+          );
           localInput.solarInstalled =
             computeKWInstalledWithKwhPerYearPerCountry(
               localInput.renewablePower,

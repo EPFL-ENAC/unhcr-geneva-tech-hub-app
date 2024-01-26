@@ -5,13 +5,6 @@ export interface IdTextTypesItem<T> {
   default?: number;
 }
 
-// TODO: lighting
-
-/*
--- tous les electric/solar devices sous un meme group.
-
-*/
-
 // electric fuels
 export const electricFuels = [
   "ELE_DIES",
@@ -42,7 +35,7 @@ export type BioMassFuel = (typeof biomassFuels)[number];
 export const biomassFuelsForGasifier = ["FWD", "BRQ", "PLTS"] as const;
 export type BioMassFuelWithoutCHC = (typeof biomassFuelsForGasifier)[number];
 export const biomassFuelWithText: IdTextTypesItem<BioMassFuel>[] = [
-  { _id: "FWD", text: "Wood", default: 0.44 }, // 2.14kg/capita/day -1.7 kg/cap/day =0.44 kg/capita/day
+  { _id: "FWD", text: "Wood" },
   { _id: "CHC", text: "Charcoal" },
   { _id: "PLTS", text: "Pellets" },
   { _id: "BRQ", text: "Briquette" },
@@ -54,9 +47,9 @@ export const liquidFuels = ["ETH", "PET", "DIES", "KRS"] as const;
 export type LiquidFuel = (typeof liquidFuels)[number];
 export const liquidFuelWithText: IdTextTypesItem<LiquidFuel>[] = [
   { _id: "ETH", text: "Ethanol/alcohol" },
-  { _id: "PET", text: "Petrol / Gas", default: 0.0351 }, // same as wash
-  { _id: "DIES", text: "Diesel" }, // same as facilities for diesel gen
-  { _id: "KRS", text: "Kerosene", default: 0.03276 }, // default for lighting
+  { _id: "PET", text: "Petrol / Gas" },
+  { _id: "DIES", text: "Diesel" },
+  { _id: "KRS", text: "Kerosene" },
 ];
 // end of liquid fuels
 
@@ -65,7 +58,7 @@ export const gasFuels = ["LPG", "BGS", "PNG"] as const;
 export type GasFuel = (typeof gasFuels)[number];
 export const gasFuelWithText: IdTextTypesItem<GasFuel>[] = [
   { _id: "LPG", text: "LPG" },
-  { _id: "BGS", text: "BIOGAS", default: 0.0400 },
+  { _id: "BGS", text: "BIOGAS"},
   { _id: "PNG", text: "Piped Natural Gas" },
 ];
 // end of gasFuels fuels
@@ -97,23 +90,20 @@ export const lightingFuels = [
 ] as const;
 export type LightingFuel = (typeof lightingFuels)[number];
 export const lightingFuelsWithText: IdTextTypesItem<LightingFuel>[] = [
-  { _id: "CNDL", text: "Candle (paraffin)", default: 0.0053 },
+  { _id: "CNDL", text: "Candle (paraffin)" },
   {
     _id: "LIGHT_HYB",
     text: "Hybrid fuel mix (Firewood + paraffin + kerosene)",
-    // description: "Firewood + paraffin + kerosene",
   },
   {
     _id: "PET",
     text: "Gasoline",
     description: "",
-    default: 0.0351,
   },
   {
     _id: "OIL",
     text: "Vegetable oil",
     description: "",
-    default: 0.14,
   },
   {
     _id: "LIGHT_SOLAR",
@@ -144,7 +134,7 @@ export const electricDevices = [
 ] as const;
 export type ElectricDevices = (typeof electricDevices)[number];
 export const electricDevicesWithText: IdTextTypesItem<ElectricDevices>[] = [
-  { _id: "SOLAR_LANTERN", text: "Solar lantern", default: 0.3 },
+  { _id: "SOLAR_LANTERN", text: "Solar lantern" },
   {
     _id: "SINGLE_USE_BAT",
     text: "Single-use battery devices",
@@ -175,7 +165,6 @@ export const allFuelsButThermal = [
 export const allFuels = [...allFuelsButElectric, ...electricFuels];
 
 export const allFuelsForLighing = [
-  // "NO_ACCESS",
   "FWD",
   "CNDL",
   "LIGHT_HYB", // rename Hybrid fuel mix (paraffin,.. ...)
@@ -199,15 +188,6 @@ export type AllFuel =
   | LightingFuel
   | ElectricDevices
   | NoAccessFuel;
-
-// export type AllFuel =
-//   | ElectricFuel
-//   | BioMassFuel
-//   | LiquidFuel
-//   | GasFuel
-//   | ThermalFuel
-//   | NoAccessFuel
-//   | LightingFuel;
 
 export const AllFuelsWithTextById = [
   ...electricFuelWithText,
