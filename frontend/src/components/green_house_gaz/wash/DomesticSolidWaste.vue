@@ -45,6 +45,7 @@ import SurveyItemTitle from "@/components/green_house_gaz/SurveyItemTitle.vue";
 import { ItemReferencesMap } from "@/store/GhgReferenceModule";
 
 import ComputeGenericFormSurveyMixin from "@/components/green_house_gaz/generic/ComputeGenericFormSurveyMixin.vue";
+import { env } from "@/config";
 import { GreenHouseGaz } from "@/store/GhgInterface";
 import "vue-class-component/hooks";
 import { Component, Mixins, Prop } from "vue-property-decorator";
@@ -83,7 +84,7 @@ export default class Cooking extends Mixins(ComputeGenericFormSurveyMixin) {
   diffDimension = diffDimension;
   name = "solid waste";
 
-  domesticSolidWasteHref = "/s3/2023-11-23/RefugeeWasteExamples-2023-11-15.pdf";
+  domesticSolidWasteHref = `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/RefugeeWasteExamples-2023-11-15.pdf`;
 
   public get title(): string {
     return this.titleKey;

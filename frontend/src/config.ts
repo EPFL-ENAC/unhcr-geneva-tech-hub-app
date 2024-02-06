@@ -14,5 +14,6 @@ const env = {
   ...processEnv,
   ...injectedEnvVariable,
 };
+env.BASE_URL_WITHOUT_SLASH = (env.BASE_URL || "").replace(/\/$/, "");
 window._env = env;
 export { env };

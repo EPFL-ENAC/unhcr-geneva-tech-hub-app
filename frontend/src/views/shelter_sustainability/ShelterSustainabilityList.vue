@@ -217,7 +217,7 @@
                       size="64"
                       tile
                     >
-                      <v-img :src="project.image?.url" @error="onError"></v-img>
+                      <v-img :src="`${env.BASE_URL_WITHOUT_SLASH}${project.image?.url}`" @error="onError"></v-img>
                     </v-avatar>
                     <v-avatar
                       v-else
@@ -359,6 +359,7 @@ import {
 } from "@/views/shelter_sustainability/shelterTypeColors";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { mapActions, mapState } from "vuex";
+import { env } from "@/config";
 
 @Component({
   computed: {
@@ -385,6 +386,7 @@ import { mapActions, mapState } from "vuex";
 export default class ProjectList extends Vue {
   newName = "";
 
+  env = env;
   shelterFilters: ShelterFilters = {
     searchName: "",
     selectedShelterTypes: [],

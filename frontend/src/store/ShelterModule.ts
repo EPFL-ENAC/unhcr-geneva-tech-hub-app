@@ -1,7 +1,13 @@
+import { env } from "@/config";
 import { checkIfAdmin } from "@/plugins/user";
 import { getNewName, updateMetaFields } from "@/store/documentUtils";
 import { RootState } from "@/store/index";
-import { ScoreCard, Shelter, ShelterState } from "@/store/ShelterInterface";
+import {
+  ImageShelter,
+  ScoreCard,
+  Shelter,
+  ShelterState,
+} from "@/store/ShelterInterface";
 import {
   computeShelter,
   generateNewShelter,
@@ -9,6 +15,7 @@ import {
 } from "@/store/ShelterModuleUtils";
 import { Paginate } from "@/store/SheltersMaterialModule";
 import { SyncDatabase } from "@/utils/couchdb";
+import { cloneDeep } from "lodash";
 import {
   ActionContext,
   ActionTree,
@@ -276,13 +283,9 @@ const actions: ActionTree<ShelterState, RootState> = {
             console.error(
               `updateDoc in ShelterModule: conflict error ${JSON.stringify(e)}`
             );
-
             // TODO: rerun dispatch updateDoc but only once
-            // let newValue = await context.dispatch("getDoc", computedShelter._id);
-            // computedShelter._rev = newValue._rev;
-            // try again with latest revision
           } else if (e.error === "unauthorized") {
-            // if guest it should not have happened because of line 220:     if (user.name) {
+            // if guest it should not have happened
             console.error(
               `updateDoc in ShelterModule: error ${JSON.stringify(e)}`
             );

@@ -126,7 +126,7 @@
               v-if="shelterWithImage?.image?.url"
               class="shelter-image-report"
               width="100%"
-              :src="shelterWithImage?.image?.url"
+              :src="`${env.BASE_URL_WITHOUT_SLASH}${shelterWithImage?.image?.url}`"
               aspect-ratio="3/2"
             ></v-img>
           </v-col>
@@ -159,6 +159,7 @@ import {
 } from "@/views/shelter_sustainability/shelterTypeColors";
 import { LatLngExpression } from "leaflet";
 
+import { env } from "@/config";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
@@ -197,6 +198,8 @@ export default class Step10ReportCard extends Vue {
   shelterColors = shelterColors;
   shelterIcons = shelterIcons;
   printFunction = printFunction;
+  env = env;
+
   public get shelterWithImage(): Shelter {
     if (this.shelter) {
       const newShelter = cloneDeep(this.shelter);

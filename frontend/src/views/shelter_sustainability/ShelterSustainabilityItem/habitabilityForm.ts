@@ -2,6 +2,7 @@ import {
   ShelterForm,
   ShelterFormType,
 } from "@/components/shelter_sustainability/ShelterForm";
+import { env } from "@/config";
 
 const habitabilityForm: ShelterForm = {
   _id: "habitability",
@@ -17,7 +18,7 @@ const habitabilityForm: ShelterForm = {
           _id: "input1",
           label: "Floor area is in accordance with Sphere standards",
           score: 1,
-          imagePath: "/shelter/habitability/floor_area.png",
+          imagePath: `${env.BASE_URL}shelter/habitability/floor_area.png`,
           description:
             "Provide a minimum 3.5 square metres of living space per person (excluding cooking space, bathing area and sanitation facility) or 4.5–5.5 square metres of living space per person in cold climates or urban settings where internal cooking space and bathing and/or sanitation facilities are included.<br/><br/>Consider living space for household members to gather, and for the care of infants, children and  persons who are ill or injured. Pay attention to changing use of space  during day and night, and plan the locations of windows, doors and  partitions to maximise the use of internal space and any adjacent  external areas such as kitchens or play areas. To accommodate these  activities in dignity, shelters need an enclosed space (walls, windows,  doors and roof) with adequate floor area. Overcrowding or exposure to  the elements increases the risk of disease outbreak or illness. Reduced space may lead to protection risks, reduced security and privacy.",
         },

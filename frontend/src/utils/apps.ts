@@ -1,3 +1,5 @@
+import { env } from "@/config";
+
 export const scope1 = `'Scope 1' indicates direct greenhouse gas (GHG) emissions that are from sources owned or controlled by the reporting entity.`;
 export const scope2 = `'Scope 2' indicates indirect GHG emissions associated with the production of electricity, heat, or steam purchased by the reporting entity.`;
 export const scope3 = `'Scope 3' indicates all other indirect emissions, i.e., emissions associated with the extraction and production of purchased materials, fuels, and services, including transport in vehicles not owned or controlled by the reporting entity, outsourced activities, waste disposal, etc`;
@@ -8,7 +10,7 @@ export const scope1and2Exception = `For solar in particular, it is assumed that 
 export const ghg = {
   title: "GHG Emission Calculator",
   to: "GreenHouseGaz",
-  link: "/s3/2023-11-23/GHG tool User's Manual v6.pdf",
+  link: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/GHG tool User's Manual v6.pdf`,
   linkName: "Guidance Manual",
   logoIcon: "$vuetify.icon.ghg",
   descriptionComponent: "ghgDescription",
@@ -18,7 +20,7 @@ export const shelter = {
   title: "Shelter and Sustainability",
   to: "ShelterSustainability",
   logoIcon: "$vuetify.icon.shelter",
-  link: "/s3/2023-03-15/Shelter & Sustainability Manual_230312.pdf",
+  link: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-03-15/Shelter & Sustainability Manual_230312.pdf`,
   linkName:
     "A technical and environmental comparative overview of common shelter typologies found in settlements across UNHCR operations",
   description:

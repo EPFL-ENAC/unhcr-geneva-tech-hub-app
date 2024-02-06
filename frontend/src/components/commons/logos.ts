@@ -1,5 +1,7 @@
+import { env } from "@/config";
+
 export const unhcr_logo = {
-  imgPath: "/app_logo_new/Logo_UNHCR.png",
+  imgPath: `${env.BASE_URL}app_logo_new/Logo_UNHCR.png`,
   label: "Logo_UNHCR",
   urlDescription:
     "https://www.unhcr.org/publications/brochures/6229f4184/geneva-technical-hub-brochure.html",
@@ -7,14 +9,14 @@ export const unhcr_logo = {
 
 export const logos = [
   {
-    imgPath: "/app_logo_new/sdc_2.png",
+    imgPath: `${env.BASE_URL}app_logo_new/sdc_2.png`,
     label: "geneva technical hub brochure",
     urlDescription:
       "https://www.unhcr.org/publications/brochures/6229f4184/geneva-technical-hub-brochure.html",
   },
 
   {
-    imgPath: "/app_logo_new/geneva_tech_hub.png",
+    imgPath: `${env.BASE_URL}app_logo_new/geneva_tech_hub.png`,
     label: "geneva_tech_hub",
     urlDescription:
       "https://www.unhcr.org/publications/brochures/6229f4184/geneva-technical-hub-brochure.html",
@@ -22,7 +24,7 @@ export const logos = [
   unhcr_logo,
 
   {
-    imgPath: "/app_logo_new/EPFL.png",
+    imgPath: `${env.BASE_URL}app_logo_new/EPFL.png`,
     label: "EPFL",
     urlDescription: "https://epfl.ch",
     height: "30px",
@@ -31,12 +33,12 @@ export const logos = [
 
 export const labLogos = [
   {
-    imgPath: "/app_logo_new/EssentialTech_Logo_5.png",
+    imgPath: `${env.BASE_URL}app_logo_new/EssentialTech_Logo_5.png`,
     label: "essential tech",
     urlDescription: "https://essentialtech.center/hth/",
   },
   {
-    imgPath: "/app_logo_new/enac-it4r.png",
+    imgPath: `${env.BASE_URL}app_logo_new/enac-it4r.png`,
     label: "enac-it4r",
     urlDescription: "https://enac-it4r.epfl.ch/",
   },

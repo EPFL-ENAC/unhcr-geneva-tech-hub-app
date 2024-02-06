@@ -2,15 +2,6 @@
   <v-card class="about ma-2" elevation="2">
     <v-card-text>
       <h2 class="mx-8" data-cy="aboutDisclaimer">Disclaimer</h2>
-      <p class="ma-4 mx-8">
-        Please report any bugs
-        <a
-          style="font-weight: bold"
-          target="_blank"
-          href="https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues"
-          >here</a
-        >
-      </p>
     </v-card-text>
     <v-divider />
     <v-card-text>

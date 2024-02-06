@@ -92,6 +92,7 @@
 </template>
 
 <script lang="ts">
+import { env } from "@/config";
 import { UserCouchCredentials } from "@/store/UserModule";
 import { AxiosError, AxiosPromise } from "axios";
 import getPkce from "oauth-pkce";
@@ -99,7 +100,6 @@ import { v4 as uuidv4 } from "uuid";
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
-import { env } from "@/config";
 
 @Component({
   computed: {
@@ -241,7 +241,8 @@ export default class LoginComponent extends Vue {
 
     url.searchParams.append("code_challenge", challenge);
     url.searchParams.append("code_challenge_method", "S256");
-    const suffix = window.location.hostname === "localhost" ? "" : "/auth";
+    const suffix =
+      window.location.hostname === "localhost" ? "" : `${env.BASE_URL}auth`;
     url.searchParams.append("redirect_uri", window.location.origin + suffix);
 
     window.location.href = url.href;

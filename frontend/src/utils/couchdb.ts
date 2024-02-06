@@ -7,7 +7,7 @@ import { JwtPayload } from "jsonwebtoken";
 import PouchDB from "pouchdb-browser";
 import qs from "qs";
 
-const databaseUrl: string = url(env.VUE_APP_COUCHDB_URL);
+const databaseUrl: string = url(`${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_COUCHDB_URL}`);
 const designDocumentPrefix = "_design/";
 
 export function parseJwt(token: string): JwtPayload {

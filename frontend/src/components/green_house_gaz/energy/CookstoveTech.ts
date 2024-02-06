@@ -8,6 +8,7 @@ import {
   noAccessFuels,
   thermalFuels,
 } from "@/components/green_house_gaz/fuelTypes";
+import { env } from "@/config";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PartialRecord<K extends keyof any, T> = {
@@ -40,45 +41,45 @@ export const cookstoveTECHs: CookstoveTech[] = [
     fuelTypes: biomassFuels,
     text: "Three stone fire",
     comment: "Photo: Manuel Krähenbühl",
-    image: "/images/energy/cookstoves/three-stone-fire.webp",
+    image: `${env.BASE_URL}images/energy/cookstoves/three-stone-fire.webp`,
   },
   {
     _id: "3",
     fuelTypes: biomassFuels,
     text: "Artisanal cookstove with solid biomass fuel",
     comment: "Photo: Manuel Krähenbühl",
-    image: "/images/energy/cookstoves/artisanal-cookstove.webp",
+    image: `${env.BASE_URL}images/energy/cookstoves/artisanal-cookstove.webp`,
   },
   {
     _id: "4",
     fuelTypes: biomassFuels,
     text: "Improved cookstove with solid biomass fuel",
-    image: "/images/energy/cookstoves/improved-bricket.jpg",
+    image: `${env.BASE_URL}images/energy/cookstoves/improved-bricket.jpg`,
   },
   {
     _id: "5",
     fuelTypes: biomassFuelsForGasifier,
     text: "Gasifier stove",
-    image: "/images/energy/cookstoves/gasifier.png",
+    image: `${env.BASE_URL}images/energy/cookstoves/gasifier.png`,
   },
   {
     _id: "6",
     fuelTypes: liquidFuels,
     text: "Liquid fuel cookstove",
-    image: "/images/energy/cookstoves/kerosene.png",
+    image: `${env.BASE_URL}images/energy/cookstoves/kerosene.png`,
   },
   {
     _id: "7",
     fuelTypes: gasFuels,
     text: "Gas powered cookstove",
     comment: "Photo: Manuel Krähenbühl",
-    image: "/images/energy/cookstoves/gas-powered-cookstove.webp",
+    image: `${env.BASE_URL}images/energy/cookstoves/gas-powered-cookstove.webp`,
   },
   {
     _id: "8",
     fuelTypes: electricFuelsWithoutNone,
     text: "Electric cookstove",
-    image: "/images/energy/cookstoves/induction.png",
+    image: `${env.BASE_URL}images/energy/cookstoves/induction.png`,
   },
   {
     _id: cookstoveIdSolarCooker,
@@ -86,7 +87,7 @@ export const cookstoveTECHs: CookstoveTech[] = [
     text: "Solar thermal cooker",
     tooltipInfo:
       "A solar thermal cooker cannot be used as a primary cooking solution to prepare 3 meals per day due to limitations with solar hours.",
-    image: "/images/energy/cookstoves/solar-parabolic.png",
+    image: `${env.BASE_URL}images/energy/cookstoves/solar-parabolic.png`,
   },
 ];
 

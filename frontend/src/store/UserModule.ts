@@ -214,7 +214,7 @@ const actions: ActionTree<UserState, RootState> = {
   ) => {
     const state = sessionStorage.getItem("state") ?? "";
     try {
-      const suffix = window.location.hostname === "localhost" ? "" : "/auth";
+      const suffix = window.location.hostname === "localhost" ? "" : `${env.BASE_URL}auth`;
       const response = await axios.post(
         `https://login.microsoftonline.com/${env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/token`,
         new URLSearchParams({
@@ -293,7 +293,7 @@ const actions: ActionTree<UserState, RootState> = {
     }
     // not working because response_type id_token, token was not allowed;
     try {
-      const suffix = window.location.hostname === "localhost" ? "" : "/auth";
+      const suffix = window.location.hostname === "localhost" ? "" : `${env.BASE_URL}auth`;
       const url: URL = new URL(
         `https://login.microsoftonline.com/${env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/authorize`
       );
@@ -362,7 +362,7 @@ const actions: ActionTree<UserState, RootState> = {
     let response;
     try {
       response = await axios.post(
-        `${env.VUE_APP_API_URL}/register`,
+        `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_API_URL}/register`,
         { name: username, password },
         {
           headers: {
@@ -387,7 +387,7 @@ const actions: ActionTree<UserState, RootState> = {
     let response;
     try {
       response = await axios.post(
-        `${env.VUE_APP_API_URL}/forgot-password`,
+        `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_API_URL}/forgot-password`,
         { name: payload.username },
         {
           headers: {
@@ -413,7 +413,7 @@ const actions: ActionTree<UserState, RootState> = {
     let response;
     try {
       response = await axios.post(
-        `${env.VUE_APP_API_URL}/reset-password`,
+        `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_API_URL}/reset-password`,
         { password, token: payload.token },
         {
           headers: {
@@ -438,7 +438,7 @@ const actions: ActionTree<UserState, RootState> = {
     let response;
     try {
       response = await axios.post(
-        `${env.VUE_APP_API_URL}/confirm-registration`,
+        `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_API_URL}/confirm-registration`,
         payload,
         {
           headers: {
@@ -463,7 +463,7 @@ const actions: ActionTree<UserState, RootState> = {
     let response;
     try {
       response = await axios.post(
-        `${env.VUE_APP_API_URL}/send-confirmation`,
+        `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_API_URL}/send-confirmation`,
         payload,
         {
           headers: {

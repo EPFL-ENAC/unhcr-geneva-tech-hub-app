@@ -9,6 +9,10 @@ COPY src ./src
 COPY *.js ./
 COPY *.conf ./
 COPY *.json ./
+ARG NODE_ENV
+ENV NODE_ENV $NODE_ENV
+ARG BASE_URL
+ENV BASE_URL $BASE_URL
 RUN npm run build
 
 FROM nginx:stable-alpine as production-stage
