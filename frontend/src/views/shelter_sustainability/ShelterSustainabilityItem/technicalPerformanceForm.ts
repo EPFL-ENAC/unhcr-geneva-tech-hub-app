@@ -2,6 +2,7 @@ import {
   ShelterForm,
   ShelterFormType,
 } from "@/components/shelter_sustainability/ShelterForm";
+import { env } from "@/config";
 
 const technicalPerformanceForm: ShelterForm = {
   _id: "technical_performance",
@@ -29,7 +30,7 @@ const technicalPerformanceForm: ShelterForm = {
             {
               _id: "input_1a_2",
               score: 1,
-              imagePath: "/shelter/step6/input_1a_2.png",
+              imagePath: `${env.BASE_URL}shelter/step6/input_1a_2.png`,
               description:
                 "Wall structures must support the vertical load of roofs and lateral (horizontal) loads from wind and other impacts. To resist horizontal loads, framed walls comprising vertical posts/columns and horizontal beams typically require diagonal bracing tying together horizontal and vertical frame elements. In addition to static loads associated with the weight of the roof, wall cladding and other parts of the shelter, local wind loads and storm risks should be taken into account in shelter structural designs that include adequate bracing, including appropriate bracing materials and appropriate connection of bracing to vertical posts and horizontal beams.",
               label:

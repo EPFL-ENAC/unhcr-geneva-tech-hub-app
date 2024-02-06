@@ -1,11 +1,12 @@
+import { env } from "@/config";
 import { ShelterDimensions } from "@/store/ShelterInterface";
 export const geometryOtherName = "other";
 export const geometriesUrl = {
-  gableHW: "/houses_new/SSC_P1_Shelter-GableHW_220201.png",
-  flatRoof: "/houses_new/SSC_P3_Shelter-FlatRoof_220201.png",
-  dome: "/houses_new/SSC_P4_Shelter-Dome_220201.png",
-  tukul: "/houses_new/SSC_P5_Shelter-Tukul_220201.png",
-  [geometryOtherName]: "/houses_new/SSC_P6_Shelter-Other_220201.png",
+  gableHW: `${env.BASE_URL}houses_new/SSC_P1_Shelter-GableHW_220201.png`,
+  flatRoof: `${env.BASE_URL}houses_new/SSC_P3_Shelter-FlatRoof_220201.png`,
+  dome: `${env.BASE_URL}houses_new/SSC_P4_Shelter-Dome_220201.png`,
+  tukul: `${env.BASE_URL}houses_new/SSC_P5_Shelter-Tukul_220201.png`,
+  [geometryOtherName]: `${env.BASE_URL}houses_new/SSC_P6_Shelter-Other_220201.png`,
 };
 
 export const geometries: Geometry[] = [

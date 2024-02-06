@@ -44,7 +44,7 @@
                 size="64"
                 tile
               >
-                <v-img :src="shelter.image?.url"></v-img>
+                <v-img :src="`${env.BASE_URL_WITHOUT_SLASH}${shelter.image?.url}`"></v-img>
               </v-avatar>
               <v-avatar v-else class="profile" color="grey" size="64" tile>
                 <v-card-title class="white--text"></v-card-title>
@@ -394,6 +394,7 @@ import PouchDB from "pouchdb-browser";
 import VChart from "vue-echarts";
 import { Route } from "vue-router";
 import { mapActions, mapGetters } from "vuex";
+import { env } from "@/config";
 
 use([
   CanvasRenderer,
@@ -461,6 +462,7 @@ export default class ShelterSustainabilityCompare extends Vue {
   shelterIcons = shelterIcons;
   loaded = false;
   printFunction = printFunction;
+  env = env;
 
   get optionsAffordabilities(): EChartsOption[] {
     return generateScorecardOptions(

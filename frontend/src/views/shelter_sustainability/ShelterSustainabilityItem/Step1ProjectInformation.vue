@@ -228,7 +228,9 @@
                   size="164"
                   tile
                 >
-                  <v-img :src="image.url"></v-img>
+                  <v-img
+                    :src="`${env.BASE_URL_WITHOUT_SLASH}${image.url}`"
+                  ></v-img>
                 </v-avatar>
                 <v-avatar v-else class="profile" color="grey" size="164" tile>
                   <v-card-title class="white--text">
@@ -240,7 +242,7 @@
                 <div v-if="$can('edit', localShelter)" aria-label="image name">
                   <a
                     v-if="toggledImage != image.url"
-                    :href="image?.origin_url ?? image?.url"
+                    :href="`${env.BASE_URL_WITHOUT_SLASH}${image?.origin_url ?? image?.url}`"
                     target="_blank"
                   >
                     <span style="text-overflow: ellipsis">
@@ -269,7 +271,7 @@
                 </div>
                 <div v-else>
                   <a
-                    :href="image?.origin_url ?? image?.url"
+                    :href="`${env.BASE_URL_WITHOUT_SLASH}${image?.origin_url ?? image?.url}`"
                     target="_blank"
                     class="text"
                   >
@@ -315,7 +317,9 @@
                     <v-btn
                       v-if="toggledImage != image.url"
                       big
-                      :href="image?.origin_url ?? image?.url"
+                      :href="`${env.BASE_URL_WITHOUT_SLASH}${
+                        image?.origin_url ?? image?.url
+                      }`"
                       target="_blank"
                     >
                       download
@@ -340,7 +344,7 @@
                     <v-btn
                       v-if="toggledImage != image.url"
                       big
-                      :href="image?.origin_url ?? image?.url"
+                      :href="`${env.BASE_URL_WITHOUT_SLASH}${image?.origin_url ?? image?.url}`"
                       target="_blank"
                     >
                       download
@@ -414,6 +418,7 @@ export default class Step1 extends Vue {
     this.$emit("input", newShelter); // for v-model
   }
 
+  env = env;
   infoTooltipText = infoTooltipText;
   occupantsOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   shelterTypes = listOfShelterType;
@@ -442,7 +447,7 @@ export default class Step1 extends Vue {
         "Content-Type": "application/json",
       },
     };
-    fetch(`${env.VUE_APP_API_URL}/files`, options)
+    fetch(`${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_API_URL}/files`, options)
       .then(async (response) => {
         if (response.ok && response.status === 204) {
           return response;
@@ -570,7 +575,10 @@ export default class Step1 extends Vue {
           Authorization: `Bearer ${this.$store.getters["UserModule/token"]}`,
         },
       };
-      fetch(`${env.VUE_APP_API_URL}/files`, options)
+      fetch(
+        `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_API_URL}/files`,
+        options
+      )
         .then(async (response) => {
           let responseJson;
           try {
@@ -590,7 +598,7 @@ export default class Step1 extends Vue {
             this.localShelter.images = [];
           }
           this.localShelter.images.push(...data.filenames);
-          // add files  instead of replacing them
+          // add files instead of replacing them
           this.updateFormInput();
           this.$store.dispatch("notifyUser", {
             message: "Successful upload to server",

@@ -1,10 +1,10 @@
+import { env } from "@/config";
 import ghgRouter from "@/router/ghgRouter";
 import shelterRouter from "@/router/shelterRouter";
 import userRouter from "@/router/userRouter";
 import Apps from "@/views/AppListView.vue";
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import { env } from "@/config";
 
 Vue.use(VueRouter);
 

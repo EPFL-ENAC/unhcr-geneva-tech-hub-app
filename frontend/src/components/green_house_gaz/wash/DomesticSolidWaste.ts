@@ -22,7 +22,6 @@ import {
   surveyTableHeaderCO2,
   surveyTableHeaderIncrements,
 } from "@/components/green_house_gaz/generic/surveyTableHeader";
-
 export interface MaterialSolidWasteItemInput extends SurveyInput {
   percentageOfTotalCategories?: number; // computed based on % of HH and stuffs
   image?: string; // image of lighting
