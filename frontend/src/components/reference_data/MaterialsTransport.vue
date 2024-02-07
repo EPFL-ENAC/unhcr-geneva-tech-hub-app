@@ -170,7 +170,7 @@
 
 <script lang="ts">
 const { default: SheltersTransportModule } = await import(
-  /* webpackPrefetch: true */ /* webpackChunkName: "reference-shelter-transports-vuex" */
+  /* webpackChunkName: "reference-shelter-transports-vuex" */
   "@/store/SheltersTransportModule"
 );
 import { countriesMap } from "@/utils/countriesAsList";

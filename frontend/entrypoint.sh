@@ -9,7 +9,8 @@
 WWW_DIR=/app
 ENV_PREFIX=VUE_APP_
 INJECT_FILE_PATH="${WWW_DIR}/injectEnv.js"
-
+INDEX_FILE_PATH="${WWW_DIR}/index.html"
+SITE_FILE_PATH="${WWW_DIR}/site.webmanifest"
 # Create the file
 echo "window.injectedEnvVariable = {" >> "${INJECT_FILE_PATH}"
 for envrow in $(printenv); do
@@ -19,11 +20,14 @@ for envrow in $(printenv); do
   fi
   if [[ $key == "BASE_URL" ]]; then
     echo "  ${key}: \"${value}\"," >> "${INJECT_FILE_PATH}"
+    BASE_URL="${value}"
   fi
   # We decided to not use NODE_ENV for now it should be always production
 done
 echo "};" >> "${INJECT_FILE_PATH}"
 
+sed -i "s|\(href\|src\)=\"|\1=\"${BASE_URL}|gi" $INDEX_FILE_PATH
+sed -i "s|\(\"/\)|\"${BASE_URL}|gi" $SITE_FILE_PATH
 # execute the command passed to the entrypoin
 # see https://stackoverflow.com/questions/39082768/what-is-the-difference-between-cmd-and-entrypoint-in-a-dockerfile
 
