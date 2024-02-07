@@ -48,10 +48,10 @@ services:
     labels:
       - "traefik.http.routers.frontend.priority=100"
       - "traefik.http.routers.frontend.tls=true"
-      - "traefik.http.routers.frontend.rule=PathPrefix(`${BASE_URL}`)"
+      - "traefik.http.routers.frontend.rule=PathPrefix(`${BASE_URL_WITHOUT_SLASH}`)"
       - "traefik.http.routers.frontend.middlewares=frontend-stripprefix,compress"
       - "traefik.http.middlewares.compress.compress=true"
-      - "traefik.http.middlewares.frontend-stripprefix.stripprefix.prefixes=${BASE_URL}"
+      - "traefik.http.middlewares.frontend-stripprefix.stripprefix.prefixes=${BASE_URL_WITHOUT_SLASH}"
     restart: unless-stopped
   couchdb:
     build: ./couchdb
