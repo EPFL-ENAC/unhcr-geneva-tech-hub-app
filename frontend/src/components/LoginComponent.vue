@@ -177,6 +177,7 @@ export default class LoginComponent extends Vue {
     if (code || code_verifier) {
       if (!code || !code_verifier) {
         sessionStorage.removeItem("verifier");
+        location.search = "";
         throw new Error("code or code_verifier missing");
       }
       // code flow with PKCE (new authorization mode 6th march 2022)
@@ -241,8 +242,7 @@ export default class LoginComponent extends Vue {
 
     url.searchParams.append("code_challenge", challenge);
     url.searchParams.append("code_challenge_method", "S256");
-    const suffix =
-      window.location.hostname === "localhost" ? "" : `${env.BASE_URL}auth`;
+    const suffix = `${env.BASE_URL}auth`;
     url.searchParams.append("redirect_uri", window.location.origin + suffix);
 
     window.location.href = url.href;

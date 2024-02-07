@@ -214,7 +214,7 @@ const actions: ActionTree<UserState, RootState> = {
   ) => {
     const state = sessionStorage.getItem("state") ?? "";
     try {
-      const suffix = window.location.hostname === "localhost" ? "" : `${env.BASE_URL}auth`;
+      const suffix = `${env.BASE_URL}auth`;
       const response = await axios.post(
         `https://login.microsoftonline.com/${env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/token`,
         new URLSearchParams({
@@ -293,7 +293,8 @@ const actions: ActionTree<UserState, RootState> = {
     }
     // not working because response_type id_token, token was not allowed;
     try {
-      const suffix = window.location.hostname === "localhost" ? "" : `${env.BASE_URL}auth`;
+      const suffix =
+        window.location.hostname === "localhost" ? "" : `${env.BASE_URL}auth`;
       const url: URL = new URL(
         `https://login.microsoftonline.com/${env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/authorize`
       );
