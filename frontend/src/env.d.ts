@@ -1,6 +1,7 @@
 declare namespace NodeJS {
   interface ProcessEnv {
     readonly NODE_ENV: string;
+    readonly BASE_URL_WITHOUT_SLASH: string;
     readonly BASE_URL: string;
     readonly VUE_APP_COUCHDB_URL: string;
     readonly VUE_APP_I18N_LOCALE: string;

@@ -16,7 +16,7 @@ interface SheltersTransportState {
 }
 
 const { default: transports } = await import(
-  /* webpackPrefetch: true */ /* webpackChunkName: "reference-shelter-transports" */
+  /* webpackChunkName: "reference-shelter-transports" */
   "@/assets/references/transports.json"
 );
 /*

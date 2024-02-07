@@ -325,7 +325,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
 const { default: SheltersTransportModule } = await import(
-  /* webpackPrefetch: true */ /* webpackChunkName: "reference-shelter-transports-vuex" */
+  /* webpackChunkName: "reference-shelter-transports-vuex" */
   "@/store/SheltersTransportModule"
 );
 @Component({
