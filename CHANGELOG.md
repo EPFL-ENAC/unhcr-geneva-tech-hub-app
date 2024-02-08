@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.8.0...v1.9.0) (2024-02-08)
+
+
+### Features
+
+* **frontend:** dynamically rewrite index.html and site.manifest ([eeb1226](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/eeb12265fb2fc6fdcb7c713930d4ca7730cdb876))
+
+
+### Bug Fixes
+
+* **docker-compose:** better couchdb prefix ([bddee3d](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/bddee3d870003dc59c5b94ca808d57ae2c4fbf70))
+* **frontend:** correct token payload for azure entra ([2a32020](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/2a32020442840ae6786634a3d95ca3329c2c1dbe))
+* **ghg:** add all the other default values to the reference csv [#608](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/608) ([307adae](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/307adae9e1ab28734c62e6bfecfeef1568535dc5))
+* **traefik:** automatic redirect from / to /base_url/ ([aedea3f](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/aedea3fb932543db36641c622144a125664d64d7))
+
 ## [1.8.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.7.0...v1.8.0) (2024-01-25)
 
 
