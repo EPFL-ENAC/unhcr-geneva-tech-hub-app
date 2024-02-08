@@ -17,18 +17,15 @@ services:
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
       - "--entrypoints.websecure.address=:443"
+      # - "--api.dashboard=true"
+      # - "--api.insecure=true"
     environment:
       - SSL_CERT_CRT=${SSL_CERT_CRT}
       - SSL_CERT_KEY=${SSL_CERT_KEY}
     ports:
       - "80:80"
       - "443:443"
-    depends_on:
-      - nginx-minio
-      - couchdb
-      - rest-api
-      - s3_server
-      - frontend
+      # - "8080:8080"
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -41,6 +38,17 @@ services:
     environment:
       - BASE_URL=${BASE_URL}
     labels:
+      - "traefik.enable=true"
+        # Router for handling specific redirection (e.g., from / to /base_url/)
+      - "traefik.http.routers.redirect-to-base.priority=10"
+      - "traefik.http.routers.redirect-to-base.tls=true"
+      - "traefik.http.routers.redirect-to-base.rule=Host(`localhost`) && (Path(`/`) || PathPrefix(`/`))"
+      - "traefik.http.routers.redirect-to-base.middlewares=redirect-to"
+      - "traefik.http.middlewares.redirect-to.redirectregex.regex=^https?:\\/\\/([^\\/]+)\\/?$$"
+      - "traefik.http.middlewares.redirect-to.redirectregex.replacement=https://$$1${BASE_URL}"
+      - "traefik.http.middlewares.redirect-to.redirectregex.permanent=true"
+      # Router for handling the frontend, with the base URL, and stripping the prefix from the request because
+      # the frontend is not aware of the base URL (e.g., /base_url/... -> /...)
       - "traefik.http.routers.frontend.priority=100"
       - "traefik.http.routers.frontend.tls=true"
       - "traefik.http.routers.frontend.rule=PathPrefix(`${BASE_URL}`)"
@@ -48,6 +56,9 @@ services:
       - "traefik.http.middlewares.compress.compress=true"
       - "traefik.http.middlewares.frontend-stripprefix.stripprefix.prefixes=${BASE_URL_WITHOUT_SLASH}"
     restart: unless-stopped
+    depends_on:
+      - couchdb
+      - reverse-proxy
   couchdb:
     build: ./couchdb
     env_file:
