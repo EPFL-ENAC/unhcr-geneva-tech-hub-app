@@ -43,7 +43,7 @@ services:
     labels:
       - "traefik.http.routers.frontend.priority=100"
       - "traefik.http.routers.frontend.tls=true"
-      - "traefik.http.routers.frontend.rule=PathPrefix(`${BASE_URL_WITHOUT_SLASH}`)"
+      - "traefik.http.routers.frontend.rule=PathPrefix(`${BASE_URL}`)"
       - "traefik.http.routers.frontend.middlewares=frontend-stripprefix,compress"
       - "traefik.http.middlewares.compress.compress=true"
       - "traefik.http.middlewares.frontend-stripprefix.stripprefix.prefixes=${BASE_URL_WITHOUT_SLASH}"
@@ -62,6 +62,7 @@ services:
       - "traefik.http.routers.couchdb.rule=PathPrefix(`${BASE_URL_WITHOUT_SLASH}${DB_PREFIX}`)"
       - "traefik.http.routers.couchdb.middlewares=couchdb-stripprefix,test-compress"
       - "traefik.http.middlewares.couchdb-stripprefix.stripprefix.prefixes=${BASE_URL_WITHOUT_SLASH}${DB_PREFIX}"
+      - "traefik.http.middlewares.couchdb-stripprefix.stripprefix.forceSlash=false"
       - "traefik.http.services.couchdb.loadbalancer.server.port=5984"
       - "traefik.http.middlewares.test-compress.compress=true"
     ports:
