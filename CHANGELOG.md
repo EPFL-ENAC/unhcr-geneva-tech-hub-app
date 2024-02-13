@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.9.0...v1.9.1) (2024-02-13)
+
+
+### Bug Fixes
+
+* **azure:** add new public key based on production tenant ([c327553](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c327553ebf1d032e488e58b3ca5a97450a7c2769))
+
 ## [1.9.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.8.0...v1.9.0) (2024-02-08)
 
 
