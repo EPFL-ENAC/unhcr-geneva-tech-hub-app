@@ -16,8 +16,9 @@ FROM nginx:stable-alpine as production-stage
 RUN apk add --update bash && rm -rf /var/cache/apk/*
 
 RUN mkdir /app
+RUN mkdir /app/tss
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY --from=build-stage /app/dist /app
+COPY --from=build-stage /app/dist /app/tss
 EXPOSE 80
 
 COPY entrypoint.sh /app/entrypoint.sh

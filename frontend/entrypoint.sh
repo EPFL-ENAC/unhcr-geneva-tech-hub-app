@@ -6,7 +6,7 @@
 # the script is inspired by https://medium.com/@jans.tuomi/how-to-use-environment-variables-in-a-built-frontend-application-in-an-nginx-container-c7a90c011ec2
 # and chat-gpt-4
 
-WWW_DIR=/app
+WWW_DIR=/app/tss
 ENV_PREFIX=VUE_APP_
 INJECT_FILE_PATH="${WWW_DIR}/injectEnv.js"
 INDEX_FILE_PATH="${WWW_DIR}/index.html"
