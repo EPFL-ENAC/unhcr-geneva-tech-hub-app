@@ -9,5 +9,5 @@ services:
     volumes:
       - ./rest-api/unhcr_tss/:/app/unhcr_tss/
     env_file:
-      - ./.env.dev
+      - ./rest-api/.env
     command: uvicorn unhcr_tss.main:app --host 0.0.0.0 --port 5051 --reload

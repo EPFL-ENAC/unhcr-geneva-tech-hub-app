@@ -4,7 +4,7 @@ from io import BytesIO
 from typing import Tuple
 from PIL import Image
 from fastapi import HTTPException, UploadFile
-from azure.storage.blob import BlobServiceClient, BlobClient
+from azure.storage.blob.aio import BlobServiceClient, BlobClient
 import urllib
 
 class AzureBlobService:
@@ -40,13 +40,12 @@ class AzureBlobService:
 
     async def upload_image(self, uploadFile: UploadFile):
         (data, origin_data) = await self.convert_image(uploadFile)
-        mimetype = "image/webp"
         (unique_name, name) = await self.get_unique_filename(uploadFile.filename, ".webp")
 
         blob_client = self.blob_service_client.get_blob_client(container=self.container_name, blob=unique_name)
         await blob_client.upload_blob(data, blob_type="BlockBlob", overwrite=True)
 
-        (unique_origin_name, origin_name) = await self.get_unique_filename(uploadFile.filename)
+        (unique_origin_name, _) = await self.get_unique_filename(uploadFile.filename)
         blob_client_origin = self.blob_service_client.get_blob_client(container=self.container_name, blob=unique_origin_name)
         await blob_client_origin.upload_blob(origin_data, blob_type="BlockBlob", overwrite=True)
 
@@ -86,23 +85,3 @@ class AzureBlobService:
         blob_client = self.blob_service_client.get_blob_client(container=self.container_name, blob=filePath.removeprefix(self.prefix))
         await blob_client.delete_blob()
         return filePath
-
-    async def upload_fileobj(self, data: BytesIO, container: str, key: str, mimetype: str):
-        """
-        Carica un oggetto file (BytesIO) in un container specificato con un key specifico.
-
-        :param data: Oggetto BytesIO contenente i dati del file da caricare.
-        :param container: Nome del container dove caricare il file (usato se diverso da self.container_name).
-        :param key: Il percorso chiave univoco sotto il quale il file deve essere salvato nel container.
-        :param mimetype: Il tipo MIME del file da caricare.
-        """
-        # Se è necessario utilizzare un container diverso da quello predefinito, è possibile aggiungere qui la logica per gestirlo.
-        # Per semplicità, questo esempio assume l'uso di self.container_name.
-        blob_client = self.blob_service_client.get_blob_client(container=self.container_name, blob=key)
-        try:
-            await blob_client.upload_blob(data, blob_type="BlockBlob", overwrite=True, content_settings={"content_type": mimetype})
-            return True
-        except Exception as e:
-            # Log l'errore o gestiscilo come preferisci
-            print(f"Errore durante l'upload: {str(e)}")
-            return False

@@ -106,28 +106,6 @@ services:
       - ./data-setup/.s3cfg:/root/.s3cfg
     depends_on:
       - nginx-minio
-  rest-api:
-    build: ./rest-api
-    env_file:
-      - .env
-    environment:
-      - AUTH_SERVER="http://couchdb:5984"
-    ports:
-      - '5050:5050'
-    labels:
-      - "traefik.http.routers.restAPI.priority=1001"
-      - "traefik.http.routers.restAPI.tls=true"
-      - "traefik.http.routers.restAPI.rule=PathPrefix(`${BASE_URL_WITHOUT_SLASH}${API_PREFIX}`)"
-      - "traefik.http.services.restAPI.loadbalancer.server.port=5050"
-      - "traefik.http.routers.restAPI.middlewares=restAPI-middleware@docker,test-compress,rest-api-ratelimit"
-      - "traefik.http.middlewares.restAPI-middleware.stripprefix.prefixes=${BASE_URL_WITHOUT_SLASH}${API_PREFIX}"
-      - "traefik.http.middlewares.rest-api-ratelimit.ratelimit.average=50"
-      - "traefik.http.middlewares.rest-api-ratelimit.ratelimit.burst=25"
-      - "traefik.http.middlewares.rest-api-ratelimit.ratelimit.period=1"
-      - "traefik.http.middlewares.test-compress.compress=true"
-    restart: unless-stopped
-    depends_on:
-      - couchdb
   s3_server:
     build: ./s3_server
     restart: unless-stopped

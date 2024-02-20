@@ -31,7 +31,6 @@ azure_blob_service = AzureBlobService(
              dependencies=[Depends(authorization_checker), Depends(size_checker)])
 async def PostUpload(files: list[UploadFile] = File(description="multiple file upload")):
     try:
-        print("______HELLO_WORLD_____")
         return {"filenames": [await azure_blob_service.upload_file(file) for file in files]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
