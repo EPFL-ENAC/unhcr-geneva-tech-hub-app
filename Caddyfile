@@ -4,7 +4,7 @@ http://localhost:8085 {
     }
 
     handle_path /api* {
-	    reverse_proxy host.docker.internal:5050
+	    reverse_proxy host.docker.internal:5051
     }
 
     handle_path /s3* {
