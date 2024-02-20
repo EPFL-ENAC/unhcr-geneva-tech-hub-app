@@ -1,3 +1,4 @@
+# Stage di costruzione per esportare le dipendenze
 FROM python:3.10.9-alpine as build-stage
 WORKDIR /app
 RUN apk add --no-cache \
@@ -5,12 +6,16 @@ RUN apk add --no-cache \
     gcc \
     musl-dev \
     libc-dev \
-    libffi-dev
+    libffi-dev \
+    libffi \
+    openssl-dev \
+    make \
+    python3-dev
 RUN pip install poetry
 COPY ./pyproject.toml ./poetry.lock* /app/
 RUN poetry export --output requirements.txt
 
-
+# Stage di produzione per costruire l'immagine finale
 FROM python:3.10.9-alpine as production-stage
 LABEL maintainer="<pierre.guilbert@epfl.ch>"
 LABEL description="FastAPI upload via boto3"
@@ -26,7 +31,11 @@ RUN apk add --no-cache \
     ca-certificates \
     ffmpeg \
     libwebp \
-    libwebp-tools
+    libwebp-tools \
+    libffi-dev \
+    libffi \
+    openssl \
+    python3-dev
 
 COPY --from=build-stage /app/requirements.txt /app
 RUN pip install --no-cache-dir -r requirements.txt

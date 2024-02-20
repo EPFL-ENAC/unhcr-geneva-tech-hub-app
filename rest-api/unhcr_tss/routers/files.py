@@ -4,9 +4,10 @@ Handle / uploads
 from unhcr_tss.config import settings
 from fastapi.datastructures import UploadFile
 from fastapi.param_functions import File
-from unhcr_tss.utils.s3client import S3_SERVICE
+from unhcr_tss.utils.azure_blob_service import AzureBlobService
 
 from fastapi import Depends, APIRouter
+from fastapi.exceptions import HTTPException
 
 from unhcr_tss.utils.auth import authorization_checker
 from unhcr_tss.utils.size import size_checker
@@ -20,26 +21,26 @@ class FilePath(BaseModel):
 
 router = APIRouter()
 
-# Object of S3_SERVICE Class
-s3_client = S3_SERVICE(settings.S3_ENDPOINT_PROTOCOL + settings.S3_ENDPOINT_HOSTNAME,
-                       settings.S3_ACCESS_KEY_ID,
-                       settings.S3_SECRET_ACCESS_KEY, settings.S3_REGION)
+azure_blob_service = AzureBlobService(
+    account_name=settings.AZURE_ACCOUNT_NAME,
+    account_key=settings.AZURE_ACCOUNT_KEY,
+    container_name=settings.AZURE_CONTAINER_NAME
+)
 
-
-@router.post("/files",
-             status_code=200,
-             description="-- Upload jpg/png/pdf or any assets to S3 --",
+@router.post("/files", status_code=200, description="-- Upload files to Azure Blob Storage --",
              dependencies=[Depends(authorization_checker), Depends(size_checker)])
-async def PostUpload(
-        files: list[UploadFile] = File(description="multiple file upload")):
-    return {"filenames": [await s3_client.upload_file(file) for file in files]}
+async def PostUpload(files: list[UploadFile] = File(description="multiple file upload")):
+    try:
+        print("______HELLO_WORLD_____")
+        return {"filenames": [await azure_blob_service.upload_file(file) for file in files]}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-
-@router.delete("/files",
-               status_code=204,
-               description="-- Delete assest present in S3 --",
-               dependencies=[Depends(authorization_checker)]
-               )
+@router.delete("/files", status_code=204, description="-- Delete files from Azure Blob Storage --",
+               dependencies=[Depends(authorization_checker)])
 async def DeleteUpload(filePath: FilePath):
-    [await s3_client.delete_file(path) for path in filePath.paths]
-    return
+    try:
+        [await azure_blob_service.delete_file(path) for path in filePath.paths]
+        return {"detail": "Files deleted successfully."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
