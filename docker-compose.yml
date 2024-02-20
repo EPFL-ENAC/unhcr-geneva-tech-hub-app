@@ -1,11 +1,5 @@
 version: "3.9"
 
-include:
-   - path: ./minio/minio-docker-compose.yml
-     project_directory: ./minio
-     env_file:
-      - ./.env
-
 services:
   reverse-proxy:
     image: traefik:v2.9
@@ -39,7 +33,7 @@ services:
       - BASE_URL=${BASE_URL}
     labels:
       - "traefik.enable=true"
-        # Router for handling specific redirection (e.g., from / to /base_url/)
+      # Router for handling specific redirection (e.g., from / to /base_url/)
       - "traefik.http.routers.redirect-to-base.priority=10"
       - "traefik.http.routers.redirect-to-base.tls=true"
       - "traefik.http.routers.redirect-to-base.rule=Host(`localhost`) && (Path(`/`) || PathPrefix(`/`))"
@@ -107,9 +101,9 @@ services:
       - s3_host_base=${S3_ENDPOINT_HOSTNAME}
       - cmd=sync-local-to-s3
       - DEST_S3=s3://${S3_Bucket}
-    # volumes:
-      # - ./data-setup/s3_cdn_dump:/opt/src
-      # - ./data-setup/.s3cfg:/root/.s3cfg
+    volumes:
+      - ./data-setup/s3_cdn_dump:/opt/src
+      - ./data-setup/.s3cfg:/root/.s3cfg
     depends_on:
       - nginx-minio
   rest-api:

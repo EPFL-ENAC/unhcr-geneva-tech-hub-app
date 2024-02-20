@@ -9,3 +9,8 @@ frontend/public/injectEnv.js
 .env
 frontend/.env*
 unhcr-tss_couchdb_data_docker_volume
+
+private/*
+data-setup/.s3cfg/*
+data-setup/s3_cdn_dump/*
+.python-version

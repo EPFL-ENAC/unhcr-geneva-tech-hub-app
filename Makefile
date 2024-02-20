@@ -71,4 +71,5 @@ run-local:
 	docker compose up -d --remove-orphans
 
 run-dev:
-	docker compose -f docker-compose.yml -f docker-compose.dev.yml up --pull=always -d --remove-orphans
+	$(MAKE) run-frontend &
+	docker compose -f docker-compose.yml -f minio/minio-docker-compose.yml -f docker-compose-caddy.yml up --pull=always -d --remove-orphans
