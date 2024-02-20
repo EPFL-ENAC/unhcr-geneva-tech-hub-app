@@ -439,7 +439,7 @@ export default class Step1 extends Vue {
     const options = {
       method: "DELETE",
       body: JSON.stringify({
-        paths: ["azure/Screenshot 2023-12-28 at 14.46.22.png"],
+        paths: assetUrlsFiltered,
       }),
       headers: {
         Authorization: `Bearer ${this.$store.getters["UserModule/token"]}`,

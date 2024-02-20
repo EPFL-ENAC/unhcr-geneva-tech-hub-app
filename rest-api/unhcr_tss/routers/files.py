@@ -38,8 +38,9 @@ async def PostUpload(files: list[UploadFile] = File(description="multiple file u
 @router.delete("/files", status_code=204, description="-- Delete files from Azure Blob Storage --",
                dependencies=[Depends(authorization_checker)])
 async def DeleteUpload(filePath: FilePath):
-    try:
+    # try:
+        print(filePath.paths)
         [await azure_blob_service.delete_file(path) for path in filePath.paths]
         return {"detail": "Files deleted successfully."}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    # except Exception as e:
+    #     raise HTTPException(status_code=500, detail=str(e))
