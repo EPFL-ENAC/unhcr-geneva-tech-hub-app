@@ -1,18 +1,22 @@
-import os
 import datetime
+import os
+import urllib
 from io import BytesIO
 from typing import Tuple
 from PIL import Image
 from fastapi import UploadFile
 from azure.storage.blob.aio import BlobServiceClient
-import urllib
+from azure.storage.blob import generate_blob_sas, BlobSasPermissions
+from unhcr_tss.config import settings
+from urllib.parse import unquote
+
 
 class AzureBlobService:
     def __init__(self, account_name, account_key, container_name):
         self.account_name = account_name
         self.account_key = account_key
         self.container_name = container_name
-        self.prefix = "/azure/"
+        self.prefix = settings.AZURE_CONTAINER_PREFIX
 
         connection_string = f"DefaultEndpointsProtocol=https;AccountName={self.account_name};AccountKey={self.account_key};EndpointSuffix=core.windows.net"
         self.blob_service_client = BlobServiceClient.from_connection_string(connection_string)
@@ -81,6 +85,29 @@ class AzureBlobService:
 
     async def delete_file(self, file_path: str):
         normalized_blob_name = file_path.lstrip('/')
-        blob_client = self.blob_service_client.get_blob_client(container=self.container_name, blob=normalized_blob_name)
+        decoded_blob_name = unquote(normalized_blob_name)
+        blob_client = self.blob_service_client.get_blob_client(container=self.container_name, blob=decoded_blob_name)
         await blob_client.delete_blob()
         return file_path
+
+    def generate_file_url(self, blob_name: str, expiry_in_hours: int = 1) -> str:
+        """
+        Generate a URL for the given blob with an optional expiry time.
+
+        Args:
+            blob_name (str): The name of the blob.
+            expiry_in_hours (int, optional): The expiry time in hours. Defaults to 1.
+
+        Returns:
+            str: The generated file URL.
+        """
+        sas_token = generate_blob_sas(
+            account_name=self.account_name,
+            container_name=self.container_name,
+            blob_name=blob_name,
+            account_key=self.account_key,
+            permission=BlobSasPermissions(read=True),
+            expiry=datetime.datetime.utcnow() + datetime.timedelta(hours=expiry_in_hours)
+        )
+
+        return f"https://{self.account_name}.blob.core.windows.net/{self.container_name}/{blob_name}?{sas_token}"

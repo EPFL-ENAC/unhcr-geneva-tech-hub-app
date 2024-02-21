@@ -33,7 +33,8 @@ settings = Dynaconf(
         Validator("AUTH_SERVER", must_exist=True, default=""),
         Validator("AZURE_ACCOUNT_NAME", must_exist=True, default=""),
         Validator("AZURE_ACCOUNT_KEY", must_exist=True, default=""),
-        Validator("AZURE_CONTAINER_NAME", must_exist=True, default="")
+        Validator("AZURE_CONTAINER_NAME", must_exist=True, default=""),
+        Validator("AZURE_CONTAINER_PREFIX", must_exist=True, default="")
     ],
 )
 
