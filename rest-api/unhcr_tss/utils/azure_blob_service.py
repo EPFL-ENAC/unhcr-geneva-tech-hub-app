@@ -80,6 +80,7 @@ class AzureBlobService:
             return await self.upload_with_type(upload_file, "Other")
 
     async def delete_file(self, file_path: str):
-        blob_client = self.blob_service_client.get_blob_client(container=self.container_name, blob=file_path)
+        normalized_blob_name = file_path.lstrip('/')
+        blob_client = self.blob_service_client.get_blob_client(container=self.container_name, blob=normalized_blob_name)
         await blob_client.delete_blob()
         return file_path
