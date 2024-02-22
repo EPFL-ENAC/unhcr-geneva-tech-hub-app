@@ -91,60 +91,25 @@ services:
     build: ./couchdb-setup
     depends_on:
       - couchdb
-  data-setup:
-    build: ./data-setup
-    env_file:
-      - .env
-    environment:
-      - aws_key=${S3_ACCESS_KEY_ID}
-      - aws_secret=${S3_SECRET_ACCESS_KEY}
-      - s3_host_base=${S3_ENDPOINT_HOSTNAME}
-      - cmd=sync-local-to-s3
-      - DEST_S3=s3://${S3_Bucket}
-    volumes:
-      - ./data-setup/s3_cdn_dump:/opt/src
-      - ./data-setup/.s3cfg:/root/.s3cfg
-    depends_on:
-      - nginx-minio
   rest-api:
-    build: ./rest-api
+    build:
+      context: ./rest-api
+      dockerfile: Dockerfile
+    ports:
+      - "5051:5051"
+    volumes:
+      - ./rest-api/unhcr_tss/:/app/unhcr_tss/
     env_file:
-      - .env
-    environment:
-      - AUTH_SERVER="http://couchdb:5984"
+      - ./rest-api/.env
+    command: uvicorn unhcr_tss.main:app --host 0.0.0.0 --port 5051 --reload
+  caddy-reverse-proxy:
+    image: caddy:latest
     ports:
-      - '5050:5050'
-    labels:
-      - "traefik.http.routers.restAPI.priority=1001"
-      - "traefik.http.routers.restAPI.tls=true"
-      - "traefik.http.routers.restAPI.rule=PathPrefix(`${BASE_URL_WITHOUT_SLASH}${API_PREFIX}`)"
-      - "traefik.http.services.restAPI.loadbalancer.server.port=5050"
-      - "traefik.http.routers.restAPI.middlewares=restAPI-middleware@docker,test-compress,rest-api-ratelimit"
-      - "traefik.http.middlewares.restAPI-middleware.stripprefix.prefixes=${BASE_URL_WITHOUT_SLASH}${API_PREFIX}"
-      - "traefik.http.middlewares.rest-api-ratelimit.ratelimit.average=50"
-      - "traefik.http.middlewares.rest-api-ratelimit.ratelimit.burst=25"
-      - "traefik.http.middlewares.rest-api-ratelimit.ratelimit.period=1"
-      - "traefik.http.middlewares.test-compress.compress=true"
-    restart: unless-stopped
-    depends_on:
-      - couchdb
-  s3_server:
-    build: ./s3_server
-    restart: unless-stopped
-    environment:
-      - DNS=${DNS}
-      - S3_ENDPOINT_HOSTNAME=${S3_ENDPOINT_HOSTNAME}
-      - S3_ENDPOINT_PROTOCOL=${S3_ENDPOINT_PROTOCOL}
-      - S3_BUCKET_NAME=${S3_Bucket}
-    labels:
-      - "traefik.http.routers.s3Server.priority=1002"
-      - "traefik.http.routers.s3Server.tls=true"
-      - "traefik.http.routers.s3Server.rule=PathPrefix(`${BASE_URL_WITHOUT_SLASH}${S3_PREFIX}`)"
-      - "traefik.http.routers.s3Server.middlewares=s3Server-stripprefix"
-      - "traefik.http.middlewares.s3Server-stripprefix.stripprefix.prefixes=${BASE_URL_WITHOUT_SLASH}${S3_PREFIX}"
-      - "traefik.http.services.s3Server.loadbalancer.server.port=5660"
-    ports:
-      - '5660:5660'
+      - "8085:8085"
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
 
 volumes:
   couchdb_data:

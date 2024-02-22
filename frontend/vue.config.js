@@ -49,13 +49,6 @@ module.exports = () => {
           },
           secure: false,
         },
-        [s3Key]: {
-          target: "http://localhost:5660/",
-          pathRewrite: {
-            [s3Key]: "",
-          },
-          secure: false,
-        },
       },
     },
 
