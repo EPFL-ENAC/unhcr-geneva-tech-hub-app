@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tss-config
+data:
+  # FRONT-END
+  BASE_PATH: "/tss/"
+  BASE_URL: "/tss/"
+  BASE_URL_WITHOUT_SLASH: "/tss"
+  VUE_APP_COUCHDB_URL: "/db"
+  VUE_APP_API_URL: "/api"
+  VUE_APP_AZURE_CONTAINER_PREFIX: "https://bioportalstdev.blob.core.windows.net/test"
+  # REST-API
+  COUCHDB_HOST: "tss-couchdb"

@@ -19,15 +19,35 @@ spec:
         - containerPort: 80
         env:
         - name: BASE_PATH
-          value: "/tss/"
+          valueFrom:
+            configMapKeyRef:
+              name: tss-config
+              key: BASE_PATH
         - name: BASE_URL
-          value: "/tss/"
+          valueFrom:
+            configMapKeyRef:
+              name: tss-config
+              key: BASE_URL
         - name: BASE_URL_WITHOUT_SLASH
-          value: "/tss"
+          valueFrom:
+            configMapKeyRef:
+              name: tss-config
+              key: BASE_URL_WITHOUT_SLASH
         - name: VUE_APP_COUCHDB_URL
-          value: "/db"
+          valueFrom:
+            configMapKeyRef:
+              name: tss-config
+              key: VUE_APP_COUCHDB_URL
         - name: VUE_APP_API_URL
-          value: "/api"
+          valueFrom:
+            configMapKeyRef:
+              name: tss-config
+              key: VUE_APP_API_URL
+        - name: VUE_APP_AZURE_CONTAINER_PREFIX
+          valueFrom:
+            configMapKeyRef:
+              name: tss-config
+              key: VUE_APP_AZURE_CONTAINER_PREFIX
 
 ---
 

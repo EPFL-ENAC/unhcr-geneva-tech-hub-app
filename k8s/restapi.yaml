@@ -21,11 +21,20 @@ spec:
         - name: AUTH_SERVER
           value: "http://tss-couchdb:5984"
         - name: COUCHDB_USER
-          value: "tssadmin"
+          valueFrom:
+            secretKeyRef:
+              name: tss-secret
+              key: COUCHDB_USER
         - name: COUCHDB_PASSWORD
-          value: "JTq3ynWrOC0hQim"
+          valueFrom:
+            secretKeyRef:
+              name: tss-secret
+              key: COUCHDB_PASSWORD
         - name: COUCHDB_HOST
-          value: "tss-couchdb"
+          valueFrom:
+            configMapKeyRef:
+              name: tss-config
+              key: BASE_PATH
         - name: MAIL_USERNAME
           value: "mail_username"
         - name: MAIL_PASSWORD
@@ -44,7 +53,26 @@ spec:
           value: "false"
         - name: USE_CREDENTIALS
           value: "true"
-
+        - name: AZURE_ACCOUNT_NAME
+          valueFrom:
+            secretKeyRef:
+              name: tss-secret
+              key: AZURE_ACCOUNT_NAME
+        - name: AZURE_ACCOUNT_KEY
+          valueFrom:
+            secretKeyRef:
+              name: tss-secret
+              key: AZURE_ACCOUNT_KEY
+        - name: AZURE_CONTAINER_NAME
+          valueFrom:
+            secretKeyRef:
+              name: tss-secret
+              key: AZURE_CONTAINER_NAME
+        - name: AZURE_CONTAINER_PREFIX
+          valueFrom:
+            secretKeyRef:
+              name: tss-secret
+              key: AZURE_CONTAINER_PREFIX
 ---
 
 apiVersion: v1
