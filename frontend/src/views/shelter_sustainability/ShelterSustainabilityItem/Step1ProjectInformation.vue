@@ -229,7 +229,7 @@
                   tile
                 >
                   <v-img
-                    :src="`${env.VUE_APP_BLOB}${image.url}`"
+                    :src="`${env.VUE_APP_AZURE_CONTAINER_PREFIX}${image.url}`"
                   ></v-img>
                 </v-avatar>
                 <v-avatar v-else class="profile" color="grey" size="164" tile>
@@ -242,7 +242,7 @@
                 <div v-if="$can('edit', localShelter)" aria-label="image name">
                   <a
                     v-if="toggledImage != image.url"
-                    :href="`${env.VUE_APP_BLOB}${image?.origin_url ?? image?.url}`"
+                    :href="`${env.VUE_APP_AZURE_CONTAINER_PREFIX}${image?.origin_url ?? image?.url}`"
                     target="_blank"
                   >
                     <span style="text-overflow: ellipsis">
@@ -271,7 +271,7 @@
                 </div>
                 <div v-else>
                   <a
-                    :href="`${env.VUE_APP_BLOB}${image?.origin_url ?? image?.url}`"
+                    :href="`${env.VUE_APP_AZURE_CONTAINER_PREFIX}${image?.origin_url ?? image?.url}`"
                     target="_blank"
                     class="text"
                   >
@@ -317,7 +317,7 @@
                     <v-btn
                       v-if="toggledImage != image.url"
                       big
-                      :href="`${env.VUE_APP_BLOB}${
+                      :href="`${env.VUE_APP_AZURE_CONTAINER_PREFIX}${
                         image?.origin_url ?? image?.url
                       }`"
                       target="_blank"
@@ -344,7 +344,7 @@
                     <v-btn
                       v-if="toggledImage != image.url"
                       big
-                      :href="`${env.VUE_APP_BLOB}${image?.origin_url ?? image?.url}`"
+                      :href="`${env.VUE_APP_AZURE_CONTAINER_PREFIX}${image?.origin_url ?? image?.url}`"
                       target="_blank"
                     >
                       download

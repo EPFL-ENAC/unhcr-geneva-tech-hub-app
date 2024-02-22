@@ -1,4 +1,4 @@
-.PHONY: backup-dump env-file install run-frontend run-database azure setup-database setup-data setup-reference test lint lint-staged dump-prod-to-local restore-local-to-test restore-local setup run run-local run-dev
+.PHONY: backup-dump install run-frontend run-database azure setup-database setup-data setup-reference test lint lint-staged dump-prod-to-local restore-local-to-test restore-local setup run run-local run-dev
 # Get the current HEAD tag
 TAG := $(shell git describe --tags --abbrev=0)
 
@@ -8,15 +8,11 @@ export IMAGE_VERSION := $(TAG)
 # Define the default target
 .DEFAULT_GOAL := deploy
 
-install: env-file
+install:
 	npm install
 	npx husky install
 	$(MAKE) -C frontend install
 	$(MAKE) -C rest-api install
-
-env-file:
-	cp .env.example .env
-	cp frontend/.env.example frontend/.env
 
 run-frontend:
 	$(MAKE) -C frontend run
@@ -67,9 +63,6 @@ setup:
 run:
 	docker compose -f docker-compose.yml -f docker-compose.prod.yml up --pull=always -d --remove-orphans
 
-run-local:
-	docker compose up -d --remove-orphans
-
 run-dev:
 	$(MAKE) run-frontend &
-	docker compose -f docker-compose.yml -f minio/minio-docker-compose.yml -f docker-compose-restapi-dev.yml -f docker-compose-caddy.yml up --pull=always -d --remove-orphans
+	docker compose -f docker-compose.yml up --pull=always -d --remove-orphans

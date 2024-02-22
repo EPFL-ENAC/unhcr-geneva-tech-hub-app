@@ -10,7 +10,7 @@ export const scope1and2Exception = `For solar in particular, it is assumed that 
 export const ghg = {
   title: "GHG Emission Calculator",
   to: "GreenHouseGaz",
-  link: `${env.VUE_APP_BLOB}${env.VUE_APP_BLOB_PREFIX}2023-11-23/GHG tool User's Manual v6.pdf`,
+  link: `${env.VUE_APP_AZURE_CONTAINER_PREFIX}${env.VUE_APP_AZURE_CONTAINER_PREFIX}2023-11-23/GHG tool User's Manual v6.pdf`,
   linkName: "Guidance Manual",
   logoIcon: "$vuetify.icon.ghg",
   descriptionComponent: "ghgDescription",
@@ -20,7 +20,7 @@ export const shelter = {
   title: "Shelter and Sustainability",
   to: "ShelterSustainability",
   logoIcon: "$vuetify.icon.shelter",
-  link: `${env.VUE_APP_BLOB}${env.VUE_APP_BLOB_PREFIX}2023-03-15/Shelter & Sustainability Manual_230312.pdf`,
+  link: `${env.VUE_APP_AZURE_CONTAINER_PREFIX}${env.VUE_APP_AZURE_CONTAINER_PREFIX}2023-03-15/Shelter & Sustainability Manual_230312.pdf`,
   linkName:
     "A technical and environmental comparative overview of common shelter typologies found in settlements across UNHCR operations",
   description:
