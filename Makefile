@@ -66,3 +66,7 @@ run:
 run-dev:
 	$(MAKE) run-frontend &
 	docker compose -f docker-compose.yml up --pull=always -d --remove-orphans
+
+stop-dev:
+	/usr/bin/bash ./stopDevFrontend.sh &
+	docker-compose -f docker-compose.yml down

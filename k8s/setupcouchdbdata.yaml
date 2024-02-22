@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: couchdb-setupdata
+spec:
+  template:
+    spec:
+      containers:
+      - name: couchdb-setupdata
+        image: vtripolitakis/tss-couchdb-data:latest
+        env:
+          - name: COUCHDB_USER
+            value: "tssadmin"
+          - name: COUCHDB_PASSWORD
+            value: "JTq3ynWrOC0hQim"
+          - name: COUCHDB_HOST
+            value: "tss-couchdb"
+      restartPolicy: Never
+  backoffLimit: 5

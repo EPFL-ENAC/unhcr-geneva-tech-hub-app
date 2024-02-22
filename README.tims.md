@@ -50,6 +50,10 @@ Before you start, ensure you have the following prerequisites installed on your 
 
 8. **Access the CouchDB Admin**: Go to http://localhost:5984/_utils and enter the credentials admin/couchdb to access the CouchDB Admin interface
 
+9. **Stop the Development server**:
+   ```
+   make stop-dev
+   ```
 
 ## Additional Notes
 

@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: tss-frontend
+                port:
+                  number: 80
+          - path: /tss/db
+            pathType: Prefix
+            backend:
+              service:
+                name: tss-couchdb
+                port:
+                  number: 5984
+

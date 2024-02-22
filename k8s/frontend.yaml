@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tss-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tss-frontend
+  template:
+    metadata:
+      labels:
+        app: tss-frontend
+    spec:
+      containers:
+      - name: tss-frontend
+        image: vtripolitakis/tss-frontend:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: BASE_PATH
+          value: "/tss/"
+        - name: BASE_URL
+          value: "/tss/"
+        - name: BASE_URL_WITHOUT_SLASH
+          value: "/tss"
+        - name: VUE_APP_COUCHDB_URL
+          value: "/db"
+        - name: VUE_APP_API_URL
+          value: "/api"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: tss-frontend-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: tss-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
