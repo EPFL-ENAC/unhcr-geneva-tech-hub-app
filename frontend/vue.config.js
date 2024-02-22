@@ -24,6 +24,7 @@ module.exports = () => {
     devServer: {
       // https://github.com/webpack/webpack-dev-server/issues/1850#issuecomment-490926569
       // host: "127.0.0.1",
+      historyApiFallback: true,
       port: 8081,
       hot: true,
       liveReload: true,

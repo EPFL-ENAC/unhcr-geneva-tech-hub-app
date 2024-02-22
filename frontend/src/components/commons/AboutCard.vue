@@ -14,7 +14,7 @@
       </p>
 
       <p class="mx-8">
-        The goal of the tools is to enable UNHCR to 'green' its operations by
+        123123123The goal of the tools is to enable UNHCR to 'green' its operations by
         informing its strategies and activity planning with concrete and
         evidence-based recommendations. These elements are made available
         directly and in a user-friendly way to humanitarian practitioners
