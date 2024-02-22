@@ -1,7 +1,6 @@
 module.exports = () => {
   const dbKey = `^${process.env.BASE_URL}db`;
   const apiKey = `^${process.env.BASE_URL}api`;
-  const s3Key = `^${process.env.BASE_URL}s3`;
   return {
     configureWebpack: {
       devtool: "source-map",
@@ -22,18 +21,15 @@ module.exports = () => {
     transpileDependencies: ["vuetify", "leaflet", "echarts"],
     publicPath: "auto",
     devServer: {
-      // https://github.com/webpack/webpack-dev-server/issues/1850#issuecomment-490926569
-      // host: "127.0.0.1",
       historyApiFallback: true,
       port: 8081,
       hot: true,
       liveReload: true,
-      // ipc: true,
       proxy: {
         [dbKey]: {
-          target: "http://localhost:5984",
+          target: "couchdb:5984",
           pathRewrite: {
-            [dbKey]: "", // remove base path
+            [dbKey]: "",
           },
           changeOrigin: true,
           secure: false,
@@ -43,10 +39,9 @@ module.exports = () => {
           },
         },
         [apiKey]: {
-          // target: "http://localhost:8000", // from running locally
-          target: "http://localhost:5050/", //from docker compose
+          target: "rest-api:5051/",
           pathRewrite: {
-            [apiKey]: "", // remove base path
+            [apiKey]: "",
           },
           secure: false,
         },

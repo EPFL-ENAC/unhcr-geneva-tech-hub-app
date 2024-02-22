@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  caddy-reverse-proxy:
+  proxy:
     image: caddy:latest
     ports:
       - "8085:8085"
@@ -10,15 +10,19 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile.dev
     env_file:
       - ./frontend/.env
-    environment:
-      - BASE_URL=${BASE_URL}
     restart: unless-stopped
     depends_on:
       - couchdb
-      - caddy-reverse-proxy
+      - proxy
+    volumes:
+      - ./frontend:/app
+    ports:
+      - '8081:8081'
   couchdb:
     build: ./couchdb
     env_file:

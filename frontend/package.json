@@ -3,7 +3,7 @@
   "version": "1.1.2",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve --fix --report",
+    "serve": "vue-cli-service serve --public http://localhost --fix --report",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",

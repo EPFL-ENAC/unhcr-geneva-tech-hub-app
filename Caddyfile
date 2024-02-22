@@ -1,17 +1,13 @@
 http://localhost:8085 {
     handle_path /db* {
-        reverse_proxy host.docker.internal:5984
+        reverse_proxy couchdb:5984
     }
 
     handle_path /api* {
-	    reverse_proxy host.docker.internal:5051
-    }
-
-    handle_path /s3* {
-	    reverse_proxy host.docker.internal:5660
+	    reverse_proxy rest-api:5051
     }
 
     handle_path /* {
-        reverse_proxy host.docker.internal:8081
+        reverse_proxy frontend:8081
     }
 }
