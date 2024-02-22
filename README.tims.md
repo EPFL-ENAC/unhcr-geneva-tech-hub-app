@@ -7,6 +7,7 @@ Welcome to our project! To get your local development environment up and running
 
 Before you start, ensure you have the following prerequisites installed on your system:
 - Docker
+- Node 16.x
 - Python 3.10.9
 - `pyenv` (optional, but recommended for managing Python versions)
 - `pip` for installing Python packages
