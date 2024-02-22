@@ -1,58 +1,24 @@
 version: "3.9"
 
 services:
-  reverse-proxy:
-    image: traefik:v2.9
-    command:
-      - "--providers.docker"
-      - "--providers.file.directory=/configuration/"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
-      - "--entrypoints.websecure.address=:443"
-      # - "--api.dashboard=true"
-      # - "--api.insecure=true"
-    environment:
-      - SSL_CERT_CRT=${SSL_CERT_CRT}
-      - SSL_CERT_KEY=${SSL_CERT_KEY}
+  caddy-reverse-proxy:
+    image: caddy:latest
     ports:
-      - "80:80"
-      - "443:443"
-      # - "8080:8080"
-    restart: unless-stopped
+      - "8085:8085"
+    extra_hosts:
+      - host.docker.internal:host-gateway
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik.yaml:/configuration/traefik.yml
-      - /etc/ssl:/etc/ssl
+      - ./Caddyfile:/etc/caddy/Caddyfile
   frontend:
     build: ./frontend
     env_file:
       - ./frontend/.env
     environment:
       - BASE_URL=${BASE_URL}
-    labels:
-      - "traefik.enable=true"
-      # Router for handling specific redirection (e.g., from / to /base_url/)
-      - "traefik.http.routers.redirect-to-base.priority=10"
-      - "traefik.http.routers.redirect-to-base.tls=true"
-      - "traefik.http.routers.redirect-to-base.rule=Host(`localhost`) && (Path(`/`) || PathPrefix(`/`))"
-      - "traefik.http.routers.redirect-to-base.middlewares=redirect-to"
-      - "traefik.http.middlewares.redirect-to.redirectregex.regex=^https?:\\/\\/([^\\/]+)\\/?$$"
-      - "traefik.http.middlewares.redirect-to.redirectregex.replacement=https://$$1${BASE_URL}"
-      - "traefik.http.middlewares.redirect-to.redirectregex.permanent=true"
-      # Router for handling the frontend, with the base URL, and stripping the prefix from the request because
-      # the frontend is not aware of the base URL (e.g., /base_url/... -> /...)
-      - "traefik.http.routers.frontend.priority=100"
-      - "traefik.http.routers.frontend.tls=true"
-      - "traefik.http.routers.frontend.rule=PathPrefix(`${BASE_URL}`)"
-      - "traefik.http.routers.frontend.middlewares=frontend-stripprefix,compress"
-      - "traefik.http.middlewares.compress.compress=true"
-      - "traefik.http.middlewares.frontend-stripprefix.stripprefix.prefixes=${BASE_URL_WITHOUT_SLASH}"
     restart: unless-stopped
     depends_on:
       - couchdb
-      - reverse-proxy
+      - caddy-reverse-proxy
   couchdb:
     build: ./couchdb
     env_file:
@@ -61,15 +27,6 @@ services:
       - COUCHDB_USER=${COUCHDB_USER}
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
       - COUCHDB_HOST=couchdb
-    labels:
-      - "traefik.http.routers.couchdb.priority=1000"
-      - "traefik.http.routers.couchdb.tls=true"
-      - "traefik.http.routers.couchdb.rule=PathPrefix(`${BASE_URL_WITHOUT_SLASH}${DB_PREFIX}`)"
-      - "traefik.http.routers.couchdb.middlewares=couchdb-stripprefix,test-compress"
-      - "traefik.http.middlewares.couchdb-stripprefix.stripprefix.prefixes=${BASE_URL_WITHOUT_SLASH}${DB_PREFIX}"
-      - "traefik.http.middlewares.couchdb-stripprefix.stripprefix.forceSlash=false"
-      - "traefik.http.services.couchdb.loadbalancer.server.port=5984"
-      - "traefik.http.middlewares.test-compress.compress=true"
     ports:
       - '5984:5984'
     restart: unless-stopped
@@ -86,8 +43,6 @@ services:
       - COUCHDB_USER=${COUCHDB_USER}
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
       - COUCHDB_HOST=couchdb
-    labels:
-      - "traefik.http.services.couchdb-setup.loadbalancer.server.port=9999"
     build: ./couchdb-setup
     depends_on:
       - couchdb
@@ -102,14 +57,6 @@ services:
     env_file:
       - ./rest-api/.env
     command: uvicorn unhcr_tss.main:app --host 0.0.0.0 --port 5051 --reload
-  caddy-reverse-proxy:
-    image: caddy:latest
-    ports:
-      - "8085:8085"
-    extra_hosts:
-      - host.docker.internal:host-gateway
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
 
 volumes:
   couchdb_data:
