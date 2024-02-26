@@ -1,0 +1,4 @@
+apiVersion: v2
+name: tss-caddy
+description: A Helm chart for deploying the TSS caddy
+version: 1.0.0

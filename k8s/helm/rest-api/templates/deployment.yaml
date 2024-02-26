@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: tss-restapi
-        image: vtripolitakis/tss-rest-api:latest
+        image: {{ .Values.global.__common__.image.registry }}/{{ .Values.global.__common__.image.repository }}-rest-api:{{ .Values.global.__common__.image.tag }}
         ports:
         - containerPort: 5050
         env:
@@ -73,17 +73,3 @@ spec:
             secretKeyRef:
               name: tss-secret
               key: AZURE_CONTAINER_PREFIX
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: tss-restapi-service
-spec:
-  type: LoadBalancer
-  selector:
-    app: tss-restapi
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 5050

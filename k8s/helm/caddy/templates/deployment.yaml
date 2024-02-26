@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tss-caddy-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tss-caddy-proxy
+  template:
+    metadata:
+      labels:
+        app: tss-caddy-proxy
+    spec:
+      containers:
+      - name: tss-caddy-proxy
+        image: {{ .Values.global.__common__.image.registry }}/{{ .Values.global.__common__.image.repository }}-caddy:{{ .Values.global.__common__.image.tag }}
+        ports:
+        - containerPort: 80
