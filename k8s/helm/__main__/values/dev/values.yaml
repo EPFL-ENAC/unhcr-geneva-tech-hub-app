@@ -10,6 +10,7 @@ global:
       BASE_URL: "/tss/"
       BASE_URL_WITHOUT_SLASH: "/tss"
       COUCHDB_HOST: "tss-couchdb"
+      DOMAIN_NAME: "dev.tims.unhcr.org"
       VUE_APP_COUCHDB_URL: "/db"
       VUE_APP_API_URL: "/api"
       VUE_APP_AZURE_CONTAINER_PREFIX: "https://satimsdevweu.blob.core.windows.net/tss"

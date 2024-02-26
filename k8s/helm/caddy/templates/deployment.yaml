@@ -17,3 +17,9 @@ spec:
         image: {{ .Values.global.__common__.image.registry }}/{{ .Values.global.__common__.image.repository }}-caddy:{{ .Values.global.__common__.image.tag }}
         ports:
         - containerPort: 80
+        env:
+        - name: DOMAIN_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: tss-configmap
+              key: DOMAIN_NAME

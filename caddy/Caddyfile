@@ -1,0 +1,21 @@
+http://${DOMAIN_NAME} {
+    handle_path /tss/db* {
+
+        uri strip_prefix /tss/db
+
+        reverse_proxy /* tss-svc-couchdb:5984
+
+    }
+
+    handle_path /tss/api* {
+
+        uri strip_prefix /tss/api
+
+        reverse_proxy /* tss-restapi-service:80
+
+    }
+
+    reverse_proxy /tss/* tss-frontend-service:80
+    reverse_proxy /doc/* tims-user-guide:80
+    reverse_proxy /* tims-frontend:80
+}

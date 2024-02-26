@@ -33,6 +33,10 @@ stages:
         docker build -t $(azureContainerRegistryName).azurecr.io/tss-frontend:az.$(Build.BuildId) ./frontend -f ./frontend/Dockerfile
         docker push $(azureContainerRegistryName).azurecr.io/tss-frontend:az.$(Build.BuildId)
       displayName: 'Build and Push Frontend'
+    - script: |
+        docker build -t $(azureContainerRegistryName).azurecr.io/tss-caddy:az.$(Build.BuildId) ./caddy -f ./caddy/Dockerfile
+        docker push $(azureContainerRegistryName).azurecr.io/tss-caddy:az.$(Build.BuildId)
+      displayName: 'Build and Push Caddy Image'
 - stage: UpdateK8sSecrets
   displayName: 'Update Kubernetes Secrets'
   jobs:
