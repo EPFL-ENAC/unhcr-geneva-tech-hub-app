@@ -25,10 +25,10 @@ stages:
     - script: |
         docker login $(azureContainerRegistryName).azurecr.io --username $(dockerUser) --password $(dockerPassword)
       displayName: 'Docker Login'
-    - script: |
-        docker build -t $(azureContainerRegistryName).azurecr.io/tss-rest-api:az.$(Build.BuildId) . -f rest-api/Dockerfile
-        docker push $(azureContainerRegistryName).azurecr.io/tss-rest-api:az.$(Build.BuildId)
-      displayName: 'Build and Push Rest API'
+    # - script: |
+    #     docker build -t $(azureContainerRegistryName).azurecr.io/tss-rest-api:az.$(Build.BuildId) . -f rest-api/Dockerfile
+    #     docker push $(azureContainerRegistryName).azurecr.io/tss-rest-api:az.$(Build.BuildId)
+    #   displayName: 'Build and Push Rest API'
     - script: |
         docker build -t $(azureContainerRegistryName).azurecr.io/tss-frontend:az.$(Build.BuildId) . -f frontend/Dockerfile
         docker push $(azureContainerRegistryName).azurecr.io/tss-frontend:az.$(Build.BuildId)
