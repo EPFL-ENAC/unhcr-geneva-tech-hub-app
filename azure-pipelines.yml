@@ -1,0 +1,79 @@
+trigger: none
+
+parameters:
+  - name: environment
+    displayName: Where to deploy?
+    type: string
+    default: dev
+    values:
+    - dev
+    - test
+    - prod
+
+variables:
+ - group: ${{parameters.environment}}
+
+stages:
+- stage: Build
+  displayName: 'Build and Push Docker Images'
+  jobs:
+  - job: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - checkout: self
+    - task: Docker@2
+      displayName: 'Login to ACR'
+      inputs:
+        command: login
+        containerRegistry: TIMSAzureConnection
+    - task: Docker@2
+      displayName: 'Build and Push Backend Image'
+      inputs:
+        command: buildAndPush
+        repository: $(azureContainerRegistryName).azurecr.io/tss-rest-api
+        dockerfile: rest-api/Dockerfile
+        buildContext: ./rest-api
+        tags: az.$(Build.BuildId)
+        containerRegistry: TIMSAzureConnection
+    - task: Docker@2
+      displayName: 'Build and Push Frontend Image'
+      inputs:
+        command: buildAndPush
+        repository: $(azureContainerRegistryName).azurecr.io/frontend-tims
+        dockerfile: ./frontend/Dockerfile
+        buildContext: ./frontend
+        tags: az.$(Build.BuildId)
+        containerRegistry: TIMSAzureConnection
+# - stage: UpdateK8sSecrets
+#   displayName: 'Update Kubernetes Secrets'
+#   jobs:
+#   - job: UpdateK8sSecrets
+#     pool:
+#       vmImage: 'ubuntu-latest'
+#     steps:
+#     - checkout: self
+#     - task: AzureCLI@2
+#       displayName: 'Get AKS Credentials'
+#       inputs:
+#         azureSubscription: 'TIMSAzureConnection'
+#         scriptType: 'bash'
+#         scriptLocation: 'inlineScript'
+#         inlineScript: |
+#           az aks get-credentials --resource-group $(ARG_NAME) --name $(AKS_NAME) --overwrite-existing
+#     - task: AzureCLI@2
+#       displayName: 'Create/Update Secrets in Kubernetes'
+#       inputs:
+#         azureSubscription: 'TIMSAzureConnection'
+#         scriptType: 'bash'
+#         scriptLocation: 'inlineScript'
+#         inlineScript: |
+#           kubectl create secret generic tss-secret \
+#             --from-literal=AZURE_ACCOUNT_KEY=$(AZURE_ACCOUNT_KEY) \
+#             --from-literal=AZURE_ACCOUNT_NAME=$(AZURE_ACCOUNT_NAME) \
+#             --from-literal=AZURE_CONTAINER_NAME=$(AZURE_CONTAINER_NAME) \
+#             --from-literal=AZURE_CONTAINER_PREFIX=$(AZURE_CONTAINER_PREFIX) \
+#             --from-literal=COUCHDB_PASSWORD=$(COUCHDB_PASSWORD) \
+#             --from-literal=COUCHDB_USER=$(COUCHDB_USER) \
+#             --namespace tims --dry-run=client -o yaml | kubectl apply -f -
+
