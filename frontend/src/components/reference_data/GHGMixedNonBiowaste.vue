@@ -13,15 +13,20 @@
               'close-delay': 1000,
             }"
           >
-          <span class="info-tooltip">
-
-            <a href="https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf" target="_blank">
-              https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf
-            </a>
-            <a href="https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf" target="_blank">
-              https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf
-            </a>
-          </span>
+            <span class="info-tooltip">
+              <a
+                href="https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf"
+                target="_blank"
+              >
+                https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf
+              </a>
+              <a
+                href="https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf"
+                target="_blank"
+              >
+                https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_5_Ch05_IOB.pdf
+              </a>
+            </span>
           </info-tooltip>
         </v-col>
       </v-row>

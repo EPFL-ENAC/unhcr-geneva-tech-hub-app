@@ -1,12 +1,15 @@
-let processEnv: any = {};
+let processEnv: Record<string, string> = {};
 try {
-  processEnv = { ...process.env };
+  processEnv = { ...process.env } as Record<string, string>;
 } catch (e) {
   console.log("process undefined", e);
 }
-const injectedEnvVariable =
-  window && (window as any).injectedEnvVariable
-    ? (window as any).injectedEnvVariable
+const injectedEnvVariable: Record<string, string> =
+  window &&
+  (window as Window & { injectedEnvVariable?: Record<string, string> })
+    .injectedEnvVariable
+    ? (window as Window & { injectedEnvVariable?: Record<string, string> })
+        .injectedEnvVariable
     : {};
 
 // cf env.d.ts for defuintion

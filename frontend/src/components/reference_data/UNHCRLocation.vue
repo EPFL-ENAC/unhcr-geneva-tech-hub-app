@@ -9,7 +9,10 @@
           operated by the company Solargis s.r.o. on behalf of the World Bank
           Group, utilizing Solargis data, with funding provided by the Energy
           Sector Management Assistance Program (ESMAP). For additional
-          information: <a target="_blank" href="https://globalsolaratlas.info">globalsolaratlas.info</a>)
+          information:
+          <a target="_blank" href="https://globalsolaratlas.info"
+            >globalsolaratlas.info</a
+          >)
         </v-col>
       </v-row>
       <v-row>
@@ -94,7 +97,6 @@ export default class Energy extends Vue {
     });
     return newItems;
   }
-
 
   public get headers(): HeaderInterface[] {
     return [

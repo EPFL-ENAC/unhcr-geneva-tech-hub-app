@@ -52,4 +52,5 @@ export default class InfoTooltip extends Vue {}
     text-decoration: underline;
     color: white;
   }
-}</style>
+}
+</style>

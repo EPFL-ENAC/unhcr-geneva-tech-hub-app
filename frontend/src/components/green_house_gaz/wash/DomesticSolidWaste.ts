@@ -90,14 +90,14 @@ const nonBiowaste = "Non-biowaste";
 
 export type practiceCategoriess = "Biowaste" | "Non-biowaste";
 
-const baselinePractices = [
-  openPits,
-  managedDisposalSite,
-  openBurning,
-  compositing,
-  anaerobicallyDigested,
-  recyclingReuse,
-]; // region dependent practices
+// const baselinePractices = [
+//   openPits,
+//   managedDisposalSite,
+//   openBurning,
+//   compositing,
+//   anaerobicallyDigested,
+//   recyclingReuse,
+// ]; // region dependent practices
 
 const regionDependentPractices = [openPits, managedDisposalSite, openBurning];
 
@@ -156,6 +156,7 @@ export function headers() {
         localInput: MaterialSolidWasteItemInput
       ) => {
         localInput = resetSurveySolidWaste(localInput);
+        return localInput;
       },
       tooltipInfoFn: function (value: string) {
         if (value === bioWaste) {

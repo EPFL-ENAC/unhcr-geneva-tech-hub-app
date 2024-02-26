@@ -217,7 +217,10 @@
                       size="64"
                       tile
                     >
-                      <v-img :src="`${env.BASE_URL_WITHOUT_SLASH}${project.image?.url}`" @error="onError"></v-img>
+                      <v-img
+                        :src="`${env.BASE_URL_WITHOUT_SLASH}${project.image?.url}`"
+                        @error="onError"
+                      ></v-img>
                     </v-avatar>
                     <v-avatar
                       v-else
@@ -345,6 +348,7 @@ import TerritoryMap from "@/components/commons/TerritoryMap.vue";
 import NewShelterDialog from "@/components/shelter_sustainability/NewShelterDialog.vue";
 import { Paginate } from "@/store/SheltersMaterialModule";
 
+import { env } from "@/config";
 import store from "@/store";
 import {
   listOfShelterType,
@@ -358,8 +362,8 @@ import {
   shelterIcons,
 } from "@/views/shelter_sustainability/shelterTypeColors";
 import { Component, Vue, Watch } from "vue-property-decorator";
+import { RawLocation } from "vue-router";
 import { mapActions, mapState } from "vuex";
-import { env } from "@/config";
 
 @Component({
   computed: {
@@ -591,7 +595,11 @@ export default class ProjectList extends Vue {
     this.closeDB();
   }
 
-  beforeRouteEnter(to: unknown, from: unknown, next: any): void {
+  beforeRouteEnter(
+    to: unknown,
+    from: unknown,
+    next: (to?: RawLocation | false | ((vm: Vue) => unknown) | void) => void
+  ): void {
     store.dispatch("ShelterModule/resetDoc");
     next();
   }

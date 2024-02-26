@@ -3,9 +3,14 @@
     <v-card-text v-if="items">
       <v-row>
         <v-col>
-          Longterm daily average of solar hours per country (Source: <a target="_blank" href="https://globalsolaratlas.info">globalsolaratlas.info</a>)
+          Longterm daily average of solar hours per country (Source:
+          <a target="_blank" href="https://globalsolaratlas.info"
+            >globalsolaratlas.info</a
+          >)
           <p class="mb-0">
-            (Note: This value is calculated as the average of solar hours for the camps in the country and is used when the site global horizontal irradiation for the site is unknown.)
+            (Note: This value is calculated as the average of solar hours for
+            the camps in the country and is used when the site global horizontal
+            irradiation for the site is unknown.)
           </p>
         </v-col>
       </v-row>
@@ -13,11 +18,11 @@
         <v-col>
           <v-card-title>
             <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            hide-details
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
             ></v-text-field>
             <v-spacer></v-spacer>
           </v-card-title>
@@ -34,9 +39,8 @@
               </span>
             </template>
             <template #[`item.Country`]="props">
-              <span :title="props.item.Country"
-                >
-                {{  props.item.Country ?? "default" }}
+              <span :title="props.item.Country">
+                {{ props.item.Country ?? "default" }}
                 <country-flag
                   v-if="props.item._id !== 'default'"
                   :country="props.item._id"

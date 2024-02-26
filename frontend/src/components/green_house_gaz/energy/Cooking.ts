@@ -199,7 +199,8 @@ export function headers(
           return cookstoveTECHs.find((x) => x._id === value)?.tooltipInfo;
         }
       },
-      formatter: (_id: string, _: unknown, localItem: EnergyCookingItem) => {
+      // formatter: (_id: string, _: unknown, localItem: EnergyCookingItem) => {
+      formatter: (_id: string) => {
         const cookStove =
           cookstoveTECHs.find((cookstove) => cookstove._id === _id) ??
           ({

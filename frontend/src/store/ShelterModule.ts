@@ -1,13 +1,7 @@
-import { env } from "@/config";
 import { checkIfAdmin } from "@/plugins/user";
 import { getNewName, updateMetaFields } from "@/store/documentUtils";
 import { RootState } from "@/store/index";
-import {
-  ImageShelter,
-  ScoreCard,
-  Shelter,
-  ShelterState,
-} from "@/store/ShelterInterface";
+import { ScoreCard, Shelter, ShelterState } from "@/store/ShelterInterface";
 import {
   computeShelter,
   generateNewShelter,
@@ -15,7 +9,6 @@ import {
 } from "@/store/ShelterModuleUtils";
 import { Paginate } from "@/store/SheltersMaterialModule";
 import { SyncDatabase } from "@/utils/couchdb";
-import { cloneDeep } from "lodash";
 import {
   ActionContext,
   ActionTree,

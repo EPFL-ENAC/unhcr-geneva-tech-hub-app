@@ -1,6 +1,5 @@
-<!-- eslint-disable vue/no-v-text-v-html-on-component -->
+<!-- eslint-disable vue/no-v-html vue/no-v-text-v-html-on-component -->
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
 interface Props {
   text: string;
   configs?: tableTextWithIcon[];
@@ -13,14 +12,14 @@ export interface tableTextWithIcon {
   text?: string;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 </script>
 
 <template>
-  <!-- eslint-disable vue/no-v-text-v-html-on-component -->
+  <!-- eslint-disable vue/no-v-html vue/no-v-text-v-html-on-component -->
   <div class="d-flex justify-left align-center">
     <span class="d-flex justify-left align-center" v-html="text"></span>
-    <span v-for="(config) in configs" :key="config.icon" class="ml-2">
+    <span v-for="config in configs" :key="config.icon" class="ml-2">
       <v-tooltip top>
         <template #activator="{ on, attrs }">
           <template v-if="config.icon">

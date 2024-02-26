@@ -54,11 +54,13 @@ if (env.NODE_ENV === "production" && env.VUE_APP_DSN) {
 }
 
 axios.interceptors.response.use(undefined, function (error: AxiosError) {
-  (error as any).originalMessage = error.message;
+  (error as unknown as { originalMessage: string }).originalMessage =
+    error.message;
   Object.defineProperty(error, "message", {
     get: function () {
       if (!error.response) {
-        return (error as any).originalMessage;
+        return (error as unknown as { originalMessage: string })
+          .originalMessage;
       }
       return `${error?.response?.status}: ${error?.response?.statusText}`;
     },
@@ -66,7 +68,8 @@ axios.interceptors.response.use(undefined, function (error: AxiosError) {
   Object.defineProperty(error, "stack", {
     get: function () {
       if (!error.response) {
-        return (error as any).originalMessage;
+        return (error as unknown as { originalMessage: string })
+          .originalMessage;
       }
       return `${JSON.stringify(error.response.data)}`;
     },

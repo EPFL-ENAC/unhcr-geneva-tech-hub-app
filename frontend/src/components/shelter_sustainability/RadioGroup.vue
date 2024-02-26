@@ -128,6 +128,7 @@ export default class RadioGroup extends Vue {
   value!: Score;
   form!: ShelterForm;
   show = true;
+  depth!: number;
 
   public toggle(): void {
     this.show = !this.show;
@@ -165,6 +166,7 @@ export default class RadioGroup extends Vue {
     return newValue;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public isShelterFormInput(obj: any): obj is ShelterFormInput {
     return obj.score !== undefined;
   }

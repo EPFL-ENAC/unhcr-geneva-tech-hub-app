@@ -44,7 +44,9 @@
                 size="64"
                 tile
               >
-                <v-img :src="`${env.BASE_URL_WITHOUT_SLASH}${shelter.image?.url}`"></v-img>
+                <v-img
+                  :src="`${env.BASE_URL_WITHOUT_SLASH}${shelter.image?.url}`"
+                ></v-img>
               </v-avatar>
               <v-avatar v-else class="profile" color="grey" size="64" tile>
                 <v-card-title class="white--text"></v-card-title>
@@ -369,6 +371,7 @@ import { constructionImpacts } from "@/views/shelter_sustainability/ShelterSusta
 import { environmentalImpacts } from "@/views/shelter_sustainability/ShelterSustainabilityItem/environmentalImpacts";
 import { generateScorecardOptions } from "@/views/shelter_sustainability/ShelterSustainabilityItem/generateScorecardOptions";
 
+import { env } from "@/config";
 import { printFunction } from "@/utils/printFunction";
 import {
   geometriesName,
@@ -394,7 +397,6 @@ import PouchDB from "pouchdb-browser";
 import VChart from "vue-echarts";
 import { Route } from "vue-router";
 import { mapActions, mapGetters } from "vuex";
-import { env } from "@/config";
 
 use([
   CanvasRenderer,

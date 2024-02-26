@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { numberOfDaysPerYear } from "@/components/green_house_gaz/energy/computeCO2cost";
 import {
   CountryIrradianceKeys,
@@ -411,7 +412,7 @@ export function commonElectricSolarDevicesHeaders() {
       },
       value: "computed.totalEnergy",
       text: "Annual fuel / Energy consumption",
-      formatter: (v: number, { ...args }, localInput: any) => {
+      formatter: (v: number, _: any, localInput: any) => {
         let suffixTimePeriod = "";
         switch (timePeriod) {
           case "Year":
@@ -584,16 +585,19 @@ export function hybridLightingElectricHeaders() {
 
   const hybridPercentagesRuleFn =
     (key: string) =>
-    (localInput: SurveyInput, surveyItem: SurveyTableHeader) => {
+    // (localInput: SurveyInput, surveyItem: SurveyTableHeader) => {
+    (localInput: SurveyInput) => {
       // warning: It's not working properly because of computed lag
       return [
-        (v: number) => {
+        // (v: number) => {
+        () => {
           const { dieselPercentage, gridPercentage, solarPercentage } =
             localInput;
           const totalPercentage =
             ((dieselPercentage as number) ?? 0) +
             ((gridPercentage as number) ?? 0) +
             ((solarPercentage as number) ?? 0);
+          console.log("totalPercentage", totalPercentage, key);
           return true;
           // return (
           //   totalPercentage <= 1 ||
