@@ -94,6 +94,7 @@ stages:
         helm dependency update
       displayName: 'Update Helm Dependencies'
     - script: |
+        cd k8s/helm
         helm upgrade tss-app ./__main__ --namespace tims \
           -f ./__main__/values/${{ parameters.environment }}/values.yaml \
           --install \
