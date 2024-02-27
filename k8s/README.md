@@ -1,3 +1,7 @@
+NOTE:
+The following guidelines are now deprecated, since we are moving those steps in the azure-pipeline.yaml configuration file.
+
+DEPRECATED:
 Ask Team Lead for the k8s/secrets.yaml, k8s/couchdb_data.yaml files and for the {COUCHDB_PASSWORD}.
 
 helm install tss couchdb/couchdb --namespace tims\
