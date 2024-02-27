@@ -19,7 +19,7 @@ spec:
         - containerPort: 5050
         env:
         - name: AUTH_SERVER
-          value: "http://tss-couchdb:5984"
+          value: "http://tss-svc-couchdb:5984"
         - name: COUCHDB_USER
           valueFrom:
             secretKeyRef:

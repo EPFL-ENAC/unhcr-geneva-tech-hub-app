@@ -9,7 +9,7 @@ global:
       BASE_PATH: "/tss/"
       BASE_URL: "/tss/"
       BASE_URL_WITHOUT_SLASH: "/tss"
-      COUCHDB_HOST: "tss-couchdb"
+      COUCHDB_HOST: "tss-svc-couchdb"
       DOMAIN_NAME: "tims.unhcr.org"
       VUE_APP_COUCHDB_URL: "/db"
       VUE_APP_API_URL: "/api"
