@@ -67,6 +67,5 @@ stages:
             --from-literal=AZURE_CONTAINER_PREFIX=$(AZURE_CONTAINER_PREFIX) \
             --from-literal=COUCHDB_PASSWORD=$(COUCHDB_PASSWORD) \
             --from-literal=COUCHDB_USER=$(COUCHDB_USER) \
-            --from-literal=FOO=$(FOO) \
             --namespace tims --dry-run=client -o yaml | kubectl apply -f -
 

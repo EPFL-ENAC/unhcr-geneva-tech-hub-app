@@ -1,9 +1,9 @@
 global:
   __common__:
     image:
-      registry: ""
-      repository: ""
-      tag: ""
+      registry: "akstimsdevweu.azurecr.io"
+      repository: "tss"
+      tag: "az.42"
   configmap:
     data:
       BASE_PATH: "/tss/"
