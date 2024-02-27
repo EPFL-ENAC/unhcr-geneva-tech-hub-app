@@ -1,0 +1,4 @@
+apiVersion: v2
+name: tss-rest-api
+description: A Helm chart for deploying the TSS rest-api
+version: 1.0.0

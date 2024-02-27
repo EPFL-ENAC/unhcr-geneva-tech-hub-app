@@ -1,0 +1,5 @@
+secrets.yaml
+couchdb_data.yaml
+couchdb_setup.yaml
+
+helm/__main__/charts/*

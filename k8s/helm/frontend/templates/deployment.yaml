@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: tss-frontend
-        image: vtripolitakis/tss-frontend:latest
+        image: {{ .Values.global.__common__.image.registry }}/{{ .Values.global.__common__.image.repository }}-frontend:{{ .Values.global.__common__.image.tag }}
         ports:
         - containerPort: 80
         env:
@@ -48,18 +48,3 @@ spec:
             configMapKeyRef:
               name: tss-configmap
               key: VUE_APP_AZURE_CONTAINER_PREFIX
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: tss-frontend-service
-spec:
-  type: LoadBalancer
-  selector:
-    app: tss-frontend
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80

@@ -1,0 +1,4 @@
+apiVersion: v2
+name: tss-frontend
+description: A Helm chart for deploying the TSS frontend
+version: 1.0.0

@@ -1,0 +1,12 @@
+dependencies:
+- name: tss-caddy
+  repository: file://../caddy/
+  version: 1.0.0
+- name: tss-frontend
+  repository: file://../frontend/
+  version: 1.0.0
+- name: tss-rest-api
+  repository: file://../rest-api/
+  version: 1.0.0
+digest: sha256:c7c8a10931e4c0011c9c9cbeb32d2daaba17d8a437406a595b7ea5e7b3734ff5
+generated: "2024-02-27T10:53:15.494413+01:00"
