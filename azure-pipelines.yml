@@ -68,4 +68,35 @@ stages:
             --from-literal=COUCHDB_PASSWORD=$(COUCHDB_PASSWORD) \
             --from-literal=COUCHDB_USER=$(COUCHDB_USER) \
             --namespace tims --dry-run=client -o yaml | kubectl apply -f -
+- stage: DeployHelmChart
+  displayName: 'Deploy Helm Chart'
+  dependsOn: UpdateK8sSecrets
+  jobs:
+  - job: Deploy
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - checkout: self
+    - task: AzureCLI@2
+      displayName: 'Get AKS Credentials'
+      inputs:
+        azureSubscription: 'TIMSAzureConnection'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az aks get-credentials --resource-group $(ARG_NAME) --name $(AKS_NAME) --overwrite-existing
+    - task: HelmInstaller@1
+      inputs:
+        helmVersion: '3.x'
+      displayName: 'Install Helm'
+    - script: |
+        cd k8s/helm/__main__
+        helm dependency update
+      displayName: 'Update Helm Dependencies'
+    - script: |
+        helm upgrade tss-app ./__main__ --namespace tims \
+          -f ./__main__/values/${{ parameters.environment }}/values.yaml \
+          --install \
+          --set global.__common__.image.tag=az.$(Build.BuildId)
+      displayName: 'Helm Upgrade'
 

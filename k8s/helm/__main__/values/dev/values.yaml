@@ -3,7 +3,7 @@ global:
     image:
       registry: "akstimsdevweu.azurecr.io"
       repository: "tss"
-      tag: "az.42"
+      tag: "az.{{ .Build.BuildId }}"
   configmap:
     data:
       BASE_PATH: "/tss/"
