@@ -24,7 +24,7 @@ export const shelter = {
   linkName:
     "A technical and environmental comparative overview of common shelter typologies found in settlements across UNHCR operations",
   description:
-    "A UNHCR tool supporting comparative assessments of environmental \
+    "A tool supporting comparative assessments of environmental \
       impacts, technical performance, habitability and affordability of \
       shelter designs used in humanitarian relief operations.",
 };
