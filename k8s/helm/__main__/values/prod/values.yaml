@@ -13,4 +13,4 @@ global:
       DOMAIN_NAME: "tims.unhcr.org"
       VUE_APP_COUCHDB_URL: "/db"
       VUE_APP_API_URL: "/api"
-      VUE_APP_AZURE_CONTAINER_PREFIX: "https://timsprd.blob.core.windows.net/tss"
+      VUE_APP_AZURE_CONTAINER_PREFIX: "https://timsprd.blob.core.windows.net/tss/"
