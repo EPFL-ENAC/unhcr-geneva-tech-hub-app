@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug-pvc-pod
+spec:
+  volumes:
+    - name: database-storage
+      persistentVolumeClaim:
+        claimName: database-storage-tss-couchdb-0
+  containers:
+    - name: debug-container
+      image: busybox
+      volumeMounts:
+        - mountPath: "/mnt"
+          name: database-storage
+      command: ['sh', '-c', 'echo Container is Running; sleep 3600']
