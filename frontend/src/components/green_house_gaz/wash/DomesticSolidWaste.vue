@@ -84,7 +84,7 @@ export default class Cooking extends Mixins(ComputeGenericFormSurveyMixin) {
   diffDimension = diffDimension;
   name = "solid waste";
 
-  domesticSolidWasteHref = `${env.VUE_APP_AZURE_CONTAINER_PREFIX}2023-11-23/RefugeeWasteExamples-2023-11-15.pdf`;
+  domesticSolidWasteHref = `${env.VUE_APP_AZURE_CONTAINER_PREFIX}/2023-11-23/RefugeeWasteExamples-2023-11-15.pdf`;
 
   public get title(): string {
     return this.titleKey;

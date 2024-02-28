@@ -1,5 +1,7 @@
 FROM couchdb:3.3
 
-# https://docs.couchdb.org/en/stable/config/intro.html
-# https://apache.googlesource.com/couchdb-docker/#configuring-couchdb
-COPY local.ini /opt/couchdb/etc/
+# Copia la configurazione personalizzata di CouchDB
+COPY etc/ /opt/couchdb/etc/
+
+# Copia i dati del database di CouchDB
+COPY data/ /opt/couchdb/data/
