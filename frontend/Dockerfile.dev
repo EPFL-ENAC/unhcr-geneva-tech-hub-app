@@ -7,6 +7,8 @@ COPY .npmrc ./
 COPY npm-shrinkwrap.json ./
 
 RUN npm ci
+# Set the PATH to include /app/node_modules/.bin
+ENV PATH="/app/node_modules/.bin:${PATH}"
 
 COPY public ./public
 COPY src ./src
