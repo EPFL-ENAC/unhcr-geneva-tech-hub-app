@@ -25,7 +25,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      # - "8080:8080"
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -59,8 +58,16 @@ services:
     depends_on:
       - couchdb
       - reverse-proxy
+  init_couchdb:
+    image: python:3.12-alpine
+    command: /entrypoint.sh
+    env_file:
+      - ./frontend/.env
+    volumes:
+        - ./couchdb/entrypoint.sh:/entrypoint.sh
+        - ./couchdb/local.ini:/local.ini
   couchdb:
-    build: ./couchdb
+    image: couchdb:3.3
     env_file:
       - ./frontend/.env
     environment:
@@ -76,11 +83,19 @@ services:
       - "traefik.http.middlewares.couchdb-stripprefix.stripprefix.forceSlash=false"
       - "traefik.http.services.couchdb.loadbalancer.server.port=5984"
       - "traefik.http.middlewares.test-compress.compress=true"
+    depends_on:
+        init_couchdb:
+          condition: service_completed_successfully
+    expose:
+      - '5984'
+      - '4369'
+      - '9100'
     ports:
-      - '5984:5984'
+      - "5984:5984"
     restart: unless-stopped
     volumes:
       - couchdb_data:/opt/couchdb/data/
+      - ./couchdb/local.ini:/opt/couchdb/etc/local.d/local.ini
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5984"]
       interval: 1m30s
@@ -112,14 +127,26 @@ services:
       # - ./data-setup/.s3cfg:/root/.s3cfg
     depends_on:
       - nginx-minio
+  azure-cron:
+    container_name: azure-cron
+    build: ./azure-cron
+    init: true
+    environment:
+      - CUSTOM_ENV_VAR=foobar
+    volumes:
+      - ./azure-cron/cron-tab.txt:/var/spool/cron/crontabs/root
+    depends_on:
+      - couchdb
   rest-api:
     build: ./rest-api
     env_file:
       - .env
     environment:
       - AUTH_SERVER="http://couchdb:5984"
+    expose:
+      - '5050'
     ports:
-      - '5050:5050'
+      - "5050:5050"
     labels:
       - "traefik.http.routers.restAPI.priority=1001"
       - "traefik.http.routers.restAPI.tls=true"
@@ -149,8 +176,10 @@ services:
       - "traefik.http.routers.s3Server.middlewares=s3Server-stripprefix"
       - "traefik.http.middlewares.s3Server-stripprefix.stripprefix.prefixes=${BASE_URL_WITHOUT_SLASH}${S3_PREFIX}"
       - "traefik.http.services.s3Server.loadbalancer.server.port=5660"
+    expose:
+      - '5660'
     ports:
-      - '5660:5660'
+      - "5660:5660"
 
 volumes:
   couchdb_data:

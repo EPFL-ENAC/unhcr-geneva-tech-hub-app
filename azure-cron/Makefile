@@ -1,12 +1,12 @@
-.PHONY: all install clean convert add_to_config add_to_ini
+.PHONY: all install clean convert add_to_config add_to_ini add_to_db
 
-all: add_to_config add_to_ini
+all: add_to_ini
 	make clean
 
 import: clean
 	./import.sh
 
-# deprecated
+# # deprecated
 add_to_config: import
 	$(info ************ RELEASE VERSIOIN **********)
 	$(info Replace the jwt_keys.json as the value of the jwt_keys key of couchdb-setup/bootstrap-setup/_config.json)
@@ -22,6 +22,12 @@ add_to_ini: import
 	cat  ../couchdb/local.ini | sed '/^\[jwt_keys\]/,/^\\[logs\]/{/^\[jwt_keys\]/!{/^\\[logs\]/!d;};}' > ../couchdb/local.ini.temp
 	cat ../couchdb/local.ini.temp jwt_keys.ini > ../couchdb/local.ini
 	rm ../couchdb/local.ini.temp
+
+# convert to ini file
+add_to_db: import
+	$(info ************ RELEASE VERSIOIN **********)
+	$(info update couchdb)
+	./add_to_running_db.sh
 
 clean:
 	rm -f -- *.pem

@@ -109,14 +109,14 @@ There is two way of doing this: first one using curl; second one using couchdb-b
 ### Using curl
 1. Follow: https://docs.couchdb.org/en/stable/intro/security.html#creating-a-new-user
 ```
-curl -X PUT http://localhost:5984/_users/org.couchdb.user:newuser@epfl.ch \
+curl -X PUT http://admin:couchdb@localhost/db/_users/org.couchdb.user:newuser@epfl.ch \
      -H "Accept: application/json" \
      -H "Content-Type: application/json" \
      -d '{"name": "newuser@epfl.ch", "password": "plain_text_password_that_will_be_encrypted", "roles": [], "type": "user"}'
 ```
 2. retrieve the inserted documented
 ```
- curl -X GET http://admin:couchdb@localhost:5984/_users/org.couchdb.user:newuser@epfl.ch \
+ curl -X GET http://admin:couchdb@localhost/db/_users/org.couchdb.user:newuser@epfl.ch \
      -H "Accept: application/json" \
      -H "Content-Type: application/json"
 

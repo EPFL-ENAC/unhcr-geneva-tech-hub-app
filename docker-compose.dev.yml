@@ -7,6 +7,7 @@ services:
   couchdb:
     image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-couchdb:dev
     build: !reset null
+    ports: !reset null
     restart: always
   couchdb-setup:
     image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-couchdb-setup:dev
@@ -17,8 +18,10 @@ services:
   s3_server:
     image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-s3_server:dev
     build: !reset null
+    ports: !reset null
     restart: always
   rest-api:
     image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-rest-api:dev
     build: !reset null
+    ports: !reset null
     restart: always
