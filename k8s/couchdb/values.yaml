@@ -1,0 +1,17 @@
+couchdbConfig:
+  couchdb:
+    uuid: 2f5eee76-91f6-4000-9348-b8847e4542ec
+
+clusterSize: 1
+
+adminUsername: tssadmin
+
+ingress:
+  enabled: true
+
+persistentVolume:
+  enabled: true
+  size: "10Gi"
+  storageClass: "azurefile"
+  accessModes:
+    - ReadWriteMany

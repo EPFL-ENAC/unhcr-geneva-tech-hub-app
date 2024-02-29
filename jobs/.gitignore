@@ -1,0 +1,4 @@
+data/
+private/
+__pycache__/
+.ipynb_checkpoints/

@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: tss-data-backup
+spec:
+  schedule: "0 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: tss-data-backup
+            image: cubocicloide/tss:jobs.3
+            command: ["python", "main.py"]
+            env:
+              - name: AZURE_ACCOUNT_NAME
+                valueFrom:
+                  secretKeyRef:
+                    name: tss-secret
+                    key: AZURE_ACCOUNT_NAME
+              - name: AZURE_ACCOUNT_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: tss-secret
+                    key: AZURE_ACCOUNT_KEY
+              - name: AZURE_CONTAINER
+                value: "backups"
+              - name: BASE_PATH
+                value: "/home"
+              - name: JOB_NAME
+                value: "0"
+              - name: SOURCE_DIR
+                value: "/data"
+            volumeMounts:
+              - name: database-storage
+                mountPath: "/data"
+          restartPolicy: OnFailure
+          volumes:
+            - name: database-storage
+              persistentVolumeClaim:
+                claimName: database-storage-tss-couchdb-0

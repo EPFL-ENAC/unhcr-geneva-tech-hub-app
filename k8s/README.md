@@ -22,13 +22,10 @@ Before you begin, ensure you have access to the Kubernetes cluster and the neces
     Deploy CouchDB to your Kubernetes cluster using the Helm chart. Replace `{COUCHDB_PASSWORD}` with the actual password:
 
     ```
-    helm install tss couchdb/couchdb --namespace tims \
-        --set couchdbConfig.couchdb.uuid=2f5eee76-91f6-4000-9348-b8847e4542ec \
-        --set clusterSize=1 \
-        --set adminUsername=tssadmin \
-        --set adminPassword={COUCHDB_PASSWORD} \
-        --set ingress.enabled=true \
-        --set persistentVolume.enabled=true
+    helm upgrade tss couchdb/couchdb --namespace tims \
+    -f ./couchdb/values.yaml \
+    --set adminPassword={COUCHDB_PASSWORD} \
+    --install
     ```
 
 5. **Wait for the Service Creation**
