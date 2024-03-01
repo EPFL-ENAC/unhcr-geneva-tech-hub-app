@@ -51,7 +51,34 @@ services:
     env_file:
       - ./rest-api/.env
     command: uvicorn unhcr_tss.main:app --host 0.0.0.0 --port 5051 --reload
+  jupyter:
+    build:
+      context: ./jobs
+      dockerfile: ./Dockerfile.dev
+    env_file:
+      - ./jobs/.env
+    volumes:
+      - ./jobs:/home/jovyan/work
+    ports:
+      - 8888:8888
+  backup:
+    build:
+      context: ./backup
+      dockerfile: Dockerfile  # Assicurati che il Dockerfile esista e sia configurato correttamente
+    volumes:
+      - ./backup:/backup
+    ports:
+      - "2222:22"  # Mappa la porta SSH all'esterno. Modifica la porta host se necessario.
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=Passw0rd!
+      - COUCHDB_HOST=couchdb
+      - COUCH_URL=http://admin:Aldebaran@couchdb:5984
+    depends_on:
+      - couchdb
 
 volumes:
   couchdb_data:
+    driver: local
+  backup-couchdb:  # Definisce un volume per i tuoi backup
     driver: local

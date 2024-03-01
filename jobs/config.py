@@ -6,6 +6,12 @@ JOBS = {
     },
     "1": {
         "description": "Restore CouchDB data",
+    },
+    "2": {
+        "description": "Dump CouchDB data through couchdb-dump",
+    },
+    "3": {
+        "description": "Restore CouchDB data through couchdb-dump",
     }
 }
 

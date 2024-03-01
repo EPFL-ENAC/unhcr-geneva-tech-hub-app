@@ -8,12 +8,19 @@ ENV PYTHONPATH "${PYTHONPATH}:/home/jovyan/work"
 
 COPY . /home/jovyan/work
 
+COPY couchdb-dump.sh /home/jovyan/work
+
 COPY requirements.txt /tmp/
 
 RUN apt-get update -y && \
     apt-get install -y gcc build-essential libpq-dev && \
+    apt-get install -y bash curl file gawk sed && \
     pip install --no-cache-dir -r /tmp/requirements.txt
 
+RUN chmod +x /home/jovyan/work/couchdb-dump.sh
+
 RUN rm -rf /home/jovyan/.cache/pip/*
+
+USER jovyan
 
 ENTRYPOINT ["python", "main.py"]
