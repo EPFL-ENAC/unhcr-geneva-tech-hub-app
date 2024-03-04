@@ -15,5 +15,7 @@ COPY src ./src
 COPY *.js ./
 COPY *.conf ./
 COPY *.json ./
+RUN mkdir /app/node_modules/.cache
+RUN chmod -R 777 /app/node_modules/.cache
 
 CMD ["npm", "run", "serve"]

@@ -21,6 +21,7 @@ services:
       - proxy
     volumes:
       - ./frontend:/app
+      - /app/node_modules
     ports:
       - '8081:8081'
   couchdb:

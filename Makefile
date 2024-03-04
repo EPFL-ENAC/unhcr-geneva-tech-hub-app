@@ -67,4 +67,4 @@ run-dev:
 	docker compose -f docker-compose.yml up --pull=always -d --remove-orphans
 
 stop-dev:
-	docker-compose -f docker-compose.yml down
+	docker compose -f docker-compose.yml down
