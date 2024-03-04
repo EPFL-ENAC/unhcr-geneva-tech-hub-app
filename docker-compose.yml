@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   proxy:
-    image: caddy:latest
+    image: caddy:latest # TODO: remove latest
     ports:
       - "8085:8085"
     extra_hosts:
@@ -26,11 +26,7 @@ services:
   couchdb:
     build: ./couchdb
     env_file:
-      - ./frontend/.env
-    environment:
-      - COUCHDB_USER=${COUCHDB_USER}
-      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
-      - COUCHDB_HOST=couchdb
+      - ./couchdb/.env
     ports:
       - '5984:5984'
     restart: unless-stopped

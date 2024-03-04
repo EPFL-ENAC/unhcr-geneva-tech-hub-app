@@ -215,3 +215,82 @@ class TSSData:
     
         print(f'Backup {backup_name} restored successfully.')
 
+    def couchdbbackup_dump(self):
+        # Imposta il timestamp per il nome del file
+        current_time_ms = int(round(time.time() * 1000))
+        backup_directory = f'/tmp/backup_{current_time_ms}'
+        os.makedirs(backup_directory, exist_ok=True)
+        
+        # Ottieni l'elenco dei database da backuppare
+        databases = subprocess.check_output(
+            f'curl -s -u {self.couchdb_user}:{self.couchdb_password} http://{self.couchdb_host}:5984/_all_dbs',
+            shell=True
+        ).decode('utf-8')
+        databases = databases.strip('[]').replace('"', '').split(',')
+
+        # Esegue il backup di ogni database
+        for db in databases:
+            backup_file_path = f'{backup_directory}/{db}.txt'
+            subprocess.call(
+                f'couchbackup --db {db} > {backup_file_path}',
+                shell=True
+            )
+
+        # Comprimi la directory del backup
+        local_backup_file = f'/tmp/backup_{current_time_ms}.tar.gz'
+        with tarfile.open(local_backup_file, 'w:gz') as tar:
+            tar.add(backup_directory, arcname=os.path.basename(backup_directory))
+
+        # Carica il file tar in Azure Blob Storage
+        blob_service_client = BlobServiceClient.from_connection_string(self.connection_string)
+        backup_blob_name = f'tss/{current_time_ms}/backup.tar.gz'
+        blob_client = blob_service_client.get_blob_client(container=self.container_name, blob=backup_blob_name)
+        with open(local_backup_file, 'rb') as data:
+            blob_client.upload_blob(data, overwrite=True)
+        print(f'Successfully uploaded {backup_blob_name} to Azure Blob Storage.')
+
+        # Pulizia: rimuovi i file locali e la directory del backup
+        shutil.rmtree(backup_directory)
+        os.remove(local_backup_file)
+
+    def couchdbbackup_restore(self, backup_name):
+        # Costruisci il nome del file di backup e il percorso del file locale
+        backup_file = f'tss/{backup_name}/backup.tar.gz'
+        local_backup_file = os.path.join('/tmp', f'backup_{backup_name}.tar.gz')
+
+        # Scarica e decomprimi il backup
+        blob_service_client = BlobServiceClient.from_connection_string(self.connection_string)
+        blob_client = blob_service_client.get_blob_client(container=self.container_name, blob=backup_file)
+        print(f'Downloading {backup_file} from Azure Blob Storage...')
+        os.makedirs(self.destination_directory, exist_ok=True)
+        with open(local_backup_file, 'wb') as download_file:
+            download_blob = blob_client.download_blob()
+            download_blob.readinto(download_file)
+        print(f'Extracting {local_backup_file} to temporary directory...')
+        temp_extract_dir = os.path.join('/tmp', f'extract_{backup_name}')
+        os.makedirs(temp_extract_dir, exist_ok=True)
+        with tarfile.open(local_backup_file, 'r:gz') as tar:
+            tar.extractall(path=temp_extract_dir)
+
+        # Itera attraverso i file estratti per il ripristino dei dati
+        for file in os.listdir(temp_extract_dir):
+            if file.endswith('.txt'):
+                db_name = file.replace('.txt', '')  # Il nome del database è derivato dal nome del file
+                db_url = f'http://{self.couchdb_user}:{self.couchdb_password}@{self.couchdb_host}:5984/{db_name}'
+
+                # Elimina il database se esiste e ricrealo
+                requests.delete(db_url)
+                requests.put(db_url)
+
+                # Esegue il ripristino del database dal file
+                restore_file_path = os.path.join(temp_extract_dir, file)
+                subprocess.call(
+                    f'cat {restore_file_path} | couchrestore --db {db_name}',
+                    shell=True
+                )
+
+        # Pulizia: rimuovi il file tar e la directory temporanea
+        os.remove(local_backup_file)
+        shutil.rmtree(temp_extract_dir)
+
+        print(f'Backup {backup_name} restored successfully.')
