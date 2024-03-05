@@ -1,33 +1,26 @@
-FROM jupyter/scipy-notebook:python-3.11.4
+FROM jupyter/base-notebook:python-3.11.4
 
 USER root
 
-# Imposta la directory di lavoro
 WORKDIR /home/jovyan/work
 
-# Copia i file necessari
+ENV PYTHONPATH "${PYTHONPATH}:/home/jovyan/work"
+
 COPY . /home/jovyan/work
-COPY couchdb-dump.sh /home/jovyan/work
 COPY requirements.txt /tmp/
 
-# Installa dipendenze di sistema
 RUN apt-get update -y && \
     apt-get install -y gcc build-essential libpq-dev curl && \
     apt-get install -y bash gawk sed file
 
-# Installa Node.js e npm
+# Install Node.js, npm and couchbackup
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
     apt-get install -y nodejs && \
     npm install -g @cloudant/couchbackup
 
-# Installa dipendenze Python
+# Install Python dependencies
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
-# Rendi eseguibili gli script
-RUN chmod +x /home/jovyan/work/couchdb-dump.sh
-
-# Pulizia della cache
 RUN rm -rf /home/jovyan/.cache/pip/*
 
-# Cambia utente
 USER jovyan

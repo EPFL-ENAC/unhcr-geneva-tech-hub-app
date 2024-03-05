@@ -1,4 +1,4 @@
-FROM jupyter/scipy-notebook:python-3.11.4
+FROM jupyter/base-notebook:python-3.11.4
 
 USER root
 
@@ -7,17 +7,19 @@ WORKDIR /home/jovyan/work
 ENV PYTHONPATH "${PYTHONPATH}:/home/jovyan/work"
 
 COPY . /home/jovyan/work
-
-COPY couchdb-dump.sh /home/jovyan/work
-
 COPY requirements.txt /tmp/
 
 RUN apt-get update -y && \
-    apt-get install -y gcc build-essential libpq-dev && \
-    apt-get install -y bash curl file gawk sed && \
-    pip install --no-cache-dir -r /tmp/requirements.txt
+    apt-get install -y gcc build-essential libpq-dev curl && \
+    apt-get install -y bash gawk sed file
 
-RUN chmod +x /home/jovyan/work/couchdb-dump.sh
+# Install Node.js, npm and couchbackup
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g @cloudant/couchbackup
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 RUN rm -rf /home/jovyan/.cache/pip/*
 

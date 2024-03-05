@@ -3,30 +3,53 @@ kind: CronJob
 metadata:
   name: tss-data-backup
 spec:
-  schedule: "0 0 * * *"
+  # schedule: "0 0 * * *" # NOTE: executes at 00:00 UTC
+  schedule: "*/10 * * * *"
   jobTemplate:
     spec:
       template:
         spec:
           containers:
           - name: tss-data-backup
-            image: cubocicloide/tss:jobs.3
+            image: cubocicloide/tss:jobs.10
             command: ["python", "main.py"]
             env:
-              - name: AZURE_ACCOUNT_NAME
-                valueFrom:
-                  secretKeyRef:
-                    name: tss-secret
-                    key: AZURE_ACCOUNT_NAME
               - name: AZURE_ACCOUNT_KEY
                 valueFrom:
                   secretKeyRef:
                     name: tss-secret
                     key: AZURE_ACCOUNT_KEY
+              - name: AZURE_ACCOUNT_NAME
+                valueFrom:
+                  secretKeyRef:
+                    name: tss-secret
+                    key: AZURE_ACCOUNT_NAME
               - name: AZURE_CONTAINER
                 value: "backups"
               - name: BASE_PATH
                 value: "/home"
+              - name: COUCH_URL
+                valueFrom:
+                  secretKeyRef:
+                    name: tss-secret
+                    key: COUCH_URL
+              - name: COUCHDB_HOST
+                valueFrom:
+                  configMapKeyRef:
+                    name: tss-configmap
+                    key: COUCHDB_HOST
+              - name: COUCHDB_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: tss-secret
+                    key: COUCHDB_PASSWORD
+              - name: COUCHDB_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: tss-secret
+                    key: COUCHDB_USER
+              - name: DEST_DIR
+                value: "/data"
               - name: JOB_NAME
                 value: "0"
               - name: SOURCE_DIR

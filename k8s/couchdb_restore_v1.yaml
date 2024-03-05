@@ -7,28 +7,25 @@ spec:
     spec:
       containers:
       - name: tss-data-restore
-        image: cubocicloide/tss:jobs.10
+        image: cubocicloide/tss:jobs.9
         command: ["python", "main.py"]
         env:
-          - name: AZURE_ACCOUNT_KEY
-            valueFrom:
-              secretKeyRef:
-                name: tss-secret
-                key: AZURE_ACCOUNT_KEY
           - name: AZURE_ACCOUNT_NAME
             valueFrom:
               secretKeyRef:
                 name: tss-secret
                 key: AZURE_ACCOUNT_NAME
+          - name: AZURE_ACCOUNT_KEY
+            valueFrom:
+              secretKeyRef:
+                name: tss-secret
+                key: AZURE_ACCOUNT_KEY
           - name: AZURE_CONTAINER
             value: "backups"
           - name: BASE_PATH
             value: "/home"
-          - name: COUCH_URL
-            valueFrom:
-              secretKeyRef:
-                name: tss-secret
-                key: COUCH_URL
+          - name: BACKUP_NAME
+            value: "1709290063738"
           - name: COUCHDB_HOST
             valueFrom:
               configMapKeyRef:
@@ -47,7 +44,7 @@ spec:
           - name: DEST_DIR
             value: "/data"
           - name: JOB_NAME
-            value: "1"
+            value: "3"
           - name: SOURCE_DIR
             value: "/data"
         volumeMounts:
