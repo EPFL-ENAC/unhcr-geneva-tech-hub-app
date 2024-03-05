@@ -22,6 +22,8 @@ spec:
                 key: AZURE_ACCOUNT_NAME
           - name: AZURE_CONTAINER
             value: "backups"
+          - name: BACKUP_NAME
+            value: {BACKUP_NAME}
           - name: BASE_PATH
             value: "/home"
           - name: COUCH_URL
