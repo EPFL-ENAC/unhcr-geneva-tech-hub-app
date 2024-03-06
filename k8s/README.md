@@ -13,11 +13,7 @@ Before you begin, ensure you have access to the Kubernetes cluster and the neces
 
     Request the `{COUCHDB_PASSWORD}` value from your team lead. This password will be used to secure your CouchDB instance.
 
-3. **Prepare CouchDB Configuration File**
-
-    Create a `couchdb_data.yaml` file by using the provided `couchdb_data.example.yaml` as a reference. Replace the `{COUCHDB_PASSWORD}` placeholder with the actual password provided by your team lead.
-
-4. **Deploy CouchDB**
+3. **Deploy CouchDB**
 
     Deploy CouchDB to your Kubernetes cluster using the Helm chart. Replace `{COUCHDB_PASSWORD}` with the actual password:
 
@@ -29,11 +25,11 @@ Before you begin, ensure you have access to the Kubernetes cluster and the neces
     --install
     ```
 
-5. **Wait for the Service Creation**
+4. **Wait for the Service Creation**
 
     Wait until the CouchDB service is fully deployed and operational. You can check the status using kubectl get pods -n tims.
 
-6. **Finalize CouchDB Cluster Setup**
+5. **Finalize CouchDB Cluster Setup**
 
     Finalize the CouchDB cluster setup by executing the following command. Replace {COUCHDB_PASSWORD} with the actual password:
 
@@ -46,12 +42,12 @@ Before you begin, ensure you have access to the Kubernetes cluster and the neces
         -d '{"action": "finish_cluster"}'
     ```
 
-7. **Apply CouchDB Data Configuration**
+6. **Restore CouchDB Data**
 
-    Apply the CouchDB data configuration by running:
+    Create the Request the `couchdb_restore.yaml` file (based on `couchdb_restore.example.yaml`). Request `{BACKUP_NAME}` value from your team lead, replace the `{BACKUP_NAME}` value in `couchdb_restore.yaml`. Then restore the `{BACKUP_NAME}` by running:
 
     ```
-    kubectl apply -f ./k8s/couchdb_data.yaml -n tims
+    kubectl apply -f ./k8s/couchdb_restore.yaml -n tims
     ```
 
 ## Final Step
@@ -59,50 +55,33 @@ Once the above steps are completed, the Azure Pipeline will take over and finali
 
 Please ensure that you follow these instructions carefully to avoid any issues during the app initialization process.
 
-### Remove couchdb from k8s
-helm uninstall tss --namespace tims
-kubectl delete pvc -l release=tss --namespace tims
+### Remove CouchDB from Kubernetes
 
-poi in un altro terminal:
-kubectl patch pvc database-storage-tss-couchdb-0 --namespace tims -p '{"metadata":{"finalizers":[]}}' --type=merge
+This section describes the process for removing a CouchDB instance deployed in Kubernetes using Helm and kubectl commands.
 
+1. **Uninstalling CouchDB with Helm:**
+    Execute the command below to uninstall the CouchDB release from your Kubernetes cluster. This instructs Helm, the Kubernetes package manager, to delete all components associated with the CouchDB deployment named 'tss' located in the 'tims' namespace.
 
-### !IMPORTANT
+    ```bash
+    helm uninstall tss --namespace tims
+    ```
 
-    helm upgrade tss couchdb/couchdb --namespace tims \
-    -f ./couchdb/values.yaml \
-    --set adminPassword={COUCHDB_PASSWORD} \
-    --version 4.5.0 \
-    --install
+2. **Deleting Persistent Volume Claims (PVCs):**
 
-    kubectl exec --namespace tims -it tss-couchdb-0 -c couchdb -- \
-    curl -s \
-    http://tssadmin:{COUCHDB_PASSWORD}@127.0.0.1:5984/_cluster_setup \
-    -X POST \
-    -H "Content-Type: application/json" \
-    -d '{"action": "finish_cluster"}'
+    Following the uninstallation of CouchDB, you should remove the associated persistent volume claims to free up storage resources. The command below deletes all PVCs tagged with release=tss within the 'tims' namespace. These PVCs were originally created as part of the CouchDB deployment for persistently storing database data.
 
-    Crea manualmente da fauxton i db mancanti
+    ```bash
+    kubectl delete pvc -l release=tss --namespace tims
+    ```
 
-    kubectl apply -f k8s/backup_pod.yaml -n tims
+3. **Removing Finalizers from PVC (in a new terminal):**
 
-    ssh in tss-backup-pod
+    If necessary, in a new terminal window, manually remove the finalizers from the PVC `database-storage-tss-couchdb-0` to allow for its proper deletion in Kubernetes. Finalizers are mechanisms used by Kubernetes to block the deletion of a resource until specific conditions are met. In certain situations, these can inadvertently prevent the removal of a no longer needed resource.
 
-cd data
+    Apply the following command to edit the PVC by erasing any existing finalizers. This is achieved by setting the `finalizers` array to empty. The `--type=merge` flag is used to apply this change while preserving the other attributes of the PVC.
 
-export COUCH_URL=http://tssadmin:{COUCHDB_PASSWORD}@tss-svc-couchdb:5984
+    ```bash
+    kubectl patch pvc database-storage-tss-couchdb-0 --namespace tims -p '{"metadata":{"finalizers":[]}}' --type=merge
+    ```
 
-Restore:
-cat _replicator.txt | couchrestore --db _replicator
-cat _users.txt | couchrestore --db _users
-cat ghg_projects_1696578512055758.txt | couchrestore --db ghg_projects_1696578512055758
-cat shelter_projects_1698666594213623.txt | couchrestore --db shelter_projects_1698666594213623
-cat tokens.txt | couchrestore --db tokens
-
-Backup:
-couchbackup --db _replicator > _replicator.txt
-couchbackup --db _users > _users.txt
-couchbackup --db ghg_projects_1696578512055758 > ghg_projects_1696578512055758.txt
-couchbackup --db shelter_projects_1698666594213623 > shelter_projects_1698666594213623.txt
-couchbackup --db tokens > tokens.txt
-
+    Following these steps ensures the complete removal of all CouchDB deployment components from your Kubernetes cluster.

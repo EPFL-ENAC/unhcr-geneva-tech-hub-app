@@ -11,6 +11,7 @@ class TSSData:
     def __init__(self):
         self.source_directory = os.getenv('SOURCE_DIR', '/data')
         self.destination_directory = os.getenv('DEST_DIR', '/data')
+        self.couch_url = os.getenv('COUCH_URL', 'http://admin:couchdb@couchdb:5984')
         self.couchdb_user = os.getenv('COUCHDB_USER', 'admin')
         self.couchdb_password = os.getenv('COUCHDB_PASSWORD', 'couchdb')
         self.couchdb_host = os.getenv('COUCHDB_HOST', 'couchdb')
@@ -49,6 +50,7 @@ class TSSData:
         for db in databases:
             safe_db_name = urllib.parse.quote_plus(db)  # Codifica il nome del database per gestire caratteri speciali
             print(safe_db_name)
+            print(self.couch_url)
             backup_file_path = f'{backup_directory}/{safe_db_name}.txt'
             subprocess.call(
                 f'couchbackup --db {db} > {backup_file_path}',

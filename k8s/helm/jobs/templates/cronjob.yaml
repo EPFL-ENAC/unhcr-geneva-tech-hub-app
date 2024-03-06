@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: tss-data-backup
+  name: tss-backup
 spec:
   # schedule: "0 0 * * *" # NOTE: executes at 00:00 UTC
   schedule: "*/10 * * * *"
@@ -10,8 +10,8 @@ spec:
       template:
         spec:
           containers:
-          - name: tss-data-backup
-            image: cubocicloide/tss:jobs.10
+          - name: tss-backup
+            image: {{ .Values.global.__common__.image.registry }}/{{ .Values.global.__common__.image.repository }}-jobs:{{ .Values.global.__common__.image.tag }}
             command: ["python", "main.py"]
             env:
               - name: AZURE_ACCOUNT_KEY

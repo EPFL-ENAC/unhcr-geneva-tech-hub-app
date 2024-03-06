@@ -1,0 +1,4 @@
+apiVersion: v2
+name: tss-jobs
+description: A Helm chart for deploying the TSS jobs
+version: 1.0.0

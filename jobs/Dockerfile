@@ -11,7 +11,7 @@ COPY requirements.txt /tmp/
 
 RUN apt-get update -y && \
     apt-get install -y gcc build-essential libpq-dev curl && \
-    apt-get install -y bash gawk sed file
+    apt-get install -y bash gawk sed file vim
 
 # Install Node.js, npm and couchbackup
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \

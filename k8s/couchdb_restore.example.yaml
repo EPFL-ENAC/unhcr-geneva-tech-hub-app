@@ -50,6 +50,8 @@ spec:
             value: "/data"
           - name: JOB_NAME
             value: "1"
+          - name: RETENTION_DAYS
+            value: "30"
           - name: SOURCE_DIR
             value: "/data"
         volumeMounts:
