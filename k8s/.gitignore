@@ -1,5 +1,4 @@
 secrets.yaml
-couchdb_data.yaml
-couchdb_setup.yaml
+couchdb_restore.yaml
 
 helm/__main__/charts/*

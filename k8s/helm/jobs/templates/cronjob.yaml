@@ -1,0 +1,65 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: tss-backup
+spec:
+  schedule: "0 0 * * *" # NOTE: executes at 00:00 UTC
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: tss-backup
+            image: {{ .Values.global.__common__.image.registry }}/{{ .Values.global.__common__.image.repository }}-jobs:{{ .Values.global.__common__.image.tag }}
+            command: ["python", "main.py"]
+            env:
+              - name: AZURE_ACCOUNT_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: tss-secret
+                    key: AZURE_ACCOUNT_KEY
+              - name: AZURE_ACCOUNT_NAME
+                valueFrom:
+                  secretKeyRef:
+                    name: tss-secret
+                    key: AZURE_ACCOUNT_NAME
+              - name: AZURE_CONTAINER
+                value: "backups"
+              - name: BASE_PATH
+                value: "/home"
+              - name: COUCH_URL
+                valueFrom:
+                  secretKeyRef:
+                    name: tss-secret
+                    key: COUCH_URL
+              - name: COUCHDB_HOST
+                valueFrom:
+                  configMapKeyRef:
+                    name: tss-configmap
+                    key: COUCHDB_HOST
+              - name: COUCHDB_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: tss-secret
+                    key: COUCHDB_PASSWORD
+              - name: COUCHDB_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: tss-secret
+                    key: COUCHDB_USER
+              - name: DEST_DIR
+                value: "/data"
+              - name: JOB_NAME
+                value: "0"
+              - name: RETENTION_DAYS
+                value: "30"
+              - name: SOURCE_DIR
+                value: "/data"
+            volumeMounts:
+              - name: database-storage
+                mountPath: "/data"
+          restartPolicy: OnFailure
+          volumes:
+            - name: database-storage
+              persistentVolumeClaim:
+                claimName: database-storage-tss-couchdb-0

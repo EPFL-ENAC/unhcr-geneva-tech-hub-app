@@ -511,7 +511,7 @@ export function dieselInputsProducedPer(
         "close-delay": 1000,
       },
       tooltipInfo: `Load refers to the electrical demand or consumption placed on the generator by connected devices, equipment, or systems.
-        <br/> The average load is calculated by determining the total electrical energy consumed over a given time period and dividing it by the duration of that period. Based on an <a target="_blank" href="${env.VUE_APP_AZURE_CONTAINER_PREFIX}2023-11-23/DG.fuel.efficiency.pdf">engineering study</a> on diesel generators where a logarithmic relationship was found to best represent fuel consumption and load, the average load placed on diesel generators ranging from 5 to 2500 kW was found to be 60%.
+        <br/> The average load is calculated by determining the total electrical energy consumed over a given time period and dividing it by the duration of that period. Based on an <a target="_blank" href="${env.VUE_APP_AZURE_CONTAINER_PREFIX}/2023-11-23/DG.fuel.efficiency.pdf">engineering study</a> on diesel generators where a logarithmic relationship was found to best represent fuel consumption and load, the average load placed on diesel generators ranging from 5 to 2500 kW was found to be 60%.
         (see Appendix C in <a href="${ghg.link}" target="_blank">${ghg.linkName}</a>).`,
       style: {
         cols: "12",

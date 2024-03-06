@@ -14,10 +14,15 @@ Before you start, ensure you have the following prerequisites installed on your 
 
 ## Environment Setup
 
-1. **Environment Variables**: You'll need to set up environment variables for different parts of the project. Please ask the team lead for the content of each `.env` file. You will need to create and populate the following files:
-    - Project root: `.env`
-    - Frontend: `/frontend/.env`
-    - Backend (rest-api): `/rest-api/.env`
+1. **Mandatory files**: You will need to create and populate the following files/directories:
+    - `/.env`
+    - `/couchdb/.env`
+    - `/couchdb/etc/`
+    - `/couchdb/data/`
+    - `/frontend/.env`
+    - `/jobs/.env`
+    - `/rest-api/.env`
+Ask Team Lead for their contents.
 
 2. **Python Version**: Use `pyenv` to set your local Python version to 3.10.9.
    ```
@@ -48,12 +53,30 @@ Before you start, ensure you have the following prerequisites installed on your 
 
 7. **Access the Application**: Go to http://localhost:8085 and enter the credentials admin/couchdb to access the application
 
-8. **Access the CouchDB Admin**: Go to http://localhost:5984/_utils and enter the credentials admin/couchdb to access the CouchDB Admin interface
+8. **Access the CouchDB Admin**: Go to http://localhost:8085/db/_utils/ and enter the credentials admin/couchdb to access the CouchDB Admin interface
 
 9. **Stop the Development server**:
    ```
    make stop-dev
    ```
+
+## Deploying EPFL
+
+1. **Access the Repository:**
+    - Go to the Azure DevOps repository for EPFL at [UNHCR-TSS-Devops/EPFL](https://dev.azure.com/UNHCR-TSS-Devops/EPFL).
+    - Ensure you have the necessary permissions to initiate deployments.
+
+2. **Triggering the Deployment Pipeline:**
+    - Navigate to the 'Pipelines' section.
+    - Find and select the `EPFL` pipeline.
+    - Click on 'Run Pipeline'.
+    - Select the branch you wish to deploy (e.g., `dev`, `test`, `master`).
+    - Choose the corresponding environment for release (e.g., `dev`, `test`, `prod`).
+    - Confirm and start the pipeline execution.
+
+3. **Verifying Deployment:**
+    - Once the pipeline completes, verify the status of the deployment.
+    - Check the application in the deployed environment to ensure that updates are applied and functioning correctly.
 
 ## Additional Notes
 

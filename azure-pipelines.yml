@@ -37,6 +37,10 @@ stages:
         docker build -t $(azureContainerRegistryName).azurecr.io/tss-caddy:az.$(Build.BuildId) ./caddy -f ./caddy/Dockerfile
         docker push $(azureContainerRegistryName).azurecr.io/tss-caddy:az.$(Build.BuildId)
       displayName: 'Build and Push Caddy Image'
+    - script: |
+        docker build -t $(azureContainerRegistryName).azurecr.io/tss-jobs:az.$(Build.BuildId) ./jobs -f ./jobs/Dockerfile
+        docker push $(azureContainerRegistryName).azurecr.io/tss-jobs:az.$(Build.BuildId)
+      displayName: 'Build and Push Jobs Image'
 - stage: UpdateK8sSecrets
   displayName: 'Update Kubernetes Secrets'
   jobs:
@@ -65,6 +69,7 @@ stages:
             --from-literal=AZURE_ACCOUNT_NAME=$(AZURE_ACCOUNT_NAME) \
             --from-literal=AZURE_CONTAINER_NAME=$(AZURE_CONTAINER_NAME) \
             --from-literal=AZURE_CONTAINER_PREFIX=$(AZURE_CONTAINER_PREFIX) \
+            --from-literal=COUCH_URL=$(COUCH_URL) \
             --from-literal=COUCHDB_PASSWORD=$(COUCHDB_PASSWORD) \
             --from-literal=COUCHDB_USER=$(COUCHDB_USER) \
             --namespace tims --dry-run=client -o yaml | kubectl apply -f -

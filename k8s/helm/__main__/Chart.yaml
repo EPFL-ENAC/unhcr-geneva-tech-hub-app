@@ -30,6 +30,9 @@ dependencies:
   - name: tss-frontend
     version: "1.0.0"
     repository: "file://../frontend/"
+  - name: tss-jobs
+    version: "1.0.0"
+    repository: "file://../jobs/"
   - name: tss-rest-api
     version: "1.0.0"
     repository: "file://../rest-api/"

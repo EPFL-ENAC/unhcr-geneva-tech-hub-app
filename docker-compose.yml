@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   proxy:
-    image: caddy:latest
+    image: caddy:latest # TODO: remove latest
     ports:
       - "8085:8085"
     extra_hosts:
@@ -27,30 +27,16 @@ services:
   couchdb:
     build: ./couchdb
     env_file:
-      - ./frontend/.env
-    environment:
-      - COUCHDB_USER=${COUCHDB_USER}
-      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
-      - COUCHDB_HOST=couchdb
+      - ./couchdb/.env
     ports:
       - '5984:5984'
     restart: unless-stopped
-    volumes:
-      - couchdb_data:/opt/couchdb/data/
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5984"]
       interval: 1m30s
       timeout: 30s
       retries: 5
       start_period: 10s
-  couchdb-setup:
-    environment:
-      - COUCHDB_USER=${COUCHDB_USER}
-      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
-      - COUCHDB_HOST=couchdb
-    build: ./couchdb-setup
-    depends_on:
-      - couchdb
   rest-api:
     build:
       context: ./rest-api
@@ -62,7 +48,34 @@ services:
     env_file:
       - ./rest-api/.env
     command: uvicorn unhcr_tss.main:app --host 0.0.0.0 --port 5051 --reload
+  jupyter:
+    build:
+      context: ./jobs
+      dockerfile: ./Dockerfile.dev
+    env_file:
+      - ./jobs/.env
+    volumes:
+      - ./jobs:/home/jovyan/work
+    ports:
+      - 8888:8888
+  backup:
+    build:
+      context: ./backup
+      dockerfile: Dockerfile  # Assicurati che il Dockerfile esista e sia configurato correttamente
+    volumes:
+      - ./backup:/backup
+    ports:
+      - "2222:22"  # Mappa la porta SSH all'esterno. Modifica la porta host se necessario.
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=Passw0rd!
+      - COUCHDB_HOST=couchdb
+      - COUCH_URL=http://admin:Aldebaran@couchdb:5984
+    depends_on:
+      - couchdb
 
 volumes:
   couchdb_data:
+    driver: local
+  backup-couchdb:  # Definisce un volume per i tuoi backup
     driver: local

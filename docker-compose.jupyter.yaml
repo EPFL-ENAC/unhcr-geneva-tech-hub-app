@@ -1,0 +1,13 @@
+version: "3.1"
+
+services:
+  jupyter:
+    build:
+      context: ./jobs
+      dockerfile: ./Dockerfile.dev
+    env_file:
+      - ./jobs/.env
+    volumes:
+      - ./jobs:/home/jovyan/work
+    ports:
+      - 8888:8888
