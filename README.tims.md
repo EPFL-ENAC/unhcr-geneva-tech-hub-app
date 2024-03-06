@@ -14,11 +14,12 @@ Before you start, ensure you have the following prerequisites installed on your 
 
 ## Environment Setup
 
-1. **Environment Variables**: You'll need to set up environment variables for different parts of the project. Please ask the team lead for the content of each `.env` file. You will need to create and populate the following files/directories:
+1. **Mandatory files**: You will need to create and populate the following files/directories:
     - Project root: `.env`
     - Frontend: `/frontend/.env`
     - Backend (rest-api): `/rest-api/.env`
     - Couch DB config & data: `/couchdb/etc` and `/couchdb/data`
+Ask Team Lead for their contents.
 
 2. **Python Version**: Use `pyenv` to set your local Python version to 3.10.9.
    ```
@@ -49,7 +50,7 @@ Before you start, ensure you have the following prerequisites installed on your 
 
 7. **Access the Application**: Go to http://localhost:8085 and enter the credentials admin/couchdb to access the application
 
-8. **Access the CouchDB Admin**: Go to http://localhost:5984/_utils and enter the credentials admin/couchdb to access the CouchDB Admin interface
+8. **Access the CouchDB Admin**: Go to http://localhost:8085/db/_utils/ and enter the credentials admin/couchdb to access the CouchDB Admin interface
 
 9. **Stop the Development server**:
    ```

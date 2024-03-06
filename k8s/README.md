@@ -44,11 +44,14 @@ Before you begin, ensure you have access to the Kubernetes cluster and the neces
 
 6. **Restore CouchDB Data**
 
-    Create the Request the `couchdb_restore.yaml` file (based on `couchdb_restore.example.yaml`). Request `{BACKUP_NAME}` value from your team lead, replace the `{BACKUP_NAME}` value in `couchdb_restore.yaml`. Then restore the `{BACKUP_NAME}` by running:
+    Create the `couchdb_restore.yaml` file (based on `couchdb_restore.example.yaml`). Request `{BACKUP_NAME}` value from your team lead (who should find the backups in the `backups/tss` Azure Blob Container for the relevant environment, i.e., `satimsdevweu` for `dev`, `satimsuatweu` for `test`, and `timsprd` for `prod`). Replace the `{BACKUP_NAME}` value in `couchdb_restore.yaml`. Then restore the `{BACKUP_NAME}` by running:
 
     ```
-    kubectl apply -f ./k8s/couchdb_restore.yaml -n tims
+    kubectl delete job tss-restore -n tims --ignore-not-found
+    kubectl apply -f ./couchdb_restore.yaml -n tims
     ```
+
+    **NOTE:** if the data are not correctly restored, we advice to first remove the DB tables, and then to apply the above command.
 
 ## Final Step
 Once the above steps are completed, the Azure Pipeline will take over and finalize the app deployment process.

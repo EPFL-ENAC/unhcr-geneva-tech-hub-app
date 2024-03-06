@@ -3,8 +3,7 @@ kind: CronJob
 metadata:
   name: tss-backup
 spec:
-  # schedule: "0 0 * * *" # NOTE: executes at 00:00 UTC
-  schedule: "*/10 * * * *"
+  schedule: "0 0 * * *" # NOTE: executes at 00:00 UTC
   jobTemplate:
     spec:
       template:

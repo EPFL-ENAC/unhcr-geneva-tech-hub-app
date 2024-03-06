@@ -1,12 +1,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: tss-data-restore-job
+  name: tss-restore
 spec:
   template:
     spec:
       containers:
-      - name: tss-data-restore
+      - name: tss-restore
         image: cubocicloide/tss:jobs.10
         command: ["python", "main.py"]
         env:
