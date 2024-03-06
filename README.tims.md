@@ -15,10 +15,13 @@ Before you start, ensure you have the following prerequisites installed on your 
 ## Environment Setup
 
 1. **Mandatory files**: You will need to create and populate the following files/directories:
-    - Project root: `.env`
-    - Frontend: `/frontend/.env`
-    - Backend (rest-api): `/rest-api/.env`
-    - Couch DB config & data: `/couchdb/etc` and `/couchdb/data`
+    - `/.env`
+    - `/couchdb/.env`
+    - `/couchdb/etc/`
+    - `/couchdb/data/`
+    - `/frontend/.env`
+    - `/jobs/.env`
+    - `/rest-api/.env`
 Ask Team Lead for their contents.
 
 2. **Python Version**: Use `pyenv` to set your local Python version to 3.10.9.
