@@ -15,14 +15,14 @@ After March 2024, the tools will be fully integrated on UNHCR TIMS infrastructur
 
 [TODO: Contributors list?]
 
-## Updating databases
+## Updating contents (CSVs databases etc)
 
 [TODO : List of databases and update frequency - by Cara]
 
 ### Reference DB 
 * The reference file is maintained by UNHCR and stored [here as an Excel](https://epflch.sharepoint.com/:x:/r/sites/ENAC-IT/Documents%20partages/Research%20IT/Advanced%20Services/0041%20%E2%80%93%20UNHCR/PHASE_2/GHG/DATABASES/GHG_EF_DBs_byModule.xlsx?d=w93e39ddb340758cfe3d57ae7412fc534&csf=1&web=1&e=mTGz8n)
 [TODO: This Excel file should be migrated in UNHCR storage system.]
-* Developers export each tab as CSVs in `reference-data/ghg/ghg_reference.csv` and run `make setup-reference` (for)
+* Developers export each tab as CSVs in `reference-data/ghg/ghg_reference.csv` and run `make setup-reference` (to convert CSVs in JSONs)
 * Implementation details can be found : [implementation history](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/580) and [usage of datasets](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/blob/feat/dead-code-and-reference-data/frontend/src/assets/references/README.md)
 
 ### UNHCR locations
@@ -35,6 +35,12 @@ After March 2024, the tools will be fully integrated on UNHCR TIMS infrastructur
 
 ### Other DBs
 [TODO]
+
+### Static files (documents and videos)
+* The static files (pdfs, videos, images, etc) are [TODO Where ?]
+[TODO re-write this section
+* it will populate the s3 with a tar.gz file
+* by running `make setup-data front-end` at the root level]
 
 ## Users & Roles
 
@@ -65,21 +71,13 @@ This array contains a list of string, each string correspond to the unique id (s
 ### Custom user management on EPFL-side
 [TODO: For reference - mettre ici Pierre?]
 
+## Codebase structure & set-up
 
-## Deployment
-
--- below is yet to be re-organized
-
+### Tech stack 
+[TODO Describe tech stack]
 
 
-## s3 files necessary for the frontend
-Before any uploads from the users you need some files (pdfs,videos, images, etc) for the frontend
-- it will populate the s3 with a tar.gz file
-- by running `make setup-data` at the root level
 
-### How to updates documents and pdfs, vidéos
-
-- find the files in the s3 server and updates them
 
 ## CouchDB setup:
 We need to run the couchdb-bootstrap to setup the databases and users, once.
