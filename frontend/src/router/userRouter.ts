@@ -6,15 +6,19 @@ import ResetPassword from "@/views/ResetPasswordView.vue";
 import Unconfirm from "@/views/UnconfirmView.vue";
 
 export default [
+  // {
+  //   path: "/login",
+  //   name: "Login",
+  //   meta: {
+  //     title: "Login",
+  //   },
+  //   components: {
+  //     Login,
+  //   },
+  // },
   {
     path: "/login",
-    name: "Login",
-    meta: {
-      title: "Login",
-    },
-    components: {
-      Login,
-    },
+    redirect: "/apps",
   },
   {
     path: "/Register",

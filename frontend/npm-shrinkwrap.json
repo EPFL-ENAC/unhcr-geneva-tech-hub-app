@@ -8,6 +8,7 @@
       "name": "unhcr-geneva-tech-hub-app",
       "version": "1.1.2",
       "dependencies": {
+        "@azure/msal-browser": "^3.9.0",
         "@mdi/js": "^6.7.96",
         "@sentry/tracing": "^7.43.0",
         "@sentry/vue": "^7.43.0",
@@ -125,6 +126,25 @@
       },
       "engines": {
         "node": ">=6.0.0"
+      }
+    },
+    "node_modules/@azure/msal-browser": {
+      "version": "3.9.0",
+      "resolved": "https://registry.npmjs.org/@azure/msal-browser/-/msal-browser-3.9.0.tgz",
+      "integrity": "sha512-Ts+Q3fw9u92koCkk+oZgL6lhwDrwWSyXBcKdsKJko1Ra7ZzDl0z7pod+1g+v4Qbt8l1YqSX4wXbXs5sWUv0VWw==",
+      "dependencies": {
+        "@azure/msal-common": "14.7.0"
+      },
+      "engines": {
+        "node": ">=0.8.0"
+      }
+    },
+    "node_modules/@azure/msal-common": {
+      "version": "14.7.0",
+      "resolved": "https://registry.npmjs.org/@azure/msal-common/-/msal-common-14.7.0.tgz",
+      "integrity": "sha512-WexujW5jKWib7xtIxR7fEVyd5xcA3FNwenELy2HO4YC/ivTFdsEcDhtpKQuRUHqXRwxoqBblyZzTAhBm4v6fHA==",
+      "engines": {
+        "node": ">=0.8.0"
       }
     },
     "node_modules/@babel/code-frame": {
@@ -18991,6 +19011,19 @@
         "@jridgewell/gen-mapping": "^0.3.0",
         "@jridgewell/trace-mapping": "^0.3.9"
       }
+    },
+    "@azure/msal-browser": {
+      "version": "3.9.0",
+      "resolved": "https://registry.npmjs.org/@azure/msal-browser/-/msal-browser-3.9.0.tgz",
+      "integrity": "sha512-Ts+Q3fw9u92koCkk+oZgL6lhwDrwWSyXBcKdsKJko1Ra7ZzDl0z7pod+1g+v4Qbt8l1YqSX4wXbXs5sWUv0VWw==",
+      "requires": {
+        "@azure/msal-common": "14.7.0"
+      }
+    },
+    "@azure/msal-common": {
+      "version": "14.7.0",
+      "resolved": "https://registry.npmjs.org/@azure/msal-common/-/msal-common-14.7.0.tgz",
+      "integrity": "sha512-WexujW5jKWib7xtIxR7fEVyd5xcA3FNwenELy2HO4YC/ivTFdsEcDhtpKQuRUHqXRwxoqBblyZzTAhBm4v6fHA=="
     },
     "@babel/code-frame": {
       "version": "7.23.5",

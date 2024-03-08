@@ -198,6 +198,7 @@ export class SyncDatabase<T> {
           }
         : undefined,
     });
+
     this.sync = localDB.sync(
       remoteDB,
       {

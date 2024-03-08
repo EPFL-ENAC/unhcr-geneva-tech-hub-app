@@ -13,6 +13,7 @@
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\""
   },
   "dependencies": {
+    "@azure/msal-browser": "^3.9.0",
     "@mdi/js": "^6.7.96",
     "@sentry/tracing": "^7.43.0",
     "@sentry/vue": "^7.43.0",

@@ -20,7 +20,7 @@ module.exports = () => {
       sourceMap: true,
     },
     transpileDependencies: ["vuetify", "leaflet", "echarts"],
-    publicPath: "auto",
+    // publicPath: "auto",
     devServer: {
       // https://github.com/webpack/webpack-dev-server/issues/1850#issuecomment-490926569
       // host: "127.0.0.1",
