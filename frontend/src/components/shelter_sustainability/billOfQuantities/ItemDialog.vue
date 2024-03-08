@@ -389,8 +389,7 @@ export default class DeleteItemDialog extends Vue {
   otherUnits = otherUnits;
   workerTypes = ["Skilled", "Unskilled"];
 
-  rules = [(v: string): boolean | string => !!v || `Required`];
-
+  rules = [(v: string): boolean | string => !!v || `Require EEd`];
   suffixOther = "OTH_";
 
   public get title(): string {

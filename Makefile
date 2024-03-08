@@ -31,7 +31,7 @@ setup-data:
 	docker compose up --build --force-recreate --no-deps data-setup
 
 setup-reference:
-	$(MAKE) -C couchdb-setup/rawdata
+	$(MAKE) -C reference-data
 
 test:
 	$(MAKE) -C frontend test

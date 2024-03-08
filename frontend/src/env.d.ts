@@ -13,6 +13,7 @@ declare namespace NodeJS {
     readonly VUE_APP_DSN: string;
     readonly VUE_APP_API_URL: string;
     readonly VUE_APP_TITLE: string;
+    readonly VUE_GTAG_ID: string;
   }
 }
 

@@ -547,7 +547,7 @@ export default class OverviewProjects extends Vue {
 
   changes!: PouchDB.Core.Changes<Shelter> | undefined;
   mounted(): void {
-    this.syncDB();
+    // this.syncDB();
     this.retrieveData();
 
     // this.changes = this.db?.onChange(this.retrieveData);

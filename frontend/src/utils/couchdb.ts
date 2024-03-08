@@ -40,11 +40,6 @@ function url(value = ""): string {
     return url.toString();
   }
 }
-export enum DatabaseName {
-  EnergyCookingFuels = "energy_cooking_fuels",
-  EnergyCookingStoves = "energy_cooking_stoves",
-  EnergySites = "energy_sites",
-}
 
 function getUrl(path: string): string {
   return `${databaseUrl}/${path}`;
@@ -179,14 +174,12 @@ export function createSyncDatabase<T>(name: string): SyncDatabase<T> {
 }
 
 export class SyncDatabase<T> {
-  public localDB: PouchDB.Database<T>;
   public remoteDB: PouchDB.Database<T>;
-  private sync: PouchDB.Replication.Sync<T>;
   private onChangeListener: PouchDB.Core.Changes<T> | undefined;
 
   constructor(name: string) {
     const token = sessionStorage.getItem(SessionStorageKey.Token);
-    const localDB = new PouchDB<T>(name);
+    // const localDB = new PouchDB<T>(name);
     const remoteDB = new PouchDB<T>(getUrl(name), {
       fetch: token
         ? (url, opts) => {
@@ -198,32 +191,6 @@ export class SyncDatabase<T> {
           }
         : undefined,
     });
-
-    this.sync = localDB.sync(
-      remoteDB,
-      {
-        batch_size: 5,
-        timeout: 30000,
-        batches_limit: 2,
-        since: "now",
-        live: true,
-        retry: true,
-        back_off_function(delay) {
-          if (delay === 27000 || delay === 0) {
-            return 1000;
-          }
-          return delay * 3;
-        },
-      },
-      (error, result) => {
-        if (error) {
-          console.error(error);
-        } else {
-          console.debug("sync", result);
-        }
-      }
-    );
-    this.localDB = localDB;
     this.remoteDB = remoteDB;
   }
 
@@ -262,7 +229,6 @@ export class SyncDatabase<T> {
   }
 
   cancel(): void {
-    this.sync.cancel();
     this.onChangeListener?.cancel();
   }
 }

@@ -1,20 +1,55 @@
 # unhcr-geneva-tech-hub-app
 
-UNHCR Geneva Technical Hub App
-
-## Status
-Currently under development, final release expected for end of March 2024.
+UNHCR Geneva Technical Hub App (TSS-APP)
 
 ## Update references variable and UNHCR locations
-- Follow this CF [Data ref](couchdb-setup/rawdata/README.md)
+- Follow this CF [Data ref](reference-data/README.md)
+- More information about its usage in [frontend reference data](frontend/src/assets/references/README.md)
 - And then you may run `make setup-reference`
+
+## How to add an admin user from AZURE/ AD (microsoft entra)
+
+- We list the azure admins in three files
+  - couchdb-setup/bootstrap/ghg_projects_1696578512055758/_design/project/validate_doc_update.js
+  - couchdb-setup/bootstrap/shelter_projects_1698666594213623/_design/shelter/validate_doc_update.js
+  - frontend/src/plugins/user.ts
+
+In those files we define a function checkIfAdmin that contains a uhcrAdmins array.
+This array contains a list of string, each string correspond to the unique id (sub field) of the user in entra/azure, which is the subject unique id.
+
+```
+  export function checkIfAdmin(user: CouchUser) {
+  // either we have the role 'admin' or '_admin'
+  // or we are in a custom list of unhcr users sub
+  const unhcrAdmins = [
+    "TBxz7Wb3aSrQGeFx1EbBtrtaKPht-4M87pznkWC2BYE" // nimri sub
+  ];
+```
+
+## s3 files necessary for the frontend
+Before any uploads from the users you need some files (pdfs,videos, images, etc) for the frontend
+- it will populate the s3 with a tar.gz file
+- by running `make setup-data` at the root level
+
+### How to updates documents and pdfs, vidéos
+
+- find the files in the s3 server and updates them
+
+## CouchDB setup:
+We need to run the couchdb-bootstrap to setup the databases and users, once.
+- It's only necessary if you start the project with a new database with no documents
+- by running `make setup-database` at the root level
+
+### CouchDB authentication
+- more information on the [README](couchdb-setup/README.md)
 
 ## Development
 
 - We use husky for git hooks: https://typicode.github.io/husky/#/?id=install
 - We use standard version and commitlint for automatic release log and proper commit message
 
-## CI/CD
+
+### CI/CD
 - We use the following workflows
   - release-please to trigger tags and changelogs also releases (on push to main)
   - deploy-test that builds the images and push them to the ghcr registry then deploy them to unhcr-tss-test.epfl.ch for every push to the 'dev' branch
@@ -22,12 +57,10 @@ Currently under development, final release expected for end of March 2024.
 
 ### Prerequisites
 
-Prerequisites:
-
 - [Make](https://www.gnu.org/software/make/) (gnu make)
 - [Node.js](https://nodejs.org/) 16.x
   - use nvm https://github.com/nvm-sh/nvm#installing-and-updating
-  - nvm install --lts; nvm use --lts
+  - nvm install lts/gallium; nvm use lts/gallium
 - [yarn]
 - [Docker](https://www.docker.com/)
   - [Docker Compose](https://docs.docker.com/compose/) 1.27.0+
@@ -65,11 +98,10 @@ make install
 ```bash
 # to run all the docker compose services
 make run-local
-
-
 # to run only some services
 make run-database;
-# setup the database if changes are made locally (change files et c)
+
+# setup the database if changes are made locally (change couchdb bootstrap files et c)
 make setup-database;
 # donwload files to upload to local minio service (pdfs and videos mainly)
 make setup-data;
@@ -78,7 +110,9 @@ make setup-reference;
 # run the dev server for the frontend on port 8080
 make run-frontend;
 # http://127.0.0.1:8080
+
 ```
+- have a look at [frontend readme](frontend/README.md)
 
 #### Visual Studio Code
 
@@ -89,8 +123,11 @@ Run configurations are in `.vscode`: https://code.visualstudio.com/docs/editor/d
 ### Local build with Docker Compose
 
 ```bash
-make run # will build with docker-compose and run docker-compose up -d with ghcr.io built images
+make run-local # will build with docker-compose and run docker-compose up -d with ghcr.io built images
 ```
+
+### prod and dev on docker file
+- We use an override for the configuration to avoid rebuilding the images
 
 ### Server @EPFL
 We use enacit-ansible to automate our process with the CD service
@@ -105,6 +142,7 @@ Releases number follow [semantic versioning conventions](https://semver.org/\).
 
 ## Create a new user
 There is two way of doing this: first one using curl; second one using couchdb-bootstrap
+
 
 ### Using curl
 1. Follow: https://docs.couchdb.org/en/stable/intro/security.html#creating-a-new-user
@@ -163,14 +201,13 @@ make setup-database
 - remove the `'_rev'` field and commit the file
 
 ## Update public keys for unhcr azure server (change may happen)
-- run make azure
+- run the following
 ```bash
 make azure
 ```
-- then copy the content of the json `azure/jwt_keys.json` at the proper place inside couchdb-setup/bootstrap/_config.json
-- verify that the json is valid
+- it will update the couchdb/local.ini configuration under jwt_keys
 
-## file uploads
+## File uploads used by the shelter app and custom user registration
 - 2 services (docker compose) necessary
   - (s3_server) nginx proxy to our minio s3 instance (cf docker-compose file in [minio doc](./minio/README.md)
   - (rest-api)  python fast api
@@ -182,16 +219,6 @@ We don't store the uploaded file directly to a database, it should be done by th
 
 ## Collaborators
 
-[EPFL Essential Tech Center](https://www.essentialtech.ch/)
-[ENAC FAR](https://www.epfl.ch/labs/far/)
-[ENAC-IT4R](http://enac-it4r.epfl.ch/)
-
-
-## Registration process
-
-/register
-/confirm
-/unconfirm
-
-/forgot password --> forgot password form
-/change-password --> change password form (keep history of password)
+- [EPFL Essential Tech Center](https://www.essentialtech.ch/)
+- [ENAC FAR](https://www.epfl.ch/labs/far/)
+- [ENAC-IT4R](http://enac-it4r.epfl.ch/)

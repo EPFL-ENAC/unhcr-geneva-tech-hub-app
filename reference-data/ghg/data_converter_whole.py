@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import argparse
 import csv
 import json
@@ -16,9 +17,12 @@ def convert(filename: str, output: str):
         for index, row in enumerate(reader):
             try:
                 id = row["_id"]
-            except Exception as inst:
-                print(row, inst)
-                raise inst
+            except Exception:
+                try:
+                    id = row["region"]
+                except Exception as inst:
+                    print(row, inst)
+                    raise inst
             ids.append(id)
             item = {k: mapValue(v) for k, v in row.items()}
             item["index"] = index

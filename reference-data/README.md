@@ -5,7 +5,7 @@
   - Path is sites/ENAC-IT/Documents partages/Research%20IT/Advanced%20Services/0041%20%E2%80%93%20UNHCR/PHASE_2/GHG/DATABASES/GHG_EF_DBs_byModule.xlsx
   - Documents / Research IT / Advanced Services / 0041 - UNHCR / PHASE_2 / GHG / DATABASES / GHG_EF_DBs_byModule.xslx
 
-1.) The content of the first excel sheet is to be exported as csv an put inside: `couchdb-setup/rawdata/ghg_reference.csv`
+1.) The content of the first excel sheet is to be exported as csv an put inside: `reference-data/ghg/ghg_reference.csv`
 2.) The you may run the following command
 
 
@@ -16,12 +16,11 @@
 
 Provide information on how to update new dataset each year
 
-
 The user need to modify /frontend/src/assets/references/unhcr_location.json which is based on the unhcr_location.csv
 
-1) update couchdb-setup/rawdata/unhcr_location.csv with the latest data (based on the excel here)https://docs.google.com/spreadsheets/d/1VVxsSS-KCUmP-giKZwlARNmw5RSSZHUQ/edit#gid=1437641817 ==> [Locations_EPFL_092023_filtered_solar_hours.xlsx](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/files/13283077/Locations_EPFL_092023_filtered_solar_hours.xlsx))
+1) update reference-data/ghg/unhcr_location.csv with the latest data (based on the excel here)https://docs.google.com/spreadsheets/d/1VVxsSS-KCUmP-giKZwlARNmw5RSSZHUQ/edit#gid=1437641817 ==> [Locations_EPFL_092023_filtered_solar_hours.xlsx](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/files/13283077/Locations_EPFL_092023_filtered_solar_hours.xlsx))
 
-2) Then you can use the Makefile in couchdb-setup/rawdata to create the /frontend/src/assets/references/unhcr_location.json
+2) Then you can use the Makefile in reference-data to create the /frontend/src/assets/references/unhcr_location.json
 
 Then it should be okay
 

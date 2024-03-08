@@ -19,7 +19,7 @@ import router from "./router";
 import store from "./store";
 
 Vue.config.productionTip = env.NODE_ENV === "production";
-Vue.prototype.window = window;
+// Vue.prototype.window = window;
 
 Vue.use(User, { store });
 Vue.use(filters);

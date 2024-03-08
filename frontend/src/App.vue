@@ -773,10 +773,11 @@ export default class App extends Vue {
       },
     ];
   }
-  @Watch("themeDark")
-  onthemeDarkChange(): void {
-    this.$vuetify.theme.dark = false; // this.$store.getters["ConfigModule/themeDark"];
-  }
+
+  // @Watch("themeDark")
+  // onthemeDarkChange(): void {
+  //   this.$vuetify.theme.dark = false; // this.$store.getters["ConfigModule/themeDark"];
+  // }
 
   @Watch("$route", { immediate: true, deep: true })
   onRouteChanged(newRoute: Route): void {
@@ -789,6 +790,7 @@ export default class App extends Vue {
     /** When route change, hide snackbar */
     this.snackbar = false;
   }
+
   @Watch("loading")
   onLoadingChange(): void {
     /** When loading change cursor*/
