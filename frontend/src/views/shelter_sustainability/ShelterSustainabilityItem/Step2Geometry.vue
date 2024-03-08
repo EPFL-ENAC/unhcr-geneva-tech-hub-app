@@ -285,8 +285,7 @@ import {
   geometryOtherName,
 } from "@/views/shelter_sustainability/ShelterSustainabilityItem/geometries";
 import { mdiDelete, mdiMagnify, mdiPlusBox } from "@mdi/js";
-import { cloneDeep } from "lodash";
-import { Component, Prop, Vue, Watch, VModel } from "vue-property-decorator";
+import { Component, VModel, Vue, Watch } from "vue-property-decorator";
 
 /* two ways to have a store copy locally
 1. having a watcher on the store that cloneDeep to data() locally

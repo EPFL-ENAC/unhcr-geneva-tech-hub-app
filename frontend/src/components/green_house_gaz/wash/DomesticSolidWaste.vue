@@ -131,7 +131,7 @@ export default class Cooking extends Mixins(ComputeGenericFormSurveyMixin) {
       this.headers,
       this.computeItem,
       this.ghgMapRef
-    ) as any;
+    ) as MaterialSolidWasteSurvey;
 
     this.$emit("update:form", this.localForm);
   }

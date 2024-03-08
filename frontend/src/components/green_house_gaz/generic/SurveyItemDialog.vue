@@ -212,6 +212,7 @@ export default class SurveyItemDialog extends Vue {
   }
 
   @Watch("localItem.input", { immediate: true, deep: true })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onLocalInputChange(value: any): void {
     // we watch only for input, because we modify the localitem.computed object
     if (value === undefined) {
@@ -231,6 +232,7 @@ export default class SurveyItemDialog extends Vue {
   }
 
   @Watch("localItem", { immediate: true, deep: true })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onlocalitemchange(value: any): void {
     if (value === undefined) {
       return;
@@ -255,7 +257,7 @@ export default class SurveyItemDialog extends Vue {
       newInputValue,
       localInput,
       this.ghgMapRef,
-      this.ghgMapDefaultValue,
+      this.ghgMapDefaultValue
     ) ?? cloneDeep(localInput)) as SurveyInput;
     const newLocalItem = cloneDeep(this.localItem);
     newLocalItem.input = newLocalInput;

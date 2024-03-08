@@ -44,7 +44,7 @@ interface TextFormItem<K> extends AbstractFormItem<K> {
 interface NumberFormItem<K> extends AbstractFormItem<K> {
   type: "number";
   subtype?: "percent";
-  tooltipAttrs?: Record<string, (boolean | number)> | undefined;
+  tooltipAttrs?: Record<string, boolean | number> | undefined;
   unit?: string;
   min?: number;
   max?: number;
@@ -92,7 +92,7 @@ export interface BooleanOptions {
 export interface SelectOption<V> {
   text: string;
   value: V;
-  description?: string
+  description?: string;
 }
 
 export type SelectValue = boolean | string | number;

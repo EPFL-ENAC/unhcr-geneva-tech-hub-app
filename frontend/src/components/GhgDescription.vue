@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <p>
     This tool estimates greenhouse gas emissions for energy, material, and

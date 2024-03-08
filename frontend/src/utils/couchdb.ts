@@ -2,12 +2,15 @@ import { ExistingDocument } from "@/models/couchdbModel";
 // import store from "@/store";
 import { env } from "@/config";
 import { SessionStorageKey } from "@/utils/storage";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosError, AxiosPromise, AxiosResponse } from "axios";
 import { JwtPayload } from "jsonwebtoken";
 import PouchDB from "pouchdb-browser";
 import qs from "qs";
 
-const databaseUrl: string = url(`${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_COUCHDB_URL}`);
+const databaseUrl: string = url(
+  `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_COUCHDB_URL}`
+);
 const designDocumentPrefix = "_design/";
 
 export function parseJwt(token: string): JwtPayload {
@@ -66,6 +69,7 @@ export function loginDefault(username: string, password: string): AxiosPromise {
 
 export class ExpireError extends Error {
   type: Record<string, string>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(message: string, options: any) {
     // Need to pass `options` as the second parameter to install the "cause" property.
     super(message, options);

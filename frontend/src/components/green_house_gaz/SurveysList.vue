@@ -50,7 +50,8 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-data-table v-if="filteredAssessments.length > 0"
+    <v-data-table
+      v-if="filteredAssessments.length > 0"
       :headers="headersSurvey"
       :items="filteredAssessments"
       sort-by="created_at"
@@ -211,7 +212,7 @@ export default class SurveysList extends Vue {
 
   public get filteredAssessments(): GreenHouseGaz[] {
     return this.siteAssessments.filter((assessment: GreenHouseGaz) => {
-      return this.$can('view', assessment) || assessment.public;
+      return this.$can("view", assessment) || assessment.public;
     });
   }
 

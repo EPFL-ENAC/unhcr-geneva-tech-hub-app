@@ -74,11 +74,13 @@ import { mapActions, mapGetters } from "vuex";
     ...mapActions(["toggleHelperCenter", "setHelperDialog"]),
   },
   directives: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     reload(el: any, binding) {
       if (binding.oldValue !== binding.value) {
         el.load();
       }
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     closeVideo(el: any, binding) {
       if (binding.value === false) {
         el.pause();
@@ -110,10 +112,4 @@ export default class HelperCenter extends Vue {
 .default-card {
   height: 300px;
 }
-// .v-dialog__content--active:has(> .notification-center),
-// .v-dialog__content:has(> .notification-center) {
-//   /* justify-content: right;
-//   align-items: baseline; */
-//   /* top: 32px; */
-// }
 </style>

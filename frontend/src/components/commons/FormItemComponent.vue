@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <div>
     <v-text-field
@@ -226,7 +227,7 @@ export default class FormItemComponent extends Vue {
   @Prop([String, Boolean])
   readonly tooltipInfo: string | boolean | undefined;
   @Prop({ type: [Object], default: () => ({}) })
-  readonly tooltipAttrs: Record<string, (boolean|number)> | undefined;
+  readonly tooltipAttrs: Record<string, boolean | number> | undefined;
   @Prop([Object, Array])
   readonly options:
     | BooleanOptions

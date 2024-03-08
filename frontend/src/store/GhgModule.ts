@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /** Config store */
 import { CountryExtended, GreenHouseGaz } from "@/store/GhgInterface";
 import { SyncDatabase } from "@/utils/couchdb";
@@ -123,10 +124,10 @@ const mutations: MutationTree<ProjectsState> = {
   SET_PROJECT_LOADING(state, value) {
     state.projectLoading = value;
   },
-  SET_COUNTRIES(state, countries) {
+  SET_COUNTRIES(state, countries: any[]) {
     state.countries = countries;
     state.sites = countries
-      .map((x: any) => x.value)
+      .map((x: any) => x.value) // Specify the type of 'x' as 'any[]'
       .reduce((acc: any[], el: any) => acc.concat(el));
   },
   SET_SITE_ASSESSMENTS(state, siteAssessments) {

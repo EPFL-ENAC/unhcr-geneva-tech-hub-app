@@ -62,7 +62,7 @@ import { Shelter } from "@/store/ShelterInterface";
 import { SyncDatabase } from "@/utils/couchdb";
 import PouchDB from "pouchdb-browser";
 import { Component, Vue } from "vue-property-decorator";
-import { Route } from "vue-router";
+import { RawLocation, Route } from "vue-router";
 import { mapActions, mapGetters } from "vuex";
 
 @Component({
@@ -168,7 +168,11 @@ export default class ShelterSustainabilityItem extends Vue {
     this.closeDB();
   }
 
-  beforeRouteLeave(to: unknown, from: unknown, next: any): void {
+  beforeRouteLeave(
+    to: unknown,
+    from: unknown,
+    next: (to?: RawLocation | false | ((vm: Vue) => unknown) | void) => void
+  ): void {
     this.$store.dispatch("ShelterModule/resetDoc");
     next();
   }
