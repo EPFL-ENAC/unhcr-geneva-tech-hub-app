@@ -1,21 +1,57 @@
-# unhcr-geneva-tech-hub-app
+# Maintenance plan for UNHCR-TSS Apps
 
+## Description
+
+The UNHCR TSS Apps comprise 2 tools : GHG Calculator & Shelter Sustainability. They operate independantly, and rely on different databases. 
+[TODO: Expand intro text + Insert summary figure from Cara.]
+
+The following document details it 
 UNHCR Geneva Technical Hub App (TSS-APP)
 
-## Update references variable and UNHCR locations
-- Follow this CF [Data ref](reference-data/README.md)
-- More information about its usage in [frontend reference data](frontend/src/assets/references/README.md)
-- And then you may run `make setup-reference`
+## Contributors & maintainers
+The tools have been conceived by [EPFL Essential Tech](https://www.essentialtech.ch/) and implemented by [EPFL ENAC-IT4R](https://www.epfl.ch/schools/enac/category/research/enac-it4research/) between 2022 and March 2024, with the codebase accessible at [https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/).
 
-## How to add an admin user from AZURE/ AD (microsoft entra)
+After March 2024, the tools will be fully integrated on UNHCR TIMS infrastructure, and maintained by [UNHCR](https://www.unhcr.org/) (domain expertise, product management) & [UNICC](https://www.unicc.org/) (technical maintenance.
 
-- We list the azure admins in three files
-  - couchdb-setup/bootstrap/ghg_projects_1696578512055758/_design/project/validate_doc_update.js
-  - couchdb-setup/bootstrap/shelter_projects_1698666594213623/_design/shelter/validate_doc_update.js
-  - frontend/src/plugins/user.ts
+[TODO: Contributors list?]
 
-In those files we define a function checkIfAdmin that contains a uhcrAdmins array.
-This array contains a list of string, each string correspond to the unique id (sub field) of the user in entra/azure, which is the subject unique id.
+## Updating databases
+
+[TODO : List of databases and update frequency - by Cara]
+
+### Reference DB 
+* The reference file is maintained by UNHCR and stored [here as an Excel](https://epflch.sharepoint.com/:x:/r/sites/ENAC-IT/Documents%20partages/Research%20IT/Advanced%20Services/0041%20%E2%80%93%20UNHCR/PHASE_2/GHG/DATABASES/GHG_EF_DBs_byModule.xlsx?d=w93e39ddb340758cfe3d57ae7412fc534&csf=1&web=1&e=mTGz8n)
+[TODO: This Excel file should be migrated in UNHCR storage system.]
+* Developers export each tab as CSVs in `reference-data/ghg/ghg_reference.csv` and run `make setup-reference` (for)
+* Implementation details can be found : [implementation history](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/580) and [usage of datasets](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/blob/feat/dead-code-and-reference-data/frontend/src/assets/references/README.md)
+
+### UNHCR locations
+* The reference file is maintained by UNHCR and stored [here as an Excel]([https://epflch.sharepoint.com/:x:/r/sites/ENAC-IT/Documents%20partages/Research%20IT/Advanced%20Services/0041%20%E2%80%93%20UNHCR/PHASE_2/GHG/DATABASES/GHG_EF_DBs_byModule.xlsx?d=w93e39ddb340758cfe3d57ae7412fc534&csf=1&web=1&e=mTGz8n](https://docs.google.com/spreadsheets/d/1VVxsSS-KCUmP-giKZwlARNmw5RSSZHUQ/edit#gid=1437641817))
+[TODO: This Excel file should be migrated in UNHCR storage system.]
+* Developers create `/frontend/src/assets/references/unhcr_location.json` with the `reference-data/Makefile`
+[TODO: This might need details Pierre?]
+* Implementation details can be found (reference issues  https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/438 & https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/467
+[TODO: Pierre, is this really necessary ?]
+
+### Other DBs
+[TODO]
+
+## Users & Roles
+
+### Roles definition
+[TODO]
+
+### Adding a user (with AZURE AD)
+[TODO]
+
+### How to make a user admin user (from AZURE AD)
+* UNHCR users may request admin right to UNICC, providing [TODO: What do they need to provide? Or make a new project,right? To Double check]
+* Developers must list Azure admins in these 3 files :
+  - `couchdb-setup/bootstrap/ghg_projects_1696578512055758/_design/project/validate_doc_update.js`
+  - `couchdb-setup/bootstrap/shelter_projects_1698666594213623/_design/shelter/validate_doc_update.js`
+  - `frontend/src/plugins/user.ts`
+* Specifically, in those files the function `checkIfAdmin` contains a `unhcrAdmins` array.
+This array contains a list of string, each string correspond to the unique id (sub field) of the user in entra/Azure, which is the subject unique id.
 
 ```
   export function checkIfAdmin(user: CouchUser) {
@@ -25,6 +61,16 @@ This array contains a list of string, each string correspond to the unique id (s
     "TBxz7Wb3aSrQGeFx1EbBtrtaKPht-4M87pznkWC2BYE" // nimri sub
   ];
 ```
+
+### Custom user management on EPFL-side
+[TODO: For reference - mettre ici Pierre?]
+
+
+## Deployment
+
+-- below is yet to be re-organized
+
+
 
 ## s3 files necessary for the frontend
 Before any uploads from the users you need some files (pdfs,videos, images, etc) for the frontend
@@ -216,9 +262,3 @@ make azure
 
 We don't store the uploaded file directly to a database, it should be done by the frontend by talking directly to couchdb. The API just return the path served by the nginx reverse proxy
 
-
-## Collaborators
-
-- [EPFL Essential Tech Center](https://www.essentialtech.ch/)
-- [ENAC FAR](https://www.epfl.ch/labs/far/)
-- [ENAC-IT4R](http://enac-it4r.epfl.ch/)
