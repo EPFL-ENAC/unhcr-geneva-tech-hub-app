@@ -32,10 +32,9 @@
         </v-card>
       </v-form>
     </v-dialog>
-    <v-sheet class="country-list overflow-y-auto">
+    <v-sheet class="country-list overflow-y-auto d-print-none">
       <v-container fluid>
         <!-- Move to component, ShelterSustaibalityListHeader Search + create tooltip logic -->
-
         <v-row>
           <!-- search name and custom check-boxese-->
           <v-col cols="12" md="6">
@@ -270,7 +269,7 @@
                     </v-row>
                   </v-col>
 
-                  <v-col cols="1">
+                  <v-col cols="1" class="d-print-none">
                     <v-row>
                       <v-col :cols="12" class="d-flex align-center justify-end">
                         <v-tooltip bottom>
@@ -645,6 +644,14 @@ interface ShelterFilters {
   margin: 0px;
   box-sizing: border-box;
   padding-bottom: 2rem;
+}
+@media print {
+  .country-list-pagination {
+    position: relative;
+    top: 64px;
+    width: 100%;
+    overflow: hidden;
+  }
 }
 .country-list__actions {
   display: flex;

@@ -40,7 +40,6 @@ const getters: GetterTree<ShelterState, RootState> = {
   countries: (s): string[] => s.countries,
 };
 
-// WARNING: WRITE on remote / READ on local
 /** Mutations */
 const mutations: MutationTree<ShelterState> = {
   INIT_DB(state) {
@@ -113,7 +112,7 @@ const actions: ActionTree<ShelterState, RootState> = {
     const localCouch = context.state.localCouch;
     const user = context.rootGetters["UserModule/user"];
     const isAdmin = checkIfAdmin(user);
-    // shelters/_design/shelter/_view/lits?include_docs=true
+    // shelters/_design/shelter/_view/list?include_docs=true
     return localCouch?.remoteDB
       .query("shelter/list", {
         keys: ["public", isAdmin ? "private" : `private_${user.name}`],

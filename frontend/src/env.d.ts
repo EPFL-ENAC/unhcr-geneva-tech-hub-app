@@ -4,8 +4,6 @@ declare namespace NodeJS {
     readonly BASE_URL_WITHOUT_SLASH: string;
     readonly BASE_URL: string;
     readonly VUE_APP_COUCHDB_URL: string;
-    readonly VUE_APP_I18N_LOCALE: string;
-    readonly VUE_APP_I18N_FALLBACK_LOCALE: string;
     readonly VUE_APP_USER_NAMESPACE: string;
     readonly VUE_APP_AUTH_TENANT_ID: string;
     readonly VUE_APP_AUTH_CLIENT_ID: string;
@@ -13,6 +11,7 @@ declare namespace NodeJS {
     readonly VUE_APP_DSN: string;
     readonly VUE_APP_API_URL: string;
     readonly VUE_APP_TITLE: string;
+    readonly VUE_GTAG_ID: string;
   }
 }
 
