@@ -4,8 +4,8 @@ services:
     image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-frontend:dev
     build: !reset null
     restart: always
-  couchdb:
-    image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-couchdb:dev
+  azure-cron:
+    image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-azure-cron:dev
     build: !reset null
     ports: !reset null
     restart: always
