@@ -25,11 +25,18 @@ services:
     ports:
       - '8081:8081'
   couchdb:
-    build: ./couchdb
+    image: couchdb:3.3
     env_file:
       - ./couchdb/.env
+    depends_on:
+        init-couchdb:
+          condition: service_completed_successfully
+    expose:
+      - '5984'
+      - '4369'
+      - '9100'
     ports:
-      - '5984:5984'
+      - "5984:5984"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5984"]

@@ -2,7 +2,6 @@ import { env } from "@/config";
 import { themeColor } from "@/plugins/vuetify";
 import router from "@/router/index";
 import ConfigModule from "@/store/ConfigModule";
-import EnergyModule from "@/store/EnergyModule";
 import GhgDefaultValuesModule from "@/store/GhgDefaultValuesModule";
 import GhgModule from "@/store/GhgModule";
 import GHGReferenceBioWasteModule from "@/store/GHGReferenceBioWasteModule";
@@ -346,7 +345,6 @@ const store: StoreOptions<RootState> = {
     GHGReferencefNRB,
     UNHCRLocationModule,
     UserModule,
-    energy: EnergyModule,
   },
   plugins: [
     // store as session storage

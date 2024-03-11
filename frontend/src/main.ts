@@ -10,7 +10,6 @@ import "leaflet/dist/leaflet.css";
 import Vue from "vue";
 import CountryFlag from "vue-country-flag";
 import App from "./App.vue";
-import i18n from "./i18n";
 import "./plugins/gtag";
 import vuetify from "./plugins/vuetify";
 import "./registerComponentHooks";
@@ -19,7 +18,6 @@ import router from "./router";
 import store from "./store";
 
 Vue.config.productionTip = env.NODE_ENV === "production";
-Vue.prototype.window = window;
 
 Vue.use(User, { store });
 Vue.use(filters);
@@ -173,6 +171,5 @@ export default new Vue({
   router,
   store,
   vuetify,
-  i18n,
   render: (h) => h(App),
 }).$mount("#app");

@@ -9,8 +9,7 @@ function (newDoc, oldDoc, userCtx, secObj) {
         // either we have the role 'admin' or '_admin'
         // or we are in a custom list of unhcr users sub
         var unhcrAdmins = [
-            "TBxz7Wb3aSrQGeFx1EbBtrtaKPht-4M87pznkWC2BYE", // nimri
-            "ZClxS-3mzvYkIq5kO8ULO37PaSFV-d9Z0Oml1CVoVeQ", // testtss
+            "TBxz7Wb3aSrQGeFx1EbBtrtaKPht-4M87pznkWC2BYE" // nimri
         ];
         var isDBAdmin = userCtx.roles.indexOf('_admin') !== -1;
         var isAdmin = userCtx.roles.indexOf('admin') !== -1;

@@ -1,4 +1,4 @@
-.PHONY: backup-dump install run-frontend run-database azure setup-database setup-data setup-reference test lint lint-staged dump-prod-to-local restore-local-to-test restore-local setup run run-local run-dev
+.PHONY: backup-dump env-file install run-frontend run-database setup-database setup-data setup-reference test lint lint-staged dump-prod-to-local restore-local-to-test restore-local setup run run-local run-dev
 # Get the current HEAD tag
 TAG := $(shell git describe --tags --abbrev=0)
 
@@ -20,9 +20,6 @@ run-frontend:
 run-database:
 	docker compose up --build -d couchdb
 
-azure:
-	$(MAKE) -C azure
-
 setup-database:
 	docker compose up --build --force-recreate --no-deps couchdb-setup
 
@@ -30,7 +27,7 @@ setup-data:
 	docker compose up --build --force-recreate --no-deps data-setup
 
 setup-reference:
-	$(MAKE) -C couchdb-setup/rawdata
+	$(MAKE) -C reference-data
 
 test:
 	$(MAKE) -C frontend test

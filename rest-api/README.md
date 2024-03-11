@@ -48,3 +48,12 @@ Path : ./Dockerfile
 
 ## Install
 Don't forget to install libwebp-dev on the machine (cf Dockerfile)
+
+## Registration process
+
+/register
+/confirm
+/unconfirm
+
+/forgot password --> forgot password form
+/change-password --> change password form (keep history of password)

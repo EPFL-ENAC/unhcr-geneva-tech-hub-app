@@ -21,9 +21,9 @@ jobs:
           - Dockerfile: ./rest-api/Dockerfile
             context: ./rest-api
             image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-rest-api
-          - Dockerfile: ./couchdb/Dockerfile
-            context: ./couchdb
-            image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-couchdb
+          - Dockerfile: ./azure-cron/Dockerfile
+            context: ./azure-cron
+            image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-azure-cron
           - Dockerfile: ./couchdb-setup/Dockerfile
             context: ./couchdb-setup
             image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-couchdb-setup

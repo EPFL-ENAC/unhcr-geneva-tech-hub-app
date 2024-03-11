@@ -11,7 +11,7 @@ Vue.use(VueRouter);
 const routes: Array<RouteConfig> = [
   {
     path: "/",
-    redirect: "/login",
+    redirect: "/apps",
   },
   ...userRouter,
   {
@@ -21,18 +21,6 @@ const routes: Array<RouteConfig> = [
     meta: {
       title: "UNHCR-TSS",
     },
-  },
-  {
-    path: "/error",
-    name: "Error",
-    meta: {
-      title: "Error",
-    },
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "error" */ "../views/ErrorView.vue"),
   },
 ];
 routes.push(ghgRouter);

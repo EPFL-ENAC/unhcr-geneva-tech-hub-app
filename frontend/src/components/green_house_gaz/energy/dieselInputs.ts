@@ -233,7 +233,6 @@ export function dieselInputsProducedPer(
       powerSuffix = "kWh/yr";
       litersSuffix = "used per year";
       operatingHoursSuffix = "hrs/week";
-      // todo arange per week
       computeLitersFromPower = computedieselLitersFromPower;
       computeLiters = computeLitresDieselPerWeek;
       computePower = computeDieselPower;
