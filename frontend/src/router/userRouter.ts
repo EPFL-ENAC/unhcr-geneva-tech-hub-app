@@ -3,22 +3,31 @@ import ForgotPassword from "@/views/ForgotPasswordView.vue";
 import Register from "@/views/RegisterView.vue";
 import ResetPassword from "@/views/ResetPasswordView.vue";
 import Unconfirm from "@/views/UnconfirmView.vue";
+import { env } from "@/config";
 
-export default [
-  // {
-  //   path: "/login",
-  //   name: "Login",
-  //   meta: {
-  //     title: "Login",
-  //   },
-  //   components: {
-  //     Login,
-  //   },
-  // },
-  {
+let baseRoute = [];
+if (env.VUE_APP_ENVIRONEMENT === 'developement') {
+  baseRoute.push(
+      {
+    path: "/login",
+    name: "Login",
+    meta: {
+      title: "Login",
+    },
+    components: {
+      Login,
+    },
+  },
+  );
+} else {
+  baseRoute.push({
     path: "/login",
     redirect: "/apps",
-  },
+  })
+}
+
+export default [
+  ...baseRoute,
   {
     path: "/Register",
     name: "Register",

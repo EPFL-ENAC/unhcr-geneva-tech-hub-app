@@ -92,11 +92,8 @@
 </template>
 
 <script lang="ts">
-import { env } from "@/config";
 import { UserCouchCredentials } from "@/store/UserModule";
 import { AxiosError, AxiosPromise } from "axios";
-import getPkce from "oauth-pkce";
-import { v4 as uuidv4 } from "uuid";
 import "vue-class-component/hooks";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
@@ -290,38 +287,7 @@ export default class LoginComponent extends Vue {
     });
   }
   async loginUnhcr(): Promise<void> {
-    interface PKCE {
-      verifier: string;
-      challenge: string;
-    }
-    const { verifier, challenge } = await new Promise<PKCE>((resolve, reject) =>
-      getPkce(43, (error, { verifier, challenge }) => {
-        if (!error) {
-          resolve({ verifier, challenge });
-        }
-        reject(error);
-      })
-    );
-    sessionStorage.setItem("verifier", verifier);
-    sessionStorage.setItem("challenge", challenge);
-    const url: URL = new URL(
-      `https://login.microsoftonline.com/${env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/authorize`
-    );
-    url.searchParams.append("client_id", env.VUE_APP_AUTH_CLIENT_ID);
-    url.searchParams.append("nonce", uuidv4());
-    // url.searchParams.append("response_type", "id_token"); for implicit flow
-    url.searchParams.append("response_type", "code");
-    url.searchParams.append("response_mode", "query"); // web_message ?
-
-    const state = uuidv4();
-    url.searchParams.append("state", state);
-    sessionStorage.setItem("state", state);
-    url.searchParams.append("scope", "openid email profile offline_access");
-
-    url.searchParams.append("code_challenge", challenge);
-    url.searchParams.append("code_challenge_method", "S256");
-
-    window.location.href = url.href;
+    await authModule.login("loginRedirect");
   }
   loginCouchdb(): void {
     this.error = "";

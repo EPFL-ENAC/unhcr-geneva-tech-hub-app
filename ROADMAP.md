@@ -38,30 +38,3 @@ VUE_APP_AUTH_CLIENT_ID=6b74559f-d9d7-4fa6-a90e-da9199bf55ac
 # UNHCR.2xyx
 VUE_APP_AUTH_TENANT_ID=48617df8-fd3d-471b-8f71-dcf99a2ceb27
 VUE_APP_AUTH_CLIENT_ID=36909dba-bdd4-435e-a2dc-f522a105ab2f
-
-
-# Dead code removal
-
-## router
-- [ ] remove the Error route
-- [ ] remove the userRoutes 
-
-## plugins
-- [ ] remove i18n (node-fetch)
-- [ ] remove "downloadjs": "^1.4.7", third app
-- [ ] exceljs third app
-
-- [ ] remove oauth-pkce when msal-browser is workin properly
-
-
-## gtag in env variable
-
-## other 
-
-- [ ] remove Vue.prototype.window = window;
-- [ ] themeDark dead code
-
-
-## vuex
-- [ ] Energy Module should be removed
-- [ ] Maybe look into deleting ConfigModule
