@@ -24,6 +24,14 @@ services:
       - /app/node_modules
     ports:
       - '8081:8081'
+  init-couchdb:
+    image: python:3.12-alpine
+    command: /entrypoint.sh
+    env_file:
+      - ./frontend/.env
+    volumes:
+        - ./couchdb/entrypoint.sh:/entrypoint.sh
+        - ./couchdb/local.ini:/local.ini
   couchdb:
     image: couchdb:3.3
     env_file:
