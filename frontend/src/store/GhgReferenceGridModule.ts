@@ -1,8 +1,8 @@
-import iges_grid from "@/assets/references/iges_grid.json";
+import grid from "@/assets/references/grid_emission_factors.json";
 import { GetterTree, Module } from "vuex";
 import { RootState } from ".";
 
-export interface IgesItem {
+export interface GridItem {
   name: string;
   value: number;
   _id: string;
@@ -10,13 +10,13 @@ export interface IgesItem {
 
 /** Getters */
 const getters: GetterTree<Record<string, never>, RootState> = {
-  items: (): IgesItem[] | null => iges_grid,
+  items: (): GridItem[] | null => grid,
 };
 
 /** VuexStore */
-const IgesGridModule: Module<Record<string, never>, RootState> = {
+const GridModule: Module<Record<string, never>, RootState> = {
   namespaced: true,
   getters,
 };
 
-export default IgesGridModule;
+export default GridModule;

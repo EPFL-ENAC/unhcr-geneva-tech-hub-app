@@ -3,17 +3,18 @@
     <v-card-text v-if="computedItems">
       <v-row>
         <v-col>
-          List of Grid Emission Factor from IGES (Institute for Global
-          Environmental Strategies) (2023). Source:
-          <a href="https://www.iges.or.jp/en/pub/list-grid-emission-factor/en"
-            >https://www.iges.or.jp/en/pub/list-grid-emission-factor/en</a
+          List of Grid Emission Factor from List of Grid Emission Factors from
+          EMBER (2021). Source:
+          <a
+            href="https://ember-climate.org/data-catalogue/yearly-electricity-data/"
+            >https://ember-climate.org/data-catalogue/yearly-electricity-data/</a
           >
         </v-col>
       </v-row>
       <v-row>
         <v-col>
           <v-card-title>
-            IGES GRID
+            Grid emission factors
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"
@@ -49,18 +50,18 @@
 </template>
 
 <script lang="ts">
-import { IgesItem } from "@/store/GhgReferenceIgesGridModule";
+import { GridItem } from "@/store/GhgReferenceGridModule";
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("GhgReferenceIgesGridModule", ["items"]),
+    ...mapGetters("GhgReferenceGridModule", ["items"]),
     ...mapGetters(["referenceDataDrawer"]),
   },
 })
-export default class IgesGrid extends Vue {
-  items!: IgesItem[];
+export default class GhgGrid extends Vue {
+  items!: GridItem[];
   snack = false;
   snackColor = "";
   snackText = "";
@@ -86,8 +87,8 @@ export default class IgesGrid extends Vue {
     ];
   }
 
-  public get computedItems(): IgesItem[] {
-    let newItems: IgesItem[] = [];
+  public get computedItems(): GridItem[] {
+    let newItems: GridItem[] = [];
     newItems = newItems.concat(this.items);
     newItems.sort((a, b) => {
       return a.name.localeCompare(b.name);

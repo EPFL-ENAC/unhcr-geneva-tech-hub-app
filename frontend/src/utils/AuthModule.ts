@@ -16,6 +16,8 @@ import {
 
 import { UIManager } from "./UIManager";
 
+// comes from https://github.com/Azure-Samples/ms-identity-javascript-tutorial/blob/main/1-Authentication/2-sign-in-b2c/App/authConfig.js
+
 /**
  * Configuration class for @azure/msal-browser:
  * https://azuread.github.io/microsoft-authentication-library-for-js/ref/msal-browser/modules/_src_config_configuration_.html
