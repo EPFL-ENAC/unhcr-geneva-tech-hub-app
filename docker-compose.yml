@@ -4,7 +4,7 @@ services:
   proxy:
     image: caddy:latest # TODO: remove latest
     ports:
-      - "8085:8085"
+      - "8081:8081"
     extra_hosts:
       - host.docker.internal:host-gateway
     volumes:
@@ -23,7 +23,7 @@ services:
       - ./frontend:/app
       - /app/node_modules
     ports:
-      - '8081:8081'
+      - '8088:8081'
   init-couchdb:
     image: python:3.12-alpine
     command: /entrypoint.sh

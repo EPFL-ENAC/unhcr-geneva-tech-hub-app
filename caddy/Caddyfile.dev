@@ -1,4 +1,4 @@
-http://localhost:8085 {
+http://localhost:8081 {
     handle_path /db* {
         reverse_proxy couchdb:5984
     }
@@ -8,6 +8,6 @@ http://localhost:8085 {
     }
 
     handle_path /* {
-        reverse_proxy frontend:8081
+        reverse_proxy frontend:8088
     }
 }

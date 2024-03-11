@@ -22,7 +22,7 @@ module.exports = () => {
     publicPath: "auto",
     devServer: {
       historyApiFallback: true,
-      port: 8081,
+      port: 8088,
       hot: true,
       liveReload: true,
       proxy: {
