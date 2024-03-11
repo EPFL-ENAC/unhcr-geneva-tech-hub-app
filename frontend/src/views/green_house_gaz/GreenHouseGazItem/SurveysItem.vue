@@ -251,7 +251,7 @@ export default class SurveyList extends Vue {
     },
   ];
 
-  public updateFormInput(key: string, value: any): void {
+  public updateFormInput(key: string, value: unknown): void {
     if (this.currentProject != undefined) {
       this.$set(this.currentProject, key, value);
     }

@@ -4,9 +4,10 @@ services:
     image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-frontend:${IMAGE_VERSION:-latest}
     build: !reset null
     restart: always
-  couchdb:
-    image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-couchdb:${IMAGE_VERSION:-latest}
+  azure-cron:
+    image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-azure-cron:${IMAGE_VERSION:-latest}
     build: !reset null
+    ports: !reset null
     restart: always
   couchdb-setup:
     image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-couchdb-setup:${IMAGE_VERSION:-latest}
@@ -17,8 +18,10 @@ services:
   s3_server:
     image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-s3_server:${IMAGE_VERSION:-latest}
     build: !reset null
+    ports: !reset null
     restart: always
   rest-api:
     image: ghcr.io/epfl-enac/unhcr-geneva-tech-hub-app-rest-api:${IMAGE_VERSION:-latest}
     build: !reset null
+    ports: !reset null
     restart: always

@@ -172,12 +172,7 @@ import { mapActions, mapGetters } from "vuex";
   },
 
   methods: {
-    ...mapActions("GhgModule", [
-      "addDoc",
-      "getDoc",
-      "getSite",
-      "resetDoc",
-    ]),
+    ...mapActions("GhgModule", ["addDoc", "getDoc", "getSite", "resetDoc"]),
   },
   components: {
     CountrySelect,

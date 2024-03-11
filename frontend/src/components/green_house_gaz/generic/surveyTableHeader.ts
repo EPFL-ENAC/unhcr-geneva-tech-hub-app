@@ -21,6 +21,7 @@ function n2sFormatter(n: number): string {
   return s;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ensureSurveyTableHeaders = (item: any): SurveyTableHeader => {
   // todo: implement typescript for item
   const [category, key] = item.value.split(".");
@@ -220,7 +221,7 @@ export interface EasySurveyTableHeader {
     v: SurveyInputValue,
     localInput: SurveyInput,
     ghgMapRef?: ItemReferencesMap,
-    ghgMapDefaultValue?: ItemReferencesMap,
+    ghgMapDefaultValue?: ItemReferencesMap
   ) => SurveyInput;
   formatter?: (
     v: unknown,

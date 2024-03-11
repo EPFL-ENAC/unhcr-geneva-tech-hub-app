@@ -15,11 +15,11 @@
         <v-col>
           <v-card-title>
             <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            hide-details
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
             ></v-text-field>
             <v-spacer></v-spacer>
           </v-card-title>

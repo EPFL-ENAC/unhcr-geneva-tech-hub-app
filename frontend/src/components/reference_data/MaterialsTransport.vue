@@ -191,6 +191,7 @@ export default class MaterialsTransport extends Vue {
 
   get items() {
     return this.$store.getters["SheltersTransportModuleREF/items"].filter(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (item: any) => {
         const source = this.getText(item._id.split("_")[0]);
         const destination = this.getText(item._id.split("_")[1]);

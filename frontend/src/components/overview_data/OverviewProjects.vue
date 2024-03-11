@@ -1,3 +1,4 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <v-container>
@@ -60,6 +61,7 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import BarChartOverview from "@/components/overview_data/BarChartOverview.vue";
 import { isoToRegion } from "@/utils/countriesAsList";
 
@@ -545,7 +547,7 @@ export default class OverviewProjects extends Vue {
 
   changes!: PouchDB.Core.Changes<Shelter> | undefined;
   mounted(): void {
-    this.syncDB();
+    // this.syncDB();
     this.retrieveData();
 
     // this.changes = this.db?.onChange(this.retrieveData);

@@ -2,13 +2,12 @@ import { env } from "@/config";
 import { themeColor } from "@/plugins/vuetify";
 import router from "@/router/index";
 import ConfigModule from "@/store/ConfigModule";
-import EnergyModule from "@/store/EnergyModule";
+import GhgDefaultValuesModule from "@/store/GhgDefaultValuesModule";
 import GhgModule from "@/store/GhgModule";
 import GHGReferenceBioWasteModule from "@/store/GHGReferenceBioWasteModule";
 import GHGReferencefNRB from "@/store/GHGReferencefNRB";
 import GhgReferenceIgesGridModule from "@/store/GhgReferenceIgesGridModule";
 import GhgReferenceModule from "@/store/GhgReferenceModule";
-import GhgDefaultValuesModule from "@/store/GhgDefaultValuesModule";
 import GHGReferenceNonBioWasteModule from "@/store/GHGReferenceNonBioWasteModule";
 import GhgReferenceRegionModule from "@/store/GHGReferenceRegionModule";
 import GhgReferenceSolarModule from "@/store/GHGReferenceSolarModule";
@@ -346,7 +345,6 @@ const store: StoreOptions<RootState> = {
     GHGReferencefNRB,
     UNHCRLocationModule,
     UserModule,
-    energy: EnergyModule,
   },
   plugins: [
     // store as session storage

@@ -85,8 +85,7 @@ export default class WaterSupply extends Vue {
     localItemInput: WashTruckingItemInput,
     ghgMapRef: ItemReferencesMap
   ): WashTruckingItemResults {
-    // TODO: merge compute CO2 of trucking and pumping
-    const { US_UNI, US_TYP, WACL, TR_TYP, TOT_WS, TR_VOL, fuelUsage } =
+    const { US_UNI, /* US_TYP, */ WACL, TR_TYP, TOT_WS, TR_VOL, fuelUsage } =
       localItemInput || {};
     const { REF_WSH_D, REF_WSH_G, REF_EFF_DIES, REF_EFF_PET } = ghgMapRef;
     try {

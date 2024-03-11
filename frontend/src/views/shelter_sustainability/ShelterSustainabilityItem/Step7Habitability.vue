@@ -1,3 +1,4 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <template>
   <v-form v-if="habitability" :disabled="loading">
     <component
@@ -13,6 +14,7 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import FormGroup from "@/components/shelter_sustainability/FormGroup.vue";
 import {
   ShelterForm,

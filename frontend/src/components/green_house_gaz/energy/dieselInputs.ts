@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   numberOfDaysPerYear,
   numberOfWeekPerYear,
@@ -232,7 +233,6 @@ export function dieselInputsProducedPer(
       powerSuffix = "kWh/yr";
       litersSuffix = "used per year";
       operatingHoursSuffix = "hrs/week";
-      // todo arange per week
       computeLitersFromPower = computedieselLitersFromPower;
       computeLiters = computeLitresDieselPerWeek;
       computePower = computeDieselPower;
@@ -270,13 +270,7 @@ export function dieselInputsProducedPer(
     {
       value: "input.disableDieselLiters",
       text: "Generator size and working hours known?", // Number of liters of diesel known
-      // conditional_value: [["ELE_DIES", "ELE_HYB"], [true]],
-      // conditional: ["fuelType"],
-      // conditional_type: "AND",
-      conditional_function: (
-        itemInput: SurveyInput,
-        tableHeader: SurveyTableHeader
-      ) => {
+      conditional_function: (itemInput: SurveyInput) => {
         if (
           itemInput.fuelType &&
           !["ELE_DIES", "ELE_HYB"].includes(itemInput.fuelType as string)

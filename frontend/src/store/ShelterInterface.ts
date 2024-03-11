@@ -49,7 +49,7 @@ export const imageShelterTypes = [
   "Report",
   "Other",
 ] as const;
-export type ImageShelterType = typeof imageShelterTypes[number];
+export type ImageShelterType = (typeof imageShelterTypes)[number];
 
 export interface ImageShelter {
   url: string; // path like /s3/unhcr_tss/xx

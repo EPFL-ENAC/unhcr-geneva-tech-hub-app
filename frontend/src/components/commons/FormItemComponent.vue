@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <div>
     <v-text-field
@@ -122,62 +123,6 @@
       </template>
       <template v-if="actualUnit" #append>{{ actualUnit }}</template>
     </v-combobox>
-    <form-item-component
-      v-if="type === 'range'"
-      v-model="model.val"
-      type="number"
-      :subtype="subtype"
-      :label="label"
-      :unit="unit"
-      :rules="rules"
-      :ratio="ratio"
-      :precision="precision"
-      :min="model.min"
-      :max="model.max"
-      :readonly="readonly"
-      :disabled="disabled"
-    >
-      <template v-if="!readonly && !disabled" #append-outer>
-        <v-dialog max-width="256">
-          <template #activator="{ on, attrs }">
-            <v-btn v-bind="attrs" icon v-on="on">
-              <v-icon>$mdiAccountHardHat</v-icon>
-            </v-btn>
-          </template>
-          <v-card>
-            <v-card-title>{{ label }}</v-card-title>
-            <v-card-text>
-              <v-form :disabled="!isTemplate">
-                <form-item-component
-                  v-model="model.min"
-                  type="number"
-                  :subtype="subtype"
-                  label="Minimum"
-                  :unit="unit"
-                  :rules="rules"
-                  :ratio="ratio"
-                  :precision="precision"
-                  optional
-                  @change="onRangeChanged"
-                ></form-item-component>
-                <form-item-component
-                  v-model="model.max"
-                  type="number"
-                  :subtype="subtype"
-                  label="Maximum"
-                  :unit="unit"
-                  :rules="rules"
-                  :ratio="ratio"
-                  :precision="precision"
-                  optional
-                  @change="onRangeChanged"
-                ></form-item-component>
-              </v-form>
-            </v-card-text>
-          </v-card>
-        </v-dialog>
-      </template>
-    </form-item-component>
     <country-select
       v-if="type === 'country'"
       v-model="model"
@@ -200,7 +145,6 @@ import {
   SelectValue,
   TypeType,
 } from "@/components/commons/FormItem";
-import { RangeModel } from "@/models/energyModel";
 import { checkMax, checkMin, checkRequired, Rule } from "@/utils/rules";
 import { SelectItemObject } from "@/utils/vuetify";
 import { round } from "lodash";
@@ -216,7 +160,7 @@ import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 })
 export default class FormItemComponent extends Vue {
   @VModel({ type: [String, Number, Boolean, Array, Object] })
-  model!: string | number | boolean | string[] | RangeModel | undefined;
+  model!: string | number | boolean | string[] | undefined;
   @Prop({ type: String as () => TypeType })
   readonly type!: TypeType;
   @Prop({ type: String as () => "percent" })
@@ -226,7 +170,7 @@ export default class FormItemComponent extends Vue {
   @Prop([String, Boolean])
   readonly tooltipInfo: string | boolean | undefined;
   @Prop({ type: [Object], default: () => ({}) })
-  readonly tooltipAttrs: Record<string, (boolean|number)> | undefined;
+  readonly tooltipAttrs: Record<string, boolean | number> | undefined;
   @Prop([Object, Array])
   readonly options:
     | BooleanOptions
@@ -358,15 +302,6 @@ export default class FormItemComponent extends Vue {
       return undefined;
     }
     return round((value as number) * this.actualRatio, this.actualPrecision);
-  }
-
-  onRangeChanged(): void {
-    if (typeof this.model === "object") {
-      const rangeModel = this.model as RangeModel;
-      if (rangeModel.min !== undefined && rangeModel.max !== undefined) {
-        rangeModel.val = (rangeModel.min + rangeModel.max) / 2;
-      }
-    }
   }
 }
 </script>

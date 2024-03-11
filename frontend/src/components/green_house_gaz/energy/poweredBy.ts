@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { formatNumberGhg } from "@/plugins/filters";
 import { EnergyItem } from "@/store/GhgInterface";
 import { ElectricFuel, electricFuelWithText } from "../fuelTypes";

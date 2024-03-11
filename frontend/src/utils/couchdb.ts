@@ -1,14 +1,14 @@
-import { ExistingDocument } from "@/models/couchdbModel";
-// import store from "@/store";
 import { env } from "@/config";
 import { SessionStorageKey } from "@/utils/storage";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosError, AxiosPromise, AxiosResponse } from "axios";
 import { JwtPayload } from "jsonwebtoken";
 import PouchDB from "pouchdb-browser";
 import qs from "qs";
 
-const databaseUrl: string = url(`${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_COUCHDB_URL}`);
-const designDocumentPrefix = "_design/";
+const databaseUrl: string = url(
+  `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_COUCHDB_URL}`
+);
 
 export function parseJwt(token: string): JwtPayload {
   const base64Url = token.split(".")[1];
@@ -37,11 +37,6 @@ function url(value = ""): string {
     return url.toString();
   }
 }
-export enum DatabaseName {
-  EnergyCookingFuels = "energy_cooking_fuels",
-  EnergyCookingStoves = "energy_cooking_stoves",
-  EnergySites = "energy_sites",
-}
 
 function getUrl(path: string): string {
   return `${databaseUrl}/${path}`;
@@ -66,6 +61,7 @@ export function loginDefault(username: string, password: string): AxiosPromise {
 
 export class ExpireError extends Error {
   type: Record<string, string>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(message: string, options: any) {
     // Need to pass `options` as the second parameter to install the "cause" property.
     super(message, options);
@@ -175,14 +171,11 @@ export function createSyncDatabase<T>(name: string): SyncDatabase<T> {
 }
 
 export class SyncDatabase<T> {
-  public localDB: PouchDB.Database<T>;
   public remoteDB: PouchDB.Database<T>;
-  private sync: PouchDB.Replication.Sync<T>;
   private onChangeListener: PouchDB.Core.Changes<T> | undefined;
 
   constructor(name: string) {
     const token = sessionStorage.getItem(SessionStorageKey.Token);
-    const localDB = new PouchDB<T>(name);
     const remoteDB = new PouchDB<T>(getUrl(name), {
       fetch: token
         ? (url, opts) => {
@@ -194,70 +187,10 @@ export class SyncDatabase<T> {
           }
         : undefined,
     });
-    this.sync = localDB.sync(
-      remoteDB,
-      {
-        batch_size: 5,
-        timeout: 30000,
-        batches_limit: 2,
-        since: "now",
-        live: true,
-        retry: true,
-        back_off_function(delay) {
-          if (delay === 27000 || delay === 0) {
-            return 1000;
-          }
-          return delay * 3;
-        },
-      },
-      (error, result) => {
-        if (error) {
-          console.error(error);
-        } else {
-          console.debug("sync", result);
-        }
-      }
-    );
-    this.localDB = localDB;
     this.remoteDB = remoteDB;
   }
 
-  /**
-   * @deprecated use localDB
-   */
-  get db(): PouchDB.Database<T> {
-    return this.localDB;
-  }
-
-  onChange(
-    listener: (value: PouchDB.Core.ChangesResponseChange<T>) => unknown
-  ): PouchDB.Core.Changes<T> {
-    this.onChangeListener = this.localDB.changes({
-      batch_size: 5,
-      timeout: 30000,
-      since: "now",
-      live: true,
-    });
-
-    this.onChangeListener.on("change", listener);
-    return this.onChangeListener;
-  }
-
-  async getAllDocuments(): Promise<ExistingDocument<T>[]> {
-    const result = await this.localDB.allDocs({
-      include_docs: true,
-    });
-    return result.rows.map((row) => row.doc as ExistingDocument<T>);
-  }
-
-  async getDocuments(): Promise<ExistingDocument<T>[]> {
-    return (await this.getAllDocuments()).filter(
-      (doc) => !doc._id.startsWith(designDocumentPrefix)
-    );
-  }
-
   cancel(): void {
-    this.sync.cancel();
     this.onChangeListener?.cancel();
   }
 }

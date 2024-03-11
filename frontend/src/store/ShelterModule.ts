@@ -1,13 +1,7 @@
-import { env } from "@/config";
 import { checkIfAdmin } from "@/plugins/user";
 import { getNewName, updateMetaFields } from "@/store/documentUtils";
 import { RootState } from "@/store/index";
-import {
-  ImageShelter,
-  ScoreCard,
-  Shelter,
-  ShelterState,
-} from "@/store/ShelterInterface";
+import { ScoreCard, Shelter, ShelterState } from "@/store/ShelterInterface";
 import {
   computeShelter,
   generateNewShelter,
@@ -15,7 +9,6 @@ import {
 } from "@/store/ShelterModuleUtils";
 import { Paginate } from "@/store/SheltersMaterialModule";
 import { SyncDatabase } from "@/utils/couchdb";
-import { cloneDeep } from "lodash";
 import {
   ActionContext,
   ActionTree,
@@ -47,7 +40,6 @@ const getters: GetterTree<ShelterState, RootState> = {
   countries: (s): string[] => s.countries,
 };
 
-// WARNING: WRITE on remote / READ on local
 /** Mutations */
 const mutations: MutationTree<ShelterState> = {
   INIT_DB(state) {
@@ -120,7 +112,7 @@ const actions: ActionTree<ShelterState, RootState> = {
     const localCouch = context.state.localCouch;
     const user = context.rootGetters["UserModule/user"];
     const isAdmin = checkIfAdmin(user);
-    // shelters/_design/shelter/_view/lits?include_docs=true
+    // shelters/_design/shelter/_view/list?include_docs=true
     return localCouch?.remoteDB
       .query("shelter/list", {
         keys: ["public", isAdmin ? "private" : `private_${user.name}`],

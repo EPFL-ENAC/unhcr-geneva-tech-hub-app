@@ -109,7 +109,7 @@ function removeJwtTempTokens(): void {
   sessionStorage.removeItem("challenge");
 }
 
-function removeAllOauthTokens(): void {
+export function removeAllOauthTokens(): void {
   removeJwtTempTokens();
   sessionStorage.removeItem(SessionStorageKey.Token);
   sessionStorage.removeItem(SessionStorageKey.Refresh);
@@ -331,12 +331,10 @@ const actions: ActionTree<UserState, RootState> = {
       .catch((response: Error | ExpireError) => {
         context.commit("SET_USER", generateEmptyUser());
         if (response instanceof ExpireError) {
-          // TODO: should remove token also
           context.dispatch(
             "notifyUser",
             {
               message: response,
-              // type: response.type ?? "error",
               stack: response.stack,
             },
             { root: true }
@@ -505,8 +503,15 @@ const actions: ActionTree<UserState, RootState> = {
       // if unhcr logout does not work at least, our ux will show as unlogged
       context.commit("SET_USER", generateEmptyUser());
       context.commit("UNSET_USER_LOADING");
-      const redirectURI = encodeURIComponent(window.location.origin);
-      window.location.href = `https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=${redirectURI}`;
+      // const redirectURI = encodeURIComponent(window.location.origin);
+      // window.location.href = `https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=${redirectURI}`;
+      const logoutRequest = {
+        account: window.authModule.myMSALObj.getActiveAccount(),
+        postLogoutRedirectUri:
+          window.authModule.myMSALObj.getConfiguration()?.auth?.redirectUri,
+      };
+
+      window.authModule.logout(logoutRequest);
     } else {
       try {
         await logoutCookie();

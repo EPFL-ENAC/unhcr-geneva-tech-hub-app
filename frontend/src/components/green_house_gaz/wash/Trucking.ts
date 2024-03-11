@@ -16,7 +16,7 @@ export interface WashTruckingItemInput extends SurveyInput, EnergyItem {
   US_UNI: string;
   TOT_WS: number;
   // LIT_WS: number; // replace by EnergyItem fuelUsage
-  WASH_TYPE: string
+  WASH_TYPE: string;
   WACL: number;
   TR_VOL: number;
   TR_TYP: string;
