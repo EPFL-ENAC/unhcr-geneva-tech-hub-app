@@ -58,6 +58,18 @@ services:
     depends_on:
       - couchdb
       - reverse-proxy
+  cron_couchdb:
+    image: python:3.12-alpine
+    command: /entrypoint.sh
+    env_file:
+      - ./frontend/.env
+    environment:
+      - COUCHDB_USER=${COUCHDB_USER}
+      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
+      - COUCHDB_HOST=couchdb
+    volumes:
+        - ./azure-cron/entrypoint.sh:/entrypoint.sh
+        - ./couchdb/local.ini:/local.ini
   init_couchdb:
     image: python:3.12-alpine
     command: /entrypoint.sh
