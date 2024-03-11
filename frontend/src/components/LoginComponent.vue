@@ -187,7 +187,6 @@ export function attemptSsoSilent(): void {
       "loginAsGuest",
       "logout",
       "loginToken",
-      "verifyCode",
     ]),
   },
 })
@@ -204,10 +203,6 @@ export default class LoginComponent extends Vue {
   logout!: () => AxiosPromise;
   loginAsGuest!: () => AxiosPromise;
   loginToken!: ({ token }: Record<string, string | boolean>) => AxiosPromise;
-  verifyCode!: ({
-    code,
-    code_verifier,
-  }: Record<string, string>) => AxiosPromise;
 
   passwordSecretToggle = true;
 
@@ -217,59 +212,6 @@ export default class LoginComponent extends Vue {
 
   public togglePassword(): void {
     this.passwordSecretToggle = !this.passwordSecretToggle;
-  }
-
-  public tokenFlow(token: string): Promise<void> {
-    return this.loginToken({ token })
-      .then(() => {
-        // push to current route if not current route
-        if (this.$route.name !== this.destinationRouteName) {
-          this.$router.push({ name: this.destinationRouteName });
-        }
-      })
-      .catch((error: Error) => {
-        if (this.jwtPattern.test(token)) {
-          this.error = `${error} AND Invalid token: ${token}`;
-        } else {
-          this.error = `Invalid token format or other: ${error}`;
-        }
-      });
-  }
-
-  async created(): Promise<void> {
-    const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    const idToken = hashParams.get("id_token");
-    // todo : maybe broadcast an event
-    if (idToken) {
-      await this.logout();
-      // implicit flow (DEPRECATED)
-      this.tokenFlow(idToken);
-    }
-
-    const queryParams = new URLSearchParams(window.location.search);
-    const code = queryParams.get("code");
-    const code_verifier = sessionStorage.getItem("verifier");
-    if (code || code_verifier) {
-      if (!code || !code_verifier) {
-        sessionStorage.removeItem("verifier");
-        location.search = "";
-        throw new Error("code or code_verifier missing");
-      }
-      // code flow with PKCE (new authorization mode 6th march 2022)
-      await this.logout();
-      sessionStorage.removeItem("verifier");
-      // remove query ?
-      const response = await this.verifyCode({ code, code_verifier });
-      // We remove query because we don't want to verify code two times
-      // alternative of ({page: location.pathname}, document.title, window.location.pathname
-      // without any history pushed
-      window.history.replaceState(
-        null,
-        document.title,
-        window.location.pathname
-      );
-      this.tokenFlow(response.data.id_token);
-    }
   }
 
   public get destinationRouteName(): string {
