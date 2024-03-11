@@ -647,12 +647,11 @@ interface ShelterFilters {
 }
 @media print {
   .country-list-pagination {
-  position: relative;
-  top: 64px;
-  width: 100%;
-  overflow: hidden;
-}
-  
+    position: relative;
+    top: 64px;
+    width: 100%;
+    overflow: hidden;
+  }
 }
 .country-list__actions {
   display: flex;

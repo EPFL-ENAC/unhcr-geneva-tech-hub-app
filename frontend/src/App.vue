@@ -204,7 +204,7 @@
                 padding: 0.5rem 0.75rem;
                 font-size: 0.9rem;
                 border: 0px solid rgba(255, 255, 255, 0.267);
-                pointer: cursor;
+                cursor: pointer;
               "
               >Guest</span
             ></span
@@ -836,11 +836,17 @@ export default class App extends Vue {
   }
 
   public async firstToken(payload: EventPayload): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((payload as any)?.account) {
-      window.authModule.myMSALObj.setActiveAccount((payload as any)?.account);
+      window.authModule.myMSALObj.setActiveAccount(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (payload as any)?.account
+      );
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((payload as any)?.idToken) {
       await this.loginToken({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         token: (payload as any)?.idToken,
         byPassLoading: true,
       });
@@ -853,21 +859,19 @@ export default class App extends Vue {
   async mounted(): Promise<void> {
     // add listener to msal browser https:/
     //github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/events.md
-    window.authModule.myMSALObj.addEventCallback(
-      (message: EventMessage, other: any) => {
-        // Update UI or interact with EventMessage here
-        if (message.eventType === EventType.LOGIN_SUCCESS) {
-          this.firstToken(message.payload);
-        }
-        if (message.eventType === EventType.SSO_SILENT_SUCCESS) {
-          this.firstToken(message.payload);
-        }
-        if (message.eventType === EventType.SSO_SILENT_FAILURE) {
-          console.log("not logged in, we should behave as guest", message);
-          this.loginAsGuest();
-        }
+    window.authModule.myMSALObj.addEventCallback((message: EventMessage) => {
+      // Update UI or interact with EventMessage here
+      if (message.eventType === EventType.LOGIN_SUCCESS) {
+        this.firstToken(message.payload);
       }
-    );
+      if (message.eventType === EventType.SSO_SILENT_SUCCESS) {
+        this.firstToken(message.payload);
+      }
+      if (message.eventType === EventType.SSO_SILENT_FAILURE) {
+        console.log("not logged in, we should behave as guest", message);
+        this.loginAsGuest();
+      }
+    });
     this.$vuetify.theme.dark = false; //this.$store.getters["ConfigModule/themeDark"];
     document.title = this?.title ?? "unknown";
 
@@ -1009,7 +1013,6 @@ interface Helpers {
 @media print {
   * {
     -webkit-print-color-adjust: exact; /* Chrome, Safari 6 – 15.3, Edge */
-    color-adjust: exact; /* Firefox 48 – 96 */
     print-color-adjust: exact; /* Firefox 97+, Safari 15.4+ */
   }
   .v-application .v-app-bar,

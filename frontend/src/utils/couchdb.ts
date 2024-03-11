@@ -1,5 +1,3 @@
-import { ExistingDocument } from "@/models/couchdbModel";
-// import store from "@/store";
 import { env } from "@/config";
 import { SessionStorageKey } from "@/utils/storage";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -11,7 +9,6 @@ import qs from "qs";
 const databaseUrl: string = url(
   `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_COUCHDB_URL}`
 );
-const designDocumentPrefix = "_design/";
 
 export function parseJwt(token: string): JwtPayload {
   const base64Url = token.split(".")[1];
@@ -179,7 +176,6 @@ export class SyncDatabase<T> {
 
   constructor(name: string) {
     const token = sessionStorage.getItem(SessionStorageKey.Token);
-    // const localDB = new PouchDB<T>(name);
     const remoteDB = new PouchDB<T>(getUrl(name), {
       fetch: token
         ? (url, opts) => {
@@ -192,40 +188,6 @@ export class SyncDatabase<T> {
         : undefined,
     });
     this.remoteDB = remoteDB;
-  }
-
-  /**
-   * @deprecated use localDB
-   */
-  get db(): PouchDB.Database<T> {
-    return this.localDB;
-  }
-
-  onChange(
-    listener: (value: PouchDB.Core.ChangesResponseChange<T>) => unknown
-  ): PouchDB.Core.Changes<T> {
-    this.onChangeListener = this.localDB.changes({
-      batch_size: 5,
-      timeout: 30000,
-      since: "now",
-      live: true,
-    });
-
-    this.onChangeListener.on("change", listener);
-    return this.onChangeListener;
-  }
-
-  async getAllDocuments(): Promise<ExistingDocument<T>[]> {
-    const result = await this.localDB.allDocs({
-      include_docs: true,
-    });
-    return result.rows.map((row) => row.doc as ExistingDocument<T>);
-  }
-
-  async getDocuments(): Promise<ExistingDocument<T>[]> {
-    return (await this.getAllDocuments()).filter(
-      (doc) => !doc._id.startsWith(designDocumentPrefix)
-    );
   }
 
   cancel(): void {

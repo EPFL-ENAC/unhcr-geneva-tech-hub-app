@@ -1,6 +1,5 @@
 import Confirm from "@/views/ConfirmView.vue";
 import ForgotPassword from "@/views/ForgotPasswordView.vue";
-import Login from "@/views/LoginView.vue";
 import Register from "@/views/RegisterView.vue";
 import ResetPassword from "@/views/ResetPasswordView.vue";
 import Unconfirm from "@/views/UnconfirmView.vue";

@@ -294,7 +294,10 @@ export class AuthModule {
    * Gets a token silently, or falls back to interactive popup.
    */
   private async getTokenPopup(
-    silentRequest: SilentRequest = { cacheLookupPolicy: CacheLookupPolicy.AccessTokenAndRefreshToken, scopes: ["email", "profile", "openid"] },
+    silentRequest: SilentRequest = {
+      cacheLookupPolicy: CacheLookupPolicy.AccessTokenAndRefreshToken,
+      scopes: ["email", "profile", "openid"],
+    },
     interactiveRequest: PopupRequest
   ): Promise<string | null> {
     // this function was returning accessToken, but we need idToken
@@ -327,7 +330,10 @@ export class AuthModule {
    * Gets a token silently, or falls back to interactive redirect.
    */
   private async getTokenRedirect(
-    silentRequest: SilentRequest = { cacheLookupPolicy: CacheLookupPolicy.AccessTokenAndRefreshToken, scopes: ["email", "profile", "openid"] },
+    silentRequest: SilentRequest = {
+      cacheLookupPolicy: CacheLookupPolicy.AccessTokenAndRefreshToken,
+      scopes: ["email", "profile", "openid"],
+    },
     interactiveRequest: RedirectRequest
   ): Promise<string | null> {
     try {

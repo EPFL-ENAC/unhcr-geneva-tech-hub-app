@@ -1,4 +1,4 @@
-import { env } from "@/env";
+import { env } from "@/config";
 import router from "@/router";
 import Vue from "vue";
 import VueGtag from "vue-gtag";

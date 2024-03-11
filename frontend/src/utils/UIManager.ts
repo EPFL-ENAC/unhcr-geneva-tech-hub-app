@@ -71,6 +71,7 @@ export class UIManager {
       alert("Your mailbox is empty!");
     } else {
       UIManager.clearTabs();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mailInfo.value.slice(0, 10).forEach((d: any, i) => {
         UIManager.createAndAppendListItem(d, i);
         UIManager.createAndAppendContentItem(d, i);
@@ -78,6 +79,7 @@ export class UIManager {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static createAndAppendListItem(d: any, i: number) {
     const listItem = document.createElement("a");
     listItem.setAttribute("class", "list-group-item list-group-item-action");
@@ -93,6 +95,7 @@ export class UIManager {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static createAndAppendContentItem(d: any, i: number) {
     const contentItem = document.createElement("div");
     contentItem.setAttribute("class", "tab-pane fade");

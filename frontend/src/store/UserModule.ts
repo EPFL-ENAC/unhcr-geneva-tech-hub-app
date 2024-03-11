@@ -507,7 +507,8 @@ const actions: ActionTree<UserState, RootState> = {
       // window.location.href = `https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=${redirectURI}`;
       const logoutRequest = {
         account: window.authModule.myMSALObj.getActiveAccount(),
-        postLogoutRedirectUri: window.authModule.myMSALObj.getConfiguration()?.auth?.redirectUri,
+        postLogoutRedirectUri:
+          window.authModule.myMSALObj.getConfiguration()?.auth?.redirectUri,
       };
 
       window.authModule.logout(logoutRequest);
