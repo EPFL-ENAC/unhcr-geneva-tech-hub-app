@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.11.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.10.0...v1.11.0) (2024-03-11)
+
+
+### Features
+
+* **frontend:** no more weird oauth code verification ([efa317a](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/efa317ae170af09f23270d4e3d7abac61618790b))
+
 ## [1.10.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.9.1...v1.10.0) (2024-03-11)
 
 
