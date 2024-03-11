@@ -14,3 +14,5 @@ global:
       VUE_APP_COUCHDB_URL: "/db"
       VUE_APP_API_URL: "/api"
       VUE_APP_AZURE_CONTAINER_PREFIX: "https://satimsuatweu.blob.core.windows.net/tss"
+      VUE_APP_AUTH_TENANT_ID: "e5c37981-6664-4134-8a0c-6543d2af80be"
+      VUE_APP_AUTH_CLIENT_ID: "064dd177-d236-4613-b9d4-158aa4172ba5"

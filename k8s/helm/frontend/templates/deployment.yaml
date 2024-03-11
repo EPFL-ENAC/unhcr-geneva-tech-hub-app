@@ -48,3 +48,13 @@ spec:
             configMapKeyRef:
               name: tss-configmap
               key: VUE_APP_AZURE_CONTAINER_PREFIX
+        - name: VUE_APP_AUTH_TENANT_ID
+          valueFrom:
+            configMapKeyRef:
+              name: tss-configmap
+              key: VUE_APP_AUTH_TENANT_ID
+        - name: VUE_APP_AUTH_CLIENT_ID
+          valueFrom:
+            configMapKeyRef:
+              name: tss-configmap
+              key: VUE_APP_AUTH_CLIENT_ID
