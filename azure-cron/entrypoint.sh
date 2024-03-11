@@ -68,6 +68,7 @@ rm jwt_keys.json
 
 # reload configuration
 # POST /_node/nonode@nohost/_config/_reload 
-curl -X POST "http://${COUCHDB_USER}:${COUCHDB_PASSWORD}@${COUCHDB_HOST}:5984/_node/_local/_config/refresh"
+# not necessary, keeping as a reference for future use
+# curl -X POST "http://${COUCHDB_USER}:${COUCHDB_PASSWORD}@${COUCHDB_HOST}:5984/_node/_local/_config/_reload"
 
 echo "end of configuration jwt_keys update";
