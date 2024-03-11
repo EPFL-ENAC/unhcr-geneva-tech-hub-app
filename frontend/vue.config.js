@@ -2,7 +2,12 @@ module.exports = () => {
   const dbKey = `^${process.env.BASE_URL}db`;
   const apiKey = `^${process.env.BASE_URL}api`;
   const s3Key = `^${process.env.BASE_URL}s3`;
+  const configBase = {};
+  if (process.env.NODE_ENV === "production") {
+    configBase.publicPath = "auto";
+  }
   return {
+    ...configBase,
     configureWebpack: {
       devtool: "source-map",
       experiments: {
@@ -20,7 +25,6 @@ module.exports = () => {
       sourceMap: true,
     },
     transpileDependencies: ["vuetify", "leaflet", "echarts"],
-    publicPath: "auto",
     devServer: {
       // https://github.com/webpack/webpack-dev-server/issues/1850#issuecomment-490926569
       // host: "127.0.0.1",
