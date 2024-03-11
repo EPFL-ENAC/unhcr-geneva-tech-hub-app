@@ -7,8 +7,7 @@ import {
 } from "@/utils/couchdb";
 import { SessionStorageKey } from "@/utils/storage";
 
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 
 import { env } from "@/config";
 import {
@@ -48,16 +47,6 @@ export enum Roles {
   user = "user",
   admin = "admin",
   _admin = "_admin", // dbAdmin
-  specialist = "specialist",
-  // "author" // does not exist, it's in the document if user is in the users field
-}
-interface AzureError {
-  correlation_id: string;
-  error: string;
-  error_codes: number[];
-  error_description: string;
-  timestamp: string;
-  trade_id: string;
 }
 
 export const GUEST_NAME = "guest";
@@ -116,13 +105,6 @@ export function removeAllOauthTokens(): void {
   sessionStorage.removeItem(SessionStorageKey.Access);
 }
 
-function setuptokens(response: AxiosResponse): void {
-  const { id_token, refresh_token, access_token } = response.data;
-  sessionStorage.setItem(SessionStorageKey.Token, id_token);
-  sessionStorage.setItem(SessionStorageKey.Refresh, refresh_token);
-  sessionStorage.setItem(SessionStorageKey.Access, access_token);
-  removeJwtTempTokens();
-}
 /** Getters */
 const getters: GetterTree<UserState, RootState> = {
   user: (s): CouchUser => s.user,
@@ -160,28 +142,6 @@ const mutations: MutationTree<UserState> = {
   },
 };
 
-function handleAzureError(
-  context: ActionContext<UserState, RootState>,
-  error: AxiosError<unknown, unknown> | unknown
-): void {
-  if (axios.isAxiosError(error) && error.response?.data) {
-    const data: AzureError = error?.response?.data as AzureError;
-    context.dispatch(
-      "notifyUser",
-      {
-        title: `${data.error}`,
-        message: `${data?.error_description ?? "unknown error_description"}`,
-        stack: JSON.stringify(data),
-        type: "error",
-      },
-      { root: true }
-    );
-    // remove token because of error
-    removeAllOauthTokens();
-  }
-  throw error;
-}
-
 /** Action */
 const actions: ActionTree<UserState, RootState> = {
   login: async (
@@ -207,114 +167,6 @@ const actions: ActionTree<UserState, RootState> = {
       .finally(() => {
         context.commit("UNSET_USER_LOADING");
       });
-  },
-  verifyCode: async (
-    context: ActionContext<UserState, RootState>,
-    { code, code_verifier }
-  ) => {
-    const state = sessionStorage.getItem("state") ?? "";
-    try {
-      const suffix = `${env.BASE_URL}auth`;
-      const response = await axios.post(
-        `https://login.microsoftonline.com/${env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/token`,
-        new URLSearchParams({
-          client_id: env.VUE_APP_AUTH_CLIENT_ID,
-          grant_type: "authorization_code",
-          code,
-          code_verifier, // web_message ?
-          state,
-          redirect_uri: window.location.origin + suffix,
-        }),
-        {
-          headers: {
-            Accept: "application/x-www-form-urlencoded",
-          },
-          withCredentials: false,
-        }
-      );
-      setuptokens(response);
-      return response;
-    } catch (error: AxiosError<unknown, unknown> | unknown) {
-      handleAzureError(context, error);
-    }
-  },
-  refreshToken: async (
-    context: ActionContext<UserState, RootState>,
-    { byPassLoading } = { byPassLoading: true }
-  ) => {
-    try {
-      const refresh_token =
-        sessionStorage.getItem(SessionStorageKey.Refresh) ?? undefined;
-      if (refresh_token === undefined) {
-        return;
-      }
-      const response = await axios.post(
-        `https://login.microsoftonline.com/${env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/token`,
-        new URLSearchParams({
-          client_id: env.VUE_APP_AUTH_CLIENT_ID,
-          grant_type: "refresh_token",
-          refresh_token,
-        }),
-        {
-          headers: {
-            Accept: "application/x-www-form-urlencoded",
-          },
-          withCredentials: false,
-        }
-      );
-      setuptokens(response);
-      await context.dispatch("loginToken", {
-        token: response.data.id_token,
-        byPassLoading: true,
-      });
-
-      await context.dispatch(
-        "notifyUser",
-        {
-          title: `refresh token:`,
-          message: `Successfully refreshed token for user: ${JSON.stringify(
-            context.getters?.user?.name
-          )}`,
-          byPassLoading,
-          type: "info",
-        },
-        { root: true }
-      );
-    } catch (error: AxiosError<unknown, unknown> | unknown) {
-      handleAzureError(context, error);
-    }
-  },
-  silentLoginToken: async (
-    context: ActionContext<UserState, RootState>,
-    { byPassLoading }
-  ) => {
-    if (!byPassLoading) {
-      context.commit("SET_USER_LOADING");
-    }
-    // not working because response_type id_token, token was not allowed;
-    try {
-      const suffix =
-        window.location.hostname === "localhost" ? "" : `${env.BASE_URL}auth`;
-      const url: URL = new URL(
-        `https://login.microsoftonline.com/${env.VUE_APP_AUTH_TENANT_ID}/oauth2/v2.0/authorize`
-      );
-      url.searchParams.append("client_id", env.VUE_APP_AUTH_CLIENT_ID);
-      url.searchParams.append("nonce", uuidv4());
-      url.searchParams.append("response_type", "token id_token");
-      url.searchParams.append("redirect_uri", window.location.origin + suffix);
-      const state = uuidv4();
-      url.searchParams.append("state", state);
-      sessionStorage.setItem("state", state);
-      url.searchParams.append("scope", "openid email profile offline_access");
-      url.searchParams.append("response_mode", "web_message"); // web_message ?
-      url.searchParams.append("prompt", "none");
-      const response = await axios.get(url.href);
-
-      setuptokens(response);
-      return response;
-    } catch (error: AxiosError<unknown, unknown> | unknown) {
-      handleAzureError(context, error);
-    }
   },
   loginToken: async (
     context: ActionContext<UserState, RootState>,

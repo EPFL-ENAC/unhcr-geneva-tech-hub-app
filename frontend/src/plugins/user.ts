@@ -20,9 +20,7 @@ interface ObjWithUsersField {
 }
 const USER_ADMIN = "admin";
 const DB_ADMIN = "_admin";
-const SPECIALIST = "specialist";
 const USER = "user";
-const SHELTER = "shelter";
 
 export function checkIfAdmin(user: CouchUser) {
   // either we have the role 'admin' or '_admin'
@@ -130,9 +128,7 @@ export default new (class User {
       const rights = {
         UserAdmin: user.loaded && (user.roles?.includes(USER_ADMIN) ?? false),
         DBAdmin: user.loaded && (user.roles?.includes(DB_ADMIN) ?? false),
-        Specialist: user.loaded && (user.roles?.includes(SPECIALIST) ?? false),
         User: user.loaded && (user.roles?.includes(USER) ?? false),
-        ShelterUser: user.loaded && (user.roles?.includes(SHELTER) ?? false),
         OauthHasRefreshToken:
           sessionStorage.getItem(SessionStorageKey.Refresh) !== undefined,
         Guest: user.loaded && user.name === GUEST_NAME,

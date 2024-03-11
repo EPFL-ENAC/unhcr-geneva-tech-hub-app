@@ -7,13 +7,7 @@
     </v-row>
     <v-row v-if="$userIs('LoggedIn')">
       <v-col v-for="app in Apps" :key="app.title">
-        <v-hover
-          v-if="
-            ($userIs('ShelterUser') && app.to === 'ShelterSustainability') ||
-            !$userIs('ShelterUser')
-          "
-          v-slot="{ hover }"
-        >
+        <v-hover v-slot="{ hover }">
           <v-card
             class="mx-auto d-flex flex-column"
             outlined
