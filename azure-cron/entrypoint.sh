@@ -20,12 +20,12 @@ if [ -z "$COUCHDB_HOST" ]; then
   exit 1;
 fi
 
-echo "run apk update and install openssl, sed, curl, jq";
-apk update;
-apk add openssl;
-apk add --update sed;
-apk add curl;
-apk add jq;
+# echo "run apk update and install openssl, sed, curl, jq";
+# apk update;
+# apk add openssl;
+# apk add --update sed;
+# apk add curl;
+# apk add jq;
 # have tenand-id in env
 # get json from https://login.microsoftonline.com/<tenant-id>/discovery/v2.0/keys
 
@@ -71,4 +71,6 @@ rm jwt_keys.json
 # not necessary, keeping as a reference for future use
 # curl -X POST "http://${COUCHDB_USER}:${COUCHDB_PASSWORD}@${COUCHDB_HOST}:5984/_node/_local/_config/_reload"
 
-echo "end of configuration jwt_keys update";
+echo "end of configuration jwt_keys update $(date)";
+
+[ "$#" -eq 0 ] && crond -f -l 8 -L /var/log/cron.log || exec "$@"

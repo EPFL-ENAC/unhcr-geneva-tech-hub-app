@@ -58,19 +58,18 @@ services:
     depends_on:
       - couchdb
       - reverse-proxy
-  cron_couchdb:
-    image: python:3.12-alpine
-    command: /entrypoint.sh
+  azure-cron:
+    build: azure-cron
     env_file:
       - ./frontend/.env
     environment:
       - COUCHDB_USER=${COUCHDB_USER}
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
       - COUCHDB_HOST=couchdb
-    volumes:
-        - ./azure-cron/entrypoint.sh:/entrypoint.sh
-        - ./couchdb/local.ini:/local.ini
-  init_couchdb:
+    depends_on:
+        couchdb:
+          condition: service_healthy
+  init-couchdb:
     image: python:3.12-alpine
     command: /entrypoint.sh
     env_file:
@@ -96,7 +95,7 @@ services:
       - "traefik.http.services.couchdb.loadbalancer.server.port=5984"
       - "traefik.http.middlewares.test-compress.compress=true"
     depends_on:
-        init_couchdb:
+        init-couchdb:
           condition: service_completed_successfully
     expose:
       - '5984'
@@ -139,16 +138,6 @@ services:
       # - ./data-setup/.s3cfg:/root/.s3cfg
     depends_on:
       - nginx-minio
-  azure-cron:
-    container_name: azure-cron
-    build: ./azure-cron
-    init: true
-    environment:
-      - CUSTOM_ENV_VAR=foobar
-    volumes:
-      - ./azure-cron/cron-tab.txt:/var/spool/cron/crontabs/root
-    depends_on:
-      - couchdb
   rest-api:
     build: ./rest-api
     env_file:
