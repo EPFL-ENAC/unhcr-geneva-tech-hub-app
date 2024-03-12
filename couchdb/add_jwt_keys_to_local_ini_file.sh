@@ -38,5 +38,8 @@ cat  local.ini | sed '/^\[jwt_keys\]/,/^\\[logs\]/{/^\[jwt_keys\]/!{/^\\[logs\]/
 cat local.ini.temp jwt_keys.ini > local.ini
 rm local.ini.temp
 rm jwt_keys.ini
+rm $temp_file
+rm *.pem
+rm *.cer
 
 echo "end of configuration file update";
