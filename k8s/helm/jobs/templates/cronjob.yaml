@@ -101,3 +101,4 @@ spec:
                     key: COUCHDB_USER
               - name: JOB_NAME
                 value: "2"
+          restartPolicy: OnFailure
