@@ -1,0 +1,216 @@
+_id,name,value
+AF,Afghanistan,0.12048
+AL,Albania,0.02344
+DZ,Algeria,0.48549
+AS,American Samoa,0.6875
+AO,Angola,0.19598
+AG,Antigua and Barbuda,0.65714
+AR,Argentina,0.3639
+AM,Armenia,0.22268
+AW,Aruba,0.5914
+AU,Australia,0.53303
+AT,Austria,0.14757
+AZ,Azerbaijan,0.46958
+BS,Bahamas (the),0.69811
+BH,Bahrain,0.49402
+BD,Bangladesh,0.55288
+BB,Barbados,0.64486
+BY,Belarus,0.4259
+BE,Belgium,0.15692
+BZ,Belize,0.48438
+BJ,Benin,0.66667
+BM,Bermuda,0
+BT,Bhutan,0.02444
+BO,Bolivia,0.32389
+BA,Bosnia Herzegovina,0.50896
+BW,Botswana,0.79452
+BR,Brazil,0.15865
+BN,Brunei Darussalam,0.49359
+BG,Bulgaria,0.35433
+BF,Burkina Faso,0.61143
+BI,Burundi,0.25
+CV,Cabo Verde,0.6
+KH,Cambodia,0.40046
+CM,Cameroon,0.27826
+CA,Canada,0.12646
+KY,Cayman Islands (the),0.68493
+CF,Central African Republic (the),0
+TD,Chad,0.67742
+CL,Chile,0.41688
+CN,China,0.54497
+CO,Colombia,0.176
+KM,Comoros (the),0.71429
+CD,Congo (the Democratic Republic of the),0.02536
+CG,Congo (the),0.39552
+CK,Cook Islands (the),0.4
+CR,Costa Rica,0.03305
+CI,Cote d'Ivoire,0.41075
+HR,Croatia,0.21098
+CU,Cuba,0.65468
+CY,Cyprus,0.59961
+CZ,Czechia,0.40559
+DK,Denmark,0.22142
+DJ,Djibouti,0.66667
+DM,Dominica,0.52941
+DO,Dominican Republic (the),0.5498
+EC,Ecuador,0.15063
+EG,Egypt,0.44828
+SV,El Salvador,0.18598
+GQ,Equatorial Guinea,0.49296
+ER,Eritrea,0.68889
+EE,Estonia,0.48122
+SZ,Eswatini,0.18919
+ET,Ethiopia,0.02519
+FK,Falkland Islands (the) [Malvinas],0.5
+FO,Faroe Islands (the),0.42857
+FJ,Fiji,0.28947
+FI,Finland,0.14554
+FR,France,0.06739
+GF,French Guiana,0
+PF,French Polynesia,0.47143
+GA,Gabon,0.39738
+GM,Gambia (the),0.7
+GE,Georgia,0.11155
+DE,Germany,0.36442
+GH,Ghana,0.3612
+GI,Gibraltar,0
+GR,Greece,0.35334
+GL,Greenland,0.13333
+GD,Grenada,0.71429
+GP,Guadeloupe,0
+GU,Guam,0.67033
+GT,Guatemala,0.30471
+GN,Guinea,0.20863
+GW,Guinea-Bissau,0.75
+GY,Guyana,0.64228
+HT,Haiti,0.60606
+HN,Honduras,0.37396
+HK,Hong Kong,0.60993
+HU,Hungary,0.23304
+IS,Iceland,0.02856
+IN,India,0.63761
+ID,Indonesia,0.62316
+IR,Iran (Islamic Republic of),0.48391
+IQ,Iraq,0.53136
+IE,Ireland,0.36372
+IL,Israel,0.53757
+IT,Italy,0.34079
+JM,Jamaica,0.53793
+JP,Japan,0.48932
+JO,Jordan,0.39113
+KZ,Kazakhstan,0.6411
+KE,Kenya,0.08622
+KI,Kiribati,0.66667
+KP,Korea (the Democratic People's Republic of),0.10242
+XK,Kosovo,0.767
+KW,Kuwait,0.57717
+KG,Kyrgyzstan,0.10443
+LA,Lao People's Democratic Republic (the),0.24218
+LV,Latvia,0.22393
+LB,Lebanon,0.6631
+LS,Lesotho,0.02
+LR,Liberia,0.30435
+LY,Libya,0.55885
+LT,Lithuania,0.2446
+LU,Luxembourg,0.18699
+MO,Macao,0.49153
+MG,Madagascar,0.48325
+MW,Malawi,0.1338
+MY,Malaysia,0.54861
+MV,Maldives,0.65152
+ML,Mali,0.46313
+MT,Malta,0.44144
+MQ,Martinique,0
+MR,Mauritania,0.5266
+MU,Mauritius,0.61111
+MX,Mexico,0.40232
+MD,Moldova,0.63718
+MN,Mongolia,0.63343
+ME,Montenegro,0.32626
+MS,Montserrat,1
+MA,Morocco,0.63075
+MZ,Mozambique,0.12663
+MM,Myanmar,0.3308
+NA,Namibia,0.06369
+NR,Nauru,0.75
+NP,Nepal,0.02451
+NL,Netherlands,0.3887
+NC,New Caledonia,0.61012
+NZ,New Zealand,0.14003
+NI,Nicaragua,0.35421
+NE,Niger (the),0.62222
+NG,Nigeria,0.37687
+NU,Niue,0
+MK,North Macedonia,0.49002
+NO,Norway,0.02755
+OM,Oman,0.48824
+PK,Pakistan,0.36605
+PS, State of Palestine,0.46512
+PA,Panama,0.15268
+PG,Papua New Guinea,0.52675
+PY,Paraguay,0.02549
+PE,Peru,0.23065
+PH,Philippines (the),0.59385
+PL,Poland,0.66012
+PT,Portugal,0.2191
+PR,Puerto Rico,0.61239
+QA,Qatar,0.49021
+RE,Reunion,0
+RO,Romania,0.25588
+RU,Russian Federation (the),0.35382
+RW,Rwanda,0.29412
+SH,Saint Helena,0
+KN,Saint Kitts and Nevis,0.68182
+LC,Saint Lucia,0.68571
+PM,Saint Pierre and Miquelon,0.8
+VC,Saint Vincent and the Grenadines,0.5
+WS,Samoa,0.47059
+ST,Sao Tome and Principe,0.6
+SA,Saudi Arabia,0.57345
+SN,Senegal,0.52313
+RS,Serbia,0.54357
+SC,Seychelles,0.61539
+SL,Sierra Leone,0.04762
+SG,Singapore,0.48794
+SK,Slovakia,0.16959
+SI,Slovenia,0.23861
+SB,Solomon Islands,0.72727
+SO,Somalia,0.63415
+ZA,South Africa,0.71488
+KR,South Korea,0.46005
+SS,South Sudan,0.68421
+ES,Spain,0.19386
+LK,Sri Lanka,0.50153
+SD,Sudan (the),0.28813
+SR,Suriname,0.35644
+SE,Sweden,0.04581
+CH,Switzerland,0.04152
+SY,Syrian Arab Republic (the),0.54117
+TW,Taiwan,0.57329
+TJ,Tajikistan,0.08363
+TZ,United Republic of Tanzania,0.36675
+TH,Thailand,0.50594
+TL,Timor-Leste,0.69811
+TG,Togo,0.46032
+TO,Tonga,0.625
+TT,Trinidad and Tobago,0.49141
+TN,Tunisia,0.46823
+TR,Turkey,0.4304
+TM,Turkmenistan,0.49019
+TC,Turks and Caicos Islands (the),0.7037
+UG,Uganda,0.05227
+UA,Ukraine,0.24158
+AE,United Arab Emirates,0.43766
+GB,United Kingdom,0.27361
+US,United States of America,0.37926
+UY,Uruguay,0.1574
+UZ,Uzbekistan,0.50541
+VU,Vanuatu,0.57143
+VE,Venezuela (Bolivarian Republic of),0.21248
+VN,Viet Nam,0.44816
+VG,Virgin Islands (British),0.71429
+VI,Virgin Islands (U.S.),0.68571
+EH,Western Sahara,0
+YE,Yemen,0.55966
+ZM,Zambia,0.0847
+ZW,Zimbabwe,0.39228
