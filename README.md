@@ -2,8 +2,12 @@
 _Last update: March 2024_
 
 ## Description
+
 The UNHCR TSS Apps comprise 2 tools : GHG Calculator & Shelter Sustainability.
 They operate independantly, and rely on different databases (see [Updating contents](#updating-contents-csvs-databases-etc))
+
+
+The GHG Calculator relies on 5 databases for its calculations. These databases can be accessed by clicking on the sandwich icon at the top right of the tool. Each database will be described below. The GHG Calculator also contains a Guidance Manual, tutorial videos and Life Cycle Assessment (LCA) reports. These information sources are accessible via the question mark icon at the top right of the tool. The information sources are static and are described in the Static Files section below.
 
 ## Contributors & maintainers
 The tools have been conceived by [EPFL Essential Tech](https://www.essentialtech.ch/) and implemented by [EPFL ENAC-IT4R](https://www.epfl.ch/schools/enac/category/research/enac-it4research/) between 2022 and March 2024, with the codebase accessible at [https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/).
@@ -33,7 +37,7 @@ classDef Databases stroke:#000,stroke-width:1px,fill:#dfdffc,color:black,font-si
 classDef App stroke:#000,stroke-width:1px,fill:#c1fbc1,color:black,font-size:30px,padding:10px
 ```
 
-TODO: Cara Reference Data table with update frequencies
+TODO: @ctobin111 Reference Data table with update frequencies
 
 ### Datasets
 
@@ -72,6 +76,16 @@ TODO: Cara Reference Data table with update frequencies
 
 ### Static files (documents and videos)
 The static files (pdfs, videos, images, etc) are the User's guide manual and their associated videos and every pdfs used in the interface (not uploaded by an app user)
+#### GHG Static Files:
+- Guidance Manual
+- Tutorial videos (9)
+- Life Cycle Assessment reports (5)
+- Solid Waste Composition Examples for Specific Displacement Contexts - accessible by going into the WASH category - Domestic Solid Waste Module and clicking on Example Waste Composition and Generation for Displacement Contexts (@Pierre, can we put a link)
+
+#### Shelter Static Files:
+- Guidance Manual
+- Tutorial videos
+
 
 #### How to retrieve and setup
   - content: https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-11-23T100540Z/s3_cdn_dump.tar.gz 
@@ -201,7 +215,7 @@ make setup-database
 - add the role 'admin' in the CouchDB user object
 
 #### How to make an AZURE AD user admin
-* UNHCR users may request admin right to UNICC, providing [TODO: What do they need to provide? Or make a new project,right? To Double check]
+* UNHCR users may request admin right to UNICC, providing [TODO: @ctobin111 What do they need to provide? Or make a new project,right? To Double check]
 * Developers must list Azure admins in these 3 files :
   - `couchdb-setup/bootstrap/ghg_projects_1696578512055758/_design/project/validate_doc_update.js`
   - `couchdb-setup/bootstrap/shelter_projects_1698666594213623/_design/shelter/validate_doc_update.js`
@@ -228,7 +242,7 @@ Description: at app start up we check that we're already authenticated
   1) first we start a spinner
   - CouchDB authentication has priority (we use the Authorization header via cookie AuthSession http-Only samesite only)
   - If we're not already authenticated with Couchdb, we check if we have a token on the session storage, if that's the case, we store the azure user in session storage and we do nothing
-    - What may happen is that we have a token which has expired. In that case, we should do nothing to not trigger errors (despite the fact that the CouchDB session API will return an http error. TODO check that)
+    - What may happen is that we have a token which has expired. In that case, we should do nothing to not trigger errors (despite the fact that the CouchDB session API will return an http error.)
   2) if we're not logged in (nor session storage JWT (azure) nor cookie (couchdb))
   3) we want to do a sso silent login to check that we're not already logged in Azure
     -> if we're not logged in (sso failure) --> we're a guest user
@@ -252,9 +266,6 @@ sequenceDiagram
     Spinner--xEndOfFlow: Stop flow
 
 ```
-
-
-
 
 ## Codebase structure & set-up
 
