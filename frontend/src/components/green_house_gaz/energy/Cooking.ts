@@ -62,7 +62,7 @@ import {
 import { computeCO2costElectric } from "./poweredBy";
 
 export interface EnergyCookingItemInput extends SurveyInput, EnergyItem {
-  numberOfCookstove?: number; // computed based on % of HH and stuffs
+  numberOfCookstove?: number; // computed based on % of households and stuffs
   cookstove: string; // type fo cookstove
   image?: string; // image of cookstove
   fuelUsage?: number; // [kg/day or L/day]
@@ -521,12 +521,12 @@ export function headers(
       text: (localInput: EnergyCookingItemInput) => {
         let result = "Fuel per day (kg/day for biomass)";
         const biomassFuelsText =
-          "Biomass used per HH per day (kg/day for biomass)";
-        const liquidFuelsText = "Fuel use per HH per day  (L/day)";
-        const gasFuelsText = "Fuel use per HH per day (m3/day)";
-        const lpgFuelsText = "Fuel use per HH per day (kg/day)";
-        const electricFuelsText = "Estimated kWh/day/HH";
-        const thermalFuelsText = "Estimated kWh/day/HH";
+          "Biomass used per household per day (kg/day for biomass)";
+        const liquidFuelsText = "Fuel use per household per day  (L/day)";
+        const gasFuelsText = "Fuel use per household per day (m3/day)";
+        const lpgFuelsText = "Fuel use per household per day (kg/day)";
+        const electricFuelsText = "Estimated kWh/day/household";
+        const thermalFuelsText = "Estimated kWh/day/household";
 
         const refTexts: {
           readonly fuelTypes: readonly AllFuel[];
@@ -588,7 +588,7 @@ export function headers(
       value: "input.renewablePower", // maybe like in DieselGeneratorWithoutLitres
       conditional_value: ["THE"],
       disabled: false,
-      text: `Solar thermal (kWh/year/HH) estimated`,
+      text: `Solar thermal (kWh/year/household) estimated`,
       formatter: (v: number) => {
         return formatNumberGhg(v);
       },
@@ -601,7 +601,7 @@ export function headers(
         return localInput;
       },
       conditional: "fuelType",
-      suffix: "kWh/year/HH",
+      suffix: "kWh/year/household",
       style: {
         cols: "12",
       },
@@ -715,8 +715,8 @@ export function headers(
       value: "input.gridPower", // maybe like in DieselGeneratorWithoutLitres
       conditional_value: ["ELE_GRID", "ELE_HYB"],
       conditional: "fuelType",
-      text: "Estimated kWh/day/HH for national grid",
-      suffix: "kWh/day/HH",
+      text: "Estimated kWh/day/household for national grid",
+      suffix: "kWh/day/household",
       style: {
         cols: "12",
       },
@@ -812,7 +812,7 @@ function getLocalFNRB(
   return localFNRB;
 }
 
-// this.project.totalHH
+// this.project.totalHH (total households)
 // this.project.countryCode
 export function generateComputeItem(
   countryCode: string,

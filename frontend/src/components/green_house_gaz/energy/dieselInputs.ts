@@ -432,7 +432,9 @@ export function dieselInputsProducedPer(
       computeResults: true,
       // TODO: beware for lighting it should be per hh per day like cookstove
       // but for facility it's not per hh
-      text: `Liters of diesel ${litersSuffix}${cookingMode ? "/HH" : ""}`,
+      text: `Liters of diesel ${litersSuffix}${
+        cookingMode ? "/household" : ""
+      }`,
       suffix: "l",
       style: {
         cols: "12",
