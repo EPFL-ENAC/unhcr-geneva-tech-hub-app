@@ -19,7 +19,7 @@ export function computeCO2CostEnergy(
   }
   result += ((localItem?.fuelUsage ?? 0) * REF_EFF_DIES?.value) / 1000;
 
-  // FYI, some countries are not in the IGES_GRID in MWH should be kWh
+  // FYI, some countries are not in the grid_emission_factors in MWH should be kWh
   // kWh * (tcO2/MWh) / 1000 == tco2e
   // because if 1 ton per megahw then we will have 1 ton per 1000 kWh
   // then 1/1000 ton per kWh

@@ -16,6 +16,8 @@ import {
 
 import { UIManager } from "./UIManager";
 
+// comes from https://github.com/Azure-Samples/ms-identity-javascript-tutorial/blob/main/1-Authentication/2-sign-in-b2c/App/authConfig.js
+
 /**
  * Configuration class for @azure/msal-browser:
  * https://azuread.github.io/microsoft-authentication-library-for-js/ref/msal-browser/modules/_src_config_configuration_.html
@@ -37,19 +39,21 @@ const MSAL_CONFIG: Configuration = {
         if (containsPii) {
           return;
         }
-        switch (level) {
-          case LogLevel.Error:
-            console.error(message);
-            return;
-          case LogLevel.Info:
-            console.info(message);
-            return;
-          case LogLevel.Verbose:
-            console.debug(message);
-            return;
-          case LogLevel.Warning:
-            console.warn(message);
-            return;
+        if (env.VUE_APP_ENVIRONEMENT === "development") {
+          switch (level) {
+            case LogLevel.Error:
+              console.error(message);
+              return;
+            case LogLevel.Info:
+              console.info(message);
+              return;
+            case LogLevel.Verbose:
+              console.debug(message);
+              return;
+            case LogLevel.Warning:
+              console.warn(message);
+              return;
+          }
         }
       },
     },
@@ -118,7 +122,7 @@ export class AuthModule {
     try {
       loginHint = JSON.parse(localStorage.auth).me.email;
     } catch {
-      console.log("No login hint found");
+      this.myMSALObj.getLogger().warning("No login hint found");
     }
     this.silentLoginRequest = {
       loginHint,

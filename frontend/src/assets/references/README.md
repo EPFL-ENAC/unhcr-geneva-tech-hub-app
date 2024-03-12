@@ -6,7 +6,7 @@
 - ghg_fnrb
 - solar_averaged
 - unhcr_location
-- iges_grid
+- grid_emission_factors
 
 ## For Shelter
 everything (which means materials.json and transports.json)
@@ -18,7 +18,7 @@ everything (which means materials.json and transports.json)
 - ghg_fnrb.json // used by frontend/src/store/GHGReferencefNRB.ts
 - solar_averaged.json // used by frontend/src/store/GHGReferenceSolarModule.ts ( INFO page )
 - unhcr_location.json // frontend/src/store/UNHCRLocationModule.ts
-- iges_grid.json // used by frontend/src/store/GhgModule.ts via frontend/src/store/GhgReferenceIgesGridModule.ts
+- grid_emission_factors.json // used by frontend/src/store/GhgModule.ts via frontend/src/store/GhgReferenceGridModule.ts
 - ghg_ef_mixed_biowaste_list.json // used by frontend/src/store/GHGReferenceBioWasteModule.ts
 - ghg_ef_mixed_non_biowaste_list.json // used by frontend/src/store/GHGReferenceNonBioWasteModule.ts
 

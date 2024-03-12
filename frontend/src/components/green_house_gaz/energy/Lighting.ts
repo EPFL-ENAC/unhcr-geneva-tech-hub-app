@@ -55,7 +55,7 @@ import { getDieselPowerText } from "./dieselInputs";
 import { computeCO2costElectric, getGridPowerText } from "./poweredBy";
 
 export interface EnergyLightingItemInput extends SurveyInput, EnergyItem {
-  percentageOfTotalHouseHolds?: number; // computed based on % of HH and stuffs
+  percentageOfTotalHouseHolds?: number; // computed based on % of households and stuffs
   image?: string; // image of lighting
   fuelType?: AllFuel; // key
   fuelTypes?: AllFuel[]; // used only as a reference
@@ -125,7 +125,7 @@ export const conditional_function_for_hyb_lights = (itemInput: SurveyInput) => {
 // Firewood + paraffin + kerosene
 export const hybridLightingInputs = [
   {
-    text: "Firewood use per HH per day (kg/day)",
+    text: "Firewood use per household per day (kg/day)",
     value: "input.fuelUsageFirewood",
     conditional_function: conditional_function_for_hyb_lights,
     style: {
@@ -134,7 +134,7 @@ export const hybridLightingInputs = [
     type: "number",
   },
   {
-    text: "Paraffin use per HH per day (kg/day)",
+    text: "Paraffin use per household per day (kg/day)",
     value: "input.fuelUsageParaffin",
     conditional_function: conditional_function_for_hyb_lights,
     style: {
@@ -143,7 +143,7 @@ export const hybridLightingInputs = [
     type: "number",
   },
   {
-    text: "Kerosene use per HH per day (L/day)",
+    text: "Kerosene use per household per day (L/day)",
     value: "input.fuelUsageKerosene",
     conditional_function: conditional_function_for_hyb_lights,
     style: {
@@ -926,12 +926,12 @@ export function headers(
       text: (localInput: EnergyLightingItemInput) => {
         let result = "Fuel per day (kg/day for biomass)";
         const biomassFuelsText =
-          "Biomass used per HH per day (kg/day for biomass)";
-        const liquidFuelsText = "Fuel use per HH per day  (L/day)";
-        const gasFuelsText = "Fuel use per HH per day (m3/day)";
-        const lpgFuelsText = "Fuel use per HH per day (kg/day)";
-        const electricFuelsText = "Estimated kWh/day/HH";
-        const thermalFuelsText = "Estimated kWh/day/HH";
+          "Biomass used per household per day (kg/day for biomass)";
+        const liquidFuelsText = "Fuel use per household per day  (L/day)";
+        const gasFuelsText = "Fuel use per household per day (m3/day)";
+        const lpgFuelsText = "Fuel use per household per day (kg/day)";
+        const electricFuelsText = "Estimated kWh/day/household";
+        const thermalFuelsText = "Estimated kWh/day/household";
 
         const refTexts: {
           readonly fuelTypes: readonly AllFuel[];

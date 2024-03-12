@@ -26,11 +26,11 @@ services:
       - '8088:8081'
   init-couchdb:
     image: python:3.12-alpine
-    command: /entrypoint.sh
+    command: /add_jwt_keys_to_local_ini_file.sh
     env_file:
       - ./frontend/.env
     volumes:
-        - ./couchdb/entrypoint.sh:/entrypoint.sh
+        - ./couchdb/add_jwt_keys_to_local_ini_file.sh:/add_jwt_keys_to_local_ini_file.sh
         - ./couchdb/local.ini:/local.ini
   couchdb:
     image: couchdb:3.3

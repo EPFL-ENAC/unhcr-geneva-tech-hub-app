@@ -360,7 +360,7 @@ To extract solar hours for a specific location please refer to the <a target="_b
       {
         type: "number",
         key: "pp_per_hh",
-        label: "Ave. People per HH",
+        label: "Ave. People per household",
         min: 0,
         max: 10,
         customEventInput: (pp_per_hh: number, localInput: GreenHouseGaz) => {
@@ -375,7 +375,7 @@ To extract solar hours for a specific location please refer to the <a target="_b
       {
         type: "number",
         key: "totalHH",
-        label: "total HH",
+        label: "total households",
         disabled: true,
       },
     ];

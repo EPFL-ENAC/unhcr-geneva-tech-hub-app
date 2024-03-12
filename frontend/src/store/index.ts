@@ -1,12 +1,11 @@
 import { env } from "@/config";
 import { themeColor } from "@/plugins/vuetify";
 import router from "@/router/index";
-import ConfigModule from "@/store/ConfigModule";
 import GhgDefaultValuesModule from "@/store/GhgDefaultValuesModule";
 import GhgModule from "@/store/GhgModule";
 import GHGReferenceBioWasteModule from "@/store/GHGReferenceBioWasteModule";
 import GHGReferencefNRB from "@/store/GHGReferencefNRB";
-import GhgReferenceIgesGridModule from "@/store/GhgReferenceIgesGridModule";
+import GhgReferenceGridModule from "@/store/GhgReferenceGridModule";
 import GhgReferenceModule from "@/store/GhgReferenceModule";
 import GHGReferenceNonBioWasteModule from "@/store/GHGReferenceNonBioWasteModule";
 import GhgReferenceRegionModule from "@/store/GHGReferenceRegionModule";
@@ -330,7 +329,6 @@ const store: StoreOptions<RootState> = {
   mutations,
   actions,
   modules: {
-    ConfigModule,
     ShelterModule,
     SheltersMaterialModule,
     ShelterBillOfQuantitiesModule,
@@ -339,7 +337,7 @@ const store: StoreOptions<RootState> = {
     GHGReferenceNonBioWasteModule,
     GhgReferenceModule,
     GhgDefaultValuesModule,
-    GhgReferenceIgesGridModule,
+    GhgReferenceGridModule,
     GhgReferenceRegionModule,
     GhgReferenceSolarModule,
     GHGReferencefNRB,

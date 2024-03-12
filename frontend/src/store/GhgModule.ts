@@ -13,7 +13,7 @@ import {
 } from "vuex";
 import { RootState } from ".";
 import { updateMetaFieldsForUpdate } from "./documentUtils";
-import { IgesItem } from "./GhgReferenceIgesGridModule";
+import { GridItem } from "./GhgReferenceGridModule";
 import { ReferenceItemInterface } from "./GhgReferenceModule";
 import { CouchUser } from "./UserModule";
 
@@ -89,15 +89,15 @@ const getters: GetterTree<ProjectsState, RootState> = {
     rootGetters
   ): ReferenceItemInterface | null => {
     const ghgMapRef = rootGetters["GhgReferenceModule/ghgMapRef"];
-    const iges_grid = rootGetters["GhgReferenceIgesGridModule/items"];
-    if (!ghgMapRef || !iges_grid) {
-      throw new Error("GhgMapRef or igesGrid is not defined");
+    const grid = rootGetters["GhgReferenceGridModule/items"];
+    if (!ghgMapRef || !grid) {
+      throw new Error("GhgMapRef or Grid is not defined");
     }
     const REF_GRD = ghgMapRef.REF_GRD;
-    const iges_grid_match = iges_grid.find(
-      (el: IgesItem) => el._id === getters.project.countryCode
+    const grid_match = grid.find(
+      (el: GridItem) => el._id === getters.project.countryCode
     );
-    REF_GRD.value = iges_grid_match?.value ?? REF_GRD.value; // find REF_GRD per country
+    REF_GRD.value = grid_match?.value ?? REF_GRD.value; // find REF_GRD per country
 
     return REF_GRD;
   },

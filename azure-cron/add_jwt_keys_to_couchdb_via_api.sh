@@ -64,8 +64,11 @@ for key in $(jq -r 'keys[]' jwt_keys.json); do
   echo "-----------------------END"
 done
 
+echo "clean up files"
 rm jwt_keys.json
-
+rm $temp_file
+rm *.cer
+rm *.pem
 # reload configuration
 # POST /_node/nonode@nohost/_config/_reload 
 # not necessary, keeping as a reference for future use
@@ -73,4 +76,3 @@ rm jwt_keys.json
 
 echo "end of configuration jwt_keys update $(date)";
 
-[ "$#" -eq 0 ] && crond -f -l 8 -L /var/log/cron.log || exec "$@"
