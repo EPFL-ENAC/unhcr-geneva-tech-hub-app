@@ -63,3 +63,41 @@ spec:
             - name: database-storage
               persistentVolumeClaim:
                 claimName: database-storage-tss-couchdb-0
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: tss-refresh-jwk
+spec:
+  schedule: "0 0 * * *" # NOTE: executes at 00:00 UTC
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: tss-refresh-jwk
+            image: {{ .Values.global.__common__.image.registry }}/{{ .Values.global.__common__.image.repository }}-jobs:{{ .Values.global.__common__.image.tag }}
+            command: ["python", "main.py"]
+            env:
+              - name: AZURE_TENANT_ID
+                valueFrom:
+                  configMapKeyRef:
+                    name: tss-configmap
+                    key: AZURE_TENANT_ID
+              - name: COUCHDB_HOST
+                valueFrom:
+                  configMapKeyRef:
+                    name: tss-configmap
+                    key: COUCHDB_HOST
+              - name: COUCHDB_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: tss-secret
+                    key: COUCHDB_PASSWORD
+              - name: COUCHDB_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: tss-secret
+                    key: COUCHDB_USER
+              - name: JOB_NAME
+                value: "2"

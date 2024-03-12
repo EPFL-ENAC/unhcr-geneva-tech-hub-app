@@ -15,9 +15,3 @@ COPY generate_ini.py /opt/couchdb/etc/generate_ini.py
 
 # Execute script to generate local.ini
 RUN python3 /opt/couchdb/etc/generate_ini.py
-
-# Copy etc directory
-COPY etc/ /opt/couchdb/etc/
-
-# Copy data directory
-COPY data/ /opt/couchdb/data/

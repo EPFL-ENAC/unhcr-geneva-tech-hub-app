@@ -7,7 +7,7 @@ import ResetPassword from "@/views/ResetPasswordView.vue";
 import Unconfirm from "@/views/UnconfirmView.vue";
 
 const baseRoute = [];
-if (env.VUE_APP_ENVIRONEMENT === "developement") {
+if (env.VUE_APP_ENVIRONEMENT === "local") {
   baseRoute.push({
     path: "/login",
     name: "Login",
