@@ -19,5 +19,6 @@ export type UserInfo = {
  * Mail data from MS Graph
  */
 export type MailInfo = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value?: Array<any>;
 };
