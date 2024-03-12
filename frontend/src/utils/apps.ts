@@ -14,6 +14,7 @@ export const ghg = {
   linkName: "Guidance Manual",
   logoIcon: "$vuetify.icon.ghg",
   descriptionComponent: "ghgDescription",
+  lastUpdated: "2024",
 };
 
 export const shelter = {
@@ -27,6 +28,7 @@ export const shelter = {
     "A tool supporting comparative assessments of environmental \
       impacts, technical performance, habitability and affordability of \
       shelter designs used in humanitarian relief operations.",
+  lastUpdated: "2023",
 };
 export default [shelter, ghg] as {
   title: string;

@@ -32,6 +32,9 @@
                     :app="app"
                   />
                 </div>
+                <div>
+                  last updated: {{ app.lastUpdated }}
+                </div>
                 <div class="item-btn-container">
                   <v-btn
                     v-if="app.link"
