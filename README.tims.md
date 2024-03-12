@@ -51,9 +51,9 @@ Ask Team Lead for their contents.
    make run-dev
    ```
 
-7. **Access the Application**: Go to http://localhost:8085 and enter the credentials admin/couchdb to access the application
+7. **Access the Application**: Go to http://localhost:8081 and enter the credentials admin/couchdb to access the application
 
-8. **Access the CouchDB Admin**: Go to http://localhost:8085/db/_utils/ and enter the credentials admin/couchdb to access the CouchDB Admin interface
+8. **Access the CouchDB Admin**: Go to http://localhost:8081/db/_utils/ and enter the credentials admin/couchdb to access the CouchDB Admin interface
 
 9. **Stop the Development server**:
    ```
