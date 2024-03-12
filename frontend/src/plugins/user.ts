@@ -1,5 +1,4 @@
 import { CouchUser, GUEST_NAME, Roles } from "@/store/UserModule";
-import { SessionStorageKey } from "@/utils/storage";
 import { VueConstructor } from "vue";
 import { Store } from "vuex";
 
@@ -18,9 +17,6 @@ interface ObjWithUsersField {
   users: (CouchUser | string)[];
   reference?: boolean;
 }
-const USER_ADMIN = "admin";
-const DB_ADMIN = "_admin";
-const USER = "user";
 
 export function checkIfAdmin(user: CouchUser) {
   // either we have the role 'admin' or '_admin'
@@ -126,11 +122,6 @@ export default new (class User {
         user.name === null || user.name === undefined || user.name === "";
       const LoggedInName = user.name !== "" && typeof user.name === "string";
       const rights = {
-        UserAdmin: user.loaded && (user.roles?.includes(USER_ADMIN) ?? false),
-        DBAdmin: user.loaded && (user.roles?.includes(DB_ADMIN) ?? false),
-        User: user.loaded && (user.roles?.includes(USER) ?? false),
-        OauthHasRefreshToken:
-          sessionStorage.getItem(SessionStorageKey.Refresh) !== undefined,
         Guest: user.loaded && user.name === GUEST_NAME,
         LoggedIn: user.loaded && LoggedInName,
         LoggedOut: (user.loaded && LoggedOutName) || user.loaded == false,

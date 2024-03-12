@@ -91,18 +91,8 @@ function generateState(): UserState {
   };
 }
 
-function removeJwtTempTokens(): void {
-  // clean verifier, challenge and state
-  sessionStorage.removeItem("state");
-  // we don't remove verifier, we wait for the user to erase it
-  sessionStorage.removeItem("challenge");
-}
-
 export function removeAllOauthTokens(): void {
-  removeJwtTempTokens();
   sessionStorage.removeItem(SessionStorageKey.Token);
-  sessionStorage.removeItem(SessionStorageKey.Refresh);
-  sessionStorage.removeItem(SessionStorageKey.Access);
 }
 
 /** Getters */

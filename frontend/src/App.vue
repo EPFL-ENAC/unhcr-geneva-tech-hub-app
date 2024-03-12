@@ -18,7 +18,7 @@
     <hr
       class="d-none d-print-flex font-weight-bold justify-space-between align-center primary"
     />
-    <v-app-bar app clipped-right class="main-app-bar" color="primary" dark>
+    <v-app-bar app clipped-right class="main-app-bar" color="primary">
       <!-- <v-app-bar-nav-icon :to="{ name: 'Apps' }">
         <template #default> -->
       <span
@@ -46,20 +46,38 @@
       </span>
 
       <v-navigation-drawer v-model="drawer" :app="true" temporary>
+        <header>
+          <v-toolbar flat
+            >x
+            <v-toolbar-title>tims</v-toolbar-title>
+          </v-toolbar>
+        </header>
         <v-list nav>
           <v-list-item-group active-class="deep-purple--text text--accent-4">
             <v-list-item>
               <v-list-item-icon>
-                <v-icon>mdi-home</v-icon>
+                <v-icon>$mdiHome</v-icon>
               </v-list-item-icon>
               <v-list-item-title>Home</v-list-item-title>
             </v-list-item>
 
             <v-list-item>
               <v-list-item-icon>
-                <v-icon>mdi-account</v-icon>
+                <v-icon>$mdiAccount</v-icon>
               </v-list-item-icon>
-              <v-list-item-title>Account</v-list-item-title>
+              <v-list-item-title>Dashboard</v-list-item-title>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>$mdiAccount</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Indicators Analysis</v-list-item-title>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>$mdiAccount</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>GIS visualization</v-list-item-title>
             </v-list-item>
           </v-list-item-group>
         </v-list>
@@ -77,7 +95,11 @@
         class="ant-tag ant-tag-orange"
         >ENV: DEV</span
       >
-      <v-app-bar-nav-icon :to="{ name: 'Apps' }" link>
+      <v-app-bar-nav-icon
+        :to="{ name: 'Apps' }"
+        link
+        class="theme-light app-home-icon"
+      >
         <template #default>
           <v-icon>$mdiHome</v-icon>
         </template>
@@ -616,9 +638,6 @@ export default class App extends Vue {
   get error(): string {
     return this.$store.getters.error;
   }
-  get themeDark(): boolean {
-    return false;
-  }
 
   // ${env.VUE_APP_S3_URL}/2023-03-27/
   get shelterHelpers(): Helpers[] {
@@ -774,11 +793,6 @@ export default class App extends Vue {
     ];
   }
 
-  // @Watch("themeDark")
-  // onthemeDarkChange(): void {
-  //   this.$vuetify.theme.dark = false; // this.$store.getters["ConfigModule/themeDark"];
-  // }
-
   @Watch("$route", { immediate: true, deep: true })
   onRouteChanged(newRoute: Route): void {
     this.rootRoute = newRoute.matched[0];
@@ -872,7 +886,7 @@ export default class App extends Vue {
         this.loginAsGuest();
       }
     });
-    this.$vuetify.theme.dark = false; //this.$store.getters["ConfigModule/themeDark"];
+    this.$vuetify.theme.dark = false;
     document.title = this?.title ?? "unknown";
 
     window.authModule.attemptSsoSilent();
@@ -1096,6 +1110,9 @@ interface Helpers {
 </style>
 
 <style lang="scss" scoped>
+.theme-light.app-home-icon {
+  color: white;
+}
 .shelter-title-tab {
   max-width: 100%;
   justify-content: left;

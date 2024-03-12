@@ -1,206 +1,470 @@
 [
   {
-    "_id": "AO",
-    "country": "Republic of Angola",
-    "value": 0.97,
+    "country": "Afghanistan",
+    "_id": "AF",
+    "value": 0.257,
     "index": 0
   },
   {
-    "_id": "BH",
-    "country": "Kingdom of Bahrain",
-    "value": 0.1,
+    "country": "Angola",
+    "_id": "AO",
+    "value": 0.349,
     "index": 1
   },
   {
-    "_id": "BF",
-    "country": "Republic of Burkina Faso",
-    "value": 0.9,
+    "country": "Burundi",
+    "_id": "BI",
+    "value": 0.555,
     "index": 2
   },
   {
-    "_id": "BI",
-    "country": "Republic of Burundi",
-    "value": 0.77,
+    "country": "Benin",
+    "_id": "BJ",
+    "value": 0.193,
     "index": 3
   },
   {
-    "_id": "CM",
-    "country": "Cameroon",
-    "value": 0.7,
+    "country": "Burkina Faso",
+    "_id": "BF",
+    "value": 0.471,
     "index": 4
   },
   {
-    "_id": "CV",
-    "country": "Republic of Cape Verde",
-    "value": 0.89,
+    "country": "Bangladesh",
+    "_id": "BD",
+    "value": 0.509,
     "index": 5
   },
   {
-    "_id": "TD",
-    "country": "Republic of Chad",
-    "value": 0.92,
+    "country": "Bosnia and Herzegovina",
+    "_id": "BA",
+    "value": 0.288,
     "index": 6
   },
   {
-    "_id": "KM",
-    "country": "Comoros",
-    "value": 0.1,
+    "country": "Bolivia (Plurinational State of)",
+    "_id": "BO",
+    "value": 0.222,
     "index": 7
   },
   {
-    "_id": "CD",
-    "country": "Democratic Republic of Congo",
-    "value": 0.9,
+    "country": "Brazil",
+    "_id": "BR",
+    "value": 0.174,
     "index": 8
   },
   {
-    "_id": "DO",
-    "country": "Dominican Republic",
-    "value": 0.85,
+    "country": "Botswana",
+    "_id": "BW",
+    "value": 0.17,
     "index": 9
   },
   {
-    "_id": "ET",
-    "country": "Federal Democratic Republic of Ethiopia",
-    "value": 0.88,
+    "country": "Central African Republic",
+    "_id": "CF",
+    "value": 0.352,
     "index": 10
   },
   {
-    "_id": "GM",
-    "country": "Republic of the Gambia",
-    "value": 0.91,
+    "country": "China",
+    "_id": "CN",
+    "value": 0.165,
     "index": 11
   },
   {
-    "_id": "GE",
-    "country": "Georgia",
-    "value": 0.74,
+    "country": "C\u00f4te d'Ivoire",
+    "_id": "CI",
+    "value": 0.352,
     "index": 12
   },
   {
-    "_id": "GH",
-    "country": "Republic of Ghana",
-    "value": 0.99,
+    "country": "Cameroon",
+    "_id": "CM",
+    "value": 0.9,
     "index": 13
   },
   {
-    "_id": "GD",
-    "country": "Grenada",
-    "value": 0.88,
+    "country": "DR of the Congo",
+    "_id": "CD",
+    "value": 0.352,
     "index": 14
   },
   {
-    "_id": "GN",
-    "country": "Republic of Guinea",
-    "value": 0.96,
+    "country": "Congo",
+    "_id": "CG",
+    "value": 0.352,
     "index": 15
   },
   {
-    "_id": "GW",
-    "country": "Republic of Guinea-Bissau",
-    "value": 0.85,
+    "country": "Colombia",
+    "_id": "CO",
+    "value": 0.297,
     "index": 16
   },
   {
-    "_id": "HT",
-    "country": "Republic of Haiti",
-    "value": 0.96,
+    "country": "Dominican Republic",
+    "_id": "DO",
+    "value": 0.33,
     "index": 17
   },
   {
-    "_id": "JM",
-    "country": "Commonwealth of Jamaica",
-    "value": 0.65,
+    "country": "Eritrea",
+    "_id": "ER",
+    "value": 0.676,
     "index": 18
   },
   {
-    "_id": "KE",
-    "country": "Republic of Kenya",
-    "value": 0.92,
+    "country": "Ethiopia",
+    "_id": "ET",
+    "value": 0.609,
     "index": 19
   },
   {
-    "_id": "LR",
-    "country": "Republic of Liberia",
-    "value": 0.97,
+    "country": "Ghana",
+    "_id": "GH",
+    "value": 0.277,
     "index": 20
   },
   {
-    "_id": "MG",
-    "country": "Republic of Madagascar",
-    "value": 0.72,
+    "country": "Guinea",
+    "_id": "GN",
+    "value": 0.241,
     "index": 21
   },
   {
-    "_id": "MW",
-    "country": "Republic of Malawi",
-    "value": 0.81,
+    "country": "Gambia",
+    "_id": "GM",
+    "value": 0.414,
     "index": 22
   },
   {
-    "_id": "ML",
-    "country": "Republic of Mali",
-    "value": 0.73,
+    "country": "Guinea-Bissau",
+    "_id": "GW",
+    "value": 0.278,
     "index": 23
   },
   {
-    "_id": "MZ",
-    "country": "Republic of Mozambique",
-    "value": 0.91,
+    "country": "Guatemala",
+    "_id": "GT",
+    "value": 0.317,
     "index": 24
   },
   {
-    "_id": "NP",
-    "country": "Federal Democratic Republic of Nepal",
-    "value": 0.86,
+    "country": "Honduras",
+    "_id": "HN",
+    "value": 0.199,
     "index": 25
   },
   {
-    "_id": "RW",
-    "country": "Republic of Rwanda",
-    "value": 0.98,
+    "country": "Haiti",
+    "_id": "HT",
+    "value": 0.663,
     "index": 26
   },
   {
-    "_id": "ST",
-    "country": "Democratic Republic of Sao Tome and Principe",
-    "value": 0.85,
+    "country": "Indonesia",
+    "_id": "ID",
+    "value": 0.411,
     "index": 27
   },
   {
-    "_id": "SN",
-    "country": "Republic of Senegal",
-    "value": 0.85,
+    "country": "India",
+    "_id": "IN",
+    "value": 0.232,
     "index": 28
   },
   {
-    "_id": "SD",
-    "country": "Republic of the Sudan",
-    "value": 0.85,
+    "country": "Iran (Islamic Republic of)",
+    "_id": "IR",
+    "value": 0.257,
     "index": 29
   },
   {
-    "_id": "TL",
-    "country": "Democratic Republic of Timor Leste",
-    "value": 0.91,
+    "country": "Kenya",
+    "_id": "KE",
+    "value": 0.367,
     "index": 30
   },
   {
-    "_id": "TG",
-    "country": "Republic of Togo",
-    "value": 0.97,
+    "country": "Kyrgyzstan",
+    "_id": "KG",
+    "value": 0.257,
     "index": 31
   },
   {
-    "_id": "UG",
-    "country": "Republic of Uganda",
-    "value": 0.82,
+    "country": "Cambodia",
+    "_id": "KH",
+    "value": 0.231,
     "index": 32
   },
   {
-    "_id": "VU",
-    "country": "Republic of Vanuatu",
-    "value": 0.85,
+    "country": "Lao PDR",
+    "_id": "LA",
+    "value": 0.257,
     "index": 33
+  },
+  {
+    "country": "Liberia",
+    "_id": "LR",
+    "value": 0.23,
+    "index": 34
+  },
+  {
+    "country": "Sri Lanka",
+    "_id": "LK",
+    "value": 0.236,
+    "index": 35
+  },
+  {
+    "country": "Lesotho",
+    "_id": "LS",
+    "value": 0.524,
+    "index": 36
+  },
+  {
+    "country": "Madagascar",
+    "_id": "MG",
+    "value": 0.266,
+    "index": 37
+  },
+  {
+    "country": "Mexico",
+    "_id": "MX",
+    "value": 0.259,
+    "index": 38
+  },
+  {
+    "country": "Mali",
+    "_id": "ML",
+    "value": 0.285,
+    "index": 39
+  },
+  {
+    "country": "Myanmar",
+    "_id": "MM",
+    "value": 0.44,
+    "index": 40
+  },
+  {
+    "country": "Mongolia",
+    "_id": "MN",
+    "value": 0.257,
+    "index": 41
+  },
+  {
+    "country": "Mozambique",
+    "_id": "MZ",
+    "value": 0.396,
+    "index": 42
+  },
+  {
+    "country": "Mauritania",
+    "_id": "MR",
+    "value": 0.691,
+    "index": 43
+  },
+  {
+    "country": "Malawi",
+    "_id": "MW",
+    "value": 0.328,
+    "index": 44
+  },
+  {
+    "country": "Namibia",
+    "_id": "NA",
+    "value": 0.453,
+    "index": 45
+  },
+  {
+    "country": "Niger",
+    "_id": "NE",
+    "value": 0.49,
+    "index": 46
+  },
+  {
+    "country": "Nigeria",
+    "_id": "NG",
+    "value": 0.188,
+    "index": 47
+  },
+  {
+    "country": "Nicaragua",
+    "_id": "NI",
+    "value": 0.319,
+    "index": 48
+  },
+  {
+    "country": "Nepal",
+    "_id": "NP",
+    "value": 0.524,
+    "index": 49
+  },
+  {
+    "country": "Pakistan",
+    "_id": "PK",
+    "value": 0.833,
+    "index": 50
+  },
+  {
+    "country": "Peru",
+    "_id": "PE",
+    "value": 0.261,
+    "index": 51
+  },
+  {
+    "country": "Philippines",
+    "_id": "PH",
+    "value": 0.218,
+    "index": 52
+  },
+  {
+    "country": "Papua New Guinea",
+    "_id": "PG",
+    "value": 0.312,
+    "index": 53
+  },
+  {
+    "country": "Paraguay",
+    "_id": "PY",
+    "value": 0.291,
+    "index": 54
+  },
+  {
+    "country": "Russian Federation",
+    "_id": "RU",
+    "value": 0.288,
+    "index": 55
+  },
+  {
+    "country": "Rwanda",
+    "_id": "RW",
+    "value": 0.589,
+    "index": 56
+  },
+  {
+    "country": "Sudan",
+    "_id": "SD",
+    "value": 0.257,
+    "index": 57
+  },
+  {
+    "country": "Senegal",
+    "_id": "SN",
+    "value": 0.333,
+    "index": 58
+  },
+  {
+    "country": "Sierra Leone",
+    "_id": "SL",
+    "value": 0.217,
+    "index": 59
+  },
+  {
+    "country": "Somalia",
+    "_id": "SO",
+    "value": 0.524,
+    "index": 60
+  },
+  {
+    "country": "Serbia",
+    "_id": "RS",
+    "value": 0.288,
+    "index": 61
+  },
+  {
+    "country": "South Sudan",
+    "_id": "SS",
+    "value": 0.352,
+    "index": 62
+  },
+  {
+    "country": "Chad",
+    "_id": "TD",
+    "value": 0.237,
+    "index": 63
+  },
+  {
+    "country": "Togo",
+    "_id": "TG",
+    "value": 0.431,
+    "index": 64
+  },
+  {
+    "country": "Thailand",
+    "_id": "TH",
+    "value": 0.3,
+    "index": 65
+  },
+  {
+    "country": "Tajikistan",
+    "_id": "TJ",
+    "value": 0.257,
+    "index": 66
+  },
+  {
+    "country": "Timor-Leste",
+    "_id": "TL",
+    "value": 0.237,
+    "index": 67
+  },
+  {
+    "country": "Turkey",
+    "_id": "TR",
+    "value": 0.257,
+    "index": 68
+  },
+  {
+    "country": "Tanzania",
+    "_id": "TZ",
+    "value": 0.176,
+    "index": 69
+  },
+  {
+    "country": "Uganda",
+    "_id": "UG",
+    "value": 0.611,
+    "index": 70
+  },
+  {
+    "country": "Ukraine",
+    "_id": "UA",
+    "value": 0.288,
+    "index": 71
+  },
+  {
+    "country": "Uzbekistan",
+    "_id": "UZ",
+    "value": 0.257,
+    "index": 72
+  },
+  {
+    "country": "Viet Nam",
+    "_id": "VN",
+    "value": 0.117,
+    "index": 73
+  },
+  {
+    "country": "Yemen",
+    "_id": "YE",
+    "value": 0.257,
+    "index": 74
+  },
+  {
+    "country": "South Africa",
+    "_id": "ZA",
+    "value": 0.238,
+    "index": 75
+  },
+  {
+    "country": "Zambia",
+    "_id": "ZM",
+    "value": 0.338,
+    "index": 76
+  },
+  {
+    "country": "Zimbabwe",
+    "_id": "ZW",
+    "value": 0.331,
+    "index": 77
   }
 ]
