@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.12.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.11.0...v1.12.0) (2024-03-12)
+
+
+### Features
+
+* **frontend:** replace iges grid by grid emission factors ([8074df6](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/8074df6a1d782569fb681f8e99859df839522cf6))
+
+
+### Bug Fixes
+
+* **azure-cron:** remove infinite loop ([eb50008](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/eb50008a11dc87862629d3285f054cb4b00f0d6a))
+* **frontend:** remove cache policy for injectEnv.js ([f43aa1b](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f43aa1b9eabb16fde68c82ed9f88f1ba19b73579))
+* **frontend:** remove the log on production for AuthModule ([edcb136](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/edcb136aef463bbacaf8cf17ddd4fd688d43b886))
+
 ## [1.11.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.10.0...v1.11.0) (2024-03-11)
 
 
