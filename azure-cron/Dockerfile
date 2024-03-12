@@ -8,12 +8,9 @@ RUN apk add --update openssl curl jq sed
 # /etc/periodic/weekly
 # /etc/periodic/monthly
 
-COPY entrypoint.sh /entrypoint.sh
-COPY entrypoint.sh /etc/periodic/15min/entrypoint
-RUN chmod +x /entrypoint.sh /etc/periodic/15min/entrypoint
-
-
-ENTRYPOINT ["/entrypoint.sh"]
+COPY add_jwt_keys_to_couchdb_via_api.sh /add_jwt_keys_to_couchdb_via_api.sh
+COPY add_jwt_keys_to_couchdb_via_api.sh /etc/periodic/15min/add_jwt_keys_to_couchdb_via_api
+RUN chmod +x /add_jwt_keys_to_couchdb_via_api.sh /etc/periodic/15min/add_jwt_keys_to_couchdb_via_api
 
 # -f | Foreground
 # -l N | Set log level. Most verbose 0, default 8
