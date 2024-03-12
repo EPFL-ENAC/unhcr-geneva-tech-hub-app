@@ -18,16 +18,25 @@
     <hr
       class="d-none d-print-flex font-weight-bold justify-space-between align-center primary"
     />
-    <v-app-bar app clipped-right class="main-app-bar" color="primary">
-      <!-- <v-app-bar-nav-icon :to="{ name: 'Apps' }">
-        <template #default> -->
+    <v-app-bar
+      app
+      clipped-right
+      class="main-app-bar"
+      color="primary"
+      height="64px"
+    >
       <span
         role="img"
         aria-label="menu"
         data-cy="menu-icon"
         tabindex="-1"
         class="anticon anticon-menu"
-        style="margin-left: -30px; font-size: 20px; color: white"
+        style="
+          margin-left: -30px;
+          font-size: 20px;
+          color: white;
+          margin-top: 6px;
+        "
         @click="drawer = !drawer"
       >
         <svg
@@ -45,7 +54,12 @@
         </svg>
       </span>
 
-      <v-navigation-drawer v-model="drawer" :app="true" temporary>
+      <v-navigation-drawer
+        v-model="drawer"
+        :app="true"
+        temporary
+        style="z-index: 5"
+      >
         <header>
           <v-toolbar flat
             >x
@@ -82,19 +96,20 @@
           </v-list-item-group>
         </v-list>
       </v-navigation-drawer>
-      <!-- </template> -->
-      <!-- </v-app-bar-nav-icon> -->
+
       <img
         data-cy="logo"
         :src="`${env.BASE_URL_WITHOUT_SLASH}/logo-e45dc393.png`"
         alt="Logo"
-        style="margin: 5px; height: 60px"
+        style="margin: 5px; margin-top: 11px; height: 60px"
       />
       <span
         v-if="env.VUE_APP_ENVIRONEMENT === 'developement'"
         class="ant-tag ant-tag-orange"
-        >ENV: DEV</span
+        style="margin-top: 6px"
       >
+        ENV: DEV
+      </span>
       <v-app-bar-nav-icon
         :to="{ name: 'Apps' }"
         link
@@ -938,7 +953,7 @@ interface Helpers {
     box-shadow: none;
     display: flex;
     align-items: center;
-    margin-top: 3px;
+    // margin-top: 3px;
   }
 
   a {
@@ -1023,6 +1038,10 @@ interface Helpers {
   margin-left: -30px;
   font-size: 20px;
   color: white;
+}
+.v-application .v-app-bar {
+  text-rendering: auto;
+  -webkit-font-smoothing: auto;
 }
 @media print {
   * {
