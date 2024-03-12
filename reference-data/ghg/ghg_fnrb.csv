@@ -1,35 +1,79 @@
-_id,country,value
-AO,Republic of Angola,0.97
-BH,Kingdom of Bahrain,0.100
-BF,Republic of Burkina Faso,0.90
-BI,Republic of Burundi,0.77
-CM,Cameroon,0.70
-CV,Republic of Cape Verde,0.89
-TD,Republic of Chad,0.92
-KM,Comoros,0.100
-CD,Democratic Republic of Congo,0.90
-DO,Dominican Republic,0.85
-ET,Federal Democratic Republic of Ethiopia,0.88
-GM,Republic of the Gambia,0.91
-GE,Georgia,0.74
-GH,Republic of Ghana,0.99
-GD,Grenada,0.88
-GN,Republic of Guinea,0.96
-GW,Republic of Guinea-Bissau,0.85
-HT,Republic of Haiti,0.96
-JM,Commonwealth of Jamaica,0.65
-KE,Republic of Kenya,0.92
-LR,Republic of Liberia,0.97
-MG,Republic of Madagascar,0.72
-MW,Republic of Malawi,0.81
-ML,Republic of Mali,0.73
-MZ,Republic of Mozambique,0.91
-NP,Federal Democratic Republic of Nepal,0.86
-RW,Republic of Rwanda,0.98
-ST,Democratic Republic of Sao Tome and Principe,0.85
-SN,Republic of Senegal,0.85
-SD,Republic of the Sudan,0.85
-TL,Democratic Republic of Timor Leste,0.91
-TG,Republic of Togo,0.97
-UG,Republic of Uganda,0.82
-VU,Republic of Vanuatu,0.85
+country,_id,value
+Afghanistan,AF,0.257
+Angola,AO,0.349
+Burundi,BI,0.555
+Benin,BJ,0.193
+Burkina Faso,BF,0.471
+Bangladesh,BD,0.509
+Bosnia and Herzegovina,BA,0.288
+Bolivia (Plurinational State of),BO,0.222
+Brazil,BR,0.174
+Botswana,BW,0.17
+Central African Republic,CF,0.352
+China,CN,0.165
+Côte d'Ivoire,CI,0.352
+Cameroon,CM,0.9
+DR of the Congo,CD,0.352
+Congo,CG,0.352
+Colombia,CO,0.297
+Dominican Republic,DO,0.33
+Eritrea,ER,0.676
+Ethiopia,ET,0.609
+Ghana,GH,0.277
+Guinea,GN,0.241
+Gambia,GM,0.414
+Guinea-Bissau,GW,0.278
+Guatemala,GT,0.317
+Honduras,HN,0.199
+Haiti,HT,0.663
+Indonesia,ID,0.411
+India,IN,0.232
+Iran (Islamic Republic of),IR,0.257
+Kenya,KE,0.367
+Kyrgyzstan,KG,0.257
+Cambodia,KH,0.231
+Lao PDR,LA,0.257
+Liberia,LR,0.23
+Sri Lanka,LK,0.236
+Lesotho,LS,0.524
+Madagascar,MG,0.266
+Mexico,MX,0.259
+Mali,ML,0.285
+Myanmar,MM,0.44
+Mongolia,MN,0.257
+Mozambique,MZ,0.396
+Mauritania,MR,0.691
+Malawi,MW,0.328
+Namibia,NA,0.453
+Niger,NE,0.49
+Nigeria,NG,0.188
+Nicaragua,NI,0.319
+Nepal,NP,0.524
+Pakistan,PK,0.833
+Peru,PE,0.261
+Philippines,PH,0.218
+Papua New Guinea,PG,0.312
+Paraguay,PY,0.291
+Russian Federation,RU,0.288
+Rwanda,RW,0.589
+Sudan,SD,0.257
+Senegal,SN,0.333
+Sierra Leone,SL,0.217
+Somalia,SO,0.524
+Serbia,RS,0.288
+South Sudan,SS,0.352
+Chad,TD,0.237
+Togo,TG,0.431
+Thailand,TH,0.3
+Tajikistan,TJ,0.257
+Timor-Leste,TL,0.237
+Turkey,TR,0.257
+Tanzania,TZ,0.176
+Uganda,UG,0.611
+Ukraine,UA,0.288
+Uzbekistan,UZ,0.257
+Viet Nam,VN,0.117
+Yemen,YE,0.257
+South Africa,ZA,0.238
+Zambia,ZM,0.338
+Zimbabwe,ZW,0.331

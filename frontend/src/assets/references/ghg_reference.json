@@ -739,8 +739,8 @@
       "lighting"
     ],
     "description": "Fraction of Non renewable biomass (fNRB)",
-    "value": 0.85,
-    "source": "https://cdm.unfccc.int/DNA/fNRB/index.html",
+    "value": 0.3,
+    "source": "https://cdm.unfccc.int/methodologies/PAmethodologies/tools/am-tool-30-v1.pdf",
     "ref": null,
     "index": 47
   }
