@@ -1,23 +1,18 @@
-# Maintenance plan for UNHCR-TSS Apps
+# README and Maintenance plan for UNHCR-TSS Apps
 
 ## Description
-
-The UNHCR TSS Apps comprise 2 tools : GHG Calculator & Shelter Sustainability. They operate independantly, and rely on different databases. 
-[TODO: Expand intro text + Insert summary figure from Cara.]
-
-The following document details it 
-UNHCR Geneva Technical Hub App (TSS-APP)
+The UNHCR TSS Apps comprise 2 tools : GHG Calculator & Shelter Sustainability.
+They operate independantly, and rely on different databases (see [Updating contents](#updating-contents-csvs-databases-etc))
 
 ## Contributors & maintainers
 The tools have been conceived by [EPFL Essential Tech](https://www.essentialtech.ch/) and implemented by [EPFL ENAC-IT4R](https://www.epfl.ch/schools/enac/category/research/enac-it4research/) between 2022 and March 2024, with the codebase accessible at [https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/).
 
-After March 2024, the tools will be fully integrated on UNHCR TIMS infrastructure, and maintained by [UNHCR](https://www.unhcr.org/) (domain expertise, product management) & [UNICC](https://www.unicc.org/) (technical maintenance.
+After March 2024, the tools will be fully integrated on UNHCR TIMS infrastructure, and maintained by [UNHCR](https://www.unhcr.org/) (domain expertise, product management) & [UNICC](https://www.unicc.org/) (technical maintenance).
 
-[TODO: Contributors list?]
+TODO: @charlie.weil propose list of contributors
 
 ## Updating contents (CSVs databases etc)
 
-[TODO : List of databases and update frequency - by Cara]
 ```mermaid
 ---
 title: The TSS Tools' Reference Data
@@ -34,95 +29,35 @@ flowchart TD
     A(GHG Calculator):::App
     B(Shelter Sustainability):::App
 
-classDef ToUpgrade stroke:#000,stroke-width:1px,fill:#ffb3b3,font-size:20px
-classDef Databases stroke:#000,stroke-width:1px,fill:#dfdffc,font-size:20px
-classDef App stroke:#000,stroke-width:1px,fill:#c1fbc1,font-size:30px,padding:10px
+classDef ToUpgrade stroke:#000,stroke-width:1px,fill:#ffb3b3,color:black,font-size:20px
+classDef Databases stroke:#000,stroke-width:1px,fill:#dfdffc,color:black,font-size:20px
+classDef App stroke:#000,stroke-width:1px,fill:#c1fbc1,color:black,font-size:30px,padding:10px
 ```
 
-### Reference DB 
+TODO: Cara Reference Data table with update frequencies
 
-#### Corresponding CSV file
+### Datasets
 
-1) GHG Calculator
-  * Grid emission factors ==> reference-data/ghg/grid_emission_factors.csv
-  * Emission Factors ==>
-    * Emission Factors ==> reference-data/ghg/ghg_reference.csv
-    * /!\Missing/!\ X? ==> reference-data/ghg/ghg_ef_mixed_biowaste_list.csv
-    * /!\Missing/!\ X? ==> reference-data/ghg/ghg_ef_mixed_non_biowaste_list.csv
-  * Default Values ==> reference-data/ghg/ghg_default_value.csv
-  * UNHCR Locations ==> reference-data/ghg/unhcr_location.csv
-  * GHG fNRB ==> reference-data/ghg/ghg_fnrb.csv
-  * /!\Missing/!\ X? ==> reference-data/ghg/ref.csv
-
-2) shelter Sustainability
-  * Materials ==> reference-data/shelter/materials.csv
-  * Materials transport ==> reference-data/shelter/transports.csv
-
-#### which files are generated from a csv ?
-##### For GHG
-
-- ghg_reference
-- ghg_default_value
-- ghg_fnrb
-- solar_averaged
-- unhcr_location
-- grid_emission_factors
-
-##### For Shelter
-everything (which means materials.json and transports.json)
-
-##### Reference data for Ghg APP
-###### generated
-- ghg_reference.json // used by frontend/src/store/GhgReferenceModule.ts
-- ghg_default_value.json // used by frontend/src/store/GhgDefaultValuesModule.ts
-- ghg_fnrb.json // used by frontend/src/store/GHGReferencefNRB.ts
-- solar_averaged.json // used by frontend/src/store/GHGReferenceSolarModule.ts ( INFO page )
-- unhcr_location.json // frontend/src/store/UNHCRLocationModule.ts
-- grid_emission_factors.json // used by frontend/src/store/GhgModule.ts via frontend/src/store/GhgReferenceGridModule.ts
-- ghg_ef_mixed_biowaste_list.json // used by frontend/src/store/GHGReferenceBioWasteModule.ts
-- ghg_ef_mixed_non_biowaste_list.json // used by frontend/src/store/GHGReferenceNonBioWasteModule.ts
-
-###### not generated from CSV
-- ghg_country_region_list.json // used by frontend/src/store/GHGReferenceRegionModule.ts
-- ghg_country_region_map.json // used by frontend/src/components/green_house_gaz/wash/DomesticSolidWaste.ts
-- ghg_ef_mixed_biowaste.json // used by frontend/src/store/GHGReferenceBioWasteModule.ts and frontend/src/components/green_house_gaz/wash/DomesticSolidWaste.ts
-- ghg_ef_mixed_non_biowaste.json // used by frontend/src/store/GHGReferenceNonBioWasteModule.ts
-- ghg_ref_key_name.json // used by frontend/src/components/green_house_gaz/wash/DomesticSolidWaste.ts
-- ghg_ref_name_key.json // used by frontend/src/components/reference_data/GHGMixedBiowaste.vue and frontend/src/components/reference_data/GHGMixedNonBiowaste.vue
-
-##### Reference data for Shelter app
-- materials.json // used by frontend/src/store/SheltersMaterialModule.ts
-- transports.json // used by frontend/src/store/SheltersTransportModule.ts
+| Tool               | Database       | Description  | CSV file path                                 | JSON file path             | Used By |
+|------------------------|----------------------|-|-------------------------------------------------------|-|---------|
+| GHG Calculator         | Grid Emission Factors| | `reference-data/ghg/grid_emission_factors.csv`         | `frontend/src/assets/references/grid_emission_factors.json`| `frontend/src/store/GhgModule.ts via frontend/src/store/GhgReferenceGridModule.ts` |
+| GHG Calculator         | Emission Factors     | | `reference-data/ghg/ghg_reference.csv`                 | `frontend/src/assets/references/ghg_reference.json`| `frontend/src/store/GhgReferenceModule.ts` |
+| GHG Calculator         | Emission Factors     | | `reference-data/ghg/ghg_ef_mixed_biowaste_list.csv`    | `frontend/src/assets/references/ghg_ef_mixed_biowaste_list.json`,`frontend/src/assets/references/ghg_ef_mixed_biowaste.json`| `frontend/src/store/GHGReferenceBioWasteModule.ts` |
+| GHG Calculator         | Emission Factors     | | `reference-data/ghg/ghg_ef_mixed_non_biowaste_list.csv`| `frontend/src/assets/references/ghg_ef_mixed_non_biowaste_list.json`, `frontend/src/assets/references/ghg_ef_mixed_non_biowaste.json`| `frontend/src/store/GHGReferenceNonBioWasteModule.ts` |
+| GHG Calculator         | Default Values       | | `reference-data/ghg/ghg_default_value.csv`             | `frontend/src/assets/references/ghg_default_value.json`| `frontend/src/store/GhgDefaultValuesModule.ts` |
+| GHG Calculator         | UNHCR Locations      | | `reference-data/ghg/unhcr_location.csv`                | `frontend/src/assets/references/unhcr_location.json`| `frontend/src/store/UNHCRLocationModule.ts` |
+| GHG Calculator         | GHG fNRB             | | `reference-data/ghg/ghg_fnrb.csv`                      | `frontend/src/assets/references/ghg_fnrb.json`| `frontend/src/store/GHGReferencefNRB.ts` |
+| GHG Calculator         |                      | Name/Key reference for solid waste | `reference-data/ghg/ref.csv`                           | `frontend/src/assets/references/ghg_ref_key_name.json, frontend/src/assets/references/ghg_ref_name_key.json`| `frontend/src/components/green_house_gaz/wash/DomesticSolidWaste.ts`, `frontend/src/components/reference_data/GHGMixedBiowaste.vue` and `frontend/src/components/reference_data/GHGMixedNonBiowaste.vue` |
+| GHG Calculator         |                      | GHG regions |                            | `frontend/src/assets/references/ghg_country_region_list.json, frontend/src/assets/references/ghg_country_region_map.json`| `frontend/src/store/GHGReferenceRegionModule.ts`,  `frontend/src/components/green_house_gaz/wash/DomesticSolidWaste.ts`|
+| GHG Calculator         |                      | | `reference-data/ghg/solar_averaged.csv`                | `frontend/src/assets/references/solar_averaged.json`| `frontend/src/store/GHGReferenceSolarModule.ts`|
+| Shelter Sustainability | Materials            | | `reference-data/shelter/materials.csv`                 | `frontend/src/assets/references/materials.json`| `frontend/src/store/SheltersMaterialModule.ts` |
+| Shelter Sustainability | Materials Transport  | | `reference-data/shelter/transports.csv`                | `frontend/src/assets/references/transports.json`| `frontend/src/store/SheltersTransportModule.ts` |
 
 #### How to update
-- find the appropriate csv file in the reference-data/ folder (see above for reference)
-- update/replace the csv file (should respect the same file format) which is a: `comma separated csv file``
-- run the `make setup-reference` command that will update the csv equivalent json file in the frontend/src/assets/references directory
+- Find the appropriate csv file in the reference-data/ folder (see above for reference)
+- Update/replace the csv file (should respect the same file format) which is a: `comma separated csv file``
+- Run the `make setup-reference` command that will update the csv equivalent json file in the frontend/src/assets/references directory
   the output should look like this:
-  ```sh
-     unhcr-geneva-tech-hub-app ✗ make setup-reference
-        /Applications/Xcode.app/Contents/Developer/usr/bin/make -C reference-data
-        /Applications/Xcode.app/Contents/Developer/usr/bin/make -C shelter
-        cat materials.csv | python materials_csv_to_json.py > ../../frontend/src/assets/references/materials.json
-        cat transports.csv | python transports_csv_to_json.py > ../../frontend/src/assets/references/transports.json
-        /Applications/Xcode.app/Contents/Developer/usr/bin/make -C ghg
-        python data_converter_whole.py ../../frontend/src/assets/references/ ghg_default_value.csv
-        processing ghg_default_value.csv to ../../frontend/src/assets/references/
-        python data_converter_whole.py ../../frontend/src/assets/references/ ghg_fnrb.csv
-        processing ghg_fnrb.csv to ../../frontend/src/assets/references/
-        python data_converter_whole.py ../../frontend/src/assets/references/ ghg_reference.csv
-        processing ghg_reference.csv to ../../frontend/src/assets/references/
-        python data_converter_whole.py ../../frontend/src/assets/references/ grid_emission_factors.csv
-        processing grid_emission_factors.csv to ../../frontend/src/assets/references/
-        python data_converter_whole.py ../../frontend/src/assets/references/ solar_averaged.csv
-        processing solar_averaged.csv to ../../frontend/src/assets/references/
-        python data_converter_whole.py ../../frontend/src/assets/references/ unhcr_location.csv
-        processing unhcr_location.csv to ../../frontend/src/assets/references/
-        python data_converter_whole.py ../../frontend/src/assets/references/ ghg_ef_mixed_biowaste_list.csv
-        processing ghg_ef_mixed_biowaste_list.csv to ../../frontend/src/assets/references/
-        python data_converter_whole.py ../../frontend/src/assets/references/ ghg_ef_mixed_non_biowaste_list.csv
-        processing ghg_ef_mixed_non_biowaste_list.csv to ../../frontend/src/assets/references/
-  ```
 - Once we run the command, the changes in the frontend/src/ files should be commited to the git repo and then the frontend app deployed to the appropriate location
 
 * Implementation details can be found :
@@ -131,30 +66,47 @@ everything (which means materials.json and transports.json)
   - [reference issue 438](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/438)
   - [reference issue 467](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/467)
 
-### Other DBs
-[TODO] ? what ?
-
 ### Static files (documents and videos)
-* The static files (pdfs, videos, images, etc) are
+The static files (pdfs, videos, images, etc) are the User's guide manual and their associated videos and every pdfs used in the interface (not uploaded by an app user)
+
+#### How to retrieve and setup
   - content: https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-11-23T100540Z/s3_cdn_dump.tar.gz 
   - content checksum: https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-11-23T100540Z/s3_cdn_dump.tar.gz.checksum
 
-* by running `make setup-data front-end` at the root level] you will populate the s3 (minio service) with the tar.gz linked above
+* by running `make setup-data` at the root level] you will populate the s3 (minio service) with the tar.gz linked above
 
-* if you want to directly update a file for instance (GHG tool User's Manual):
+#### How to update only one file
+If you want to directly update a file for instance (GHG tool User's Manual):
   - Find the path of the file: which is /2023-11-23/GHG tool User's Manual v6.pdf
   - Update the file on your file storage (minio, azure blob or whatever you're using)
   - Create a backup of the blob/s3 and store it in a new tar.gz with a checksum that will superseed the above one
-
-- The static files contains the User's guide manual and their associated videos and every pdfs used in the interface (not uploaded by an app user)
 
 
 ## Users & Roles
 
 ### Roles definition
 
+| User Type   | Description                                                                   | Permissions                                                                      |
+|-------------|-------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| Normal User | - No roles                                                                    | - Cannot Delete/Update if not in 'users' field of the object in CouchDB          |
+|             |                                                                               | - Can create an object in CouchDB (Shelter and GHG app)                          |
+| Admin User  | - CouchDB admin with the _admin role                                          | - Can access, Update, and delete every object in CouchDB                         |
+|             | - CouchDB user with an admin role                                             |                                                                                  |
+|             | - User's sub (from jwt) is in the unhcrAdmins array                           |                                                                                  |
+| Guest User  | - Not authenticated                                                           | - Can access the app in read-only mode                                           |
+|             |                                                                               | - Cannot create, update, or delete things                                       |
+
+| User Type   | Permissions                                                                      | Authenticated |
+|-------------|----------------------------------------------------------------------------------|---------------|
+| Normal User | - Cannot Delete/Update if not in 'users' field of the object in CouchDB          | Yes |
+|             | - Can create an object in CouchDB (Shelter and GHG app)                          |     |
+| Admin User  | - Can access, Update, and delete every object in CouchDB                         | Yes|
+| Guest User  | - Can access the app in read-only mode                                           | No |
+|             | - Cannot create, update, or delete things                                        | |
+
+
 #### Intro to CouchDB
-We removed the roles in the _security policy of every databse, so every user may be able to read the databases
+We removed the roles in the _security policy of every database, so every user may be able to read the databases
 Here is an example of policy json
 
 Bottom line: We don't use any roles for our users (only the admin, but see below)
@@ -176,26 +128,6 @@ Since CouchDB 3.x newly created databases have by default the _admin role to pre
 
 If there are any member names or roles defined for a database, then only authenticated users having a matching name or role are allowed to read documents from the database
 cf [https://docs.couchdb.org/en/3.2.0/api/database/security.html#db-security]
-
-#### What are the roles
- - Normal user
-  - no roles
- - Admin user
-  - is the CouchDB admin with the _admin role
-  - is a CouchDB user with an admin role
-  - User' sub (from jwt) is in the unhcrAdmins array (see below)
- - Guest user
-  - not authenticated
-
-#### What the roles allow the user to do:
-- Normal user
-  - Cannot Delete/Update if they're not in the 'users' field of the object stored in CouchDB
-  - Can create an object in CouchDB (meaning Shelter and GHG app)
-- Admin user
-  - Can access, Update and delete every ojects in CouchDB
-- Guest user
-  - Can access the app in read-only mode
-  - Cannot create, update or delete things
 
 ### Adding a user
  - We can add a user in the users database in Couchdb
