@@ -40,35 +40,190 @@ classDef App stroke:#000,stroke-width:1px,fill:#c1fbc1,font-size:30px,padding:10
 ```
 
 ### Reference DB 
-* The reference file is maintained by UNHCR and stored [here as an Excel](https://epflch.sharepoint.com/:x:/r/sites/ENAC-IT/Documents%20partages/Research%20IT/Advanced%20Services/0041%20%E2%80%93%20UNHCR/PHASE_2/GHG/DATABASES/GHG_EF_DBs_byModule.xlsx?d=w93e39ddb340758cfe3d57ae7412fc534&csf=1&web=1&e=mTGz8n)
-[TODO: This Excel file should be migrated in UNHCR storage system.]
-* Developers export each tab as CSVs in `reference-data/ghg/ghg_reference.csv` and run `make setup-reference` (to convert CSVs in JSONs)
-* Implementation details can be found : [implementation history](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/580) and [usage of datasets](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/blob/feat/dead-code-and-reference-data/frontend/src/assets/references/README.md)
 
-### UNHCR locations
-* The reference file is maintained by UNHCR and stored [here as an Excel]([https://epflch.sharepoint.com/:x:/r/sites/ENAC-IT/Documents%20partages/Research%20IT/Advanced%20Services/0041%20%E2%80%93%20UNHCR/PHASE_2/GHG/DATABASES/GHG_EF_DBs_byModule.xlsx?d=w93e39ddb340758cfe3d57ae7412fc534&csf=1&web=1&e=mTGz8n](https://docs.google.com/spreadsheets/d/1VVxsSS-KCUmP-giKZwlARNmw5RSSZHUQ/edit#gid=1437641817))
-[TODO: This Excel file should be migrated in UNHCR storage system.]
-* Developers create `/frontend/src/assets/references/unhcr_location.json` with the `reference-data/Makefile`
-[TODO: This might need details Pierre?]
-* Implementation details can be found (reference issues  https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/438 & https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/467
-[TODO: Pierre, is this really necessary ?]
+#### Corresponding CSV file
+
+1) GHG Calculator
+  * Grid emission factors ==> reference-data/ghg/grid_emission_factors.csv
+  * Emission Factors ==>
+    * Emission Factors ==> reference-data/ghg/ghg_reference.csv
+    * /!\Missing/!\ X? ==> reference-data/ghg/ghg_ef_mixed_biowaste_list.csv
+    * /!\Missing/!\ X? ==> reference-data/ghg/ghg_ef_mixed_non_biowaste_list.csv
+  * Default Values ==> reference-data/ghg/ghg_default_value.csv
+  * UNHCR Locations ==> reference-data/ghg/unhcr_location.csv
+  * GHG fNRB ==> reference-data/ghg/ghg_fnrb.csv
+  * /!\Missing/!\ X? ==> reference-data/ghg/ref.csv
+
+2) shelter Sustainability
+  * Materials ==> reference-data/shelter/materials.csv
+  * Materials transport ==> reference-data/shelter/transports.csv
+
+#### How to update
+- find the appropriate csv file in the reference-data/ folder (see above for reference)
+- update/replace the csv file (should respect the same file format) which is a: `comma separated csv file``
+- run the `make setup-reference` command that will update the csv equivalent json file in the frontend/src/assets/references directory
+  the output should look like this:
+  ```sh
+     unhcr-geneva-tech-hub-app ✗ make setup-reference
+        /Applications/Xcode.app/Contents/Developer/usr/bin/make -C reference-data
+        /Applications/Xcode.app/Contents/Developer/usr/bin/make -C shelter
+        cat materials.csv | python materials_csv_to_json.py > ../../frontend/src/assets/references/materials.json
+        cat transports.csv | python transports_csv_to_json.py > ../../frontend/src/assets/references/transports.json
+        /Applications/Xcode.app/Contents/Developer/usr/bin/make -C ghg
+        python data_converter_whole.py ../../frontend/src/assets/references/ ghg_default_value.csv
+        processing ghg_default_value.csv to ../../frontend/src/assets/references/
+        python data_converter_whole.py ../../frontend/src/assets/references/ ghg_fnrb.csv
+        processing ghg_fnrb.csv to ../../frontend/src/assets/references/
+        python data_converter_whole.py ../../frontend/src/assets/references/ ghg_reference.csv
+        processing ghg_reference.csv to ../../frontend/src/assets/references/
+        python data_converter_whole.py ../../frontend/src/assets/references/ grid_emission_factors.csv
+        processing grid_emission_factors.csv to ../../frontend/src/assets/references/
+        python data_converter_whole.py ../../frontend/src/assets/references/ solar_averaged.csv
+        processing solar_averaged.csv to ../../frontend/src/assets/references/
+        python data_converter_whole.py ../../frontend/src/assets/references/ unhcr_location.csv
+        processing unhcr_location.csv to ../../frontend/src/assets/references/
+        python data_converter_whole.py ../../frontend/src/assets/references/ ghg_ef_mixed_biowaste_list.csv
+        processing ghg_ef_mixed_biowaste_list.csv to ../../frontend/src/assets/references/
+        python data_converter_whole.py ../../frontend/src/assets/references/ ghg_ef_mixed_non_biowaste_list.csv
+        processing ghg_ef_mixed_non_biowaste_list.csv to ../../frontend/src/assets/references/
+  ```
+- Once we run the command, the changes in the frontend/src/ files should be commited to the git repo and then the frontend app deployed to the appropriate location
+
+* Implementation details can be found :
+  - [implementation history](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/580)
+  - [usage of datasets](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/blob/feat/dead-code-and-reference-data/frontend/src/assets/references/README.md)
+  - [reference issue 438](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/438)
+  - [reference issue 467](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/467)
 
 ### Other DBs
-[TODO]
+[TODO] ? what ?
 
 ### Static files (documents and videos)
-* The static files (pdfs, videos, images, etc) are [TODO Where ?]
-[TODO re-write this section
-* it will populate the s3 with a tar.gz file
-* by running `make setup-data front-end` at the root level]
+* The static files (pdfs, videos, images, etc) are
+  - content: https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-11-23T100540Z/s3_cdn_dump.tar.gz 
+  - content checksum: https://enacit4r-cdn.epfl.ch/unhcr-geneva-tech-hub-app/2023-11-23T100540Z/s3_cdn_dump.tar.gz.checksum
+
+* by running `make setup-data front-end` at the root level] you will populate the s3 (minio service) with the tar.gz linked above
+
+* if you want to directly update a file for instance (GHG tool User's Manual):
+  - Find the path of the file: which is /2023-11-23/GHG tool User's Manual v6.pdf
+  - Update the file on your file storage (minio, azure blob or whatever you're using)
+  - Create a backup of the blob/s3 and store it in a new tar.gz with a checksum that will superseed the above one
+
+- The static files contains the User's guide manual and their associated videos and every pdfs used in the interface (not uploaded by an app user)
+
 
 ## Users & Roles
 
 ### Roles definition
-[TODO]
+#### What are the roles
+ - Normal user
+  - no roles
+ - Admin user
+  - is the CouchDB admin with the _admin role
+  - is a CouchDB user with an admin role
+  - User' sub (from jwt) is in the unhcrAdmins array (see below)
+ - Guest user
+  - not authenticated
 
-### Adding a user (with AZURE AD)
-[TODO]
+#### What the roles allow the user to do:
+- Normal user
+  - Cannot Delete/Update if they're not in the 'users' field of the object stored in CouchDB
+  - Can create an object in CouchDB (meaning Shelter and GHG app)
+- Admin user
+  - Can access, Update and delete every ojects in CouchDB
+- Guest user
+  - Can access the app in read-only mode
+  - Cannot create, update or delete things
+
+### Adding a user
+ - We can add a user in the users database in Couchdb
+ - If you want to add a user in AZURE AD, you need to signup via https://tims.unhcr.org/signup or contact the Global Service Desk <hqussd@unhcr.org>
+
+#### How to make a CouchDB user admin
+- add the role 'admin' in the CouchDB user object
+
+#### How to make an AZURE AD user admin
+* UNHCR users may request admin right to UNICC, providing [TODO: What do they need to provide? Or make a new project,right? To Double check]
+* Developers must list Azure admins in these 3 files :
+  - `couchdb-setup/bootstrap/ghg_projects_1696578512055758/_design/project/validate_doc_update.js`
+  - `couchdb-setup/bootstrap/shelter_projects_1698666594213623/_design/shelter/validate_doc_update.js`
+  - `frontend/src/plugins/user.ts`
+* Specifically, in those files the function `checkIfAdmin` contains a `unhcrAdmins` array.
+This array contains a list of string, each string correspond to the unique id (sub field) of the user in entra/Azure, which is the subject unique id.
+
+```
+  export function checkIfAdmin(user: CouchUser) {
+  // either we have the role 'admin' or '_admin'
+  // or we are in a custom list of unhcr users sub
+  const unhcrAdmins = [
+    "TBxz7Wb3aSrQGeFx1EbBtrtaKPht-4M87pznkWC2BYE" // nimri sub
+  ];
+```
+
+
+#### Adding a user in CouchDB
+
+##### Create a new user
+There is two way of doing this: first one using curl; second one using couchdb-bootstrap
+
+
+##### Using curl
+1. Follow: https://docs.couchdb.org/en/stable/intro/security.html#creating-a-new-user
+```
+curl -X PUT http://admin:couchdb@localhost/db/_users/org.couchdb.user:newuser@epfl.ch \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json" \
+     -d '{"name": "newuser@epfl.ch", "password": "plain_text_password_that_will_be_encrypted", "roles": [], "type": "user"}'
+```
+2. retrieve the inserted documented
+```
+ curl -X GET http://admin:couchdb@localhost/db/_users/org.couchdb.user:newuser@epfl.ch \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json"
+
+{"_id":"org.couchdb.user:newuser@epfl.ch","_rev":"1-xxxx","name":"newuser@epfl.ch","roles":[],"type":"user","password_scheme":"pbkdf2","iterations":10,"derived_key":"917a923abd865bc82feadd5659a1d0d55318ca49","salt":"83f9a989d48e31b7a5e99c28df8a989c"}
+```
+3. add the result json from above inside
+add the above json result as new file in `couchdb-setup/bootstrap/_users/newuser@epfl.ch.json` :
+3.a you can remove the _rev field
+
+```json
+{
+  "_id": "org.couchdb.user:newuser@epfl.ch",
+  "name": "newuser@epfl.ch",
+  "roles": [],
+  "type": "user",
+  "password_scheme": "pbkdf2",
+  "iterations": 10,
+  "derived_key": "917a923abd865bc82feadd5659a1d0d55318ca49",
+  "salt": "83f9a989d48e31b7a5e99c28df8a989c"
+}
+```
+
+##### Using couchdb bootstrap
+- add a new file inside couchdb-setup/bootstrap/_users with
+```json
+{
+  "_id": "org.couchdb.user:newuser@epfl.ch",
+  "name": "newuser@epfl.ch",
+  "roles": [],
+  "type": "user",
+  "password": "plain_text_that_will_be_hash_by_couchdb",
+}
+```
+*BEWARE*:  this change should not be commited to github since the password is not encrypted
+- run the following command:
+
+```bash
+make setup-database
+```
+
+- CouchDB has hashed the password, you can get it on http://localhost:5984/\_utils/#database/\_users/\_all_docs
+- find the new user and download
+- save the document by deplacing `couchdb-setup/bootstrap/_users/new_username.json`
+- remove the `'_rev'` field and commit the file
+
 
 ### User authentication flow
 
@@ -104,34 +259,28 @@ sequenceDiagram
 
 ```
 
-### How to make a user admin user (from AZURE AD)
-* UNHCR users may request admin right to UNICC, providing [TODO: What do they need to provide? Or make a new project,right? To Double check]
-* Developers must list Azure admins in these 3 files :
-  - `couchdb-setup/bootstrap/ghg_projects_1696578512055758/_design/project/validate_doc_update.js`
-  - `couchdb-setup/bootstrap/shelter_projects_1698666594213623/_design/shelter/validate_doc_update.js`
-  - `frontend/src/plugins/user.ts`
-* Specifically, in those files the function `checkIfAdmin` contains a `unhcrAdmins` array.
-This array contains a list of string, each string correspond to the unique id (sub field) of the user in entra/Azure, which is the subject unique id.
 
-```
-  export function checkIfAdmin(user: CouchUser) {
-  // either we have the role 'admin' or '_admin'
-  // or we are in a custom list of unhcr users sub
-  const unhcrAdmins = [
-    "TBxz7Wb3aSrQGeFx1EbBtrtaKPht-4M87pznkWC2BYE" // nimri sub
-  ];
-```
 
-### Custom user management on EPFL-side
-[TODO: For reference - mettre ici Pierre?]
 
 ## Codebase structure & set-up
 
 ### Tech stack 
-[TODO Describe tech stack]
 
-
-
+#### list of services
+- frontend (vue2 spa using vuetify v2 framework and pouchdb)
+- couchdb (behave as the backend/api prefixed by /db)
+- rest-api (prefixed by /api: python fast api that allows upload and custom user signup on couchdb)
+    - use boto3 to upload files to the s3 instance
+    - use custom user management system for couchdb user creation and registering new users (also send email and password verification)
+    - We don't store the uploaded file directly to a database, it should be done by the frontend by talking directly to couchdb. The API just return the path served by the nginx reverse proxy
+- s3-server
+  - nginx reverse proxy to serve and cache static file on our minio s3 instance
+  - cf docker-compose file in [minio doc](./minio/README.md)
+- minio
+  - s3 server that allows us to store uploaded and static files for the frontend
+  - [minio doc](./minio/README.md)
+- traefik (global reverse proxy handling routing and cache for the whole app)
+- init_couchdb and azure-cron are here to update the jwt_keys on couchDB config to allow for JWT to work properly
 
 ## CouchDB setup:
 We need to run the couchdb-bootstrap to setup the databases and users, once.
@@ -148,7 +297,7 @@ We need to run the couchdb-bootstrap to setup the databases and users, once.
 
 
 ### CI/CD
-- We use the following workflows
+- We use the following workflows in .github/workflows
   - release-please to trigger tags and changelogs also releases (on push to main)
   - deploy-test that builds the images and push them to the ghcr registry then deploy them to unhcr-tss-test.epfl.ch for every push to the 'dev' branch
   - deploy-prod that builds the images and push them to the ghcr registry then deploy them to unhcr-tss.epfl.ch for every 'release created by release-please'
@@ -167,13 +316,6 @@ We need to run the couchdb-bootstrap to setup the databases and users, once.
 
 #### information about 127.0.0.11 as the static docker dns ip
 From: https://hwchiu.medium.com/fun-dns-facts-learned-from-the-kind-environment-241e0ea8c6d4
-Readers familiar with Docker Compose are likely aware that for convenient communication between containers, container names can be used directly as DNS targets. This design eliminates the need for containers to worry about IP changes. Docker, in fact, embeds a DNS server within its system to handle this issue, with the DNS server’s fixed IP being 127.0.0.11.
-
-The responsibilities of this DNS server can be categorized as follows:
-
-If the DNS request is for a container name, the IP of the container is returned.
-Otherwise, based on the host configuration, the DNS request is forwarded to an upstream DNS server.
-In the example depicted below, two containers, named “hwchiu” and “hwchiu2,” are running. Using nslookup, one can easily resolve the corresponding IP addresses. It’s also observable that the /etc/hosts file within these containers dynamically point to 127.0.0.11. This implies that all DNS requests within the containers are redirected to the built-in Docker DNS server.
 
 #### Create .env file to hold your Secrets
 
@@ -183,7 +325,11 @@ Create the files by running `make env-file`
 - ./.env
   is used by every service
 - ./frontend/.env
-  is used by the frontend
+  is used by the frontend and the azure-cron for the AZURE TENANT ID
+
+- For more information regarding the env variable necessary for the APP
+  - have a look at the comments in the .env that describe each variable
+  - have a look at the docker-compose file
 
 #### Installation
 
@@ -210,7 +356,6 @@ make run-frontend;
 # http://127.0.0.1:8080
 
 ```
-- have a look at [frontend readme](frontend/README.md)
 
 #### Visual Studio Code
 
@@ -221,97 +366,26 @@ Run configurations are in `.vscode`: https://code.visualstudio.com/docs/editor/d
 ### Local build with Docker Compose
 
 ```bash
-make run-local # will build with docker-compose and run docker-compose up -d with ghcr.io built images
+make run-local # will build with docker-compose and run docker-compose up -d without ghcr.io built images
 ```
 
-### prod and dev on docker file
-- We use an override for the configuration to avoid rebuilding the images
-
-### Server @EPFL
-We use enacit-ansible to automate our process with the CD service
-
-### Deployment process
+### Server @EPFL Deployment process
+We use enacit-ansible to automate our process with the CD service cf .github/workflows
 
 * regular (at least weekly) releases onto the staging environment - http://unhcr-tss-test.epfl.ch/ accessible within EPFL only.
 * monthly (by the 1st) releases onto the production environment  http://unhcr-tss.epfl.ch/ including only features validated.
 * intermediate releases may happen occasionally for hot fixes 
 
-Releases number follow [semantic versioning conventions](https://semver.org/\). 
+Releases number follow [semantic versioning conventions](https://semver.org/\). \
 
-## Create a new user
-There is two way of doing this: first one using curl; second one using couchdb-bootstrap
+#### prod and dev on docker file
+- We use an override for the configuration to avoid rebuilding the images
+  - for dev: `make run-dev` cf override in docker-compose.dev.yml
+  - for prod: `make run` cf override in docker-compose.prod.yml
 
 
-### Using curl
-1. Follow: https://docs.couchdb.org/en/stable/intro/security.html#creating-a-new-user
-```
-curl -X PUT http://admin:couchdb@localhost/db/_users/org.couchdb.user:newuser@epfl.ch \
-     -H "Accept: application/json" \
-     -H "Content-Type: application/json" \
-     -d '{"name": "newuser@epfl.ch", "password": "plain_text_password_that_will_be_encrypted", "roles": [], "type": "user"}'
-```
-2. retrieve the inserted documented
-```
- curl -X GET http://admin:couchdb@localhost/db/_users/org.couchdb.user:newuser@epfl.ch \
-     -H "Accept: application/json" \
-     -H "Content-Type: application/json"
-
-{"_id":"org.couchdb.user:newuser@epfl.ch","_rev":"1-xxxx","name":"newuser@epfl.ch","roles":[],"type":"user","password_scheme":"pbkdf2","iterations":10,"derived_key":"917a923abd865bc82feadd5659a1d0d55318ca49","salt":"83f9a989d48e31b7a5e99c28df8a989c"}
-```
-3. add the result json from above inside
-add the above json result as new file in `couchdb-setup/bootstrap/_users/newuser@epfl.ch.json` :
-3.a you can remove the _rev field
-
-```json
-{
-  "_id": "org.couchdb.user:newuser@epfl.ch",
-  "name": "newuser@epfl.ch",
-  "roles": [],
-  "type": "user",
-  "password_scheme": "pbkdf2",
-  "iterations": 10,
-  "derived_key": "917a923abd865bc82feadd5659a1d0d55318ca49",
-  "salt": "83f9a989d48e31b7a5e99c28df8a989c"
-}
-```
-
-### Using couchdb bootstrap
-- add a new file inside couchdb-setup/bootstrap/_users with
-```json
-{
-  "_id": "org.couchdb.user:newuser@epfl.ch",
-  "name": "newuser@epfl.ch",
-  "roles": [],
-  "type": "user",
-  "password": "plain_text_that_will_be_hash_by_couchdb",
-}
-```
-*BEWARE*:  this change should not be commited to github since the password is not encrypted
-- run the following command:
-
-```bash
-make setup-database
-```
-
-- CouchDB has hashed the password, you can get it on http://localhost:5984/\_utils/#database/\_users/\_all_docs
-- find the new user and download
-- save the document by deplacing `couchdb-setup/bootstrap/_users/new_username.json`
-- remove the `'_rev'` field and commit the file
-
-## Update public keys for unhcr azure server (change may happen)
-- run the following
-```bash
-make azure
-```
-- it will update the couchdb/local.ini configuration under jwt_keys
-
-## File uploads used by the shelter app and custom user registration
-- 2 services (docker compose) necessary
-  - (s3_server) nginx proxy to our minio s3 instance (cf docker-compose file in [minio doc](./minio/README.md)
-  - (rest-api)  python fast api
-    - use boto3 to upload files to the s3 instance
-    - use custom user management system for couchdb user creation and registering new users (also send email and password verification)
-
-We don't store the uploaded file directly to a database, it should be done by the frontend by talking directly to couchdb. The API just return the path served by the nginx reverse proxy
-
-## okay
+#### Releases
+  - you can have a look at: https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/releases for all the releases and messages
+  - You can find the images for x86-64 architecture https://github.com/orgs/EPFL-ENAC/packages?repo_name=unhcr-geneva-tech-hub-app
+    - with the dev tag corresponding to the latest commit on the dev branch
+    - with tag for every tagged commit of the repository (main branch, for production)
