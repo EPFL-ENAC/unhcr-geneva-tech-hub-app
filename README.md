@@ -1,4 +1,5 @@
-# README and Maintenance plan for UNHCR-TSS Apps
+# README & Maintenance plan for UNHCR-TSS Apps
+_Last update: March 2024_
 
 ## Description
 The UNHCR TSS Apps comprise 2 tools : GHG Calculator & Shelter Sustainability.
@@ -8,8 +9,6 @@ They operate independantly, and rely on different databases (see [Updating conte
 The tools have been conceived by [EPFL Essential Tech](https://www.essentialtech.ch/) and implemented by [EPFL ENAC-IT4R](https://www.epfl.ch/schools/enac/category/research/enac-it4research/) between 2022 and March 2024, with the codebase accessible at [https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/).
 
 After March 2024, the tools will be fully integrated on UNHCR TIMS infrastructure, and maintained by [UNHCR](https://www.unhcr.org/) (domain expertise, product management) & [UNICC](https://www.unicc.org/) (technical maintenance).
-
-TODO: @charlie.weil propose list of contributors
 
 ## Updating contents (CSVs databases etc)
 
@@ -86,26 +85,18 @@ If you want to directly update a file for instance (GHG tool User's Manual):
 
 ### Roles definition
 
-| User Type   | Description                                                                   | Permissions                                                                      |
-|-------------|-------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
-| Normal User | - No roles                                                                    | - Cannot Delete/Update if not in 'users' field of the object in CouchDB          |
-|             |                                                                               | - Can create an object in CouchDB (Shelter and GHG app)                          |
-| Admin User  | - CouchDB admin with the _admin role                                          | - Can access, Update, and delete every object in CouchDB                         |
-|             | - CouchDB user with an admin role                                             |                                                                                  |
-|             | - User's sub (from jwt) is in the unhcrAdmins array                           |                                                                                  |
-| Guest User  | - Not authenticated                                                           | - Can access the app in read-only mode                                           |
-|             |                                                                               | - Cannot create, update, or delete things                                       |
-
 | User Type   | Permissions                                                                      | Authenticated |
 |-------------|----------------------------------------------------------------------------------|---------------|
-| Normal User | - Cannot Delete/Update if not in 'users' field of the object in CouchDB          | Yes |
-|             | - Can create an object in CouchDB (Shelter and GHG app)                          |     |
+| Normal User | - Can create an object in CouchDB (Shelter and GHG app) but Cannot Delete/Update if not in 'users' field of the object in CouchDB        | Yes |
 | Admin User  | - Can access, Update, and delete every object in CouchDB                         | Yes|
-| Guest User  | - Can access the app in read-only mode                                           | No |
-|             | - Cannot create, update, or delete things                                        | |
+| Guest User  | - Can access the app in read-only mode but Cannot create, update, or delete things                                             | No |
 
+Admin users inherit their right one of the following ways :
+* CouchDB admin with the _admin role
+*  CouchDB user with an admin role
+*  User's sub (from jwt) is in the unhcrAdmins array 
 
-#### Intro to CouchDB
+### Intro to CouchDB
 We removed the roles in the _security policy of every database, so every user may be able to read the databases
 Here is an example of policy json
 
