@@ -126,36 +126,17 @@ If there are any member names or roles defined for a database, then only authent
 cf [https://docs.couchdb.org/en/3.2.0/api/database/security.html#db-security]
 
 ### Adding a user
- - We can add a user in the users database in Couchdb
- - If you want to add a user in AZURE AD, you need to signup via https://tims.unhcr.org/signup or contact the Global Service Desk <hqussd@unhcr.org>
-
-#### How to make a CouchDB user admin
-- add the role 'admin' in the CouchDB user object
-
-#### How to make an AZURE AD user admin
-* UNHCR users may request admin right to UNICC, providing [TODO: What do they need to provide? Or make a new project,right? To Double check]
-* Developers must list Azure admins in these 3 files :
-  - `couchdb-setup/bootstrap/ghg_projects_1696578512055758/_design/project/validate_doc_update.js`
-  - `couchdb-setup/bootstrap/shelter_projects_1698666594213623/_design/shelter/validate_doc_update.js`
-  - `frontend/src/plugins/user.ts`
-* Specifically, in those files the function `checkIfAdmin` contains a `unhcrAdmins` array.
-This array contains a list of string, each string correspond to the unique id (sub field) of the user in entra/Azure, which is the subject unique id.
-
-```
-  export function checkIfAdmin(user: CouchUser) {
-  // either we have the role 'admin' or '_admin'
-  // or we are in a custom list of unhcr users sub
-  const unhcrAdmins = [
-    "TBxz7Wb3aSrQGeFx1EbBtrtaKPht-4M87pznkWC2BYE" // nimri sub
-  ];
-```
+ - In the users database in Couchdb (see [adding a CouchDB User](#adding-a-user-in-couchdb))
+ - in AZURE AD
+  - You need to signup via https://tims.unhcr.org/signup or contact the Global Service Desk <hqussd@unhcr.org> for more information
 
 
 #### Adding a user in CouchDB
 
-##### Create a new user
-There is two way of doing this: first one using curl; second one using couchdb-bootstrap
-
+There is three way of creating a new user
+1) using curl ([see](#using-curl))
+3) using the fauxton interface on http://localhost:5984/_utils/#/database/_users/_new
+2) using couchdb-bootstrap ([see](#using-couchdb-bootstrap))
 
 ##### Using curl
 1. Follow: https://docs.couchdb.org/en/stable/intro/security.html#creating-a-new-user
@@ -173,8 +154,9 @@ curl -X PUT http://admin:couchdb@localhost/db/_users/org.couchdb.user:newuser@ep
 
 {"_id":"org.couchdb.user:newuser@epfl.ch","_rev":"1-xxxx","name":"newuser@epfl.ch","roles":[],"type":"user","password_scheme":"pbkdf2","iterations":10,"derived_key":"917a923abd865bc82feadd5659a1d0d55318ca49","salt":"83f9a989d48e31b7a5e99c28df8a989c"}
 ```
-3. add the result json from above inside
-add the above json result as new file in `couchdb-setup/bootstrap/_users/newuser@epfl.ch.json` :
+3. Update the couchdb-setup boostrap to be persistent
+- add the result json from above inside
+- add the above json result as new file in `couchdb-setup/bootstrap/_users/newuser@epfl.ch.json` :
 3.a you can remove the _rev field
 
 ```json
@@ -209,9 +191,32 @@ make setup-database
 ```
 
 - CouchDB has hashed the password, you can get it on http://localhost:5984/\_utils/#database/\_users/\_all_docs
-- find the new user and download
-- save the document by deplacing `couchdb-setup/bootstrap/_users/new_username.json`
-- remove the `'_rev'` field and commit the file
+- find the new user and download it as json
+- save the document by deplacing `couchdb-setup/bootstrap/_users/new_username.json` (replace by your username)
+- remove the `'_rev'` field and commit the file to your git repository
+
+
+### Role management
+#### How to make a CouchDB user admin
+- add the role 'admin' in the CouchDB user object
+
+#### How to make an AZURE AD user admin
+* UNHCR users may request admin right to UNICC, providing [TODO: What do they need to provide? Or make a new project,right? To Double check]
+* Developers must list Azure admins in these 3 files :
+  - `couchdb-setup/bootstrap/ghg_projects_1696578512055758/_design/project/validate_doc_update.js`
+  - `couchdb-setup/bootstrap/shelter_projects_1698666594213623/_design/shelter/validate_doc_update.js`
+  - `frontend/src/plugins/user.ts`
+* Specifically, in those files the function `checkIfAdmin` contains a `unhcrAdmins` array.
+This array contains a list of string, each string correspond to the unique id (sub field) of the user in entra/Azure, which is the subject unique id.
+
+```
+  export function checkIfAdmin(user: CouchUser) {
+  // either we have the role 'admin' or '_admin'
+  // or we are in a custom list of unhcr users sub
+  const unhcrAdmins = [
+    "TBxz7Wb3aSrQGeFx1EbBtrtaKPht-4M87pznkWC2BYE" // nimri sub
+  ];
+```
 
 
 ### User authentication flow
@@ -255,7 +260,7 @@ sequenceDiagram
 
 ### Tech stack 
 
-#### list of services
+Here is the list of services
 - frontend (vue2 spa using vuetify v2 framework and pouchdb)
 - couchdb (behave as the backend/api prefixed by /db)
 - rest-api (prefixed by /api: python fast api that allows upload and custom user signup on couchdb)
@@ -271,33 +276,6 @@ sequenceDiagram
 - traefik (global reverse proxy handling routing and cache for the whole app)
 - init_couchdb and azure-cron are here to update the jwt_keys on couchDB config to allow for JWT to work properly
 
-## CouchDB setup:
-We need to run the couchdb-bootstrap to setup the databases and users, once.
-- It's only necessary if you start the project with a new database with no documents
-- by running `make setup-database` at the root level
-
-### Config file
-- We used to generate config file in json. But the database was starting without the proper jwt. And that does not work properly without a full restart which takes too much time
-- We decided to translate manually the json to a .ini file in
-`couchdb/local.ini` for now
-- It should be setup by env variable via kubernetes or mounting the local.ini file as a volume
-
-
-### CouchDB authentication
-- more information on the [README](couchdb-setup/README.md)
-
-## Development
-
-- We use husky for git hooks: https://typicode.github.io/husky/#/?id=install
-- We use standard version and commitlint for automatic release log and proper commit message
-
-
-### CI/CD
-- We use the following workflows in .github/workflows
-  - release-please to trigger tags and changelogs also releases (on push to main)
-  - deploy-test that builds the images and push them to the ghcr registry then deploy them to unhcr-tss-test.epfl.ch for every push to the 'dev' branch
-  - deploy-prod that builds the images and push them to the ghcr registry then deploy them to unhcr-tss.epfl.ch for every 'release created by release-please'
-
 ### Prerequisites
 
 - [Make](https://www.gnu.org/software/make/) (gnu make)
@@ -307,13 +285,8 @@ We need to run the couchdb-bootstrap to setup the databases and users, once.
 - [yarn]
 - [Docker](https://www.docker.com/)
   - [Docker Compose](https://docs.docker.com/compose/) 1.27.0+
-
-### Run for development using docker compose
-
-#### information about 127.0.0.11 as the static docker dns ip
-From: https://hwchiu.medium.com/fun-dns-facts-learned-from-the-kind-environment-241e0ea8c6d4
-
-#### Create .env file to hold your Secrets
+### Config files
+#### Env file
 
 We use two env files `./.env` and `./frontend/.env`
 Create the files by running `make env-file`
@@ -323,9 +296,32 @@ Create the files by running `make env-file`
 - ./frontend/.env
   is used by the frontend and the azure-cron for the AZURE TENANT ID
 
-- For more information regarding the env variable necessary for the APP
+For more information regarding the env variable necessary for the APP:
   - have a look at the comments in the .env that describe each variable
   - have a look at the docker-compose file
+#### CouchDB
+- We used to generate config file in json. But the database was starting without the proper jwt. And that does not work properly without a full restart which takes too much time
+- We decided to translate manually the json to a .ini file in
+`couchdb/local.ini` for now
+- It should be setup by env variable via kubernetes or mounting the local.ini file as a volume
+
+### CI/CD
+- We use the following workflows in .github/workflows
+  - release-please to trigger tags and changelogs also releases (on push to main)
+  - deploy-test that builds the images and push them to the ghcr registry then deploy them to unhcr-tss-test.epfl.ch for every push to the 'dev' branch
+  - deploy-prod that builds the images and push them to the ghcr registry then deploy them to unhcr-tss.epfl.ch for every 'release created by release-please'
+
+
+### Development tools
+
+- We use husky for git hooks: https://typicode.github.io/husky/#/?id=install
+- We use standard version and commitlint for automatic release log and proper commit message
+
+
+### Run for local development
+
+#### information about 127.0.0.11 as the static docker dns ip
+From: https://hwchiu.medium.com/fun-dns-facts-learned-from-the-kind-environment-241e0ea8c6d4
 
 #### Installation
 
@@ -333,7 +329,7 @@ Create the files by running `make env-file`
 make install
 ```
 
-#### CLI
+#### Makefile and examples
 
 ```bash
 # to run all the docker compose services
@@ -342,6 +338,9 @@ make run-local
 make run-database;
 
 # setup the database if changes are made locally (change couchdb bootstrap files et c)
+# We need to run the couchdb-bootstrap to setup the databases and users, once.
+# - It's only necessary if you start with a new couchdb instance
+# - by running `make setup-database` at the root level
 make setup-database;
 # donwload files to upload to local minio service (pdfs and videos mainly)
 make setup-data;
@@ -352,6 +351,7 @@ make run-frontend;
 # http://127.0.0.1:8080
 
 ```
+
 
 #### Visual Studio Code
 
