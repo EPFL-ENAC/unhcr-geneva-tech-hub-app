@@ -53,6 +53,11 @@ TODO: Cara Reference Data table with update frequencies
 | Shelter Sustainability | Materials Transport  | | `reference-data/shelter/transports.csv`                | `frontend/src/assets/references/transports.json`| `frontend/src/store/SheltersTransportModule.ts` |
 
 #### How to update
+
+##### Data curators (UNHCR)
+- Data curators may update directly the CSV or an Excel version of the CSVs document, shared between UNHCR and UNICC, which developers will export as CSVs.
+
+##### Developers (UNICC) 
 - Find the appropriate csv file in the reference-data/ folder (see above for reference)
 - Update/replace the csv file (should respect the same file format) which is a: `comma separated csv file``
 - Run the `make setup-reference` command that will update the csv equivalent json file in the frontend/src/assets/references directory
