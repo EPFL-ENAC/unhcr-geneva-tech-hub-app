@@ -5,6 +5,7 @@ import Login from "@/views/LoginView.vue";
 import Register from "@/views/RegisterView.vue";
 import ResetPassword from "@/views/ResetPasswordView.vue";
 import Unconfirm from "@/views/UnconfirmView.vue";
+import UserMeView from "@/views/UserMeView.vue";
 
 const baseRoute = [];
 if (env.VUE_APP_ENVIRONEMENT === "developement") {
@@ -18,9 +19,20 @@ if (env.VUE_APP_ENVIRONEMENT === "developement") {
       Login,
     },
   });
+  baseRoute.push({
+    path: "/me",
+    name: "Me",
+    meta: {
+      title: "Me",
+    },
+    components: {
+      default: UserMeView,
+    },
+  });
 } else {
   baseRoute.push({
     path: "/login",
+    name: "LoginRedirectToApps",
     redirect: "/apps",
   });
 }
@@ -34,7 +46,7 @@ export default [
       title: "Register",
     },
     components: {
-      Register,
+      default: Register,
     },
   },
   {
@@ -44,7 +56,7 @@ export default [
       title: "Confirm",
     },
     components: {
-      Confirm,
+      default: Confirm,
     },
   },
   {
@@ -54,7 +66,7 @@ export default [
       title: "Unconfirm",
     },
     components: {
-      Unconfirm,
+      default: Unconfirm,
     },
   },
   {
@@ -64,7 +76,7 @@ export default [
       title: "Reset password",
     },
     components: {
-      ResetPassword,
+      default: ResetPassword,
     },
   },
   {
@@ -74,7 +86,7 @@ export default [
       title: "Forgot password",
     },
     components: {
-      ForgotPassword,
+      default: ForgotPassword,
     },
   },
   {

@@ -207,10 +207,6 @@ export default class ResetPasswordComponent extends Vue {
       });
   }
 
-  async created(): Promise<void> {
-    console.log("created");
-  }
-
   required(value: string) {
     if (value) {
       return true;

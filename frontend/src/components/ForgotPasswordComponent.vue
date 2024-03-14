@@ -130,9 +130,5 @@ export default class ForgotPasswordComponent extends Vue {
         this.loading = false;
       });
   }
-
-  async created(): Promise<void> {
-    console.log("created");
-  }
 }
 </script>

@@ -79,7 +79,9 @@ export async function loginJWT(token: string): Promise<AxiosResponse> {
   // parse the jwt, and update userCTX with custom email claim
   const payload = parseJwt(token);
   if (!payload.exp) {
-    console.error("(no exp field in JWT token payload)");
+    if (env.NODE_ENV === "development") {
+      console.error("(no exp field in JWT token payload)");
+    }
     throw expireTokenAndError("Authentication has expired, please login again");
   }
   const expiredDate = new Date(payload.exp * 1000).getTime();
@@ -89,9 +91,11 @@ export async function loginJWT(token: string): Promise<AxiosResponse> {
   );
   const hasExpired = ttlSeconds <= 0;
   if (hasExpired) {
-    console.error(
-      "Authentication has expired, please login again: expiration (exp) not in future"
-    );
+    if (env.NODE_ENV === "development") {
+      console.error(
+        "Authentication has expired, please login again: expiration (exp) not in future"
+      );
+    }
     throw expireTokenAndError("Authentication has expired, please login again");
   }
 

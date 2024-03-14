@@ -115,6 +115,10 @@ Admin users inherit their right one of the following ways :
 *  CouchDB user with an admin role
 *  User's sub (from jwt) is in the unhcrAdmins array 
 
+Normal users have an empty roles array: `[]`
+
+Guest users have a roles array containing a role specific to the frontend called `["guest"]` since couchdb _session does not return it
+
 ### Intro to CouchDB
 We removed the roles in the _security policy of every database, so every user may be able to read the databases
 Here is an example of policy json
@@ -239,15 +243,25 @@ This array contains a list of string, each string correspond to the unique id (s
 ---
 title: The TSS Tools' User authentication flow
 Description: at app start up we check that we're already authenticated
-  1) first we start a spinner
-  - CouchDB authentication has priority (we use the Authorization header via cookie AuthSession http-Only samesite only)
-  - If we're not already authenticated with Couchdb, we check if we have a token on the session storage, if that's the case, we store the azure user in session storage and we do nothing
-    - What may happen is that we have a token which has expired. In that case, we should do nothing to not trigger errors (despite the fact that the CouchDB session API will return an http error.)
-  2) if we're not logged in (nor session storage JWT (azure) nor cookie (couchdb))
-  3) we want to do a sso silent login to check that we're not already logged in Azure
+  0) We start a spinner (to inform the user the app is not ready)
+  1) We check if we're authenticated properly on CouchDB
+  - CouchDB Cookie authentication has priority over Azure JWT (we use the Authorization header via cookie AuthSession http-Only samesite only)
+  - If we're authenticated with Couchdb cookie we set the user context via vuex in session storage
+  - Else we check if we have a valid JWT on the session storage, if it's okay we store it (JWT azure) in the session storage and the user context via vuex/session storage from CouchDB
+    - What may happen is that we have a token which has expired. In that case, we should do nothing to not trigger errors
+      - TODO:
+        - (despite the fact that the CouchDB session API will return an http error.)
+        - Remove sessions storage ?
+
+  2) If we're not logged in (nor valid session storage JWT (azure) nor valid cookie (couchdb))
+    -> We want to do a sso silent login to check that we're not already logged in Azure
     -> if we're not logged in (sso failure) --> we're a guest user
-    --> if we're logged in, we store the token in the session storage and the user context via vuex/session storage
+    --> if we're logged in
+      - we store the token in the session storage and the user context via vuex/session storage after couchdb verification of the validity of the token
+
   4) if we're guest mode, we should ensure that we don't have a stale cookie by deleting session on Couchdb (that will remove couchdb cookie) and by removing the sessionStorage user that may be stale
+
+  5) We stop the spinner
 ---
 sequenceDiagram
     Spinner -->>User: Start spinner
