@@ -719,7 +719,7 @@ export default class App extends Vue {
   logoutStore!: () => AxiosPromise;
   getSessionStore!: ({
     byPassLoading,
-  }: Record<string, boolean>) => AxiosPromise;
+  }: Record<string, boolean>) => Promise<Record<string, unknown>>;
   loginToken!: ({
     token,
     byPassLoading,
@@ -1024,28 +1024,43 @@ export default class App extends Vue {
     } else {
       removeAllOauthTokens();
     }
+    this.loading = false;
   }
   /** Run once. */
   async mounted(): Promise<void> {
     // add listener to msal browser https:/
     //github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/events.md
-    window.authModule.myMSALObj.addEventCallback((message: EventMessage) => {
-      // Update UI or interact with EventMessage here
-      if (message.eventType === EventType.LOGIN_SUCCESS) {
-        this.firstToken(message.payload);
+    window.authModule.myMSALObj.addEventCallback(
+      async (message: EventMessage) => {
+        // Update UI or interact with EventMessage here
+        if (message.eventType === EventType.LOGIN_SUCCESS) {
+          this.firstToken(message.payload);
+        }
+        if (message.eventType === EventType.SSO_SILENT_SUCCESS) {
+          this.firstToken(message.payload);
+        }
+        if (message.eventType === EventType.SSO_SILENT_FAILURE) {
+          const resp = await this.getSessionStore({ byPassLoading: true });
+          if (resp === undefined || resp?.name === "null") {
+            // meaning we are not logged in and we're a guest
+            this.loginAsGuest();
+          }
+          this.loading = false;
+        }
       }
-      if (message.eventType === EventType.SSO_SILENT_SUCCESS) {
-        this.firstToken(message.payload);
-      }
-      if (message.eventType === EventType.SSO_SILENT_FAILURE) {
-        console.log("not logged in, we should behave as guest", message);
-        this.loginAsGuest();
-      }
-    });
+    );
     this.$vuetify.theme.dark = false;
     document.title = this?.title ?? "unknown";
 
-    window.authModule.attemptSsoSilent();
+    this.loading = true;
+    const resp = await this.getSessionStore({ byPassLoading: true });
+    // couchdb session is superseeding azure
+    if (resp === undefined || resp?.name === null) {
+      // meaning we are not logged in in couchdbm we'll try to login via azure and default to guest otherwise
+      window.authModule.attemptSsoSilent();
+    } else {
+      this.loading = false;
+    }
 
     this.$store.subscribe((mutation) => {
       const shouldUpdate = ["storeMessage"];

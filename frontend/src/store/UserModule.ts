@@ -371,60 +371,52 @@ const actions: ActionTree<UserState, RootState> = {
     { byPassLoading }
   ) => {
     // if user logged in as guest no session needed!
-    const currentUser: CouchUser = context.getters["user"];
-    // check session only if currentUser is loaded true
-    if (
-      currentUser.loaded === false ||
-      currentUser.name === null ||
-      currentUser.name === undefined ||
-      currentUser.name === "" // legacy could happen when initializing a user
-    ) {
-      // no name: no authentication do nothing
-      return;
+    // const currentUser: CouchUser = context.getters["user"];
+    const sessionStorageToken = sessionStorage.getItem(SessionStorageKey.Token);
+
+    // we're not a guest user nor a oauth user but a normal user (couchdb user)
+    if (!byPassLoading) {
+      context.commit("SET_USER_LOADING");
     }
 
-    const sessionStorageToken = sessionStorage.getItem(SessionStorageKey.Token);
+    const userCouchDB = await getSessionWithCookie()
+      .then((response) => {
+        const user = response.data;
+        try {
+          // if we bypass, we don't refresh
+          if (byPassLoading) {
+            user.userCtx.loaded = true;
+            context.commit("UNSET_USER_LOADING_UNIQUELY");
+          }
+          // Find a way to pass user.info.authenticated (jwt/cookie/default) to userCTX
+          context.commit("SET_USER", user.userCtx);
+        } catch (e: unknown) {
+          console.error(e);
+        }
+        return user.userCtx;
+      })
+      .catch((e: unknown) => {
+        // ExpireError mostly we should try to refresh
+        throw e;
+      })
+      .finally(() => {
+        context.commit("UNSET_USER_LOADING");
+      });
+    if (userCouchDB?.name !== null) {
+      // we're a couchdb user, we have priority
+      return userCouchDB;
+    }
+    // const sessionStorageToken = sessionStorage.getItem(SessionStorageKey.Token);
     if (sessionStorageToken) {
       // we're a oauth user
-      return await context.dispatch("loginToken", {
+      const resp = await context.dispatch("loginToken", {
         token: sessionStorageToken,
         byPassLoading,
       });
+      return resp.data;
     }
 
-    if (
-      typeof currentUser.name === "string" &&
-      currentUser.name !== GUEST_NAME
-    ) {
-      // we're not a guest user nor a oauth user but a normal user (couchdb user)
-      if (!byPassLoading) {
-        context.commit("SET_USER_LOADING");
-      }
-
-      return await getSessionWithCookie()
-        .then((response) => {
-          const user = response.data;
-          try {
-            // if we bypass, we don't refresh
-            if (byPassLoading) {
-              user.userCtx.loaded = true;
-              context.commit("UNSET_USER_LOADING_UNIQUELY");
-            }
-            // Find a way to pass user.info.authenticated (jwt/cookie/default) to userCTX
-            context.commit("SET_USER", user.userCtx);
-          } catch (e: unknown) {
-            console.error(e);
-          }
-        })
-        .catch((e: unknown) => {
-          // ExpireError mostly we should try to refresh
-          throw e;
-        })
-        .finally(() => {
-          context.commit("UNSET_USER_LOADING");
-        });
-    }
-    return; // guest user
+    return userCouchDB; // guest user
   },
 };
 

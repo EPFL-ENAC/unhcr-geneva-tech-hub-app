@@ -18,6 +18,26 @@ After March 2024, the tools will be fully integrated on UNHCR TIMS infrastructur
 ## Updating contents (CSVs databases etc)
 
 [TODO : List of databases and update frequency - by Cara]
+```mermaid
+---
+title: The TSS Tools' Reference Data
+---
+flowchart TD
+    AB[(Grid emission factors)]:::ToUpgrade --> A
+    AC[(Emission Factors)]:::Databases --> A
+    AD[(Default Values)]:::ToUpgrade --> A
+    AE[(UNHCR Locations)]:::Databases --> A
+    AF[(GHG fNRB)]:::Databases --> A
+    BA[(Materials)]:::Databases --> B
+    BB[(Materials transport)]:::Databases --> B
+
+    A(GHG Calculator):::App
+    B(Shelter Sustainability):::App
+
+classDef ToUpgrade stroke:#000,stroke-width:1px,fill:#ffb3b3,font-size:20px
+classDef Databases stroke:#000,stroke-width:1px,fill:#dfdffc,font-size:20px
+classDef App stroke:#000,stroke-width:1px,fill:#c1fbc1,font-size:30px,padding:10px
+```
 
 ### Reference DB 
 * The reference file is maintained by UNHCR and stored [here as an Excel](https://epflch.sharepoint.com/:x:/r/sites/ENAC-IT/Documents%20partages/Research%20IT/Advanced%20Services/0041%20%E2%80%93%20UNHCR/PHASE_2/GHG/DATABASES/GHG_EF_DBs_byModule.xlsx?d=w93e39ddb340758cfe3d57ae7412fc534&csf=1&web=1&e=mTGz8n)
@@ -49,6 +69,40 @@ After March 2024, the tools will be fully integrated on UNHCR TIMS infrastructur
 
 ### Adding a user (with AZURE AD)
 [TODO]
+
+### User authentication flow
+
+```mermaid
+---
+title: The TSS Tools' User authentication flow
+Description: at app start up we check that we're already authenticated
+  1) first we start a spinner
+  - CouchDB authentication has priority (we use the Authorization header via cookie AuthSession http-Only samesite only)
+  - If we're not already authenticated with Couchdb, we check if we have a token on the session storage, if that's the case, we store the azure user in session storage and we do nothing
+    - What may happen is that we have a token which has expired. In that case, we should do nothing to not trigger errors (despite the fact that the CouchDB session API will return an http error. TODO check that)
+  2) if we're not logged in (nor session storage JWT (azure) nor cookie (couchdb))
+  3) we want to do a sso silent login to check that we're not already logged in Azure
+    -> if we're not logged in (sso failure) --> we're a guest user
+    --> if we're logged in, we store the token in the session storage and the user context via vuex/session storage
+  4) if we're guest mode, we should ensure that we don't have a stale cookie by deleting session on Couchdb (that will remove couchdb cookie) and by removing the sessionStorage user that may be stale
+---
+sequenceDiagram
+    Spinner -->>User: Start spinner
+    User->>CouchDB: Are we authenticated via cookie or JWT?
+    CouchDB->>User: Yes, userCtx json with name not null and sub if JWT
+    User-->>Spinner: We're authenticated, cancel spinner
+    CouchDB->>User: No, userCtx name null, we're not authenticated via cookie,JWT
+    User->>Azure: Silent sso, to check if we're authenticated on azure
+    Azure->>User: Yes
+    User->>CouchDB: Check that jwt token is valid
+    CouchDB->>User: Yes, userCtx json with name not null and sub if JWT
+    User-->>Spinner: We're authenticated, cancel spinner
+    Azure->>User: No
+    User->>Guest: Guest mode (read only)
+    Guest-->>Spinner: We're not authenticated, cancel spinner
+    Spinner--xEndOfFlow: Stop flow
+
+```
 
 ### How to make a user admin user (from AZURE AD)
 * UNHCR users may request admin right to UNICC, providing [TODO: What do they need to provide? Or make a new project,right? To Double check]
@@ -260,3 +314,4 @@ make azure
 
 We don't store the uploaded file directly to a database, it should be done by the frontend by talking directly to couchdb. The API just return the path served by the nginx reverse proxy
 
+## okay
