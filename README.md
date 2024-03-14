@@ -58,6 +58,42 @@ classDef App stroke:#000,stroke-width:1px,fill:#c1fbc1,font-size:30px,padding:10
   * Materials ==> reference-data/shelter/materials.csv
   * Materials transport ==> reference-data/shelter/transports.csv
 
+#### which files are generated from a csv ?
+##### For GHG
+
+- ghg_reference
+- ghg_default_value
+- ghg_fnrb
+- solar_averaged
+- unhcr_location
+- grid_emission_factors
+
+##### For Shelter
+everything (which means materials.json and transports.json)
+
+##### Reference data for Ghg APP
+###### generated
+- ghg_reference.json // used by frontend/src/store/GhgReferenceModule.ts
+- ghg_default_value.json // used by frontend/src/store/GhgDefaultValuesModule.ts
+- ghg_fnrb.json // used by frontend/src/store/GHGReferencefNRB.ts
+- solar_averaged.json // used by frontend/src/store/GHGReferenceSolarModule.ts ( INFO page )
+- unhcr_location.json // frontend/src/store/UNHCRLocationModule.ts
+- grid_emission_factors.json // used by frontend/src/store/GhgModule.ts via frontend/src/store/GhgReferenceGridModule.ts
+- ghg_ef_mixed_biowaste_list.json // used by frontend/src/store/GHGReferenceBioWasteModule.ts
+- ghg_ef_mixed_non_biowaste_list.json // used by frontend/src/store/GHGReferenceNonBioWasteModule.ts
+
+###### not generated from CSV
+- ghg_country_region_list.json // used by frontend/src/store/GHGReferenceRegionModule.ts
+- ghg_country_region_map.json // used by frontend/src/components/green_house_gaz/wash/DomesticSolidWaste.ts
+- ghg_ef_mixed_biowaste.json // used by frontend/src/store/GHGReferenceBioWasteModule.ts and frontend/src/components/green_house_gaz/wash/DomesticSolidWaste.ts
+- ghg_ef_mixed_non_biowaste.json // used by frontend/src/store/GHGReferenceNonBioWasteModule.ts
+- ghg_ref_key_name.json // used by frontend/src/components/green_house_gaz/wash/DomesticSolidWaste.ts
+- ghg_ref_name_key.json // used by frontend/src/components/reference_data/GHGMixedBiowaste.vue and frontend/src/components/reference_data/GHGMixedNonBiowaste.vue
+
+##### Reference data for Shelter app
+- materials.json // used by frontend/src/store/SheltersMaterialModule.ts
+- transports.json // used by frontend/src/store/SheltersTransportModule.ts
+
 #### How to update
 - find the appropriate csv file in the reference-data/ folder (see above for reference)
 - update/replace the csv file (should respect the same file format) which is a: `comma separated csv file``
@@ -116,6 +152,31 @@ classDef App stroke:#000,stroke-width:1px,fill:#c1fbc1,font-size:30px,padding:10
 ## Users & Roles
 
 ### Roles definition
+
+#### Intro to CouchDB
+We removed the roles in the _security policy of every databse, so every user may be able to read the databases
+Here is an example of policy json
+
+Bottom line: We don't use any roles for our users (only the admin, but see below)
+
+```json
+{
+  "members": {
+    "roles": [],
+    "names": []
+  },
+  "admins": {
+    "roles": ["_admin"],
+    "names": []
+  }
+}
+```
+
+Since CouchDB 3.x newly created databases have by default the _admin role to prevent unintentional access.
+
+If there are any member names or roles defined for a database, then only authenticated users having a matching name or role are allowed to read documents from the database
+cf [https://docs.couchdb.org/en/3.2.0/api/database/security.html#db-security]
+
 #### What are the roles
  - Normal user
   - no roles
@@ -286,6 +347,13 @@ sequenceDiagram
 We need to run the couchdb-bootstrap to setup the databases and users, once.
 - It's only necessary if you start the project with a new database with no documents
 - by running `make setup-database` at the root level
+
+### Config file
+- We used to generate config file in json. But the database was starting without the proper jwt. And that does not work properly without a full restart which takes too much time
+- We decided to translate manually the json to a .ini file in
+`couchdb/local.ini` for now
+- It should be setup by env variable via kubernetes or mounting the local.ini file as a volume
+
 
 ### CouchDB authentication
 - more information on the [README](couchdb-setup/README.md)
