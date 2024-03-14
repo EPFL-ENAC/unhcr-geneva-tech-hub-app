@@ -182,12 +182,7 @@ export function attemptSsoSilent(): void {
   },
 
   methods: {
-    ...mapActions("UserModule", [
-      "login",
-      "loginAsGuest",
-      "logout",
-      "loginToken",
-    ]),
+    ...mapActions("UserModule", ["login", "loginAsGuest", "logout"]),
   },
 })
 export default class LoginComponent extends Vue {
@@ -202,7 +197,6 @@ export default class LoginComponent extends Vue {
   login!: (doc: UserCouchCredentials) => AxiosPromise;
   logout!: () => AxiosPromise;
   loginAsGuest!: () => AxiosPromise;
-  loginToken!: ({ token }: Record<string, string | boolean>) => AxiosPromise;
 
   passwordSecretToggle = true;
 

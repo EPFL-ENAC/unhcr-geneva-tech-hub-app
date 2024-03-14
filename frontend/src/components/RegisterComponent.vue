@@ -168,10 +168,6 @@ export default class RegisterComponent extends Vue {
       });
   }
 
-  async created(): Promise<void> {
-    console.log("created");
-  }
-
   userExist(): void {
     // userAlready exist/
     // for security reason don't inform the user the email already exist

@@ -380,7 +380,7 @@
           style="opacity: 1; order: 0; padding: 0px 0.5rem"
         >
           <span class="ant-menu-title-content"
-            ><a href="/signup"
+            ><a @click="signup"
               ><span
                 style="
                   color: rgb(0, 114, 188);
@@ -403,7 +403,7 @@
         >
           <span class="ant-menu-title-content"
             ><!-- <a href="https://dev.tims.unhcr.org/api/auth/authorize/login/" -->
-            <a @click="authModule.login('loginRedirect')">
+            <a @click="login">
               <span
                 style="
                   color: rgb(255, 255, 255);
@@ -483,9 +483,9 @@
           data-menu-id="rc-menu-uuid-45730-1-/me"
           style="opacity: 1; order: 0"
         >
-          <span class="ant-menu-title-content"
-            ><a href="/me"
-              ><span
+          <span class="ant-menu-title-content" :title="userTitle">
+            <a href="/me">
+              <span
                 role="img"
                 aria-label="user"
                 class="anticon anticon-user"
@@ -501,8 +501,11 @@
                 >
                   <path
                     d="M858.5 763.6a374 374 0 00-80.6-119.5 375.63 375.63 0 00-119.5-80.6c-.4-.2-.8-.3-1.2-.5C719.5 518 760 444.7 760 362c0-137-111-248-248-248S264 225 264 362c0 82.7 40.5 156 102.8 201.1-.4.2-.8.3-1.2.5-44.8 18.9-85 46-119.5 80.6a375.63 375.63 0 00-80.6 119.5A371.7 371.7 0 00136 901.8a8 8 0 008 8.2h60c4.4 0 7.9-3.5 8-7.8 2-77.2 33-149.5 87.8-204.3 56.7-56.7 132-87.9 212.2-87.9s155.5 31.2 212.2 87.9C779 752.7 810 825 812 902.2c.1 4.4 3.6 7.8 8 7.8h60a8 8 0 008-8.2c-1-47.8-10.9-94.3-29.5-138.2zM512 534c-45.9 0-89.1-17.9-121.6-50.4S340 407.9 340 362c0-45.9 17.9-89.1 50.4-121.6S466.1 190 512 190s89.1 17.9 121.6 50.4S684 316.1 684 362c0 45.9-17.9 89.1-50.4 121.6S557.9 534 512 534z"
-                  ></path></svg></span></a
-          ></span>
+                  ></path>
+                </svg>
+              </span>
+            </a>
+          </span>
         </li>
         <li
           class="ant-menu-overflow-item ant-menu-item ant-menu-item-only-child"
@@ -660,7 +663,7 @@ import ReferenceData from "@/components/ReferenceData.vue";
 
 import { env } from "@/config";
 import update from "@/mixins/update.js";
-import { CouchUser, removeAllOauthTokens } from "@/store/UserModule";
+import { CouchUser, removeAllOauthTokens, Roles } from "@/store/UserModule";
 import { ghg, shelter } from "@/utils/apps";
 import md5 from "@/utils/md5";
 import { EventMessage, EventPayload, EventType } from "@azure/msal-browser";
@@ -719,7 +722,7 @@ export default class App extends Vue {
   logoutStore!: () => AxiosPromise;
   getSessionStore!: ({
     byPassLoading,
-  }: Record<string, boolean>) => Promise<Record<string, unknown>>;
+  }: Record<string, boolean>) => Promise<CouchUser | undefined>;
   loginToken!: ({
     token,
     byPassLoading,
@@ -767,6 +770,12 @@ export default class App extends Vue {
 
   public goToGisVisualisation(): void {
     window.location.href = "/gis";
+  }
+
+  get userTitle(): string {
+    return this.$userIs("Azure")
+      ? `AD ${this.$userIs("Admin") ? "admin" : ""} user`
+      : `CouchDB ${this.$userIs("Admin") ? "admin" : ""} user`;
   }
 
   get currentRouteId(): string | undefined {
@@ -974,10 +983,26 @@ export default class App extends Vue {
     }
   }
 
+  public get hasLoginPage(): boolean {
+    return this.$router
+      .getRoutes()
+      .map((x) => x.name)
+      .includes("Login");
+  }
+
   login(): void {
-    if (this.currentRouteName !== "Login") {
-      this.$router.push({ name: "Login" });
-    }
+    // if login page exist we go to login page, otherwise we go to loginRedirect
+    this.hasLoginPage
+      ? this.currentRouteName !== "Login" &&
+        this.$router.push({ name: "Login" })
+      : this.authModule.login("loginRedirect");
+  }
+
+  signup(): void {
+    this.hasLoginPage
+      ? this.currentRouteName !== "Register" &&
+        this.$router.push({ name: "Register" })
+      : (window.location.href = "/signup");
   }
 
   logout(): void {
@@ -1028,7 +1053,6 @@ export default class App extends Vue {
   }
   /** Run once. */
   async mounted(): Promise<void> {
-    // add listener to msal browser https:/
     //github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/events.md
     window.authModule.myMSALObj.addEventCallback(
       async (message: EventMessage) => {
@@ -1040,11 +1064,7 @@ export default class App extends Vue {
           this.firstToken(message.payload);
         }
         if (message.eventType === EventType.SSO_SILENT_FAILURE) {
-          const resp = await this.getSessionStore({ byPassLoading: true });
-          if (resp === undefined || resp?.name === "null") {
-            // meaning we are not logged in and we're a guest
-            this.loginAsGuest();
-          }
+          this.loginAsGuest();
           this.loading = false;
         }
       }
@@ -1054,8 +1074,9 @@ export default class App extends Vue {
 
     this.loading = true;
     const resp = await this.getSessionStore({ byPassLoading: true });
+
     // couchdb session is superseeding azure
-    if (resp === undefined || resp?.name === null) {
+    if (resp?.roles?.includes(Roles[Roles.guest])) {
       // meaning we are not logged in in couchdbm we'll try to login via azure and default to guest otherwise
       window.authModule.attemptSsoSilent();
     } else {

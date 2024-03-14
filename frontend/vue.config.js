@@ -26,6 +26,9 @@ module.exports = () => {
     },
     transpileDependencies: ["vuetify", "leaflet", "echarts"],
     devServer: {
+      client: {
+        overlay: false,
+      },
       // https://github.com/webpack/webpack-dev-server/issues/1850#issuecomment-490926569
       // host: "127.0.0.1",
       port: 8081,
