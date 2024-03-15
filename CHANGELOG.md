@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.13.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.12.0...v1.13.0) (2024-03-15)
+
+
+### Features
+
+* **frontend:** add medium proximaNova font and better header css ([2a13ac7](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/2a13ac781c65d4d0b93f2195b9f5165f47ae1f77))
+* **frontend:** better authentication with sequence diagram in README.md ([a67f4ba](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/a67f4ba110aec52c4263d087b1c552709d79960a))
+* **frontend:** better navbar ([d468d42](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d468d42b172062a98195eb4a85d5cecdec79ce71))
+* **ghg:** replace HH by Household and Households [#620](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/620) ([790fd11](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/790fd118a6e0974ec87e25191a136f87fea59ee0))
+* **reference-data:** update fnrb dataset [#622](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/622) ([8d37e62](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/8d37e6243f88611767025ae9190fc7716f18a239))
+
+
+### Bug Fixes
+
+* **chore:** clean up tmp files from scripts ([c79a023](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c79a0235c2428f9876f5973eb849ff393d06a178))
+* **frontend:** add a lastUpdated field in the apps [#619](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/619) ([cd76246](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/cd76246a3460899e3daa349fc8a0d2f438f6f0e8))
+* **frontend:** better logic for the authentication ([284d574](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/284d57454ae713facd1d3735ae9fedae328abff6))
+* **frontend:** implement auth flow for user respecting ad and couchdb ([3337109](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/333710950da14cc749f6e94e3c980779474f1821))
+* **frontend:** lint fix and better side panel ([47dd73d](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/47dd73de2fe6c24e6ef60bcf90aa5d195b2454ef))
+* **frontend:** new env variable for login page on unhcr-tss.epfl.ch ([ca6199a](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/ca6199ae4a3030455196608ce2a7c2afca8e0551))
+* **frontend:** remove duplicate ant-menu class with shadow ([5228bce](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/5228bceb716ef7cb5503a7dd44232205ad1e2df5))
+* **readme:** remove buggy mermaid code ([8f0f669](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/8f0f669499658d39feae32ad53ae5e279df7148c))
+* **rest-api:** correct register for email and weird password ([f5d82a3](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f5d82a3111543da57772adcfb47c93e51fa4cbab))
+
 ## [1.12.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.11.0...v1.12.0) (2024-03-12)
 
 

@@ -1321,7 +1321,9 @@ interface Helpers {
   border-radius: 0px;
   margin-right: 10px;
 }
+</style>
 
+<style lang="scss">
 .ant-drawer {
   position: fixed;
   z-index: 1000;
@@ -1560,7 +1562,7 @@ interface Helpers {
   margin-left: 12px;
 }
 
-.ant-menu-item[data-v-7ba5bd90]:active {
+.ant-menu-item:active {
   background-color: inherit;
   user-select: none;
 }
@@ -1618,11 +1620,6 @@ interface Helpers {
   list-style: none;
   background: #fff;
   outline: none;
-  box-shadow: 0 2px 8px #00000026;
-  transition: background 0.3s, width 0.3s cubic-bezier(0.2, 0, 0, 1) 0s;
-}
-
-.ant-menu[data-v-7ba5bd90] {
   box-shadow: none;
   transition: none;
 }
@@ -1704,68 +1701,6 @@ interface Helpers {
 
 .ant-menu-title-content {
   transition: color 0.3s;
-}
-
-.ant-menu {
-  box-sizing: border-box;
-  margin: 0;
-  font-variant: tabular-nums;
-  line-height: 1.5715;
-  font-feature-settings: "tnum";
-  padding: 0;
-  color: #000000a6;
-  font-size: 14px;
-  line-height: 0;
-  text-align: left;
-  list-style: none;
-  background: #fff;
-  outline: none;
-  box-shadow: 0 2px 8px #00000026;
-  transition: background 0.3s, width 0.3s cubic-bezier(0.2, 0, 0, 1) 0s;
-}
-
-.ant-menu:before {
-  display: table;
-  content: "";
-}
-
-.ant-menu:after {
-  display: table;
-  clear: both;
-  content: "";
-}
-
-.ant-menu.ant-menu-root:focus-visible {
-  box-shadow: 0 0 0 2px #99d9f0;
-}
-
-.ant-menu ul,
-.ant-menu ol {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.ant-menu-overflow {
-  display: flex;
-}
-
-.ant-menu-overflow-item {
-  flex: none;
-}
-
-.ant-menu-hidden,
-.ant-menu-submenu-hidden {
-  display: none;
-}
-
-.ant-menu-item-group-title {
-  height: 1.5715;
-  padding: 8px 16px;
-  color: #00000073;
-  font-size: 14px;
-  line-height: 1.5715;
-  transition: all 0.3s;
 }
 
 .ant-menu-horizontal .ant-menu-submenu {

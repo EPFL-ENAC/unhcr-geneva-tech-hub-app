@@ -15,6 +15,7 @@ from requests.utils import quote  # type: ignore
 from random import uniform
 from time import sleep
 
+from urllib import parse
 
 class EmailSchema(BaseModel):
     name: EmailStr
@@ -25,7 +26,7 @@ class SimpleUserSchema(EmailSchema):
 
 
 class UserSchema(SimpleUserSchema):
-    roles: Optional[List[str]] = ["shelter", "user"]
+    roles: Optional[List[str]] = ["user"]
     type: Optional[str] = "user"
     unconfirmed: Optional[bool] = None
 
@@ -135,10 +136,11 @@ async def authenticate_admin() -> tuple[Cookie, dict[str, str]]:
 async def authenticate(
         name: str, password: str) -> tuple[Cookie, dict[str, str], Response]:
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    data = 'name={name}&password={password}'.format(name=parse.quote(name),
+                                                    password=parse.quote(password))
     r = post(settings.AUTH_SERVER + "/_session",
              headers=headers,
-             data='name={name}&password={password}'.format(name=name,
-                                                           password=password))
+             data=data)
     # // fail silently
     cookies = r.cookies.get_dict()
     headers["X-CouchDB-WWW-Authenticate"] = "Cookie"
@@ -190,7 +192,7 @@ async def confirm_user(user: UserSchema, password: str) -> JSONResponse:
                             })
     latest_user = r.json()
     latest_user.pop("unconfirmed", None)
-    latest_user["roles"] = ["shelter", "user"]
+    latest_user["roles"] = ["user"]
 
     user_encoded = quote(":{user}".format(user=user.name))
     cookies, headers, r = await authenticate_admin()

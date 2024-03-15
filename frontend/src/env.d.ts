@@ -14,6 +14,7 @@ declare namespace NodeJS {
     readonly VUE_APP_AZURE_CONTAINER_PREFIX: string;
     readonly VUE_APP_AZURE_CONTAINER_PREFIX: string;
     readonly VUE_GTAG_ID: string;
+    readonly VUE_APP_DEACTIVATE_LOGIN_PAGE: string;
   }
 }
 
