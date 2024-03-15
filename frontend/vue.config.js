@@ -28,6 +28,11 @@ module.exports = () => {
     devServer: {
       historyApiFallback: true,
       port: 8088,
+      client: {
+        overlay: false,
+      },
+      // https://github.com/webpack/webpack-dev-server/issues/1850#issuecomment-490926569
+      // host: "127.0.0.1",
       hot: true,
       liveReload: true,
       proxy: {

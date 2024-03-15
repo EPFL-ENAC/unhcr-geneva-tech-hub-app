@@ -2,6 +2,55 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.12.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.11.0...v1.12.0) (2024-03-12)
+
+
+### Features
+
+* **frontend:** replace iges grid by grid emission factors ([8074df6](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/8074df6a1d782569fb681f8e99859df839522cf6))
+
+
+### Bug Fixes
+
+* **azure-cron:** remove infinite loop ([eb50008](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/eb50008a11dc87862629d3285f054cb4b00f0d6a))
+* **frontend:** remove cache policy for injectEnv.js ([f43aa1b](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f43aa1b9eabb16fde68c82ed9f88f1ba19b73579))
+* **frontend:** remove the log on production for AuthModule ([edcb136](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/edcb136aef463bbacaf8cf17ddd4fd688d43b886))
+
+## [1.11.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.10.0...v1.11.0) (2024-03-11)
+
+
+### Features
+
+* **frontend:** no more weird oauth code verification ([efa317a](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/efa317ae170af09f23270d4e3d7abac61618790b))
+
+## [1.10.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.9.1...v1.10.0) (2024-03-11)
+
+
+### Features
+
+* **azure-cron:** working cron-jobs every 15mn ([1536d84](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/1536d84947df77def61a16b6a65912ed1eb3f8d7))
+* **azure-cron:** working init-couchdb ([e45ad2a](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/e45ad2ab3c8b9c5f0ec2fbe4083c0432cc9d43cb))
+* **azure:** clean the files ([e99fdf8](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/e99fdf894a44c00f38dcb005d3b48df979e9668e))
+* **cron:** working entrypoint.sh script for cron ([43bf12d](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/43bf12d3203784918514b46cb8fe888c5ac12703))
+* **frontend:** new header and msal implementation ([5cb4d27](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/5cb4d27dcf77e69a72c5a832243d9283f185abcb))
+* **frontend:** remove dead code ([b213e53](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/b213e5311d13bd713d288e5d21cea4627f3b247e))
+* **readme:** merge Charlie's readme ([028aa80](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/028aa800de9fe85079172adccefafa9be1ef0e5e))
+* **readme:** new readme and reference-data folder ([ef05ddb](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/ef05ddb129eae4b8c8aa1c30e09636cd7b369a1c))
+
+
+### Bug Fixes
+
+* **frontend:** add back public path auto ([24a96bc](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/24a96bc366d49284c68c6958ec96e32fc6046fc4))
+* **frontend:** correct compilation error with userRouter.ts ([bbaac84](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/bbaac8469b2302716ba5c674d016719e36af4a05))
+* **frontend:** remove localDB and other dead code ([d085dc6](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d085dc6559ba575fc90b7c0e99ee6f349f6b385c))
+
+## [1.9.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.9.0...v1.9.1) (2024-02-13)
+
+
+### Bug Fixes
+
+* **azure:** add new public key based on production tenant ([c327553](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c327553ebf1d032e488e58b3ca5a97450a7c2769))
+
 ## [1.9.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.8.0...v1.9.0) (2024-02-08)
 
 

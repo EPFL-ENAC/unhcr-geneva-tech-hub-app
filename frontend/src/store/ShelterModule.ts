@@ -124,9 +124,6 @@ const actions: ActionTree<ShelterState, RootState> = {
           "SET_SHELTERS",
           result.rows.map((x) => x.value)
         );
-      })
-      .catch(function (err: Error) {
-        console.log(err);
       });
   },
   getScorecards: (
