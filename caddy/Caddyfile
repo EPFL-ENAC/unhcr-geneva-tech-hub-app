@@ -1,4 +1,12 @@
 http://${DOMAIN_NAME} {
+    handle_path /rspat/* {
+
+        uri strip_prefix /rspat
+
+        reverse_proxy /* rspat-frontend-service:8090
+
+    }
+
     handle_path /tss/db* {
 
         uri strip_prefix /tss/db
