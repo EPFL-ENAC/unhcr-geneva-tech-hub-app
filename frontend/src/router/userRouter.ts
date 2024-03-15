@@ -8,7 +8,7 @@ import Unconfirm from "@/views/UnconfirmView.vue";
 import UserMeView from "@/views/UserMeView.vue";
 
 const baseRoute = [];
-if (env.VUE_APP_ENVIRONEMENT === "developement") {
+if (env.VUE_APP_DEACTIVATE_LOGIN_PAGE !== "true") {
   baseRoute.push({
     path: "/login",
     name: "Login",

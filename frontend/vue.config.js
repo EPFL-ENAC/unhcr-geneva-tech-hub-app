@@ -37,7 +37,7 @@ module.exports = () => {
       // ipc: true,
       proxy: {
         [dbKey]: {
-          target: "http://localhost:5984",
+          target: "http://localhost:5984/",
           pathRewrite: {
             [dbKey]: "", // remove base path
           },

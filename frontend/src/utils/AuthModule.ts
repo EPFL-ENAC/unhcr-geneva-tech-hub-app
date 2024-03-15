@@ -39,7 +39,7 @@ const MSAL_CONFIG: Configuration = {
         if (containsPii) {
           return;
         }
-        if (env.VUE_APP_ENVIRONEMENT === "development") {
+        if (env.NODE_ENV === "development") {
           switch (level) {
             case LogLevel.Error:
               console.error(message);
