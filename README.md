@@ -111,7 +111,7 @@ If you want to directly update a file for instance (GHG tool User's Manual):
 | Guest User  | - Can access the app in read-only mode but Cannot create, update, or delete things                                             | No |
 
 Admin users inherit their right one of the following ways :
-* CouchDB admin with the _admin role
+*  CouchDB admin with the _admin role
 *  CouchDB user with an admin role
 *  User's sub (from jwt) is in the unhcrAdmins array 
 
@@ -249,9 +249,8 @@ Description: at app start up we check that we're already authenticated
   - If we're authenticated with Couchdb cookie we set the user context via vuex in session storage
   - Else we check if we have a valid JWT on the session storage, if it's okay we store it (JWT azure) in the session storage and the user context via vuex/session storage from CouchDB
     - What may happen is that we have a token which has expired. In that case, we should do nothing to not trigger errors
-      - TODO:
         - (despite the fact that the CouchDB session API will return an http error.)
-        - Remove sessions storage ?
+        - Remove sessions storage
 
   2) If we're not logged in (nor valid session storage JWT (azure) nor valid cookie (couchdb))
     -> We want to do a sso silent login to check that we're not already logged in Azure
