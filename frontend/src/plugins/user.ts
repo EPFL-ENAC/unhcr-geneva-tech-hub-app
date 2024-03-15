@@ -123,6 +123,8 @@ export default new (class User {
       const LoggedInName = user.name !== "" && typeof user.name === "string";
       const rights = {
         Guest: user.loaded && user.name === GUEST_NAME,
+        Admin: user.loaded && checkIfAdmin(user),
+        Azure: user.loaded && user.sub !== undefined && user.sub !== null,
         LoggedIn: user.loaded && LoggedInName,
         LoggedOut: (user.loaded && LoggedOutName) || user.loaded == false,
       } as Record<string, boolean>;

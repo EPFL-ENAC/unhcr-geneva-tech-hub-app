@@ -6,7 +6,7 @@
       </v-col>
     </v-row>
     <v-row v-if="$userIs('LoggedIn')">
-      <v-col v-for="app in Apps" :key="app.title">
+      <v-col v-for="app in Apps" :key="app.title" :cols="6">
         <v-hover v-slot="{ hover }">
           <v-card
             class="mx-auto d-flex flex-column"

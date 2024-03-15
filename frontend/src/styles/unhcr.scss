@@ -19,4 +19,13 @@
   font-style: normal;
   font-display: swap;
 }
+
+@font-face {
+  font-family: 'Proxima Nova';
+  src: local('Proxima Nova Medium'), local('ProximaNova-Medium'),
+    url('~@/assets/fonts/ProximaNova-Medium.ttf') format('ttf');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
 // Common Styles

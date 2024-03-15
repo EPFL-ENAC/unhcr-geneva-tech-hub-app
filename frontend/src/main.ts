@@ -72,7 +72,9 @@ axios.interceptors.response.use(undefined, function (error: AxiosError) {
       return `${JSON.stringify(error.response.data)}`;
     },
   });
-  console.trace(error);
+  if (env.NODE_ENV === "development") {
+    console.trace(error);
+  }
   return Promise.reject(error);
 });
 
@@ -80,7 +82,13 @@ Vue.config.errorHandler = function (err, vm, info) {
   // handle error
   // `info` is a Vue-specific error info, e.g. which lifecycle hook
   // the error was found in. Only available in 2.2.0+
-  console.trace(err.stack);
+  if (env.NODE_ENV === "development") {
+    console.trace(err.stack);
+  }
+  if (err?.name === "unauthorized") {
+    // recheck the user cookie by calling the server
+    store.dispatch("UserModule/getSession", { bypassLoading: true });
+  }
   store.dispatch("notifyUser", {
     title: info,
     message: err.message,
@@ -92,7 +100,9 @@ Vue.config.errorHandler = function (err, vm, info) {
 Vue.config.warnHandler = function (err, vm, info) {
   // handle warning
   // `info` is a Vue-specific error info, e.g. which lifecycle hook
-  console.trace(info);
+  if (env.NODE_ENV === "development") {
+    console.trace(info);
+  }
   store.dispatch("notifyUser", {
     title: `${vm.$options.name}: ${err.split(":")[0] ?? err}`,
     message: err,
@@ -108,16 +118,26 @@ window.addEventListener("unhandledrejection", function (event) {
 
   if (axios.isAxiosError(event.reason)) {
     // we already have an axios error interceptor, we don't need to notify the user again
-    console.log(event.reason.status);
-    console.error(event.reason.response);
+    if (env.NODE_ENV === "development") {
+      console.log(event.reason.status);
+      console.error(event.reason.response);
+    }
   } else {
-    console.trace(event.reason?.stack ?? JSON.stringify(event.promise));
-    store.dispatch("notifyUser", {
-      title: event.reason?.title ?? "unhandled rejection",
-      message: event.reason?.message ?? event.reason,
-      stack: event.reason?.stack ?? JSON.stringify(event.promise),
-      type: "error",
-    });
+    if (env.NODE_ENV === "development") {
+      console.trace(event.reason?.stack ?? JSON.stringify(event.promise));
+    }
+    if (event.reason?.name === "unauthorized") {
+      // recheck the user cookie by calling the server
+      // we don't notify the user about this error
+      store.dispatch("UserModule/getSession", { bypassLoading: true });
+    } else {
+      store.dispatch("notifyUser", {
+        title: event.reason?.title ?? "unhandled rejection",
+        message: event.reason?.message ?? event.reason,
+        stack: event.reason?.stack ?? JSON.stringify(event.promise),
+        type: "error",
+      });
+    }
   }
 });
 
@@ -141,13 +161,20 @@ window.addEventListener("unhandledrejection", function (event) {
 window.addEventListener("error", function (event) {
   //handle error here
   const { message, filename, lineno, colno, error, timeStamp } = event;
-  console.trace(error?.stack);
+  if (env.NODE_ENV === "development") {
+    console.trace(error?.stack);
+  }
   // ResizeObserver loop completed with undelivered notifications.
   if (message.includes("ResizeObserver loop completed")) {
-    console.warn(
-      "We have a ResizeObserver loop problem (due to too many calls)" + message
-    );
+    if (env.NODE_ENV === "development") {
+      console.warn(
+        "We have a ResizeObserver loop problem (due to too many calls)" +
+          message
+      );
+    }
+    event.stopImmediatePropagation();
     event.stopPropagation();
+    event.preventDefault();
     return false;
   }
   store.dispatch("notifyUser", {

@@ -17,6 +17,7 @@ install: env-file
 env-file:
 	cp .env.example .env
 	cp frontend/.env.example frontend/.env
+	cp rest-api/.env.example rest-api/.env
 
 run-frontend:
 	$(MAKE) -C frontend run

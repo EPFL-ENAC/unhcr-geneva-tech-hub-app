@@ -44,9 +44,12 @@ export class UnhcrNotificationError extends Error {
 /** Config store */
 
 export enum Roles {
-  user = "user",
-  admin = "admin",
+  user = "user", // Deprecated not used anymore
+  admin = "admin", // user admin
   _admin = "_admin", // dbAdmin
+  unconfirmed = "unconfirmed", // Deprecated from registering rest-api
+  specialist = "specialist", // deprecated
+  guest = "guest", // frontend only
 }
 
 export const GUEST_NAME = "guest";
@@ -118,6 +121,7 @@ const mutations: MutationTree<UserState> = {
       roles: value.roles ? (value.roles as unknown as Roles[]) : [],
       loaded: value.loaded ?? false,
     };
+    return state.user;
   },
   SET_USER_LOADING(state) {
     state.userLoading = true;
@@ -172,20 +176,16 @@ const actions: ActionTree<UserState, RootState> = {
       })
       .catch((response: Error | ExpireError) => {
         context.commit("SET_USER", generateEmptyUser());
-        if (response instanceof ExpireError) {
-          context.dispatch(
-            "notifyUser",
-            {
-              message: response,
-              stack: response.stack,
-            },
-            { root: true }
-          );
-          // We don't throw the error, we just return it; we want to keep the user not logged in
-          return response;
-        } else {
-          throw response;
-        }
+        // if (response instanceof ExpireError) {
+        context.dispatch(
+          "notifyUser",
+          {
+            message: response,
+            stack: response.stack,
+          },
+          { root: true }
+        );
+        throw response;
       })
       .finally(() => {
         context.commit("UNSET_USER_LOADING");
@@ -339,12 +339,25 @@ const actions: ActionTree<UserState, RootState> = {
   },
   logout: async (context: ActionContext<UserState, RootState>) => {
     context.commit("SET_USER_LOADING");
-    removeAllOauthTokens();
-    if (context.getters.user.sub) {
+    // we should logout from everywhere
+    // start with cookie
+    try {
+      await logoutCookie();
+      context.commit("SET_USER", generateEmptyUser());
+    } catch (e) {
+      context.commit("SET_USER", generateEmptyUser());
+      throw e;
+    } finally {
+      context.commit("UNSET_USER_LOADING");
+    }
+    // then do the oauth logout
+    const sessionStorageToken = sessionStorage.getItem(SessionStorageKey.Token);
+    if (context.getters.user?.sub || sessionStorageToken) {
       // force local state to empty then redirect to unhcr
       // if unhcr logout does not work at least, our ux will show as unlogged
       context.commit("SET_USER", generateEmptyUser());
       context.commit("UNSET_USER_LOADING");
+      removeAllOauthTokens();
       // const redirectURI = encodeURIComponent(window.location.origin);
       // window.location.href = `https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=${redirectURI}`;
       const logoutRequest = {
@@ -354,16 +367,6 @@ const actions: ActionTree<UserState, RootState> = {
       };
 
       window.authModule.logout(logoutRequest);
-    } else {
-      try {
-        await logoutCookie();
-        context.commit("SET_USER", generateEmptyUser());
-      } catch (e) {
-        context.commit("SET_USER", generateEmptyUser());
-        throw e;
-      } finally {
-        context.commit("UNSET_USER_LOADING");
-      }
     }
   },
   getSession: async (
@@ -371,60 +374,68 @@ const actions: ActionTree<UserState, RootState> = {
     { byPassLoading }
   ) => {
     // if user logged in as guest no session needed!
-    const currentUser: CouchUser = context.getters["user"];
-    // check session only if currentUser is loaded true
-    if (
-      currentUser.loaded === false ||
-      currentUser.name === null ||
-      currentUser.name === undefined ||
-      currentUser.name === "" // legacy could happen when initializing a user
-    ) {
-      // no name: no authentication do nothing
-      return;
-    }
-
+    // const currentUser: CouchUser = context.getters["user"];
     const sessionStorageToken = sessionStorage.getItem(SessionStorageKey.Token);
+    // we're not a guest user nor a oauth user but a normal user (couchdb user)
+    if (!byPassLoading) {
+      context.commit("SET_USER_LOADING");
+    }
+    const userCouchDB = await getSessionWithCookie()
+      .then((response) => {
+        const user = response.data;
+        try {
+          // if we bypass, we don't refresh
+          if (byPassLoading) {
+            user.userCtx.loaded = true;
+            context.commit("UNSET_USER_LOADING_UNIQUELY");
+          }
+          // Find a way to pass user.info.authenticated (jwt/cookie/default) to userCTX
+          // userCtx either has a name === null or a name === user.name
+          context.commit("SET_USER", user.userCtx);
+        } catch (e: unknown) {
+          console.error(e);
+        }
+        return user.userCtx;
+      })
+      .catch((e: unknown) => {
+        // ExpireError mostly we should try to refresh
+        throw e;
+      })
+      .finally(() => {
+        context.commit("UNSET_USER_LOADING");
+      });
+    if (userCouchDB?.name !== null) {
+      // we're a couchdb user, we have priority
+      return userCouchDB;
+    }
+    // const sessionStorageToken = sessionStorage.getItem(SessionStorageKey.Token);
     if (sessionStorageToken) {
       // we're a oauth user
-      return await context.dispatch("loginToken", {
-        token: sessionStorageToken,
-        byPassLoading,
-      });
-    }
-
-    if (
-      typeof currentUser.name === "string" &&
-      currentUser.name !== GUEST_NAME
-    ) {
-      // we're not a guest user nor a oauth user but a normal user (couchdb user)
-      if (!byPassLoading) {
-        context.commit("SET_USER_LOADING");
-      }
-
-      return await getSessionWithCookie()
-        .then((response) => {
-          const user = response.data;
-          try {
-            // if we bypass, we don't refresh
-            if (byPassLoading) {
-              user.userCtx.loaded = true;
-              context.commit("UNSET_USER_LOADING_UNIQUELY");
-            }
-            // Find a way to pass user.info.authenticated (jwt/cookie/default) to userCTX
-            context.commit("SET_USER", user.userCtx);
-          } catch (e: unknown) {
-            console.error(e);
-          }
-        })
-        .catch((e: unknown) => {
-          // ExpireError mostly we should try to refresh
-          throw e;
-        })
-        .finally(() => {
-          context.commit("UNSET_USER_LOADING");
+      try {
+        const resp = await context.dispatch("loginToken", {
+          token: sessionStorageToken,
+          byPassLoading,
         });
+        return resp.data;
+      } catch (e: unknown) {
+        // ExpireError mostly we should try to refresh
+        if (env.NODE_ENV === "development") {
+          console.trace(e);
+        }
+        // We don't throw the error, we want to keep the user not logged in (as a guest user below)
+      } finally {
+        context.commit("UNSET_USER_LOADING");
+      }
     }
-    return; // guest user
+    // we're a guest user
+    context.commit("SET_USER", {
+      name: GUEST_NAME,
+      roles: [GUEST_NAME],
+    });
+    context.commit("UNSET_USER_LOADING");
+    return context.getters.user;
+    // we don't return guest userCtx, we override it with our custom
+    // return userCouchDB;
   },
 };
 
