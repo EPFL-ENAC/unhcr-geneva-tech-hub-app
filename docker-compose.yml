@@ -23,26 +23,15 @@ services:
       - ./frontend:/app
       - /app/node_modules
     ports:
-      - '8088:8081'
-  init-couchdb:
-    image: python:3.12-alpine
-    command: /entrypoint.sh
-    env_file:
-      - ./frontend/.env
-    volumes:
-        - ./couchdb/entrypoint.sh:/entrypoint.sh
-        - ./couchdb/local.ini:/local.ini
+      - "8088:8081"
   couchdb:
-    image: couchdb:3.3
+    build:
+      context: ./couchdb
+      dockerfile: Dockerfile
+      args:
+        AZURE_TENANT_ID: e5c37981-6664-4134-8a0c-6543d2af80be
     env_file:
       - ./couchdb/.env
-    depends_on:
-        init-couchdb:
-          condition: service_completed_successfully
-    expose:
-      - '5984'
-      - '4369'
-      - '9100'
     ports:
       - "5984:5984"
     restart: unless-stopped

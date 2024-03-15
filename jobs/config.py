@@ -6,7 +6,10 @@ JOBS = {
     },
     "1": {
         "description": "Restore CouchDB data",
-    }
+    },
+    "2": {
+        "description": "Update JWT keys",
+    },
 }
 
 BASE_PATH = os.getenv("BASE_PATH", "/home")

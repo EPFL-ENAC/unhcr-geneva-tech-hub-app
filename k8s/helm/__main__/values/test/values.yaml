@@ -6,6 +6,7 @@ global:
       tag: "az.{{ .Build.BuildId }}"
   configmap:
     data:
+      AZURE_TENANT_ID: e5c37981-6664-4134-8a0c-6543d2af80be
       BASE_PATH: "/tss/"
       BASE_URL: "/tss/"
       BASE_URL_WITHOUT_SLASH: "/tss"

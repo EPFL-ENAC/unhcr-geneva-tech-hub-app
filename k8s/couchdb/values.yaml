@@ -9,6 +9,11 @@ adminUsername: tssadmin
 ingress:
   enabled: true
 
+image:
+  repository: cubocicloide/tss
+  tag: couchdb.0
+  pullPolicy: IfNotPresent
+
 persistentVolume:
   enabled: true
   size: "10Gi"
