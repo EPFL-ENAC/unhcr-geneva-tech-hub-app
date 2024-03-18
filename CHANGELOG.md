@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.13.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.13.0...v1.13.1) (2024-03-18)
+
+
+### Bug Fixes
+
+* **README:** correct csv databases table ([5c6bd74](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/5c6bd749d03e4f1df5a13c6ccf26d3d7e4ae3061))
+* **readme:** merge branch 'dev' ([f87430d](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f87430df1c10f2a799d8d8ef5f9c2f398a5a2451))
+
 ## [1.13.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.12.0...v1.13.0) (2024-03-15)
 
 
