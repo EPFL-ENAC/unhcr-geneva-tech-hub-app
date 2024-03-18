@@ -37,24 +37,29 @@ classDef Databases stroke:#000,stroke-width:1px,fill:#dfdffc,color:black,font-si
 classDef App stroke:#000,stroke-width:1px,fill:#c1fbc1,color:black,font-size:30px,padding:10px
 ```
 
-TODO: @ctobin111 Reference Data table with update frequencies
-
 ### Datasets
 
-| Tool               | Database       | Description  | CSV file path                                 | JSON file path             | Used By |
-|------------------------|----------------------|-|-------------------------------------------------------|-|---------|
-| GHG Calculator         | Grid Emission Factors| | `reference-data/ghg/grid_emission_factors.csv`         | `frontend/src/assets/references/grid_emission_factors.json`| `frontend/src/store/GhgModule.ts via frontend/src/store/GhgReferenceGridModule.ts` |
-| GHG Calculator         | Emission Factors     | | `reference-data/ghg/ghg_reference.csv`                 | `frontend/src/assets/references/ghg_reference.json`| `frontend/src/store/GhgReferenceModule.ts` |
-| GHG Calculator         | Emission Factors     | | `reference-data/ghg/ghg_ef_mixed_biowaste_list.csv`    | `frontend/src/assets/references/ghg_ef_mixed_biowaste_list.json`,`frontend/src/assets/references/ghg_ef_mixed_biowaste.json`| `frontend/src/store/GHGReferenceBioWasteModule.ts` |
-| GHG Calculator         | Emission Factors     | | `reference-data/ghg/ghg_ef_mixed_non_biowaste_list.csv`| `frontend/src/assets/references/ghg_ef_mixed_non_biowaste_list.json`, `frontend/src/assets/references/ghg_ef_mixed_non_biowaste.json`| `frontend/src/store/GHGReferenceNonBioWasteModule.ts` |
-| GHG Calculator         | Default Values       | | `reference-data/ghg/ghg_default_value.csv`             | `frontend/src/assets/references/ghg_default_value.json`| `frontend/src/store/GhgDefaultValuesModule.ts` |
-| GHG Calculator         | UNHCR Locations      | | `reference-data/ghg/unhcr_location.csv`                | `frontend/src/assets/references/unhcr_location.json`| `frontend/src/store/UNHCRLocationModule.ts` |
-| GHG Calculator         | GHG fNRB             | | `reference-data/ghg/ghg_fnrb.csv`                      | `frontend/src/assets/references/ghg_fnrb.json`| `frontend/src/store/GHGReferencefNRB.ts` |
-| GHG Calculator         |                      | Name/Key reference for solid waste | `reference-data/ghg/ref.csv`                           | `frontend/src/assets/references/ghg_ref_key_name.json, frontend/src/assets/references/ghg_ref_name_key.json`| `frontend/src/components/green_house_gaz/wash/DomesticSolidWaste.ts`, `frontend/src/components/reference_data/GHGMixedBiowaste.vue` and `frontend/src/components/reference_data/GHGMixedNonBiowaste.vue` |
-| GHG Calculator         |                      | GHG regions |                            | `frontend/src/assets/references/ghg_country_region_list.json, frontend/src/assets/references/ghg_country_region_map.json`| `frontend/src/store/GHGReferenceRegionModule.ts`,  `frontend/src/components/green_house_gaz/wash/DomesticSolidWaste.ts`|
-| GHG Calculator         |                      | | `reference-data/ghg/solar_averaged.csv`                | `frontend/src/assets/references/solar_averaged.json`| `frontend/src/store/GHGReferenceSolarModule.ts`|
-| Shelter Sustainability | Materials            | | `reference-data/shelter/materials.csv`                 | `frontend/src/assets/references/materials.json`| `frontend/src/store/SheltersMaterialModule.ts` |
-| Shelter Sustainability | Materials Transport  | | `reference-data/shelter/transports.csv`                | `frontend/src/assets/references/transports.json`| `frontend/src/store/SheltersTransportModule.ts` |
+#### GHG Calculator
+| Database                                               | Description                                                                          | Update Frequency              | Data sources                                                                                                                                                                                                                                           | CSV file path                                           | JSON file path                                                                                                                        | Used By                                                                                                                                                                                               |
+| :----------------------------------------------------- | :----------------------------------------------------------------------------------- | :---------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Grid Emission Factors                                  | Annual electricity mix from national grids                                           | Annually                      | Yearly electricity data from EMBER: https://ember-climate.org/data/data-catalogue/  - see https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/634)                                                                                           | `reference-data/ghg/grid_emission_factors.csv`          | `frontend/src/assets/references/grid_emission_factors.json`                                                                           | `frontend/src/store/GhgModule.ts` via `frontend/src/store/GhgReferenceGridModule.ts`                                                                                                                  |
+| Emission Factors - global                              | Emission factors for all 5 GHG modules                                               | None                          | Processed EFs from literature including from IPCC, FACET, see hyperlinks on GHG Tool.                                                                                                                                                                  | `reference-data/ghg/ghg_reference.csv`                  | `frontend/src/assets/references/ghg_reference.json`                                                                                   | `frontend/src/store/GhgReferenceModule.ts`                                                                                                                                                            |
+| Emission Factors - domestic solid waste (biowaste)     | Regional mixed biowaste emission factors                                             | None                          | https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf                                                                                                                                                                   | `reference-data/ghg/ghg_ef_mixed_biowaste_list.csv`     | `frontend/src/assets/references/ghg_ef_mixed_biowaste_list.json`, `frontend/src/assets/references/ghg_ef_mixed_biowaste.json`         | `frontend/src/store/GHGReferenceBioWasteModule.ts`                                                                                                                                                    |
+| Emission Factors - domestic solid waste (non-biowaste) | Regional mixed non-biowaste emission factors                                         | None                          | https://www.ipcc-nggip.iges.or.jp/public/2019rf/pdf/5_Volume5/19R_V5_3_Ch03_SWDS.pdf                                                                                                                                                                   | `reference-data/ghg/ghg_ef_mixed_non_biowaste_list.csv` | `frontend/src/assets/references/ghg_ef_mixed_non_biowaste_list.json`, `frontend/src/assets/references/ghg_ef_mixed_non_biowaste.json` | `frontend/src/store/GHGReferenceNonBioWasteModule.ts`                                                                                                                                                 |
+| Default Values                                         | Default values for all 5 GHG modules                                                 | None                          | Processed default values from literature, IPCC, FACET, see hyperlinks on GHG Tool and see table: Example Waste Composition and Generation for Displacement Contexts                                                                                    | `reference-data/ghg/ghg_default_value.csv`              | `frontend/src/assets/references/ghg_default_value.json`                                                                               | `frontend/src/store/GhgDefaultValuesModule.ts`                                                                                                                                                        |
+| UNHCR Locations                                        | Displacement site coordinates, population and average number of people per household | Annually (or every 2-3 years) | a) UNHCR GIS data for coordinates and population b) See Guidance Manual Annex B for solar (Solar Grid Atlas)  c) Households: https://www.un.org/development/desa/pd/data/household-size-and-composition Note: Countries have been assigned to regions. | `reference-data/ghg/unhcr_location.csv`                 | `frontend/src/assets/references/unhcr_location.json`                                                                                  | `frontend/src/store/UNHCRLocationModule.ts`                                                                                                                                                           |
+| GHG fNRB                                               | Fraction of non renewable biomass per country                                        | Rarely (every 5 years)        | Create a csv file from most recent literature, e.g. https://iopscience.iop.org/article/10.1088/1748-9326/acb501                                                                                                                                        | `reference-data/ghg/ghg_fnrb.csv`                       | `frontend/src/assets/references/ghg_fnrb.json`                                                                                        | `frontend/src/store/GHGReferencefNRB.ts`                                                                                                                                                              |
+| Solar irradiance                                       | Daily solar hours per site                                                           | None                          | Guidance Manual Annex B for solar (Solar Grid Atlas)                                                                                                                                                                                                   | `reference-data/ghg/solar_averaged.csv`                 | `frontend/src/assets/references/solar_averaged.json`                                                                                  | `frontend/src/store/GHGReferenceSolarModule.ts`                                                                                                                                                       |
+| GHG regions                                            | Countries matched to regions                                                         | None                          |                                                                                                                                                                                                                                                        |                                                         | `frontend/src/assets/references/ghg_country_region_list.json`, `frontend/src/assets/references/ghg_country_region_map.json`           | `frontend/src/store/GHGReferenceRegionModule.ts`, `frontend/src/components/green_house_gaz/wash/DomesticSolidWaste.ts`                                                                                |
+| Naming for solid waste                                 | Name/Key reference for solid waste materials                                         | None                          |                                                                                                                                                                                                                                                        | `reference-data/ghg/ref.csv`                            | `frontend/src/assets/references/ghg_ref_key_name.json`, `frontend/src/assets/references/ghg_ref_name_key.json`                        | `frontend/src/components/green_house_gaz/wash/DomesticSolidWaste.ts`, `frontend/src/components/reference_data/GHGMixedBiowaste.vue`, `frontend/src/components/reference_data/GHGMixedNonBiowaste.vue` |
+
+#### Shelter Sustainability
+
+
+ Database            | CSV file path                           | JSON file path                                   | Used By                                         |
+ ------------------- | --------------------------------------- | ------------------------------------------------ | ----------------------------------------------- |
+ Materials           | `reference-data/shelter/materials.csv`  | `frontend/src/assets/references/materials.json`  | `frontend/src/store/SheltersMaterialModule.ts`  |
+ Materials Transport | `reference-data/shelter/transports.csv` | `frontend/src/assets/references/transports.json` | `frontend/src/store/SheltersTransportModule.ts` |
 
 #### How to update
 
@@ -76,13 +81,13 @@ TODO: @ctobin111 Reference Data table with update frequencies
 
 ### Static files (documents and videos)
 The static files (pdfs, videos, images, etc) are the User's guide manual and their associated videos and every pdfs used in the interface (not uploaded by an app user)
-#### GHG Static Files:
+#### GHG Static Files
 - Guidance Manual
 - Tutorial videos (9)
 - Life Cycle Assessment reports (5)
 - Solid Waste Composition Examples for Specific Displacement Contexts - accessible by going into the WASH category - Domestic Solid Waste Module and clicking on Example Waste Composition and Generation for Displacement Contexts (@Pierre, can we put a link)
 
-#### Shelter Static Files:
+#### Shelter Static Files
 - Guidance Manual
 - Tutorial videos
 
@@ -104,11 +109,11 @@ If you want to directly update a file for instance (GHG tool User's Manual):
 
 ### Roles definition
 
-| User Type   | Permissions                                                                      | Authenticated |
-|-------------|----------------------------------------------------------------------------------|---------------|
-| Normal User | - Can create an object in CouchDB (Shelter and GHG app) but Cannot Delete/Update if not in 'users' field of the object in CouchDB        | Yes |
-| Admin User  | - Can access, Update, and delete every object in CouchDB                         | Yes|
-| Guest User  | - Can access the app in read-only mode but Cannot create, update, or delete things                                             | No |
+| User Type   | Permissions                                                                                                                       | Authenticated |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| Normal User | - Can create an object in CouchDB (Shelter and GHG app) but Cannot Delete/Update if not in 'users' field of the object in CouchDB | Yes           |
+| Admin User  | - Can access, Update, and delete every object in CouchDB                                                                          | Yes           |
+| Guest User  | - Can access the app in read-only mode but Cannot create, update, or delete things                                                | No            |
 
 Admin users inherit their right one of the following ways :
 *  CouchDB admin with the _admin role
@@ -324,10 +329,7 @@ For more information regarding the env variable necessary for the APP:
   - have a look at the comments in the .env that describe each variable
   - have a look at the docker-compose file
 #### CouchDB
-- We used to generate config file in json. But the database was starting without the proper jwt. And that does not work properly without a full restart which takes too much time
-- We decided to translate manually the json to a .ini file in
-`couchdb/local.ini` for now
-- It should be setup by env variable via kubernetes or mounting the local.ini file as a volume
+CouchDB config file is in `couchdb/local.ini`
 
 ### CI/CD
 - We use the following workflows in .github/workflows
@@ -338,14 +340,11 @@ For more information regarding the env variable necessary for the APP:
 
 ### Development tools
 
-- We use husky for git hooks: https://typicode.github.io/husky/#/?id=install
+- We use husky for [git hooks](https://typicode.github.io/husky/#/?id=install)
 - We use standard version and commitlint for automatic release log and proper commit message
 
 
 ### Run for local development
-
-#### information about 127.0.0.11 as the static docker dns ip
-From: https://hwchiu.medium.com/fun-dns-facts-learned-from-the-kind-environment-241e0ea8c6d4
 
 #### Installation
 
@@ -375,11 +374,6 @@ make run-frontend;
 # http://127.0.0.1:8080
 
 ```
-
-
-#### Visual Studio Code
-
-Run configurations are in `.vscode`: https://code.visualstudio.com/docs/editor/debugging
 
 ## Deployment
 
