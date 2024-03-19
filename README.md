@@ -85,7 +85,7 @@ The static files (pdfs, videos, images, etc) are the User's guide manual and the
 - Guidance Manual
 - Tutorial videos (9)
 - Life Cycle Assessment reports (5)
-- Solid Waste Composition Examples for Specific Displacement Contexts - accessible by going into the WASH category - Domestic Solid Waste Module and clicking on Example Waste Composition and Generation for Displacement Contexts (@Pierre, can we put a link)
+- [Solid Waste Composition Examples for Specific Displacement Contexts](https://timsprd.blob.core.windows.net/tss/2023-11-23/RefugeeWasteExamples-2023-11-15.pdf) - accessible by going into the WASH category - Domestic Solid Waste Module and clicking on Example Waste Composition and Generation for Displacement Contexts 
 
 #### Shelter Static Files
 - Guidance Manual
@@ -100,7 +100,7 @@ The static files (pdfs, videos, images, etc) are the User's guide manual and the
 
 #### How to update only one file
 If you want to directly update a file for instance (GHG tool User's Manual):
-  - Find the path of the file: which is /2023-11-23/GHG tool User's Manual v6.pdf
+  - Find the path of the file: example: /2023-11-23/GHG tool User's Manual v6.pdf
   - Update the file on your file storage (minio, azure blob or whatever you're using)
   - Create a backup of the blob/s3 and store it in a new tar.gz with a checksum that will superseed the above one
 
