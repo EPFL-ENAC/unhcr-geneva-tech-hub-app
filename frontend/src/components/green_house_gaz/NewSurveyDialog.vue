@@ -63,9 +63,10 @@
                             font-style: italic;
                           "
                           :title="slotProps.item.siteId"
-                          >({{
-                            (slotProps.item.siteId + "").substr(0, 8)
-                          }} <span v-if="!slotProps.item.location_pcode"> User Created ID</span>)</span
+                          >({{ (slotProps.item.siteId + "").substr(0, 8) }}
+                          <span v-if="!slotProps.item.location_pcode">
+                            User Created ID</span
+                          >)</span
                         >
                       </div>
                     </div>
