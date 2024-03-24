@@ -60,7 +60,6 @@
 <script lang="ts">
 import { Shelter } from "@/store/ShelterInterface";
 import { SyncDatabase } from "@/utils/couchdb";
-import PouchDB from "pouchdb-browser";
 import { Component, Vue } from "vue-property-decorator";
 import { RawLocation, Route } from "vue-router";
 import { mapActions, mapGetters } from "vuex";

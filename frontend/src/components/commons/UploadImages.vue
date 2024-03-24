@@ -1,5 +1,10 @@
 <template>
-  <v-dialog :value="dialog" max-width="450px" @click:outside="closeDialog" @keydown.esc="closeDialog">
+  <v-dialog
+    :value="dialog"
+    max-width="450px"
+    @click:outside="closeDialog"
+    @keydown.esc="closeDialog"
+  >
     <v-card
       :class="{ 'grey lighten-2': dragover }"
       @drop.prevent="onDrop($event)"

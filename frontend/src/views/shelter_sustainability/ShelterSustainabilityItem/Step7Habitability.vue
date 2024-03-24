@@ -23,7 +23,10 @@ import {
   ShelterFormType,
 } from "@/components/shelter_sustainability/ShelterForm";
 import { Score, Shelter } from "@/store/ShelterInterface";
-import { areDoorsBiggerThan90cm, updateHabitability } from "@/store/ShelterModuleUtils";
+import {
+  areDoorsBiggerThan90cm,
+  updateHabitability,
+} from "@/store/ShelterModuleUtils";
 import habitabilityForm from "@/views/shelter_sustainability/ShelterSustainabilityItem/habitabilityForm";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue } from "vue-property-decorator";

@@ -83,7 +83,6 @@ import {
 } from "@/views/shelter_sustainability/shelterTypeColors";
 import { CallbackDataParams, EChartsOption } from "echarts/types/dist/shared";
 import { map, mean, sum } from "lodash";
-import PouchDB from "pouchdb-browser";
 
 import { ScorecardConfig } from "@/views/shelter_sustainability/ShelterSustainabilityItem/generateScorecardOptions";
 import { cloneDeep } from "lodash";
