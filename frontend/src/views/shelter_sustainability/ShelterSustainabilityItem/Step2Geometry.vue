@@ -276,9 +276,9 @@ import {
   WindowDimensions,
 } from "@/store/ShelterInterface";
 import {
-  areDoorsBiggerThan90cm,
-  getMaxWindowArea,
   getNewGeometry,
+  updateHabitability,
+  updateTechnicalPerformance,
 } from "@/store/ShelterModuleUtils";
 import {
   geometries,
@@ -334,12 +334,12 @@ export default class Step2Geometry extends Vue {
 
   public addDoor(): void {
     this.localShelter.geometry.doors_dimensions.push({ Wd: 0, Hd: 0 });
-    this.updateHabitability();
+    this.localShelter = updateHabitability(this.localShelter);
     this.updateFormInput();
   }
   public removeDoor(index: number): void {
     this.localShelter.geometry.doors_dimensions.splice(index, 1);
-    this.updateHabitability();
+    this.localShelter = updateHabitability(this.localShelter);
     this.updateFormInput();
   }
 
@@ -371,7 +371,7 @@ export default class Step2Geometry extends Vue {
         this.floorArea(newShelterDimensions);
       this.localShelter.geometry.volume =
         this.computeVolume(newShelterDimensions);
-      this.updateTechnicalPerformance();
+      this.localShelter = updateTechnicalPerformance(this.localShelter);
     }
     // transmist change above
     this.updateFormInput();
@@ -381,14 +381,14 @@ export default class Step2Geometry extends Vue {
     if (newWindowDimensions && this.hasComputedFloorAndVolume) {
       const windowArea = this.windowDimensions(newWindowDimensions);
       this.localShelter.geometry.windowArea = parseFloat(windowArea.toFixed(2));
-      this.updateTechnicalPerformance();
+      this.localShelter = updateTechnicalPerformance(this.localShelter);
     }
     // transmist change above
     this.updateFormInput();
   }
 
   public updateShelterDoorDimensions(): void {
-    this.updateHabitability();
+    this.localShelter = updateHabitability(this.localShelter);
     const doorArea = this.doorDimensions(
       this.localShelter.geometry.doors_dimensions
     );
@@ -407,32 +407,6 @@ export default class Step2Geometry extends Vue {
       };
     }
   }
-  private updateTechnicalPerformance(): void {
-    // TODO: we should update technical_performance when opening technical_performance
-    const { windowArea, floorArea } = this.localShelter.geometry;
-    // update technical_performance, because it should be done like this (defined in the specs)
-    // Ratio of window and ventilation openings area to floor area > 0.05
-    this.localShelter.technical_performance.input_2a_1 =
-      windowArea / floorArea > 0.05 ? 1 : -1;
-
-    // Ratio of windows area to floor area > 0.10
-    this.localShelter.technical_performance.input_2c_1 =
-      windowArea / floorArea > 0.1 ? 1 : -1;
-
-    // Window opening dimensions < 60x60cm
-    const hasAWindowTooBig =
-      getMaxWindowArea(this.localShelter.geometry.windows_dimensions) >= 0.36;
-    this.localShelter.technical_performance.input_3b_4 = hasAWindowTooBig
-      ? -1
-      : 1;
-  }
-
-  private updateHabitability(): void {
-    this.localShelter.habitability.input5 = areDoorsBiggerThan90cm(
-      this.localShelter.geometry
-    );
-  }
-
   private doorDimensions(doorDimensions: DoorDimensions[]): number {
     // deprecated. We were using it for Opening area, but it's unused for now
     if (doorDimensions.length === 0) {
