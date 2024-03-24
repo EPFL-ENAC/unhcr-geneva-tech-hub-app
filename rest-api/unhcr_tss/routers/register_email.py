@@ -220,7 +220,6 @@ async def create_token(email: str, expiration_in_minutes: int = 15) -> str:
     _id = "{uuid}{email}".format(uuid=str(uuid.uuid4()),
                                  email=base64.b64encode(
                                      email.encode('ascii')).decode('ascii'))
-    # TODO: delete all previous token associated with that email
     r = post(
         settings.AUTH_SERVER + "/tokens",
         cookies=cookies,
@@ -228,7 +227,7 @@ async def create_token(email: str, expiration_in_minutes: int = 15) -> str:
         data=json.dumps({
             "expire_at": expire_at,
             "_id": _id,
-            "email": email  # TODO should probably encrypt email there
+            "email": email
         }))
     return quote(r.json().get("id", ""))
 
