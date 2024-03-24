@@ -404,10 +404,22 @@ export function generateComputeItem(
         REF_EFF = ghgMapRef[`REF_EFF_${subcatKey}_${practiceKey}`]?.value ?? 0;
       }
     }
+    let percentToGas = 1;
+    // only for Open pits, unmanaged and Managed disposal sites
+    if ([openPits, managedDisposalSite].includes(practiceType)) {
+      // https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/633
+      // After a very rigorous Life Cycle Assessment and working with a solid waste management expert,
+      //we would like to add a multiplication factor in the code for the Solid Waste Management module.
+      // Basically, we would like to include 3% carbon going to leachate for solid waste emission factors:
+      // To represent this reduction on the emission factor, the equation for emissions in the solid waste
+      //module should be updated as follows:
+      percentToGas = 0.97;
+    }
     const totalwasteAmount = //  (ton/yr)
       populationPercentage * // Population
       generationGram * // in Gram
       numberOfDaysPerYear * // days/yr
+      percentToGas *
       0.001; // (if gram ==> like 1/ 1000000  (g/ton)) (if kg ==>  (like 1/ 1000  (kg/ton)))
 
     totalCO2Emission = REF_EFF * totalwasteAmount;
