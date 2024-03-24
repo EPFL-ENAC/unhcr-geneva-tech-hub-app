@@ -435,23 +435,6 @@ export default class NewSurveyDialog extends Vue {
     }
   }
 
-  // public setLocalCampSite(project: GreenHouseGaz): void {
-  //   this.newCampSite = project ? cloneDeep(project) : ({} as GreenHouseGaz);
-  // }
-
-  // public syncLocalCampSite(): void {
-  //   // init function
-  //   // not sure how to handle this.project
-  //   this.setLocalCampSite(this.project);
-
-  //   this.$store.subscribe((mutation) => {
-  //     const shouldUpdate = ["GhgModule/SET_PROJECT"];
-  //     if (shouldUpdate.includes(mutation.type)) {
-  //       this.setLocalCampSite(mutation.payload);
-  //     }
-  //   });
-  // }
-
   @Watch("open", { immediate: true })
   onOpenChange(value: boolean): void {
     // reset form on dialog open
