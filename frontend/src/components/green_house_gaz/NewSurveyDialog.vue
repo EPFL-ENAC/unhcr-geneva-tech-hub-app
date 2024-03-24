@@ -65,7 +65,7 @@
                           :title="slotProps.item.siteId"
                           >({{
                             (slotProps.item.siteId + "").substr(0, 8)
-                          }})</span
+                          }} <span v-if="!slotProps.item.location_pcode"> User Created ID</span>)</span
                         >
                       </div>
                     </div>
