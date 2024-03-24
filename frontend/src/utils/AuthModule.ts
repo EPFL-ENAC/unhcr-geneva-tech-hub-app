@@ -137,7 +137,6 @@ export class AuthModule {
 
   /**
    * Calls getAllAccounts and determines the correct account to sign into, currently defaults to first account found in cache.
-   * TODO: Add account chooser code
    *
    * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-common/docs/Accounts.md
    */

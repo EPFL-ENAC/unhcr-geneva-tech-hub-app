@@ -246,7 +246,7 @@ export default class WaterSupply extends Vue {
         }
         return result;
       },
-      items: ["Pumping", "Trucking"], // should be dynamic ? // todo: maybe dissplay only when it's WATER ? what are the rules ?
+      items: ["Pumping", "Trucking"],
     },
     // start of pumping
     ...poweredByInputs("Year", this.countryCode, this.project?.solar, {

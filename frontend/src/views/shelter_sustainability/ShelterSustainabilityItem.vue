@@ -159,7 +159,6 @@ export default class ShelterSustainabilityItem extends Vue {
   public retrieveData(): void {
     this.getDoc(decodeURIComponent(this.$route.params.id));
   }
-  changes!: PouchDB.Core.Changes<Shelter> | undefined;
   mounted(): void {
     this.syncDB();
     this.retrieveData();

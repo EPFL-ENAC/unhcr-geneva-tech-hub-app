@@ -19,8 +19,15 @@
       </v-col>
       <v-spacer />
       <v-col class="col-auto d-flex align-center">
-        <!-- todo: add the icon check mark and cancel -->
-        <span class="mr-4">Bill of quantities status: </span>
+        <span class="mr-4"
+          >Bill of quantities status:
+          <span v-if="localShelter.completed_boq" class="mr-4">
+            <v-icon class="green--text text--lighten-3">$mdiCheck</v-icon>
+          </span>
+          <span v-else class="mr-4">
+            <v-icon class="red--text text--lighten-3">$mdiClose</v-icon>
+          </span>
+        </span>
         <v-switch
           v-model="localShelter.completed_boq"
           :label="localShelter.completed_boq ? 'complete' : 'incomplete'"

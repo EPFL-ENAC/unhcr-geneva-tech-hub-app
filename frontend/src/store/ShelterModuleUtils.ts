@@ -145,7 +145,6 @@ export function computeShelter(value: Shelter): Shelter {
   resultShelter.habitability_score =
     habitabilityScore.score / totalHabWithApplicable;
 
-  // todo change completed
   const totalHabToBeCompleted =
     TOTAL_HAB_ITEMS - nonApplicableHabitabilityScore.length;
   resultShelter.habitability.completed =

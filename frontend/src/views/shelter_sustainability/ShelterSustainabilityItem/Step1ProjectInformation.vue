@@ -218,8 +218,6 @@
         <template v-for="image in localShelter.images">
           <v-card :key="image.url" class="my-4" color="white">
             <v-row class="d-flex align-center">
-              <!-- todo: move to modal -->
-              <!-- thumbnail, name, input:image_type, input_description then edit/download/delete,-->
               <v-col>
                 <v-avatar
                   v-if="['Image', 'Drawing'].includes(image.type)"

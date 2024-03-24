@@ -23,7 +23,6 @@ function n2sFormatter(n: number): string {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ensureSurveyTableHeaders = (item: any): SurveyTableHeader => {
-  // todo: implement typescript for item
   const [category, key] = item.value.split(".");
   const isInput = item?.isInput ?? category === "input";
   const res = {

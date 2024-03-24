@@ -1076,7 +1076,6 @@ function getLocalFNRB(
     const errorMessage = `undefined default fNRB`;
     throw new Error(errorMessage);
   }
-  // TODO simplify this
   const countryfNRB = items.find((x) => x._id === countryCode);
   let localFNRB = countryfNRB?.value ?? default_fNRB;
 
@@ -1281,7 +1280,6 @@ export function generateComputeItem(
     switch (true) {
       /* solid fuels "FWD", "CHC", "BRQ", "PLTS" */
       case biomassFuels.includes(fuelType as BioMassFuel): {
-        // todo: simplify argument to this function
         totalCO2Emission = computeItemBiomass(
           fuelUsage,
           localItemInput,

@@ -451,8 +451,6 @@ export default class ShelterSustainabilityCompare extends Vue {
   scorecards!: ScoreCardWithShelterInfo[];
   getScorecards!: (id: string[]) => Promise<ScoreCardWithShelterInfo[]>;
 
-  changes!: PouchDB.Core.Changes<Shelter> | undefined;
-
   newName = "";
   shelters: Shelter[] = [];
   affordabilities = affordabilities;
@@ -521,11 +519,9 @@ export default class ShelterSustainabilityCompare extends Vue {
   mounted(): void {
     this.syncDB();
     this.retrieveData();
-    // this.changes = this.db?.onChange(this.retrieveData);
   }
   destroyed(): void {
     this.closeDB();
-    // this.changes?.cancel();
   }
 }
 </script>

@@ -133,8 +133,6 @@ export default class TerritoryMap extends Vue {
       if (lat === 0 && lng === 0) {
         return defaultCoordinates;
       }
-      // TODO: find another way of special offset of 5 lng for printing only
-      // return [parseFloat(lat as string), parseFloat(lng as string) + 5];
       return [parseFloat(lat as string), parseFloat(lng as string)];
     }
     return defaultCoordinates;

@@ -152,7 +152,6 @@
   -> redirect to proper surveyId page edit
 */
 import CountrySelect from "@/components/commons/CountrySelect.vue";
-// TODO use generic Survey instead of Survey
 import {
   Country,
   DEFAULT_PP_PER_HH,

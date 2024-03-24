@@ -235,7 +235,6 @@ export default class SurveysList extends Vue {
   dialogToggleReference = false;
   editedIndex = -1;
 
-  // TODO: fix that: it should not exist
   private newDefaultItem(): GreenHouseGaz {
     return {
       name: "",

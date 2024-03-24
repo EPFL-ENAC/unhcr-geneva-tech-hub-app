@@ -408,7 +408,7 @@ export default class Step2Geometry extends Vue {
     }
   }
   private updateTechnicalPerformance(): void {
-    // todo: we should update technical_performance when opening technical_performance
+    // TODO: we should update technical_performance when opening technical_performance
     const { windowArea, floorArea } = this.localShelter.geometry;
     // update technical_performance, because it should be done like this (defined in the specs)
     // Ratio of window and ventilation openings area to floor area > 0.05

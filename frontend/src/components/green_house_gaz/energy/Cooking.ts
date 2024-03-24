@@ -680,7 +680,6 @@ export function headers(
             dieselEstimatedRes.dieselLitersEstimated;
           localInput.dieselLitersEstimated =
             dieselEstimatedRes.dieselLitersEstimated;
-          // TODO check that's okay for number of day.
 
           localInput.dieselPower = computeDieselPower(
             localInput as EnergyItem,
@@ -802,7 +801,6 @@ function getLocalFNRB(
     const errorMessage = `undefined default fNRB`;
     throw new Error(errorMessage);
   }
-  // TODO simplify this
   const countryfNRB = items.find((x) => x._id === countryCode);
   let localFNRB = countryfNRB?.value ?? default_fNRB;
 

@@ -381,7 +381,6 @@ export default class SurveyItemDialog extends Vue {
           surveyItem: header,
           intervention: this.intervention,
         });
-        // TODO: abstract wrapper function to make things more readable
         header.options = items;
       }
       if (typeof header.maxFn === "function") {
