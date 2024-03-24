@@ -3,16 +3,22 @@
     <v-card-text v-if="computedItems">
       <v-row>
         <v-col>
-          Daily solar peak hours approximated using the Longterm daily average
-          of global horizontal irradiation (GHI). (GHI data obtained from the
-          Global Solar Atlas 2.0, a free, web-based application developed and
-          operated by the company Solargis s.r.o. on behalf of the World Bank
-          Group, utilizing Solargis data, with funding provided by the Energy
-          Sector Management Assistance Program (ESMAP). For additional
-          information:
-          <a target="_blank" href="https://globalsolaratlas.info"
-            >globalsolaratlas.info</a
-          >)
+          <p>
+            Data below have been provided by the UNHCR GIS division for the year
+            2022. The exception is the daily solar peak hour information.
+          </p>
+          <p>
+            Daily solar peak hours approximated using the Longterm daily average
+            of global horizontal irradiation (GHI). (GHI data obtained from the
+            Global Solar Atlas 2.0, a free, web-based application developed and
+            operated by the company Solargis s.r.o. on behalf of the World Bank
+            Group, utilizing Solargis data, with funding provided by the Energy
+            Sector Management Assistance Program (ESMAP). For additional
+            information:
+            <a target="_blank" href="https://globalsolaratlas.info"
+              >globalsolaratlas.info</a
+            >)
+          </p>
         </v-col>
       </v-row>
       <v-row>
