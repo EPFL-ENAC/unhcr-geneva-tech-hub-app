@@ -339,9 +339,9 @@
       "water-supply"
     ],
     "description": "Energy - Electricity - Emission Factor - National Grid [kg CO2e/kWh]",
-    "value": 0.6448,
-    "source": "https://www.iges.or.jp/en/pub/list-grid-emission-factor/en",
-    "ref": "The default grid emission factor is an average of all IGES 2022 emission factors for countries hosting refugees.",
+    "value": 0.4,
+    "source": "https://ember-climate.org/data-catalogue/yearly-electricity-data/",
+    "ref": "The default grid emission factor is an average of all emission factors for countries hosting refugees.",
     "index": 21
   },
   {
