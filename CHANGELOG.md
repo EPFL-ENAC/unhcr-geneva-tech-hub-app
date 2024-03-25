@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.14.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.13.1...v1.14.0) (2024-03-25)
+
+
+### Features
+
+* **frontend:** add new sentence in UNHCR locations [#645](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/645) ([35f6706](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/35f6706822ab4889e4042b2c3654036f5a7230c4))
+* **frontend:** add User created id next to custom id [#644](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/644) ([e32b24d](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/e32b24dc35f3e47ec8cbf68467a30f1cea9abe00))
+* **frontend:** correct domestic solid waste formula [#633](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/633) carbon to leachate ([35a81f2](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/35a81f22bb74e79ab925bd9d974956a756c9a7a3))
+
+
+### Bug Fixes
+
+* **azure-cron:** replace wget by curl to avoid memory leak on alpine ([48ae235](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/48ae235eee007fca4287356340c0dc9e7c883868))
+* **frontend:** auth for firefox sso replaced by acquiredToken on failure ([d4e0f1a](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d4e0f1aa11ad2a354d6d23b6ebf92476c578a942))
+* **frontend:** centralize msal oauth flow ([a462baa](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/a462baa8b6469a31768ae696f60bd912de6d4dcb))
+* **frontend:** correct lint errors ([7835df8](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/7835df822e346fb6707cd0db2c2bd1bf6e579faa))
+* **frontend:** correct linting ([fdbf8ad](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/fdbf8adce8f306011d2c7e07fcdf7de56ebaf878))
+* **frontend:** reference data updated for grid default [#643](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/643) ([a8b440d](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/a8b440d8b182c8332360e55bbb88cfa111198a95))
+* **frontend:** remove all useless todo in the code ([5ef75b5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/5ef75b5db3fc26521bcf99c58bd3978257166298))
+* **frontend:** remove webpack chunk and dead code ([f5bac10](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f5bac10bcf5944601d04314dc73d553b6ee32a38))
+* **frontend:** replace src by href in 'a' tag ([dc539c1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/dc539c127722350c6493cabdf89af337587f7a2d))
+* **frontend:** resolve escape bug on modal [#337](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/337) ([3ebd54f](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/3ebd54f1b6336d8adf1cccbc235d154168d004ec))
+* **frontend:** try to avoid weird behavior with shelter [#640](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/640) ([00685d0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/00685d0bfd90dd25b9e62e67d530474d27f2bc4f))
+* **frontend:** when session not valid on 401, return to guest automatically ([2ea6e99](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/2ea6e9916b1003fdcd1b0f56099ed41b16dbbefa))
+* **readme:** correct todo and typo ([865088d](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/865088d51c580a90eef8f28bdf5f5f221509352c))
+
 ## [1.13.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.13.0...v1.13.1) (2024-03-18)
 
 
