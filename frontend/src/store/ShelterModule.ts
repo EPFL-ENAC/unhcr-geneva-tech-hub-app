@@ -277,6 +277,12 @@ const actions: ActionTree<ShelterState, RootState> = {
             console.error(
               `updateDoc in ShelterModule: error ${JSON.stringify(e)}`
             );
+            // recheck the user cookie by calling the server
+            context.dispatch(
+              "UserModule/getSession",
+              { bypassLoading: true },
+              { root: true }
+            );
           } else {
             console.error(
               `updateDoc in ShelterModule: error ${JSON.stringify(e)}`
