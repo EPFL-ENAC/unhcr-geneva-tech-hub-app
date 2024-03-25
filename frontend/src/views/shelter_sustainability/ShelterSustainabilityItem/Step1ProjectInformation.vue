@@ -45,7 +45,11 @@
       <v-col>
         <v-sheet v-if="localShelter" elevation="2" rounded>
           <v-container fluid>
-            <v-form v-model="localShelter.completed_info">
+            <v-form
+              ref="form"
+              v-model="localShelter.completed_info"
+              :lazy-validation="false"
+            >
               <v-row>
                 <v-col class="about-first-column" cols="6">
                   <v-text-field
@@ -149,6 +153,7 @@
                     required
                     :rules="numberRules"
                     label="Number of people for setup"
+                    type="string"
                     @change="updateFormInput"
                   />
                   <v-text-field
@@ -156,6 +161,7 @@
                     name="setup_time"
                     required
                     :rules="numberRules"
+                    type="string"
                     label="Time for setup (days)"
                     @change="updateFormInput"
                   />
@@ -417,6 +423,7 @@ export default class Step1 extends Vue {
   readonly attribution = attributionMap;
 
   public updateFormInput(): void {
+    this.$refs.form?.validate();
     const newShelter = cloneDeep(this.localShelter);
     this.$emit("update:shelter", newShelter);
     this.$emit("input", newShelter); // for v-model
@@ -508,6 +515,9 @@ export default class Step1 extends Vue {
   numberRules = [
     (v: string | number): boolean | string => {
       return (v !== undefined && v !== "") || `is required`;
+    },
+    (v: string | number): boolean | string => {
+      return Number.isInteger(v) || `should be an integer`;
     },
   ];
 
