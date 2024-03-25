@@ -913,10 +913,10 @@ export default class App extends Vue {
         href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/GHG Databases and Creating Assessments.mp4`,
       },
       {
-        title: "Energy for Facilities Tutorial (Coming soon)",
+        title: "Energy for Facilities Tutorial",
         type: "video",
         icon: "mdiPlayCircle",
-        // href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/{comingsoon}.mp4`,},
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/Energy_facilities.mp4`,
       },
       {
         title: "Energy for Cooking Tutorial",
@@ -925,10 +925,10 @@ export default class App extends Vue {
         href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/Energy for Cooking Tutorial.mp4`,
       },
       {
-        title: "Energy for Lighting Tutorial (Coming soon)",
+        title: "Energy for Lighting Tutorial",
         type: "video",
         icon: "mdiPlayCircle",
-        // href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/{comingsoon}.mp4`,
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/Energy_lighting.mp4`,
       },
       {
         title: "Water Supply Tutorial",
@@ -943,16 +943,16 @@ export default class App extends Vue {
         href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/Domestic Solid Waste Tutorial.mp4`,
       },
       {
-        title: "Multiple Endlines (Coming soon)",
+        title: "Multiple Endlines",
         type: "video",
         icon: "mdiPlayCircle",
-        // href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/{comingsoon}.mp4`,}",
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/multiple_endlines.mp4`,
       },
       {
-        title: "Results and Printing (Coming soon)",
+        title: "Results and Printing",
         type: "video",
         icon: "mdiPlayCircle",
-        // href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/{comingsoon}.mp4`,}",
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/results_and_printing.mp4`,
       },
       {
         title: "LCA_Facilities_GHG_Brief_Mar2024_vf",
