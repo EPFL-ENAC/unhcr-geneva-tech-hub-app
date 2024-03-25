@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.15.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.14.0...v1.15.0) (2024-03-25)
+
+
+### Features
+
+* **shelter:** add complete/incomplete status on shelter listing ([c2771f3](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c2771f31036a57dbf0a7bfc2c844523b06ae2d4e))
+
+
+### Bug Fixes
+
+* deactivate acquire token in case profile not approved ([59e14e6](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/59e14e660ae3ece4b553c18a4f643bad8f32a69d))
+* **frontend:** replace NODE_ENV by VUE_APP for enabling trace/log ([a903fab](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/a903fab9ea48915011cef3adb51eac8b8bcd18f4))
+
 ## [1.14.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.13.1...v1.14.0) (2024-03-25)
 
 
