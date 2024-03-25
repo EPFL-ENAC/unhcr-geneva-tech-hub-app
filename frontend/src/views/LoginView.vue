@@ -9,9 +9,9 @@
 </template>
 
 <script lang="ts">
+import LoginComponent from "@/components/LoginComponent.vue";
 import Vue from "vue";
 import { mapGetters } from "vuex";
-import LoginComponent from "../components/LoginComponent.vue";
 
 export default Vue.extend({
   name: "LoginView",

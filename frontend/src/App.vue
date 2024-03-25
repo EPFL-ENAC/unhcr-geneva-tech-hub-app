@@ -663,10 +663,9 @@ import ReferenceData from "@/components/ReferenceData.vue";
 
 import { env } from "@/config";
 import update from "@/mixins/update.js";
-import { CouchUser, removeAllOauthTokens, Roles } from "@/store/UserModule";
+import { CouchUser } from "@/store/UserModule";
 import { ghg, shelter } from "@/utils/apps";
 import md5 from "@/utils/md5";
-import { EventMessage, EventPayload, EventType } from "@azure/msal-browser";
 import { AxiosError, AxiosPromise } from "axios";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { Route, RouteRecordPublic } from "vue-router";
@@ -1030,72 +1029,13 @@ export default class App extends Vue {
     this.mini = !this.mini;
   }
 
-  public async firstToken(payload: EventPayload): Promise<void> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if ((payload as any)?.account) {
-      window.authModule.myMSALObj.setActiveAccount(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (payload as any)?.account
-      );
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if ((payload as any)?.idToken) {
-      await this.loginToken({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        token: (payload as any)?.idToken,
-        byPassLoading: true,
-      });
-      await this.getSessionStore({ byPassLoading: true });
-    } else {
-      removeAllOauthTokens();
-    }
-    this.loading = false;
-  }
   /** Run once. */
   async mounted(): Promise<void> {
-    //github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/events.md
-    window.authModule.myMSALObj.addEventCallback(
-      async (message: EventMessage) => {
-        // Update UI or interact with EventMessage here
-        if (message.eventType === EventType.LOGIN_SUCCESS) {
-          this.firstToken(message.payload);
-        }
-        if (message.eventType === EventType.SSO_SILENT_SUCCESS) {
-          this.firstToken(message.payload);
-        }
-        if (
-          message.eventType === EventType.SSO_SILENT_FAILURE ||
-          message.eventType === EventType.ACQUIRE_TOKEN_FAILURE
-        ) {
-          this.loginAsGuest();
-          this.loading = false;
-        }
-        if (message.eventType === EventType.ACQUIRE_TOKEN_SUCCESS) {
-          this.firstToken(message.payload);
-        }
-      }
-    );
     this.$vuetify.theme.dark = false;
     document.title = this?.title ?? "unknown";
 
     this.loading = true;
-    const resp = await this.getSessionStore({ byPassLoading: true });
-    if (resp?.roles?.includes(Roles[Roles.guest])) {
-      // probably better to wait for final event before attempting ssoSilent or else ?
-      // if (window.authModule.myMSALObj.getAllAccounts().length === 0) {
-      //   window.authModule.attemptSsoSilent();
-      // } else {
-      //   window.authModule.getTokenRedirect(
-      //     window.authModule.silentProfileRequest,
-      //     window.authModule.profileRedirectRequest
-      //   );
-      // }
-      // temp ? should move loading false at end of event
-      this.loading = false;
-    } else {
-      // we're couchdb or jwt ad user
-      this.loading = false;
-    }
+    // this.loading is set to false at the end of the flow: logic has been moved to initialize in AuthModule.ts
 
     this.$store.subscribe((mutation) => {
       const shouldUpdate = ["storeMessage"];

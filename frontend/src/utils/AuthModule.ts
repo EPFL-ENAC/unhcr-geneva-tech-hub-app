@@ -16,6 +16,9 @@ import {
   SsoSilentRequest,
 } from "@azure/msal-browser";
 
+import store from "@/store";
+
+import { GUEST_NAME } from "@/store/UserModule";
 import { UIManager } from "./UIManager";
 
 // comes from https://github.com/Azure-Samples/ms-identity-javascript-tutorial/blob/main/1-Authentication/2-sign-in-b2c/App/authConfig.js
@@ -131,25 +134,82 @@ export class AuthModule {
     };
   }
 
+  public async firstToken(payload: AuthenticationResult): Promise<void> {
+    if (payload?.account) {
+      this.myMSALObj.setActiveAccount(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (payload as any)?.account
+      );
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (payload?.idToken) {
+      await store.dispatch("UserModule/loginToken", {
+        token: payload?.idToken,
+        bypassLoading: true,
+      });
+      await store.dispatch("UserModule/getSession", {
+        bypassLoading: true,
+      });
+    } else {
+      await store.dispatch("UserModule/removeAllOauthTokens");
+    }
+    await store.dispatch("setLoading", false);
+  }
+
   public async initialize(): Promise<void> {
     await this.myMSALObj.initialize();
 
     this.myMSALObj.addEventCallback(async (message: EventMessage) => {
       // Update UI or interact with EventMessage here
       if (message.eventType === EventType.HANDLE_REDIRECT_END) {
-        if (window.authModule.myMSALObj.getAllAccounts().length === 0) {
-          window.authModule.attemptSsoSilent();
+        const resp = await store.dispatch("UserModule/getSession", {
+          bypassLoading: true,
+        });
+        if (resp?.roles?.includes(GUEST_NAME)) {
+          if (window.authModule.myMSALObj.getAllAccounts().length === 0) {
+            window.authModule.attemptSsoSilent();
+          } else {
+            window.authModule.getTokenRedirect(
+              window.authModule.silentProfileRequest,
+              window.authModule.profileRedirectRequest
+            );
+          }
         } else {
-          window.authModule.getTokenRedirect(
-            window.authModule.silentProfileRequest,
-            window.authModule.profileRedirectRequest
-          );
+          await store.dispatch("setLoading", false);
         }
       }
-    });
+      if (message.eventType === EventType.ACQUIRE_TOKEN_SUCCESS) {
+        const payload: AuthenticationResult =
+          message.payload as AuthenticationResult;
+        this.firstToken(payload);
+      }
 
-    this.loadAuthModule();
-    this.account = this.getAccount();
+       // Update UI or interact with EventMessage here
+       if (message.eventType === EventType.LOGIN_SUCCESS) {
+        const payload: AuthenticationResult =
+          message.payload as AuthenticationResult;
+        this.firstToken(payload);
+      }
+      if (message.eventType === EventType.SSO_SILENT_SUCCESS) {
+        const payload: AuthenticationResult =
+          message.payload as AuthenticationResult;
+        this.firstToken(payload);
+      }
+      if (
+        message.eventType === EventType.SSO_SILENT_FAILURE ||
+        message.eventType === EventType.ACQUIRE_TOKEN_FAILURE
+      ) {
+        await store.dispatch("UserModule/loginAsGuest", {
+          bypassLoading: true,
+        });
+        await store.dispatch("setLoading", false);
+      }
+      if (message.eventType === EventType.ACQUIRE_TOKEN_SUCCESS) {
+        const payload: AuthenticationResult =
+          message.payload as AuthenticationResult;
+        this.firstToken(payload);
+      }
+    });
   }
 
   /**

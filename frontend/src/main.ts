@@ -16,6 +16,7 @@ import "./registerComponentHooks";
 import "./registerServiceWorker";
 import router from "./router";
 import store from "./store";
+import { AuthModule } from "./utils/AuthModule";
 
 Vue.config.productionTip = env.NODE_ENV === "production";
 
@@ -178,6 +179,16 @@ window.addEventListener("error", function (event) {
     stack: error?.stack,
     type: "error",
   });
+});
+
+// Load auth module when browser window loads. Only required for redirect flows.
+window.addEventListener("load", async () => {
+  const authModule: AuthModule = new AuthModule();
+  await authModule.initialize();
+  // find out why ? uninitialized_public_client_application
+  authModule.loadAuthModule();
+  // authModule.getAccount();
+  window.authModule = authModule;
 });
 
 export default new Vue({
