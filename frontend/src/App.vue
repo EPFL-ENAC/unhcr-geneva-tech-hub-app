@@ -954,6 +954,36 @@ export default class App extends Vue {
         icon: "mdiPlayCircle",
         // href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/{comingsoon}.mp4`,}",
       },
+      {
+        title: "LCA_Facilities_GHG_Brief_Mar2024_vf",
+        type: "pdf",
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/LCA_Facilities_GHG_Brief_Mar2024_vf.pdf`,
+        icon: "mdiFileDocumentOutline",
+      },
+      {
+        title: "LCA_Water_Supply_GHG_Brief_Mar2024_vf",
+        type: "pdf",
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/LCA_Water_Supply_GHG_Brief_Mar2024_vf.pdf`,
+        icon: "mdiFileDocumentOutline",
+      },
+      {
+        title: "LCA_SWM_GHG_Brief_Mar2024_vf",
+        type: "pdf",
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/LCA_SWM_GHG_Brief_Mar2024_vf.pdf`,
+        icon: "mdiFileDocumentOutline",
+      },
+      {
+        title: "LCA_Lighting_GHG_Brief_Mar2024_vf",
+        type: "pdf",
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/LCA_Lighting_GHG_Brief_Mar2024_vf.pdf`,
+        icon: "mdiFileDocumentOutline",
+      },
+      {
+        title: "LCA_Cooking_GHG_Brief_Mar2024_vf",
+        type: "pdf",
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/LCA_Cooking_GHG_Brief_Mar2024_vf.pdf`,
+        icon: "mdiFileDocumentOutline",
+      },
     ];
   }
 
