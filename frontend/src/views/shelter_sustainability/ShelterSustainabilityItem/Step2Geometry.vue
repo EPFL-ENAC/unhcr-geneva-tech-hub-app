@@ -125,7 +125,8 @@
                                 :name="dimension"
                                 :label="dimension"
                                 suffix="m"
-                                type="number"
+                                type="string"
+                                :rules="numberRules"
                                 @change="updateShelterDimensions"
                               />
                             </v-form>
@@ -162,7 +163,8 @@
                                 :name="dimension"
                                 :label="dimension"
                                 suffix="m"
-                                type="number"
+                                type="string"
+                                :rules="numberRules"
                                 @change="updateShelterDoorDimensions"
                               />
                             </v-form>
@@ -199,7 +201,8 @@
                                 :name="dimension"
                                 :label="dimension"
                                 suffix="m"
-                                type="number"
+                                type="string"
+                                :rules="numberRules"
                                 @change="updateShelterWindowDimensions"
                               />
                             </v-form>
@@ -236,7 +239,8 @@
                             "
                             :name="resultDimension.label"
                             :label="resultDimension.label"
-                            type="number"
+                            type="string"
+                            :rules="numberRules"
                             :disabled="!geometry.hiddenInputs"
                             :suffix="resultDimension.suffix"
                             @change="updateResultDimension"
@@ -306,6 +310,14 @@ export default class Step2Geometry extends Vue {
   mdiDelete = mdiDelete;
   mdiPlusBox = mdiPlusBox;
 
+  numberRules = [
+    (v: string | number): boolean | string => {
+      return (v !== undefined && v !== "") || `is required`;
+    },
+    (v: string | number): boolean | string => {
+      return Number.isFinite(v) || `should be a number`;
+    },
+  ];
   public updateFormInput(): void {
     this.localShelter = Object.assign({}, this.localShelter);
   }
