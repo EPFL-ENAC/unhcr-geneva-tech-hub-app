@@ -5,6 +5,8 @@ import {
   CacheLookupPolicy,
   Configuration,
   EndSessionRequest,
+  EventMessage,
+  EventType,
   InteractionRequiredAuthError,
   LogLevel,
   PopupRequest,
@@ -68,11 +70,11 @@ export class AuthModule {
   private account: AccountInfo | null; // https://azuread.github.io/microsoft-authentication-library-for-js/ref/msal-common/modules/_src_account_accountinfo_.html
   private loginRedirectRequest: RedirectRequest; // https://azuread.github.io/microsoft-authentication-library-for-js/ref/msal-browser/modules/_src_request_redirectrequest_.html
   private loginRequest: PopupRequest; // https://azuread.github.io/microsoft-authentication-library-for-js/ref/msal-browser/modules/_src_request_popuprequest_.html
-  private profileRedirectRequest: RedirectRequest;
+  public profileRedirectRequest: RedirectRequest;
   private profileRequest: PopupRequest;
   private mailRedirectRequest: RedirectRequest;
   private mailRequest: PopupRequest;
-  private silentProfileRequest: SilentRequest; // https://azuread.github.io/microsoft-authentication-library-for-js/ref/msal-browser/modules/_src_request_silentrequest_.html
+  public silentProfileRequest: SilentRequest; // https://azuread.github.io/microsoft-authentication-library-for-js/ref/msal-browser/modules/_src_request_silentrequest_.html
   private silentMailRequest: SilentRequest;
   private silentLoginRequest: SsoSilentRequest;
 
@@ -131,6 +133,21 @@ export class AuthModule {
 
   public async initialize(): Promise<void> {
     await this.myMSALObj.initialize();
+
+    this.myMSALObj.addEventCallback(async (message: EventMessage) => {
+      // Update UI or interact with EventMessage here
+      if (message.eventType === EventType.HANDLE_REDIRECT_END) {
+        if (window.authModule.myMSALObj.getAllAccounts().length === 0) {
+          window.authModule.attemptSsoSilent();
+        } else {
+          window.authModule.getTokenRedirect(
+            window.authModule.silentProfileRequest,
+            window.authModule.profileRedirectRequest
+          );
+        }
+      }
+    });
+
     this.loadAuthModule();
     this.account = this.getAccount();
   }
@@ -209,9 +226,14 @@ export class AuthModule {
       .catch((error) => {
         console.error("Silent Error: " + error);
         // in case we want to display a popup // by default we'll be a guest user
-        // if (error instanceof InteractionRequiredAuthError) {
-        //   this.login("loginPopup");
-        // }
+        if (error instanceof InteractionRequiredAuthError) {
+          if (this.getAccount() !== null) {
+            this.getTokenRedirect(
+              this.silentProfileRequest,
+              this.profileRedirectRequest
+            );
+          }
+        }
       });
   }
 
@@ -332,12 +354,12 @@ export class AuthModule {
   /**
    * Gets a token silently, or falls back to interactive redirect.
    */
-  private async getTokenRedirect(
+  public async getTokenRedirect(
     silentRequest: SilentRequest = {
       cacheLookupPolicy: CacheLookupPolicy.AccessTokenAndRefreshToken,
       scopes: ["email", "profile", "openid"],
     },
-    interactiveRequest: RedirectRequest
+    interactiveRequest: RedirectRequest = this.profileRedirectRequest
   ): Promise<string | null> {
     try {
       const response = await this.myMSALObj.acquireTokenSilent(silentRequest);

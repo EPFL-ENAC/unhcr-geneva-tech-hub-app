@@ -1063,9 +1063,15 @@ export default class App extends Vue {
         if (message.eventType === EventType.SSO_SILENT_SUCCESS) {
           this.firstToken(message.payload);
         }
-        if (message.eventType === EventType.SSO_SILENT_FAILURE) {
+        if (
+          message.eventType === EventType.SSO_SILENT_FAILURE ||
+          message.eventType === EventType.ACQUIRE_TOKEN_FAILURE
+        ) {
           this.loginAsGuest();
           this.loading = false;
+        }
+        if (message.eventType === EventType.ACQUIRE_TOKEN_SUCCESS) {
+          this.firstToken(message.payload);
         }
       }
     );
@@ -1074,12 +1080,20 @@ export default class App extends Vue {
 
     this.loading = true;
     const resp = await this.getSessionStore({ byPassLoading: true });
-
-    // couchdb session is superseeding azure
     if (resp?.roles?.includes(Roles[Roles.guest])) {
-      // meaning we are not logged in in couchdbm we'll try to login via azure and default to guest otherwise
-      window.authModule.attemptSsoSilent();
+      // probably better to wait for final event before attempting ssoSilent or else ?
+      // if (window.authModule.myMSALObj.getAllAccounts().length === 0) {
+      //   window.authModule.attemptSsoSilent();
+      // } else {
+      //   window.authModule.getTokenRedirect(
+      //     window.authModule.silentProfileRequest,
+      //     window.authModule.profileRedirectRequest
+      //   );
+      // }
+      // temp ? should move loading false at end of event
+      this.loading = false;
     } else {
+      // we're couchdb or jwt ad user
       this.loading = false;
     }
 
