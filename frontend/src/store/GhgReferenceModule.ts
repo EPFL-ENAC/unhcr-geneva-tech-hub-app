@@ -1,4 +1,4 @@
-import ghg_reference from "@/assets/references/ghg_reference.json";
+import ghg_emission_factors from "@/assets/references/ghg_emission_factors.json";
 import { GetterTree, Module } from "vuex";
 import { RootState } from ".";
 
@@ -17,12 +17,12 @@ export interface ReferenceItemInterface {
 
 /** Getters */
 const getters: GetterTree<null, RootState> = {
-  items: (): ReferenceItemInterface[] | null => ghg_reference,
+  items: (): ReferenceItemInterface[] | null => ghg_emission_factors,
   ghgMapRef: (): ItemReferencesMap | undefined => {
-    if (!ghg_reference) {
+    if (!ghg_emission_factors) {
       return undefined;
     }
-    return ghg_reference.reduce(
+    return ghg_emission_factors.reduce(
       (acc: ItemReferencesMap, item: ReferenceItemInterface) => {
         acc[item._id] = item;
         return acc;

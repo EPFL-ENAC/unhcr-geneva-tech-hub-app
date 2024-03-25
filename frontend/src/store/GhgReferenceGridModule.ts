@@ -1,4 +1,4 @@
-import grid from "@/assets/references/grid_emission_factors.json";
+import grid from "@/assets/references/ghg_grid_emission_factors.json";
 import { GetterTree, Module } from "vuex";
 import { RootState } from ".";
 
