@@ -44,7 +44,7 @@ const MSAL_CONFIG: Configuration = {
         if (containsPii) {
           return;
         }
-        if (env.NODE_ENV === "development") {
+        if (env.VUE_APP_ENVIRONEMENT !== "production") {
           switch (level) {
             case LogLevel.Error:
               console.error(message);
@@ -165,6 +165,7 @@ export class AuthModule {
         const resp = await store.dispatch("UserModule/getSession", {
           bypassLoading: true,
         });
+        // replace window.authModule by this
         if (resp?.roles?.includes(GUEST_NAME)) {
           if (window.authModule.myMSALObj.getAllAccounts().length === 0) {
             window.authModule.attemptSsoSilent();
@@ -184,8 +185,8 @@ export class AuthModule {
         this.firstToken(payload);
       }
 
-       // Update UI or interact with EventMessage here
-       if (message.eventType === EventType.LOGIN_SUCCESS) {
+      // Update UI or interact with EventMessage here
+      if (message.eventType === EventType.LOGIN_SUCCESS) {
         const payload: AuthenticationResult =
           message.payload as AuthenticationResult;
         this.firstToken(payload);
@@ -394,7 +395,6 @@ export class AuthModule {
     } catch (e) {
       console.log("silent token acquisition fails.");
       if (e instanceof InteractionRequiredAuthError) {
-        console.log("acquiring token using redirect");
         return this.myMSALObj
           .acquireTokenPopup(interactiveRequest)
           .then((resp) => {
@@ -428,7 +428,6 @@ export class AuthModule {
     } catch (e) {
       console.log("silent token acquisition fails.");
       if (e instanceof InteractionRequiredAuthError) {
-        console.log("acquiring token using redirect");
         this.myMSALObj
           .acquireTokenRedirect(interactiveRequest)
           .catch(console.error);

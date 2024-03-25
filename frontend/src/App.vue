@@ -229,7 +229,7 @@
         style="margin: 5px; margin-top: 11px; height: 60px"
       />
       <span
-        v-if="env.VUE_APP_ENVIRONEMENT === 'developement'"
+        v-if="env.VUE_APP_ENVIRONEMENT !== 'production'"
         class="ant-tag ant-tag-orange"
         style="margin-top: 6px"
       >
