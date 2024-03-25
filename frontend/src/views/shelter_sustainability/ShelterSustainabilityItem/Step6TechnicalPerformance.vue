@@ -53,6 +53,7 @@ export default class Step6 extends Vue {
   public async update(value: Score): Promise<void> {
     this.localShelter.technical_performance = value;
     this.localShelter = updateHabitability(this.localShelter);
+    this.localShelter = updateTechnicalPerformance(this.localShelter);
     this.updateFormInput();
   }
 

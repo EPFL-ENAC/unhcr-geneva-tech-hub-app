@@ -73,7 +73,7 @@ axios.interceptors.response.use(undefined, function (error: AxiosError) {
       return `${JSON.stringify(error.response.data)}`;
     },
   });
-  if (env.NODE_ENV === "development") {
+  if (env.VUE_APP_ENVIRONEMENT !== "production") {
     console.trace(error);
   }
   return Promise.reject(error);
@@ -83,7 +83,7 @@ Vue.config.errorHandler = function (err, vm, info) {
   // handle error
   // `info` is a Vue-specific error info, e.g. which lifecycle hook
   // the error was found in. Only available in 2.2.0+
-  if (env.NODE_ENV === "development") {
+  if (env.VUE_APP_ENVIRONEMENT !== "production") {
     console.trace(err.stack);
   }
   if (err?.name === "unauthorized") {
@@ -101,7 +101,7 @@ Vue.config.errorHandler = function (err, vm, info) {
 Vue.config.warnHandler = function (err, vm, info) {
   // handle warning
   // `info` is a Vue-specific error info, e.g. which lifecycle hook
-  if (env.NODE_ENV === "development") {
+  if (env.VUE_APP_ENVIRONEMENT !== "production") {
     console.trace(info);
   }
   store.dispatch("notifyUser", {
@@ -119,12 +119,12 @@ window.addEventListener("unhandledrejection", function (event) {
 
   if (axios.isAxiosError(event.reason)) {
     // we already have an axios error interceptor, we don't need to notify the user again
-    if (env.NODE_ENV === "development") {
+    if (env.VUE_APP_ENVIRONEMENT !== "production") {
       console.log(event.reason.status);
       console.error(event.reason.response);
     }
   } else {
-    if (env.NODE_ENV === "development") {
+    if (env.VUE_APP_ENVIRONEMENT !== "production") {
       console.trace(event.reason?.stack ?? JSON.stringify(event.promise));
     }
     if (event.reason?.name === "unauthorized") {
@@ -145,7 +145,7 @@ window.addEventListener("unhandledrejection", function (event) {
 window.addEventListener("error", function (event) {
   //handle error here
   const { message, filename, lineno, colno, error, timeStamp } = event;
-  if (env.NODE_ENV === "development") {
+  if (env.VUE_APP_ENVIRONEMENT !== "production") {
     console.trace(error?.stack);
   }
   // **  Fixing ResizeObserver loop completed with undelivered notifications.
@@ -153,7 +153,7 @@ window.addEventListener("error", function (event) {
   // **  https://stackoverflow.com/questions/49384120/resizeobserver-loop-limit-exceeded
   // ResizeObserver loop completed with undelivered notifications.
   if (message.includes("ResizeObserver loop completed")) {
-    if (env.NODE_ENV === "development") {
+    if (env.VUE_APP_ENVIRONEMENT !== "production") {
       console.warn(
         "We have a ResizeObserver loop problem (due to too many calls)" +
           message

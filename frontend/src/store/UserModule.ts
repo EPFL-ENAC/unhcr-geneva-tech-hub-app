@@ -420,7 +420,7 @@ const actions: ActionTree<UserState, RootState> = {
         return resp.data;
       } catch (e: unknown) {
         // ExpireError mostly we should try to refresh
-        if (env.NODE_ENV === "development") {
+        if (env.VUE_APP_ENVIRONEMENT !== "production") {
           console.trace(e);
         }
         // We don't throw the error, we want to keep the user not logged in (as a guest user below)

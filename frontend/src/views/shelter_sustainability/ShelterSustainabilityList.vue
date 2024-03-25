@@ -254,10 +254,8 @@
                   >
                     <v-row class="align-center d-flex">
                       <v-col cols="4" class="text-caption">
-                        Created: {{ project.created_at | formatDate }}
-                      </v-col>
-                      <v-col cols="4" class="text-caption">
-                        Updated: {{ project.updated_at | formatDate }}
+                        <p>Created: {{ project.created_at | formatDate }}</p>
+                        <p>Updated: {{ project.updated_at | formatDate }}</p>
                       </v-col>
                       <v-col
                         cols="4"
@@ -329,6 +327,19 @@
                         </v-tooltip>
                       </v-col>
                     </v-row>
+                  </v-col>
+                  <v-col cols="1" class="d-print-none">
+                    <div
+                      class="d-flex align-center justify-center"
+                      style="height: 100%"
+                    >
+                      <span
+                        class="text-caption align-center d-flex font-italic text--lighten-3"
+                        :class="project.completed ? `green--text` : `red--text`"
+                      >
+                        {{ project.completed ? "complete" : "incomplete" }}
+                      </span>
+                    </div>
                   </v-col>
                 </v-row>
               </v-card>

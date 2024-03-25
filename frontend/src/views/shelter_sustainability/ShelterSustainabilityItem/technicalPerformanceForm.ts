@@ -181,7 +181,7 @@ const technicalPerformanceForm: ShelterForm = {
           children: [
             {
               _id: "2b1_thermal_comfort",
-              type: ShelterFormType.radioGroup,
+              type: ShelterFormType.checkboxGroup,
               children: [
                 {
                   _id: "input_2b_1",
