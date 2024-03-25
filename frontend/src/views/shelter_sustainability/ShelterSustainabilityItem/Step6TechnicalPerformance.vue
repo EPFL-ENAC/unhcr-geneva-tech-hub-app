@@ -15,10 +15,13 @@
 import FormGroup from "@/components/shelter_sustainability/FormGroup.vue";
 import { ShelterFormType } from "@/components/shelter_sustainability/ShelterForm";
 import { Score, Shelter } from "@/store/ShelterInterface";
+import {
+  updateHabitability,
+  updateTechnicalPerformance,
+} from "@/store/ShelterModuleUtils";
 import technicalPerformanceForm from "@/views/shelter_sustainability/ShelterSustainabilityItem/technicalPerformanceForm";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue } from "vue-property-decorator";
-
 @Component({
   components: {
     FormGroup,
@@ -49,18 +52,13 @@ export default class Step6 extends Vue {
   }
   public async update(value: Score): Promise<void> {
     this.localShelter.technical_performance = value;
-
-    // update habitability, because it should be done like this (defined in the specs)
-    // TODO: add non applicable because it does rely on the technical performance
-    this.localShelter.habitability.input12 =
-      this.technical_performance.input_3b_6;
-    this.localShelter.habitability.input12na =
-      this.technical_performance.input_3b_6na;
-    this.localShelter.habitability.input13 =
-      this.technical_performance.input_3b_7;
-    this.localShelter.habitability.input13na =
-      this.technical_performance.input_3b_7na;
+    this.localShelter = updateHabitability(this.localShelter);
     this.updateFormInput();
+  }
+
+  mounted(): void {
+    this.localShelter = updateTechnicalPerformance(this.localShelter);
+    this.localShelter = updateHabitability(this.localShelter);
   }
 
   technicalPerformanceForm = technicalPerformanceForm;

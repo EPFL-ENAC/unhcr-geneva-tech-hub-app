@@ -63,9 +63,10 @@
                             font-style: italic;
                           "
                           :title="slotProps.item.siteId"
-                          >({{
-                            (slotProps.item.siteId + "").substr(0, 8)
-                          }})</span
+                          >({{ (slotProps.item.siteId + "").substr(0, 8) }}
+                          <span v-if="!slotProps.item.location_pcode">
+                            User Created ID</span
+                          >)</span
                         >
                       </div>
                     </div>
@@ -151,7 +152,6 @@
   -> redirect to proper surveyId page edit
 */
 import CountrySelect from "@/components/commons/CountrySelect.vue";
-// TODO use generic Survey instead of Survey
 import {
   Country,
   DEFAULT_PP_PER_HH,
@@ -434,23 +434,6 @@ export default class NewSurveyDialog extends Vue {
       });
     }
   }
-
-  // public setLocalCampSite(project: GreenHouseGaz): void {
-  //   this.newCampSite = project ? cloneDeep(project) : ({} as GreenHouseGaz);
-  // }
-
-  // public syncLocalCampSite(): void {
-  //   // init function
-  //   // not sure how to handle this.project
-  //   this.setLocalCampSite(this.project);
-
-  //   this.$store.subscribe((mutation) => {
-  //     const shouldUpdate = ["GhgModule/SET_PROJECT"];
-  //     if (shouldUpdate.includes(mutation.type)) {
-  //       this.setLocalCampSite(mutation.payload);
-  //     }
-  //   });
-  // }
 
   @Watch("open", { immediate: true })
   onOpenChange(value: boolean): void {

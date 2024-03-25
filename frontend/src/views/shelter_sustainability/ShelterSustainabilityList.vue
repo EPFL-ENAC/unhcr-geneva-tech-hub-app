@@ -507,7 +507,6 @@ export default class ProjectList extends Vue {
         .toLocaleLowerCase()
         .trim();
     }
-    // TODO replace by _find mango query when indexes work with couchdb bootstrap
     return this.shelters
       .filter((shelter: Shelter) => {
         // by name do a lexicographic search
@@ -579,10 +578,6 @@ export default class ProjectList extends Vue {
     // GET years and GET countries for v-select used by shelterFilters
     this.getYears();
     this.getCountries();
-
-    // TODO: be responsive to change with a custom view
-    // reload on db change
-    // this.db?.onChange(this.getShelters);
 
     const queryIds = this.$route.query.ids;
     if (typeof queryIds === "string") {

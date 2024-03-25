@@ -4,15 +4,16 @@
       <v-row>
         <v-col>
           fNRB (Fraction of non-renewable biomass) per country. Source:
-          <a target="_blank" src="https://doi.org/10.1088/1748-9326/acb501"
-            >https://doi.org/10.1088/1748-9326/acb501 </a
-          ><br />
+          <a target="_blank" href="https://doi.org/10.1088/1748-9326/acb501"
+            >fNRB (Fraction of non-renewable biomass)</a
+          >
+          <br />
           For the countries that are not listed in the database, the default
           value for fNRB is 30%.
           <br />The source for this value is this methodology tool:
           <a
             target="_blank"
-            src="https://cdm.unfccc.int/methodologies/PAmethodologies/tools/am-tool-30-v1.pdf"
+            href="https://cdm.unfccc.int/methodologies/PAmethodologies/tools/am-tool-30-v1.pdf"
             >https://cdm.unfccc.int/methodologies/PAmethodologies/tools/am-tool-30-v1.pdf
           </a>
         </v-col>

@@ -29,7 +29,6 @@
 
 <script lang="ts">
 import OverviewProjects from "@/components/overview_data/OverviewProjects.vue";
-import OverviewUsers from "@/components/overview_data/OverviewUsers.vue";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
@@ -41,7 +40,6 @@ import { mapActions, mapGetters } from "vuex";
     ...mapActions(["toggleOverviewData", "setOverviewDataDrawer"]),
   },
   components: {
-    OverviewUsers,
     OverviewProjects,
   },
 })
@@ -58,13 +56,7 @@ export default class App extends Vue {
     return this.overviewDataDrawer;
   }
 
-  readonly menuItems: MenuSurveyItem[] = [
-    // {
-    //   tab: "projects",
-    //   componentName: "OverviewProjects",
-    // },
-    // { tab: "users", componentName: "OverviewUsers" },
-  ];
+  readonly menuItems: MenuSurveyItem[] = [];
   tab = 1;
 }
 

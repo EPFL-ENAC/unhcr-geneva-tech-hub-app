@@ -43,6 +43,7 @@ export class UnhcrNotificationError extends Error {
 
 /** Config store */
 
+export const GUEST_NAME = "guest";
 export enum Roles {
   user = "user", // Deprecated not used anymore
   admin = "admin", // user admin
@@ -52,7 +53,6 @@ export enum Roles {
   guest = "guest", // frontend only
 }
 
-export const GUEST_NAME = "guest";
 export interface CouchUser {
   name?: string | null;
   sub?: string;
@@ -360,10 +360,11 @@ const actions: ActionTree<UserState, RootState> = {
       removeAllOauthTokens();
       // const redirectURI = encodeURIComponent(window.location.origin);
       // window.location.href = `https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=${redirectURI}`;
+      const redirectUri =
+        window.authModule.myMSALObj.getConfiguration()?.auth?.redirectUri;
       const logoutRequest = {
         account: window.authModule.myMSALObj.getActiveAccount(),
-        postLogoutRedirectUri:
-          window.authModule.myMSALObj.getConfiguration()?.auth?.redirectUri,
+        postLogoutRedirectUri: redirectUri,
       };
 
       window.authModule.logout(logoutRequest);

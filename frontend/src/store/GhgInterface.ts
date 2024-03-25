@@ -45,7 +45,6 @@ export function newDefaultCampSite(username?: string): GreenHouseGaz {
     ...newSurveyForm(),
     pp_per_hh: DEFAULT_PP_PER_HH, // 4.73 (based on the most recent values for average household size from Database on Household Size and Composition 2022
     totalHH: 0,
-    // solar: , // TODO: I just noticed that I'm not using the solar average of the country
     created_at: new Date().toISOString(),
     created_by: username,
   } as GreenHouseGaz;
@@ -156,7 +155,6 @@ export interface WashSurvey {
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
-// TODO replace by GenericFormSurvey
 export interface FormSurvey {
   baseline: {
     inputs: FormSurveyInput[];

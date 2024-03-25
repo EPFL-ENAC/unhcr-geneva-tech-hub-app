@@ -32,7 +32,7 @@ fi
 temp_file=$(mktemp)
 keys_json_url="https://login.microsoftonline.com/$VUE_APP_AUTH_TENANT_ID/discovery/v2.0/keys"
 
-wget -O ${temp_file} $keys_json_url
+curl $keys_json_url > ${temp_file}
 cat /${temp_file} | python3 -c 'import sys, json; keys = json.load(sys.stdin)["keys"]; [print(i["kid"], i["x5c"][0]) for i in keys]' | awk '{ print "-----BEGIN CERTIFICATE-----\n" $2   "\n" "-----END CERTIFICATE-----\n"> ($1 ".cer") }'
 
 for file in $(find . -name "*.cer"); do

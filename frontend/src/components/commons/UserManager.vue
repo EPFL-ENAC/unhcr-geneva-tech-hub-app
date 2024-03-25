@@ -79,10 +79,6 @@ export default class UserManager extends Vue {
   readonly form: VForm | undefined;
 
   get rules(): (Rule | unknown)[] {
-    // TODO: add check UNHCR to circumvent the problem
-    // WARNING: if username is for instance testtss@unhcr.org it will match real unhcr users
-    // but because we can only add couchdb USER, we should probably add a warning for unhcr users
-    // saying that they cannot add unhcr users
     return [checkRequired, checkUserExists(this.users)];
   }
 

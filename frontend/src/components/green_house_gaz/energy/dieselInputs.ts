@@ -139,7 +139,6 @@ export function computeDieselPowerAndUpdateKey(
           dieselEstimatedRes.dieselLitersEstimated;
       }
     }
-    // TODO divide or not by number of day.
     localInput.dieselPower = computeDieselPowerFromLiters(
       localInput as EnergyItem,
       ghgMapRef?.REF_EFF_DIES_L
@@ -430,8 +429,7 @@ export function dieselInputsProducedPer(
         // when disabledFuelUsage == TRUE AND disableDieselLiters is False --> automatic number of diesel liters with default value
       },
       computeResults: true,
-      // TODO: beware for lighting it should be per hh per day like cookstove
-      // but for facility it's not per hh
+      // Beware for lighting it should be per hh per day like cookstove but for facility it's not per hh
       text: `Liters of diesel ${litersSuffix}${
         cookingMode ? "/household" : ""
       }`,

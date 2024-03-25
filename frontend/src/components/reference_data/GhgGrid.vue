@@ -6,6 +6,7 @@
           List of Grid Emission Factor from List of Grid Emission Factors from
           EMBER (2021). Source:
           <a
+            target="_blank"
             href="https://ember-climate.org/data-catalogue/yearly-electricity-data/"
             >https://ember-climate.org/data-catalogue/yearly-electricity-data/</a
           >

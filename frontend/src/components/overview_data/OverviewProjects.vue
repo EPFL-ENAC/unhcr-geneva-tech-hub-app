@@ -83,7 +83,6 @@ import {
 } from "@/views/shelter_sustainability/shelterTypeColors";
 import { CallbackDataParams, EChartsOption } from "echarts/types/dist/shared";
 import { map, mean, sum } from "lodash";
-import PouchDB from "pouchdb-browser";
 
 import { ScorecardConfig } from "@/views/shelter_sustainability/ShelterSustainabilityItem/generateScorecardOptions";
 import { cloneDeep } from "lodash";
@@ -346,7 +345,6 @@ export default class OverviewProjects extends Vue {
       [], // 2022 year2
     ]}, {}, {}]
     */
-    // TODO: make it generic by using: shelterColors.Emergency
     const emergency_shelter = scorecards.filter(
       (scorecard) => scorecard.shelter_type !== "Emergency"
     );
@@ -526,11 +524,7 @@ export default class OverviewProjects extends Vue {
     const routeParamId = this.$route.params.id;
     const id = routeParamId ? decodeURIComponent(routeParamId) : undefined;
 
-    // TODO: correct the getScorecards function to avoid this behavior
     this.getScorecards(id);
-    // this.changes = this.db?.onChange(() => {
-    //   this.getScorecards(id);
-    // });
 
     // GET years and GET countries for v-select used by shelterFilters
     this.getYears();
@@ -545,16 +539,12 @@ export default class OverviewProjects extends Vue {
     });
   }
 
-  changes!: PouchDB.Core.Changes<Shelter> | undefined;
   mounted(): void {
-    // this.syncDB();
+    this.syncDB();
     this.retrieveData();
-
-    // this.changes = this.db?.onChange(this.retrieveData);
   }
   destroyed(): void {
     this.closeDB();
-    this.changes?.cancel();
   }
 }
 

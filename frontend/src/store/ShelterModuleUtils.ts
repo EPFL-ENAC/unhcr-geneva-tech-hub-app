@@ -145,7 +145,6 @@ export function computeShelter(value: Shelter): Shelter {
   resultShelter.habitability_score =
     habitabilityScore.score / totalHabWithApplicable;
 
-  // todo change completed
   const totalHabToBeCompleted =
     TOTAL_HAB_ITEMS - nonApplicableHabitabilityScore.length;
   resultShelter.habitability.completed =
@@ -172,6 +171,41 @@ export function isMaterial(object: unknown): object is Material {
     Object.prototype.hasOwnProperty.call(object, "materialId") &&
     Object.prototype.hasOwnProperty.call(object, "formId")
   );
+}
+
+export function updateTechnicalPerformance(localShelter: Shelter): Shelter {
+  const { windowArea, floorArea } = localShelter.geometry;
+  // update technical_performance, because it should be done like this (defined in the specs)
+  // Ratio of window and ventilation openings area to floor area > 0.05
+  localShelter.technical_performance.input_2a_1 =
+    windowArea / floorArea > 0.05 ? 1 : -1;
+
+  // Ratio of windows area to floor area > 0.10
+  localShelter.technical_performance.input_2c_1 =
+    windowArea / floorArea > 0.1 ? 1 : -1;
+
+  // Window opening dimensions < 60x60cm
+  const hasAWindowTooBig =
+    getMaxWindowArea(localShelter.geometry.windows_dimensions) >= 0.36;
+  localShelter.technical_performance.input_3b_4 = hasAWindowTooBig ? -1 : 1;
+  return localShelter;
+}
+
+export function updateHabitability(localShelter: Shelter): Shelter {
+  localShelter.habitability.input5 = areDoorsBiggerThan90cm(
+    localShelter.geometry
+  );
+
+  // add non applicable because it does rely on the technical performance
+  localShelter.habitability.input12 =
+    localShelter.technical_performance.input_3b_6;
+  localShelter.habitability.input12na =
+    localShelter.technical_performance.input_3b_6na;
+  localShelter.habitability.input13 =
+    localShelter.technical_performance.input_3b_7;
+  localShelter.habitability.input13na =
+    localShelter.technical_performance.input_3b_7na;
+  return localShelter;
 }
 
 export function getFormIdItems(items: Item[] = []): string[] {

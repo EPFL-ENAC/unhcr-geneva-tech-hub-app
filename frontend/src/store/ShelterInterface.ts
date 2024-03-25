@@ -119,13 +119,13 @@ export interface ScoreCard {
 export interface ScoreCardWithShelterInfo extends ScoreCard {
   name: string;
   shelter_type: ShelterType;
-  created_at: string; // todo
+  created_at: string;
   created_by: string;
   updated_by: string;
   updated_at: string;
   organisation: string;
   year: string;
-  location_country: string; // todo
+  location_country: string;
   id: string;
 }
 export type ScoreCardWithShelterInfoKeys = keyof ScoreCardWithShelterInfo;
@@ -561,7 +561,6 @@ export const materialFunctions: MaterialsFunction = {
      */
     const { quantity, diameter } = item;
     if (quantity && diameter) {
-      // TODO: need to multiply by proper factor to convert milimeter in mˆ2 dimension
       return (
         Math.PI *
         Math.pow((diameter * ONE_THOUSANDTH) / 2, 2) *
@@ -628,7 +627,6 @@ export const materialFunctions: MaterialsFunction = {
   PCE_CYLINDRICAL: (item: Material, density: Density) => {
     const { quantity, diameter, length } = item;
     if (quantity && diameter && length) {
-      // TODO: need to multiply by proper factor to convert milimeter in mˆ2 dimension
       return (
         Math.PI *
         Math.pow((diameter * ONE_THOUSANDTH) / 2, 2) *

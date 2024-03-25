@@ -143,7 +143,6 @@ export default class RegisterComponent extends Vue {
 
   public get destinationRouteName(): string {
     const currentRouteName = this.$router.currentRoute.name as string;
-    // TODO: check again
     return currentRouteName === "Register" ? "Login" : currentRouteName;
   }
   registerCouchdb(): void {

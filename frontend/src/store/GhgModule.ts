@@ -155,7 +155,6 @@ const mutations: MutationTree<ProjectsState> = {
     state.updateAssessment = value;
   },
   REMOVE_DOC(state, value) {
-    // todo:check that projects exists!
     const indexToRemove = state.projects.findIndex((el) => el.id === value);
     state.projects.splice(indexToRemove, 1);
   },
@@ -275,9 +274,6 @@ function getGenericSite(
 const actions: ActionTree<ProjectsState, RootState> = {
   syncDB: (context: ActionContext<ProjectsState, RootState>) => {
     context.commit("INIT_DB");
-    // context.state.localCouch?.onChange(function () {
-    //   context.dispatch("getCountries");
-    // });
   },
   closeDB: (context: ActionContext<ProjectsState, RootState>) => {
     context.commit("CLOSE_DB");

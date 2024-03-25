@@ -272,11 +272,16 @@ const actions: ActionTree<ShelterState, RootState> = {
             console.error(
               `updateDoc in ShelterModule: conflict error ${JSON.stringify(e)}`
             );
-            // TODO: rerun dispatch updateDoc but only once
           } else if (e.error === "unauthorized") {
             // if guest it should not have happened
             console.error(
               `updateDoc in ShelterModule: error ${JSON.stringify(e)}`
+            );
+            // recheck the user cookie by calling the server
+            context.dispatch(
+              "UserModule/getSession",
+              { bypassLoading: true },
+              { root: true }
             );
           } else {
             console.error(

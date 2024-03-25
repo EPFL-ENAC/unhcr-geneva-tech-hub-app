@@ -23,7 +23,10 @@ import {
   ShelterFormType,
 } from "@/components/shelter_sustainability/ShelterForm";
 import { Score, Shelter } from "@/store/ShelterInterface";
-import { areDoorsBiggerThan90cm } from "@/store/ShelterModuleUtils";
+import {
+  areDoorsBiggerThan90cm,
+  updateHabitability,
+} from "@/store/ShelterModuleUtils";
 import habitabilityForm from "@/views/shelter_sustainability/ShelterSustainabilityItem/habitabilityForm";
 import { cloneDeep } from "lodash";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -113,10 +116,13 @@ export default class Step7 extends Vue {
 
   public async update(value: Score): Promise<void> {
     this.localShelter.habitability = value;
-    // TODO: add for loading here!
     this.updateFormInput();
   }
 
   habitabilityForm = habitabilityForm;
+
+  mounted(): void {
+    this.localShelter = updateHabitability(this.localShelter);
+  }
 }
 </script>

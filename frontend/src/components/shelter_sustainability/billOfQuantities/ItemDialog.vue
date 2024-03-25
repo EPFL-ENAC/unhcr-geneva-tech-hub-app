@@ -325,7 +325,6 @@ import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
 
 const { default: SheltersTransportModule } = await import(
-  /* webpackChunkName: "reference-shelter-transports-vuex" */
   "@/store/SheltersTransportModule"
 );
 @Component({
@@ -585,7 +584,6 @@ export default class DeleteItemDialog extends Vue {
 
   public async computeCost(): Promise<void> {
     try {
-      // side effect function: TODO: transform to pure function and move to utils
       const { quantity, formId, unit, unitCost, materialId } = this
         .localItem as Material;
       let { embodied_carbon, embodied_water } = this.localItem as Material;

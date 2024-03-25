@@ -168,7 +168,6 @@ import {
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
 import { EChartsOption } from "echarts/types/dist/shared";
-import PouchDB from "pouchdb-browser";
 import VChart from "vue-echarts";
 import { Component, Vue } from "vue-property-decorator";
 import { mapActions, mapGetters } from "vuex";
@@ -282,17 +281,12 @@ export default class Step8ScoreCard extends Vue {
       });
   }
 
-  // TODO: should be a mixin so we can use it in OverviewProjects also
-  changes!: PouchDB.Core.Changes<Shelter> | undefined;
   mounted(): void {
     // we don't init/close the db, it's handled by parent route component
     // frontend/src/views/shelter_sustainability/ShelterSustainabilityItem.vue
     const id = decodeURIComponent(this.$route.params.id);
 
     this.getScorecards(id);
-    // this.changes = this.db?.onChange(() => {
-    //   this.getScorecards(id);
-    // });
 
     // GET years and GET countries for v-select used by shelterFilters
     this.getYears();
@@ -305,10 +299,6 @@ export default class Step8ScoreCard extends Vue {
         this.getScorecards(id);
       }
     });
-  }
-
-  destroyed(): void {
-    // this.changes?.cancel();
   }
 }
 

@@ -12,7 +12,7 @@
     "audit": "npm audit --omit=dev"
   },
   "dependencies": {
-    "@azure/msal-browser": "^3.9.0",
+    "@azure/msal-browser": "^3.11.0",
     "@mdi/js": "^6.7.96",
     "@sentry/tracing": "^7.43.0",
     "@sentry/vue": "^7.43.0",

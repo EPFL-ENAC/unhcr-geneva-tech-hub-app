@@ -393,7 +393,6 @@ import {
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
 import { EChartsOption } from "echarts/types/dist/shared";
-import PouchDB from "pouchdb-browser";
 import VChart from "vue-echarts";
 import { Route } from "vue-router";
 import { mapActions, mapGetters } from "vuex";
@@ -450,8 +449,6 @@ export default class ShelterSustainabilityCompare extends Vue {
   db!: SyncDatabase<Shelter> | null;
   scorecards!: ScoreCardWithShelterInfo[];
   getScorecards!: (id: string[]) => Promise<ScoreCardWithShelterInfo[]>;
-
-  changes!: PouchDB.Core.Changes<Shelter> | undefined;
 
   newName = "";
   shelters: Shelter[] = [];
@@ -521,11 +518,9 @@ export default class ShelterSustainabilityCompare extends Vue {
   mounted(): void {
     this.syncDB();
     this.retrieveData();
-    // this.changes = this.db?.onChange(this.retrieveData);
   }
   destroyed(): void {
     this.closeDB();
-    // this.changes?.cancel();
   }
 }
 </script>

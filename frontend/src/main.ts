@@ -16,6 +16,7 @@ import "./registerComponentHooks";
 import "./registerServiceWorker";
 import router from "./router";
 import store from "./store";
+import { AuthModule } from "./utils/AuthModule";
 
 Vue.config.productionTip = env.NODE_ENV === "production";
 
@@ -141,29 +142,15 @@ window.addEventListener("unhandledrejection", function (event) {
   }
 });
 
-/*
- **  TODO: to fix the ResizeObserver loop problem
- **  we may do the following things
- **
- **  FIXING ResizeObserver loop completed with undelivered notifications.
- **  https://github.com/vuejs/vue-cli/issues/7431
- **  https://stackoverflow.com/questions/49384120/resizeobserver-loop-limit-exceeded
- **  use the requestFrameAnimation instead of a callback
- **  const _ = (window as any).ResizeObserver;
- **  (window as any).ResizeObserver = class ResizeObserver extends _ {
- **    constructor(callback: (...args: any[]) => void) {
- **      callback = debounce (callback, 20);
- **      super(callback);
- **    }
- **  };
- */
-
 window.addEventListener("error", function (event) {
   //handle error here
   const { message, filename, lineno, colno, error, timeStamp } = event;
   if (env.NODE_ENV === "development") {
     console.trace(error?.stack);
   }
+  // **  Fixing ResizeObserver loop completed with undelivered notifications.
+  // **  https://github.com/vuejs/vue-cli/issues/7431
+  // **  https://stackoverflow.com/questions/49384120/resizeobserver-loop-limit-exceeded
   // ResizeObserver loop completed with undelivered notifications.
   if (message.includes("ResizeObserver loop completed")) {
     if (env.NODE_ENV === "development") {
@@ -192,6 +179,16 @@ window.addEventListener("error", function (event) {
     stack: error?.stack,
     type: "error",
   });
+});
+
+// Load auth module when browser window loads. Only required for redirect flows.
+window.addEventListener("load", async () => {
+  const authModule: AuthModule = new AuthModule();
+  await authModule.initialize();
+  // find out why ? uninitialized_public_client_application
+  authModule.loadAuthModule();
+  // authModule.getAccount();
+  window.authModule = authModule;
 });
 
 export default new Vue({
