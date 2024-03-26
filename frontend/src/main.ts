@@ -88,7 +88,7 @@ Vue.config.errorHandler = function (err, vm, info) {
   }
   if (err?.name === "unauthorized") {
     // recheck the user cookie by calling the server
-    store.dispatch("UserModule/getSession", { bypassLoading: true });
+    store.dispatch("UserModule/getSession", { byPassLoading: true });
   }
   store.dispatch("notifyUser", {
     title: info,
@@ -130,7 +130,7 @@ window.addEventListener("unhandledrejection", function (event) {
     if (event.reason?.name === "unauthorized") {
       // recheck the user cookie by calling the server
       // we don't notify the user about this error
-      store.dispatch("UserModule/getSession", { bypassLoading: true });
+      store.dispatch("UserModule/getSession", { byPassLoading: true });
     } else {
       store.dispatch("notifyUser", {
         title: event.reason?.title ?? "unhandled rejection",
@@ -184,11 +184,9 @@ window.addEventListener("error", function (event) {
 // Load auth module when browser window loads. Only required for redirect flows.
 window.addEventListener("load", async () => {
   const authModule: AuthModule = new AuthModule();
-  await authModule.initialize();
-  // find out why ? uninitialized_public_client_application
-  authModule.loadAuthModule();
-  // authModule.getAccount();
   window.authModule = authModule;
+  await authModule.initialize();
+  await authModule.loadAuthModule();
 });
 
 export default new Vue({

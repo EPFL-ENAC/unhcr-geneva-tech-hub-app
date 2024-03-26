@@ -686,7 +686,6 @@ import { UnhcrNotification } from "./store";
   methods: {
     ...mapActions("UserModule", {
       logoutStore: "logout",
-      getSessionStore: "getSession",
       loginToken: "loginToken",
       loginAsGuest: "loginAsGuest",
       refreshToken: "refreshToken",
@@ -719,9 +718,6 @@ export default class App extends Vue {
 
   // probably vuex Promise and not AxiosPromise
   logoutStore!: () => AxiosPromise;
-  getSessionStore!: ({
-    byPassLoading,
-  }: Record<string, boolean>) => Promise<CouchUser | undefined>;
   loginToken!: ({
     token,
     byPassLoading,
@@ -913,10 +909,10 @@ export default class App extends Vue {
         href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/GHG Databases and Creating Assessments.mp4`,
       },
       {
-        title: "Energy for Facilities Tutorial (Coming soon)",
+        title: "Energy for Facilities Tutorial",
         type: "video",
         icon: "mdiPlayCircle",
-        // href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/{comingsoon}.mp4`,},
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/Energy_facilities.mp4`,
       },
       {
         title: "Energy for Cooking Tutorial",
@@ -925,10 +921,10 @@ export default class App extends Vue {
         href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/Energy for Cooking Tutorial.mp4`,
       },
       {
-        title: "Energy for Lighting Tutorial (Coming soon)",
+        title: "Energy for Lighting Tutorial",
         type: "video",
         icon: "mdiPlayCircle",
-        // href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/{comingsoon}.mp4`,
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/Energy_lighting.mp4`,
       },
       {
         title: "Water Supply Tutorial",
@@ -943,16 +939,46 @@ export default class App extends Vue {
         href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/Domestic Solid Waste Tutorial.mp4`,
       },
       {
-        title: "Multiple Endlines (Coming soon)",
+        title: "Multiple Endlines",
         type: "video",
         icon: "mdiPlayCircle",
-        // href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/{comingsoon}.mp4`,}",
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/multiple_endlines.mp4`,
       },
       {
-        title: "Results and Printing (Coming soon)",
+        title: "Results and Printing",
         type: "video",
         icon: "mdiPlayCircle",
-        // href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/{comingsoon}.mp4`,}",
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/results_and_printing.mp4`,
+      },
+      {
+        title: "LCA_Facilities_GHG_Brief_Mar2024_vf",
+        type: "pdf",
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/LCA_Facilities_GHG_Brief_Mar2024_vf.pdf`,
+        icon: "mdiFileDocumentOutline",
+      },
+      {
+        title: "LCA_Water_Supply_GHG_Brief_Mar2024_vf",
+        type: "pdf",
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/LCA_Water_Supply_GHG_Brief_Mar2024_vf.pdf`,
+        icon: "mdiFileDocumentOutline",
+      },
+      {
+        title: "LCA_SWM_GHG_Brief_Mar2024_vf",
+        type: "pdf",
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/LCA_SWM_GHG_Brief_Mar2024_vf.pdf`,
+        icon: "mdiFileDocumentOutline",
+      },
+      {
+        title: "LCA_Lighting_GHG_Brief_Mar2024_vf",
+        type: "pdf",
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/LCA_Lighting_GHG_Brief_Mar2024_vf.pdf`,
+        icon: "mdiFileDocumentOutline",
+      },
+      {
+        title: "LCA_Cooking_GHG_Brief_Mar2024_vf",
+        type: "pdf",
+        href: `${env.BASE_URL_WITHOUT_SLASH}${env.VUE_APP_S3_URL}/2023-11-23/LCA_Cooking_GHG_Brief_Mar2024_vf.pdf`,
+        icon: "mdiFileDocumentOutline",
       },
     ];
   }
@@ -994,7 +1020,7 @@ export default class App extends Vue {
     this.hasLoginPage
       ? this.currentRouteName !== "Login" &&
         this.$router.push({ name: "Login" })
-      : this.authModule.login("loginRedirect");
+      : window.authModule.login("loginRedirect");
   }
 
   signup(): void {

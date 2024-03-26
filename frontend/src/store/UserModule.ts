@@ -174,10 +174,10 @@ const actions: ActionTree<UserState, RootState> = {
         context.commit("SET_USER", response.data);
         return response;
       })
-      .catch((response: Error | ExpireError) => {
+      .catch(async (response: Error | ExpireError) => {
         context.commit("SET_USER", generateEmptyUser());
         // if (response instanceof ExpireError) {
-        context.dispatch(
+        await context.dispatch(
           "notifyUser",
           {
             message: response,
@@ -187,7 +187,8 @@ const actions: ActionTree<UserState, RootState> = {
         );
         throw response;
       })
-      .finally(() => {
+      .finally(async () => {
+        await context.dispatch("setLoading", false, { root: true });
         context.commit("UNSET_USER_LOADING");
       });
   },
@@ -334,6 +335,7 @@ const actions: ActionTree<UserState, RootState> = {
       context.commit("UNSET_USER_LOADING");
       throw e;
     } finally {
+      await context.dispatch("setLoading", false, { root: true });
       context.commit("UNSET_USER_LOADING");
     }
   },
@@ -372,7 +374,7 @@ const actions: ActionTree<UserState, RootState> = {
   },
   getSession: async (
     context: ActionContext<UserState, RootState>,
-    { byPassLoading }
+    { byPassLoading }: { byPassLoading: boolean }
   ) => {
     // if user logged in as guest no session needed!
     // const currentUser: CouchUser = context.getters["user"];
@@ -403,13 +405,16 @@ const actions: ActionTree<UserState, RootState> = {
         throw e;
       })
       .finally(() => {
-        context.commit("UNSET_USER_LOADING");
+        if (byPassLoading) {
+          context.commit("UNSET_USER_LOADING_UNIQUELY");
+        } else {
+          context.commit("UNSET_USER_LOADING");
+        }
       });
     if (userCouchDB?.name !== null) {
       // we're a couchdb user, we have priority
       return userCouchDB;
     }
-    // const sessionStorageToken = sessionStorage.getItem(SessionStorageKey.Token);
     if (sessionStorageToken) {
       // we're a oauth user
       try {
@@ -433,10 +438,13 @@ const actions: ActionTree<UserState, RootState> = {
       name: GUEST_NAME,
       roles: [GUEST_NAME],
     });
-    context.commit("UNSET_USER_LOADING");
-    return context.getters.user;
+    if (byPassLoading) {
+      context.commit("UNSET_USER_LOADING_UNIQUELY");
+    } else {
+      context.commit("UNSET_USER_LOADING");
+    }
     // we don't return guest userCtx, we override it with our custom
-    // return userCouchDB;
+    return context.getters.user;
   },
 };
 

@@ -116,8 +116,15 @@ export async function loginJWT(token: string): Promise<AxiosResponse> {
     if (axios.isAxiosError(error)) {
       // 401 Unauthorized or other
       // {"error":"unauthorized","reason":"exp not in future"}
+      // 400 Bad Request
+      // {"error": "bad_request","reason": "Unknown kid"}
+      let customMessage = "please login again";
+      if (error.response?.data?.reason === "Unknown kid") {
+        customMessage =
+          "JWT token is not recognized by the server, please update jwt_keys on the database configuration";
+      }
       throw expireTokenAndError(
-        `Authentication failed, please login again: ${
+        `Authentication failed, ${customMessage}: ${
           error?.response?.status
         } ${JSON.stringify(error?.response?.data ?? "unknown message")}`
       );
