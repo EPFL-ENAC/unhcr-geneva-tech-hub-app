@@ -184,9 +184,9 @@ window.addEventListener("error", function (event) {
 // Load auth module when browser window loads. Only required for redirect flows.
 window.addEventListener("load", async () => {
   const authModule: AuthModule = new AuthModule();
-  await authModule.initialize();
-  authModule.loadAuthModule();
   window.authModule = authModule;
+  await authModule.initialize();
+  await authModule.loadAuthModule();
 });
 
 export default new Vue({

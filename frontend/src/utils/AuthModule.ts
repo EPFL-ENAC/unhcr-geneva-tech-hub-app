@@ -68,6 +68,8 @@ const MSAL_CONFIG: Configuration = {
 /**
  * AuthModule for application - handles authentication in app.
  */
+const scopes: string[] = ["User.Read", "openid", "Mail.read", "profile"];
+
 export class AuthModule {
   private myMSALObj: PublicClientApplication; // https://azuread.github.io/microsoft-authentication-library-for-js/ref/msal-browser/classes/_src_app_publicclientapplication_.publicclientapplication.html
   private account: AccountInfo | null; // https://azuread.github.io/microsoft-authentication-library-for-js/ref/msal-common/modules/_src_account_accountinfo_.html
@@ -86,7 +88,7 @@ export class AuthModule {
     this.account = null;
 
     this.loginRequest = {
-      scopes: [],
+      scopes,
     };
 
     this.loginRedirectRequest = {
@@ -95,7 +97,7 @@ export class AuthModule {
     };
     // openid email profile offline_access
     this.profileRequest = {
-      scopes: ["User.Read", "openid", "Mail.read", "profile"],
+      scopes,
     };
 
     this.profileRedirectRequest = {
@@ -105,7 +107,7 @@ export class AuthModule {
 
     // Add here scopes for access token to be used at MS Graph API endpoints.
     this.mailRequest = {
-      scopes: ["Mail.Read"],
+      scopes,
     };
 
     this.mailRedirectRequest = {
@@ -114,12 +116,12 @@ export class AuthModule {
     };
 
     this.silentProfileRequest = {
-      scopes: ["openid", "profile", "Mail.Read", "User.Read"],
+      scopes,
       forceRefresh: false,
     };
 
     this.silentMailRequest = {
-      scopes: ["openid", "profile", "Mail.Read", "User.Read"],
+      scopes,
       forceRefresh: false,
     };
 
@@ -136,15 +138,11 @@ export class AuthModule {
 
   public async firstToken(payload: AuthenticationResult): Promise<void> {
     if (payload?.account) {
-      this.myMSALObj.setActiveAccount(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (payload as any)?.account
-      );
+      this.myMSALObj.setActiveAccount(payload.account);
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (payload?.idToken) {
+    if (payload.idToken) {
       await store.dispatch("UserModule/loginToken", {
-        token: payload?.idToken,
+        token: payload.idToken,
         bypassLoading: true,
       });
       await store.dispatch("UserModule/getSession", {
@@ -170,6 +168,7 @@ export class AuthModule {
           if (window.authModule.myMSALObj.getAllAccounts().length === 0) {
             window.authModule.attemptSsoSilent();
           } else {
+            debugger;
             window.authModule.getTokenRedirect(
               window.authModule.silentProfileRequest,
               window.authModule.profileRedirectRequest
@@ -244,8 +243,8 @@ export class AuthModule {
    *
    * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/initialization.md#redirect-apis
    */
-  loadAuthModule(): void {
-    this.myMSALObj
+  loadAuthModule(): Promise<void> {
+    return this.myMSALObj
       .handleRedirectPromise()
       .then((resp: AuthenticationResult | null) => {
         this.handleResponse(resp);
@@ -384,7 +383,7 @@ export class AuthModule {
   private async getTokenPopup(
     silentRequest: SilentRequest = {
       cacheLookupPolicy: CacheLookupPolicy.AccessTokenAndRefreshToken,
-      scopes: ["email", "profile", "openid"],
+      scopes,
     },
     interactiveRequest: PopupRequest
   ): Promise<string | null> {
@@ -419,11 +418,13 @@ export class AuthModule {
   public async getTokenRedirect(
     silentRequest: SilentRequest = {
       cacheLookupPolicy: CacheLookupPolicy.AccessTokenAndRefreshToken,
-      scopes: ["email", "profile", "openid"],
+      scopes,
     },
     interactiveRequest: RedirectRequest = this.profileRedirectRequest
   ): Promise<string | null> {
     try {
+      const accounts = this.myMSALObj.getAllAccounts();
+      this.myMSALObj.setActiveAccount(accounts[0]);
       const response = await this.myMSALObj.acquireTokenSilent(silentRequest);
       return response.idToken;
     } catch (e) {
