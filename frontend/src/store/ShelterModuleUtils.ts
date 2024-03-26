@@ -89,7 +89,7 @@ export function getNonApplicableScore(score: Score): {
   const xtech = Object.keys(score).filter((x) => x.match("na$"));
   const nonApplicableArray = xtech
     .map((x) => score[x])
-    .filter((x) => x !== undefined && x !== false && x !== 0); /// new: na can be number or boolean; if 0 false, 1 true
+    .filter((x) => x !== undefined && x !== false && Number.isFinite(x)); /// new: na can be number or boolean; if undefined false, 1 true
   const nonApplicableScore = nonApplicableArray.reduce((acc: number, el) => {
     if (typeof el === "boolean") {
       return acc + 1; // statisticaly, 90% of the time it will be true.. and it happens only for old schemas
