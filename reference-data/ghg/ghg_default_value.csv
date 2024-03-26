@@ -1,46 +1,48 @@
 _id,type,category,subcat,description,value,source,ref,index
 REF_POW_FAC,number,"[energy,wash]","[facilities,cooking,lighting,water-supply]",Power factor - Diesel generator,0.8,https://www.globalpwr.com/power-calculator/,factor to convert kVA to kW,0
-REF_LIGHTING_FWD,number,[energy],[lighting],Firewood [kg/capita/day],0.44,,,1
-REF_LIGHTING_BGS,number,[energy],[lighting],Biogas [m3/capita/day],0.4,https://energypedia.info/images/2/2c/Biogas_gate_volume_2.pdf,,2
-REF_LIGHTING_PET,number,[energy],[lighting],Gasoline [kg/capita/day],0.351,,,3
-REF_LIGHTING_KRS,number,[energy],[lighting],Kerosene [kg/capita/day],0.03276,,,4
-REF_LIGHTING_OIL,number,[energy],[lighting],Vegetable oil [kg/capita/day],0.14,,,5
-REF_LIGHTING_CNDL,number,[energy],[lighting],Candle (paraffin) [kg/capita/day],0.0053,,,6
-REF_LIGHTING_SOLAR_LANTERN,number,[energy],[lighting],Solar lantern [watt/device],0.3,,,7
-REF_LIGHTING_PLUGIN_LIGHT_BULB_INC,number,[energy],[lighting],Incandescent light bulb (plug-in) [watt/device],60,,,8
-REF_LIGHTING_PLUGIN_LIGHT_BULB_LED,number,[energy],[lighting],LED light bulb (plug-in) [watt/device],10,,,9
-REF_LIGHTING_RECHARGEABLE_BAT_TORCH,number,[energy],[lighting],Small handheld torch (rechargeable batteries) [watt/device],1,,,10
-REF_LIGHTING_RECHARGEABLE_BAT_BIG_TORCH,number,[energy],[lighting],Big handheld torch (rechargeable batteries) [watt/device],5,,,11
-REF_LIGHTING_RECHARGEABLE_BAT_LANTERN,number,[energy],[lighting],Lantern (rechargeable batteries) [watt/device],3,,,12
-REF_LIGHTING_TORCH,number,[energy],[lighting],Small handheld torc [watt/device],1,,,13
-REF_LIGHTING_TORCH_BIG,number,[energy],[lighting],Big handheld torch [watt/device],3,,,14
-REF_LIGHTING_LANTERN,number,[energy],[lighting],Lantern [watt/device],1,,,15
-REF_COOKING_2_FWD,number,[energy],[cooking],Three stone fire Firewood [watt/device],1.7,,,16
-REF_COOKING_2_CHC,number,[energy],[cooking],Three stone fire Charcoal [watt/device],0.898983051,,,17
-REF_COOKING_2_PLTS,number,[energy],[cooking],Three stone fire Pellets [watt/device],2.286206897,,,18
-REF_COOKING_2_BRQ,number,[energy],[cooking],Three stone fire Brickets [watt/device],2.286206897,,,19
-REF_COOKING_3_FWD,number,[energy],[cooking],Artisanal cookstove Firewood [watt/device],1.578571429,,,20
-REF_COOKING_3_CHC,number,[energy],[cooking],Artisanal cookstove Charcoal [watt/device],0.834769976,,,21
-REF_COOKING_3_BRQ,number,[energy],[cooking],Artisanal cookstove Brickets [watt/device],2.122906404,,,22
-REF_COOKING_3_PLTS,number,[energy],[cooking],Artisanal cookstove Pellets [watt/device],2.122906404,,,23
-REF_COOKING_4_FWD,number,[energy],[cooking],Improved cookstove Firewood [watt/device],1.163157895,,,24
-REF_COOKING_4_CHC,number,[energy],[cooking],Improved cookstove Charcoal [watt/device],0.615093666,,,25
-REF_COOKING_4_BRQ,number,[energy],[cooking],Improved cookstove Brickets [watt/device],1.564246824,,,26
-REF_COOKING_4_PLTS,number,[energy],[cooking],Improved cookstove Pellets [watt/device],1.564246824,,,27
-REF_COOKING_5_FWD,number,[energy],[cooking],Gasifier stove Firewood [watt/device],0.631428571,,,28
-REF_COOKING_5_BRQ,number,[energy],[cooking],Gasifier stove Brickets [watt/device],0.84916256,,,29
-REF_COOKING_5_PLTS,number,[energy],[cooking],Gasifier stove Pellets [watt/device],0.849162562,,,30
-REF_COOKING_6_ETH,number,[energy],[cooking],Liquid fuel cookstove Ethanol [L/day],0.354443685,,,31
-REF_COOKING_6_PET,number,[energy],[cooking],Liquid fuel cookstove Gasoline [L/day],0.226270184,,,32
-REF_COOKING_6_DIES,number,[energy],[cooking],Liquid fuel cookstove Diesel [L/day],0.205055612,,,33
-REF_COOKING_6_KRS,number,[energy],[cooking],Gas powered cookstove Kerosene [L/day],0.211251553,,,34
-REF_COOKING_7_LPG,number,[energy],[cooking],Gas powered cookstove LPG [kg/day],0.086,,,35
-REF_COOKING_7_BGS,number,[energy],[cooking],Gas powered cookstove Biogas [m3/day],0.155112839,,,36
-REF_COOKING_7_PNG,number,[energy],[cooking],Gas powered cookstove Piped Natural Gas [m3/day],0.18554637,,,37
-REF_COOKING_8_ELE_DIES,number,[energy],[cooking],Electric cookstove Diesel generator [kWh/capita/day],0.2,,,38
-REF_COOKING_8_ELE_GRID,number,[energy],[cooking],Electric cookstove Grid [kWh/capita/day],0.6,,,39
-REF_COOKING_8_ELE_HYB,number,[energy],[cooking],Electric cookstove Hybrid grid [kWh/capita/day],0.6,,,40
-REF_COOKING_8_ELE_NONE,number,[energy],[cooking],Electric cookstove None [kWh/capita/day],0,,,41
-REF_COOKING_8_ELE_SOLAR,number,[energy],[cooking],Electric cookstove Solar electric [kWh/capita/day],0.6,,,42
-REF_COOKING_9_THE,number,[energy],[cooking],Solar thermal cooker [kWh/capita/day],0.02,,,43
-REG_GEN_LOAD,number,[energy],"[facilities,cooking,lighting]",Generator load [percentage],0.6,,,44
+REF_LIGHTING_FWD,number,[energy],[lighting],Firewood [kg/capita/day],0.44,https://www.sciencedirect.com/science/article/pii/S0961953400000726,Value estimated substracting firewood consumption for cooking from total firewood consumption,1
+REF_LIGHTING_PET,number,[energy],[lighting],Gasoline [L/capita/day],0.351,http://large.stanford.edu/courses/2011/ph240/machala1/docs/offgrid-lighting.pdf,Assuming as a proxy the fuel consumption of a kerosene hurricane lamp and converting it using the gasoline net calorific value.,2
+REF_LIGHTING_KRS,number,[energy],[lighting],Kerosene [L/capita/day],0.03276,http://large.stanford.edu/courses/2011/ph240/machala1/docs/offgrid-lighting.pdf,Kerosene consumption for hurricane lamps ,3
+REF_LIGHTING_OIL,number,[energy],[lighting],Vegetable oil [L/capita/day],0.14,https://www.researchgate.net/publication/292027850_Straight_Vegetable_oil_An_alternative_fuel_for_cooking_lighting_and_irrigation_pump,Calculated using as a proxy the fuel rate consumption of lamps using kerosene-vegetable oil blends.,4
+REF_LIGHTING_CNDL,number,[energy],[lighting],Candle (paraffin) [kg/capita/day],0.0053,https://iopscience.iop.org/article/10.1088/1757-899X/1252/1/012011/pdf,,5
+REF_LIGHTING_SOLAR_LANTERN,number,[energy],[lighting],Solar lantern [watt/device],0.3,,Based on research on available devices in the market.,6
+REF_LIGHTING_PLUGIN_LIGHT_BULB_INC,number,[energy],[lighting],Incandescent light bulb (plug-in) [watt/device],60,,Based on research on available devices in the market.,7
+REF_LIGHTING_PLUGIN_LIGHT_BULB_LED,number,[energy],[lighting],LED light bulb (plug-in) [watt/device],10,,Based on research on available devices in the market.,8
+REF_LIGHTING_RECHARGEABLE_BAT_TORCH,number,[energy],[lighting],Small handheld torch (rechargeable batteries) [watt/device],1,,Based on research on available devices in the market.,9
+REF_LIGHTING_RECHARGEABLE_BAT_BIG_TORCH,number,[energy],[lighting],Big handheld torch (rechargeable batteries) [watt/device],5,,Based on research on available devices in the market.,10
+REF_LIGHTING_RECHARGEABLE_BAT_LANTERN,number,[energy],[lighting],Lantern (rechargeable batteries) [watt/device],3,,Based on research on available devices in the market.,11
+REF_LIGHTING_TORCH,number,[energy],[lighting],Small handheld torc [watt/device],1,,Based on research on available devices in the market.,12
+REF_LIGHTING_TORCH_BIG,number,[energy],[lighting],Big handheld torch [watt/device],3,,Based on research on available devices in the market.,13
+REF_LIGHTING_LANTERN,number,[energy],[lighting],Lantern [watt/device],1,,Based on research on available devices in the market.,14
+REF_COOKING_2_FWD,number,[energy],[cooking],Three stone fire Firewood [kg/capita/day],1.1,https://cdm.unfccc.int/methodologies/PAmethodologies/tools/am-tool-33-v2.0.pdf,,15
+REF_COOKING_2_CHC,number,[energy],[cooking],Three stone fire Charcoal [kg/capita/day],0.58,,,16
+REF_COOKING_2_PLTS,number,[energy],[cooking],Three stone fire Pellets [kg/capita/day],1.47,,,17
+REF_COOKING_2_BRQ,number,[energy],[cooking],Three stone fire Briquettes [kg/capita/day],1.47,,,18
+REF_COOKING_2_CAR_BRQ,number,[energy],[cooking],Three stone fire Carbonized Briquettes [kg/capita/day],0.73,https://www.sciencedirect.com/science/article/pii/S246822761930763X,Using NCV for Idigbo (Terminalia ivorensis) charcoal briquettes produced in Nigeria (with 5% gelatinized cassava peel as binder).,19
+REF_COOKING_3_FWD,number,[energy],[cooking],Artisanal cookstove Firewood [kg/capita/day],0.91,,,20
+REF_COOKING_3_CHC,number,[energy],[cooking],Artisanal cookstove Charcoal [kg/capita/day],0.4,,,21
+REF_COOKING_3_BRQ,number,[energy],[cooking],Artisanal cookstove Briquettes [kg/capita/day],1.23,,,22
+REF_COOKING_3_PLTS,number,[energy],[cooking],Artisanal cookstove Pellets [kg/capita/day],1.23,,,23
+REF_COOKING_3_CAR_BRQ,number,[energy],[cooking],Artisanal cookstove Carbonized Briquettes [kg/capita/day],0.5,https://www.sciencedirect.com/science/article/pii/S246822761930763X,Using NCV for Idigbo (Terminalia ivorensis) charcoal briquettes produced in Nigeria (with 5% gelatinized cassava peel as binder).,24
+REF_COOKING_4_FWD,number,[energy],[cooking],Improved cookstove Firewood [kg/capita/day],0.66,,,25
+REF_COOKING_4_CHC,number,[energy],[cooking],Improved cookstove Charcoal [kg/capita/day],0.35,,,26
+REF_COOKING_4_BRQ,number,[energy],[cooking],Improved cookstove Briquettes [kg/capita/day],0.88,,,27
+REF_COOKING_4_PLTS,number,[energy],[cooking],Improved cookstove Pellets [kg/capita/day],0.88,,,28
+REF_COOKING_4_CAR_BRQ,number,[energy],[cooking],Improved cookstove Carbonized Briquettes [kg/capita/day],0.44,https://www.sciencedirect.com/science/article/pii/S246822761930763X,Using NCV for Idigbo (Terminalia ivorensis) charcoal briquettes produced in Nigeria (with 5% gelatinized cassava peel as binder).,29
+REF_COOKING_5_FWD,number,[energy],[cooking],Gasifier stove Firewood [kg/capita/day],0.56,,,30
+REF_COOKING_5_BRQ,number,[energy],[cooking],Gasifier stove Briquettes [kg/capita/day],0.75,,,31
+REF_COOKING_5_PLTS,number,[energy],[cooking],Gasifier stove Pellets [kg/capita/day],0.75,,,32
+REF_COOKING_6_ETH,number,[energy],[cooking],Liquid fuel cookstove Ethanol [L/capita/day],0.25,https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022,NCV extracted from the referenced source.,33
+REF_COOKING_6_PET,number,[energy],[cooking],Liquid fuel cookstove Gasoline [L/capita/day],0.17,https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022,NCV extracted from the referenced source.,34
+REF_COOKING_6_DIES,number,[energy],[cooking],Liquid fuel cookstove Diesel [L/capita/day],0.15,,,35
+REF_COOKING_6_KRS,number,[energy],[cooking],Gas powered cookstove Kerosene [L/capita/day],0.16,,,36
+REF_COOKING_7_LPG,number,[energy],[cooking],Gas powered cookstove LPG [kg/capita/day],0.11,,,37
+REF_COOKING_7_BGS,number,[energy],[cooking],Gas powered cookstove Biogas [m3/capita/day],0.4,https://energypedia.info/images/2/2c/Biogas_gate_volume_2.pdf,,38
+REF_COOKING_7_PNG,number,[energy],[cooking],Gas powered cookstove Piped Natural Gas [m3/capita/day],0.41,https://energypedia.info/images/2/2c/Biogas_gate_volume_2.pdf,Value estimated using biogas default value of consumption and piped natural gas NCV.,39
+REF_COOKING_8_ELE_DIES,number,[energy],[cooking],Electric cookstove Diesel generator [L/capita/day],0.33,,,40
+REF_COOKING_8_ELE_GRID,number,[energy],[cooking],Electric cookstove Grid [kWh/capita/day],1.21,,,41
+REF_COOKING_8_ELE_HYB,number,[energy],[cooking],Electric cookstove Hybrid grid [kWh/capita/day],1.21,,,42
+REF_COOKING_8_ELE_NONE,number,[energy],[cooking],Electric cookstove None [kWh/capita/day],0,,,43
+REF_COOKING_8_ELE_SOLAR,number,[energy],[cooking],Electric cookstove Solar electric [kWh/capita/day],1.21,,,44
+REF_COOKING_9_THE,number,[energy],[cooking],Solar thermal cooker [kWh/capita/day],0.02,,,45
+REG_GEN_LOAD,number,[energy],"[facilities,cooking,lighting]",Generator load [percentage],0.6,,Determined from sensitivity analysis explained in User's Manual.,46
