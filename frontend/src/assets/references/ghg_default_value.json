@@ -29,24 +29,9 @@
     ],
     "description": "Firewood [kg/capita/day]",
     "value": 0.44,
-    "source": null,
-    "ref": null,
+    "source": "https://www.sciencedirect.com/science/article/pii/S0961953400000726",
+    "ref": "Value estimated substracting firewood consumption for cooking from total firewood consumption",
     "index": 1
-  },
-  {
-    "_id": "REF_LIGHTING_BGS",
-    "type": "number",
-    "category": [
-      "energy"
-    ],
-    "subcat": [
-      "lighting"
-    ],
-    "description": "Biogas [m3/capita/day]",
-    "value": 0.4,
-    "source": "https://energypedia.info/images/2/2c/Biogas_gate_volume_2.pdf",
-    "ref": null,
-    "index": 2
   },
   {
     "_id": "REF_LIGHTING_PET",
@@ -57,11 +42,11 @@
     "subcat": [
       "lighting"
     ],
-    "description": "Gasoline [kg/capita/day]",
+    "description": "Gasoline [L/capita/day]",
     "value": 0.351,
-    "source": null,
-    "ref": null,
-    "index": 3
+    "source": "http://large.stanford.edu/courses/2011/ph240/machala1/docs/offgrid-lighting.pdf",
+    "ref": "Assuming as a proxy the fuel consumption of a kerosene hurricane lamp and converting it using the gasoline net calorific value.",
+    "index": 2
   },
   {
     "_id": "REF_LIGHTING_KRS",
@@ -72,11 +57,11 @@
     "subcat": [
       "lighting"
     ],
-    "description": "Kerosene [kg/capita/day]",
+    "description": "Kerosene [L/capita/day]",
     "value": 0.03276,
-    "source": null,
-    "ref": null,
-    "index": 4
+    "source": "http://large.stanford.edu/courses/2011/ph240/machala1/docs/offgrid-lighting.pdf",
+    "ref": "Kerosene consumption for hurricane lamps",
+    "index": 3
   },
   {
     "_id": "REF_LIGHTING_OIL",
@@ -87,11 +72,11 @@
     "subcat": [
       "lighting"
     ],
-    "description": "Vegetable oil [kg/capita/day]",
+    "description": "Vegetable oil [L/capita/day]",
     "value": 0.14,
-    "source": null,
-    "ref": null,
-    "index": 5
+    "source": "https://www.researchgate.net/publication/292027850_Straight_Vegetable_oil_An_alternative_fuel_for_cooking_lighting_and_irrigation_pump",
+    "ref": "Calculated using as a proxy the fuel rate consumption of lamps using kerosene-vegetable oil blends.",
+    "index": 4
   },
   {
     "_id": "REF_LIGHTING_CNDL",
@@ -104,9 +89,9 @@
     ],
     "description": "Candle (paraffin) [kg/capita/day]",
     "value": 0.0053,
-    "source": null,
+    "source": "https://iopscience.iop.org/article/10.1088/1757-899X/1252/1/012011/pdf",
     "ref": null,
-    "index": 6
+    "index": 5
   },
   {
     "_id": "REF_LIGHTING_SOLAR_LANTERN",
@@ -120,8 +105,8 @@
     "description": "Solar lantern [watt/device]",
     "value": 0.3,
     "source": null,
-    "ref": null,
-    "index": 7
+    "ref": "Based on research on available devices in the market.",
+    "index": 6
   },
   {
     "_id": "REF_LIGHTING_PLUGIN_LIGHT_BULB_INC",
@@ -135,8 +120,8 @@
     "description": "Incandescent light bulb (plug-in) [watt/device]",
     "value": 60,
     "source": null,
-    "ref": null,
-    "index": 8
+    "ref": "Based on research on available devices in the market.",
+    "index": 7
   },
   {
     "_id": "REF_LIGHTING_PLUGIN_LIGHT_BULB_LED",
@@ -150,8 +135,8 @@
     "description": "LED light bulb (plug-in) [watt/device]",
     "value": 10,
     "source": null,
-    "ref": null,
-    "index": 9
+    "ref": "Based on research on available devices in the market.",
+    "index": 8
   },
   {
     "_id": "REF_LIGHTING_RECHARGEABLE_BAT_TORCH",
@@ -165,8 +150,8 @@
     "description": "Small handheld torch (rechargeable batteries) [watt/device]",
     "value": 1,
     "source": null,
-    "ref": null,
-    "index": 10
+    "ref": "Based on research on available devices in the market.",
+    "index": 9
   },
   {
     "_id": "REF_LIGHTING_RECHARGEABLE_BAT_BIG_TORCH",
@@ -180,8 +165,8 @@
     "description": "Big handheld torch (rechargeable batteries) [watt/device]",
     "value": 5,
     "source": null,
-    "ref": null,
-    "index": 11
+    "ref": "Based on research on available devices in the market.",
+    "index": 10
   },
   {
     "_id": "REF_LIGHTING_RECHARGEABLE_BAT_LANTERN",
@@ -195,8 +180,8 @@
     "description": "Lantern (rechargeable batteries) [watt/device]",
     "value": 3,
     "source": null,
-    "ref": null,
-    "index": 12
+    "ref": "Based on research on available devices in the market.",
+    "index": 11
   },
   {
     "_id": "REF_LIGHTING_TORCH",
@@ -210,8 +195,8 @@
     "description": "Small handheld torc [watt/device]",
     "value": 1,
     "source": null,
-    "ref": null,
-    "index": 13
+    "ref": "Based on research on available devices in the market.",
+    "index": 12
   },
   {
     "_id": "REF_LIGHTING_TORCH_BIG",
@@ -225,8 +210,8 @@
     "description": "Big handheld torch [watt/device]",
     "value": 3,
     "source": null,
-    "ref": null,
-    "index": 14
+    "ref": "Based on research on available devices in the market.",
+    "index": 13
   },
   {
     "_id": "REF_LIGHTING_LANTERN",
@@ -240,8 +225,8 @@
     "description": "Lantern [watt/device]",
     "value": 1,
     "source": null,
-    "ref": null,
-    "index": 15
+    "ref": "Based on research on available devices in the market.",
+    "index": 14
   },
   {
     "_id": "REF_COOKING_2_FWD",
@@ -252,11 +237,11 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Three stone fire Firewood [watt/device]",
-    "value": 1.7,
-    "source": null,
+    "description": "Three stone fire Firewood [kg/capita/day]",
+    "value": 1.1,
+    "source": "https://cdm.unfccc.int/methodologies/PAmethodologies/tools/am-tool-33-v2.0.pdf",
     "ref": null,
-    "index": 16
+    "index": 15
   },
   {
     "_id": "REF_COOKING_2_CHC",
@@ -267,11 +252,11 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Three stone fire Charcoal [watt/device]",
-    "value": 0.898983051,
+    "description": "Three stone fire Charcoal [kg/capita/day]",
+    "value": 0.58,
     "source": null,
     "ref": null,
-    "index": 17
+    "index": 16
   },
   {
     "_id": "REF_COOKING_2_PLTS",
@@ -282,11 +267,11 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Three stone fire Pellets [watt/device]",
-    "value": 2.286206897,
+    "description": "Three stone fire Pellets [kg/capita/day]",
+    "value": 1.47,
     "source": null,
     "ref": null,
-    "index": 18
+    "index": 17
   },
   {
     "_id": "REF_COOKING_2_BRQ",
@@ -297,10 +282,25 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Three stone fire Brickets [watt/device]",
-    "value": 2.286206897,
+    "description": "Three stone fire Briquettes [kg/capita/day]",
+    "value": 1.47,
     "source": null,
     "ref": null,
+    "index": 18
+  },
+  {
+    "_id": "REF_COOKING_2_CAR_BRQ",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Three stone fire Carbonized Briquettes [kg/capita/day]",
+    "value": 0.73,
+    "source": "https://www.sciencedirect.com/science/article/pii/S246822761930763X",
+    "ref": "Using NCV for Idigbo (Terminalia ivorensis) charcoal briquettes produced in Nigeria (with 5% gelatinized cassava peel as binder).",
     "index": 19
   },
   {
@@ -312,8 +312,8 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Artisanal cookstove Firewood [watt/device]",
-    "value": 1.578571429,
+    "description": "Artisanal cookstove Firewood [kg/capita/day]",
+    "value": 0.91,
     "source": null,
     "ref": null,
     "index": 20
@@ -327,8 +327,8 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Artisanal cookstove Charcoal [watt/device]",
-    "value": 0.834769976,
+    "description": "Artisanal cookstove Charcoal [kg/capita/day]",
+    "value": 0.4,
     "source": null,
     "ref": null,
     "index": 21
@@ -342,8 +342,8 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Artisanal cookstove Brickets [watt/device]",
-    "value": 2.122906404,
+    "description": "Artisanal cookstove Briquettes [kg/capita/day]",
+    "value": 1.23,
     "source": null,
     "ref": null,
     "index": 22
@@ -357,11 +357,26 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Artisanal cookstove Pellets [watt/device]",
-    "value": 2.122906404,
+    "description": "Artisanal cookstove Pellets [kg/capita/day]",
+    "value": 1.23,
     "source": null,
     "ref": null,
     "index": 23
+  },
+  {
+    "_id": "REF_COOKING_3_CAR_BRQ",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Artisanal cookstove Carbonized Briquettes [kg/capita/day]",
+    "value": 0.5,
+    "source": "https://www.sciencedirect.com/science/article/pii/S246822761930763X",
+    "ref": "Using NCV for Idigbo (Terminalia ivorensis) charcoal briquettes produced in Nigeria (with 5% gelatinized cassava peel as binder).",
+    "index": 24
   },
   {
     "_id": "REF_COOKING_4_FWD",
@@ -372,11 +387,11 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Improved cookstove Firewood [watt/device]",
-    "value": 1.163157895,
+    "description": "Improved cookstove Firewood [kg/capita/day]",
+    "value": 0.66,
     "source": null,
     "ref": null,
-    "index": 24
+    "index": 25
   },
   {
     "_id": "REF_COOKING_4_CHC",
@@ -387,11 +402,11 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Improved cookstove Charcoal [watt/device]",
-    "value": 0.615093666,
+    "description": "Improved cookstove Charcoal [kg/capita/day]",
+    "value": 0.35,
     "source": null,
     "ref": null,
-    "index": 25
+    "index": 26
   },
   {
     "_id": "REF_COOKING_4_BRQ",
@@ -402,11 +417,11 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Improved cookstove Brickets [watt/device]",
-    "value": 1.564246824,
+    "description": "Improved cookstove Briquettes [kg/capita/day]",
+    "value": 0.88,
     "source": null,
     "ref": null,
-    "index": 26
+    "index": 27
   },
   {
     "_id": "REF_COOKING_4_PLTS",
@@ -417,11 +432,26 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Improved cookstove Pellets [watt/device]",
-    "value": 1.564246824,
+    "description": "Improved cookstove Pellets [kg/capita/day]",
+    "value": 0.88,
     "source": null,
     "ref": null,
-    "index": 27
+    "index": 28
+  },
+  {
+    "_id": "REF_COOKING_4_CAR_BRQ",
+    "type": "number",
+    "category": [
+      "energy"
+    ],
+    "subcat": [
+      "cooking"
+    ],
+    "description": "Improved cookstove Carbonized Briquettes [kg/capita/day]",
+    "value": 0.44,
+    "source": "https://www.sciencedirect.com/science/article/pii/S246822761930763X",
+    "ref": "Using NCV for Idigbo (Terminalia ivorensis) charcoal briquettes produced in Nigeria (with 5% gelatinized cassava peel as binder).",
+    "index": 29
   },
   {
     "_id": "REF_COOKING_5_FWD",
@@ -432,11 +462,11 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Gasifier stove Firewood [watt/device]",
-    "value": 0.631428571,
+    "description": "Gasifier stove Firewood [kg/capita/day]",
+    "value": 0.56,
     "source": null,
     "ref": null,
-    "index": 28
+    "index": 30
   },
   {
     "_id": "REF_COOKING_5_BRQ",
@@ -447,11 +477,11 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Gasifier stove Brickets [watt/device]",
-    "value": 0.84916256,
+    "description": "Gasifier stove Briquettes [kg/capita/day]",
+    "value": 0.75,
     "source": null,
     "ref": null,
-    "index": 29
+    "index": 31
   },
   {
     "_id": "REF_COOKING_5_PLTS",
@@ -462,11 +492,11 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Gasifier stove Pellets [watt/device]",
-    "value": 0.849162562,
+    "description": "Gasifier stove Pellets [kg/capita/day]",
+    "value": 0.75,
     "source": null,
     "ref": null,
-    "index": 30
+    "index": 32
   },
   {
     "_id": "REF_COOKING_6_ETH",
@@ -477,11 +507,11 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Liquid fuel cookstove Ethanol [L/day]",
-    "value": 0.354443685,
-    "source": null,
-    "ref": null,
-    "index": 31
+    "description": "Liquid fuel cookstove Ethanol [L/capita/day]",
+    "value": 0.25,
+    "source": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022",
+    "ref": "NCV extracted from the referenced source.",
+    "index": 33
   },
   {
     "_id": "REF_COOKING_6_PET",
@@ -492,11 +522,11 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Liquid fuel cookstove Gasoline [L/day]",
-    "value": 0.226270184,
-    "source": null,
-    "ref": null,
-    "index": 32
+    "description": "Liquid fuel cookstove Gasoline [L/capita/day]",
+    "value": 0.17,
+    "source": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2022",
+    "ref": "NCV extracted from the referenced source.",
+    "index": 34
   },
   {
     "_id": "REF_COOKING_6_DIES",
@@ -507,11 +537,11 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Liquid fuel cookstove Diesel [L/day]",
-    "value": 0.205055612,
+    "description": "Liquid fuel cookstove Diesel [L/capita/day]",
+    "value": 0.15,
     "source": null,
     "ref": null,
-    "index": 33
+    "index": 35
   },
   {
     "_id": "REF_COOKING_6_KRS",
@@ -522,11 +552,11 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Gas powered cookstove Kerosene [L/day]",
-    "value": 0.211251553,
+    "description": "Gas powered cookstove Kerosene [L/capita/day]",
+    "value": 0.16,
     "source": null,
     "ref": null,
-    "index": 34
+    "index": 36
   },
   {
     "_id": "REF_COOKING_7_LPG",
@@ -537,11 +567,11 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Gas powered cookstove LPG [kg/day]",
-    "value": 0.086,
+    "description": "Gas powered cookstove LPG [kg/capita/day]",
+    "value": 0.11,
     "source": null,
     "ref": null,
-    "index": 35
+    "index": 37
   },
   {
     "_id": "REF_COOKING_7_BGS",
@@ -552,11 +582,11 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Gas powered cookstove Biogas [m3/day]",
-    "value": 0.155112839,
-    "source": null,
+    "description": "Gas powered cookstove Biogas [m3/capita/day]",
+    "value": 0.4,
+    "source": "https://energypedia.info/images/2/2c/Biogas_gate_volume_2.pdf",
     "ref": null,
-    "index": 36
+    "index": 38
   },
   {
     "_id": "REF_COOKING_7_PNG",
@@ -567,11 +597,11 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Gas powered cookstove Piped Natural Gas [m3/day]",
-    "value": 0.18554637,
-    "source": null,
-    "ref": null,
-    "index": 37
+    "description": "Gas powered cookstove Piped Natural Gas [m3/capita/day]",
+    "value": 0.41,
+    "source": "https://energypedia.info/images/2/2c/Biogas_gate_volume_2.pdf",
+    "ref": "Value estimated using biogas default value of consumption and piped natural gas NCV.",
+    "index": 39
   },
   {
     "_id": "REF_COOKING_8_ELE_DIES",
@@ -582,11 +612,11 @@
     "subcat": [
       "cooking"
     ],
-    "description": "Electric cookstove Diesel generator [kWh/capita/day]",
-    "value": 0.2,
+    "description": "Electric cookstove Diesel generator [L/capita/day]",
+    "value": 0.33,
     "source": null,
     "ref": null,
-    "index": 38
+    "index": 40
   },
   {
     "_id": "REF_COOKING_8_ELE_GRID",
@@ -598,10 +628,10 @@
       "cooking"
     ],
     "description": "Electric cookstove Grid [kWh/capita/day]",
-    "value": 0.6,
+    "value": 1.21,
     "source": null,
     "ref": null,
-    "index": 39
+    "index": 41
   },
   {
     "_id": "REF_COOKING_8_ELE_HYB",
@@ -613,10 +643,10 @@
       "cooking"
     ],
     "description": "Electric cookstove Hybrid grid [kWh/capita/day]",
-    "value": 0.6,
+    "value": 1.21,
     "source": null,
     "ref": null,
-    "index": 40
+    "index": 42
   },
   {
     "_id": "REF_COOKING_8_ELE_NONE",
@@ -631,7 +661,7 @@
     "value": 0,
     "source": null,
     "ref": null,
-    "index": 41
+    "index": 43
   },
   {
     "_id": "REF_COOKING_8_ELE_SOLAR",
@@ -643,10 +673,10 @@
       "cooking"
     ],
     "description": "Electric cookstove Solar electric [kWh/capita/day]",
-    "value": 0.6,
+    "value": 1.21,
     "source": null,
     "ref": null,
-    "index": 42
+    "index": 44
   },
   {
     "_id": "REF_COOKING_9_THE",
@@ -661,7 +691,7 @@
     "value": 0.02,
     "source": null,
     "ref": null,
-    "index": 43
+    "index": 45
   },
   {
     "_id": "REG_GEN_LOAD",
@@ -677,7 +707,7 @@
     "description": "Generator load [percentage]",
     "value": 0.6,
     "source": null,
-    "ref": null,
-    "index": 44
+    "ref": "Determined from sensitivity analysis explained in User's Manual.",
+    "index": 46
   }
 ]
