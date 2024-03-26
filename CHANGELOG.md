@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.16.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.16.0...v1.16.1) (2024-03-26)
+
+
+### Bug Fixes
+
+* **shelter:** reset non applicable field of computed field ([1adba16](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/1adba16f400dd8084167ab77664590e062455881))
+
 ## [1.16.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.15.0...v1.16.0) (2024-03-26)
 
 
