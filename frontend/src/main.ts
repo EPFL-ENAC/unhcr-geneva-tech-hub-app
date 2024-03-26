@@ -88,7 +88,7 @@ Vue.config.errorHandler = function (err, vm, info) {
   }
   if (err?.name === "unauthorized") {
     // recheck the user cookie by calling the server
-    store.dispatch("UserModule/getSession", { bypassLoading: true });
+    store.dispatch("UserModule/getSession", { byPassLoading: true });
   }
   store.dispatch("notifyUser", {
     title: info,
@@ -130,7 +130,7 @@ window.addEventListener("unhandledrejection", function (event) {
     if (event.reason?.name === "unauthorized") {
       // recheck the user cookie by calling the server
       // we don't notify the user about this error
-      store.dispatch("UserModule/getSession", { bypassLoading: true });
+      store.dispatch("UserModule/getSession", { byPassLoading: true });
     } else {
       store.dispatch("notifyUser", {
         title: event.reason?.title ?? "unhandled rejection",

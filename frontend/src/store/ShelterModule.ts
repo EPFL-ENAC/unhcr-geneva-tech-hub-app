@@ -280,7 +280,7 @@ const actions: ActionTree<ShelterState, RootState> = {
             // recheck the user cookie by calling the server
             context.dispatch(
               "UserModule/getSession",
-              { bypassLoading: true },
+              { byPassLoading: true },
               { root: true }
             );
           } else {

@@ -143,10 +143,10 @@ export class AuthModule {
     if (payload.idToken) {
       await store.dispatch("UserModule/loginToken", {
         token: payload.idToken,
-        bypassLoading: true,
+        byPassLoading: true,
       });
       await store.dispatch("UserModule/getSession", {
-        bypassLoading: true,
+        byPassLoading: true,
       });
     } else {
       await store.dispatch("UserModule/removeAllOauthTokens");
@@ -161,7 +161,7 @@ export class AuthModule {
       // Update UI or interact with EventMessage here
       if (message.eventType === EventType.HANDLE_REDIRECT_END) {
         const resp = await store.dispatch("UserModule/getSession", {
-          bypassLoading: true,
+          byPassLoading: true,
         });
         if (resp?.roles?.includes(GUEST_NAME)) {
           if (window.authModule.myMSALObj.getAllAccounts().length === 0) {
@@ -195,13 +195,13 @@ export class AuthModule {
       }
       if (message.eventType === EventType.SSO_SILENT_FAILURE) {
         await store.dispatch("UserModule/loginAsGuest", {
-          bypassLoading: true,
+          byPassLoading: true,
         });
         await store.dispatch("setLoading", false);
       }
       if (message.eventType === EventType.ACQUIRE_TOKEN_FAILURE) {
         await store.dispatch("UserModule/loginAsGuest", {
-          bypassLoading: true,
+          byPassLoading: true,
         });
         await store.dispatch("setLoading", false);
       }

@@ -686,7 +686,6 @@ import { UnhcrNotification } from "./store";
   methods: {
     ...mapActions("UserModule", {
       logoutStore: "logout",
-      getSessionStore: "getSession",
       loginToken: "loginToken",
       loginAsGuest: "loginAsGuest",
       refreshToken: "refreshToken",
@@ -719,9 +718,6 @@ export default class App extends Vue {
 
   // probably vuex Promise and not AxiosPromise
   logoutStore!: () => AxiosPromise;
-  getSessionStore!: ({
-    byPassLoading,
-  }: Record<string, boolean>) => Promise<CouchUser | undefined>;
   loginToken!: ({
     token,
     byPassLoading,

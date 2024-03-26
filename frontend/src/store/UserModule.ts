@@ -374,7 +374,7 @@ const actions: ActionTree<UserState, RootState> = {
   },
   getSession: async (
     context: ActionContext<UserState, RootState>,
-    { byPassLoading }
+    { byPassLoading }: { byPassLoading: boolean }
   ) => {
     // if user logged in as guest no session needed!
     // const currentUser: CouchUser = context.getters["user"];
@@ -405,13 +405,16 @@ const actions: ActionTree<UserState, RootState> = {
         throw e;
       })
       .finally(() => {
-        context.commit("UNSET_USER_LOADING");
+        if (byPassLoading) {
+          context.commit("UNSET_USER_LOADING_UNIQUELY");
+        } else {
+          context.commit("UNSET_USER_LOADING");
+        }
       });
     if (userCouchDB?.name !== null) {
       // we're a couchdb user, we have priority
       return userCouchDB;
     }
-    // const sessionStorageToken = sessionStorage.getItem(SessionStorageKey.Token);
     if (sessionStorageToken) {
       // we're a oauth user
       try {
@@ -435,10 +438,13 @@ const actions: ActionTree<UserState, RootState> = {
       name: GUEST_NAME,
       roles: [GUEST_NAME],
     });
-    context.commit("UNSET_USER_LOADING");
-    return context.getters.user;
+    if (byPassLoading) {
+      context.commit("UNSET_USER_LOADING_UNIQUELY");
+    } else {
+      context.commit("UNSET_USER_LOADING");
+    }
     // we don't return guest userCtx, we override it with our custom
-    // return userCouchDB;
+    return context.getters.user;
   },
 };
 
