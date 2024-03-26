@@ -400,6 +400,8 @@ import {
 import { cloneDeep } from "lodash";
 import { Component, Prop, VModel, Vue } from "vue-property-decorator";
 
+import { VForm } from "@/utils/vuetify";
+
 @Component({
   components: {
     CountrySelect,
@@ -421,6 +423,10 @@ export default class Step1 extends Vue {
   readonly defaultCoordinates = defaultCoordinates;
   readonly url = urlMap;
   readonly attribution = attributionMap;
+
+  $refs!: {
+    form: VForm;
+  };
 
   public updateFormInput(): void {
     this.$refs.form?.validate();
