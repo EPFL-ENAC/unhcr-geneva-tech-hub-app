@@ -1024,7 +1024,7 @@ export default class App extends Vue {
     this.hasLoginPage
       ? this.currentRouteName !== "Login" &&
         this.$router.push({ name: "Login" })
-      : this.authModule.login("loginRedirect");
+      : window.authModule.login("loginRedirect");
   }
 
   signup(): void {

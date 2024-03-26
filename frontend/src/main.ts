@@ -185,9 +185,7 @@ window.addEventListener("error", function (event) {
 window.addEventListener("load", async () => {
   const authModule: AuthModule = new AuthModule();
   await authModule.initialize();
-  // find out why ? uninitialized_public_client_application
   authModule.loadAuthModule();
-  // authModule.getAccount();
   window.authModule = authModule;
 });
 

@@ -289,7 +289,8 @@ export class AuthModule {
         // in case we want to display a popup // by default we'll be a guest user
         if (error instanceof InteractionRequiredAuthError) {
           if (this.getAccount() !== null) {
-            // we don't get token redirect, just in case profile was not approved by admin
+            // we don't do token redirect, just in case profile was not approved by admin
+            // could be improved if necessary
             // this.getTokenRedirect(
             //   this.silentProfileRequest,
             //   this.profileRedirectRequest
