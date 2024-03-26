@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <v-card flat>
     <v-tabs
@@ -18,6 +19,9 @@
       </template>
     </v-tabs>
     <v-card-text v-if="filteredItems">
+      <v-card-title v-if="selectedTitle">
+        <h2 class="text-h6 font-weight-medium" v-html="selectedTitle"></h2>
+      </v-card-title>
       <v-data-table
         :headers="headers"
         :items="filteredItems"
@@ -104,6 +108,10 @@ export default class EmissionFactors extends Vue {
     });
   }
 
+  public get selectedTitle(): string | undefined {
+    return this.menuItems.find((item) => item.to === this.selectedTab)?.title;
+  }
+
   public get headers(): HeaderInterface[] {
     return [
       {
@@ -125,11 +133,19 @@ export default class EmissionFactors extends Vue {
       text: "Facilities",
       to: "Facilities",
     },
-    { icon: "$mdiStove", text: "Cooking", to: "Cooking" },
+    {
+      icon: "$mdiStove",
+      text: "Cooking",
+      to: "Cooking",
+      title: `The default values of consumption assume the energy demand for cooking is met by the primary cooking solution. The default value for firewood consumption was used to calculate other fuels' consumption together with the net calorific value (NCV) and the cookstove efficiency (except for biogas and piped natural gas). Except where otherwise indicated, the values for NCV and assumed cookstove efficiency were taken from the following links respectively:
+<a href="https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_1_Ch1_Introduction.pdf" target="_blank">here</a> and <a href="https://cfpub.epa.gov/si/si_public_record_report.cfm?Lab=NRMRL&dirEntryId=339679 target="_blank" >here</a>. Details on the calculations and assumptions are available in the User's Manual.
+`,
+    },
     {
       icon: "$mdiLightbulb",
       text: "Lighting",
       to: "Lighting",
+      title: `Default values for fuel consumption were calculated assuming 3.9 hours/day as the lighting demand (Source: <a href="https://doi.org/10.1016/j.deveng.2020.100056" target="_blank">doi: 10.1016/j.deveng.2020.100056</a>).`,
     },
     { text: "Water Supply", to: "Water-Supply", icon: "$mdiWaterPump" },
     {
@@ -176,6 +192,7 @@ interface MenuItem {
   to: string;
   redirect?: string;
   children?: MenuItem[];
+  title?: string;
 }
 </script>
 
