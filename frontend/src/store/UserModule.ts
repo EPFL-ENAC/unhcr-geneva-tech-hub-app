@@ -174,10 +174,10 @@ const actions: ActionTree<UserState, RootState> = {
         context.commit("SET_USER", response.data);
         return response;
       })
-      .catch((response: Error | ExpireError) => {
+      .catch(async (response: Error | ExpireError) => {
         context.commit("SET_USER", generateEmptyUser());
         // if (response instanceof ExpireError) {
-        context.dispatch(
+        await context.dispatch(
           "notifyUser",
           {
             message: response,
@@ -187,7 +187,8 @@ const actions: ActionTree<UserState, RootState> = {
         );
         throw response;
       })
-      .finally(() => {
+      .finally(async () => {
+        await context.dispatch("setLoading", false, { root: true });
         context.commit("UNSET_USER_LOADING");
       });
   },
@@ -334,6 +335,7 @@ const actions: ActionTree<UserState, RootState> = {
       context.commit("UNSET_USER_LOADING");
       throw e;
     } finally {
+      await context.dispatch("setLoading", false, { root: true });
       context.commit("UNSET_USER_LOADING");
     }
   },

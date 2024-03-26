@@ -68,7 +68,7 @@ const MSAL_CONFIG: Configuration = {
 /**
  * AuthModule for application - handles authentication in app.
  */
-const scopes: string[] = ["User.Read", "openid", "Mail.read", "profile"];
+const scopes: string[] = ["openid", "email", "profile", "offline_access"]; // openid email profile offline_access
 
 export class AuthModule {
   private myMSALObj: PublicClientApplication; // https://azuread.github.io/microsoft-authentication-library-for-js/ref/msal-browser/classes/_src_app_publicclientapplication_.publicclientapplication.html
@@ -163,12 +163,10 @@ export class AuthModule {
         const resp = await store.dispatch("UserModule/getSession", {
           bypassLoading: true,
         });
-        // replace window.authModule by this
         if (resp?.roles?.includes(GUEST_NAME)) {
           if (window.authModule.myMSALObj.getAllAccounts().length === 0) {
             window.authModule.attemptSsoSilent();
           } else {
-            debugger;
             window.authModule.getTokenRedirect(
               window.authModule.silentProfileRequest,
               window.authModule.profileRedirectRequest
@@ -195,10 +193,13 @@ export class AuthModule {
           message.payload as AuthenticationResult;
         this.firstToken(payload);
       }
-      if (
-        message.eventType === EventType.SSO_SILENT_FAILURE ||
-        message.eventType === EventType.ACQUIRE_TOKEN_FAILURE
-      ) {
+      if (message.eventType === EventType.SSO_SILENT_FAILURE) {
+        await store.dispatch("UserModule/loginAsGuest", {
+          bypassLoading: true,
+        });
+        await store.dispatch("setLoading", false);
+      }
+      if (message.eventType === EventType.ACQUIRE_TOKEN_FAILURE) {
         await store.dispatch("UserModule/loginAsGuest", {
           bypassLoading: true,
         });
@@ -429,6 +430,7 @@ export class AuthModule {
       return response.idToken;
     } catch (e) {
       console.log("silent token acquisition fails.");
+      // in case of silent token acquisition fails, fallback to interaction required flow
       if (e instanceof InteractionRequiredAuthError) {
         this.myMSALObj
           .acquireTokenRedirect(interactiveRequest)
