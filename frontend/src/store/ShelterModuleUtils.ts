@@ -132,7 +132,6 @@ export function computeShelter(value: Shelter): Shelter {
     TOTAL_TECH_PERF_ITEMS - nonApplicableTechnicalScore.length;
   resultShelter.technical_performance.completed =
     technicalScore.completed === totalToBeCompleted;
-
   // habitability
   const habitabilityScore = getScore(resultShelter.habitability);
   const nonApplicableHabitabilityScore = getNonApplicableScore(
@@ -179,15 +178,17 @@ export function updateTechnicalPerformance(localShelter: Shelter): Shelter {
   // Ratio of window and ventilation openings area to floor area > 0.05
   localShelter.technical_performance.input_2a_1 =
     windowArea / floorArea > 0.05 ? 1 : -1;
-
+  localShelter.technical_performance.input_2a_1na = undefined; // force reset of disabled field
   // Ratio of windows area to floor area > 0.10
   localShelter.technical_performance.input_2c_1 =
     windowArea / floorArea > 0.1 ? 1 : -1;
+  localShelter.technical_performance.input_2c_1na = undefined; // force reset of disabled field
 
   // Window opening dimensions < 60x60cm
   const hasAWindowTooBig =
     getMaxWindowArea(localShelter.geometry.windows_dimensions) >= 0.36;
   localShelter.technical_performance.input_3b_4 = hasAWindowTooBig ? -1 : 1;
+  localShelter.technical_performance.input_3b_4na = undefined; // force reset of disabled field
   return localShelter;
 }
 
@@ -195,7 +196,7 @@ export function updateHabitability(localShelter: Shelter): Shelter {
   localShelter.habitability.input5 = areDoorsBiggerThan90cm(
     localShelter.geometry
   );
-
+  localShelter.habitability.input5na = undefined; // force non applicable reset
   // add non applicable because it does rely on the technical performance
   localShelter.habitability.input12 =
     localShelter.technical_performance.input_3b_6;

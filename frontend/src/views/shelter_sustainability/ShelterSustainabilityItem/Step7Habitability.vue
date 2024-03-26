@@ -101,6 +101,7 @@ export default class Step7 extends Vue {
           this.localShelter.habitability.input5 = areDoorsBiggerThan90cm(
             this.localShelter.geometry
           );
+          this.localShelter.habitability.input5na = undefined; // force non applicable reset
         }
       });
     }
