@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.16.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.15.0...v1.16.0) (2024-03-26)
+
+
+### Features
+
+* **frontend:** add ghg_default_value ([d86c091](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/d86c0916b8db5669a10f95687fa62747bbce5979))
+* **frontend:** add subtitle for cooking and lighting ([94254a7](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/94254a7341578862f7634a8afdaac867893f45cd))
+
+
+### Bug Fixes
+
+* **frontend:** add  for typescript ([5cb4176](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/5cb41768fc686c93fce0e30f3d7bef6fbb534083))
+* **frontend:** add a rule for numbers on shelter page [#334](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/334) ([9ed6278](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/9ed627848e1b814b002aaf3879f297895a95e2f8))
+* **frontend:** add a rule for numbers on shelter page [#341](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/341) ([c5e46b3](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/c5e46b3798413c98582e9ea4f905c77f7c40f0d9))
+* **frontend:** add new lca pdf files [#635](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/635) ([f560bb0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f560bb0dd2a41b4bf59b781e6ddd4ae785a73da4))
+* **frontend:** add new uri for videos [#635](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/issues/635) ([50e64f5](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/50e64f5763bb0ab7351b8328dbf7c1b0d780ad54))
+* **frontend:** correct typo for byPassLoading ([2e370a3](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/2e370a3448eaa391b9486f425733b98678eba387))
+* **frontend:** replace this.authModule by window.authModule ([b7b3307](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/b7b3307aec96f8b60a86599463f447481e8fe7ef))
+* **msal:** add proper scopes for msal and better error when kid error ([29c3bdc](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/29c3bdc3bc4926a489f3ca58e0d8dedf51708c7e))
+* **msal:** same scopes for everyone ([f78990d](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/f78990d4df046e1dc8d2aca09a4c1c59267fd535))
+* **shelter:** correct complete total ([6898e8b](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/6898e8b457dea740745ebb7a307ad14b1f880e80))
+
 ## [1.15.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.14.0...v1.15.0) (2024-03-25)
 
 
