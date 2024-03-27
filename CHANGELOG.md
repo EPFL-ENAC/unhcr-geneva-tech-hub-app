@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.17.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.16.1...v1.17.0) (2024-03-27)
+
+
+### Features
+
+* **frontend:** guest can store to local storage ([7ad2eb1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/7ad2eb1551481f965c8d63b40f6fabe5ed6f6e31))
+
+
+### Bug Fixes
+
+* **frontend:** favor remote instead of local when retrieving item ([3dcd42b](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/3dcd42bfb2647d6c83317fb2cd99ad297d136bee))
+
 ## [1.16.1](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.16.0...v1.16.1) (2024-03-26)
 
 
