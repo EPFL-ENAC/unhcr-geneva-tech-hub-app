@@ -340,13 +340,13 @@ const actions: ActionTree<ShelterState, RootState> = {
     const db = context.state.localCouch?.remoteDB;
     const localDB = context.state.localCouch?.localDB; // for guest user only
     let result: Shelter | undefined;
-    if (localDB) {
+    if (db) {
       try {
-        result = await localDB.get(id);
+        result = await db.get(id);
       } catch (errL: unknown) {
         try {
-          if (db) {
-            result = await db.get(id);
+          if (localDB) {
+            result = await localDB.get(id);
           }
         } catch (err: unknown) {
           if (err instanceof Error) {

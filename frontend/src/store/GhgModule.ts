@@ -362,16 +362,16 @@ const actions: ActionTree<ProjectsState, RootState> = {
   getDoc: async (context: ActionContext<ProjectsState, RootState>, id) => {
     const db = context.state.localCouch?.remoteDB;
     const localDB = context.state.localCouch?.localDB; // for guest user only
-    if (localDB) {
+    if (db) {
       context.commit("SET_PROJECT_LOADING", true);
       try {
-        const result = await localDB.get(id);
+        const result = await db.get(id);
         context.commit("SET_PROJECT", result);
         return result;
       } catch (errL: unknown) {
         try {
-          if (db) {
-            const result = await db.get(id);
+          if (localDB) {
+            const result = await localDB.get(id);
             context.commit("SET_PROJECT", result);
             return result;
           }
