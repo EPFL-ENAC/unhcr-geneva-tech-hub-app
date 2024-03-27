@@ -120,7 +120,6 @@
                     <v-btn
                       class="float-right"
                       color="primary"
-                      :disabled="!$can('create')"
                       text
                       @click="addProject"
                     >

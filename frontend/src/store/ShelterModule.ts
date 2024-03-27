@@ -16,7 +16,7 @@ import {
   Module,
   MutationTree,
 } from "vuex";
-import { CouchUser } from "./UserModule";
+import { CouchUser, Roles } from "./UserModule";
 
 const DB_NAME = "shelter_projects_1698666594213623";
 const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
@@ -206,11 +206,15 @@ const actions: ActionTree<ShelterState, RootState> = {
     const user = context.rootGetters["UserModule/user"] as CouchUser;
     if (user.name) {
       const value = generateNewShelter(name, user);
-      const remoteDB = context.state.localCouch?.remoteDB;
-      if (!remoteDB) {
+      let db = context.state.localCouch?.remoteDB;
+
+      if (user.roles?.includes(Roles.guest)) {
+        db = context.state.localCouch?.localDB;
+      }
+      if (!db) {
         throw new Error(MSG_DB_DOES_NOT_EXIST);
       }
-      return remoteDB.post(value).then(() => {
+      return db.post(value).then(() => {
         context.commit("ADD_DOC", value);
       });
     }
@@ -220,6 +224,9 @@ const actions: ActionTree<ShelterState, RootState> = {
     value: Shelter
   ) => {
     const user = context.rootGetters["UserModule/user"] as CouchUser;
+    if (user.roles?.includes(Roles.guest)) {
+      return;
+    }
     if (user.name) {
       // retrieve real document first
       let newValue = await context.dispatch("getDoc", value._id);
@@ -238,6 +245,10 @@ const actions: ActionTree<ShelterState, RootState> = {
     }
   },
   removeDoc: (context: ActionContext<ShelterState, RootState>, id) => {
+    const user = context.rootGetters["UserModule/user"] as CouchUser;
+    if (user.roles?.includes(Roles.guest)) {
+      return;
+    }
     context.commit("REMOVE_DOC", id);
   },
   updateDoc: async (context: ActionContext<ShelterState, RootState>, value) => {
@@ -246,8 +257,13 @@ const actions: ActionTree<ShelterState, RootState> = {
       value.updated_at = new Date().toISOString();
       value.updated_by = user.name;
       const computedShelter = computeShelter(value);
-      const remoteDB = context.state.localCouch?.remoteDB;
-      if (!remoteDB) {
+      // const remoteDB = context.state.localCouch?.remoteDB;
+      let db = context.state.localCouch?.remoteDB;
+
+      if (user.roles?.includes(Roles.guest)) {
+        db = context.state.localCouch?.localDB;
+      }
+      if (!db) {
         throw new Error(MSG_DB_DOES_NOT_EXIST);
       }
       if (!context.getters["shelterLoading"]) {
@@ -257,7 +273,7 @@ const actions: ActionTree<ShelterState, RootState> = {
         }, 300);
         timeoutIds.push(timeId);
         try {
-          const response = await remoteDB.put(computedShelter);
+          const response = await db.put(computedShelter);
           computedShelter._rev = response.rev;
           // we were calling the get Doc too many times
           // const newValue = await context.dispatch("getDoc", response.id);
@@ -321,8 +337,25 @@ const actions: ActionTree<ShelterState, RootState> = {
       true,
       { root: true }
     );
-    let result: Shelter | undefined =
-      await context.state.localCouch?.remoteDB.get(id);
+    const db = context.state.localCouch?.remoteDB;
+    const localDB = context.state.localCouch?.localDB; // for guest user only
+    let result: Shelter | undefined;
+    if (localDB) {
+      try {
+        result = await localDB.get(id);
+      } catch (errL: unknown) {
+        try {
+          if (db) {
+            result = await db.get(id);
+          }
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            err.message = `${err?.message} ${id}`;
+          }
+          throw err;
+        }
+      }
+    }
     if (result) {
       result = computeShelter(result);
       context.commit("SET_SHELTER", result);

@@ -183,6 +183,7 @@ export function createSyncDatabase<T>(name: string): SyncDatabase<T> {
 
 export class SyncDatabase<T> {
   public remoteDB: PouchDB.Database<T>;
+  public localDB: PouchDB.Database<T>;
   private onChangeListener: PouchDB.Core.Changes<T> | undefined;
 
   constructor(name: string) {
@@ -198,6 +199,7 @@ export class SyncDatabase<T> {
           }
         : undefined,
     });
+    this.localDB = new PouchDB<T>(name);
     this.remoteDB = remoteDB;
   }
 

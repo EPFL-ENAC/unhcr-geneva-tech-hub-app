@@ -45,6 +45,7 @@
                   ? ""
                   : "(This assessment is the Reference for this site so it cannot be modified.)"
               }}
+              <span v-if="$userIs('Guest')">(Guest mode: read only)</span>
             </span>
           </h2>
         </v-col>
