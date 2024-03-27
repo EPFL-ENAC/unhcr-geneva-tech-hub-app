@@ -15,7 +15,7 @@ import { RootState } from ".";
 import { updateMetaFieldsForUpdate } from "./documentUtils";
 import { GridItem } from "./GhgReferenceGridModule";
 import { ReferenceItemInterface } from "./GhgReferenceModule";
-import { CouchUser } from "./UserModule";
+import { CouchUser, Roles } from "./UserModule";
 
 const MSG_DB_DOES_NOT_EXIST = "Please, init your database";
 const MSG_USER_NOT_PRESENT = "Could not find user information";
@@ -311,27 +311,38 @@ const actions: ActionTree<ProjectsState, RootState> = {
     const user = context.rootGetters["UserModule/user"] as CouchUser;
     // context.commit("ADD_DOC", generateNewProject(newGhg, user));
     const value = generateNewProject(newGhg, user) as any;
-    const remoteDB = context.state.localCouch?.remoteDB;
-    if (remoteDB) {
+    let db = context.state.localCouch?.remoteDB;
+    if (user.roles?.includes(Roles.guest)) {
+      db = context.state.localCouch?.localDB;
+    }
+    if (db) {
       delete value.isUNHCR;
       value._id = value?._id ?? value?.id ?? uuidv4();
       delete value.id; // just in case we forgot to remove it
       delete value._rev; // just in case we forgot to remove it
-      return remoteDB.post(value).then((response) => {
+      return db.post(value).then((response) => {
         context.commit("NEW_ASSESSEMENT", true);
         return context.dispatch("getDoc", response.id);
       });
     }
   },
   removeDoc: (context: ActionContext<ProjectsState, RootState>, id) => {
-    const remoteDB = context.state.localCouch?.remoteDB;
-    if (!remoteDB) {
+    const user = context.rootGetters["UserModule/user"] as CouchUser;
+
+    let db = context.state.localCouch?.remoteDB;
+    if (user.roles?.includes(Roles.guest)) {
+      db = context.state.localCouch?.localDB;
+    }
+    if (!db) {
       throw new Error(MSG_DB_DOES_NOT_EXIST);
     }
-    return remoteDB
+    return db
       .get(id)
       .then(function (doc: PouchDB.Core.ExistingDocument<GreenHouseGaz>) {
-        return remoteDB.put({ ...doc, _deleted: true });
+        if (!db) {
+          throw new Error(MSG_DB_DOES_NOT_EXIST);
+        }
+        return db.put({ ...doc, _deleted: true });
       })
       .finally(() => {
         context.commit("REMOVE_ASSESSEMENT", true);
@@ -348,24 +359,32 @@ const actions: ActionTree<ProjectsState, RootState> = {
     const newValue = updateMetaFieldsForUpdate(value, user);
     context.commit("SET_PROJECT", newValue);
   },
-  getDoc: (context: ActionContext<ProjectsState, RootState>, id) => {
+  getDoc: async (context: ActionContext<ProjectsState, RootState>, id) => {
     const db = context.state.localCouch?.remoteDB;
-    if (db) {
+    const localDB = context.state.localCouch?.localDB; // for guest user only
+    if (localDB) {
       context.commit("SET_PROJECT_LOADING", true);
-      return db
-        .get(id)
-        .then(function (result) {
-          context.commit("SET_PROJECT", result);
-          return result;
-        })
-        .catch(function (err: Error) {
-          context.commit("SET_PROJECT_LOADING", false);
-          err.message = `${err?.message} ${id}`;
-          throw err;
-        })
-        .finally(() => {
-          context.commit("SET_PROJECT_LOADING", false);
-        });
+      try {
+        const result = await localDB.get(id);
+        context.commit("SET_PROJECT", result);
+        return result;
+      } catch (errL: unknown) {
+        try {
+          if (db) {
+            const result = await db.get(id);
+            context.commit("SET_PROJECT", result);
+            return result;
+          }
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            context.commit("SET_PROJECT_LOADING", false);
+            err.message = `${err?.message} ${id}`;
+          }
+        }
+        throw errL;
+      } finally {
+        context.commit("SET_PROJECT_LOADING", false);
+      }
     } else {
       context.commit("SET_PROJECT_LOADING", false);
       throw new Error(MSG_DB_DOES_NOT_EXIST);
@@ -388,7 +407,11 @@ const actions: ActionTree<ProjectsState, RootState> = {
     // no need for  "SET_PROJECT" it should only be done by getDoc
 
     context.commit("SET_PROJECT_LOADING", true);
-    const db = context.state.localCouch?.remoteDB;
+
+    let db = context.state.localCouch?.remoteDB;
+    if (user.roles?.includes(Roles.guest)) {
+      db = context.state.localCouch?.localDB;
+    }
     if (db) {
       // first retrieve latest rev
       // const doc = await db.get(newValue.id);

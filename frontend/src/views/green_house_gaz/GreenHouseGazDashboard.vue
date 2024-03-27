@@ -20,13 +20,7 @@
             </v-btn>
           </v-col>
           <v-col class="country-list__actions d-flex justify-end align-center">
-            <v-btn
-              class="float-right"
-              color="primary"
-              :disabled="!$can('create')"
-              text
-              @click="addSurvey"
-            >
+            <v-btn class="float-right" color="primary" text @click="addSurvey">
               <v-icon left>$mdiPlusBox</v-icon>
               New assessment
             </v-btn>
