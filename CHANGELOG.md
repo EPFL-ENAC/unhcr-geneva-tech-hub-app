@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.18.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.17.0...v1.18.0) (2024-03-28)
+
+
+### Features
+
+* replace frontend logic by redirect link to tims ([67a40aa](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/commit/67a40aabe77d74065f73306b927c346dde63547a))
+
 ## [1.17.0](https://github.com/EPFL-ENAC/unhcr-geneva-tech-hub-app/compare/v1.16.1...v1.17.0) (2024-03-27)
 
 
