@@ -1,0 +1,5 @@
+server {
+    listen 80;
+    server_name localhost;
+    return 301 ${VUE_APP_REDIRECT_URI}$request_uri;
+}
